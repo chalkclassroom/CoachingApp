@@ -1,2 +1,2 @@
 # CoachingApp
-Data acquisition and coaching application for teachers and their coaches
+Education data acquisition and analysis application for teachers and coaches
