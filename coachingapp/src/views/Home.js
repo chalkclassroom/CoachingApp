@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {Carousel} from 'react-responsive-carousel';
 import {AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons';
+import MenuIcon from '@material-ui/icons/Menu';
 
 
 
