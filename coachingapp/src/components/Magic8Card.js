@@ -10,7 +10,6 @@ const styles = {
 
     title: {
         textAlign: 'center',
-        marginTop: '20%',
     },
 
     titleText: {
@@ -31,8 +30,6 @@ const CardBase = styled.div`
   display: inline-block;
   //border: dashed 2px #808080;
   border-radius: 5px;
-  width: 10%;
-  height: 20%;
 `;
 
 class Magic8Card extends Component {
@@ -54,16 +51,16 @@ class Magic8Card extends Component {
 
     render() {
         return (
-            <CardBase style={{height: '30%'}}>
+            <CardBase>
                 <Card style={{backgroundColor: this.props.backgroundColor,
-                              opacity: this.state.selected? .5 : 1,}}
+                              opacity: this.state.selected? .5 : 1, height: '100px;'}}
                         onClick = {this.onClick}>
-                    <CardActionArea>
-                        <Icon styles={{marginLeft: '20%' }}>
+                    <CardActionArea style={{height: '160px', width: '160px'}}>
+                        <Icon style={{ color: "#FFFFFF", transform: 'scale(3)'}}>
                             {this.props.icon}
                         </Icon>
                         <CardContent className="title">
-                            <Typography className="titleText">
+                            <Typography className="titleText" style={{color: '#FFFFFF', fontSize: "1.5em"}}>
                                 {this.props.title}
                             </Typography>
                         </CardContent>
