@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Carousel} from 'react-responsive-carousel';
 import {AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons';
+import { Menu } from '@material-ui/icons';
 
 
 
@@ -27,7 +26,7 @@ function ButtonAppBar(props) {
             <AppBar position="static" style={{backgroundColor: '#00c1b8'}}>
                 <Toolbar>
                     <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                        <MenuIcon />
+                        <Menu/>
                     </IconButton>
                     <Typography variant="h6" color="inherit" className={classes.grow}>
                         Classroom Quality Ref

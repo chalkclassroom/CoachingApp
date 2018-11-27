@@ -1,37 +1,27 @@
 'use strict';
 
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {Card, CardActionArea, CardContent, Icon, Typography} from '@material-ui/core';
+import styled from "styled-components";
 
 const styles = {
 
-    firstCard: {
-        maxWidth: 200,
-        minHeight: 200,
-        maxHeight: 300,
-        marginLeft: 20,
-        marginTop: 20,
+    card: {
+        width: '20%',
+        height: '20%',
     },
-
-    transitionTime: {
+    title: {
         textAlign: 'center',
         marginTop: '20%',
     },
 
-    transitionTimeText: {
-        fontSize: 70,
-    },
-    firstCardAA: {
-        backgroundColor: 'red',
-        maxWidth: 200,
-        minHeight: 200,
-        maxHeight: 300,
-        marginTop: '20%',
+    titleText: {
+        fontSize: '1.7vw',
     },
 
-    transitionTimeIcon: {
+    icon: {
         position: 'absolute',
         transform: 'scale(2.2)',
         textAlign: 'center',
@@ -39,24 +29,51 @@ const styles = {
     },
 };
 
-function Magic8Card(props) {
-    const { classes } = props;
-    return (
-        <div>
-            <Card className={classes.firstCard} style={{backgroundColor: this.props.backgroundColor}}>
-                <CardActionArea className={classes.firstCardAA}>
-                    <Icon className={classes.transitionTimeIcon}>
-                        {this.props.icon}
-                    </Icon>
-                    <CardContent className={classes.transitionTime}>
-                        <Typography style = {{fontSize: '1.7vw'}}>
-                            {this.props.title}
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-        </div>
-    );
+const CardBase = styled.div`
+  margin: 5px;
+  position: relative;
+  display: inline-block;
+  //border: dashed 2px #808080;
+  border-radius: 5px;
+  width: 20%;
+`;
+
+class Magic8Card extends Component {
+    constructor(props){
+        super(props);
+        this.onClick = this.onClick.bind(this);
+        this.state = {
+            selected: false
+        };
+    }
+
+    onClick(e) {
+        e.preventDefault();
+        const { onClick, numSelected } = this.props;
+        onClick(this.state.selected);
+        if(this.state.selected){this.setState({selected: false})}
+        else if(numSelected<2){this.setState({selected: true})}
+    }
+
+    render() {
+        return (
+            <CardBase>
+                <Card style={{backgroundColor: this.props.backgroundColor, opacity: this.state.selected? .5 : 1}}
+                        onClick = {this.onClick}>
+                    <CardActionArea className = "card">
+                        <Icon className="icon">
+                            {this.props.icon}
+                        </Icon>
+                        <CardContent className="title">
+                            <Typography className="titleText">
+                                {this.props.title}
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            </CardBase>
+        );
+    }
 }
 
 Magic8Card.propTypes = {
