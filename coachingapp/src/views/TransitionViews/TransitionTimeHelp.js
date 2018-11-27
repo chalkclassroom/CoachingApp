@@ -74,17 +74,35 @@ class TransitionTimeHelp extends React.Component {
                     open={this.state.open}
                 >
                     <div style={getModalStyle()} className={classes.paper}>
-                        <Grid xs={12} container alignItems="center" direction="column" justify="center">
-                            <Typography variant="h6">
-                            Transition Time
+                        <Grid xs={12} container alignItems="center" direction="column" justify="flex-start">
+                            <Typography variant="subtitle2" gutterBottom>
+                                A positive classroom climate leads to long-term benefits for children’s academic achievement, social competence, and self-regulation. It allows children to:
                             </Typography>
-                            <Typography variant="subtitle1" gutterBottom>
-                            Instructions
+                            <Typography variant="h6" gutterBottom>
+                                Components
                             </Typography>
-                            <Typography variant="subtitle1" gutterBottom>
+                            <Typography variant="subtitle2" gutterBottom>
+                                <br/>
+                                - More behavior-approving language
+                                <br/>
+                                - Less behavior-disapproving language
+                                <br/>
+                                - Concrete and specific praise
+                                <br/>
+                                -Absense of threats and sarcasm
                             </Typography>
-                            <Typography variant="caption" gutterBottom>
-                                By Signing In you are accepting T&C and Privacy Policy
+                            <br/>
+                            <Typography variant="h6" gutterBottom>
+                                Benefits
+                            </Typography>
+                            <Typography variant="subtitle2" gutterBottom>
+                                - feel valued and safe
+                                <br/>
+                                - interact more with teachers and peers
+                                <br/>
+                                -take academic risks
+                                <br/>
+                                -deeply engage in learning
                             </Typography>
                         </Grid>
                     </div>
