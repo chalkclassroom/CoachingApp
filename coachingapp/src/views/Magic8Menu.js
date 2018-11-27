@@ -83,7 +83,7 @@ class Magic8Menu extends Component {
                     <CardRow>
                         <Button
                                 style={{backgroundColor: "#2196F3", opacity: this.state.allowed? 1 : .5,
-                                    marginLeft: '84%', transform: 'scale(1.4)'}}>
+                                    marginLeft: '84%', transform: 'scale(1.4)', display: 'flex', marginBottom: '5px'}}>
                             Observe
                         </Button>
                     </CardRow>
