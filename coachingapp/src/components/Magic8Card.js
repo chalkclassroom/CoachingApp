@@ -8,10 +8,6 @@ import styled from "styled-components";
 
 const styles = {
 
-    card: {
-        width: '20%',
-        height: '20%',
-    },
     title: {
         textAlign: 'center',
         marginTop: '20%',
@@ -22,8 +18,8 @@ const styles = {
     },
 
     icon: {
-        position: 'absolute',
-        transform: 'scale(2.2)',
+        position: 'relative',
+        transform: 'scale(4.2)',
         textAlign: 'center',
         marginLeft: '43%',
     },
@@ -35,7 +31,8 @@ const CardBase = styled.div`
   display: inline-block;
   //border: dashed 2px #808080;
   border-radius: 5px;
-  width: 20%;
+  width: 10%;
+  height: 20%;
 `;
 
 class Magic8Card extends Component {
@@ -57,11 +54,12 @@ class Magic8Card extends Component {
 
     render() {
         return (
-            <CardBase>
-                <Card style={{backgroundColor: this.props.backgroundColor, opacity: this.state.selected? .5 : 1}}
+            <CardBase style={{height: '30%'}}>
+                <Card style={{backgroundColor: this.props.backgroundColor,
+                              opacity: this.state.selected? .5 : 1,}}
                         onClick = {this.onClick}>
-                    <CardActionArea className = "card">
-                        <Icon className="icon">
+                    <CardActionArea>
+                        <Icon styles={{marginLeft: '20%' }}>
                             {this.props.icon}
                         </Icon>
                         <CardContent className="title">
