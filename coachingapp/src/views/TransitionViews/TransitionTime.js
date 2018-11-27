@@ -18,7 +18,9 @@ import EditIcon from "@material-ui/icons/Edit"
 import {createMuiTheme, MuiThemeProvider, withStyles} from '@material-ui/core/styles';
 import cyan from '@material-ui/core/colors/teal';
 import TransitionTimeHelp from "./TransitionTimeHelp";
+import TranstionType from "./TransitionType";
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import TransitionTimer from "./TransitionTimer";
 
 
 
@@ -35,6 +37,9 @@ const theme = createMuiTheme({
 const styles = {
     root: {
         flexGrow: 1,
+        display: 'flex',
+        minHeight: '100vh',
+        flexDirection: 'column',
     },
     grow: {
         flexGrow: 1,
@@ -80,14 +85,6 @@ class TransitionTime extends React.Component {
         return (
             <MuiThemeProvider theme={theme}>
             <div className={classes.root}>
-                {/*<FormGroup>*/}
-                    {/*<FormControlLabel*/}
-                        {/*control={*/}
-                            {/*<Switch checked={auth} onChange={this.handleChange} aria-label="LoginSwitch" />*/}
-                        {/*}*/}
-                        {/*label={auth ? 'Logout' : 'Login'}*/}
-                    {/*/>*/}
-                {/*</FormGroup>*/}
                 <AppBar position="static"  color="default">
                     <Toolbar>
                         <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
@@ -128,17 +125,13 @@ class TransitionTime extends React.Component {
                     </Toolbar>
                 </AppBar>
                 {this.state.help? <ClickAwayListener onClickAway={this.handleClickAway}> <TransitionTimeHelp/></ClickAwayListener>:<div />}
-                <Grid container alignItems={"center"} justify={"center"} direction={"row"}>
-                    Time
+                <main style={{flex:1}}>
+                <Grid container alignItems={"center"} justify={"center"} direction={"column"} >
+                    <div style={{margin: 20}}></div>
+                    <TranstionType/>
+                    <TransitionTimer/>
                 </Grid>
-                <Grid container alignItems={"center"} justify={"center"} direction={"row"}>
-                    <Button variant="fab" mini color="primary" aria-label="Cancel"  fontSize={'large'}>
-                       Cancel
-                    </Button>
-                    <Button variant="fab" color="secondary" aria-label="Start"  fontSize={'large'}>
-                       Start
-                    </Button>
-                </Grid>
+                </main>
                 <footer>
                     <Grid container alignItems={"center"} justify={"space-between"} direction={"row"}>
                         <Grid item xs={2}>
@@ -164,8 +157,8 @@ class TransitionTime extends React.Component {
                         </Grid>
                         <Grid item xs={2}>
                             <Grid container alignItems={"center"} justify={"space-between"} direction={"column"}>
-                                Start Time: 12:04 PM
-                                Run Time : 17 Minutes
+                                Start Time: {new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}
+                                <br/>
                             <Button variant={'outlined'} color={"secondary"} style={{margin:10}}>
                                 Complete Observation
                             </Button>

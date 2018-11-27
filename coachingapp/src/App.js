@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import './views/Home'
 import Home from "./views/Home";
-import TransitionTime from "./views/TransitionTime";
+import TransitionTime from "./views/TransitionViews/TransitionTime";
 
 class App extends Component {
   render() {

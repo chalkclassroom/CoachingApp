@@ -76,7 +76,7 @@ class TransitionTimeHelp extends React.Component {
                     <div style={getModalStyle()} className={classes.paper}>
                         <Grid xs={12} container alignItems="center" direction="column" justify="center">
                             <Typography variant="h6">
-                            CQ Ref Help
+                            Transition Time
                             </Typography>
                             <Typography variant="subtitle1" gutterBottom>
                             Instructions
