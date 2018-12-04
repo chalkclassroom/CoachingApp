@@ -7,11 +7,17 @@
     "@material-ui/icons": "^3.0.1",
     "prop-types": "latest",
     "react": "^16.6.1",
+    "react-circle": "^1.1.1",
+    "react-circular-progressbar": "^1.0.0",
     "react-dom": "^16.6.1",
     "react-responsive-carousel": "^3.1.43",
+<<<<<<< HEAD
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1",
     "styled-components": "^4.1.1"
+=======
+    "react-scripts": "2.1.1"
+>>>>>>> TransitionTime
   },
   "scripts": {
     "start": "react-scripts start",
