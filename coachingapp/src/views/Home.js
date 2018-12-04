@@ -32,7 +32,7 @@ function ButtonAppBar(props) {
                     <Typography variant="h6" color="inherit" className={classes.grow}>
                         Classroom Quality Ref
                     </Typography>
-                    <Button> color="inherit"></Button>
+                    <Button color="inherit"><Link styles={{display:"block", height: '100%'}} to={`/Magic8Menu`}>Login</Link></Button>
                 </Toolbar>
             </AppBar>
         </div>
