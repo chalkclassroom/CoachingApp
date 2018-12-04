@@ -2,7 +2,18 @@ import React, {Component}  from 'react';
 import '../App.css';
 import PropTypes from 'prop-types';
 import Magic8Card from '../components/Magic8Card.js';
-import {Add, FormatListNumbered, Headset, HowToReg, Menu, InsertEmoticon, People, School, Timer} from '@material-ui/icons';
+import {
+    Add,
+    FormatListNumbered,
+    Headset,
+    HowToReg,
+    Menu,
+    InsertEmoticon,
+    People,
+    School,
+    Timer,
+    Link
+} from '@material-ui/icons';
 import {Button, Typography} from '@material-ui/core';
 import styled from "styled-components";
 
@@ -42,7 +53,9 @@ class Magic8Menu extends Component {
         return (
             <div>
                 <BurgerMenu>
+                    <Link style={{display:"block", height: '100%'}} to={`/`}>
                     <Menu style={{transform: "scale(3)", marginTop: '22px', marginLeft: '25px', color: "#a5a4a4"}}/>
+                    </Link>
                 </BurgerMenu>
                 <div className = "row">
                     <div className="row">
