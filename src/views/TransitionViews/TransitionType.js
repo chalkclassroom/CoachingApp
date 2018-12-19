@@ -38,9 +38,9 @@ class SimpleMenu extends React.Component {
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
                 >
-                    <MenuItem onClick={this.handleClose}>Lull</MenuItem>
-                    <MenuItem onClick={this.handleClose}>Within ClassRoom</MenuItem>
-                    <MenuItem onClick={this.handleClose}>External Classroom</MenuItem>
+                    <MenuItem onClick={this.handleClose}>Wait Time</MenuItem>
+                    <MenuItem onClick={this.handleClose}>Inside Classroom</MenuItem>
+                    <MenuItem onClick={this.handleClose}>Outisde Classroom</MenuItem>
                 </Menu>
             </div>
         );

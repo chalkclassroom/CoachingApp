@@ -38,6 +38,10 @@ class App extends Component {
                         path="/Magic8Menu"
                         render={() => (<Magic8Menu/>)}
                     />
+                    <Route
+                      path="/TransitionTime"
+                      render={() => (<TransitionTime/>)}
+                    />
                 </MuiThemeProvider>
         </BrowserRouter>
     );
