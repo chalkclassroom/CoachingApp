@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cc645c45-ce6f-4f53-a555-7d509df62276" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionTime.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionTimeHelp.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionTimer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionType.js" afterDir="false" />
+    <list default="true" id="8ef9b76a-c662-43c6-b6b1-725e05af03cd" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/CoachingApp.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coachingapp/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/coachingapp/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coachingapp/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/coachingapp/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/coachingapp/src/views/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/coachingapp/src/views/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Home.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,45 +22,50 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="1308134960">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.open.time.1" value="1" />
-          <entry key="project.opened" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="js" value="58" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="JavaScript" value="58" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="gitignore" value="1" />
-          <entry key="js" value="3" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="JavaScript" value="3" />
-          <entry key="PLAIN_TEXT" value="1" />
-        </counts>
-      </usages-collector>
-    </session>
-  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/coachingapp/src/views/Home.js">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="-140">
+                <caret line="4" column="43" selection-start-line="4" selection-start-column="43" selection-end-line="4" selection-end-column="43" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="345">
+              <caret line="15" column="33" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/App.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="182">
+              <caret line="17" column="28" lean-forward="true" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/index.css">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -66,13 +73,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/coachingapp/src/App.js">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/views/Home.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="22" column="3" lean-forward="true" selection-start-line="22" selection-start-column="3" selection-end-line="22" selection-end-column="3" />
+            <state relative-caret-position="-531">
+              <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
               <folding>
-                <element signature="e#0#41#0" expanded="true" />
+                <element signature="e#0#26#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -87,45 +94,55 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>classes</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/coachingapp/src/components/AppBar.js" />
-        <option value="$PROJECT_DIR$/coachingapp/src/components/Magic8Card.js" />
-        <option value="$PROJECT_DIR$/coachingapp/src/views/Magic8Menu.js" />
+        <option value="$PROJECT_DIR$/coachingapp/build/index.html" />
+        <option value="$PROJECT_DIR$/coachingapp/public/index.html" />
+        <option value="$PROJECT_DIR$/coachingapp/package.json" />
         <option value="$PROJECT_DIR$/coachingapp/src/views/Home.js" />
+        <option value="$PROJECT_DIR$/coachingapp/src/views/TransitionTimeHelp" />
+        <option value="$PROJECT_DIR$/coachingapp/src/views/TransitionTimeHelp.js" />
+        <option value="$PROJECT_DIR$/coachingapp/src/index.css" />
+        <option value="$PROJECT_DIR$/coachingapp/src/views/TransitionType.js" />
+        <option value="$PROJECT_DIR$/coachingapp/src/views/TransitionTime.js" />
+        <option value="$PROJECT_DIR$/coachingapp/src/views/TransitionTimer.js" />
         <option value="$PROJECT_DIR$/coachingapp/src/App.js" />
+        <option value="$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionTime.js" />
+        <option value="$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionTimer.js" />
+        <option value="$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionTimeHelp.js" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/views/Home.js" />
+        <option value="$PROJECT_DIR$/src/App.js" />
       </list>
     </option>
   </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsGulpfileManager">
-    <detection-done>true</detection-done>
-    <sorting>DEFINITION_ORDER</sorting>
-  </component>
-  <component name="NodeModulesDirectoryManager">
-    <handled-path value="$PROJECT_DIR$/coachingapp/node_modules" />
-  </component>
-  <component name="NodePackageJsonFileManager">
-    <packageJsonPaths>
-      <path value="$PROJECT_DIR$/coachingapp/package.json" />
-    </packageJsonPaths>
-  </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="23" />
-    <option name="width" value="1440" />
-    <option name="height" value="828" />
+    <option name="x" value="67" />
+    <option name="y" value="145" />
+    <option name="width" value="1853" />
+    <option name="height" value="810" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -136,25 +153,11 @@
             <path>
               <item name="CoachingApp" type="b2602c69:ProjectViewProjectNode" />
               <item name="CoachingApp" type="462c0819:PsiDirectoryNode" />
-              <item name="coachingapp" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CoachingApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CoachingApp" type="462c0819:PsiDirectoryNode" />
-              <item name="coachingapp" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CoachingApp" type="b2602c69:ProjectViewProjectNode" />
               <item name="CoachingApp" type="462c0819:PsiDirectoryNode" />
-              <item name="coachingapp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CoachingApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CoachingApp" type="462c0819:PsiDirectoryNode" />
-              <item name="coachingapp" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
             </path>
@@ -162,15 +165,24 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../DukaanBabu/2.0/extension" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/coachingapp/src/views/TransitionViews" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/coachingapp/public" />
+      <recent name="$PROJECT_DIR$/coachingapp/src/components" />
+      <recent name="$PROJECT_DIR$/coachingapp/build" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -189,132 +201,340 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="cc645c45-ce6f-4f53-a555-7d509df62276" name="Default Changelist" comment="" />
-      <created>1542219560252</created>
+      <changelist id="8ef9b76a-c662-43c6-b6b1-725e05af03cd" name="Default Changelist" comment="" />
+      <created>1542062890940</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1542219560252</updated>
-      <workItem from="1542219563232" duration="819000" />
-      <workItem from="1542234059535" duration="1246000" />
-      <workItem from="1542235365254" duration="61000" />
-      <workItem from="1543292524005" duration="12839000" />
-      <workItem from="1543956106224" duration="1180000" />
-      <workItem from="1543958278538" duration="2871000" />
+      <updated>1542062890940</updated>
+      <workItem from="1542062892085" duration="6378000" />
+      <workItem from="1542095621510" duration="599000" />
+      <workItem from="1542101335555" duration="608000" />
+      <workItem from="1542131162306" duration="761000" />
+      <workItem from="1542211361662" duration="996000" />
+      <workItem from="1542212372797" duration="368000" />
+      <workItem from="1543249271499" duration="5849000" />
+      <workItem from="1543313904721" duration="11068000" />
+      <workItem from="1545230639284" duration="2564000" />
     </task>
-    <task id="LOCAL-00001" summary="Added Magic8Menu and Magic8Card">
-      <created>1542235399294</created>
+    <task id="LOCAL-00001" summary="Initial Commit">
+      <created>1542138495202</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1542235399294</updated>
+      <updated>1542138495202</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Project Structure Uploaded">
+      <created>1542212060235</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1542212060235</updated>
+    </task>
+    <task id="LOCAL-00003" summary="TransitionTime Initial Snippet">
+      <created>1543253495722</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1543253495722</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Timer Logic Needs to Be Complete">
+      <created>1543323301333</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1543323301333</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Transition Help Content is Ready">
+      <created>1543324346749</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1543324346749</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Transition Help Content is Ready">
+      <created>1543324951279</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1543324951279</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Restructure CQ Ref Project Folder">
+      <created>1545231498211</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1545231498212</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27988000" />
+    <option name="totallyTimeSpent" value="29191000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="777" extended-state="6" />
-    <editor active="true" />
+    <frame x="67" y="27" width="1853" height="1053" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20571883" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.34535518" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32916668" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.329927" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.33722627" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32932165" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32932165" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.329927" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.33868614" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49833056" weight="0.32890365" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4966611" visible="true" weight="0.4208195" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5033389" side_tool="true" visible="true" weight="0.4208195" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout-to-restore>
+    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added Magic8Menu and Magic8Card" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Magic8Menu and Magic8Card" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="Initial Commit" />
+    <MESSAGE value="Project Structure Uploaded" />
+    <MESSAGE value="TransitionTime Initial Snippet" />
+    <MESSAGE value="Timer Logic Needs to Be Complete" />
+    <MESSAGE value="Transition Help Content is Ready" />
+    <MESSAGE value="Restructure CQ Ref Project Folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="Restructure CQ Ref Project Folder" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/coachingapp/src/views/TransitionTime.js" />
-    <entry file="file://$PROJECT_DIR$/coachingapp/src/components/AppBar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/coachingapp/public/static/js/1.1a2fe23b.chunk.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/public/favicon.ico">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/src/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/coachingapp/src/App.css">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/coachingapp/src/components/Magic8Card.js">
+    <entry file="file://$PROJECT_DIR$/coachingapp/build/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1035">
-          <caret line="77" selection-start-line="77" selection-end-line="77" />
+        <state>
+          <caret column="295" selection-start-column="295" selection-end-column="295" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="66" selection-start-column="66" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/src/index.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionTime.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="87">
+          <caret line="86" column="42" selection-start-line="86" selection-start-column="42" selection-end-line="86" selection-end-column="42" />
           <folding>
-            <element signature="e#15#54#0" expanded="true" />
+            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#3111#4521#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/coachingapp/src/views/Magic8Menu.js">
+    <entry file="file://$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionTimer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/coachingapp/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/coachingapp/src/views/Home.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="345">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionType.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1035">
+          <caret line="45" column="10" selection-start-line="45" selection-start-column="10" selection-end-line="45" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/public/precache-manifest.3f8efc8ebff8aece200207ddbb86057d.js" />
+    <entry file="file://$PROJECT_DIR$/coachingapp/public/precache-manifest.968081259b0a61f461899aea2ae0e55e.js" />
+    <entry file="file://$PROJECT_DIR$/coachingapp/public/precache-manifest.db000f132a15e72dce9145864817cff0.js" />
+    <entry file="file://$PROJECT_DIR$/coachingapp/build/precache-manifest.db000f132a15e72dce9145864817cff0.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="17" column="3" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/public/static/js/1.06d590ed.chunk.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/public/manifest.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionTimeHelp.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2530">
+          <caret line="110" column="10" lean-forward="true" selection-start-line="110" selection-start-column="10" selection-end-line="110" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/src/views/Home.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="39" column="1" selection-start-line="39" selection-start-column="1" selection-end-line="39" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/build/precache-manifest.968081259b0a61f461899aea2ae0e55e.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/build/precache-manifest.3f8efc8ebff8aece200207ddbb86057d.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/firebase.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/.firebaserc">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/src/components/AppBar.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/coachingapp/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="22" column="3" lean-forward="true" selection-start-line="22" selection-start-column="3" selection-end-line="22" selection-end-column="3" />
+        <state relative-caret-position="23">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/src/views/Magic8Menu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/coachingapp/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="736">
+          <caret line="32" column="48" selection-start-line="32" selection-start-column="48" selection-end-line="32" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-140">
+            <caret line="4" column="43" selection-start-line="4" selection-start-column="43" selection-end-line="4" selection-end-column="43" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="15" column="33" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.firebase/hosting.cHVibGlj.cache">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/Home.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-531">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="17" column="28" lean-forward="true" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>
