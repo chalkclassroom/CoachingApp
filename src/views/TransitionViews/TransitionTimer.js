@@ -12,7 +12,8 @@ class TransitionTimer extends React.Component {
         percentage: 0,
         isOn: false,
         time: 0,
-        start: 0
+        start: 0,
+        hasStarted: false
     };
 
     handleClick = event => {
@@ -26,8 +27,10 @@ class TransitionTimer extends React.Component {
     onStart = () => {
         this.setState(state => {
             if (state.isOn) {
+                this.setState({ hasStarted: false });
                 clearInterval(this.timer);
             } else {
+                this.setState({ hasStarted: true });
                 const startTime = Date.now() - this.state.time;
                 this.timer = setInterval(() => {
                     this.setState({ time: Date.now() - startTime });
@@ -38,15 +41,29 @@ class TransitionTimer extends React.Component {
     };
 
     onCancel = () => {
+        // TODO(thomas): Unexpected behavior - possible bug in the circular progress bar code.
+        // Steps to reproduce:
+        // 1. Start the timer
+        // 2. Without stopping the timer, select Cancel. The progress bar will not reset.
+        // 3. Click Cancel for a second time. Progress bar correctly resets.
         clearInterval(this.timer);
-        this.setState({ isOn: false, time: 0, percentage: 0 });
+        this.setState({
+            isOn: false,
+            time: 0,
+            percentage: 0,
+            hasStarted: false
+        });
     };
+
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
 
     render() {
         const { classes } = this.props;
         const { anchorEl } = this.state;
 
-        if (this.state.isOn) {
+        if (this.state.hasStarted) {
             setTimeout(() => {
                 // @Cleanup
                 // Since this is more of a stopwatch rather than a timer, we keep the progress
