@@ -10,7 +10,7 @@ class TransitionTimer extends React.Component {
     state = {
         anchorEl: null,
         percentage: 0,
-        isOn:false,
+        isOn: false,
         time: 0,
         start: 0
     };
@@ -23,13 +23,12 @@ class TransitionTimer extends React.Component {
         this.setState({ anchorEl: null });
     };
 
-    onStart= () =>{
+    onStart = () => {
         this.setState({isOn: !this.state.isOn});
-
     }
 
-    onCancel= () =>{
-        this.setState({ isOn: false, time:0 , percentage:0})
+    onCancel = () => {
+        this.setState({ isOn: false, time: 0 , percentage: 0})
     }
 
     render() {
@@ -38,7 +37,11 @@ class TransitionTimer extends React.Component {
 
         if(this.state.isOn){
             setTimeout(() => {
-                this.setState({percentage: (this.state.percentage + 1) % 100})
+                // @Cleanup
+                // Since this is more of a stopwatch rather than a timer, we keep the progress
+                // at 100% (to be aesthetically pleasing, I guess). Should remove this dependency
+                // later to reduce bloat.
+                this.setState({percentage: 100})
             }, 100);
         }
 
@@ -53,12 +56,12 @@ class TransitionTimer extends React.Component {
                         text: { fill: '#000', fontSize: '16px' },
                     }}
                 />
-                <Grid container alignItems={"center"} justify={"center"} direction={"row"}>
-                    <Button variant="fab" mini color="primary" aria-label="Cancel" onClick={this.onCancel}>
-                        Cancel
-                    </Button>
-                    <Button variant="fab" color="secondary" aria-label="Start" onClick={this.onStart}>
+                <Grid container alignItems={"center"} justify={"space-around"} direction={"column"}>
+                    <Button variant="contained" color="secondary" aria-label="Start" onClick={this.onStart}>
                         {this.state.isOn? 'Stop' : 'Start' }
+                    </Button>
+                    <Button variant="outlined" color="primary" aria-label="Cancel" onClick={this.onCancel}>
+                    Cancel Transition
                     </Button>
                 </Grid>
             </div>

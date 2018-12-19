@@ -27,7 +27,7 @@ import TransitionTimer from "./TransitionTimer";
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: '#ffffff',
+            main: '#ff0000',
         },
         secondary: cyan,
     },
