@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.5.1",
     "@material-ui/icons": "^3.0.1",
+    "pretty-ms": "^4.0.0",
     "prop-types": "latest",
     "react": "^16.6.1",
     "react-circle": "^1.1.1",
@@ -36,5 +37,8 @@
   "bugs": {
     "url": "https://github.com/CQ-REF/CoachingApp/issues"
   },
-  "homepage": "https://cqrefpwa.firebaseapp.com"
+  "homepage": "https://cqrefpwa.firebaseapp.com",
+  "devDependencies": {
+    "prettier": "^1.15.3"
+  }
 }
