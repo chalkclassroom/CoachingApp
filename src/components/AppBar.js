@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { withStyles, AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+import Link from "react-router-dom/es/Link";
+import Logo from '../assets/logo.png'
 
 const styles = {
     root: {
@@ -20,15 +22,21 @@ function ButtonAppBar(props) {
     const { classes } = props;
     return (
         <div className={classes.root}>
-            <AppBar position="static" style={{backgroundColor: '#00c1b8'}}>
+            <AppBar position="static" color={"primary"}>
                 <Toolbar>
-                    <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                        <MenuIcon />
+                    <IconButton
+                        color="inherit"
+                        aria-label="Logo"
+                        className={classNames(
+                            classes.menuButton,
+                            classes.menuButtonHidden,
+                        )}
+                    >
+                        <img src={Logo} height={'48'}/>
                     </IconButton>
-                    <Typography variant="h6" color="inherit" className={classes.grow}>
-                        Classroom Quality Ref
-                    </Typography>
-                    <Button color="inherit">Login</Button>
+                    <div color="inherit" className={classes.grow}/>
+                    <Button color="secondary" variant={"contained"}><Link to={`/login`}>Log In</Link></Button>
+                    <Button color="secondary" variant={"contained"}><Link to={`/signup`}>Sign Up</Link></Button>
                 </Toolbar>
             </AppBar>
         </div>
