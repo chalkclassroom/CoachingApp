@@ -21,7 +21,7 @@ const styles = {
     root:{
         flexGrow: 1,
         display: 'flex',
-        minHeight: '100vh',
+        minHeight: 'calc(100%-100px)',
         flexDirection: 'column',
     },
     card: {
@@ -34,6 +34,10 @@ const styles = {
     cardContent: {
         flexGrow: 1,
     },
+    slide: {
+        width:'auto',
+        height: '100%'
+    }
 };
 
 class WelcomeCarousel extends React.Component {
@@ -45,7 +49,7 @@ class WelcomeCarousel extends React.Component {
             slidesToShow: 1,
             slidesToScroll: 1,
             adaptiveHeight: true,
-            autoplay: true,
+            autoplay: false,
             autoplaySpeed: 2000,
         };
         const { classes } = this.props;
@@ -56,27 +60,27 @@ class WelcomeCarousel extends React.Component {
                  <CardMedia
                                 className={classes.cardMedia}
                                 image={slide1}
-                                title="Magic 8 Process"
+                                title="Magic 8 Coaching"
                             />
                 <div>
-                        <CardMedia
-                            className={classes.cardMedia}
-                            image={slide1}
-                            title="Magic 8 Process"
+                        <img
+                            className={classes.slide}
+                            src={slide1}
+                            title="Magic 8 Coaching"
                         />
                 </div>
                 <div>
                         <CardMedia
                             className={classes.cardMedia}
                             image={slide1}
-                            title="Magic 8 Process"
+                            title="Magic 8 Coaching"
                         />
                 </div>
                 <div>
                     <CardMedia
                             className={classes.cardMedia}
                             image={slide1}
-                            title="Magic 8 Process"
+                            title="Magic 8 Coaching"
                     />
                 </div>
             </Slider>

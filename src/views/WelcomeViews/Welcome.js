@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '../../components/AppBar';
 import WelcomeCarousel from './WelcomeCarousel';
-import Typography from "@material-ui/core/Typography";
-import CardContent from "@material-ui/core/CardContent";
 
 const styles = {
     root: {
@@ -16,17 +14,17 @@ const styles = {
     }
 };
 
-function Welcome(props) {
-    const { classes } = props;
-    return (
-        <div className={classes.root}>
-            <AppBar/>
-            <WelcomeCarousel/>
-            <footer>
-                Vanderbilt University
-            </footer>
-        </div>
-    );
+class Welcome extends React.Component {
+
+    render() {
+        const {classes} = this.props;
+        return (
+            <div className={classes.root}>
+                <AppBar/>
+                <WelcomeCarousel/>
+            </div>
+        );
+    }
 }
 
 Welcome.propTypes = {
