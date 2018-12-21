@@ -236,7 +236,7 @@ class TransitionTime extends React.Component {
                                     })}
                                     <br />
                                     <Button
-                                        variant={"outlined"}
+                                        variant={"contained"}
                                         color={"secondary"}
                                         style={{ margin: 10 }}
                                     >

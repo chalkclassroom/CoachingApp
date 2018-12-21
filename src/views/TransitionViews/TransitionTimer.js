@@ -101,6 +101,7 @@ class TransitionTimer extends React.Component {
                             "Are you sure you want to cancel the current active transition?"
                         }
                         onAccept={this.onCancel}
+                        shouldOpen={this.state.isOn}
                     />
                 </Grid>
             </div>
