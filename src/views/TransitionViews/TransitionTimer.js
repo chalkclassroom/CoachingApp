@@ -5,10 +5,12 @@ import "react-circular-progressbar/dist/styles.css";
 import Button from "@material-ui/core/Button/Button";
 import Grid from "@material-ui/core/Grid/Grid";
 import ms from "pretty-ms";
+import YesNoDialog from "./YesNoDialog";
 
 class TransitionTimer extends React.Component {
     constructor(props) {
         super(props);
+        this.onCancel = this.onCancel.bind(this);
     }
 
     state = {
@@ -21,10 +23,6 @@ class TransitionTimer extends React.Component {
 
     handleClick = event => {
         this.setState({ anchorEl: event.currentTarget });
-    };
-
-    handleClose = () => {
-        this.setState({ anchorEl: null });
     };
 
     onStart = () => {
@@ -94,14 +92,16 @@ class TransitionTimer extends React.Component {
                             : "Start New Transition"}
                     </Button>
                     <div style={{ margin: 2 }} />
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        aria-label="Cancel"
-                        onClick={this.onCancel}
-                    >
-                        Cancel Transition
-                    </Button>
+                    <YesNoDialog
+                        buttonVariant={"outlined"}
+                        buttonColor={"primary"}
+                        buttonAriaLabel={"Cancel"}
+                        buttonText={"Cancel Transition"}
+                        dialogTitle={
+                            "Are you sure you want to cancel the current active transition?"
+                        }
+                        onAccept={this.onCancel}
+                    />
                 </Grid>
             </div>
         );
