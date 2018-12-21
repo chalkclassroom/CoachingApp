@@ -38,7 +38,7 @@ class TransitionTimer extends React.Component {
                 const startTime = Date.now() - this.state.time;
                 this.timer = setInterval(() => {
                     this.setState({ time: Date.now() - startTime });
-                });
+                }, 1000);
             }
             return { isOn: !state.isOn };
         });
@@ -82,6 +82,7 @@ class TransitionTimer extends React.Component {
                     justify={"space-around"}
                     direction={"column"}
                 >
+                    <div style={{ margin: 2 }} />
                     <Button
                         variant="contained"
                         color="secondary"
@@ -92,6 +93,7 @@ class TransitionTimer extends React.Component {
                             ? "End Transition"
                             : "Start New Transition"}
                     </Button>
+                    <div style={{ margin: 2 }} />
                     <Button
                         variant="outlined"
                         color="primary"
