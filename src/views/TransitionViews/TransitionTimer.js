@@ -7,7 +7,6 @@ import Grid from "@material-ui/core/Grid/Grid";
 import ms from "pretty-ms";
 
 class TransitionTimer extends React.Component {
-
     constructor(props) {
         super(props);
     }
@@ -17,8 +16,7 @@ class TransitionTimer extends React.Component {
         percentage: 0,
         isOn: false,
         time: 0,
-        start: 0,
-        hasStarted: false
+        start: 0
     };
 
     handleClick = event => {
@@ -32,12 +30,11 @@ class TransitionTimer extends React.Component {
     onStart = () => {
         this.setState(state => {
             if (state.isOn) {
-                this.setState({ hasStarted: false });
                 clearInterval(this.timer);
                 let end = new Date();
+                this.setState({ time: 0 });
                 this.props.handleAppend(end.toLocaleString());
             } else {
-                this.setState({ hasStarted: true });
                 const startTime = Date.now() - this.state.time;
                 this.timer = setInterval(() => {
                     this.setState({ time: Date.now() - startTime });
@@ -48,17 +45,11 @@ class TransitionTimer extends React.Component {
     };
 
     onCancel = () => {
-        // TODO(thomas): Unexpected behavior - possible bug in the circular progress bar code.
-        // Steps to reproduce:
-        // 1. Start the timer
-        // 2. Without stopping the timer, select Cancel. The progress bar will not reset.
-        // 3. Click Cancel for a second time. Progress bar correctly resets.
         clearInterval(this.timer);
         this.setState({
             isOn: false,
             time: 0,
-            percentage: 0,
-            hasStarted: false
+            percentage: 0
         });
     };
 
@@ -70,15 +61,9 @@ class TransitionTimer extends React.Component {
         const { classes } = this.props;
         const { anchorEl } = this.state;
 
-        if (this.state.hasStarted) {
-            setTimeout(() => {
-                // @Cleanup
-                // Since this is more of a stopwatch rather than a timer, we keep the progress
-                // at 100% (to be aesthetically pleasing, I guess). Should remove this dependency
-                // later to reduce bloat.
-                this.setState({ percentage: 100 });
-            }, 100);
-        }
+        setTimeout(() => {
+            this.setState({ percentage: this.state.isOn ? 100 : 0 });
+        }, 100);
 
         return (
             <div style={{ width: 400, marginTop: 20 }}>
@@ -103,7 +88,9 @@ class TransitionTimer extends React.Component {
                         aria-label="Start"
                         onClick={this.onStart}
                     >
-                        {this.state.isOn ? "Stop" : "Start"}
+                        {this.state.isOn
+                            ? "End Transition"
+                            : "Start New Transition"}
                     </Button>
                     <Button
                         variant="outlined"
