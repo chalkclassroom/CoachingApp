@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -25,6 +26,7 @@ import TransitionTimeHelp from "./TransitionTimeHelp";
 import TranstionType from "./TransitionType";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
+import TransitionLog from "./TransitionLog";
 
 const theme = createMuiTheme({
     palette: {
@@ -52,11 +54,24 @@ const styles = {
 };
 
 class TransitionTime extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.handleAppend = this.handleAppend.bind(this);
+    }
+
     state = {
         auth: true,
         anchorEl: null,
-        help: false
+        help: false,
+        entries: []
     };
+
+    handleAppend(entry) {
+        let newEntries = this.state.entries;
+        newEntries.push(entry);
+        this.setState({ entries: newEntries });
+    }
 
     handleChange = event => {
         this.setState({ auth: event.target.checked });
@@ -148,15 +163,30 @@ class TransitionTime extends React.Component {
                         <div />
                     )}
                     <main style={{ flex: 1 }}>
-                        <Grid
-                            container
-                            alignItems={"center"}
-                            justify={"center"}
-                            direction={"column"}
-                        >
-                            <div style={{ margin: 20 }} />
-                            <TranstionType />
-                            <TransitionTimer />
+                        <Grid container spacing={36}>
+                            <Grid item xs={4}>
+                                <Grid
+                                    container
+                                    alignItems={"center"}
+                                    justify={"center"}
+                                    direction={"column"}
+                                >
+                                    <div style={{ margin: 20 }} />
+                                    <TransitionLog entries={this.state.entries}/>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Grid
+                                    container
+                                    alignItems={"center"}
+                                    justify={"center"}
+                                    direction={"column"}
+                                >
+                                    <div style={{ margin: 20 }} />
+                                    <TranstionType />
+                                    <TransitionTimer handleAppend={this.handleAppend}/>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </main>
                     <footer>

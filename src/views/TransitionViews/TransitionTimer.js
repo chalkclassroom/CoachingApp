@@ -7,6 +7,11 @@ import Grid from "@material-ui/core/Grid/Grid";
 import ms from "pretty-ms";
 
 class TransitionTimer extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
     state = {
         anchorEl: null,
         percentage: 0,
@@ -29,6 +34,8 @@ class TransitionTimer extends React.Component {
             if (state.isOn) {
                 this.setState({ hasStarted: false });
                 clearInterval(this.timer);
+                let end = new Date();
+                this.props.handleAppend(end.toLocaleString());
             } else {
                 this.setState({ hasStarted: true });
                 const startTime = Date.now() - this.state.time;
