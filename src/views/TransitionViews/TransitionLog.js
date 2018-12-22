@@ -7,13 +7,12 @@ import Typography from "@material-ui/core/Typography";
 const styles = theme => ({
     root: {
         ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2
-}
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2
+    }
 });
 
 const TransitionLog = ({ entries, classes }) => {
-
     const fiveEntries = entries.slice(-5);
 
     return (
@@ -22,18 +21,24 @@ const TransitionLog = ({ entries, classes }) => {
                 <Typography variant="h5" component="h3">
                     Recent Transitions
                 </Typography>
-                <Typography variant="ul">
+                <ul>
                     {fiveEntries.map((entry, index) => (
-                        <li key={index}>{entry}</li>
+                        <li key={index}>
+                            {entry.end}
+                            <br />
+                            Duration:{entry.duration}
+                            <br />
+                            Type:{entry.type}
+                        </li>
                     ))}
-                </Typography>
+                </ul>
             </Paper>
         </div>
     );
 };
 
 TransitionLog.propTypes = {
-    entries: PropTypes.object.isRequired
+    entries: PropTypes.array.isRequired
 };
 
 export default withStyles(styles)(TransitionLog);

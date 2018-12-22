@@ -30,6 +30,9 @@ const styles = theme => ({
 });
 
 class SimpleMenu extends React.Component {
+    constructor(props) {
+        super(props);
+    }
 
     state = {
         type: "",
@@ -38,6 +41,21 @@ class SimpleMenu extends React.Component {
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
+        let mType = "";
+        switch (event.target.value) {
+            case 1:
+                mType = "Wait Time";
+                break;
+            case 2:
+                mType = "Inside Classroom";
+                break;
+            case 3:
+                mType = "Outside Classroom";
+                break;
+            default:
+                mType = "Undefined";
+        }
+        this.props.handleTypeChange(mType);
     };
 
     componentDidMount() {

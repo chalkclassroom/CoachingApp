@@ -27,6 +27,7 @@ import TranstionType from "./TransitionType";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
+import YesNoDialog from "./YesNoDialog";
 
 const theme = createMuiTheme({
     palette: {
@@ -54,23 +55,29 @@ const styles = {
 };
 
 class TransitionTime extends React.Component {
-
     constructor(props) {
-        super(props)
+        super(props);
         this.handleAppend = this.handleAppend.bind(this);
+        this.handleTypeChange = this.handleTypeChange.bind(this);
     }
 
     state = {
         auth: true,
         anchorEl: null,
         help: false,
+        type: null,
         entries: []
     };
 
     handleAppend(entry) {
         let newEntries = this.state.entries;
+        entry.type = this.state.type;
         newEntries.push(entry);
         this.setState({ entries: newEntries });
+    }
+
+    handleTypeChange(newType) {
+        this.setState({ type: newType });
     }
 
     handleChange = event => {
@@ -163,7 +170,7 @@ class TransitionTime extends React.Component {
                         <div />
                     )}
                     <main style={{ flex: 1 }}>
-                        <Grid container spacing={36}>
+                        <Grid container spacing={16}>
                             <Grid item xs={4}>
                                 <Grid
                                     container
@@ -172,7 +179,9 @@ class TransitionTime extends React.Component {
                                     direction={"column"}
                                 >
                                     <div style={{ margin: 20 }} />
-                                    <TransitionLog entries={this.state.entries}/>
+                                    <TransitionLog
+                                        entries={this.state.entries}
+                                    />
                                 </Grid>
                             </Grid>
                             <Grid item xs={8}>
@@ -183,8 +192,12 @@ class TransitionTime extends React.Component {
                                     direction={"column"}
                                 >
                                     <div style={{ margin: 20 }} />
-                                    <TranstionType />
-                                    <TransitionTimer handleAppend={this.handleAppend}/>
+                                    <TranstionType
+                                        handleTypeChange={this.handleTypeChange}
+                                    />
+                                    <TransitionTimer
+                                        handleAppend={this.handleAppend}
+                                    />
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -235,13 +248,13 @@ class TransitionTime extends React.Component {
                                         hour12: true
                                     })}
                                     <br />
-                                    <Button
-                                        variant={"contained"}
-                                        color={"secondary"}
-                                        style={{ margin: 10 }}
-                                    >
-                                        Complete Observation
-                                    </Button>
+                                    <YesNoDialog
+                                        buttonText={"Complete Observation"}
+                                        buttonVariant={"contained"}
+                                        buttonColor={"secondary"}
+                                        buttonStyle={{margin: 10}}
+                                        dialogTitle={"Are you sure you want to complete this observation?"}
+                                        shouldOpen={true}/>
                                 </Grid>
                             </Grid>
                         </Grid>
