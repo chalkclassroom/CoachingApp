@@ -4,6 +4,7 @@ import WelcomePage from "./views/WelcomeViews/Welcome";
 import Magic8Menu from "./views/Magic8Menu"
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import TransitionTime from "./views/TransitionViews/TransitionTime";
+import ClassroomClimate from "./views/ClassroomClimateViews/ClassroomClimate";
 
 import  blue from "@material-ui/core/colors/blue"
 import amber from "@material-ui/core/colors/amber";
@@ -39,6 +40,10 @@ class App extends Component {
                     <Route
                       path="/TransitionTime"
                       render={() => (<TransitionTime/>)}
+                    />
+                    <Route
+                      path="/ClassroomClimate"
+                      render={() => (<ClassroomClimate/>)}
                     />
                 </MuiThemeProvider>
         </BrowserRouter>

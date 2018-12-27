@@ -5,7 +5,7 @@ import "react-circular-progressbar/dist/styles.css";
 import Button from "@material-ui/core/Button/Button";
 import Grid from "@material-ui/core/Grid/Grid";
 import ms from "pretty-ms";
-import YesNoDialog from "./YesNoDialog";
+import YesNoDialog from "../../components/Shared/YesNoDialog";
 
 class TransitionTimer extends React.Component {
     constructor(props) {

@@ -37,7 +37,11 @@ class YesNoDialog extends React.Component {
     };
 
     handleAccept = () => {
-        this.props.onAccept();
+        if (this.props.onAcceptParams !== null) {
+            this.props.onAccept(this.props.onAcceptParams);
+        } else {
+            this.props.onAccept();
+        }
         this.setState({ open: false });
     };
 

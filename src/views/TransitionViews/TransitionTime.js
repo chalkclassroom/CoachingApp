@@ -27,7 +27,7 @@ import TranstionType from "./TransitionType";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
-import YesNoDialog from "./YesNoDialog";
+import YesNoDialog from "../../components/Shared/YesNoDialog";
 
 const theme = createMuiTheme({
     palette: {
