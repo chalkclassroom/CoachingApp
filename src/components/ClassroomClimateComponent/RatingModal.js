@@ -68,7 +68,7 @@ class RatingModal extends React.Component {
             case "Flat":
                 ret = 3;
                 break;
-            case "Positive":
+            case "Pleasant":
                 ret = 4;
                 break;
             case "Vibrant":
@@ -133,9 +133,9 @@ class RatingModal extends React.Component {
                                         labelPlacement="bottom"
                                     />
                                     <FormControlLabel
-                                        value="Positive"
+                                        value="Pleasant"
                                         control={<Radio color="secondary" />}
-                                        label="Positive"
+                                        label="Pleasant"
                                         labelPlacement="bottom"
                                     />
                                     <FormControlLabel
