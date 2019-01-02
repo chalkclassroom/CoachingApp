@@ -40,7 +40,7 @@ import ms from "pretty-ms";
  */
 
 const RATING_INTERVAL = 135000;
-const TEN_PERCENT = 13500;
+const TEN_PERCENT = 0.10 * RATING_INTERVAL;
 
 const styles = {
     root: {
