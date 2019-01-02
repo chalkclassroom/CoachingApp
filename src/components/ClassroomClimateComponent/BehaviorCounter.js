@@ -9,6 +9,7 @@ import Chip from "@material-ui/core/Chip";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import ReplayIcon from "@material-ui/icons/Replay";
+import spreadsheetData from "../../SPREADSHEET_SECRETS";
 
 const styles = theme => ({
     root: {
@@ -90,6 +91,8 @@ class BehaviorCounter extends React.Component {
         mArray.pop();
         this.setState({ undoStack: mArray });
         console.log(mArray);
+
+        this.handleSpreadsheetDeleteRow();
     };
 
     handlePush = entry => {
@@ -101,6 +104,52 @@ class BehaviorCounter extends React.Component {
         mArray.push(mEntry);
         this.setState({ undoStack: mArray });
         console.log(mArray);
+
+        this.handleSpreadsheetInsert(mEntry);
+    };
+
+    handleSpreadsheetInsert = entry => {
+        let url = new URL(spreadsheetData.scriptLink),
+            params = {
+                sheet: "ClassroomClimateBehavior",
+                del: "false",
+                BehaviorResponse: entry.observation,
+                InstructionTransition: entry.type
+            };
+        Object.keys(params).forEach(key =>
+            url.searchParams.append(key, params[key])
+        );
+        fetch(url, {
+            method: "POST",
+            credentials: "include",
+            mode: "no-cors",
+            headers: {
+                "content-type": "application/json"
+            }
+        })
+            .then(response => console.log("Success"))
+            .catch(error => console.error("Error:", error));
+    };
+
+    handleSpreadsheetDeleteRow = () => {
+        let url = new URL(spreadsheetData.scriptLink),
+            params = {
+                sheet: "ClassroomClimateBehavior",
+                del: "true"
+            };
+        Object.keys(params).forEach(key =>
+            url.searchParams.append(key, params[key])
+        );
+        fetch(url, {
+            method: "POST",
+            credentials: "include",
+            mode: "no-cors",
+            headers: {
+                "content-type": "application/json"
+            }
+        })
+            .then(response => console.log("Success"))
+            .catch(error => console.error("Error:", error));
     };
 
     render() {

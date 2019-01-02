@@ -98,6 +98,12 @@ class ClassroomClimate extends React.Component {
         mRatings.push(rating);
         this.setState({ ratings: mRatings });
         console.log(mRatings);
+
+        let entry = {
+            rating: rating,
+            ratingInterval: RATING_INTERVAL
+        };
+        this.handleSpreadsheetInsert(entry);
     };
 
     handleHelpModal = () => {
@@ -106,6 +112,10 @@ class ClassroomClimate extends React.Component {
 
     handleClickAway = () => {
         this.setState({ help: false });
+    };
+
+    handleSpreadsheetInsert = entry => {
+        console.log(entry);
     };
 
     render() {
