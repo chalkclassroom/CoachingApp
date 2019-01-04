@@ -2,10 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8ef9b76a-c662-43c6-b6b1-725e05af03cd" name="Default Changelist" comment="">
+<<<<<<< HEAD
+      <change beforePath="$PROJECT_DIR$/src/views/TransitionViews/TransitionLog.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/TransitionViews/TransitionLog.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/TransitionViews/TransitionTime.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/TransitionViews/TransitionTime.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/TransitionViews/TransitionTimer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/TransitionViews/TransitionTimer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/TransitionViews/TransitionType.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/TransitionViews/TransitionType.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/TransitionViews/YesNoDialog.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/TransitionViews/YesNoDialog.js" afterDir="false" />
+=======
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/src/views/protected/HomeViews/ObserveModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/protected/HomeViews/ObserveModal.js" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+>>>>>>> origin/master
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -17,6 +29,38 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< HEAD
+  <component name="FUSProjectUsageTrigger">
+    <session id="1878730622">
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="js" value="14209" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JavaScript" value="14209" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="js" value="5" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JavaScript" value="5" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts">
+        <counts>
+          <entry key="PrettierLanguageServiceImpl" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+=======
+>>>>>>> origin/master
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="Magic8Menu.js" pinned="false" current-in-tab="false">
@@ -58,33 +102,122 @@
       <file leaf-file-name="AppBar.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/AppBar.js">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="359">
               <caret line="137" selection-start-line="137" selection-end-line="138" selection-end-column="52" />
+=======
+<<<<<<< HEAD
+            <state relative-caret-position="714">
+              <caret line="42" column="51" selection-start-line="42" selection-start-column="51" selection-end-line="42" selection-end-column="51" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
+=======
+            <state relative-caret-position="46">
+              <caret line="2" selection-start-line="2" selection-end-line="2" />
+>>>>>>> origin/master
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/TransitionTime.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="509">
+              <caret line="257" selection-start-line="257" selection-end-line="257" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/YesNoDialog.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="816">
+              <caret line="48" column="48" selection-start-line="48" selection-start-column="48" selection-end-line="48" selection-end-column="48" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
+            </state>
+          </provider>
+        </entry>
+      </file>
+<<<<<<< HEAD
       <file leaf-file-name="Home.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/protected/HomeViews/Home.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-1715">
               <caret line="13" selection-start-line="13" selection-end-line="13" />
+=======
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/TransitionLog.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="19" column="58" lean-forward="true" selection-start-line="19" selection-start-column="58" selection-end-line="19" selection-end-column="58" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="ForgotPassword.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/ForgotPasswordViews/ForgotPassword.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="155">
               <caret line="26" column="76" selection-start-line="26" selection-start-column="76" selection-end-line="26" selection-end-column="76" />
+=======
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/TransitionType.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="576">
+              <caret line="55" column="34" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="TransitionTime.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/protected/TransitionViews/TransitionTime.js">
+=======
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/TransitionTimer.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="417">
+              <caret line="34" column="49" selection-start-line="34" selection-start-column="49" selection-end-line="34" selection-end-column="49" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/TransitionTimeHelp.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-636">
+              <caret line="21" column="27" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+=======
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.firebase/hosting.cHVibGlj.cache">
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
           <provider selected="true" editor-type-id="text-editor" />
+>>>>>>> origin/master
         </entry>
       </file>
       <file leaf-file-name="TransitionType.js" pinned="false" current-in-tab="false">
@@ -119,6 +252,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>classes</find>
+<<<<<<< HEAD
       <find>loc</find>
       <find>appbar</find>
       <find>this.state.auth</find>
@@ -126,6 +260,16 @@
       <find>auth</find>
       <find>open</find>
       <find>Draw</find>
+=======
+      <find>transition</find>
+      <find>transitiontype</find>
+      <find>type</find>
+      <find>simplemenu</find>
+      <find>36</find>
+      <find>this.setstate</find>
+      <find>handlechange</find>
+      <find>push</find>
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -155,10 +299,17 @@
         <option value="$PROJECT_DIR$/coachingapp/src/views/TransitionViews/TransitionTimeHelp.js" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/views/Home.js" />
+<<<<<<< HEAD
+        <option value="$PROJECT_DIR$/src/App.js" />
+=======
         <option value="$PROJECT_DIR$/src/views/TransitionViews/TransitionType.js" />
+>>>>>>> origin/master
         <option value="$PROJECT_DIR$/src/views/TransitionViews/TransitionTimeHelp.js" />
-        <option value="$PROJECT_DIR$/src/views/TransitionViews/TransitionTime.js" />
+        <option value="$PROJECT_DIR$/src/views/TransitionViews/YesNoModal.js" />
+        <option value="$PROJECT_DIR$/src/views/TransitionViews/YesNoDialog.js" />
+        <option value="$PROJECT_DIR$/src/views/TransitionViews/TransitionType.js" />
         <option value="$PROJECT_DIR$/src/views/TransitionViews/TransitionTimer.js" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/src/components/SignUpComponent/SignUpLogic.js" />
         <option value="$PROJECT_DIR$/src/Firebase.js" />
         <option value="$PROJECT_DIR$/src/components/Firebase/context.js" />
@@ -172,6 +323,25 @@
         <option value="$PROJECT_DIR$/src/views/protected/HomeViews/Home.js" />
         <option value="$PROJECT_DIR$/src/views/protected/Magic8Menu.js" />
         <option value="$PROJECT_DIR$/src/views/ForgotPassword.js" />
+=======
+<<<<<<< HEAD
+        <option value="$PROJECT_DIR$/src/views/TransitionViews/TransitionLog.js" />
+        <option value="$PROJECT_DIR$/src/views/TransitionViews/TransitionTime.js" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1920" />
+    <option name="height" value="1057" />
+=======
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
         <option value="$PROJECT_DIR$/src/App.js" />
         <option value="$PROJECT_DIR$/src/components/AppBar.js" />
         <option value="$PROJECT_DIR$/src/views/WelcomeViews/Welcome.js" />
@@ -202,10 +372,18 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
+<<<<<<< HEAD
     <option name="x" value="60" />
     <option name="y" value="326" />
     <option name="width" value="1844" />
     <option name="height" value="790" />
+=======
+    <option name="x" value="67" />
+    <option name="y" value="145" />
+    <option name="width" value="1853" />
+    <option name="height" value="810" />
+>>>>>>> origin/master
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -294,6 +472,12 @@
               <item name="CoachingApp" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="CoachingApp" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="components" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="CoachingApp" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -501,7 +685,15 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="130961000" />
+=======
+<<<<<<< HEAD
+    <option name="totallyTimeSpent" value="80712000" />
+=======
+    <option name="totallyTimeSpent" value="40300000" />
+>>>>>>> origin/master
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -525,6 +717,12 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.4576627" visible="true" weight="0.37231505" />
       <window_info id="Favorites" order="2" side_tool="true" />
+<<<<<<< HEAD
+=======
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32932165" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32953367" />
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="TypeScript" order="12" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -644,10 +842,52 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/components/Firebase/context.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="23">
           <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+=======
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/.firebase/hosting.cHVibGlj.cache">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/Home.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-531">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Magic8Card.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-680" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="714">
+          <caret line="42" column="51" selection-start-line="42" selection-start-column="51" selection-end-line="42" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+=======
+    <entry file="file://$PROJECT_DIR$/src/views/Home.js" />
+>>>>>>> origin/master
+    <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/TransitionTimeHelp.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-636">
+          <caret line="21" column="27" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
         </state>
       </provider>
     </entry>
@@ -655,6 +895,7 @@
     <entry file="file://$PROJECT_DIR$/src/views/HomeViews/ObserveModal.js" />
     <entry file="file://$PROJECT_DIR$/src/components/BurgerMenu.js">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="243">
           <caret line="201" column="57" lean-forward="true" selection-start-line="201" selection-start-column="57" selection-end-line="201" selection-end-column="57" />
         </state>
@@ -714,12 +955,27 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="903">
           <caret line="96" column="33" lean-forward="true" selection-start-line="96" selection-start-column="33" selection-end-line="96" selection-end-column="33" />
+=======
+        <state relative-caret-position="576">
+          <caret line="55" column="34" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/TransitionTimer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="417">
+          <caret line="34" column="49" selection-start-line="34" selection-start-column="49" selection-end-line="34" selection-end-column="49" />
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -740,6 +996,32 @@
     <entry file="file://$PROJECT_DIR$/src/views/protected/TransitionViews/TransitionType.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
+=======
+    <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/TransitionLog.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="58" lean-forward="true" selection-start-line="19" selection-start-column="58" selection-end-line="19" selection-end-column="58" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/YesNoDialog.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="48" column="48" selection-start-line="48" selection-start-column="48" selection-end-line="48" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/TransitionViews/TransitionTime.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="509">
+          <caret line="257" selection-start-line="257" selection-end-line="257" />
+>>>>>>> 2b36742035fdfd2b905ca5b3a279cbf9ad75e441
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>

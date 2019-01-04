@@ -1,54 +1,114 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import NavigationIcon from '@material-ui/icons/List';
+import React from "react";
+import Button from "@material-ui/core/Button";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import NavigationIcon from "@material-ui/icons/List";
 import PropTypes from "prop-types";
 
+import ReactDOM from "react-dom";
+import { withStyles } from "@material-ui/core/styles";
+import Input from "@material-ui/core/Input";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import FilledInput from "@material-ui/core/FilledInput";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+
+const styles = theme => ({
+    root: {
+        display: "flex",
+        flexWrap: "wrap"
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 240
+    },
+    selectEmpty: {
+        marginTop: theme.spacing.unit * 2
+    }
+});
+
 class SimpleMenu extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
     state = {
-        anchorEl: null,
+        type: "",
+        labelWidth: 0
     };
 
-    handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
+    handleChange = event => {
+        this.setState({ [event.target.name]: event.target.value });
+        let mType = "";
+        switch (event.target.value) {
+            case 1:
+                mType = "Wait Time";
+                break;
+            case 2:
+                mType = "Inside Classroom";
+                break;
+            case 3:
+                mType = "Outside Classroom";
+                break;
+            default:
+                mType = "Undefined";
+        }
+        this.props.handleTypeChange(mType);
     };
 
-    handleClose = () => {
-        this.setState({ anchorEl: null });
-    };
+    componentDidMount() {
+        this.setState({
+            labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth
+        });
+    }
 
     render() {
-        const {classes} = this.props;
-        const { anchorEl } = this.state;
+        const { classes } = this.props;
 
         return (
             <div>
-                <Button variant="extendedFab" aria-label="Delete"
-                        aria-owns={anchorEl ? 'simple-menu' : undefined}
-                        color={"secondary"}
-                        aria-haspopup="true"
-                        onClick={this.handleClick}>
-                    <NavigationIcon/>
-                    Transition Type
-                </Button>
-                <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={this.handleClose}
-                >
-                    <MenuItem onClick={this.handleClose}>Wait Time</MenuItem>
-                    <MenuItem onClick={this.handleClose}>Inside Classroom</MenuItem>
-                    <MenuItem onClick={this.handleClose}>Outisde Classroom</MenuItem>
-                </Menu>
+                <form className={classes.root} autoComplete="off">
+                    <FormControl
+                        variant="outlined"
+                        className={classes.formControl}
+                    >
+                        <InputLabel
+                            ref={ref => {
+                                this.InputLabelRef = ref;
+                            }}
+                            htmlFor="outlined-transitiontype-simple"
+                        >
+                            Transition Type
+                        </InputLabel>
+                        <Select
+                            value={this.state.type}
+                            onChange={this.handleChange}
+                            input={
+                                <OutlinedInput
+                                    labelWidth={this.state.labelWidth}
+                                    name="type"
+                                    id="outlined-transitiontype-simple"
+                                />
+                            }
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={1}>Wait Time</MenuItem>
+                            <MenuItem value={2}>Inside Classroom</MenuItem>
+                            <MenuItem value={3}>Outside Classroom</MenuItem>
+                        </Select>
+                    </FormControl>
+                </form>
             </div>
         );
     }
 }
 
 SimpleMenu.propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired
 };
 
-export default SimpleMenu;
+export default withStyles(styles)(SimpleMenu);

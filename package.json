@@ -6,8 +6,10 @@
     "@material-ui/core": "^3.5.1",
     "@material-ui/icons": "^3.0.1",
     "firebase": "^5.7.2",
+    "immortal-db": "^1.0.1",
     "pretty-ms": "^4.0.0",
     "prop-types": "latest",
+    "rc-progress": "^2.2.6",
     "react": "^16.6.1",
     "react-circle": "^1.1.1",
     "react-circular-progressbar": "^1.0.0",
@@ -44,6 +46,7 @@
   },
   "homepage": "https://cqrefpwa.firebaseapp.com",
   "devDependencies": {
+    "jquery": "^3.3.1",
     "prettier": "^1.15.3"
   }
 }
