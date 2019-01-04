@@ -28,6 +28,8 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
 import YesNoDialog from "../../components/Shared/YesNoDialog";
+import spreadsheetData from "../../SPREADSHEET_SECRETS";
+import { ImmortalDB } from "immortal-db";
 
 const theme = createMuiTheme({
     palette: {
@@ -66,7 +68,8 @@ class TransitionTime extends React.Component {
         anchorEl: null,
         help: false,
         type: null,
-        entries: []
+        entries: [],
+        dbCounter: 0 // @Hack @Temporary !!!
     };
 
     handleAppend(entry) {
@@ -74,6 +77,10 @@ class TransitionTime extends React.Component {
         entry.type = this.state.type;
         newEntries.push(entry);
         this.setState({ entries: newEntries });
+
+        this.handleSpreadsheetAppend(entry);
+
+        this.handleDBinsert(entry);
     }
 
     handleTypeChange(newType) {
@@ -98,6 +105,41 @@ class TransitionTime extends React.Component {
 
     handleClickAway = () => {
         this.setState({ help: false });
+    };
+
+    handleDBinsert = async entry => {
+        // Once we integrate users, the user + some index will be the key for the DB.
+        await ImmortalDB.set(
+            JSON.stringify(this.state.dbCounter),
+            JSON.stringify(entry)
+        );
+
+        this.setState({ dbCounter: this.state.dbCounter + 1 });
+    };
+
+    handleSpreadsheetAppend = entry => {
+        let url = new URL(spreadsheetData.scriptLink),
+            params = {
+                sheet: "TransitionTime",
+                del: "false",
+                TrnStart: entry.start,
+                TrnEnd: entry.end,
+                TrnDur: entry.duration,
+                TrnType: entry.type
+            };
+        Object.keys(params).forEach(key =>
+            url.searchParams.append(key, params[key])
+        );
+        fetch(url, {
+            method: "POST",
+            credentials: "include",
+            mode: "no-cors",
+            headers: {
+                "content-type": "application/json"
+            }
+        })
+            .then(response => console.log("Success"))
+            .catch(error => console.error("Error:", error));
     };
 
     render() {
@@ -252,9 +294,12 @@ class TransitionTime extends React.Component {
                                         buttonText={"Complete Observation"}
                                         buttonVariant={"contained"}
                                         buttonColor={"secondary"}
-                                        buttonStyle={{margin: 10}}
-                                        dialogTitle={"Are you sure you want to complete this observation?"}
-                                        shouldOpen={true}/>
+                                        buttonStyle={{ margin: 10 }}
+                                        dialogTitle={
+                                            "Are you sure you want to complete this observation?"
+                                        }
+                                        shouldOpen={true}
+                                    />
                                 </Grid>
                             </Grid>
                         </Grid>

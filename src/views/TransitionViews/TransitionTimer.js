@@ -31,6 +31,7 @@ class TransitionTimer extends React.Component {
                 clearInterval(this.timer);
                 let end = new Date();
                 let entry = {
+                    start: this.state.start.toLocaleString(),
                     end: end.toLocaleString(),
                     duration: ms(this.state.time),
                     type: null
@@ -39,6 +40,8 @@ class TransitionTimer extends React.Component {
                 this.props.handleAppend(entry);
             } else {
                 const startTime = Date.now() - this.state.time;
+                let mStart = new Date();
+                this.setState({ start: mStart });
                 this.timer = setInterval(() => {
                     this.setState({ time: Date.now() - startTime });
                 }, 1000);

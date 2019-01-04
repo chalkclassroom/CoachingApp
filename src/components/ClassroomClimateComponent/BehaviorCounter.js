@@ -88,11 +88,13 @@ class BehaviorCounter extends React.Component {
 
     handleUndo = () => {
         let mArray = [...this.state.undoStack];
-        mArray.pop();
-        this.setState({ undoStack: mArray });
-        console.log(mArray);
+        if (mArray.length > 0) {
+            mArray.pop();
+            this.setState({ undoStack: mArray });
+            console.log(mArray);
 
-        this.handleSpreadsheetDeleteRow();
+            this.handleSpreadsheetDeleteRow();
+        }
     };
 
     handlePush = entry => {

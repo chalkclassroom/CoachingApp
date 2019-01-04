@@ -29,6 +29,7 @@ import InstructionTransitionToggle from "../../components/ClassroomClimateCompon
 import RatingModal from "../../components/ClassroomClimateComponent/RatingModal";
 import { Line } from "rc-progress";
 import ms from "pretty-ms";
+import spreadsheetData from "../../SPREADSHEET_SECRETS";
 
 /*
     N.B. Time measured in milliseconds.
@@ -115,7 +116,26 @@ class ClassroomClimate extends React.Component {
     };
 
     handleSpreadsheetInsert = entry => {
-        console.log(entry);
+        let url = new URL(spreadsheetData.scriptLink),
+            params = {
+                sheet: "ClassroomClimateTone",
+                del: "false",
+                ToneRating: entry.rating,
+                ToneTimer: entry.ratingInterval
+            };
+        Object.keys(params).forEach(key =>
+            url.searchParams.append(key, params[key])
+        );
+        fetch(url, {
+            method: "POST",
+            credentials: "include",
+            mode: "no-cors",
+            headers: {
+                "content-type": "application/json"
+            }
+        })
+            .then(response => console.log("Success"))
+            .catch(error => console.error("Error:", error));
     };
 
     render() {
