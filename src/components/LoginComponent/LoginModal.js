@@ -79,22 +79,6 @@ class LoginModal extends React.Component {
         this.setState({ value: index });
     };
 
-    // componentWillMount () {
-    //     browser.runtime.sendMessage({
-    //         "type": "login",
-    //     });
-    //
-    //     browser.runtime.onMessage.addListener((result) => {
-    //         console.log("Message Recieved From Background Service after Querying");
-    //         console.log(result);
-    //         if (result.loginData.email) {
-    //             console.log(result.loginData.email)
-    //
-    //             this.handleClose()
-    //         }
-    //     });
-    // }
-
     render () {
         const {classes} = this.props;
 
@@ -132,13 +116,13 @@ class LoginModal extends React.Component {
                                 onChangeIndex={(e,index)=>this.handleChangeIndex(index)}
                             >
                                 <TabContainer dir={theme.direction}>
-                                    <LoginForm/>
+                                    <LoginForm firebase = {this.props.firebase}/>
                                 </TabContainer>
                                 <TabContainer dir={theme.direction}>
-                                    <LoginForm/>
+                                    <LoginForm firebase = {this.props.firebase}/>
                                 </TabContainer>
                                 <TabContainer dir={theme.direction}>
-                                    <LoginForm/>
+                                    <LoginForm firebase = {this.props.firebase}/>
                                 </TabContainer>
                             </SwipeableViews>
                         </Grid>

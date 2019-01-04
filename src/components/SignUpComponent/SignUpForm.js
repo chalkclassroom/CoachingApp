@@ -3,9 +3,14 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
+import { firebaseEmailSignUp } from '../authorize';
+
+import firebase from 'firebase';
+import {withRouter} from "react-router-dom";
 
 const styles = theme => ({
     main: {
@@ -26,52 +31,239 @@ const styles = theme => ({
     },
 });
 
-function SignUpForm(props) {
-    const { classes } = props;
+class SignUpForm extends React.Component{
 
-    return (
-        <main>
-            <Paper className={classes.paper}>
-                <form className={classes.form}>
-                    <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="firstname">First Name</InputLabel>
-                        <Input id="firstname" name="firstname" autoComplete="firstname" autoFocus />
-                    </FormControl>
-                    <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="lastname">Last Name</InputLabel>
-                        <Input name="lastname" type="lastname" id="lastname" />
-                    </FormControl>
-                    <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="email">Email Address</InputLabel>
-                        <Input id="email" name="email" autoComplete="email" autoFocus />
-                    </FormControl>
-                    <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="accesscode">Access Code</InputLabel>
-                        <Input name="accesscode" id="accesscode" />
-                    </FormControl>
-                    <FormControl margin="normal" fullWidth>
-                        <InputLabel htmlFor="profilepic">Profile Picture</InputLabel>
-                        <Button name="profilepic" label='Profile Picture' style={{padding:20}} variant={'outlined'}>
-                            <input name="profilepic" type='file' style={{width: '50%'}} />
+    constructor(props) {
+        super(props);
+        this.state = {
+            firstName: '',
+            firstNameError: '',
+            lastName: '',
+            lastNameError: '',
+            email: '',
+            emailError: '',
+            password: '',
+            passwordError: '',
+            confirmPassword: '',
+            confirmPasswordError:''
+        };
+    }
+
+    handleChange = name => event => {
+        this.setState({
+            [name]: event.target.value,
+        });
+        this.validateState(name, event.target.value);
+    };
+
+    validateState = (name, value) => {
+        switch (name) {
+            case 'firstName':
+                if(value.length < 6){
+                    this.setState({
+                        'firstNameError': 'Cannot be Empty or contain Numbers',
+                        'errors': true,
+                    });
+                } else {
+                    this.setState({
+                        'firstNameError': '',
+                        'errors': false
+                    });
+                }
+                break;
+            case 'lastName':
+                if(value.length < 6){
+                    this.setState({
+                        'lastNameError': 'Cannot be Empty or contain Numbers',
+                        'errors': true,
+                    });
+                } else {
+                    this.setState({
+                        'lastNameError': '',
+                        'errors': false,
+                    });
+                }
+                break;
+            case 'email':
+                if(value.length === 0){
+                    this.setState({
+                        'emailError': 'Cannot be Empty or contain Numbers',
+                    });
+                }else if (!this.validateEmail(value)){
+                    this.setState({
+                        'emailError': 'Not A Valid Email Address',
+                        'errors': true,
+                    });
+                } else {
+                    this.setState({
+                        'emailError': '',
+                        'errors': false,
+                    });
+                }
+                break;
+            case 'password':
+                if(value.length < 6){
+                    this.setState({
+                        'passwordError': 'Cannot be Empty or contain Numbers',
+                        'errors': true,
+                    });
+                } else {
+                    this.setState({
+                        'passwordError': '',
+                        'errors': false,
+                    });
+                }
+                this.validateState('confirmPassword', this.state.confirmPassword);
+                break;
+            case 'confirmPassword':
+                if (value.length < 6){
+                    this.setState({
+                        'confirmPasswordError': 'Cannot be Empty or contain Numbers',
+                        'errors': true,
+                    });
+                } else if (this.state.password !== value){
+                    this.setState({
+                        'confirmPasswordError': 'Password did not Match',
+                        'errors': true,
+                    });
+                } else {
+                    this.setState({
+                        'confirmPasswordError': '',
+                        'errors': false,
+                    });
+                }
+                break;
+            default:
+                this.validateState('confirmPassword', this.state.confirmPassword);
+                this.validateState('password', this.state.password);
+                this.validateState('firstName', this.state.firstName);
+                this.validateState('lastName', this.state.lastName);
+                this.validateState('email', this.state.email);
+                break;
+        }
+    };
+
+    validateEmail = (email) => {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    };
+
+    handleSubmit = (event) =>{
+        this.validateState();
+        if (!this.state.errors){
+            this.props.firebase.firebaseEmailSignUp({email: this.state.email, password: this.state.password, firstName: this.state.firstName, lastName: this.state.lastName}, this.props.role).then(function(isSuccess) {
+                if(isSuccess){
+                    this.props.history.push('/Home');
+                }
+            });
+        }
+    };
+
+    render(){
+        const { classes } = this.props;
+
+        return (
+            <main>
+                <Paper className={classes.paper}>
+                    {this.state.errors? <Paper> Check your Form Data </Paper>: <div/>}
+                            <TextField
+                                required
+                                id="firstname"
+                                label="First Name"
+                                value={this.state.firstName}
+                                onChange={this.handleChange('firstName')}
+                                margin="normal"
+                                variant="standard"
+                                name="firstName"
+                                autoComplete="firstname"
+                                autoFocus
+                                fullWidth
+                                helperText={this.state.firstNameError}
+                                error={(this.state.firstNameError !== '')}
+                            />
+                            <TextField
+                                required
+                                id="lastname"
+                                label="Last Name"
+                                value={this.state.lastName}
+                                onChange={this.handleChange('lastName')}
+                                margin="normal"
+                                variant="standard"
+                                name="lastname"
+                                autoComplete="lastname"
+                                fullWidth
+                                helperText={this.state.lastNameError}
+                                error={(this.state.lastNameError !== '')}
+                            />
+                            <TextField
+                                required
+                                id="email"
+                                name="email"
+                                label="Email"
+                                autoComplete="email"
+                                value={this.state.email}
+                                onChange={this.handleChange('email')}
+                                margin="normal"
+                                variant="standard"
+                                fullWidth
+                                helperText={this.state.emailError}
+                                error={(this.state.emailError !== '')}
+                            />
+                            <TextField
+                                required
+                                id="password"
+                                name="password"
+                                type="password"
+                                label="Password"
+                                value={this.state.password}
+                                onChange={this.handleChange('password')}
+                                margin="normal"
+                                variant="standard"
+                                fullWidth
+                                helperText={this.state.passwordError}
+                                error={(this.state.passwordError !== '')}
+                            />
+                            <TextField
+                                required
+                                id="confirmPassword"
+                                name="confrimPassword"
+                                type="password"
+                                label="Confirm Password"
+                                value={this.state.confirmPassword}
+                                onChange={this.handleChange('confirmPassword')}
+                                margin="normal"
+                                variant="standard"
+                                fullWidth
+                                helperText={this.state.confirmPasswordError}
+                                error={(this.state.confirmPasswordError !== '')}
+                            />
+                        {/*<FormControl margin="normal" fullWidth>*/}
+                            {/*<InputLabel htmlFor="profilepic">Profile Picture (Optional)</InputLabel>*/}
+                            {/*<Button name="profilepic" label='Profile Picture' style={{padding: 20}}*/}
+                                    {/*variant={'outlined'}>*/}
+                                {/*<input name="profilepic" type='file' style={{width: '50%'}}/>*/}
+                            {/*</Button>*/}
+                        {/*</FormControl>*/}
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            onClick={this.handleSubmit}
+                            disabled={this.state.errors}
+                        >
+                            Sign Up
                         </Button>
-                    </FormControl>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Sign Up
-                    </Button>
-                </form>
-            </Paper>
-        </main>
-    );
+                </Paper>
+            </main>
+        );
+    }
 }
 
 SignUpForm.propTypes = {
     classes: PropTypes.object.isRequired,
+    role: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(SignUpForm);
+const SignUpFormWithRouter = withRouter(SignUpForm);
+export default withStyles(styles)(SignUpFormWithRouter);

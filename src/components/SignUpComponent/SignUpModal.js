@@ -115,13 +115,13 @@ class SignUpModal extends React.Component {
                                 onChangeIndex={(e,index)=>this.handleChangeIndex(index)}
                             >
                                 <TabContainer dir={theme.direction}>
-                                    <SignUpForm/>
+                                    <SignUpForm role={'coach'} firebase = {this.props.firebase}/>
                                 </TabContainer>
                                 <TabContainer dir={theme.direction}>
-                                    <SignUpForm/>
+                                    <SignUpForm role={'teacher'} firebase = {this.props.firebase}/>
                                 </TabContainer>
                                 <TabContainer dir={theme.direction}>
-                                    <SignUpForm/>
+                                    <SignUpForm role={'administrator'} firebase = {this.props.firebase}/>
                                 </TabContainer>
                             </SwipeableViews>
                         </Grid>

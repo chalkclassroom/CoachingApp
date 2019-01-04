@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
 import WelcomePage from "./views/WelcomeViews/Welcome";
-import Magic8Menu from "./views/Magic8Menu"
-import { BrowserRouter, Route, Redirect } from "react-router-dom";
-import TransitionTime from "./views/TransitionViews/TransitionTime";
+import Magic8Menu from "./views/protected/Magic8Menu"
+import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
+import TransitionTime from "./views/protected/TransitionViews/TransitionTime";
+import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPassword";
+import HomePage from "./views/protected/HomeViews/Home";
 
 import  blue from "@material-ui/core/colors/blue"
 import amber from "@material-ui/core/colors/amber";
@@ -26,24 +28,77 @@ const styles = createMuiTheme({
         },
     }
 });
-class App extends Component {
-  render() {
+
+function PrivateRoute ({component: Component, auth, ...rest}) {
     return (
-        <BrowserRouter>
-                <MuiThemeProvider theme={styles}>
-                    <Route exact path="/" component={WelcomePage}/>
-                    <Route
-                        path="/Magic8Menu"
-                        render={() => (<Magic8Menu/>)}
-                    />
-                    <Route
-                      path="/TransitionTime"
-                      render={() => (<TransitionTime/>)}
-                    />
-                </MuiThemeProvider>
-        </BrowserRouter>
-    );
-  }
+        <Route
+            {...rest}
+            render={(props) => auth === true
+                ? <Component {...props} />
+                : <Redirect to={{pathname: '/', state: {from: props.location}}} />}
+        />
+    )
+}
+
+function PublicRoute ({component: Component, auth, ...rest}) {
+    return (
+        <Route
+            {...rest}
+            render={(props) => auth === false
+                ? <Component {...props} />
+                : <Redirect to='/Home' />}
+        />
+    )
+}
+
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            auth: false,
+            loading: true
+        }
+    }
+
+    componentDidMount () {
+        this.removeListener = this.props.firebase.auth.onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({
+                    auth: true,
+                    loading: false,
+                })
+            } else {
+                this.setState({
+                    auth: false,
+                    loading: false
+                })
+            }
+        })
+    }
+
+    componentWillUnmount () {
+        this.removeListener()
+    }
+
+    render() {
+    return this.state.loading === true ? <h1>Loading</h1> : (
+                <BrowserRouter>
+                    <MuiThemeProvider theme={styles}>
+                        <Switch>
+                            <Route exact path='/' component={WelcomePage}/>
+                            <Route exact path='/forgot' component={ForgotPasswordPage}/>
+                            <PrivateRoute auth={this.state.auth} path='/Invite' component={HomePage}/>
+                            <PrivateRoute auth={this.state.auth} path='/Account' component={HomePage}/>
+                            <PrivateRoute auth={this.state.auth} path='/Home' component={HomePage}/>
+                            <PrivateRoute auth={this.state.auth} path='/TransitionTime' component={TransitionTime}/>
+                            <PrivateRoute auth={this.state.auth} path='/Magic8Menu' component={Magic8Menu}/>
+                            <Route render={() => <h3>No Match</h3>}/>
+                        </Switch>
+                    </MuiThemeProvider>
+                </BrowserRouter>
+            )
+    }
 }
 
 export default withStyles(styles)(App);

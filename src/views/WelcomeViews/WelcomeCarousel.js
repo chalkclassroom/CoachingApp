@@ -35,12 +35,26 @@ const styles = {
         flexGrow: 1,
     },
     slide: {
-        width:'auto',
-        height: '100%'
+        width: '100%',
+        height: 'calc(100vh - 80px)',
+        display: 'flex !important',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    slideImg:{
+        position: 'relative',
+        top: '2px',
+        maxWidth: '100vw',
+        maxHeight: 'calc(100vh - 82px)'
     }
+
 };
 
 class WelcomeCarousel extends React.Component {
+    componentDidMount() {
+        document.querySelector('button.slick-arrow.slick-next').remove();
+    }
+
     render() {
         var settings = {
             dots: false,
@@ -49,7 +63,7 @@ class WelcomeCarousel extends React.Component {
             slidesToShow: 1,
             slidesToScroll: 1,
             adaptiveHeight: true,
-            autoplay: false,
+            autoplay: true,
             autoplaySpeed: 2000,
         };
         const { classes } = this.props;
@@ -57,30 +71,32 @@ class WelcomeCarousel extends React.Component {
         return (
             <div className={classes.root}>
             <Slider {...settings}>
-                 <CardMedia
-                                className={classes.cardMedia}
-                                image={slide1}
-                                title="Magic 8 Coaching"
-                            />
-                <div>
-                        <img
-                            className={classes.slide}
-                            src={slide1}
-                            title="Magic 8 Coaching"
-                        />
+                <div className={classes.slide}>
+                    <img
+                        src={slide1}
+                        title="Magic 8 Coaching"
+                        className={classes.slideImg}
+                    />
                 </div>
-                <div>
-                        <CardMedia
-                            className={classes.cardMedia}
-                            image={slide1}
-                            title="Magic 8 Coaching"
-                        />
+                <div className={classes.slide}>
+                    <img
+                        src={slide1}
+                        title="Magic 8 Coaching"
+                        className={classes.slideImg}
+                    />
                 </div>
-                <div>
-                    <CardMedia
-                            className={classes.cardMedia}
-                            image={slide1}
-                            title="Magic 8 Coaching"
+                <div className={classes.slide}>
+                    <img
+                        src={slide1}
+                        title="Magic 8 Coaching"
+                        className={classes.slideImg}
+                    />
+                </div>
+                <div className={classes.slide}>
+                    <img
+                        src={slide1}
+                        title="Magic 8 Coaching"
+                        className={classes.slideImg}
                     />
                 </div>
             </Slider>
