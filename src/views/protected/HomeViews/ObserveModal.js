@@ -16,6 +16,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import TeacherSvg from '../../../assets/icons/teacher.svg'
+import {withRouter} from "react-router-dom";
 
 function getModalStyle () {
 
@@ -73,11 +74,17 @@ const styles = theme => ({
 });
 
 class ObserveModal extends React.Component {
-    state = {
-        open: true,
-        value: 0,
-        teachers: []
-    };
+    constructor(props){
+        super(props);
+        this.state = {
+            open: true,
+            value: 0,
+            teachers: []
+        };
+
+        this.selectTeacher = this.selectTeacher.bind(this);
+    }
+
 
     handleOpen = () => {
         this.setState({open: true});
@@ -100,9 +107,22 @@ class ObserveModal extends React.Component {
             this.setState((previousState, currentProps) => {
                 console.log(snapshot.val());
                 console.log(previousState.teachers);
-                return {teachers: previousState.teachers.concat([snapshot.val()])};
+
+                let arraySnapshot = [];
+                let objectSnapshot = snapshot.val();
+
+                Object.keys(objectSnapshot).forEach(key=>{
+                   arraySnapshot.push({key: objectSnapshot[key]})
+                });
+
+                return {teachers: previousState.teachers.concat(arraySnapshot)};
             });
         });
+    }
+
+    selectTeacher(teacherInfo) {
+        console.log(teacherInfo);
+        this.props.history.push({pathname: '/Magic8Menu', state: teacherInfo});
     }
 
     render () {
@@ -130,7 +150,7 @@ class ObserveModal extends React.Component {
                                     this.state.teachers.map( teacher => console.log(Object.values(teacher)[0]))}
                                 {
                                     this.state.teachers.map( teacher =>
-                                        <ListItem alignItems="flex-start">
+                                        <ListItem alignItems="flex-start" onClick={()=>this.selectTeacher(teacher)}>
                                             <ListItemAvatar>
                                                 <Avatar alt="Teacher Profile Pic" src={TeacherSvg} />
                                             </ListItemAvatar>
@@ -162,4 +182,5 @@ ObserveModal.propTypes = {
     handleClose: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ObserveModal);
+const ObserveModalWithRouter = withRouter(ObserveModal);
+export default withStyles(styles)(ObserveModalWithRouter);
