@@ -41,12 +41,15 @@ import spreadsheetData from "../../SPREADSHEET_SECRETS";
  */
 
 const RATING_INTERVAL = 135000;
-const TEN_PERCENT = 0.10 * RATING_INTERVAL;
+const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
 const styles = {
     root: {
         flexGrow: 1,
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
+        display: "flex",
+        minHeight: "100vh",
+        flexDirection: "column"
     },
     grow: {
         flexGrow: 1
