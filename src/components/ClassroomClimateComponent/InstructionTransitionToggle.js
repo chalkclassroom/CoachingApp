@@ -28,8 +28,13 @@ const tabsPalette = createMuiTheme({
 
 function TabContainer(props) {
     return (
-        <Typography component="div" style={{ padding: 8 * 3,
-        backgroundColor: props.value === 0 ? "#76e9e9" : "#68b0ff"}}>
+        <Typography
+            component="div"
+            style={{
+                padding: 8 * 3,
+                backgroundColor: props.value === 0 ? "#76e9e9" : "#68b0ff"
+            }}
+        >
             {props.children}
         </Typography>
     );
@@ -95,7 +100,10 @@ class InstructionTransitionToggle extends React.Component {
                             </Tabs>
                         </AppBar>
                         <TabContainer value={this.state.value}>
-                            <BehaviorCounter type={this.state.value} />
+                            <BehaviorCounter
+                                type={this.state.value}
+                                teacherId={this.props.teacherId}
+                            />
                         </TabContainer>
                     </MuiThemeProvider>
                 </div>

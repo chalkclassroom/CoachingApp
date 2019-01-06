@@ -116,7 +116,8 @@ class BehaviorCounter extends React.Component {
                 sheet: "ClassroomClimateBehavior",
                 del: "false",
                 BehaviorResponse: entry.observation,
-                InstructionTransition: entry.type
+                InstructionTransition: entry.type,
+                TeacherID: this.props.teacherId
             };
         Object.keys(params).forEach(key =>
             url.searchParams.append(key, params[key])

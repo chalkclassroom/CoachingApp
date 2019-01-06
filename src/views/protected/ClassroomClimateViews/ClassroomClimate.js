@@ -41,7 +41,7 @@ import FirebaseContext from "../../../components/Firebase/context";
     and then allow for 2 full minutes in between ratings.
  */
 
-const RATING_INTERVAL = 135000;
+const RATING_INTERVAL = 35000;
 const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
 const styles = {
@@ -73,6 +73,7 @@ class ClassroomClimate extends React.Component {
 
     componentDidMount() {
         this.timer = setInterval(this.tick, 1000);
+        console.log(this.props.location.state);
     }
 
     componentWillUnmount() {
@@ -125,7 +126,8 @@ class ClassroomClimate extends React.Component {
                 sheet: "ClassroomClimateTone",
                 del: "false",
                 ToneRating: entry.rating,
-                ToneTimer: entry.ratingInterval
+                ToneTimer: entry.ratingInterval,
+                TeacherID: this.props.location.state.key.id
             };
         Object.keys(params).forEach(key =>
             url.searchParams.append(key, params[key])
@@ -150,9 +152,7 @@ class ClassroomClimate extends React.Component {
         return (
             <div className={classes.root}>
                 <FirebaseContext.Consumer>
-                    {
-                        firebase => <AppBar firebase={firebase}/>
-                    }
+                    {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
                 {this.state.help ? (
                     <ClickAwayListener onClickAway={this.handleClickAway}>
@@ -175,7 +175,9 @@ class ClassroomClimate extends React.Component {
                             xs
                             style={{ marginBottom: 50, marginTop: 50 }}
                         >
-                            <InstructionTransitionToggle />
+                            <InstructionTransitionToggle
+                                teacherId={this.props.location.state.key.id}
+                            />
                             <div style={{ margin: 20, textAlign: "center" }}>
                                 Time until next Tone Rating:
                                 {ms(this.state.time)}

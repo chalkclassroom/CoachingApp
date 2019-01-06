@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -21,7 +20,6 @@ import {
     MuiThemeProvider,
     withStyles
 } from "@material-ui/core/styles";
-import cyan from "@material-ui/core/colors/teal";
 import TransitionTimeHelp from "./TransitionTimeHelp";
 import TranstionType from "./TransitionType";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -29,16 +27,9 @@ import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
 import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
+import FirebaseContext from "../../../components/Firebase/context";
+import AppBar from "../../../components/AppBar";
 import { ImmortalDB } from "immortal-db";
-
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: "#ff0000"
-        },
-        secondary: cyan
-    }
-});
 
 const styles = {
     root: {
@@ -71,6 +62,10 @@ class TransitionTime extends React.Component {
         entries: [],
         dbCounter: 0 // @Hack @Temporary !!!
     };
+
+    componentDidMount() {
+        console.log(this.props.location.state);
+    }
 
     handleAppend(entry) {
         let newEntries = this.state.entries;
@@ -125,7 +120,8 @@ class TransitionTime extends React.Component {
                 TrnStart: entry.start,
                 TrnEnd: entry.end,
                 TrnDur: entry.duration,
-                TrnType: entry.type
+                TrnType: entry.type,
+                TeacherID: this.props.location.state.key.id
             };
         Object.keys(params).forEach(key =>
             url.searchParams.append(key, params[key])
@@ -148,164 +144,110 @@ class TransitionTime extends React.Component {
         const open = Boolean(anchorEl);
 
         return (
-            <MuiThemeProvider theme={theme}>
-                <div className={classes.root}>
-                    <AppBar position="static" color="default">
-                        <Toolbar>
+            <div className={classes.root}>
+                <FirebaseContext.Consumer>
+                    {firebase => <AppBar firebase={firebase} />}
+                </FirebaseContext.Consumer>
+                {this.state.help ? (
+                    <ClickAwayListener onClickAway={this.handleClickAway}>
+                        {" "}
+                        <TransitionTimeHelp />
+                    </ClickAwayListener>
+                ) : (
+                    <div />
+                )}
+                <main style={{ flex: 1 }}>
+                    <Grid container spacing={16}>
+                        <Grid item xs={4}>
+                            <Grid
+                                container
+                                alignItems={"center"}
+                                justify={"center"}
+                                direction={"column"}
+                            >
+                                <div style={{ margin: 20 }} />
+                                <TransitionLog entries={this.state.entries} />
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Grid
+                                container
+                                alignItems={"center"}
+                                justify={"center"}
+                                direction={"column"}
+                            >
+                                <div style={{ margin: 20 }} />
+                                <TranstionType
+                                    handleTypeChange={this.handleTypeChange}
+                                />
+                                <TransitionTimer
+                                    handleAppend={this.handleAppend}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </main>
+                <footer>
+                    <Grid
+                        container
+                        alignItems={"center"}
+                        justify={"space-between"}
+                        direction={"row"}
+                    >
+                        <Grid item xs={2}>
                             <IconButton
-                                className={classes.menuButton}
+                                aria-owns={open ? "menu-appbar" : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleHelpModal}
                                 color="inherit"
-                                aria-label="Menu"
                             >
-                                <MenuIcon />
+                                <InfoIcon
+                                    color={"secondary"}
+                                    fontSize={"large"}
+                                />
                             </IconButton>
-                            <Typography
-                                variant="h6"
+                            <IconButton
+                                aria-owns={open ? "menu-appbar" : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleNotes}
                                 color="inherit"
-                                className={classes.grow}
                             >
-                                Transition Time
-                            </Typography>
-                            {auth && (
-                                <div>
-                                    <IconButton
-                                        aria-owns={
-                                            open ? "menu-appbar" : undefined
-                                        }
-                                        aria-haspopup="true"
-                                        onClick={this.handleMenu}
-                                        color="inherit"
-                                    >
-                                        <AccountCircle />
-                                    </IconButton>
-                                    <Menu
-                                        id="menu-appbar"
-                                        anchorEl={anchorEl}
-                                        anchorOrigin={{
-                                            vertical: "top",
-                                            horizontal: "right"
-                                        }}
-                                        transformOrigin={{
-                                            vertical: "top",
-                                            horizontal: "right"
-                                        }}
-                                        open={open}
-                                        onClose={this.handleClose}
-                                    >
-                                        <MenuItem onClick={this.handleClose}>
-                                            Profile
-                                        </MenuItem>
-                                        <MenuItem onClick={this.handleClose}>
-                                            My account
-                                        </MenuItem>
-                                    </Menu>
-                                </div>
-                            )}
-                        </Toolbar>
-                    </AppBar>
-                    {this.state.help ? (
-                        <ClickAwayListener onClickAway={this.handleClickAway}>
-                            {" "}
-                            <TransitionTimeHelp />
-                        </ClickAwayListener>
-                    ) : (
-                        <div />
-                    )}
-                    <main style={{ flex: 1 }}>
-                        <Grid container spacing={16}>
-                            <Grid item xs={4}>
-                                <Grid
-                                    container
-                                    alignItems={"center"}
-                                    justify={"center"}
-                                    direction={"column"}
-                                >
-                                    <div style={{ margin: 20 }} />
-                                    <TransitionLog
-                                        entries={this.state.entries}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Grid item xs={8}>
-                                <Grid
-                                    container
-                                    alignItems={"center"}
-                                    justify={"center"}
-                                    direction={"column"}
-                                >
-                                    <div style={{ margin: 20 }} />
-                                    <TranstionType
-                                        handleTypeChange={this.handleTypeChange}
-                                    />
-                                    <TransitionTimer
-                                        handleAppend={this.handleAppend}
-                                    />
-                                </Grid>
+                                <EditIcon
+                                    color={"secondary"}
+                                    fontSize={"large"}
+                                />
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={8} />
+                        <Grid item xs={2}>
+                            <Grid
+                                container
+                                alignItems={"center"}
+                                justify={"space-between"}
+                                direction={"column"}
+                            >
+                                Start Time:{" "}
+                                {new Date().toLocaleString("en-US", {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true
+                                })}
+                                <br />
+                                <YesNoDialog
+                                    buttonText={"Complete Observation"}
+                                    buttonVariant={"contained"}
+                                    buttonColor={"secondary"}
+                                    buttonStyle={{ margin: 10 }}
+                                    dialogTitle={
+                                        "Are you sure you want to complete this observation?"
+                                    }
+                                    shouldOpen={true}
+                                />
                             </Grid>
                         </Grid>
-                    </main>
-                    <footer>
-                        <Grid
-                            container
-                            alignItems={"center"}
-                            justify={"space-between"}
-                            direction={"row"}
-                        >
-                            <Grid item xs={2}>
-                                <IconButton
-                                    aria-owns={open ? "menu-appbar" : undefined}
-                                    aria-haspopup="true"
-                                    onClick={this.handleHelpModal}
-                                    color="inherit"
-                                >
-                                    <InfoIcon
-                                        color={"secondary"}
-                                        fontSize={"large"}
-                                    />
-                                </IconButton>
-                                <IconButton
-                                    aria-owns={open ? "menu-appbar" : undefined}
-                                    aria-haspopup="true"
-                                    onClick={this.handleNotes}
-                                    color="inherit"
-                                >
-                                    <EditIcon
-                                        color={"secondary"}
-                                        fontSize={"large"}
-                                    />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={8} />
-                            <Grid item xs={2}>
-                                <Grid
-                                    container
-                                    alignItems={"center"}
-                                    justify={"space-between"}
-                                    direction={"column"}
-                                >
-                                    Start Time:{" "}
-                                    {new Date().toLocaleString("en-US", {
-                                        hour: "numeric",
-                                        minute: "numeric",
-                                        hour12: true
-                                    })}
-                                    <br />
-                                    <YesNoDialog
-                                        buttonText={"Complete Observation"}
-                                        buttonVariant={"contained"}
-                                        buttonColor={"secondary"}
-                                        buttonStyle={{ margin: 10 }}
-                                        dialogTitle={
-                                            "Are you sure you want to complete this observation?"
-                                        }
-                                        shouldOpen={true}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </footer>
-                </div>
-            </MuiThemeProvider>
+                    </Grid>
+                </footer>
+            </div>
         );
     }
 }
