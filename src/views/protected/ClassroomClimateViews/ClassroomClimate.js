@@ -252,6 +252,7 @@ class ClassroomClimate extends React.Component {
                                         "Are you sure you want to complete this observation?"
                                     }
                                     shouldOpen={true}
+                                    onAccept={() => console.log("hello")}
                                 />
                             </Grid>
                         </Grid>

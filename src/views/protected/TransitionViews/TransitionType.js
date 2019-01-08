@@ -1,19 +1,50 @@
 import React from "react";
+import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import NavigationIcon from "@material-ui/icons/List";
 import PropTypes from "prop-types";
-
 import ReactDOM from "react-dom";
-import { withStyles } from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import FilledInput from "@material-ui/core/FilledInput";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
+import {
+    withStyles,
+    MuiThemeProvider,
+    createMuiTheme
+} from "@material-ui/core/styles";
+
+const COLOR_1 = "#F9A796";
+const COLOR_2 = "#FFE79D";
+const COLOR_3 = "#4DEDBC";
+
+const theme1 = createMuiTheme({
+    palette: {
+        primary: {
+            main: COLOR_1
+        },
+        secondary: {
+            main: "#ffffff"
+        }
+    }
+});
+
+const theme2 = createMuiTheme({
+    palette: {
+        primary: {
+            main: COLOR_2
+        },
+        secondary: {
+            main: "#ffffff"
+        }
+    }
+});
+
+const theme3 = createMuiTheme({
+    palette: {
+        primary: {
+            main: COLOR_3
+        },
+        secondary: {
+            main: "#ffffff"
+        }
+    }
+});
 
 const styles = theme => ({
     root: {
@@ -26,6 +57,9 @@ const styles = theme => ({
     },
     selectEmpty: {
         marginTop: theme.spacing.unit * 2
+    },
+    grow: {
+        flexGrow: 1
     }
 });
 
@@ -34,74 +68,57 @@ class SimpleMenu extends React.Component {
         super(props);
     }
 
-    state = {
-        type: "",
-        labelWidth: 0
+    handleChange = type => {
+        this.props.handleTypeChange(type);
     };
-
-    handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
-        let mType = "";
-        switch (event.target.value) {
-            case 1:
-                mType = "Wait Time";
-                break;
-            case 2:
-                mType = "Inside Classroom";
-                break;
-            case 3:
-                mType = "Outside Classroom";
-                break;
-            default:
-                mType = "Undefined";
-        }
-        this.props.handleTypeChange(mType);
-    };
-
-    componentDidMount() {
-        this.setState({
-            labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth
-        });
-    }
 
     render() {
         const { classes } = this.props;
 
         return (
             <div>
-                <form className={classes.root} autoComplete="off">
-                    <FormControl
-                        variant="outlined"
-                        className={classes.formControl}
-                    >
-                        <InputLabel
-                            ref={ref => {
-                                this.InputLabelRef = ref;
-                            }}
-                            htmlFor="outlined-transitiontype-simple"
-                        >
-                            Transition Type
-                        </InputLabel>
-                        <Select
-                            value={this.state.type}
-                            onChange={this.handleChange}
-                            input={
-                                <OutlinedInput
-                                    labelWidth={this.state.labelWidth}
-                                    name="type"
-                                    id="outlined-transitiontype-simple"
-                                />
-                            }
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={1}>Wait Time</MenuItem>
-                            <MenuItem value={2}>Inside Classroom</MenuItem>
-                            <MenuItem value={3}>Outside Classroom</MenuItem>
-                        </Select>
-                    </FormControl>
-                </form>
+                <Grid container className={classes.grow} spacing={16}>
+                    <Grid item>
+                        <MuiThemeProvider theme={theme1}>
+                            <Button
+                                variant={"contained"}
+                                color={"primary"}
+                                style={{ maxWidth: 100, minHeight: 67 }}
+                                onClick={() => this.handleChange("Wait Time")}
+                            >
+                                Wait Time
+                            </Button>
+                        </MuiThemeProvider>
+                    </Grid>
+                    <Grid item>
+                        <MuiThemeProvider theme={theme2}>
+                            <Button
+                                variant={"contained"}
+                                color={"primary"}
+                                style={{ maxWidth: 100, minHeight: 67 }}
+                                onClick={() =>
+                                    this.handleChange("Inside Classroom")
+                                }
+                            >
+                                Inside Classroom
+                            </Button>
+                        </MuiThemeProvider>
+                    </Grid>
+                    <Grid item>
+                        <MuiThemeProvider theme={theme3}>
+                            <Button
+                                variant={"contained"}
+                                color={"primary"}
+                                style={{ maxWidth: 100, minHeight: 67 }}
+                                onClick={() =>
+                                    this.handleChange("Outside Classroom")
+                                }
+                            >
+                                Outside Classroom
+                            </Button>
+                        </MuiThemeProvider>
+                    </Grid>
+                </Grid>
             </div>
         );
     }

@@ -131,11 +131,14 @@ class TransitionTimer extends React.Component {
                         <Button
                             variant="contained"
                             color="secondary"
+                            disabled={this.props.type === "#FFFFFF"}
                             aria-label="Start"
                             onClick={this.onStart}
                         >
                             {this.state.isOn
                                 ? "End Transition"
+                                : this.props.type === "#FFFFFF"
+                                ? "Please choose a transition type"
                                 : "Start New Transition"}
                         </Button>
                         <div style={{ margin: 2 }} />
