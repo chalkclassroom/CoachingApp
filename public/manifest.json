@@ -1,15 +1,19 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    }
+  "name": "Classroom Quality REF",
+  "short_name": "CQ Ref",
+    "icons": [{
+      "src": "favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }],
+  "gcm_sender_id": "",
+  "gcm_user_visible_only": true,
+  "start_url": "/",
+  "permissions": [
+    "gcm"
   ],
-  "start_url": ".",
+  "orientation": "",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#ffc107",
+  "background_color": "#2196f3"
 }
