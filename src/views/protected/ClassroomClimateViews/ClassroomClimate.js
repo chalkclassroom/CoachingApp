@@ -41,7 +41,7 @@ import FirebaseContext from "../../../components/Firebase/context";
     and then allow for 2 full minutes in between ratings.
  */
 
-const RATING_INTERVAL = 35000;
+const RATING_INTERVAL = 135000;
 const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
 const styles = {
