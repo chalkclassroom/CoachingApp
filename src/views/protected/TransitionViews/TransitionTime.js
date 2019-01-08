@@ -30,6 +30,7 @@ import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import { ImmortalDB } from "immortal-db";
+import cyan from "@material-ui/core/colors/teal";
 
 const styles = {
     root: {
@@ -47,6 +48,23 @@ const styles = {
     }
 };
 
+const COLOR_1 = "#F9A796";
+const COLOR_2 = "#FFE79D";
+const COLOR_3 = "#4DEDBC";
+
+let getHexFromType = type => {
+    switch (type) {
+        case "Wait Time":
+            return COLOR_1;
+        case "Inside Classroom":
+            return COLOR_2;
+        case "Outside Classroom":
+            return COLOR_3;
+        default:
+            return "#FFFFFF";
+    }
+};
+
 class TransitionTime extends React.Component {
     constructor(props) {
         super(props);
@@ -59,6 +77,7 @@ class TransitionTime extends React.Component {
         anchorEl: null,
         help: false,
         type: null,
+        hex: "#FFFFFF",
         entries: [],
         dbCounter: 0 // @Hack @Temporary !!!
     };
@@ -80,7 +99,13 @@ class TransitionTime extends React.Component {
 
     handleTypeChange(newType) {
         this.setState({ type: newType });
+        this.changeHex(newType);
     }
+
+    changeHex = (type) => {
+        let mHex = getHexFromType(type);
+        this.setState({hex: mHex})
+    };
 
     handleChange = event => {
         this.setState({ auth: event.target.checked });
@@ -182,6 +207,7 @@ class TransitionTime extends React.Component {
                                 />
                                 <TransitionTimer
                                     handleAppend={this.handleAppend}
+                                    type={this.state.hex}
                                 />
                             </Grid>
                         </Grid>

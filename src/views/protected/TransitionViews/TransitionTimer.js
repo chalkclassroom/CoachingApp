@@ -13,6 +13,10 @@ import {
     withStyles
 } from "@material-ui/core/styles";
 
+const COLOR_1 = "#F9A796";
+const COLOR_2 = "#FFE79D";
+const COLOR_3 = "#4DEDBC";
+
 const theme = createMuiTheme({
     palette: {
         primary: {
@@ -21,6 +25,19 @@ const theme = createMuiTheme({
         secondary: cyan
     }
 });
+
+let getHexFromType = type => {
+    switch (type) {
+        case "Wait Time":
+            return COLOR_1;
+        case "Inside Classroom":
+            return COLOR_2;
+        case "Outside Classroom":
+            return COLOR_3;
+        default:
+            return "#FFFFFF";
+    }
+};
 
 class TransitionTimer extends React.Component {
     constructor(props) {
@@ -90,6 +107,7 @@ class TransitionTimer extends React.Component {
             <MuiThemeProvider theme={theme}>
                 <div style={{ width: 400, marginTop: 20 }}>
                     <CircularProgressbar
+                        background
                         percentage={this.state.percentage}
                         text={
                             this.state.time === 0 ? "0:00" : ms(this.state.time)
@@ -97,7 +115,10 @@ class TransitionTimer extends React.Component {
                         initialAnimation={false}
                         styles={{
                             path: { stroke: "rgba(29, 233, 182, 1)" },
-                            text: { fill: "#000", fontSize: "16px" }
+                            text: { fill: "#000", fontSize: "16px" },
+                            background: {
+                                fill: this.props.type
+                            }
                         }}
                     />
                     <Grid
