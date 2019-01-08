@@ -2,9 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {createMuiTheme, withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import SwipeableViews from 'react-swipeable-views';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 
 import Modal from '@material-ui/core/Modal';
 import Grid from "@material-ui/core/Grid";
@@ -13,6 +10,11 @@ import SignUpForm from "./SignUpForm";
 import CloseIcon from "@material-ui/icons/Close"
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import Card from "@material-ui/core/Card";
+import {ReactComponent as CoachSvg} from "../../assets/icons/coach.svg";
+import {ReactComponent as TeacherSvg} from "../../assets/icons/teacher.svg";
+import {ReactComponent as ManagerSvg} from "../../assets/icons/manager.svg";
+import CardContent from "@material-ui/core/CardContent";
 function getModalStyle () {
 
     return {
@@ -59,7 +61,7 @@ const styles = theme => ({
 class SignUpModal extends React.Component {
     state = {
         open: true,
-        value: 0
+        role: 0
     };
 
     handleOpen = () => {
@@ -74,8 +76,8 @@ class SignUpModal extends React.Component {
         this.setState({ value });
     };
 
-    handleChangeIndex = (index) => {
-        this.setState({ value: index });
+    handleChangeRole = (role) => {
+        this.setState({ role: role });
     };
 
     render () {
@@ -98,32 +100,51 @@ class SignUpModal extends React.Component {
                             </IconButton>
                         </Grid>
                         <Grid xs={12} container alignItems="center" direction="column" justify="flex-start">
-                                <Tabs
-                                    value={this.state.value}
-                                    onChange={this.handleChange}
-                                    indicatorColor="secondary"
-                                    textColor="inherit"
-                                    centered
-                                >
-                                    <Tab label="Coach" />
-                                    <Tab label="Teacher" />
-                                    <Tab label="Administrator" />
-                                </Tabs>
-                            <SwipeableViews
-                                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                                index={this.state.value}
-                                onChangeIndex={(e,index)=>this.handleChangeIndex(index)}
-                            >
-                                <TabContainer dir={theme.direction}>
-                                    <SignUpForm role={'coach'} firebase = {this.props.firebase}/>
-                                </TabContainer>
-                                <TabContainer dir={theme.direction}>
-                                    <SignUpForm role={'teacher'} firebase = {this.props.firebase}/>
-                                </TabContainer>
-                                <TabContainer dir={theme.direction}>
-                                    <SignUpForm role={'administrator'} firebase = {this.props.firebase}/>
-                                </TabContainer>
-                            </SwipeableViews>
+                            {this.state.role == 0 ?
+                            <Grid xs={12} container alignItems="center" direction="row" justify="space-around" style={{padding:40}}>
+                                <Card className={classes.card} onClick={()=>this.handleChangeRole(1)}>
+                                    <CardContent>
+                                        <Grid xs={12} container alignItems="center" direction="column" justify="flex-start">
+                                            <Grid item>
+                                                <CoachSvg style={{height:'100', width: '100'}}/>
+                                            </Grid>
+                                            <Grid item>
+                                                <Typography variant="h5" component="h2">
+                                                    Coach
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </CardContent>
+                                </Card>
+                                <Card className={classes.card} onClick={()=>this.handleChangeRole(2)}>
+                                    <CardContent>
+                                        <Grid xs={12} container alignItems="center" direction="column" justify="flex-start">
+                                            <Grid item>
+                                                <TeacherSvg style={{height:'100', width: '100'}}/>
+                                            </Grid>
+                                            <Grid item>
+                                                <Typography variant="h5" component="h2">
+                                                    Teacher
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </CardContent>
+                                </Card>
+                                <Card className={classes.card} onClick={()=>this.handleChangeRole(3)}>
+                                    <CardContent>
+                                        <Grid xs={12} container alignItems="center" direction="column" justify="flex-start">
+                                            <Grid item>
+                                                <ManagerSvg style={{height:'100', width: '100'}}/>
+                                            </Grid>
+                                            <Grid item>
+                                                <Typography variant="h5" component="h2">
+                                                    Admin
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </CardContent>
+                                </Card>
+                            </Grid> : this.state.role == 1 ? <SignUpForm role={'coach'} fullWidth firebase = {this.props.firebase}/> : this.state.role == 2 ? <SignUpForm role={'teacher'} firebase = {this.props.firebase}/> : <SignUpForm role={'administrator'} firebase = {this.props.firebase}/> }
                         </Grid>
                     </div>
                 </Modal>

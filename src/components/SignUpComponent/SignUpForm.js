@@ -14,7 +14,7 @@ import {withRouter} from "react-router-dom";
 
 const styles = theme => ({
     main: {
-        maxWidth: '100%',
+        width: '100%',
         display: 'block',
     },
     paper: {
@@ -163,7 +163,7 @@ class SignUpForm extends React.Component{
         const { classes } = this.props;
 
         return (
-            <main>
+            <main className={classes.main}>
                 <Paper className={classes.paper}>
                     {this.state.errors? <Paper> Check your Form Data </Paper>: <div/>}
                             <TextField

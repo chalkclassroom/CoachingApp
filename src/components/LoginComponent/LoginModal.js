@@ -99,32 +99,7 @@ class LoginModal extends React.Component {
                             </IconButton>
                         </Grid>
                         <Grid xs={12} container alignItems="center" direction="column" justify="flex-start">
-                                <Tabs
-                                    value={this.state.value}
-                                    onChange={this.handleChange}
-                                    indicatorColor="secondary"
-                                    textColor="inherit"
-                                    centered
-                                >
-                                    <Tab label="Coach" />
-                                    <Tab label="Teacher" />
-                                    <Tab label="Administrator" />
-                                </Tabs>
-                            <SwipeableViews
-                                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                                index={this.state.value}
-                                onChangeIndex={(e,index)=>this.handleChangeIndex(index)}
-                            >
-                                <TabContainer dir={theme.direction}>
-                                    <LoginForm firebase = {this.props.firebase}/>
-                                </TabContainer>
-                                <TabContainer dir={theme.direction}>
-                                    <LoginForm firebase = {this.props.firebase}/>
-                                </TabContainer>
-                                <TabContainer dir={theme.direction}>
-                                    <LoginForm firebase = {this.props.firebase}/>
-                                </TabContainer>
-                            </SwipeableViews>
+                            <LoginForm firebase = {this.props.firebase}/>
                         </Grid>
                     </div>
                 </Modal>

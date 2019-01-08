@@ -10,6 +10,7 @@ import {isSignedIn} from "../authorize";
 
 const styles = theme => ({
     main: {
+        width: '100%',
     },
     paper: {
         display: 'flex',
@@ -104,7 +105,7 @@ class LoginForm extends React.Component{
         const {classes} = this.props;
 
         return (
-            <main>
+            <main className={classes.main}>
                 <Paper className={classes.paper}>
                         <TextField
                             required
