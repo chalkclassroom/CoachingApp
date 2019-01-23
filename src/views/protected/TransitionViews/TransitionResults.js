@@ -15,6 +15,9 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import InfoIcon from "@material-ui/icons/Help";
 import EditIcon from "@material-ui/icons/Edit";
+import List from "@material-ui/core/List"
+import ListItem from "@material-ui/core/ListItem"
+
 import {
     createMuiTheme,
     MuiThemeProvider,
@@ -174,7 +177,31 @@ class TransitionResults extends React.Component {
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
                 <main style={{ flex: 1 }}>
-                    <Grid container spacing={16}>
+                    <Grid container spacing={16} justify="center">
+                      <List>
+                        <ListItem>
+                          <Button size= "large" color= {"secondary"} variant = "outlined" className={classes.margin}>
+                          Summary
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <Button size= "large" color= {"primary"} variant = "outlined" className={classes.margin}>
+                          List Detail
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <Button size= "large" color= {"secondary"} variant = "outlined" className={classes.margin}>
+                          Trends
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <Button size= "large" color= {"inherit"} variant = "outlined" className={classes.margin}>
+                          Next Steps
+                          </Button>
+                        </ListItem>
+                      </List>
+                    </Grid>
+                    <Grid container spacing={16} justify="center">
                     </Grid>
                 </main>
             </div>
