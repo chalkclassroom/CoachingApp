@@ -201,16 +201,14 @@ class TransitionResults extends React.Component {
                           </Button>
                         </ListItem>
                       </List>
-                    </Grid>
-                    <Grid container spacing={16} justify="center">
-                        <Iframe url = "https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"
-                                width = "600px"
-                                height = "450px"
-                                className = "TransitionResults"
-                                display = "initial"
-                                position = "relative"
-                                styles = {{border: "0", frameBorder: "0"}}
-                                allowFullScreen/>
+                      <iframe src="https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"
+                              width="450px"
+                              height="300px"
+                              id="myId"
+                              className="myClassname"
+                              display="initial"
+                              position="relative"
+                              allowFullScreen/>
                     </Grid>
                 </main>
             </div>
