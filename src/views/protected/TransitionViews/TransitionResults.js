@@ -260,6 +260,14 @@ class TransitionResults extends React.Component {
                           </Button>
                         </ListItem>
                       </List>
+                      <iframe src="https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"
+                              width="450px"
+                              height="300px"
+                              id="myId"
+                              className="myClassname"
+                              display="initial"
+                              position="relative"
+                              allowFullScreen/>
                     </Grid>
                 </main>
             </div>
