@@ -34,6 +34,7 @@ import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import { ImmortalDB } from "immortal-db";
 import cyan from "@material-ui/core/colors/teal";
+import Iframe from 'react-iframe';
 
 const styles = {
     root: {
@@ -202,6 +203,14 @@ class TransitionResults extends React.Component {
                       </List>
                     </Grid>
                     <Grid container spacing={16} justify="center">
+                        <Iframe url = "https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"
+                                width = "600px"
+                                height = "450px"
+                                className = "TransitionResults"
+                                display = "initial"
+                                position = "relative"
+                                styles = {{border: "0", frameBorder: "0"}}
+                                allowFullScreen/>
                     </Grid>
                 </main>
             </div>
