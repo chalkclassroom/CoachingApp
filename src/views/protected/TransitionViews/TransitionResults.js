@@ -34,7 +34,7 @@ import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import { ImmortalDB } from "immortal-db";
 import cyan from "@material-ui/core/colors/teal";
-import Iframe from 'react-iframe';
+//import Iframe from 'react-iframe';
 
 const styles = {
     root: {
