@@ -45,6 +45,9 @@ const styles = {
     menuButton: {
         marginLeft: -12,
         marginRight: 20
+    },
+    viewButtons: {
+        minWidth: 150,
     }
 };
 
@@ -79,7 +82,11 @@ class TransitionResults extends React.Component {
         type: null,
         hex: "#FFFFFF",
         entries: [],
-        dbCounter: 0 // @Hack @Temporary !!!
+        dbCounter: 0, // @Hack @Temporary !!!
+        onSummary: true,
+        onList: false,
+        onTrends: false,
+        onNextSteps: false
     };
 
     componentDidMount() {
@@ -163,6 +170,42 @@ class TransitionResults extends React.Component {
             .catch(error => console.error("Error:", error));
     };
 
+    summaryClick = () => {
+        if (this.state.onSummary == false){
+            this.setState({ onSummary: true });
+            this.setState({ onList: false });
+            this.setState({ onTrends: false });
+            this.setState({ onNextSteps: false });
+        }
+    };
+
+    listClick = () => {
+        if (this.state.onList == false){
+            this.setState({ onSummary: false });
+            this.setState({ onList: true });
+            this.setState({ onTrends: false });
+            this.setState({ onNextSteps: false });
+        }
+    };
+
+    trendsClick = () => {
+        if (this.state.onTrends == false){
+            this.setState({ onSummary: false });
+            this.setState({ onList: false });
+            this.setState({ onTrends: true });
+            this.setState({ onNextSteps: false });
+        }
+    };
+
+    nextStepsClick = () => {
+        if (this.state.onNextSteps == false){
+            this.setState({ onSummary: false });
+            this.setState({ onList: false });
+            this.setState({ onTrends: false });
+            this.setState({ onNextSteps: true });
+        }
+    };
+
     render() {
         const { classes } = this.props;
         const { auth, anchorEl } = this.state;
@@ -174,7 +217,68 @@ class TransitionResults extends React.Component {
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
                 <main style={{ flex: 1 }}>
-                    <Grid container spacing={16}>
+                    <Grid container spacing={16} justify="center">
+                      <List>
+                        <ListItem>
+                          <Button size= "large" color= {"secondary"} variant = "outlined" className={classes.margin}>
+                          Summary
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <Button size= "large" color= {"primary"} variant = "outlined" className={classes.margin}>
+                          List Detail
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <Button size= "large" color= {"secondary"} variant = "outlined" className={classes.margin}>
+                          Trends
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <Button size= "large" color= {"inherit"} variant = "outlined" className={classes.margin}>
+                          Next Steps
+                          </Button>
+                        </ListItem>
+                      </List>
+                    <Grid container spacing={16} justify="center">
+                      <List>
+                        <ListItem>
+                          <Button size= "large"
+                                  color= {"secondary"}
+                                  variant = {this.state.onSummary ? "contained" : "outlined"}
+                                  className={classes.viewButtons}
+                                  onClick={this.summaryClick}>
+                          Summary
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <Button size= "large"
+                                  color= {"primary"}
+                                  variant = {this.state.onList ? "contained" : "outlined"}
+                                  className={classes.viewButtons}
+                                  onClick={this.listClick}>
+                          List Detail
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <Button size= "large"
+                                  color= {"secondary"}
+                                  variant = {this.state.onTrends ? "contained" : "outlined"}
+                                  className={classes.viewButtons}
+                                  onClick={this.trendsClick}>
+                          Trends
+                          </Button>
+                        </ListItem>
+                        <ListItem>
+                          <Button size= "large"
+                                  color= {"inherit"}
+                                  variant = {this.state.onNextSteps ? "contained" : "outlined"}
+                                  className={classes.viewButtons}
+                                  onClick={this.nextStepsClick}>
+                          Next Steps
+                          </Button>
+                        </ListItem>
+                      </List>
                     </Grid>
                 </main>
             </div>
