@@ -1,31 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Toolbar from "@material-ui/core/Toolbar";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import InfoIcon from "@material-ui/icons/Help";
 import EditIcon from "@material-ui/icons/Edit";
+import List from "@material-ui/core/List"
+import ListItem from "@material-ui/core/ListItem"
+import FilledInput from '@material-ui/core/FilledInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import {
     createMuiTheme,
     MuiThemeProvider,
     withStyles
 } from "@material-ui/core/styles";
-import TransitionTimeHelp from "./TransitionTimeHelp";
-import TranstionType from "./TransitionType";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import TransitionTimer from "./TransitionTimer";
-import TransitionLog from "./TransitionLog";
-import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
@@ -48,6 +41,7 @@ const styles = {
     },
     viewButtons: {
         minWidth: 150,
+        textAlign: "center"
     }
 };
 
@@ -240,8 +234,26 @@ class TransitionResults extends React.Component {
                           </Button>
                         </ListItem>
                       </List>
+            </Grid>
                     <Grid container spacing={16} justify="center">
                       <List>
+                        <ListItem>
+                            <form>
+                                <FormControl variant="filled" className={classes.viewButtons}>
+                                    <InputLabel htmlFor="filled-age-simple">Date</InputLabel>
+                                    <Select
+                                        input={<FilledInput name="age" id="filled-age-simple" />}
+                                    >
+                                        <MenuItem value="">
+                                            <em>None</em>
+                                        </MenuItem>
+                                        <MenuItem value={10}>Ten</MenuItem>
+                                        <MenuItem value={20}>Twenty</MenuItem>
+                                        <MenuItem value={30}>Thirty</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </form>
+                        </ListItem>
                         <ListItem>
                           <Button size= "large"
                                   color= {"secondary"}
