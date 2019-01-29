@@ -79,7 +79,8 @@ class TransitionResults extends React.Component {
         onSummary: true,
         onList: false,
         onTrends: false,
-        onNextSteps: false
+        onNextSteps: false,
+        iFrameSRC: ""
     };
 
     componentDidMount() {
@@ -169,6 +170,7 @@ class TransitionResults extends React.Component {
             this.setState({ onList: false });
             this.setState({ onTrends: false });
             this.setState({ onNextSteps: false });
+            this.setState({ iFrameSRC: ""});
         }
     };
 
@@ -178,6 +180,7 @@ class TransitionResults extends React.Component {
             this.setState({ onList: true });
             this.setState({ onTrends: false });
             this.setState({ onNextSteps: false });
+            this.setState({ iFrameSRC: ""});
         }
     };
 
@@ -186,7 +189,8 @@ class TransitionResults extends React.Component {
             this.setState({ onSummary: false });
             this.setState({ onList: false });
             this.setState({ onTrends: true });
-            this.setState({ onNextSteps: false });
+            this.setState({ onNextSteps: false })
+            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"});
         }
     };
 
@@ -196,6 +200,7 @@ class TransitionResults extends React.Component {
             this.setState({ onList: false });
             this.setState({ onTrends: false });
             this.setState({ onNextSteps: true });
+            this.setState({ iFrameSRC: ""});
         }
     };
 
@@ -210,7 +215,7 @@ class TransitionResults extends React.Component {
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
                 <main style={{ flex: 1 }}>
-                    <Grid container spacing={16} justify="center">
+                    <Grid container spacing={32} justify="center">
                       <List>
                         <ListItem>
                             <form>
@@ -266,9 +271,9 @@ class TransitionResults extends React.Component {
                           </Button>
                         </ListItem>
                       </List>
-                      <iframe src="https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"
-                              width="450px"
-                              height="325px"
+                      <iframe src={this.state.iFrameSRC}
+                              width="600px"
+                              height="425px"
                               id="myId"
                               className="myClassname"
                               display="initial"
