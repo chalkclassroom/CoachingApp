@@ -80,7 +80,7 @@ class TransitionResults extends React.Component {
         onList: false,
         onTrends: false,
         onNextSteps: false,
-        iFrameSRC: ""
+        iFrameSRC: "https://datastudio.google.com/embed/reporting/1EeK-fkzvcyOELN2mPMpeRoQcl7OU5Ex3/page/r36g"
     };
 
     componentDidMount() {
@@ -170,7 +170,7 @@ class TransitionResults extends React.Component {
             this.setState({ onList: false });
             this.setState({ onTrends: false });
             this.setState({ onNextSteps: false });
-            this.setState({ iFrameSRC: ""});
+            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1EeK-fkzvcyOELN2mPMpeRoQcl7OU5Ex3/page/r36g"});
         }
     };
 
