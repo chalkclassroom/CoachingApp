@@ -9,6 +9,12 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import spreadsheetData from "../../SPREADSHEET_SECRETS";
 import { connect } from "react-redux";
+import { pushOntoClimateStack } from "../../state/actions/classroom-climate";
+
+const REDIRECTION = "#f9a796";
+const NONSPECIFIC = "#ffe79d";
+const DISAPPROVAL = "#ff6a6a";
+const APPROVAL = "#4bedbc";
 
 const styles = theme => ({
     root: {
@@ -16,100 +22,25 @@ const styles = theme => ({
     }
 });
 
-const redirectionTheme = createMuiTheme({
-    palette: {
-        primary: {
-            main: "#f9a796"
-        },
-        secondary: {
-            main: "#ffffff"
+const counterTheme = primary =>
+    createMuiTheme({
+        palette: {
+            primary: {
+                main: primary
+            },
+            secondary: {
+                main: "#ffffff"
+            }
         }
-    }
-});
-
-const nonSpecificApprovalTheme = createMuiTheme({
-    palette: {
-        primary: {
-            main: "#ffe79d"
-        },
-        secondary: {
-            main: "#ffffff"
-        }
-    }
-});
-
-const disapprovalTheme = createMuiTheme({
-    palette: {
-        primary: {
-            main: "#ff6a6a"
-        },
-        secondary: {
-            main: "#ffffff"
-        }
-    }
-});
-
-const specificApprovalTheme = createMuiTheme({
-    palette: {
-        primary: {
-            main: "#4bedbc"
-        },
-        secondary: {
-            main: "#ffffff"
-        }
-    }
-});
+    });
 
 class BehaviorCounter extends React.Component {
-    state = {
-        undoStack: []
-    };
-
-    componentWillMount() {
-        this.timer = setInterval(() => {
-            console.log(this.props.mClimateType);
-        }, 1000);
-    }
-
-    handleIncrement = event => {
-        switch (event.currentTarget.value) {
-            case "1":
-                this.handlePush("redirection");
-                break;
-            case "2":
-                this.handlePush("nonspecificapproval");
-                break;
-            case "3":
-                this.handlePush("disapproval");
-                break;
-            case "4":
-                this.handlePush("specificapproval");
-                break;
-            default:
-        }
-    };
-
-    handleUndo = () => {
-        let mArray = [...this.state.undoStack];
-        if (mArray.length > 0) {
-            mArray.pop();
-            this.setState({ undoStack: mArray });
-            console.log(mArray);
-
-            this.handleSpreadsheetDeleteRow();
-        }
-    };
-
     handlePush = entry => {
-        let mArray = [...this.state.undoStack];
         let mEntry = {
             observation: entry,
-            type: this.props.type === 0 ? "instruction" : "transition"
+            climateType: this.props.climateType
         };
-        mArray.push(mEntry);
-        this.setState({ undoStack: mArray });
-        console.log(mArray);
-
+        this.props.pushOntoClimateStack(mEntry);
         this.handleSpreadsheetInsert(mEntry);
     };
 
@@ -119,7 +50,7 @@ class BehaviorCounter extends React.Component {
                 sheet: "ClassroomClimateBehavior",
                 del: "false",
                 BehaviorResponse: entry.observation,
-                InstructionTransition: entry.type,
+                InstructionTransition: entry.climateType,
                 TeacherID: this.props.teacherId
             };
         Object.keys(params).forEach(key =>
@@ -137,36 +68,13 @@ class BehaviorCounter extends React.Component {
             .catch(error => console.error("Error:", error));
     };
 
-    handleSpreadsheetDeleteRow = () => {
-        let url = new URL(spreadsheetData.scriptLink),
-            params = {
-                sheet: "ClassroomClimateBehavior",
-                del: "true"
-            };
-        Object.keys(params).forEach(key =>
-            url.searchParams.append(key, params[key])
-        );
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: {
-                "content-type": "application/json"
-            }
-        })
-            .then(response => console.log("Success"))
-            .catch(error => console.error("Error:", error));
-    };
-
     render() {
-        console.log(this.props.mClimateType);
-
         return (
             <div
                 className={this.props.classes.root}
                 style={{
                     backgroundColor:
-                        this.props.mClimateType === "instruction"
+                        this.props.climateType === "instruction"
                             ? "#76e9e9"
                             : "#68b0ff",
                     borderRadius: "25px"
@@ -180,16 +88,17 @@ class BehaviorCounter extends React.Component {
                             justify={"center"}
                             alignItems={"center"}
                         >
-                            <MuiThemeProvider theme={redirectionTheme}>
+                            <MuiThemeProvider theme={counterTheme(REDIRECTION)}>
                                 <Button
                                     color="primary"
                                     variant="contained"
                                     size="large"
-                                    value="1"
                                     style={{ minWidth: 250 }}
-                                    onClick={this.handleIncrement}
+                                    onClick={() =>
+                                        this.handlePush("redirection")
+                                    }
                                 >
-                                    {this.props.mClimateType}
+                                    Redirection
                                 </Button>
                             </MuiThemeProvider>
                         </Grid>
@@ -201,14 +110,15 @@ class BehaviorCounter extends React.Component {
                             justify={"center"}
                             alignItems={"center"}
                         >
-                            <MuiThemeProvider theme={nonSpecificApprovalTheme}>
+                            <MuiThemeProvider theme={counterTheme(NONSPECIFIC)}>
                                 <Button
                                     color="primary"
                                     variant="contained"
                                     size="large"
-                                    value="2"
                                     style={{ minWidth: 250 }}
-                                    onClick={this.handleIncrement}
+                                    onClick={() =>
+                                        this.handlePush("nonspecificapproval")
+                                    }
                                 >
                                     Non-specific Approval
                                 </Button>
@@ -225,14 +135,15 @@ class BehaviorCounter extends React.Component {
                             justify={"center"}
                             alignItems={"center"}
                         >
-                            <MuiThemeProvider theme={disapprovalTheme}>
+                            <MuiThemeProvider theme={counterTheme(DISAPPROVAL)}>
                                 <Button
                                     color="primary"
                                     variant="contained"
                                     size="large"
-                                    value="3"
                                     style={{ minWidth: 250 }}
-                                    onClick={this.handleIncrement}
+                                    onClick={() =>
+                                        this.handlePush("disapproval")
+                                    }
                                 >
                                     Disapproval
                                 </Button>
@@ -246,14 +157,15 @@ class BehaviorCounter extends React.Component {
                             justify={"center"}
                             alignItems={"center"}
                         >
-                            <MuiThemeProvider theme={specificApprovalTheme}>
+                            <MuiThemeProvider theme={counterTheme(APPROVAL)}>
                                 <Button
                                     color="primary"
                                     variant="contained"
                                     size="large"
-                                    value="4"
                                     style={{ minWidth: 250 }}
-                                    onClick={this.handleIncrement}
+                                    onClick={() =>
+                                        this.handlePush("specificapproval")
+                                    }
                                 >
                                     Specific Approval
                                 </Button>
@@ -267,13 +179,19 @@ class BehaviorCounter extends React.Component {
 }
 
 BehaviorCounter.propTypes = {
-    mClimateType: PropTypes.string.isRequired
+    climateType: PropTypes.string.isRequired,
+    teacherId: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => {
     return {
-        mClimateType: state.climateTypeState.climateType
+        climateType: state.climateTypeState.climateType
     };
 };
 
-export default withStyles(styles)(connect(mapStateToProps)(BehaviorCounter));
+export default withStyles(styles)(
+    connect(
+        mapStateToProps,
+        { pushOntoClimateStack }
+    )(BehaviorCounter)
+);
