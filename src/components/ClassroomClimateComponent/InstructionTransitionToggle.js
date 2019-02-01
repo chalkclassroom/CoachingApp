@@ -5,15 +5,12 @@ import {
     MuiThemeProvider,
     withStyles
 } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import NoSsr from "@material-ui/core/NoSsr";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 import TransferWithinAStationIcon from "@material-ui/icons/TransferWithinAStation";
 import SchoolIcon from "@material-ui/icons/School";
-import BehaviorCounter from "./BehaviorCounter";
+import { connect } from "react-redux";
+import { toggleNewClimateType } from "../../state/actions/classroom-climate";
 
 const tabsPalette = createMuiTheme({
     palette: {
@@ -26,88 +23,83 @@ const tabsPalette = createMuiTheme({
     }
 });
 
-function TabContainer(props) {
-    return (
-        <Typography
-            component="div"
-            style={{
-                padding: 8 * 3,
-                backgroundColor: props.value === 0 ? "#76e9e9" : "#68b0ff"
-            }}
-        >
-            {props.children}
-        </Typography>
-    );
-}
-
-TabContainer.propTypes = {
-    children: PropTypes.node.isRequired
-};
-
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: theme.palette.background.paper,
+        margin: 20
+    },
+    button: {
+        margin: theme.spacing.unit
+    },
+    leftIcon: {
+        marginRight: theme.spacing.unit
+    },
+    rightIcon: {
+        marginLeft: theme.spacing.unit
+    },
+    iconSmall: {
+        fontSize: 20
+    },
+    grow: {
+        flexGrow: 1
     }
 });
 
 class InstructionTransitionToggle extends React.Component {
-    state = {
-        /*
-        Values:
-        0 - Instruction
-        1 - Transition
-         */
-        value: 0
-    };
-
-    handleChange = (event, value) => {
-        this.setState({ value });
-    };
+    state = {};
 
     render() {
-        const { classes } = this.props;
-        const { value } = this.state;
-
         return (
-            <NoSsr>
-                <div className={classes.root}>
-                    <MuiThemeProvider theme={tabsPalette}>
-                        <AppBar
-                            position="static"
-                            color={value === 0 ? "primary" : "secondary"}
-                        >
-                            <Tabs
-                                fullWidth
-                                value={value}
-                                onChange={this.handleChange}
-                                indicatorColor={
-                                    value === 0 ? "secondary" : "primary"
+            <div className={this.props.classes.root}>
+                <MuiThemeProvider theme={tabsPalette}>
+                    <Grid
+                        container
+                        className={this.props.classes.grow}
+                        direction={"row"}
+                        justify={"center"}
+                        alignItems={"center"}
+                        spacing={16}
+                    >
+                        <Grid item>
+                            <Button
+                                variant={"contained"}
+                                color={"primary"}
+                                className={this.props.classes.button}
+                                style={{ minWidth: 200 }}
+                                onClick={() =>
+                                    this.props.toggleNewClimateType(
+                                        "instruction"
+                                    )
                                 }
                             >
-                                <Tab
-                                    icon={value === 0 && <SchoolIcon />}
-                                    label="Instruction"
+                                Instruction
+                                <SchoolIcon
+                                    className={this.props.classes.rightIcon}
                                 />
-                                <Tab
-                                    icon={
-                                        value === 1 && (
-                                            <TransferWithinAStationIcon />
-                                        )
-                                    }
-                                    label="Transition"
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                variant={"contained"}
+                                color={"secondary"}
+                                className={this.props.classes.button}
+                                style={{ minWidth: 200 }}
+                                onClick={() =>
+                                    this.props.toggleNewClimateType(
+                                        "transition"
+                                    )
+                                }
+                            >
+                                Transition
+                                <TransferWithinAStationIcon
+                                    className={this.props.classes.rightIcon}
                                 />
-                            </Tabs>
-                        </AppBar>
-                        <TabContainer value={this.state.value}>
-                            <BehaviorCounter
-                                type={this.state.value}
-                                teacherId={this.props.teacherId}
-                            />
-                        </TabContainer>
-                    </MuiThemeProvider>
-                </div>
-            </NoSsr>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </MuiThemeProvider>
+            </div>
         );
     }
 }
@@ -116,4 +108,9 @@ InstructionTransitionToggle.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(InstructionTransitionToggle);
+export default withStyles(styles)(
+    connect(
+        null,
+        { toggleNewClimateType }
+    )(InstructionTransitionToggle)
+);

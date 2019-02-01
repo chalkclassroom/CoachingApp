@@ -1,19 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Toolbar from "@material-ui/core/Toolbar";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button/Button";
 import InfoIcon from "@material-ui/icons/Help";
 import EditIcon from "@material-ui/icons/Edit";
 import {
@@ -31,17 +20,20 @@ import { Line } from "rc-progress";
 import ms from "pretty-ms";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
+import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter";
+import CounterWithUndo from "../../../components/ClassroomClimateComponent/CounterWithUndo";
+import { connect } from "react-redux";
 
 /*
     N.B. Time measured in milliseconds.
 
-    Rationale for the 2:15 interval -
-    Give coaches ~15 seconds to make and confirm their rating,
+    Rationale for the 2:10 interval -
+    Give coaches ~10 seconds to make and confirm their rating,
     catch up on behavior approval/disapproval count if they need to,
     and then allow for 2 full minutes in between ratings.
  */
 
-const RATING_INTERVAL = 135000;
+const RATING_INTERVAL = 130000;
 const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
 const styles = {
@@ -58,17 +50,14 @@ const styles = {
 };
 
 class ClassroomClimate extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     state = {
         auth: true,
         anchorEl: null,
         help: false,
         time: RATING_INTERVAL,
         ratingIsOpen: false,
-        ratings: []
+        ratings: [],
+        value: 1
     };
 
     componentDidMount() {
@@ -145,12 +134,11 @@ class ClassroomClimate extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
         const { auth, anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
         return (
-            <div className={classes.root}>
+            <div className={this.props.classes.root}>
                 <FirebaseContext.Consumer>
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
@@ -168,32 +156,60 @@ class ClassroomClimate extends React.Component {
                     />
                 </Modal>
                 <main style={{ flex: 1 }}>
-                    <Grid container spacing={0}>
-                        <Grid item xs={1} />
-                        <Grid
-                            item
-                            xs
-                            style={{ marginBottom: 50, marginTop: 50 }}
-                        >
-                            <InstructionTransitionToggle
-                                teacherId={this.props.location.state.key.id}
-                            />
-                            <div style={{ margin: 20, textAlign: "center" }}>
-                                Time until next Tone Rating:
-                                {ms(this.state.time)}
-                            </div>
-                            <Line
-                                percent={`${100 *
-                                    (this.state.time / RATING_INTERVAL)}`}
-                                strokeWidth="1"
-                                strokeColor={
-                                    this.state.time > TEN_PERCENT
-                                        ? "#00ff00"
-                                        : "#ff0000"
-                                }
-                            />
+                    <Grid container spacing={16}>
+                        <Grid item xs={4}>
+                            <Grid
+                                container
+                                direction={"column"}
+                                justify={"center"}
+                                alignItems={"center"}
+                                spacing={16}
+                            >
+                                <Grid item>
+                                    <CounterWithUndo />
+                                </Grid>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={1} />
+                        <Grid item xs={8}>
+                            <Grid container spacing={0}>
+                                <Grid
+                                    item
+                                    xs
+                                    style={{ marginBottom: 50, marginTop: 50 }}
+                                >
+                                    <InstructionTransitionToggle
+                                        teacherId={
+                                            this.props.location.state.key.id
+                                        }
+                                    />
+                                    <BehaviorCounter
+                                        teacherId={
+                                            this.props.location.state.key.id
+                                        }
+                                    />
+                                    <div
+                                        style={{
+                                            margin: 20,
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        Time until next Tone Rating:
+                                        {ms(this.state.time)}
+                                    </div>
+                                    <Line
+                                        percent={`${100 *
+                                            (this.state.time /
+                                                RATING_INTERVAL)}`}
+                                        strokeWidth="1"
+                                        strokeColor={
+                                            this.state.time > TEN_PERCENT
+                                                ? "#00ff00"
+                                                : "#ff0000"
+                                        }
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <div />
                 </main>
@@ -267,4 +283,4 @@ ClassroomClimate.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ClassroomClimate);
+export default connect()(withStyles(styles)(ClassroomClimate));

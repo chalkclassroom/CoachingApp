@@ -1,15 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
 import {
     createMuiTheme,
     MuiThemeProvider,
     withStyles
 } from "@material-ui/core/styles";
-import Chip from "@material-ui/core/Chip";
+import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import ReplayIcon from "@material-ui/icons/Replay";
 import spreadsheetData from "../../SPREADSHEET_SECRETS";
+import { connect } from "react-redux";
 
 const styles = theme => ({
     root: {
@@ -62,13 +61,15 @@ const specificApprovalTheme = createMuiTheme({
 });
 
 class BehaviorCounter extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     state = {
         undoStack: []
     };
+
+    componentWillMount() {
+        this.timer = setInterval(() => {
+            console.log(this.props.mClimateType);
+        }, 1000);
+    }
 
     handleIncrement = event => {
         switch (event.currentTarget.value) {
@@ -83,6 +84,8 @@ class BehaviorCounter extends React.Component {
                 break;
             case "4":
                 this.handlePush("specificapproval");
+                break;
+            default:
         }
     };
 
@@ -156,15 +159,17 @@ class BehaviorCounter extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
-        const { value } = this.state;
+        console.log(this.props.mClimateType);
 
         return (
             <div
-                className={classes.root}
+                className={this.props.classes.root}
                 style={{
                     backgroundColor:
-                        this.props.type === 0 ? "#76e9e9" : "#68b0ff"
+                        this.props.mClimateType === "instruction"
+                            ? "#76e9e9"
+                            : "#68b0ff",
+                    borderRadius: "25px"
                 }}
             >
                 <Grid container spacing={24}>
@@ -181,9 +186,10 @@ class BehaviorCounter extends React.Component {
                                     variant="contained"
                                     size="large"
                                     value="1"
+                                    style={{ minWidth: 250 }}
                                     onClick={this.handleIncrement}
                                 >
-                                    Redirection
+                                    {this.props.mClimateType}
                                 </Button>
                             </MuiThemeProvider>
                         </Grid>
@@ -201,6 +207,7 @@ class BehaviorCounter extends React.Component {
                                     variant="contained"
                                     size="large"
                                     value="2"
+                                    style={{ minWidth: 250 }}
                                     onClick={this.handleIncrement}
                                 >
                                     Non-specific Approval
@@ -208,35 +215,6 @@ class BehaviorCounter extends React.Component {
                             </MuiThemeProvider>
                         </Grid>
                     </Grid>
-                </Grid>
-                <div style={{ margin: 10 }} />
-                <Grid
-                    container
-                    direction={"row"}
-                    justify={"center"}
-                    alignItems={"center"}
-                >
-                    <Chip
-                        label={`Total Responses: ${
-                            this.state.undoStack.length
-                        }`}
-                    />
-                </Grid>
-                <div style={{ margin: 10 }} />
-                <Grid
-                    container
-                    direction={"row"}
-                    justify={"center"}
-                    alignItems={"center"}
-                >
-                    <Button
-                        variant="contained"
-                        color="default"
-                        onClick={this.handleUndo}
-                    >
-                        Undo
-                        <ReplayIcon />
-                    </Button>
                 </Grid>
                 <div style={{ margin: 10 }} />
                 <Grid container spacing={24}>
@@ -253,6 +231,7 @@ class BehaviorCounter extends React.Component {
                                     variant="contained"
                                     size="large"
                                     value="3"
+                                    style={{ minWidth: 250 }}
                                     onClick={this.handleIncrement}
                                 >
                                     Disapproval
@@ -273,6 +252,7 @@ class BehaviorCounter extends React.Component {
                                     variant="contained"
                                     size="large"
                                     value="4"
+                                    style={{ minWidth: 250 }}
                                     onClick={this.handleIncrement}
                                 >
                                     Specific Approval
@@ -286,4 +266,14 @@ class BehaviorCounter extends React.Component {
     }
 }
 
-export default withStyles(styles)(BehaviorCounter);
+BehaviorCounter.propTypes = {
+    mClimateType: PropTypes.string.isRequired
+};
+
+const mapStateToProps = state => {
+    return {
+        mClimateType: state.climateTypeState.climateType
+    };
+};
+
+export default withStyles(styles)(connect(mapStateToProps)(BehaviorCounter));

@@ -26,6 +26,7 @@
     "redux-logger": "^3.0.6",
     "redux-observable": "^1.0.0",
     "redux-thunk": "^2.3.0",
+    "rxjs": "^6.3.3",
     "slick-carousel": "^1.8.1",
     "styled-components": "^4.1.1"
   },
@@ -53,6 +54,6 @@
   "homepage": "https://cqrefpwa.firebaseapp.com",
   "devDependencies": {
     "jquery": "^3.3.1",
-    "prettier": "^1.15.3"
+    "prettier": "^1.16.1"
   }
 }
