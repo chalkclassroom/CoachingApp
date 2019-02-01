@@ -50,7 +50,7 @@ function PrivateRoute({ component: Component, auth, ...rest }) {
         />
     );
 }
-
+/*
 function PublicRoute({ component: Component, auth, ...rest }) {
     return (
         <Route
@@ -65,7 +65,7 @@ function PublicRoute({ component: Component, auth, ...rest }) {
         />
     );
 }
-
+*/
 class App extends Component {
     constructor(props) {
         super(props);

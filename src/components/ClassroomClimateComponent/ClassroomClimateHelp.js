@@ -1,10 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { createMuiTheme, withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import cyan from "@material-ui/core/colors/teal";
 
 function getModalStyle() {
     return {
@@ -14,17 +12,6 @@ function getModalStyle() {
         transform: `translate(-50%, -50%)`
     };
 }
-
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: "#ffffff"
-        },
-        secondary: {
-            main: "#76e9e9"
-        }
-    }
-});
 
 const styles = theme => ({
     paper: {

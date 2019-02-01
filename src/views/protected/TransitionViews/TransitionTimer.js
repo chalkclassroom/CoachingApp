@@ -1,21 +1,12 @@
 import React from "react";
 import CircularProgressbar from "react-circular-progressbar";
-import PropTypes from "prop-types";
 import "react-circular-progressbar/dist/styles.css";
 import Button from "@material-ui/core/Button/Button";
 import Grid from "@material-ui/core/Grid/Grid";
 import ms from "pretty-ms";
 import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import cyan from "@material-ui/core/colors/teal";
-import {
-    createMuiTheme,
-    MuiThemeProvider,
-    withStyles
-} from "@material-ui/core/styles";
-
-const COLOR_1 = "#F9A796";
-const COLOR_2 = "#FFE79D";
-const COLOR_3 = "#4DEDBC";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
     palette: {
@@ -25,19 +16,6 @@ const theme = createMuiTheme({
         secondary: cyan
     }
 });
-
-let getHexFromType = type => {
-    switch (type) {
-        case "Wait Time":
-            return COLOR_1;
-        case "Inside Classroom":
-            return COLOR_2;
-        case "Outside Classroom":
-            return COLOR_3;
-        default:
-            return "#FFFFFF";
-    }
-};
 
 class TransitionTimer extends React.Component {
     constructor(props) {
@@ -96,9 +74,6 @@ class TransitionTimer extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
-        const { anchorEl } = this.state;
-
         setTimeout(() => {
             this.setState({ percentage: this.state.isOn ? 100 : 0 });
         }, 100);

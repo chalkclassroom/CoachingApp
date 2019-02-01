@@ -1,25 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Toolbar from "@material-ui/core/Toolbar";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button/Button";
 import InfoIcon from "@material-ui/icons/Help";
 import EditIcon from "@material-ui/icons/Edit";
-import {
-    createMuiTheme,
-    MuiThemeProvider,
-    withStyles
-} from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import TransitionTimeHelp from "./TransitionTimeHelp";
 import TranstionType from "./TransitionType";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -30,7 +15,6 @@ import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import { ImmortalDB } from "immortal-db";
-import cyan from "@material-ui/core/colors/teal";
 
 const styles = {
     root: {
@@ -102,9 +86,9 @@ class TransitionTime extends React.Component {
         this.changeHex(newType);
     }
 
-    changeHex = (type) => {
+    changeHex = type => {
         let mHex = getHexFromType(type);
-        this.setState({hex: mHex})
+        this.setState({ hex: mHex });
     };
 
     handleChange = event => {
@@ -165,7 +149,7 @@ class TransitionTime extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { auth, anchorEl } = this.state;
+        const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
         return (

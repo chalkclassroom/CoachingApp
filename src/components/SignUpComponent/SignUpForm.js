@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
+// import FormControl from '@material-ui/core/FormControl';
+// import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
+// import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { firebaseEmailSignUp } from '../authorize';
+// import { firebaseEmailSignUp } from '../authorize';
 
-import firebase from 'firebase';
+// import firebase from 'firebase';
 import {withRouter} from "react-router-dom";
 
 const styles = theme => ({
@@ -144,14 +144,14 @@ class SignUpForm extends React.Component{
     };
 
     validateEmail = (email) => {
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     };
 
     handleSubmit = (event) =>{
         this.validateState();
         if (!this.state.errors){
-            this.props.firebase.firebaseEmailSignUp({email: this.state.email, password: this.state.password, firstName: this.state.firstName, lastName: this.state.lastName}, this.props.role).then(function(isSuccess) {
+            this.props.firebase.firebaseEmailSignUp({email: this.state.email, password: this.state.password, firstName: this.state.firstName, lastName: this.state.lastName}, this.props.mRole).then(function(isSuccess) {
                 if(isSuccess){
                     this.props.history.push('/Home');
                 }
@@ -262,7 +262,7 @@ class SignUpForm extends React.Component{
 
 SignUpForm.propTypes = {
     classes: PropTypes.object.isRequired,
-    role: PropTypes.string.isRequired,
+    mRole: PropTypes.string.isRequired,
 };
 
 const SignUpFormWithRouter = withRouter(SignUpForm);

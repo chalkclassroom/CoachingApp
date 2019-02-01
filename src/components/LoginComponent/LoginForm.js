@@ -4,9 +4,9 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import {Link} from 'react-router-dom'
-import {firebaseEmailSignIn} from "../authorize";
+// import {firebaseEmailSignIn} from "../authorize";
 import TextField from "@material-ui/core/TextField";
-import {isSignedIn} from "../authorize";
+// import {isSignedIn} from "../authorize";
 
 const styles = theme => ({
     main: {
@@ -85,7 +85,7 @@ class LoginForm extends React.Component{
     };
 
     validateEmail = (email) => {
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     };
 

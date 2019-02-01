@@ -7,23 +7,16 @@ import {
     FormatListNumbered,
     Headset,
     HowToReg,
-    Menu,
     InsertEmoticon,
     People,
     School,
-    Timer,
-    Link
+    Timer
 } from "@material-ui/icons";
 import { Button, Typography } from "@material-ui/core";
 import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/context";
 import AppBar from "../../components/AppBar";
-import {
-    createMuiTheme,
-    MuiThemeProvider,
-    withStyles
-} from "@material-ui/core/styles";
-
+import { withStyles } from "@material-ui/core/styles";
 const CardRow = styled.div`
     position: relative;
     display: block;
@@ -83,6 +76,9 @@ class Magic8Menu extends Component {
                 break;
             case "Classroom Climate":
                 selected = "ClassroomClimate";
+                break;
+            default:
+                break;
         }
         if (selected !== "") {
             this.props.history.push({

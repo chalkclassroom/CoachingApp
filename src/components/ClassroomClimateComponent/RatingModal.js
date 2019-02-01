@@ -12,7 +12,6 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 
 function getModalStyle() {
     return {
@@ -46,10 +45,6 @@ const theme = createMuiTheme({
 });
 
 class RatingModal extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     state = {
         rating: 0,
         value: "undefined"
@@ -73,6 +68,9 @@ class RatingModal extends React.Component {
                 break;
             case "Vibrant":
                 ret = 5;
+                break;
+            default:
+                break;
         }
         this.setState({ value: event.target.value });
         this.setState({ rating: ret });

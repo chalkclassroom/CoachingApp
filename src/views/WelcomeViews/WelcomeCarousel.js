@@ -6,13 +6,13 @@ import "slick-carousel/slick/slick-theme.css";
 
 import {withStyles} from "@material-ui/core";
 
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+// import Card from '@material-ui/core/Card';
+// import CardActionArea from '@material-ui/core/CardActionArea';
+// import CardActions from '@material-ui/core/CardActions';
+// import CardContent from '@material-ui/core/CardContent';
+// import CardMedia from '@material-ui/core/CardMedia';
+// import Button from '@material-ui/core/Button';
+// import Typography from '@material-ui/core/Typography';
 import PropTypes from "prop-types";
 import slide1 from "../../assets/slides/slide1.png"
 
@@ -76,6 +76,7 @@ class WelcomeCarousel extends React.Component {
                         src={slide1}
                         title="Magic 8 Coaching"
                         className={classes.slideImg}
+                        alt={""}
                     />
                 </div>
                 <div className={classes.slide}>
@@ -83,6 +84,7 @@ class WelcomeCarousel extends React.Component {
                         src={slide1}
                         title="Magic 8 Coaching"
                         className={classes.slideImg}
+                        alt={""}
                     />
                 </div>
                 <div className={classes.slide}>
@@ -90,6 +92,7 @@ class WelcomeCarousel extends React.Component {
                         src={slide1}
                         title="Magic 8 Coaching"
                         className={classes.slideImg}
+                        alt={""}
                     />
                 </div>
                 <div className={classes.slide}>
@@ -97,6 +100,7 @@ class WelcomeCarousel extends React.Component {
                         src={slide1}
                         title="Magic 8 Coaching"
                         className={classes.slideImg}
+                        alt={""}
                     />
                 </div>
             </Slider>

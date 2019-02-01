@@ -63,10 +63,6 @@ const styles = theme => ({
 });
 
 class SimpleMenu extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     handleChange = type => {
         this.props.handleTypeChange(type);
     };

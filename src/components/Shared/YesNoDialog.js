@@ -2,13 +2,10 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 class YesNoDialog extends React.Component {
-    constructor(props) {
-        /*
+    /*
         REQUIRED PROPS:
         1. buttonText: text of button to initialize dialog.
         2. dialogTitle: The bold text that asks your user for confirmation of an action.
@@ -18,9 +15,7 @@ class YesNoDialog extends React.Component {
         then cancelling the transition should result in a no-op.
         MISC:
         buttonVariant, buttonColor, buttonAriaLabel: use these to format the button to your liking.
-         */
-        super(props);
-    }
+     */
 
     state = {
         open: false

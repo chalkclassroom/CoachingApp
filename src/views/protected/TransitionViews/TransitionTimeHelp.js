@@ -1,52 +1,41 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {createMuiTheme, withStyles} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
+import React from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import cyan from "@material-ui/core/colors/teal";
 
-function getModalStyle () {
-
+function getModalStyle() {
     return {
-        position: 'fixed',
+        position: "fixed",
         top: `35%`,
         left: `50%`,
-        transform: `translate(-50%, -50%)`,
+        transform: `translate(-50%, -50%)`
     };
 }
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#ffffff',
-        },
-        secondary: cyan,
-    },
-});
-
 const styles = theme => ({
     paper: {
-        position: 'absolute',
-        width: '40%',
+        position: "absolute",
+        width: "40%",
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
-        borderRadius: 8,
-    },
+        borderRadius: 8
+    }
 });
 
 class TransitionTimeHelp extends React.Component {
     state = {
-        open: true,
+        open: true
     };
 
     handleOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
     // componentWillMount () {
@@ -65,43 +54,50 @@ class TransitionTimeHelp extends React.Component {
     //     });
     // }
 
-    render () {
-        const {classes} = this.props;
+    render() {
+        const { classes } = this.props;
 
         return (
             <div>
-                <Modal
-                    open={this.state.open}
-                >
+                <Modal open={this.state.open}>
                     <div style={getModalStyle()} className={classes.paper}>
-                        <Grid xs={12} container alignItems="center" direction="column" justify="flex-start">
+                        <Grid
+                            xs={12}
+                            container
+                            alignItems="center"
+                            direction="column"
+                            justify="flex-start"
+                        >
                             <Typography variant="subtitle2" gutterBottom>
-                                A positive classroom climate leads to long-term benefits for children’s academic achievement, social competence, and self-regulation. It allows children to:
+                                A positive classroom climate leads to long-term
+                                benefits for children’s academic achievement,
+                                social competence, and self-regulation. It
+                                allows children to:
                             </Typography>
                             <Typography variant="h6" gutterBottom>
                                 Components
                             </Typography>
                             <Typography variant="subtitle2" gutterBottom>
-                                <br/>
+                                <br />
                                 - More behavior-approving language
-                                <br/>
+                                <br />
                                 - Less behavior-disapproving language
-                                <br/>
+                                <br />
                                 - Concrete and specific praise
-                                <br/>
+                                <br />
                                 -Absense of threats and sarcasm
                             </Typography>
-                            <br/>
+                            <br />
                             <Typography variant="h6" gutterBottom>
                                 Benefits
                             </Typography>
                             <Typography variant="subtitle2" gutterBottom>
                                 - feel valued and safe
-                                <br/>
+                                <br />
                                 - interact more with teachers and peers
-                                <br/>
+                                <br />
                                 -take academic risks
-                                <br/>
+                                <br />
                                 -deeply engage in learning
                             </Typography>
                         </Grid>
@@ -113,7 +109,7 @@ class TransitionTimeHelp extends React.Component {
 }
 
 TransitionTimeHelp.propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(TransitionTimeHelp);

@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles, AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
-import Link from "react-router-dom/Link";
+import { withStyles, AppBar, Toolbar, Button, IconButton} from '@material-ui/core';
 import Logo from '../logo.svg'
 import {withRouter} from 'react-router-dom'
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -10,7 +9,7 @@ import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu"
 import BurgerMenu from "./BurgerMenu";
-import Firebase, {FirebaseContext} from "./Firebase"
+// import Firebase, {FirebaseContext} from "./Firebase"
 
 
 const styles = {
@@ -109,7 +108,7 @@ class CommonAppBar extends React.Component{
                                     )}
                                     style={{backgroundColor: '#FFFFFF', margin:10}}
                                 >
-                                    <img src={Logo} height={'36'}/>
+                                    <img src={Logo} height={'36'} alt={""}/>
                                 </IconButton>
                                 <div color="inherit" className={classes.grow}/>
                                 <Button color="secondary" variant={"contained"} onClick={this.handleLoginModal}
