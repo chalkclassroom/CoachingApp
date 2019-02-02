@@ -146,18 +146,35 @@ class RatingModal extends React.Component {
                             </FormControl>
                         </MuiThemeProvider>
                     </Grid>
-                    <YesNoDialog
-                        buttonText={"Confirm Rating"}
-                        buttonVariant={"contained"}
-                        buttonColor={"secondary"}
-                        buttonStyle={{ margin: 10 }}
-                        dialogTitle={`Are you sure you want to submit a rating of ${
-                            this.state.value
-                        }?`}
-                        onAccept={this.props.handleRatingConfirmation}
-                        onAcceptParams={this.state.rating}
-                        shouldOpen={true}
-                    />
+                    <Grid
+                        container
+                        alignItems={"center"}
+                        justify={"center"}
+                        direction={"row"}
+                    >
+                        <YesNoDialog
+                            buttonText={"Confirm Rating"}
+                            buttonVariant={"contained"}
+                            buttonColor={"secondary"}
+                            buttonStyle={{ margin: 10 }}
+                            dialogTitle={`Are you sure you want to submit a rating of ${
+                                this.state.value
+                            }?`}
+                            onAccept={this.props.handleRatingConfirmation}
+                            onAcceptParams={this.state.rating}
+                            shouldOpen={true}
+                        />
+                        <YesNoDialog
+                            buttonText={"Skip Rating"}
+                            buttonVariant={"contained"}
+                            buttonColor={"primary"}
+                            buttonStyle={{ margin: 10 }}
+                            dialogTitle={`Are you sure you want to skip this rating? This option should only be used in exceptional circumstances.`}
+                            onAccept={this.props.handleRatingConfirmation}
+                            onAcceptParams={0}
+                            shouldOpen={true}
+                        />
+                    </Grid>
                 </Grid>
             </div>
         );

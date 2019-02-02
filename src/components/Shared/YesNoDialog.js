@@ -3,6 +3,18 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: "#ff0000"
+        },
+        secondary: {
+            main: "#5da7ff"
+        }
+    }
+});
 
 class YesNoDialog extends React.Component {
     /*
@@ -43,15 +55,17 @@ class YesNoDialog extends React.Component {
     render() {
         return (
             <div>
-                <Button
-                    onClick={this.handleClickOpen}
-                    style={this.props.buttonStyle}
-                    variant={this.props.buttonVariant}
-                    color={this.props.buttonColor}
-                    aria-label={this.props.buttonAriaLabel}
-                >
-                    {this.props.buttonText}
-                </Button>
+                <MuiThemeProvider theme={theme}>
+                    <Button
+                        onClick={this.handleClickOpen}
+                        style={this.props.buttonStyle}
+                        variant={this.props.buttonVariant}
+                        color={this.props.buttonColor}
+                        aria-label={this.props.buttonAriaLabel}
+                    >
+                        {this.props.buttonText}
+                    </Button>
+                </MuiThemeProvider>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
