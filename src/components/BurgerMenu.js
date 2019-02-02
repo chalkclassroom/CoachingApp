@@ -271,8 +271,8 @@ class BurgerMenu extends React.Component {
 
 BurgerMenu.propTypes = {
     classes: PropTypes.object.isRequired,
-    handleClose: PropTypes.object.isRequired,
-    open: PropTypes.object.isRequired
+    handleClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired
 };
 
 const BurgerMenuWithRouter = withRouter(BurgerMenu);

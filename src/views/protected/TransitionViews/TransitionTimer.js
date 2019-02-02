@@ -136,7 +136,11 @@ class TransitionTimer extends React.Component {
                         }
                         initialAnimation={false}
                         styles={{
-                            path: { stroke: "rgba(29, 233, 182, 1)" },
+                            path: {
+                                stroke: getHexFromType(
+                                    this.props.transitionType
+                                )
+                            },
                             text: { fill: "#000", fontSize: "16px" },
                             background: {
                                 fill: getHexFromType(this.props.transitionType)

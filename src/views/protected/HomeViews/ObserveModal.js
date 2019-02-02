@@ -164,8 +164,9 @@ class ObserveModal extends React.Component {
                                 {this.state.teachers.map(teacher =>
                                     console.log(Object.values(teacher)[0])
                                 )}
-                                {this.state.teachers.map(teacher => (
+                                {this.state.teachers.map((teacher, index) => (
                                     <ListItem
+                                        key={index}
                                         alignItems="flex-start"
                                         onClick={() =>
                                             this.selectTeacher(teacher)

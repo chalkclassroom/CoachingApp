@@ -64,7 +64,7 @@ class WelcomeCarousel extends React.Component {
             slidesToScroll: 1,
             adaptiveHeight: true,
             autoplay: true,
-            autoplaySpeed: 2000,
+            autoplaySpeed: 10000,
         };
         const { classes } = this.props;
 
