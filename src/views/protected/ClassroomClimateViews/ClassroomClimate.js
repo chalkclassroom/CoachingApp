@@ -19,6 +19,7 @@ import FirebaseContext from "../../../components/Firebase/context";
 import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter";
 import CounterWithUndo from "../../../components/ClassroomClimateComponent/CounterWithUndo";
 import { connect } from "react-redux";
+import { appendClimateRating } from "../../../state/actions/classroom-climate";
 
 /*
     N.B. Time measured in milliseconds.
@@ -52,13 +53,11 @@ class ClassroomClimate extends React.Component {
         help: false,
         time: RATING_INTERVAL,
         ratingIsOpen: false,
-        ratings: [],
-        value: 1
+        ratings: []
     };
 
     componentDidMount() {
         this.timer = setInterval(this.tick, 1000);
-        console.log(this.props.location.state);
     }
 
     componentWillUnmount() {
@@ -82,27 +81,24 @@ class ClassroomClimate extends React.Component {
         this.setState({ ratingIsOpen: true });
     };
 
-    handleRatingConfirmation = rating => {
-        this.setState({ ratingIsOpen: false });
-
-        let mRatings = [...this.state.ratings];
-        mRatings.push(rating);
-        this.setState({ ratings: mRatings });
-        console.log(mRatings);
-
-        let entry = {
-            rating: rating,
-            ratingInterval: RATING_INTERVAL
-        };
-        this.handleSpreadsheetInsert(entry);
-    };
-
     handleHelpModal = () => {
         this.setState({ help: true });
     };
 
     handleClickAway = () => {
         this.setState({ help: false });
+    };
+
+    handleRatingConfirmation = rating => {
+        this.setState({ ratingIsOpen: false });
+
+        this.props.appendClimateRating(rating);
+
+        let entry = {
+            rating: rating,
+            ratingInterval: RATING_INTERVAL
+        };
+        this.handleSpreadsheetInsert(entry);
     };
 
     handleSpreadsheetInsert = entry => {
@@ -279,4 +275,7 @@ ClassroomClimate.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default connect()(withStyles(styles)(ClassroomClimate));
+export default connect(
+    null,
+    { appendClimateRating }
+)(withStyles(styles)(ClassroomClimate));

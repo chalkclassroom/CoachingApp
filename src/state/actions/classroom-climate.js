@@ -2,6 +2,7 @@ export const CHANGE_CLIMATE_TYPE =
     "toggle_instruction_transition_for_classroom_climate";
 export const PUSH_CLIMATE_STACK = "push_entry_onto_classroom_climate_stack";
 export const POP_CLIMATE_STACK = "pop_entry_off_classroom_climate_stack";
+export const CLIMATE_APPEND_RATING = "append_classroom_climate_rating";
 
 export const toggleNewClimateType = climateType => ({
     type: CHANGE_CLIMATE_TYPE,
@@ -19,4 +20,12 @@ export const pushOntoClimateStack = entry => ({
 
 export const popOffClimateStack = () => ({
     type: POP_CLIMATE_STACK
+});
+
+export const appendClimateRating = rating => ({
+    type: CLIMATE_APPEND_RATING,
+    entry: {
+        timestamp: Date.now(),
+        rating
+    }
 });

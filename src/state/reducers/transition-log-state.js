@@ -1,10 +1,10 @@
-import { PUSH_TRANSITION_STACK } from "../actions/transition-time";
+import { TRANSITION_APPEND_LOG } from "../actions/transition-time";
 
 const initialState = { transitionStack: [] };
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case PUSH_TRANSITION_STACK:
+        case TRANSITION_APPEND_LOG:
             return {
                 ...state,
                 transitionStack: [...state.transitionStack, action.entry]
