@@ -7,6 +7,9 @@ import ms from "pretty-ms";
 import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import cyan from "@material-ui/core/colors/teal";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import spreadsheetData from "../../../SPREADSHEET_SECRETS";
+import { connect } from "react-redux";
+import { pushOntoTransitionStack } from "../../../state/actions/transition-time";
 
 const theme = createMuiTheme({
     palette: {
@@ -16,6 +19,23 @@ const theme = createMuiTheme({
         secondary: cyan
     }
 });
+
+const COLOR_1 = "#F9A796";
+const COLOR_2 = "#FFE79D";
+const COLOR_3 = "#4DEDBC";
+
+let getHexFromType = type => {
+    switch (type) {
+        case "Wait Time":
+            return COLOR_1;
+        case "Inside Classroom":
+            return COLOR_2;
+        case "Outside Classroom":
+            return COLOR_3;
+        default:
+            return "#FFFFFF";
+    }
+};
 
 class TransitionTimer extends React.Component {
     constructor(props) {
@@ -31,10 +51,6 @@ class TransitionTimer extends React.Component {
         start: 0
     };
 
-    handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
-    };
-
     onStart = () => {
         this.setState(state => {
             if (state.isOn) {
@@ -44,10 +60,10 @@ class TransitionTimer extends React.Component {
                     start: this.state.start.toLocaleString(),
                     end: end.toLocaleString(),
                     duration: ms(this.state.time),
-                    type: null
+                    transitionType: this.props.transitionType
                 };
                 this.setState({ time: 0 });
-                this.props.handleAppend(entry);
+                this.handleAppend(entry);
             } else {
                 const startTime = Date.now() - this.state.time;
                 let mStart = new Date();
@@ -73,6 +89,37 @@ class TransitionTimer extends React.Component {
         clearInterval(this.timer);
     }
 
+    handleAppend = entry => {
+        this.props.pushOntoTransitionStack(entry);
+        this.handleSpreadsheetAppend(entry);
+    };
+
+    handleSpreadsheetAppend = entry => {
+        let url = new URL(spreadsheetData.scriptLink),
+            params = {
+                sheet: "TransitionTime",
+                del: "false",
+                TrnStart: entry.start,
+                TrnEnd: entry.end,
+                TrnDur: entry.duration,
+                TrnType: entry.transitionType,
+                TeacherID: this.props.teacherId
+            };
+        Object.keys(params).forEach(key =>
+            url.searchParams.append(key, params[key])
+        );
+        fetch(url, {
+            method: "POST",
+            credentials: "include",
+            mode: "no-cors",
+            headers: {
+                "content-type": "application/json"
+            }
+        })
+            .then(response => console.log("Success"))
+            .catch(error => console.error("Error:", error));
+    };
+
     render() {
         setTimeout(() => {
             this.setState({ percentage: this.state.isOn ? 100 : 0 });
@@ -92,7 +139,7 @@ class TransitionTimer extends React.Component {
                             path: { stroke: "rgba(29, 233, 182, 1)" },
                             text: { fill: "#000", fontSize: "16px" },
                             background: {
-                                fill: this.props.type
+                                fill: getHexFromType(this.props.transitionType)
                             }
                         }}
                     />
@@ -106,13 +153,13 @@ class TransitionTimer extends React.Component {
                         <Button
                             variant="contained"
                             color="secondary"
-                            disabled={this.props.type === "#FFFFFF"}
+                            disabled={this.props.transitionType === null}
                             aria-label="Start"
                             onClick={this.onStart}
                         >
                             {this.state.isOn
                                 ? "End Transition"
-                                : this.props.type === "#FFFFFF"
+                                : this.props.transitionType === null
                                 ? "Please choose a transition type"
                                 : "Start New Transition"}
                         </Button>
@@ -135,4 +182,13 @@ class TransitionTimer extends React.Component {
     }
 }
 
-export default TransitionTimer;
+const mapStateToProps = state => {
+    return {
+        transitionType: state.transitionTypeState.transitionType
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    { pushOntoTransitionStack }
+)(TransitionTimer);

@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
+import { connect } from "react-redux";
 
 const COLOR_1 = "#F9A796";
 const COLOR_2 = "#FFE79D";
@@ -55,12 +56,12 @@ const TransitionLog = ({ entries, classes }) => {
                         }}
                     >
                         {entries.map((entry, index) => (
-                            <React.Fragment>
+                            <React.Fragment key={index}>
                                 <Divider />
                                 <ListItem
                                     style={{
                                         backgroundColor: getHexFromType(
-                                            entry.type
+                                            entry.transitionType
                                         )
                                     }}
                                 >
@@ -68,7 +69,7 @@ const TransitionLog = ({ entries, classes }) => {
                                     <br />
                                     Duration:{entry.duration}
                                     <br />
-                                    Type:{entry.type}
+                                    Type:{entry.transitionType}
                                 </ListItem>
                             </React.Fragment>
                         ))}
@@ -83,4 +84,9 @@ TransitionLog.propTypes = {
     entries: PropTypes.array.isRequired
 };
 
-export default withStyles(styles)(TransitionLog);
+const mapStateToProps = state => {
+    return {
+        entries: state.transitionLogState.transitionStack
+    };
+};
+export default withStyles(styles)(connect(mapStateToProps)(TransitionLog));

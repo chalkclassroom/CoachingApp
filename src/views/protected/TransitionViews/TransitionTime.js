@@ -6,15 +6,13 @@ import InfoIcon from "@material-ui/icons/Help";
 import EditIcon from "@material-ui/icons/Edit";
 import { withStyles } from "@material-ui/core/styles";
 import TransitionTimeHelp from "./TransitionTimeHelp";
-import TranstionType from "./TransitionType";
+import TransitionType from "./TransitionType";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
 import YesNoDialog from "../../../components/Shared/YesNoDialog";
-import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
-import { ImmortalDB } from "immortal-db";
 
 const styles = {
     root: {
@@ -32,63 +30,11 @@ const styles = {
     }
 };
 
-const COLOR_1 = "#F9A796";
-const COLOR_2 = "#FFE79D";
-const COLOR_3 = "#4DEDBC";
-
-let getHexFromType = type => {
-    switch (type) {
-        case "Wait Time":
-            return COLOR_1;
-        case "Inside Classroom":
-            return COLOR_2;
-        case "Outside Classroom":
-            return COLOR_3;
-        default:
-            return "#FFFFFF";
-    }
-};
-
 class TransitionTime extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleAppend = this.handleAppend.bind(this);
-        this.handleTypeChange = this.handleTypeChange.bind(this);
-    }
-
     state = {
         auth: true,
         anchorEl: null,
-        help: false,
-        type: null,
-        hex: "#FFFFFF",
-        entries: [],
-        dbCounter: 0 // @Hack @Temporary !!!
-    };
-
-    componentDidMount() {
-        console.log(this.props.location.state);
-    }
-
-    handleAppend(entry) {
-        let newEntries = this.state.entries;
-        entry.type = this.state.type;
-        newEntries.push(entry);
-        this.setState({ entries: newEntries });
-
-        this.handleSpreadsheetAppend(entry);
-
-        this.handleDBinsert(entry);
-    }
-
-    handleTypeChange(newType) {
-        this.setState({ type: newType });
-        this.changeHex(newType);
-    }
-
-    changeHex = type => {
-        let mHex = getHexFromType(type);
-        this.setState({ hex: mHex });
+        help: false
     };
 
     handleChange = event => {
@@ -109,42 +55,6 @@ class TransitionTime extends React.Component {
 
     handleClickAway = () => {
         this.setState({ help: false });
-    };
-
-    handleDBinsert = async entry => {
-        // Once we integrate users, the user + some index will be the key for the DB.
-        await ImmortalDB.set(
-            JSON.stringify(this.state.dbCounter),
-            JSON.stringify(entry)
-        );
-
-        this.setState({ dbCounter: this.state.dbCounter + 1 });
-    };
-
-    handleSpreadsheetAppend = entry => {
-        let url = new URL(spreadsheetData.scriptLink),
-            params = {
-                sheet: "TransitionTime",
-                del: "false",
-                TrnStart: entry.start,
-                TrnEnd: entry.end,
-                TrnDur: entry.duration,
-                TrnType: entry.type,
-                TeacherID: this.props.location.state.key.id
-            };
-        Object.keys(params).forEach(key =>
-            url.searchParams.append(key, params[key])
-        );
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: {
-                "content-type": "application/json"
-            }
-        })
-            .then(response => console.log("Success"))
-            .catch(error => console.error("Error:", error));
     };
 
     render() {
@@ -175,7 +85,7 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 <div style={{ margin: 20 }} />
-                                <TransitionLog entries={this.state.entries} />
+                                <TransitionLog />
                             </Grid>
                         </Grid>
                         <Grid item xs={8}>
@@ -186,12 +96,9 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 <div style={{ margin: 20 }} />
-                                <TranstionType
-                                    handleTypeChange={this.handleTypeChange}
-                                />
+                                <TransitionType />
                                 <TransitionTimer
-                                    handleAppend={this.handleAppend}
-                                    type={this.state.hex}
+                                    teacherId={this.props.location.state.key.id}
                                 />
                             </Grid>
                         </Grid>
