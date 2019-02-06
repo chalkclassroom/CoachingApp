@@ -31,6 +31,8 @@ const CardRow = styled.div`
     justify-content: center;
     align-items: center;
     margin-bottom: 2em;
+    text-align: center;
+
 `;
 
 const styles = {
@@ -43,7 +45,7 @@ const styles = {
     },
     grow: {
         flexGrow: 1
-    }
+    },
 };
 
 class Magic8Menu extends Component {
@@ -99,31 +101,27 @@ class Magic8Menu extends Component {
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
                 <div className="row">
-                    <div className="row">
+                    <div className="row" align="center" >
                         <Typography
-                            style={{ fontSize: "2.4em", color: "#81ECEC" }}
+                            style={{ fontSize: "2.4em", color: "#81ECEC"}}
                         >
                             Student & Teacher Observation Tool
                         </Typography>
                     </div>
-                    <div className="row">
+                    <div className="row" align="center">
                         <Typography
                             style={{ fontSize: "3em", color: "#a5a4a4" }}
                         >
                             Magic 8
                         </Typography>
                     </div>
-                    <div className="row">
+                    <div className="row" align="center">
                         <Typography
-                            style={{
-                                fontSize: "1em",
-                                color: "#afafaf",
-                                marginTop: "2%",
-                                marginRight: "31.2%"
-                            }}
+                            style={{ fontSize: "1.5em", color: "#afafaf"}}
                         >
                             Select the skill you'd like to focus on:
                         </Typography>
+
                     </div>
                     <CardRow>
                         <Magic8Card
@@ -190,7 +188,7 @@ class Magic8Menu extends Component {
                             style={{
                                 backgroundColor: "#2196F3",
                                 opacity: this.state.allowed ? 1 : 0.5,
-                                marginLeft: "84%",
+                                marginLeft: "71%",
                                 transform: "scale(1.4)",
                                 display: "flex",
                                 marginBottom: "5px"
