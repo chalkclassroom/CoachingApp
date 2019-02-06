@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import WelcomePage from "./views/WelcomeViews/Welcome";
 import ClassroomClimate from "./views/protected/ClassroomClimateViews/ClassroomClimate";
+import ClassroomClimateResults from "./views/protected/ClassroomClimateViews/ClassroomClimateResults";
 import Magic8Menu from "./views/protected/Magic8Menu";
 import TransitionResults from "./views/protected/TransitionViews/TransitionResults";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
@@ -145,6 +146,11 @@ class App extends Component {
                             auth={this.state.auth}
                             path="/TransitionResults"
                             component={TransitionResults}
+                        />
+                        <PrivateRoute
+                            auth={this.state.auth}
+                            path="/ClassroomClimateResults"
+                            component={ClassroomClimateResults}
                         />
                         <Route render={() => <h3>No Match</h3>} />
                     </Switch>
