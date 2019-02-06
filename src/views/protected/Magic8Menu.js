@@ -45,7 +45,7 @@ const styles = {
     },
     grow: {
         flexGrow: 1
-    },
+    }
 };
 
 class Magic8Menu extends Component {
