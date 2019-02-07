@@ -1,8 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
@@ -21,8 +18,7 @@ import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import { ImmortalDB } from "immortal-db";
-import cyan from "@material-ui/core/colors/teal";
-//import Iframe from 'react-iframe';
+import {PieChart} from 'react-easy-chart';
 
 const styles = {
     root: {
@@ -80,7 +76,6 @@ class TransitionResults extends React.Component {
         onList: false,
         onTrends: false,
         onNextSteps: false,
-        iFrameSRC: "https://datastudio.google.com/embed/reporting/1EeK-fkzvcyOELN2mPMpeRoQcl7OU5Ex3/page/r36g"
     };
 
     componentDidMount() {
@@ -170,7 +165,6 @@ class TransitionResults extends React.Component {
             this.setState({ onList: false });
             this.setState({ onTrends: false });
             this.setState({ onNextSteps: false });
-            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1EeK-fkzvcyOELN2mPMpeRoQcl7OU5Ex3/page/r36g"});
         }
     };
 
@@ -180,7 +174,6 @@ class TransitionResults extends React.Component {
             this.setState({ onList: true });
             this.setState({ onTrends: false });
             this.setState({ onNextSteps: false });
-            this.setState({ iFrameSRC: ""});
         }
     };
 
@@ -189,8 +182,7 @@ class TransitionResults extends React.Component {
             this.setState({ onSummary: false });
             this.setState({ onList: false });
             this.setState({ onTrends: true });
-            this.setState({ onNextSteps: false })
-            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"});
+            this.setState({ onNextSteps: false });
         }
     };
 
@@ -215,71 +207,110 @@ class TransitionResults extends React.Component {
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
                 <main style={{ flex: 1 }}>
-                    <Grid container spacing={32} justify="center">
-                      <List>
-                        <ListItem>
-                            <form>
-                                <FormControl variant="filled" className={classes.viewButtons}>
-                                    <InputLabel htmlFor="filled-age-simple">Date</InputLabel>
-                                    <Select
-                                        input={<FilledInput name="age" id="filled-age-simple" />}
-                                    >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </form>
-                        </ListItem>
-                        <ListItem>
-                          <Button size= "large"
-                                  color= {"secondary"}
-                                  variant = {this.state.onSummary ? "contained" : "outlined"}
-                                  className={classes.viewButtons}
-                                  onClick={this.summaryClick}>
-                          Summary
-                          </Button>
-                        </ListItem>
-                        <ListItem>
-                          <Button size= "large"
-                                  color= {"primary"}
-                                  variant = {this.state.onList ? "contained" : "outlined"}
-                                  className={classes.viewButtons}
-                                  onClick={this.listClick}>
-                          List Detail
-                          </Button>
-                        </ListItem>
-                        <ListItem>
-                          <Button size= "large"
-                                  color= {"secondary"}
-                                  variant = {this.state.onTrends ? "contained" : "outlined"}
-                                  className={classes.viewButtons}
-                                  onClick={this.trendsClick}>
-                          Trends
-                          </Button>
-                        </ListItem>
-                        <ListItem>
-                          <Button size= "large"
-                                  color= {"inherit"}
-                                  variant = {this.state.onNextSteps ? "contained" : "outlined"}
-                                  className={classes.viewButtons}
-                                  onClick={this.nextStepsClick}>
-                          Next Steps
-                          </Button>
-                        </ListItem>
-                      </List>
-                      <iframe src={this.state.iFrameSRC}
-                              width="600px"
-                              height="425px"
-                              id="myId"
-                              className="myClassname"
-                              display="initial"
-                              position="relative"
-                              allowFullScreen/>
-                    </Grid>
+                    <div className={classes.root} align="center">
+                        <Grid container spacing={24} alignContent={"center"} alignItems={"center"}>
+                            <Grid xs ={1}/>
+                            <Grid xs={3} alignContent={"center"}>
+                                <List>
+                                <ListItem>
+                                    <form>
+                                        <FormControl variant="filled" className={classes.viewButtons}>
+                                            <InputLabel htmlFor="filled-age-simple">Date</InputLabel>
+                                            <Select
+                                                input={<FilledInput name="age" id="filled-age-simple" />}
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={10}>Ten</MenuItem>
+                                                <MenuItem value={20}>Twenty</MenuItem>
+                                                <MenuItem value={30}>Thirty</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </form>
+                                </ListItem>
+                                <ListItem>
+                                  <Button size= "large"
+                                          color= {"secondary"}
+                                          variant = {this.state.onSummary ? "contained" : "outlined"}
+                                          className={classes.viewButtons}
+                                          onClick={this.summaryClick}>
+                                  Summary
+                                  </Button>
+                                </ListItem>
+                                <ListItem>
+                                  <Button size= "large"
+                                          color= {"primary"}
+                                          variant = {this.state.onList ? "contained" : "outlined"}
+                                          className={classes.viewButtons}
+                                          onClick={this.listClick}>
+                                  List Detail
+                                  </Button>
+                                </ListItem>
+                                <ListItem>
+                                  <Button size= "large"
+                                          color= {"secondary"}
+                                          variant = {this.state.onTrends ? "contained" : "outlined"}
+                                          className={classes.viewButtons}
+                                          onClick={this.trendsClick}>
+                                  Trends
+                                  </Button>
+                                </ListItem>
+                                <ListItem>
+                                  <Button size= "large"
+                                          color= {"inherit"}
+                                          variant = {this.state.onNextSteps ? "contained" : "outlined"}
+                                          className={classes.viewButtons}
+                                          onClick={this.nextStepsClick}>
+                                  Next Steps
+                                  </Button>
+                                </ListItem>
+                              </List>
+                            </Grid>
+                            <Grid xs={8} alignContent={"center"}>
+                                <div>
+                                  {this.state.onSummary
+                                      ? <PieChart
+                                      labels
+                                      styles={{
+                                          '.chart_lines': {
+                                              strokeWidth: 10
+                                          },
+                                          '.chart_text': {
+                                              fontFamily: 'serif',
+                                              fontSize: '100em',
+                                              fill: '#fff'
+                                          }
+                                      }}
+                                      data={[
+                                          {key: 'Instruction', value: 100, color: '#00cec9'},
+                                          {key: 'Transition', value: 200, color: '#0984e3'}
+                                      ]}
+                                  />
+                                      : null
+                                  }
+                              </div>
+                                <div>
+                                    {this.state.onList
+                                        ? null // replace this null with list graph
+                                        : null
+                                    }
+                                </div>
+                                <div>
+                                    {this.state.onTrends
+                                        ? null // replace this null with trends graph
+                                        : null
+                                    }
+                                </div>
+                                <div>
+                                    {this.state.onNextSteps
+                                        ? null // replace this null with next steps content
+                                        : null
+                                    }
+                                </div>
+                            </Grid>
+                        </Grid>
+                    </div>
                 </main>
             </div>
         );
