@@ -40,22 +40,6 @@ const styles = {
     }
 };
 
-const COLOR_1 = "#F9A796";
-const COLOR_2 = "#FFE79D";
-const COLOR_3 = "#4DEDBC";
-
-let getHexFromType = type => {
-    switch (type) {
-        case "Wait Time":
-            return COLOR_1;
-        case "Inside Classroom":
-            return COLOR_2;
-        case "Outside Classroom":
-            return COLOR_3;
-        default:
-            return "#FFFFFF";
-    }
-};
 
 class TransitionResults extends React.Component {
     constructor(props) {
@@ -97,11 +81,6 @@ class TransitionResults extends React.Component {
         this.setState({ type: newType });
         this.changeHex(newType);
     }
-
-    changeHex = (type) => {
-        let mHex = getHexFromType(type);
-        this.setState({hex: mHex})
-    };
 
     handleChange = event => {
         this.setState({ auth: event.target.checked });

@@ -13,6 +13,7 @@
     "react": "^16.6.1",
     "react-circle": "^1.1.1",
     "react-circular-progressbar": "^1.0.0",
+    "react-d3-components": "^0.9.1",
     "react-dom": "^16.6.1",
     "react-easy-chart": "^1.0.0",
     "react-iframe": "^1.3.3",
