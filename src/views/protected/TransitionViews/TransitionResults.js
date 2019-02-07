@@ -22,6 +22,7 @@ import AppBar from "../../../components/AppBar";
 import { ImmortalDB } from "immortal-db";
 import cyan from "@material-ui/core/colors/teal";
 import {PieChart} from 'react-easy-chart';
+import {VictoryPie} from 'victory-pie';
 
 const styles = {
     root: {
@@ -254,23 +255,15 @@ class TransitionResults extends React.Component {
                             <Grid xs={8} alignContent={"center"}>
                                 <div>
                                   {this.state.onSummary
-                                      ? <PieChart
-                                      labels
-                                      styles={{
-                                          '.chart_lines': {
-                                              strokeWidth: 10
-                                          },
-                                          '.chart_text': {
-                                              fontFamily: 'serif',
-                                              fontSize: '100em',
-                                              fill: '#fff'
-                                          }
-                                      }}
-                                      data={[
-                                          {key: 'Instruction', value: 100, color: '#00cec9'},
-                                          {key: 'Transition', value: 200, color: '#0984e3'}
-                                      ]}
-                                  />
+                                      ? <VictoryPie
+                                          data={[
+                                              { x: "Transition\n27%", y: 150 },
+                                              { x: "Non-transition\n73%", y: 400 }
+                                          ]}
+                                          colorScale={["#00cec9", "#0984e3"]}
+                                          labelRadius ={50}
+                                          style={{ labels: { fill: "white", fontSize: 16}}}
+                                              />
                                       : null
                                   }
                               </div>

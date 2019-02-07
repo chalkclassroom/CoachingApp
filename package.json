@@ -33,7 +33,8 @@
     "redux-thunk": "^2.3.0",
     "rxjs": "^6.3.3",
     "slick-carousel": "^1.8.1",
-    "styled-components": "^4.1.1"
+    "styled-components": "^4.1.1",
+    "victory-pie": "^31.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
