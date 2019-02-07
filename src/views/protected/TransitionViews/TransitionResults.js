@@ -23,6 +23,15 @@ import { ImmortalDB } from "immortal-db";
 import cyan from "@material-ui/core/colors/teal";
 import {PieChart} from 'react-easy-chart';
 import {VictoryPie} from 'victory-pie';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import indigo from '@material-ui/core/colors/indigo'
+import amber from '@material-ui/core/colors/amber'
+import red from '@material-ui/core/colors/red'
 
 const styles = {
     root: {
@@ -44,6 +53,21 @@ const styles = {
     }
 };
 
+// dummy data for transition list detail table, when we read in from DB we can use custom id
+let id = 0;
+function createData(startTime, duration, notes, type) {
+  id += 1;
+  return { id, startTime, duration, notes, type };
+}
+
+const transitionData = [
+  createData('08:32', '2m 3s', 'Breakfast to am meeting', 'INSIDE'),
+  createData('08:44', '5m 10s', 'Line up for bathroom', 'OUTSIDE'),
+  createData('09:01', '1m 7s', 'T finding book', 'WAIT'),
+  createData('09:37', '1m 56s', 'Rotating rooms', 'WAIT'),
+  createData('09:56', '3m 2s', 'Cleanup after centers', 'INSIDE'),
+];
+// end of list detail table data
 
 class TransitionResults extends React.Component {
     constructor(props) {
@@ -269,7 +293,34 @@ class TransitionResults extends React.Component {
                               </div>
                                 <div>
                                     {this.state.onList
-                                        ? null // replace this null with list graph
+                                        ?
+                                      <Paper style={{width: '90%', overflowX: 'auto', margin: 'auto'}}>
+                                        <Table className={classes.table}>
+                                          <TableHead>
+                                            <TableRow>
+                                              <TableCell style={{backgroundColor:'#3f51b5', color: 'white', fontSize: 14}}>Start Time</TableCell>
+                                              <TableCell style={{backgroundColor:'#3f51b5', color: 'white', fontSize: 14}} align="right">Duration</TableCell>
+                                              <TableCell style={{backgroundColor:'#3f51b5', color: 'white', fontSize: 14}} align="right">Notes</TableCell>
+                                              <TableCell style={{backgroundColor:'#3f51b5', color: 'white', fontSize: 14}} align="right">Type</TableCell>
+                                            </TableRow>
+                                          </TableHead>
+                                          <TableBody>
+                                            {transitionData.map(row => (
+                                              <TableRow className={classes.row} key={row.id}>
+                                                <TableCell component="th" scope="row">
+                                                  {row.startTime}
+                                                </TableCell>
+                                                <TableCell align="right">{row.duration}</TableCell>
+                                                <TableCell align="right">{row.notes}</TableCell>
+                                                {row.type === 'INSIDE' ? <TableCell style={{backgroundColor:'#ffc107', color: 'black', fontSize: 14}}>{row.type}</TableCell>
+                                                  : row.type === 'OUTSIDE' ? <TableCell style={{backgroundColor:'#f44336', color: 'black', fontSize: 14}}>{row.type}</TableCell>
+                                                    : row.type === 'WAIT' ? <TableCell style={{backgroundColor:'#69f0ae', color: 'black', fontSize: 14}}>{row.type}</TableCell>
+                                                      : null}
+                                              </TableRow>
+                                            ))}
+                                          </TableBody>
+                                        </Table>
+                                      </Paper>
                                         : null
                                     }
                                 </div>
