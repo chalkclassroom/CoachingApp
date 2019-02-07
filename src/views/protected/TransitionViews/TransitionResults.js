@@ -231,7 +231,7 @@ class TransitionResults extends React.Component {
                                 </ListItem>
                                 <ListItem>
                                   <Button size= "large"
-                                          color= {"secondary"}
+                                          color= {"primary"}
                                           variant = {this.state.onSummary ? "contained" : "outlined"}
                                           className={classes.viewButtons}
                                           onClick={this.summaryClick}>
@@ -249,7 +249,7 @@ class TransitionResults extends React.Component {
                                 </ListItem>
                                 <ListItem>
                                   <Button size= "large"
-                                          color= {"secondary"}
+                                          color= {"primary"}
                                           variant = {this.state.onTrends ? "contained" : "outlined"}
                                           className={classes.viewButtons}
                                           onClick={this.trendsClick}>
@@ -258,7 +258,7 @@ class TransitionResults extends React.Component {
                                 </ListItem>
                                 <ListItem>
                                   <Button size= "large"
-                                          color= {"inherit"}
+                                          color= {"primary"}
                                           variant = {this.state.onNextSteps ? "contained" : "outlined"}
                                           className={classes.viewButtons}
                                           onClick={this.nextStepsClick}>
