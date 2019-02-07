@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0e8f285-b1d7-46cf-b7f2-55032c6f88e3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/protected/TransitionViews/TransitionResults.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/protected/TransitionViews/TransitionResults.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -44,12 +44,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="1616" />
+          <entry key="js" value="1638" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JavaScript" value="1616" />
+          <entry key="JavaScript" value="1638" />
         </counts>
       </usages-collector>
     </session>
@@ -59,14 +59,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/views/protected/TransitionViews/TransitionResults.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="240" column="36" lean-forward="true" selection-start-line="240" selection-start-column="36" selection-end-line="240" selection-end-column="36" />
+            <state relative-caret-position="-2340">
+              <caret line="82" column="5" selection-start-line="82" selection-start-column="5" selection-end-line="82" selection-end-column="5" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
                 <element signature="e#6147#7076#0" />
                 <element signature="e#6356#7021#0" />
-                <element signature="e#8316#8730#0" />
-                <element signature="e#8852#9274#0" />
                 <element signature="e#9465#10599#0" />
                 <element signature="e#10632#10900#0" />
                 <element signature="e#10933#11205#0" />
@@ -2014,7 +2012,7 @@
       <path value="$PROJECT_DIR$/src/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="15" />
     <option name="y" value="30" />
     <option name="width" value="1890" />
@@ -2096,16 +2094,15 @@
       <workItem from="1548881350904" duration="573000" />
       <workItem from="1549407051551" duration="734000" />
       <workItem from="1549479874994" duration="5722000" />
-      <workItem from="1549490780245" duration="5731000" />
+      <workItem from="1549490780245" duration="7035000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28214000" />
+    <option name="totallyTimeSpent" value="29518000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1295" height="695" extended-state="7" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24960254" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -2121,7 +2118,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.3285968" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.058614563" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.42806393" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -2176,14 +2173,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/views/protected/TransitionViews/TransitionResults.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="240" column="36" lean-forward="true" selection-start-line="240" selection-start-column="36" selection-end-line="240" selection-end-column="36" />
+        <state relative-caret-position="-2340">
+          <caret line="82" column="5" selection-start-line="82" selection-start-column="5" selection-end-line="82" selection-end-column="5" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
             <element signature="e#6147#7076#0" />
             <element signature="e#6356#7021#0" />
-            <element signature="e#8316#8730#0" />
-            <element signature="e#8852#9274#0" />
             <element signature="e#9465#10599#0" />
             <element signature="e#10632#10900#0" />
             <element signature="e#10933#11205#0" />
