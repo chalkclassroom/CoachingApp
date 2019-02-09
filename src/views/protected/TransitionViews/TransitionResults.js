@@ -28,6 +28,7 @@ import Paper from '@material-ui/core/Paper';
 import indigo from '@material-ui/core/colors/indigo'
 import amber from '@material-ui/core/colors/amber'
 import red from '@material-ui/core/colors/red'
+import ListDetailTable from "../../../components/ResultsComponents/ListDetailTable";
 
 const styles = {
     root: {
@@ -163,7 +164,7 @@ class TransitionResults extends React.Component {
     };
 
     summaryClick = () => {
-        if (this.state.onSummary == false){
+        if (this.state.onSummary === false){
             this.setState({ onSummary: true });
             this.setState({ onList: false });
             this.setState({ onTrends: false });
@@ -172,7 +173,7 @@ class TransitionResults extends React.Component {
     };
 
     listClick = () => {
-        if (this.state.onList == false){
+        if (this.state.onList === false){
             this.setState({ onSummary: false });
             this.setState({ onList: true });
             this.setState({ onTrends: false });
@@ -181,7 +182,7 @@ class TransitionResults extends React.Component {
     };
 
     trendsClick = () => {
-        if (this.state.onTrends == false){
+        if (this.state.onTrends === false){
             this.setState({ onSummary: false });
             this.setState({ onList: false });
             this.setState({ onTrends: true });
@@ -190,7 +191,7 @@ class TransitionResults extends React.Component {
     };
 
     nextStepsClick = () => {
-        if (this.state.onNextSteps == false){
+        if (this.state.onNextSteps === false){
             this.setState({ onSummary: false });
             this.setState({ onList: false });
             this.setState({ onTrends: false });
@@ -212,63 +213,63 @@ class TransitionResults extends React.Component {
                 <main style={{ flex: 1 }}>
                     <div className={classes.root} align="center">
                         <Grid container spacing={24} alignContent={"center"} alignItems={"center"}>
-                            <Grid xs ={1}/>
+                          <Grid xs ={1}/>
                             <Grid xs={3} alignContent={"center"}>
                                 <List>
-                                <ListItem>
-                                    <form>
-                                        <FormControl variant="filled" className={classes.viewButtons}>
-                                            <InputLabel htmlFor="filled-age-simple">Date</InputLabel>
-                                            <Select
-                                                input={<FilledInput name="age" id="filled-age-simple" />}
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </form>
-                                </ListItem>
-                                <ListItem>
-                                  <Button size= "large"
-                                          color= {"primary"}
-                                          variant = {this.state.onSummary ? "contained" : "outlined"}
-                                          className={classes.viewButtons}
-                                          onClick={this.summaryClick}>
-                                  Summary
-                                  </Button>
-                                </ListItem>
-                                <ListItem>
-                                  <Button size= "large"
-                                          color= {"primary"}
-                                          variant = {this.state.onList ? "contained" : "outlined"}
-                                          className={classes.viewButtons}
-                                          onClick={this.listClick}>
-                                  List Detail
-                                  </Button>
-                                </ListItem>
-                                <ListItem>
-                                  <Button size= "large"
-                                          color= {"primary"}
-                                          variant = {this.state.onTrends ? "contained" : "outlined"}
-                                          className={classes.viewButtons}
-                                          onClick={this.trendsClick}>
-                                  Trends
-                                  </Button>
-                                </ListItem>
-                                <ListItem>
-                                  <Button size= "large"
-                                          color= {"primary"}
-                                          variant = {this.state.onNextSteps ? "contained" : "outlined"}
-                                          className={classes.viewButtons}
-                                          onClick={this.nextStepsClick}>
-                                  Next Steps
-                                  </Button>
-                                </ListItem>
-                              </List>
+                                  <ListItem>
+                                      <form>
+                                          <FormControl variant="filled" className={classes.viewButtons}>
+                                              <InputLabel htmlFor="filled-age-simple">Date</InputLabel>
+                                              <Select
+                                                  input={<FilledInput name="age" id="filled-age-simple" />}
+                                              >
+                                                  <MenuItem value="">
+                                                      <em>None</em>
+                                                  </MenuItem>
+                                                  <MenuItem value={10}>Ten</MenuItem>
+                                                  <MenuItem value={20}>Twenty</MenuItem>
+                                                  <MenuItem value={30}>Thirty</MenuItem>
+                                              </Select>
+                                          </FormControl>
+                                      </form>
+                                  </ListItem>
+                                  <ListItem>
+                                    <Button size= "large"
+                                            color= {"primary"}
+                                            variant = {this.state.onSummary ? "contained" : "outlined"}
+                                            className={classes.viewButtons}
+                                            onClick={this.summaryClick}>
+                                    Summary
+                                    </Button>
+                                  </ListItem>
+                                  <ListItem>
+                                    <Button size= "large"
+                                            color= {"primary"}
+                                            variant = {this.state.onList ? "contained" : "outlined"}
+                                            className={classes.viewButtons}
+                                            onClick={this.listClick}>
+                                    List Detail
+                                    </Button>
+                                  </ListItem>
+                                  <ListItem>
+                                    <Button size= "large"
+                                            color= {"primary"}
+                                            variant = {this.state.onTrends ? "contained" : "outlined"}
+                                            className={classes.viewButtons}
+                                            onClick={this.trendsClick}>
+                                    Trends
+                                    </Button>
+                                  </ListItem>
+                                  <ListItem>
+                                    <Button size= "large"
+                                            color= {"primary"}
+                                            variant = {this.state.onNextSteps ? "contained" : "outlined"}
+                                            className={classes.viewButtons}
+                                            onClick={this.nextStepsClick}>
+                                    Next Steps
+                                    </Button>
+                                  </ListItem>
+                                </List>
                             </Grid>
                             <Grid xs={8} alignContent={"center"}>
                                 <div>
@@ -287,34 +288,7 @@ class TransitionResults extends React.Component {
                               </div>
                                 <div>
                                     {this.state.onList
-                                        ?
-                                      <Paper style={{width: '90%', overflowX: 'auto', margin: 'auto'}}>
-                                        <Table className={classes.table}>
-                                          <TableHead>
-                                            <TableRow>
-                                              <TableCell style={{backgroundColor:'#3f51b5', color: 'white', fontSize: 14}}>Start Time</TableCell>
-                                              <TableCell style={{backgroundColor:'#3f51b5', color: 'white', fontSize: 14}} align="right">Duration</TableCell>
-                                              <TableCell style={{backgroundColor:'#3f51b5', color: 'white', fontSize: 14}} align="right">Notes</TableCell>
-                                              <TableCell style={{backgroundColor:'#3f51b5', color: 'white', fontSize: 14}} align="right">Type</TableCell>
-                                            </TableRow>
-                                          </TableHead>
-                                          <TableBody>
-                                            {transitionData.map(row => (
-                                              <TableRow className={classes.row} key={row.id}>
-                                                <TableCell component="th" scope="row">
-                                                  {row.startTime}
-                                                </TableCell>
-                                                <TableCell align="right">{row.duration}</TableCell>
-                                                <TableCell align="right">{row.notes}</TableCell>
-                                                {row.type === 'INSIDE' ? <TableCell style={{backgroundColor:'#ffc107', color: 'black', fontSize: 14}}>{row.type}</TableCell>
-                                                  : row.type === 'OUTSIDE' ? <TableCell style={{backgroundColor:'#f44336', color: 'black', fontSize: 14}}>{row.type}</TableCell>
-                                                    : row.type === 'WAIT' ? <TableCell style={{backgroundColor:'#69f0ae', color: 'black', fontSize: 14}}>{row.type}</TableCell>
-                                                      : null}
-                                              </TableRow>
-                                            ))}
-                                          </TableBody>
-                                        </Table>
-                                      </Paper>
+                                        ? <ListDetailTable data={transitionData}/>
                                         : null
                                     }
                                 </div>
