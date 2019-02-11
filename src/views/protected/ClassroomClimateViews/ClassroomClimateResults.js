@@ -1,8 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
@@ -11,25 +8,33 @@ import ListItem from "@material-ui/core/ListItem"
 import FilledInput from '@material-ui/core/FilledInput';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from '@material-ui/core/Select';
+import {ReactComponent as GenerateReportSVG} from '../../../assets/icons/generateReport.svg'
+
 import {
-    createMuiTheme,
-    MuiThemeProvider,
     withStyles
 } from "@material-ui/core/styles";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
+import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
-import cyan from "@material-ui/core/colors/teal";
-//import Iframe from 'react-iframe';
+import {VictoryPie} from 'victory-pie';
+import ListDetailTableClassroomClimateResults from "../../../components/ResultsComponents/ListDetailTableClassroomClimateResults.js";
+
 
 const styles = {
     root: {
         flexGrow: 1,
         display: "flex",
-        minHeight: "100vh",
+        height: "100%",
         flexDirection: "column"
+    },
+    main: {
+        flex: 1,
+        height: '90%',
+        marginTop: '10vh'
     },
     grow: {
         flexGrow: 1
@@ -41,25 +46,50 @@ const styles = {
     viewButtons: {
         minWidth: 150,
         textAlign: "center"
+    },
+    buttonsList: {
+        position: 'relative',
+        left: '40%',
+        top: '13%'
+    },
+    title: {
+        position: 'relative',
+        left: '33%',
+        top: '10%'
+    },
+    secondTitle: {
+        position: 'relative',
+        left: '40%',
+        top: '10%'
+    },
+    chart: {
+        position: 'relative',
+        left: '7%',
+        top: '5%'
+    },
+    generateReport: {
+        position: 'relative',
+        right: '10%',
+        top: '76%'
     }
+
 };
 
-const COLOR_1 = "#F9A796";
-const COLOR_2 = "#FFE79D";
-const COLOR_3 = "#4DEDBC";
+// dummy data for classroom cliamte list detail table, when we read in from DB we can use custom id
+let id = 0;
+function createData(time, notes) {
+  id += 1;
+  return {time, notes};
+}
 
-let getHexFromType = type => {
-    switch (type) {
-        case "Wait Time":
-            return COLOR_1;
-        case "Inside Classroom":
-            return COLOR_2;
-        case "Outside Classroom":
-            return COLOR_3;
-        default:
-            return "#FFFFFF";
-    }
-};
+const classroomClimateData = [
+  createData('08:32', 'Kiss your brain'),
+  createData('08:44', 'Great super friend'),
+  createData('09:01', 'Lots of good jobs'),
+  createData('09:37', 'BD frown'),
+  createData('09:56', 'Close down center conflict'),
+];
+// end of list detail table data
 
 class ClassroomClimateResults extends React.Component {
     constructor(props) {
@@ -79,8 +109,8 @@ class ClassroomClimateResults extends React.Component {
         onSummary: true,
         onList: false,
         onTrends: false,
+        onNotes: false,
         onNextSteps: false,
-        iFrameSRC: "https://datastudio.google.com/embed/reporting/1EeK-fkzvcyOELN2mPMpeRoQcl7OU5Ex3/page/r36g"
     };
 
     componentDidMount() {
@@ -102,11 +132,6 @@ class ClassroomClimateResults extends React.Component {
         this.setState({ type: newType });
         this.changeHex(newType);
     }
-
-    changeHex = (type) => {
-        let mHex = getHexFromType(type);
-        this.setState({hex: mHex})
-    };
 
     handleChange = event => {
         this.setState({ auth: event.target.checked });
@@ -141,13 +166,9 @@ class ClassroomClimateResults extends React.Component {
     handleSpreadsheetAppend = entry => {
         let url = new URL(spreadsheetData.scriptLink),
             params = {
-                sheet: "TransitionTime",
+                sheet: "ClassroomClimateTime",
                 del: "false",
-                TrnStart: entry.start,
-                TrnEnd: entry.end,
-                TrnDur: entry.duration,
-                TrnType: entry.type,
-                TeacherID: this.props.location.state.key.id
+                TrnDur: entry.time,
             };
         Object.keys(params).forEach(key =>
             url.searchParams.append(key, params[key])
@@ -165,42 +186,52 @@ class ClassroomClimateResults extends React.Component {
     };
 
     summaryClick = () => {
-        if (this.state.onSummary == false){
+        if (this.state.onSummary === false){
             this.setState({ onSummary: true });
             this.setState({ onList: false });
             this.setState({ onTrends: false });
+            this.setState({ onNotes: false });
             this.setState({ onNextSteps: false });
-            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1EeK-fkzvcyOELN2mPMpeRoQcl7OU5Ex3/page/r36g"});
         }
     };
 
     listClick = () => {
-        if (this.state.onList == false){
+        if (this.state.onList === false){
             this.setState({ onSummary: false });
             this.setState({ onList: true });
             this.setState({ onTrends: false });
+            this.setState({ onNotes: false });
             this.setState({ onNextSteps: false });
-            this.setState({ iFrameSRC: ""});
         }
     };
 
     trendsClick = () => {
-        if (this.state.onTrends == false){
+        if (this.state.onTrends === false){
             this.setState({ onSummary: false });
             this.setState({ onList: false });
             this.setState({ onTrends: true });
+            this.setState({ onNotes: false });
             this.setState({ onNextSteps: false })
-            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"});
+        }
+    };
+
+    notesClick = () => {
+        if (this.state.onNotes === false){
+            this.setState({ onSummary: false });
+            this.setState({ onList: false });
+            this.setState({ onTrends: false });
+            this.setState({ onNotes: true });
+            this.setState({ onNextSteps: false })
         }
     };
 
     nextStepsClick = () => {
-        if (this.state.onNextSteps == false){
+        if (this.state.onNextSteps === false){
             this.setState({ onSummary: false });
             this.setState({ onList: false });
             this.setState({ onTrends: false });
+            this.setState({ onNotes: false });
             this.setState({ onNextSteps: true });
-            this.setState({ iFrameSRC: ""});
         }
     };
 
@@ -214,9 +245,10 @@ class ClassroomClimateResults extends React.Component {
                 <FirebaseContext.Consumer>
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
-                <main style={{ flex: 1 }}>
-                    <Grid container spacing={32} justify="center">
-                        <List>
+                <main className={classes.main}>
+                    <Grid container spacing={32} justify="center" direction={'row'}>
+                        <Grid item xs={3}>
+                          <List className={classes.buttonsList}>
                             <ListItem>
                                 <form>
                                     <FormControl variant="filled" className={classes.viewButtons}>
@@ -227,58 +259,105 @@ class ClassroomClimateResults extends React.Component {
                                             <MenuItem value="">
                                                 <em>None</em>
                                             </MenuItem>
-                                            <MenuItem value={10}>Ten</MenuItem>
-                                            <MenuItem value={20}>Twenty</MenuItem>
-                                            <MenuItem value={30}>Thirty</MenuItem>
+                                            <MenuItem value={10}>Mon, Oct 22, 2018</MenuItem>
+                                            <MenuItem value={20}>Tue, Nov 6, 2018</MenuItem>
+                                            <MenuItem value={30}>Thurs, Nov 29, 2018</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </form>
                             </ListItem>
                             <ListItem>
-                                <Button size= "large"
-                                        color= {"secondary"}
-                                        variant = {this.state.onSummary ? "contained" : "outlined"}
-                                        className={classes.viewButtons}
-                                        onClick={this.summaryClick}>
-                                    Summary
-                                </Button>
+                              <Button size= "large"
+                                      color= {"secondary"}
+                                      variant = {this.state.onSummary ? "contained" : "outlined"}
+                                      className={classes.viewButtons}
+                                      onClick={this.summaryClick}>
+                              Summary
+                              </Button>
                             </ListItem>
                             <ListItem>
-                                <Button size= "large"
-                                        color= {"primary"}
-                                        variant = {this.state.onList ? "contained" : "outlined"}
-                                        className={classes.viewButtons}
-                                        onClick={this.listClick}>
-                                    List Detail
-                                </Button>
+                              <Button size= "large"
+                                      color= {"primary"}
+                                      variant = {this.state.onList ? "contained" : "outlined"}
+                                      className={classes.viewButtons}
+                                      onClick={this.listClick}>
+                              List Detail
+                              </Button>
                             </ListItem>
                             <ListItem>
-                                <Button size= "large"
-                                        color= {"secondary"}
-                                        variant = {this.state.onTrends ? "contained" : "outlined"}
-                                        className={classes.viewButtons}
-                                        onClick={this.trendsClick}>
-                                    Trends
-                                </Button>
+                              <Button size= "large"
+                                      color= {"secondary"}
+                                      variant = {this.state.onTrends ? "contained" : "outlined"}
+                                      className={classes.viewButtons}
+                                      onClick={this.trendsClick}>
+                              Trends
+                              </Button>
                             </ListItem>
                             <ListItem>
-                                <Button size= "large"
-                                        color= {"inherit"}
-                                        variant = {this.state.onNextSteps ? "contained" : "outlined"}
-                                        className={classes.viewButtons}
-                                        onClick={this.nextStepsClick}>
-                                    Next Steps
-                                </Button>
+                              <Button size= "large"
+                                      color= {"inherit"}
+                                      variant = {this.state.onNotes ? "contained" : "outlined"}
+                                      className={classes.viewButtons}
+                                      onClick={this.notesClick}>
+                              Notes
+                              </Button>
                             </ListItem>
-                        </List>
-                        <iframe src={this.state.iFrameSRC}
-                                width="600px"
-                                height="425px"
-                                id="myId"
-                                className="myClassname"
-                                display="initial"
-                                position="relative"
-                                allowFullScreen/>
+                              <ListItem>
+                                  <Button size= "large"
+                                          color= {"inherit"}
+                                          variant = {this.state.onNextSteps ? "contained" : "outlined"}
+                                          className={classes.viewButtons}
+                                          onClick={this.nextStepsClick}>
+                                      Next Steps
+                                  </Button>
+                              </ListItem>
+                          </List>
+                        </Grid>
+                        <Grid container item xs={7}>
+                            <Grid container direction={'row'}>
+                                <Grid item xs={12}>
+                                    <Typography variant={'h5'} className={classes.title}>Classroom Climate Results</Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <div>
+
+                                    </div>
+                                    <div>
+                                    {this.state.onList
+                                        ? <div style={{height: '60vh', position:'relative', top:'8vh', left:'25%'}}>
+                                            <ListDetailTableClassroomClimateResults data={classroomClimateData}/>
+                                        </div>
+                                        : null
+                                    }
+                                    </div>
+                                    <div>
+                                    {this.state.onTrends
+                                        ? <div style={{height: '60vh'}}/>// replace this null with trends graph
+                                        : null
+                                    }
+                                    </div>
+                                    <div>
+                                        {this.state.onNotes
+                                            ? <div style={{height: '60vh'}}/>// replace this null with trends graph
+                                            : null
+                                        }
+                                    </div>
+                                    <div>
+                                    {this.state.onNextSteps
+                                        ? <div style={{height: '60vh'}}/>// replace this null with next steps content
+                                        : null
+                                    }
+                                    </div>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container item xs={2}>
+                            <Grid item xs={12}>
+                                <IconButton className={classes.generateReport}>
+                                    <GenerateReportSVG style={{height: '88px', width: '88px'}}/>
+                                </IconButton>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </main>
             </div>
