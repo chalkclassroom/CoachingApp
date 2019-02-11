@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 import PropTypes from "prop-types";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
@@ -15,8 +15,6 @@ import Select from '@material-ui/core/Select';
 import {ReactComponent as GenerateReportSVG} from '../../../assets/icons/generateReport.svg'
 
 import {
-    createMuiTheme,
-    MuiThemeProvider,
     withStyles
 } from "@material-ui/core/styles";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
@@ -27,15 +25,6 @@ import { ImmortalDB } from "immortal-db";
 import cyan from "@material-ui/core/colors/teal";
 import {PieChart} from 'react-easy-chart';
 import {VictoryPie} from 'victory-pie';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import indigo from '@material-ui/core/colors/indigo'
-import amber from '@material-ui/core/colors/amber'
-import red from '@material-ui/core/colors/red'
 import ListDetailTable from "../../../components/ResultsComponents/ListDetailTable";
 
 const styles = {
@@ -125,7 +114,6 @@ class TransitionResults extends React.Component {
         onTrends: false,
         onNotes: false,
         onNextSteps: false,
-        iFrameSRC: "https://datastudio.google.com/embed/reporting/1EeK-fkzvcyOELN2mPMpeRoQcl7OU5Ex3/page/r36g"
     };
 
     componentDidMount() {
@@ -211,7 +199,6 @@ class TransitionResults extends React.Component {
             this.setState({ onTrends: false });
             this.setState({ onNotes: false });
             this.setState({ onNextSteps: false });
-            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1EeK-fkzvcyOELN2mPMpeRoQcl7OU5Ex3/page/r36g"});
         }
     };
 
@@ -232,7 +219,6 @@ class TransitionResults extends React.Component {
             this.setState({ onTrends: true });
             this.setState({ onNotes: false });
             this.setState({ onNextSteps: false })
-            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"});
         }
     };
 
@@ -243,7 +229,16 @@ class TransitionResults extends React.Component {
             this.setState({ onTrends: false });
             this.setState({ onNotes: true });
             this.setState({ onNextSteps: false })
-            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"});
+        }
+    };
+
+    notesClick = () => {
+        if (this.state.onNotes === false){
+            this.setState({ onSummary: false });
+            this.setState({ onList: false });
+            this.setState({ onTrends: false });
+            this.setState({ onNotes: true });
+            this.setState({ onNextSteps: false })
         }
     };
 
@@ -254,7 +249,6 @@ class TransitionResults extends React.Component {
             this.setState({ onTrends: false });
             this.setState({ onNotes: false });
             this.setState({ onNextSteps: true });
-            this.setState({ iFrameSRC: ""});
         }
     };
 
@@ -345,14 +339,38 @@ class TransitionResults extends React.Component {
                                     <Typography variant={'h7'} className={classes.secondTitle}>Total Transition Time: </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                  <iframe src={this.state.iFrameSRC}
-                                          width="600px"
-                                          height="425px"
-                                          id="myId"
-                                          className={classes.chart}
-                                          display="initial"
-                                          position="relative"
-                                          allowFullScreen/>
+                                    <div>
+                                    {this.state.onSummary
+                                        ? <VictoryPie
+                                            data={[
+                                                { x: "Transition\n27%", y: 150 },
+                                                { x: "Non-transition\n73%", y: 400 }
+                                            ]}
+                                            colorScale={["#00cec9", "#0984e3"]}
+                                            labelRadius ={50}
+                                            style={{ labels: { fill: "white", fontSize: 16}}}
+                                        />
+                                        : null
+                                    }
+                                    </div>
+                                    <div>
+                                    {this.state.onList
+                                        ? <ListDetailTable data={transitionData}/>
+                                        : null
+                                    }
+                                    </div>
+                                    <div>
+                                    {this.state.onTrends
+                                        ? null // replace this null with trends graph
+                                        : null
+                                    }
+                                    </div>
+                                    <div>
+                                    {this.state.onNextSteps
+                                        ? null // replace this null with next steps content
+                                        : null
+                                    }
+                                    </div>
                                 </Grid>
                             </Grid>
                         </Grid>
