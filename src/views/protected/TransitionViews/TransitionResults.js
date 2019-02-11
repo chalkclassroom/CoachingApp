@@ -1,8 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
@@ -16,8 +13,6 @@ import Select from '@material-ui/core/Select';
 import {ReactComponent as GenerateReportSVG} from '../../../assets/icons/generateReport.svg'
 
 import {
-    createMuiTheme,
-    MuiThemeProvider,
     withStyles
 } from "@material-ui/core/styles";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
@@ -25,8 +20,8 @@ import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
-import cyan from "@material-ui/core/colors/teal";
-//import Iframe from 'react-iframe';
+import {VictoryPie} from 'victory-pie';
+import ListDetailTable from "../../../components/ResultsComponents/ListDetailTable";
 
 const styles = {
     root: {
@@ -79,22 +74,21 @@ const styles = {
 
 };
 
-const COLOR_1 = "#F9A796";
-const COLOR_2 = "#FFE79D";
-const COLOR_3 = "#4DEDBC";
+// dummy data for transition list detail table, when we read in from DB we can use custom id
+let id = 0;
+function createData(startTime, duration, notes, type) {
+  id += 1;
+  return { id, startTime, duration, notes, type };
+}
 
-let getHexFromType = type => {
-    switch (type) {
-        case "Wait Time":
-            return COLOR_1;
-        case "Inside Classroom":
-            return COLOR_2;
-        case "Outside Classroom":
-            return COLOR_3;
-        default:
-            return "#FFFFFF";
-    }
-};
+const transitionData = [
+  createData('08:32', '2m 3s', 'Breakfast to am meeting', 'INSIDE'),
+  createData('08:44', '5m 10s', 'Line up for bathroom', 'OUTSIDE'),
+  createData('09:01', '1m 7s', 'T finding book', 'WAIT'),
+  createData('09:37', '1m 56s', 'Rotating rooms', 'WAIT'),
+  createData('09:56', '3m 2s', 'Cleanup after centers', 'INSIDE'),
+];
+// end of list detail table data
 
 class TransitionResults extends React.Component {
     constructor(props) {
@@ -116,7 +110,6 @@ class TransitionResults extends React.Component {
         onTrends: false,
         onNotes: false,
         onNextSteps: false,
-        iFrameSRC: "https://datastudio.google.com/embed/reporting/1EeK-fkzvcyOELN2mPMpeRoQcl7OU5Ex3/page/r36g"
     };
 
     componentDidMount() {
@@ -138,11 +131,6 @@ class TransitionResults extends React.Component {
         this.setState({ type: newType });
         this.changeHex(newType);
     }
-
-    changeHex = (type) => {
-        let mHex = getHexFromType(type);
-        this.setState({hex: mHex})
-    };
 
     handleChange = event => {
         this.setState({ auth: event.target.checked });
@@ -207,7 +195,6 @@ class TransitionResults extends React.Component {
             this.setState({ onTrends: false });
             this.setState({ onNotes: false });
             this.setState({ onNextSteps: false });
-            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1EeK-fkzvcyOELN2mPMpeRoQcl7OU5Ex3/page/r36g"});
         }
     };
 
@@ -218,7 +205,6 @@ class TransitionResults extends React.Component {
             this.setState({ onTrends: false });
             this.setState({ onNotes: false });
             this.setState({ onNextSteps: false });
-            this.setState({ iFrameSRC: ""});
         }
     };
 
@@ -229,7 +215,6 @@ class TransitionResults extends React.Component {
             this.setState({ onTrends: true });
             this.setState({ onNotes: false });
             this.setState({ onNextSteps: false })
-            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"});
         }
     };
 
@@ -240,7 +225,6 @@ class TransitionResults extends React.Component {
             this.setState({ onTrends: false });
             this.setState({ onNotes: true });
             this.setState({ onNextSteps: false })
-            this.setState({ iFrameSRC: "https://datastudio.google.com/embed/reporting/1gajoLOQyrnFx7QGPTa6iHTEBOy_3Qhoz/page/IRsg"});
         }
     };
 
@@ -251,7 +235,6 @@ class TransitionResults extends React.Component {
             this.setState({ onTrends: false });
             this.setState({ onNotes: false });
             this.setState({ onNextSteps: true });
-            this.setState({ iFrameSRC: ""});
         }
     };
 
@@ -342,14 +325,38 @@ class TransitionResults extends React.Component {
                                     <Typography variant={'h7'} className={classes.secondTitle}>Total Transition Time: </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                  <iframe src={this.state.iFrameSRC}
-                                          width="600px"
-                                          height="425px"
-                                          id="myId"
-                                          className={classes.chart}
-                                          display="initial"
-                                          position="relative"
-                                          allowFullScreen/>
+                                    <div>
+                                    {this.state.onSummary
+                                        ? <VictoryPie
+                                            data={[
+                                                { x: "Transition\n27%", y: 150 },
+                                                { x: "Non-transition\n73%", y: 400 }
+                                            ]}
+                                            colorScale={["#00cec9", "#0984e3"]}
+                                            labelRadius ={50}
+                                            style={{ labels: { fill: "white", fontSize: 16}}}
+                                        />
+                                        : null
+                                    }
+                                    </div>
+                                    <div>
+                                    {this.state.onList
+                                        ? <ListDetailTable data={transitionData}/>
+                                        : null
+                                    }
+                                    </div>
+                                    <div>
+                                    {this.state.onTrends
+                                        ? null // replace this null with trends graph
+                                        : null
+                                    }
+                                    </div>
+                                    <div>
+                                    {this.state.onNextSteps
+                                        ? null // replace this null with next steps content
+                                        : null
+                                    }
+                                    </div>
                                 </Grid>
                             </Grid>
                         </Grid>
