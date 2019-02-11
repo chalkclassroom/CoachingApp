@@ -53,12 +53,12 @@ const styles = {
     },
     title: {
         position: 'relative',
-        left: '35%',
+        left: '33%',
         top: '10%'
     },
     secondTitle: {
         position: 'relative',
-        left: '41%',
+        left: '40%',
         top: '10%'
     },
     chart: {
@@ -68,8 +68,8 @@ const styles = {
     },
     generateReport: {
         position: 'relative',
-        left: '25%',
-        top: '82%'
+        right: '10%',
+        top: '76%'
     }
 
 };
@@ -326,34 +326,45 @@ class TransitionResults extends React.Component {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <div>
-                                    {this.state.onSummary
-                                        ? <VictoryPie
-                                            data={[
-                                                { x: "Transition\n27%", y: 150 },
-                                                { x: "Non-transition\n73%", y: 400 }
-                                            ]}
-                                            colorScale={["#00cec9", "#0984e3"]}
-                                            labelRadius ={50}
-                                            style={{ labels: { fill: "white", fontSize: 16}}}
-                                        />
-                                        : null
-                                    }
+                                        {this.state.onSummary
+                                            ? <div style={{height: '60vh'}}>
+                                                <VictoryPie
+                                                data={[
+                                                    { x: "Transition\n27%", y: 150 },
+                                                    { x: "Non-transition\n73%", y: 400 }
+                                                ]}
+                                                colorScale={["#00cec9", "#0984e3"]}
+                                                labelRadius ={50}
+                                                radius={170}
+                                                style={{ labels: { fill: "white", fontSize: 16}}}
+                                                />
+                                            </div>
+                                            : null
+                                        }
                                     </div>
                                     <div>
                                     {this.state.onList
-                                        ? <ListDetailTable data={transitionData}/>
+                                        ? <div style={{height: '60vh', position:'relative', top:'8vh', left:'7%'}}>
+                                            <ListDetailTable data={transitionData}/>
+                                        </div>
                                         : null
                                     }
                                     </div>
                                     <div>
                                     {this.state.onTrends
-                                        ? null // replace this null with trends graph
+                                        ? <div style={{height: '60vh'}}/>// replace this null with trends graph
                                         : null
                                     }
                                     </div>
                                     <div>
+                                        {this.state.onNotes
+                                            ? <div style={{height: '60vh'}}/>// replace this null with trends graph
+                                            : null
+                                        }
+                                    </div>
+                                    <div>
                                     {this.state.onNextSteps
-                                        ? null // replace this null with next steps content
+                                        ? <div style={{height: '60vh'}}/>// replace this null with next steps content
                                         : null
                                     }
                                     </div>
