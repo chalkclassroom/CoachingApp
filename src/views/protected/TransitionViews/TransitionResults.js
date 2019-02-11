@@ -25,7 +25,7 @@ import { ImmortalDB } from "immortal-db";
 import cyan from "@material-ui/core/colors/teal";
 import {PieChart} from 'react-easy-chart';
 import {VictoryPie} from 'victory-pie';
-import ListDetailTable from "../../../components/ResultsComponents/ListDetailTable";
+import ListDetailTableTransitionResults from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
 
 const styles = {
     root: {
@@ -276,9 +276,9 @@ class TransitionResults extends React.Component {
                                             <MenuItem value="">
                                                 <em>None</em>
                                             </MenuItem>
-                                            <MenuItem value={10}>Ten</MenuItem>
-                                            <MenuItem value={20}>Twenty</MenuItem>
-                                            <MenuItem value={30}>Thirty</MenuItem>
+                                            <MenuItem value={10}>Mon, Oct 22, 2018</MenuItem>
+                                            <MenuItem value={20}>Tue, Nov 6, 2018</MenuItem>
+                                            <MenuItem value={30}>Thurs, Nov 29, 2018</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </form>
@@ -359,7 +359,7 @@ class TransitionResults extends React.Component {
                                     <div>
                                     {this.state.onList
                                         ? <div style={{height: '60vh', position:'relative', top:'8vh', left:'7%'}}>
-                                            <ListDetailTable data={transitionData}/>
+                                            <ListDetailTableTransitionResults data={transitionData}/>
                                         </div>
                                         : null
                                     }
