@@ -74,6 +74,14 @@ const styles = {
 
 };
 
+const ViewEnum = {
+    SUMMARY: 1,
+    LIST: 2,
+    TRENDS: 3,
+    NOTES: 4,
+    NEXT_STEPS: 5,
+};
+
 // dummy data for transition list detail table, when we read in from DB we can use custom id
 let id = 0;
 function createData(startTime, duration, notes, type) {
@@ -105,11 +113,7 @@ class TransitionResults extends React.Component {
         hex: "#FFFFFF",
         entries: [],
         dbCounter: 0, // @Hack @Temporary !!!
-        onSummary: true,
-        onList: false,
-        onTrends: false,
-        onNotes: false,
-        onNextSteps: false,
+        view: ViewEnum.SUMMARY
     };
 
     componentDidMount() {
@@ -189,52 +193,32 @@ class TransitionResults extends React.Component {
     };
 
     summaryClick = () => {
-        if (this.state.onSummary === false){
-            this.setState({ onSummary: true });
-            this.setState({ onList: false });
-            this.setState({ onTrends: false });
-            this.setState({ onNotes: false });
-            this.setState({ onNextSteps: false });
+        if (this.state.view !== ViewEnum.SUMMARY){
+            this.setState({ view: ViewEnum.SUMMARY});
         }
     };
 
     listClick = () => {
-        if (this.state.onList === false){
-            this.setState({ onSummary: false });
-            this.setState({ onList: true });
-            this.setState({ onTrends: false });
-            this.setState({ onNotes: false });
-            this.setState({ onNextSteps: false });
+        if (this.state.view !== ViewEnum.LIST){
+            this.setState({ view: ViewEnum.LIST});
         }
     };
 
     trendsClick = () => {
-        if (this.state.onTrends === false){
-            this.setState({ onSummary: false });
-            this.setState({ onList: false });
-            this.setState({ onTrends: true });
-            this.setState({ onNotes: false });
-            this.setState({ onNextSteps: false })
+        if (this.state.view !== ViewEnum.TRENDS){
+            this.setState({ view: ViewEnum.TRENDS});
         }
     };
 
     notesClick = () => {
-        if (this.state.onNotes === false){
-            this.setState({ onSummary: false });
-            this.setState({ onList: false });
-            this.setState({ onTrends: false });
-            this.setState({ onNotes: true });
-            this.setState({ onNextSteps: false })
+        if (this.state.view !== ViewEnum.NOTES){
+            this.setState({ view: ViewEnum.NOTES});
         }
     };
 
     nextStepsClick = () => {
-        if (this.state.onNextSteps === false){
-            this.setState({ onSummary: false });
-            this.setState({ onList: false });
-            this.setState({ onTrends: false });
-            this.setState({ onNotes: false });
-            this.setState({ onNextSteps: true });
+        if (this.state.view !== ViewEnum.NEXT_STEPS){
+            this.setState({ view: ViewEnum.NEXT_STEPS});
         }
     };
 
@@ -272,7 +256,7 @@ class TransitionResults extends React.Component {
                             <ListItem>
                               <Button size= "large"
                                       color= {"secondary"}
-                                      variant = {this.state.onSummary ? "contained" : "outlined"}
+                                      variant = {this.state.view === ViewEnum.SUMMARY ? "contained" : "outlined"}
                                       className={classes.viewButtons}
                                       onClick={this.summaryClick}>
                               Summary
@@ -281,7 +265,7 @@ class TransitionResults extends React.Component {
                             <ListItem>
                               <Button size= "large"
                                       color= {"primary"}
-                                      variant = {this.state.onList ? "contained" : "outlined"}
+                                      variant = {this.state.view === ViewEnum.LIST ? "contained" : "outlined"}
                                       className={classes.viewButtons}
                                       onClick={this.listClick}>
                               List Detail
@@ -290,7 +274,7 @@ class TransitionResults extends React.Component {
                             <ListItem>
                               <Button size= "large"
                                       color= {"secondary"}
-                                      variant = {this.state.onTrends ? "contained" : "outlined"}
+                                      variant = {this.state.view === ViewEnum.TRENDS ? "contained" : "outlined"}
                                       className={classes.viewButtons}
                                       onClick={this.trendsClick}>
                               Trends
@@ -299,7 +283,7 @@ class TransitionResults extends React.Component {
                             <ListItem>
                               <Button size= "large"
                                       color= {"inherit"}
-                                      variant = {this.state.onNotes ? "contained" : "outlined"}
+                                      variant = {this.state.view === ViewEnum.NOTES ? "contained" : "outlined"}
                                       className={classes.viewButtons}
                                       onClick={this.notesClick}>
                               Notes
@@ -308,7 +292,7 @@ class TransitionResults extends React.Component {
                               <ListItem>
                                   <Button size= "large"
                                           color= {"inherit"}
-                                          variant = {this.state.onNextSteps ? "contained" : "outlined"}
+                                          variant = {this.state.view === ViewEnum.NEXT_STEPS ? "contained" : "outlined"}
                                           className={classes.viewButtons}
                                           onClick={this.nextStepsClick}>
                                       Next Steps
@@ -326,7 +310,7 @@ class TransitionResults extends React.Component {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <div>
-                                        {this.state.onSummary
+                                        {this.state.view === ViewEnum.SUMMARY
                                             ? <div style={{height: '60vh'}}>
                                                 <VictoryPie
                                                 data={[
@@ -343,7 +327,7 @@ class TransitionResults extends React.Component {
                                         }
                                     </div>
                                     <div>
-                                    {this.state.onList
+                                    {this.state.view === ViewEnum.LIST
                                         ? <div style={{height: '60vh', position:'relative', top:'8vh', left:'7%'}}>
                                             <ListDetailTableTransitionResults data={transitionData}/>
                                         </div>
@@ -351,19 +335,19 @@ class TransitionResults extends React.Component {
                                     }
                                     </div>
                                     <div>
-                                    {this.state.onTrends
+                                    {this.state.view === ViewEnum.TRENDS
                                         ? <div style={{height: '60vh'}}/>// replace this null with trends graph
                                         : null
                                     }
                                     </div>
                                     <div>
-                                        {this.state.onNotes
+                                        {this.state.view === ViewEnum.NOTES
                                             ? <div style={{height: '60vh'}}/>// replace this null with trends graph
                                             : null
                                         }
                                     </div>
                                     <div>
-                                    {this.state.onNextSteps
+                                    {this.state.view === ViewEnum.NEXT_STEPS
                                         ? <div style={{height: '60vh'}}/>// replace this null with next steps content
                                         : null
                                     }
