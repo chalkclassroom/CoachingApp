@@ -21,6 +21,7 @@ import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
 import {VictoryPie} from 'victory-pie';
+import HSBar from "react-horizontal-stacked-bar-chart";
 import ListDetailTableTransitionResults from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
 
 const styles = {
@@ -322,32 +323,42 @@ class TransitionResults extends React.Component {
                                                 radius={170}
                                                 style={{ labels: { fill: "white", fontSize: 16}}}
                                                 />
+                                                <HSBar
+                                                    height={50}
+                                                    showText
+                                                    id="new_id"
+                                                    fontColor="#ffffff"
+                                                    data={[
+                                                        {
+                                                            name: "Inside",
+                                                            value: 10,
+                                                            description: "10 min",
+                                                            color: "#E99C2E"
+                                                        },
+                                                        {
+                                                            name: "Outside",
+                                                            value: 12,
+                                                            description: "12 min",
+                                                            color: "#0988EC"
+                                                        },
+                                                        {
+                                                            name: "Waiting",
+                                                            value: 8,
+                                                            description: "8 min",
+                                                            color: "#4FD9B3"
+                                                        }
+                                                    ]}
+                                                />
                                             </div>
-                                            : null
-                                        }
-                                    </div>
-                                    <div>
-                                    {this.state.view === ViewEnum.LIST
+                                            : this.state.view === ViewEnum.LIST
                                         ? <div style={{height: '60vh', position:'relative', top:'8vh', left:'7%'}}>
                                             <ListDetailTableTransitionResults data={transitionData}/>
                                         </div>
-                                        : null
-                                    }
-                                    </div>
-                                    <div>
-                                    {this.state.view === ViewEnum.TRENDS
+                                        : this.state.view === ViewEnum.TRENDS
                                         ? <div style={{height: '60vh'}}/>// replace this null with trends graph
-                                        : null
-                                    }
-                                    </div>
-                                    <div>
-                                        {this.state.view === ViewEnum.NOTES
+                                        : this.state.view === ViewEnum.NOTES
                                             ? <div style={{height: '60vh'}}/>// replace this null with trends graph
-                                            : null
-                                        }
-                                    </div>
-                                    <div>
-                                    {this.state.view === ViewEnum.NEXT_STEPS
+                                            : this.state.view === ViewEnum.NEXT_STEPS
                                         ? <div style={{height: '60vh'}}/>// replace this null with next steps content
                                         : null
                                     }
