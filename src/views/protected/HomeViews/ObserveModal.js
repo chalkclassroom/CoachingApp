@@ -101,17 +101,17 @@ class ObserveModal extends React.Component {
     };
 
     componentDidMount() {
-        this.props.firebase.getTeacherList().on("value", snapshot => {
+        this.props.firebase.getTeacherList().then(teacherList => {
             this.setState((previousState, currentProps) => {
-                console.log(snapshot.val());
                 console.log(previousState.teachers);
+                console.log(teacherList);
 
                 let arraySnapshot = [];
-                let objectSnapshot = snapshot.val();
+                let objectSnapshot = teacherList
 
-                Object.keys(objectSnapshot).forEach(key => {
-                    arraySnapshot.push({ key: objectSnapshot[key] });
-                });
+                    Object.keys(objectSnapshot).forEach(key => {
+                        arraySnapshot.push({ key: objectSnapshot[key] });
+                    });
 
                 return {
                     teachers: previousState.teachers.concat(arraySnapshot)
