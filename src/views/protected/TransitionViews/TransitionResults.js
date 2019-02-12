@@ -313,9 +313,14 @@ class TransitionResults extends React.Component {
                                       Next Steps
                                   </Button>
                               </ListItem>
+                              <ListItem>
+                                  <IconButton className={classes.generateReport}>
+                                      <GenerateReportSVG style={{height: '88px', width: '88px'}}/>
+                                  </IconButton>
+                              </ListItem>
                           </List>
                         </Grid>
-                        <Grid container item xs={7}>
+                        <Grid container item xs={9}>
                             <Grid container direction={'row'}>
                                 <Grid item xs={12}>
                                     <Typography variant={'h5'} className={classes.title}>Transition Time Results</Typography>
@@ -378,13 +383,6 @@ class TransitionResults extends React.Component {
                                     }
                                     </div>
                                 </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid container item xs={2}>
-                            <Grid item xs={12}>
-                                <IconButton className={classes.generateReport}>
-                                    <GenerateReportSVG style={{height: '88px', width: '88px'}}/>
-                                </IconButton>
                             </Grid>
                         </Grid>
                     </Grid>
