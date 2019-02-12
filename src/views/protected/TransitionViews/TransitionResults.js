@@ -317,7 +317,7 @@ class TransitionResults extends React.Component {
                                 <Grid item xs={12}>
                                     <div>
                                         {this.state.view === ViewEnum.SUMMARY
-                                            ? <div style={{height: '60vh'}}>
+                                            ? <div style={{height: '80vh'}}>
                                                 <VictoryPie
                                                 data={[
                                                     { x: "Transition\n27%", y: 150 },
