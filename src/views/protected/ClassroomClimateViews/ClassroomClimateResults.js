@@ -312,27 +312,30 @@ class ClassroomClimateResults extends React.Component {
 
                                     </div>
                                     <div>
-                                    {this.state.onList
+                                    {this.state.view === ViewEnum.SUMMARY
                                         ? <div style={{height: '60vh', position:'relative', top:'8vh', left:'25%'}}>
-                                            <ListDetailTableClassroomClimateResults data={classroomClimateData}/>
+                                            <VictoryPie
+                                                data={[
+                                                    { x: "General\n24%", y: 48 },
+                                                    { x: "Specific\n16%", y: 32 },
+                                                    { x: "Negative\n11%", y: 22 },
+                                                    { x: "Redirect\n49%", y: 98 }
+                                                ]}
+                                                colorScale={["#55efc4", "#00b894", "#d63031", "#e17055"]}
+                                                labelRadius ={60}
+                                                radius={170}
+                                                style={{ labels: { fill: "white", fontSize: 16}}}
+                                            />
                                         </div>
-                                        : null
-                                    }
-                                    </div>
-                                    <div>
-                                    {this.state.onTrends
-                                        ? <div style={{height: '60vh'}}/>// replace this null with trends graph
-                                        : null
-                                    }
-                                    </div>
-                                    <div>
-                                        {this.state.onNotes
+                                        : this.state.view === ViewEnum.DETAILS
                                             ? <div style={{height: '60vh'}}/>// replace this null with trends graph
-                                            : null
-                                        }
-                                    </div>
-                                    <div>
-                                    {this.state.onNextSteps
+                                        : this.state.view === ViewEnum.TRENDS
+                                        ? <div style={{height: '60vh'}}/>// replace this null with trends graph
+                                        : this.state.view === ViewEnum.NOTES
+                                            ? <div style={{height: '60vh'}}>
+                                                <ListDetailTableClassroomClimateResults data={classroomClimateData}/>
+                                            </div>// replace this null with notes
+                                            : this.state.view === ViewEnum.NEXT_STEPS
                                         ? <div style={{height: '60vh'}}/>// replace this null with next steps content
                                         : null
                                     }
