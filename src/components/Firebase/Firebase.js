@@ -32,7 +32,7 @@ class Firebase {
                     id: userInfo.user.uid
                 });
 
-                firebase.firestore().collection(role).doc(userInfo.user.uid).set(data)
+                firebase.firestore().collection("users").doc(userInfo.user.uid).set(data)
                     .then(function(docRef) {
                         console.log("Document written with ID: ", docRef.id);
                     })
@@ -85,7 +85,7 @@ class Firebase {
     };
 
     getTeacherList = function () {
-         return firebase.firestore().collection("teacher")
+         return firebase.firestore().collection("users").where("role","==","teacher")
             .get()
             .then(function(querySnapshot) {
                 let teacherList  = []
@@ -103,7 +103,7 @@ class Firebase {
     };
 
     getCoachList = function () {
-        return firebase.firestore().collection("coach")
+        return firebase.firestore().collection("users").where("role","==","coach")
             .get()
             .then(function(querySnapshot) {
                 let teacherList  = []
@@ -121,7 +121,7 @@ class Firebase {
     };
 
     getAdminList = function () {
-        return firebase.firestore().collection("admin")
+        return firebase.firestore().collection("users").where("role","==","admin")
             .get()
             .then(function(querySnapshot) {
                 let teacherList  = []
