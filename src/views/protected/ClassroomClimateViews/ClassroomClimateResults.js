@@ -322,7 +322,7 @@ class ClassroomClimateResults extends React.Component {
                                                     <img src="../../../assets/icons/emotionFace1.png"/>
                                                 </Grid>
                                                 <Grid item>
-                                                    <img src="../../../assets/icons/emotionFace2.png"/>
+                                                    <img src="./../../../assets/icons/emotionFace2.png"/>
                                                 </Grid>
                                                 <Grid item>
                                                     <img src="../../../assets/icons/emotionFace3.png"/>
