@@ -10,6 +10,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from '@material-ui/core/Select';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import {ReactComponent as GenerateReportSVG} from '../../../assets/icons/generateReport.svg'
 
 import {
@@ -21,6 +22,11 @@ import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
 import {VictoryPie} from 'victory-pie';
+import {ReactComponent as EmotionFace1} from '../../../assets/icons/emotionFace1.png'
+import {ReactComponent as EmotionFace2} from '../../../assets/icons/emotionFace2.png'
+import {ReactComponent as EmotionFace3} from '../../../assets/icons/emotionFace3.png'
+import {ReactComponent as EmotionFace4} from '../../../assets/icons/emotionFace4.png'
+import {ReactComponent as EmotionFace5} from '../../../assets/icons/emotionFace5.png'
 import ListDetailTableClassroomClimateResults from "../../../components/ResultsComponents/ListDetailTableClassroomClimateResults.js";
 
 
@@ -224,21 +230,20 @@ class ClassroomClimateResults extends React.Component {
         const { auth, anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
-        return (
-            <div className={classes.root}>
-                <FirebaseContext.Consumer>
-                    {firebase => <AppBar firebase={firebase} />}
-                </FirebaseContext.Consumer>
-                <main className={classes.main}>
-                    <Grid container spacing={32} justify="center" direction={'row'}>
-                        <Grid item xs={3}>
-                          <List className={classes.buttonsList}>
+        return <div className={classes.root}>
+            <FirebaseContext.Consumer>
+                {firebase => <AppBar firebase={firebase}/>}
+            </FirebaseContext.Consumer>
+            <main className={classes.main}>
+                <Grid container spacing={32} justify="center" direction={'row'}>
+                    <Grid item xs={3}>
+                        <List className={classes.buttonsList}>
                             <ListItem>
                                 <form>
                                     <FormControl variant="filled" className={classes.viewButtons}>
                                         <InputLabel htmlFor="filled-age-simple">Date</InputLabel>
                                         <Select
-                                            input={<FilledInput name="age" id="filled-age-simple" />}
+                                            input={<FilledInput name="age" id="filled-age-simple"/>}
                                         >
                                             <MenuItem value="">
                                                 <em>None</em>
@@ -251,102 +256,119 @@ class ClassroomClimateResults extends React.Component {
                                 </form>
                             </ListItem>
                             <ListItem>
-                              <Button size= "large"
-                                      color= {"secondary"}
-                                      variant = {this.state.view === ViewEnum.SUMMARY ? "contained" : "outlined"}
-                                      className={classes.viewButtons}
-                                      onClick={this.summaryClick}>
-                              Summary
-                              </Button>
+                                <Button size="large"
+                                        color={"secondary"}
+                                        variant={this.state.view === ViewEnum.SUMMARY ? "contained" : "outlined"}
+                                        className={classes.viewButtons}
+                                        onClick={this.summaryClick}>
+                                    Summary
+                                </Button>
                             </ListItem>
                             <ListItem>
-                              <Button size= "large"
-                                      color= {"primary"}
-                                      variant = {this.state.view === ViewEnum.DETAILS ? "contained" : "outlined"}
-                                      className={classes.viewButtons}
-                                      onClick={this.detailsClick}>
-                              Details
-                              </Button>
+                                <Button size="large"
+                                        color={"primary"}
+                                        variant={this.state.view === ViewEnum.DETAILS ? "contained" : "outlined"}
+                                        className={classes.viewButtons}
+                                        onClick={this.detailsClick}>
+                                    Details
+                                </Button>
                             </ListItem>
                             <ListItem>
-                              <Button size= "large"
-                                      color= {"secondary"}
-                                      variant = {this.state.view === ViewEnum.TRENDS ? "contained" : "outlined"}
-                                      className={classes.viewButtons}
-                                      onClick={this.trendsClick}>
-                              Trends
-                              </Button>
+                                <Button size="large"
+                                        color={"secondary"}
+                                        variant={this.state.view === ViewEnum.TRENDS ? "contained" : "outlined"}
+                                        className={classes.viewButtons}
+                                        onClick={this.trendsClick}>
+                                    Trends
+                                </Button>
                             </ListItem>
                             <ListItem>
-                              <Button size= "large"
-                                      color= {"inherit"}
-                                      variant = {this.state.view === ViewEnum.NOTES ? "contained" : "outlined"}
-                                      className={classes.viewButtons}
-                                      onClick={this.notesClick}>
-                              Notes
-                              </Button>
+                                <Button size="large"
+                                        color={"inherit"}
+                                        variant={this.state.view === ViewEnum.NOTES ? "contained" : "outlined"}
+                                        className={classes.viewButtons}
+                                        onClick={this.notesClick}>
+                                    Notes
+                                </Button>
                             </ListItem>
-                              <ListItem>
-                                  <Button size= "large"
-                                          color= {"inherit"}
-                                          variant = {this.state.view === ViewEnum.NEXT_STEPS ? "contained" : "outlined"}
-                                          className={classes.viewButtons}
-                                          onClick={this.nextStepsClick}>
-                                      Next Steps
-                                  </Button>
-                              </ListItem>
-                              <ListItem>
-                                  <IconButton className={classes.generateReport}>
-                                      <GenerateReportSVG style={{height: '88px', width: '88px'}}/>
-                                  </IconButton>
-                              </ListItem>
-                          </List>
-                        </Grid>
-                        <Grid container item xs={9}>
-                            <Grid container direction={'row'}>
-                                <Grid item xs={12}>
-                                    <Typography variant={'h5'} className={classes.title}>Classroom Climate Results</Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <div>
-
-                                    </div>
-                                    <div>
+                            <ListItem>
+                                <Button size="large"
+                                        color={"inherit"}
+                                        variant={this.state.view === ViewEnum.NEXT_STEPS ? "contained" : "outlined"}
+                                        className={classes.viewButtons}
+                                        onClick={this.nextStepsClick}>
+                                    Next Steps
+                                </Button>
+                            </ListItem>
+                            <ListItem>
+                                <IconButton className={classes.generateReport}>
+                                    <GenerateReportSVG style={{height: '88px', width: '88px'}}/>
+                                </IconButton>
+                            </ListItem>
+                        </List>
+                    </Grid>
+                    <Grid container item xs={9}>
+                        <Grid container direction={'row'}>
+                            <Grid item xs={12}>
+                                <Typography variant={'h5'} className={classes.title}>Classroom Climate
+                                    Results</Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <div>
                                     {this.state.view === ViewEnum.SUMMARY
-                                        ? <div style={{height: '60vh', position:'relative', top:'8vh', left:'25%'}}>
-                                            <VictoryPie
-                                                data={[
-                                                    { x: "General\n24%", y: 48 },
-                                                    { x: "Specific\n16%", y: 32 },
-                                                    { x: "Negative\n11%", y: 22 },
-                                                    { x: "Redirect\n49%", y: 98 }
-                                                ]}
-                                                colorScale={["#55efc4", "#00b894", "#d63031", "#e17055"]}
-                                                labelRadius ={60}
-                                                radius={170}
-                                                style={{ labels: { fill: "white", fontSize: 16}}}
-                                            />
+                                        ? <div style={{height: '60vh', position: 'relative', top: '8vh', left: '25%'}}>
+                                            <Grid container direction={"row"} justify={"space-evenly"}>
+                                                <Grid item>
+                                                    <img src="../../../assets/icons/emotionFace1.png"/>
+                                                </Grid>
+                                                <Grid item>
+                                                    <img src="../../../assets/icons/emotionFace2.png"/>
+                                                </Grid>
+                                                <Grid item>
+                                                    <img src="../../../assets/icons/emotionFace3.png"/>
+                                                </Grid>
+                                                <Grid item>
+                                                    <img src="../../../assets/icons/emotionFace4.png"/>
+                                                </Grid>
+                                                <Grid item>
+                                                    <img src="../../../assets/icons/emotionFace5.png"/>
+                                                </Grid>
+                                            </Grid>
+                                            <LinearProgress variant="determinate" value={75}/>
                                         </div>
                                         : this.state.view === ViewEnum.DETAILS
-                                            ? <div style={{height: '60vh'}}/>// replace this null with trends graph
-                                        : this.state.view === ViewEnum.TRENDS
-                                        ? <div style={{height: '60vh'}}/>// replace this null with trends graph
-                                        : this.state.view === ViewEnum.NOTES
                                             ? <div style={{height: '60vh'}}>
-                                                <ListDetailTableClassroomClimateResults data={classroomClimateData}/>
-                                            </div>// replace this null with notes
-                                            : this.state.view === ViewEnum.NEXT_STEPS
-                                        ? <div style={{height: '60vh'}}/>// replace this null with next steps content
-                                        : null
+                                                <VictoryPie
+                                                    data={[
+                                                        {x: "General\n24%", y: 48},
+                                                        {x: "Specific\n16%", y: 32},
+                                                        {x: "Negative\n11%", y: 22},
+                                                        {x: "Redirect\n49%", y: 98}
+                                                    ]}
+                                                    colorScale={["#55efc4", "#00b894", "#d63031", "#e17055"]}
+                                                    labelRadius={60}
+                                                    radius={170}
+                                                    style={{labels: {fill: "white", fontSize: 16}}}
+                                                />
+                                            </div>
+                                            : this.state.view === ViewEnum.TRENDS
+                                                ? <div style={{height: '60vh'}}/>// replace this null with trends graph
+                                                : this.state.view === ViewEnum.NOTES
+                                                    ? <div style={{height: '60vh'}}>
+                                                        <ListDetailTableClassroomClimateResults
+                                                            data={classroomClimateData}/>
+                                                    </div>// replace this null with notes
+                                                    : this.state.view === ViewEnum.NEXT_STEPS
+                                                        ? <div style={{height: '60vh'}}/>// replace this null with next steps content
+                                                        : null
                                     }
-                                    </div>
-                                </Grid>
+                                </div>
                             </Grid>
                         </Grid>
                     </Grid>
-                </main>
-            </div>
-        );
+                </Grid>
+            </main>
+        </div>;
     }
 }
 
