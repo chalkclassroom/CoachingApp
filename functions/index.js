@@ -2,9 +2,11 @@ const functions = require("firebase-functions")
 const BigQuery = require("@google-cloud/bigquery")
 
 exports.observationsToBQ = functions.firestore
-    .document("/observation/{observationID}")
+    .document("/observations/{observationID}")
     .onCreate(event => {
         console.log(`new create event for document ID: ${event.data.id}`)
+        console.log(`new create event for document ID: ${event.data.type}`)
+
 
         // Set via: firebase functions:config:set centiment.{dataset,table}
         let config = functions.config()
