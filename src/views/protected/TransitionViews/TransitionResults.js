@@ -19,7 +19,6 @@ import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
 import { VictoryPie } from "victory-pie";
-import HSBar from "react-horizontal-stacked-bar-chart";
 import ListDetailTableTransitionResults from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
 
 const styles = {
@@ -381,56 +380,33 @@ class TransitionResults extends React.Component {
                                                     data={[
                                                         {
                                                             x:
-                                                                "Transition\n27%",
-                                                            y: 150
+                                                                "Inside Transition\n(17%)",
+                                                            y: 15,
                                                         },
                                                         {
                                                             x:
-                                                                "Non-transition\n73%",
-                                                            y: 400
+                                                                "Outside Transition\n(17%)",
+                                                            y: 12,
+                                                        },
+                                                        {
+                                                            x:
+                                                                "Non-Transition\n(17%)",
+                                                            y: 47,
                                                         }
                                                     ]}
                                                     colorScale={[
-                                                        "#00cec9",
-                                                        "#0984e3"
+                                                        "#E99C2E",
+                                                        "#E55529",
+                                                        "#0988EC"
                                                     ]}
-                                                    labelRadius={50}
-                                                    radius={170}
+                                                    labelRadius={75}
+                                                    radius={190}
                                                     style={{
                                                         labels: {
                                                             fill: "white",
-                                                            fontSize: 16
+                                                            fontSize: 12,
                                                         }
                                                     }}
-                                                />
-                                                <HSBar
-                                                    height={50}
-                                                    showText
-                                                    id="new_id"
-                                                    fontColor="#ffffff"
-                                                    data={[
-                                                        {
-                                                            name: "Inside",
-                                                            value: 10,
-                                                            description:
-                                                                "10 min",
-                                                            color: "#E99C2E"
-                                                        },
-                                                        {
-                                                            name: "Outside",
-                                                            value: 12,
-                                                            description:
-                                                                "12 min",
-                                                            color: "#0988EC"
-                                                        },
-                                                        {
-                                                            name: "Waiting",
-                                                            value: 8,
-                                                            description:
-                                                                "8 min",
-                                                            color: "#4FD9B3"
-                                                        }
-                                                    ]}
                                                 />
                                             </div>
                                         ) : this.state.view ===
