@@ -47,10 +47,6 @@ class TransitionType extends React.Component {
 
         const transitionTypes = [
             {
-                name: "Wait Time",
-                color: COLOR_1
-            },
-            {
                 name: "Inside Classroom",
                 color: COLOR_2
             },
