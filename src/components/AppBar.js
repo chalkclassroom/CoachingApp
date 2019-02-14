@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles, AppBar, Toolbar, Button, IconButton} from '@material-ui/core';
+import { withStyles, AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
 import Logo from '../logo.svg'
 import {withRouter} from 'react-router-dom'
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
