@@ -1,4 +1,4 @@
-import * as firebase from 'firebase';
+import * as firebase from "firebase";
 
 const config = {
     apiKey: "AIzaSyB7IUNOBelyA5-rMBSM4PtADvlvUOqe6NU",
@@ -18,21 +18,29 @@ class Firebase {
         }
     }
 
-    firebaseEmailSignUp = async function (userData, role) {
+    firebaseEmailSignUp = async function(userData, role) {
         console.log(role);
         console.log(userData);
-        await this.auth.createUserWithEmailAndPassword(userData.email, userData.password)
+        await this.auth
+            .createUserWithEmailAndPassword(userData.email, userData.password)
             .then(function(userInfo) {
                 console.log("Create user and sign in Success", userInfo);
-                var data = Object.assign({}, {
-                    email: userData.email,
-                    firstName: userData.firstName,
-                    lastName: userData.lastName,
-                    role: role,
-                    id: userInfo.user.uid
-                });
+                var data = Object.assign(
+                    {},
+                    {
+                        email: userData.email,
+                        firstName: userData.firstName,
+                        lastName: userData.lastName,
+                        role: role,
+                        id: userInfo.user.uid
+                    }
+                );
 
-                firebase.firestore().collection("users").doc(userInfo.user.uid).set(data)
+                firebase
+                    .firestore()
+                    .collection("users")
+                    .doc(userInfo.user.uid)
+                    .set(data)
                     .then(function(docRef) {
                         console.log("Document written with ID: ", docRef.id);
                     })
@@ -49,46 +57,54 @@ class Firebase {
                 // });
             })
             .catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.error(errorCode+':'+ errorMessage);
-            alert(errorMessage);
-            return false;
-        });
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.error(errorCode + ":" + errorMessage);
+                alert(errorMessage);
+                return false;
+            });
     };
 
-    firebaseEmailSignIn = async function (userData, role) {
+    firebaseEmailSignIn = async function(userData, role) {
         console.log(role);
         console.log(userData);
 
-        await this.auth.signInWithEmailAndPassword(userData.email, userData.password).catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.error(errorCode+':'+ errorMessage);
-            alert(errorMessage);
-            return errorMessage;
-        });
+        await this.auth
+            .signInWithEmailAndPassword(userData.email, userData.password)
+            .catch(function(error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.error(errorCode + ":" + errorMessage);
+                alert(errorMessage);
+                return errorMessage;
+            });
     };
 
-    firebaseSignOut = async function () {
-        await this.auth.signOut().then(function() {
-            // Sign-out successful.
-            console.log('Signed Out');
-        }).catch(function(error) {
-            // An error happened.
-            console.log('Signed Out Unsuccessful');
-        });
+    firebaseSignOut = async function() {
+        await this.auth
+            .signOut()
+            .then(function() {
+                // Sign-out successful.
+                console.log("Signed Out");
+            })
+            .catch(function(error) {
+                // An error happened.
+                console.log("Signed Out Unsuccessful");
+            });
     };
 
-    resetPassword  = (email) => {
+    resetPassword = email => {
         return this.auth.sendPasswordResetEmail(email);
     };
 
-    getTeacherList = function () {
-         return firebase.firestore().collection("users").where("role","==","teacher")
+    getTeacherList = function() {
+        return firebase
+            .firestore()
+            .collection("users")
+            .where("role", "==", "teacher")
             .get()
             .then(function(querySnapshot) {
-                let teacherList  = []
+                let teacherList = [];
                 querySnapshot.forEach(function(doc) {
                     // doc.data() is never undefined for query doc snapshots
                     console.log(doc.id, " => ", doc.data());
@@ -102,11 +118,14 @@ class Firebase {
             });
     };
 
-    getCoachList = function () {
-        return firebase.firestore().collection("users").where("role","==","coach")
+    getCoachList = function() {
+        return firebase
+            .firestore()
+            .collection("users")
+            .where("role", "==", "coach")
             .get()
             .then(function(querySnapshot) {
-                let teacherList  = []
+                let teacherList = [];
                 querySnapshot.forEach(function(doc) {
                     // doc.data() is never undefined for query doc snapshots
                     console.log(doc.id, " => ", doc.data());
@@ -120,11 +139,14 @@ class Firebase {
             });
     };
 
-    getAdminList = function () {
-        return firebase.firestore().collection("users").where("role","==","admin")
+    getAdminList = function() {
+        return firebase
+            .firestore()
+            .collection("users")
+            .where("role", "==", "admin")
             .get()
             .then(function(querySnapshot) {
-                let teacherList  = []
+                let teacherList = [];
                 querySnapshot.forEach(function(doc) {
                     // doc.data() is never undefined for query doc snapshots
                     console.log(doc.id, " => ", doc.data());
