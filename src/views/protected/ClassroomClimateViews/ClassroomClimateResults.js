@@ -20,13 +20,11 @@ import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
 import { VictoryPie } from "victory-pie";
-/*
-import { ReactComponent as EmotionFace1 } from "../../../assets/icons/emotionFace1.png";
-import { ReactComponent as EmotionFace2 } from "../../../assets/icons/emotionFace2.png";
-import { ReactComponent as EmotionFace3 } from "../../../assets/icons/emotionFace3.png";
-import { ReactComponent as EmotionFace4 } from "../../../assets/icons/emotionFace4.png";
-import { ReactComponent as EmotionFace5 } from "../../../assets/icons/emotionFace5.png";
-*/
+import exNegativeFace from "../../../assets/icons/1-ex-negative-cqref.png";
+import negativeFace from "../../../assets/icons/2-negative-cqref.png";
+import flatFace from "../../../assets/icons/3-flat-cqref.png";
+import pleasantFace from "../../../assets/icons/4-pleasant-cqref.png";
+import vibrantFace from "../../../assets/icons/5-vibrant-cqref.png";
 import ListDetailTableClassroomClimateResults from "../../../components/ResultsComponents/ListDetailTableClassroomClimateResults.js";
 
 const styles = {
@@ -388,36 +386,41 @@ class ClassroomClimateResults extends React.Component {
                                                 <Grid
                                                     container
                                                     direction={"row"}
-                                                    justify={"space-evenly"}
+                                                    justify={"space-between"}
                                                 >
                                                     <Grid item>
                                                         <img
-                                                            alt={"face1"}
-                                                            src="../../../assets/icons/emotionFace1.png"
+                                                            alt="extreme negative face"
+                                                            src={exNegativeFace}
+                                                            width={100}
                                                         />
                                                     </Grid>
                                                     <Grid item>
                                                         <img
-                                                            alt={"face2"}
-                                                            src="./../../../assets/icons/emotionFace2.png"
+                                                            alt="negative face"
+                                                            src={negativeFace}
+                                                            width={100}
                                                         />
                                                     </Grid>
                                                     <Grid item>
                                                         <img
-                                                            alt={"face3"}
-                                                            src="../../../assets/icons/emotionFace3.png"
+                                                            alt="flat face"
+                                                            src={flatFace}
+                                                            width={100}
                                                         />
                                                     </Grid>
                                                     <Grid item>
                                                         <img
-                                                            alt={"face4"}
-                                                            src="../../../assets/icons/emotionFace4.png"
+                                                            alt="pleasant face"
+                                                            src={pleasantFace}
+                                                            width={100}
                                                         />
                                                     </Grid>
                                                     <Grid item>
                                                         <img
-                                                            alt={"face5"}
-                                                            src="../../../assets/icons/emotionFace5.png"
+                                                            alt="vibrant face"
+                                                            src={vibrantFace}
+                                                            width={100}
                                                         />
                                                     </Grid>
                                                 </Grid>
