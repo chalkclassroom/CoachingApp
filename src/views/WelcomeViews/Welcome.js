@@ -8,7 +8,7 @@ import FirebaseContext from "../../components/Firebase/context";
 const styles = {
     root: {
         flexGrow: 1,
-        backgroundColor:'#2196f3',
+        backgroundColor:'#ffffff',
         height: '100vh'
     },
     grow: {
