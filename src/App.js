@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import WelcomePage from "./views/WelcomeViews/Welcome";
+import ClassroomClimate from "./views/protected/ClassroomClimateViews/ClassroomClimate";
 import Magic8Menu from "./views/protected/Magic8Menu"
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTime from "./views/protected/TransitionViews/TransitionTime";
@@ -92,6 +93,11 @@ class App extends Component {
                             <PrivateRoute auth={this.state.auth} path='/Account' component={HomePage}/>
                             <PrivateRoute auth={this.state.auth} path='/Home' component={HomePage}/>
                             <PrivateRoute auth={this.state.auth} path='/TransitionTime' component={TransitionTime}/>
+    <PrivateRoute
+    auth={this.state.auth}
+    path="/ClassroomClimate"
+    component={ClassroomClimate}
+    />
                             <PrivateRoute auth={this.state.auth} path='/Magic8Menu' component={Magic8Menu}/>
                             <Route render={() => <h3>No Match</h3>}/>
                         </Switch>

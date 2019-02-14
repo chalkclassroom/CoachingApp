@@ -24,3 +24,5 @@ yarn-error.log*
 
 # .idea/
 .idea/
+
+src/SPREADSHEET_SECRETS.js
