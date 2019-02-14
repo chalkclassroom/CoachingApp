@@ -110,6 +110,9 @@ class CommonAppBar extends React.Component{
                                 >
                                     <img src={Logo} height={'36'} alt={""}/>
                                 </IconButton>
+                                <Typography variant="h6" style={{color:'#FFFFFF',}}>
+                                    Classroom Quality - REF
+                                </Typography>
                                 <div color="inherit" className={classes.grow}/>
                                 <Button color="secondary" variant={"contained"} onClick={this.handleLoginModal}
                                         className={classes.menuButton}>Log In</Button>

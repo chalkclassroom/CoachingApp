@@ -5,16 +5,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import {withStyles} from "@material-ui/core";
-
-// import Card from '@material-ui/core/Card';
-// import CardActionArea from '@material-ui/core/CardActionArea';
-// import CardActions from '@material-ui/core/CardActions';
-// import CardContent from '@material-ui/core/CardContent';
-// import CardMedia from '@material-ui/core/CardMedia';
-// import Button from '@material-ui/core/Button';
-// import Typography from '@material-ui/core/Typography';
 import PropTypes from "prop-types";
 import slide1 from "../../assets/slides/slide1.png"
+import slide2 from "../../assets/slides/slide2.png"
+import slide3 from "../../assets/slides/slide3.png"
+import slide4 from "../../assets/slides/slide4.png"
+
 
 
 const styles = {
@@ -64,7 +60,7 @@ class WelcomeCarousel extends React.Component {
             slidesToScroll: 1,
             adaptiveHeight: true,
             autoplay: true,
-            autoplaySpeed: 10000,
+            autoplaySpeed: 5000,
         };
         const { classes } = this.props;
 
@@ -76,31 +72,27 @@ class WelcomeCarousel extends React.Component {
                         src={slide1}
                         title="Magic 8 Coaching"
                         className={classes.slideImg}
-                        alt={""}
                     />
                 </div>
                 <div className={classes.slide}>
                     <img
-                        src={slide1}
+                        src={slide2}
                         title="Magic 8 Coaching"
                         className={classes.slideImg}
-                        alt={""}
                     />
                 </div>
                 <div className={classes.slide}>
                     <img
-                        src={slide1}
+                        src={slide3}
                         title="Magic 8 Coaching"
                         className={classes.slideImg}
-                        alt={""}
                     />
                 </div>
                 <div className={classes.slide}>
                     <img
-                        src={slide1}
+                        src={slide4}
                         title="Magic 8 Coaching"
                         className={classes.slideImg}
-                        alt={""}
                     />
                 </div>
             </Slider>
