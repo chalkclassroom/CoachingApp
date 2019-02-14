@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -25,6 +26,10 @@ import TransitionTimeHelp from "./TransitionTimeHelp";
 import TranstionType from "./TransitionType";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
+import TransitionLog from "./TransitionLog";
+import YesNoDialog from "../../../components/Shared/YesNoDialog";
+import spreadsheetData from "../../../SPREADSHEET_SECRETS";
+import { ImmortalDB } from "immortal-db";
 
 const theme = createMuiTheme({
     palette: {
@@ -52,11 +57,35 @@ const styles = {
 };
 
 class TransitionTime extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleAppend = this.handleAppend.bind(this);
+        this.handleTypeChange = this.handleTypeChange.bind(this);
+    }
+
     state = {
         auth: true,
         anchorEl: null,
-        help: false
+        help: false,
+        type: null,
+        entries: [],
+        dbCounter: 0 // @Hack @Temporary !!!
     };
+
+    handleAppend(entry) {
+        let newEntries = this.state.entries;
+        entry.type = this.state.type;
+        newEntries.push(entry);
+        this.setState({ entries: newEntries });
+
+        this.handleSpreadsheetAppend(entry);
+
+        this.handleDBinsert(entry);
+    }
+
+    handleTypeChange(newType) {
+        this.setState({ type: newType });
+    }
 
     handleChange = event => {
         this.setState({ auth: event.target.checked });
@@ -76,6 +105,41 @@ class TransitionTime extends React.Component {
 
     handleClickAway = () => {
         this.setState({ help: false });
+    };
+
+    handleDBinsert = async entry => {
+        // Once we integrate users, the user + some index will be the key for the DB.
+        await ImmortalDB.set(
+            JSON.stringify(this.state.dbCounter),
+            JSON.stringify(entry)
+        );
+
+        this.setState({ dbCounter: this.state.dbCounter + 1 });
+    };
+
+    handleSpreadsheetAppend = entry => {
+        let url = new URL(spreadsheetData.scriptLink),
+            params = {
+                sheet: "TransitionTime",
+                del: "false",
+                TrnStart: entry.start,
+                TrnEnd: entry.end,
+                TrnDur: entry.duration,
+                TrnType: entry.type
+            };
+        Object.keys(params).forEach(key =>
+            url.searchParams.append(key, params[key])
+        );
+        fetch(url, {
+            method: "POST",
+            credentials: "include",
+            mode: "no-cors",
+            headers: {
+                "content-type": "application/json"
+            }
+        })
+            .then(response => console.log("Success"))
+            .catch(error => console.error("Error:", error));
     };
 
     render() {
@@ -148,15 +212,36 @@ class TransitionTime extends React.Component {
                         <div />
                     )}
                     <main style={{ flex: 1 }}>
-                        <Grid
-                            container
-                            alignItems={"center"}
-                            justify={"center"}
-                            direction={"column"}
-                        >
-                            <div style={{ margin: 20 }} />
-                            <TranstionType />
-                            <TransitionTimer />
+                        <Grid container spacing={16}>
+                            <Grid item xs={4}>
+                                <Grid
+                                    container
+                                    alignItems={"center"}
+                                    justify={"center"}
+                                    direction={"column"}
+                                >
+                                    <div style={{ margin: 20 }} />
+                                    <TransitionLog
+                                        entries={this.state.entries}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Grid
+                                    container
+                                    alignItems={"center"}
+                                    justify={"center"}
+                                    direction={"column"}
+                                >
+                                    <div style={{ margin: 20 }} />
+                                    <TranstionType
+                                        handleTypeChange={this.handleTypeChange}
+                                    />
+                                    <TransitionTimer
+                                        handleAppend={this.handleAppend}
+                                    />
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </main>
                     <footer>
@@ -205,13 +290,16 @@ class TransitionTime extends React.Component {
                                         hour12: true
                                     })}
                                     <br />
-                                    <Button
-                                        variant={"outlined"}
-                                        color={"secondary"}
-                                        style={{ margin: 10 }}
-                                    >
-                                        Complete Observation
-                                    </Button>
+                                    <YesNoDialog
+                                        buttonText={"Complete Observation"}
+                                        buttonVariant={"contained"}
+                                        buttonColor={"secondary"}
+                                        buttonStyle={{ margin: 10 }}
+                                        dialogTitle={
+                                            "Are you sure you want to complete this observation?"
+                                        }
+                                        shouldOpen={true}
+                                    />
                                 </Grid>
                             </Grid>
                         </Grid>
