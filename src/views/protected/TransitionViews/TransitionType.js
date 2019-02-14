@@ -12,7 +12,6 @@ import { toggleNewTransitionType } from "../../../state/actions/transition-time"
 
 const COLOR_1 = "#F9A796";
 const COLOR_2 = "#FFE79D";
-const COLOR_3 = "#4DEDBC";
 
 const styles = theme => ({
     root: {
@@ -47,16 +46,12 @@ class TransitionType extends React.Component {
 
         const transitionTypes = [
             {
-                name: "Wait Time",
+                name: "Inside Classroom",
                 color: COLOR_1
             },
             {
-                name: "Inside Classroom",
-                color: COLOR_2
-            },
-            {
                 name: "Outside Classroom",
-                color: COLOR_3
+                color: COLOR_2
             }
         ];
 
