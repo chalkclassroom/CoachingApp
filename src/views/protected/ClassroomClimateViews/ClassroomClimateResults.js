@@ -424,9 +424,11 @@ class ClassroomClimateResults extends React.Component {
                                                         />
                                                     </Grid>
                                                 </Grid>
+                                                <div style={{ height: 20 }}/>
                                                 <LinearProgress
                                                     variant="determinate"
                                                     value={75}
+                                                    style={{ height: 20 }}
                                                 />
                                             </div>
                                         ) : this.state.view ===
