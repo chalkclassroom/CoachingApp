@@ -10,6 +10,7 @@ import Grid from "@material-ui/core/Grid";
 import spreadsheetData from "../../SPREADSHEET_SECRETS";
 import { connect } from "react-redux";
 import { pushOntoClimateStack } from "../../state/actions/classroom-climate";
+import Firebase from "../Firebase/Firebase"
 
 const REDIRECTION = "#f9a796";
 const NONSPECIFIC = "#ffe79d";
@@ -95,7 +96,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePush("redirection")
+                                        this.handlePushFire("redirection")
                                     }
                                 >
                                     Redirection
@@ -117,7 +118,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePush("nonspecificapproval")
+                                        this.handlePushFire("nonspecificapproval")
                                     }
                                 >
                                     Non-specific Approval
@@ -142,7 +143,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePush("disapproval")
+                                        this.handlePushFire("disapproval")
                                     }
                                 >
                                     Disapproval
@@ -164,7 +165,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePush("specificapproval")
+                                        this.handlePushFire("specificapproval")
                                     }
                                 >
                                     Specific Approval
