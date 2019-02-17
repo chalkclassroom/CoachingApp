@@ -78,7 +78,6 @@ const styles = {
         right: '10%',
         top: '76%'
     }
-
 };
 
 const ViewEnum = {
@@ -335,6 +334,24 @@ class ClassroomClimateResults extends React.Component {
                                                 </Grid>
                                             </Grid>
                                             <LinearProgress variant="determinate" value={75}/>
+                                            <Grid>
+                                            <div class="behavior">
+                                              <div class='disapprovals' style={{display: 'inline-block', marginRight:'150px', marginTop: '175px'}}>
+                                                <div style={{width: '200px', height: '50px', fontSize: 24, color: '#B22222', textAlign:'center'}} >TOTAL BEHAVIOR DISAPPROVALS</div>
+                                                <div style={{width: '200px', height: '50px', fontSize: 36, color: '#B22222', textAlign:'center'}}>78</div>
+                                                <div style={{width: '200px', height: '50px', fontSize: 20, backgroundColor: '#FF2400', color:"#ffffff", fontWeight:'bold'}}>14 NEGATIVE</div>
+                                                <div style={{width: '200px', height: '50px', fontSize: 20, backgroundColor: '#B22222', color:"#ffffff", fontWeight:'bold'}}>64 REDIRECTIONS</div>
+                                              </div>
+                                              <div class='approvals' style={{display: 'inline-block'}}>
+                                                <div style={{width: '200px', height: '50px', fontSize: 24, color: '#64E986', display:'inline-block', textAlign:'center'}}>TOTAL BEHAVIOR APPROVALS</div>
+                                                  <div style={{width: '200px', height: '50px', fontSize: 36, color: '#64E986', textAlign:'center'}}>53</div>
+                                                  <div style={{width: '200px', height: '50px', fontSize: 20, backgroundColor: '#54C571', color:"#ffffff", fontWeight:'bold'}}>32 GENERAL</div>
+                                                  <div style={{width: '200px', height: '50px', fontSize: 20, backgroundColor: '#64E986', color:"#ffffff", fontWeight:'bold'}}>21 SPECIFIC</div>
+                                              </div>
+                                            </div>
+                                            </Grid>
+
+
                                         </div>
                                         : this.state.view === ViewEnum.DETAILS
                                             ? <div style={{height: '60vh'}}>
@@ -371,6 +388,7 @@ class ClassroomClimateResults extends React.Component {
         </div>;
     }
 }
+
 
 ClassroomClimateResults.propTypes = {
     classes: PropTypes.object.isRequired
