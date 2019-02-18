@@ -30,8 +30,7 @@ import ListDetailTableClassroomClimateResults from "../../../components/ResultsC
 const styles = {
     root: {
         flexGrow: 1,
-        display: "flex",
-        height: "100%",
+        height: '100vh',
         flexDirection: "column"
     },
     main: {
@@ -52,7 +51,7 @@ const styles = {
     },
     buttonsList: {
         position: "relative",
-        left: "40%",
+        left: "20%",
         top: "13%"
     },
     title: {
@@ -229,14 +228,14 @@ class ClassroomClimateResults extends React.Component {
                 <FirebaseContext.Consumer>
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
-                <main className={classes.main}>
+                <main>
                     <Grid
                         container
-                        spacing={32}
+                        spacing={16}
                         justify="center"
                         direction={"row"}
                     >
-                        <Grid item xs={3}>
+                        <Grid container item xs={4}>
                             <List className={classes.buttonsList}>
                                 <ListItem>
                                     <form>
@@ -361,16 +360,14 @@ class ClassroomClimateResults extends React.Component {
                                 </ListItem>
                             </List>
                         </Grid>
-                        <Grid container item xs={9}>
+                        <Grid container item xs={8}>
                             <Grid container direction={"row"}>
-                                <Grid item xs={12}>
-                                    <Typography
-                                        variant={"h5"}
-                                        className={classes.title}
-                                    >
-                                        Classroom Climate Results
-                                    </Typography>
-                                </Grid>
+                                <Typography
+                                    variant={"h5"}
+                                    className={classes.title}
+                                >
+                                    Classroom Climate Results
+                                </Typography>
                                 <Grid item xs={12}>
                                     <div>
                                         {this.state.view ===
@@ -380,7 +377,6 @@ class ClassroomClimateResults extends React.Component {
                                                     height: "60vh",
                                                     position: "relative",
                                                     top: "8vh",
-                                                    left: "25%"
                                                 }}
                                             >
                                                 <Grid
@@ -392,35 +388,35 @@ class ClassroomClimateResults extends React.Component {
                                                         <img
                                                             alt="extreme negative face"
                                                             src={exNegativeFace}
-                                                            width={100}
+                                                            width="100vw"
                                                         />
                                                     </Grid>
                                                     <Grid item>
                                                         <img
                                                             alt="negative face"
                                                             src={negativeFace}
-                                                            width={100}
+                                                            width="100vw"
                                                         />
                                                     </Grid>
                                                     <Grid item>
                                                         <img
                                                             alt="flat face"
                                                             src={flatFace}
-                                                            width={100}
+                                                            width="100vw"
                                                         />
                                                     </Grid>
                                                     <Grid item>
                                                         <img
                                                             alt="pleasant face"
                                                             src={pleasantFace}
-                                                            width={100}
+                                                            width="100vw"
                                                         />
                                                     </Grid>
                                                     <Grid item>
                                                         <img
                                                             alt="vibrant face"
                                                             src={vibrantFace}
-                                                            width={100}
+                                                            width="100vw"
                                                         />
                                                     </Grid>
                                                 </Grid>
