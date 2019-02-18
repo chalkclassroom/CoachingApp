@@ -75,7 +75,7 @@ class Magic8Card extends Component {
                         <CardContent className="title">
                             <Typography
                                 className="titleText"
-                                style={{ color: "#FFFFFF", fontSize: "1.5em" }}
+                                style={{ color: "#FFFFFF", fontSize: "1.5em", fontWeight: "bold" }}
                             >
                                 {this.props.title}
                             </Typography>
