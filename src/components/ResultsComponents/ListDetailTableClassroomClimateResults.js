@@ -17,7 +17,7 @@ class ListDetailTableClassroomClimateResults extends React.Component {
 
         return (
             <Paper
-                style={{ width: "60%", overflowX: "auto", marginRight: "10%" }}
+                style={{ width: "80%", overflowX: "auto", marginRight: "10%" }}
             >
                 <Table className={classes.table}>
                     <TableHead>

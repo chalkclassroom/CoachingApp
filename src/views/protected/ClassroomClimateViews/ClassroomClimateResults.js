@@ -502,7 +502,7 @@ class ClassroomClimateResults extends React.Component {
                                             <div style={{ height: "60vh" }} /> // replace this null with trends graph
                                         ) : this.state.view ===
                                           ViewEnum.NOTES ? (
-                                            <div style={{ height: "60vh" }}>
+                                            <div style={{ height: "60vh", marginLeft: '165px', marginTop: '100px'}}>
                                                 <ListDetailTableClassroomClimateResults
                                                     data={classroomClimateData}
                                                 />
