@@ -24,8 +24,7 @@ import ListDetailTableTransitionResults from "../../../components/ResultsCompone
 const styles = {
     root: {
         flexGrow: 1,
-        display: "flex",
-        height: "100%",
+        height: '100vh',
         flexDirection: "column"
     },
     main: {
@@ -46,7 +45,7 @@ const styles = {
     },
     buttonsList: {
         position: "relative",
-        left: "40%",
+        left: "20%",
         top: "13%"
     },
     title: {
@@ -67,7 +66,8 @@ const styles = {
     generateReport: {
         position: "relative",
         right: "10%",
-        top: "76%"
+        top: "76%",
+        left: "10%"
     }
 };
 
@@ -221,14 +221,14 @@ class TransitionResults extends React.Component {
                 <FirebaseContext.Consumer>
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
-                <main className={classes.main}>
+                <main>
                     <Grid
                         container
-                        spacing={32}
+                        spacing={16}
                         justify="center"
                         direction={"row"}
                     >
-                        <Grid item xs={3}>
+                        <Grid container item xs={4}>
                             <List className={classes.buttonsList}>
                                 <ListItem>
                                     <form>
@@ -345,15 +345,15 @@ class TransitionResults extends React.Component {
                                     >
                                         <GenerateReportSVG
                                             style={{
-                                                height: "88px",
-                                                width: "88px"
+                                                height: "10vh",
+                                                width: "10vh"
                                             }}
                                         />
                                     </IconButton>
                                 </ListItem>
                             </List>
                         </Grid>
-                        <Grid container item xs={9}>
+                        <Grid container item xs={8}>
                             <Grid container direction={"row"}>
                                 <Grid item xs={12}>
                                     <Typography
@@ -362,6 +362,9 @@ class TransitionResults extends React.Component {
                                     >
                                         Transition Time Results
                                     </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <div style={{ height: 20 }}/>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Typography
@@ -399,11 +402,10 @@ class TransitionResults extends React.Component {
                                                         "#E55529",
                                                         "#0988EC"
                                                     ]}
-                                                    labelRadius={75}
-                                                    radius={190}
+                                                    //labelRadius={75}
                                                     style={{
                                                         labels: {
-                                                            fill: "white",
+                                                            fill: "black",
                                                             fontSize: 12,
                                                         }
                                                     }}

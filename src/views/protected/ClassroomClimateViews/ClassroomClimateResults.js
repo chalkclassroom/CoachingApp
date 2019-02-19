@@ -72,7 +72,8 @@ const styles = {
     generateReport: {
         position: "relative",
         right: "10%",
-        top: "76%"
+        top: "76%",
+        left: "10%"
     }
 };
 
