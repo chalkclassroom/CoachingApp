@@ -25,7 +25,7 @@ import negativeFace from "../../../assets/icons/2-negative-cqref.png";
 import flatFace from "../../../assets/icons/3-flat-cqref.png";
 import pleasantFace from "../../../assets/icons/4-pleasant-cqref.png";
 import vibrantFace from "../../../assets/icons/5-vibrant-cqref.png";
-import ListDetailTableClassroomClimateResults from "../../../components/ResultsComponents/ListDetailTableClassroomClimateResults.js";
+import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
 
 const styles = {
     root: {
@@ -92,7 +92,7 @@ function createData(time, notes) {
     return { time, notes };
 }
 
-const classroomClimateData = [
+const classroomClimateNotes = [
     createData("08:32", "Kiss your brain"),
     createData("08:44", "Great super friend"),
     createData("09:01", "Lots of good jobs"),
@@ -504,10 +504,10 @@ class ClassroomClimateResults extends React.Component {
                                         ) : this.state.view ===
                                           ViewEnum.NOTES ? (
                                             <div style={{ height: "60vh", marginLeft: '165px', marginTop: '100px'}}>
-                                                <ListDetailTableClassroomClimateResults
-                                                    data={classroomClimateData}
+                                                <NotesListDetailTable
+                                                    data={classroomClimateNotes}
                                                 />
-                                            </div> // replace this null with notes
+                                            </div>
                                         ) : this.state.view ===
                                           ViewEnum.NEXT_STEPS ? (
                                             <div style={{ height: "60vh" }} /> // replace this null with next steps content

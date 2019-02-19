@@ -11,7 +11,7 @@ import Paper from "@material-ui/core/Paper/Paper";
 const styles = {
     //idk how this works
 };
-class ListDetailTableClassroomClimateResults extends React.Component {
+class NotesListDetailTable extends React.Component {
     render() {
         const { classes } = this.props;
 
@@ -59,9 +59,9 @@ class ListDetailTableClassroomClimateResults extends React.Component {
     }
 }
 
-ListDetailTableClassroomClimateResults.propTypes = {
+NotesListDetailTable.propTypes = {
     classes: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ListDetailTableClassroomClimateResults);
+export default withStyles(styles)(NotesListDetailTable);

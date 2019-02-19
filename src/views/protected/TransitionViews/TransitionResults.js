@@ -20,6 +20,7 @@ import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
 import { VictoryPie } from "victory-pie";
 import ListDetailTableTransitionResults from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
+import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 
 const styles = {
     root: {
@@ -93,7 +94,14 @@ const transitionData = [
     createData("09:37", "1m 56s", "Rotating rooms", "WAIT"),
     createData("09:56", "3m 2s", "Cleanup after centers", "INSIDE")
 ];
-// end of list detail table data
+
+const transitionNotes = [
+    createData("08:32", "Kiss your brain"),
+    createData("08:44", "Great super friend"),
+    createData("09:01", "Lots of good jobs"),
+    createData("09:37", "BD frown"),
+    createData("09:56", "Close down center conflict")
+];
 
 class TransitionResults extends React.Component {
     constructor(props) {
@@ -354,7 +362,7 @@ class TransitionResults extends React.Component {
                             </List>
                         </Grid>
                         <Grid container item xs={8}>
-                            <Grid container direction={"row"}>
+                            <Grid container item direction={"row"}>
                                 <Grid item xs={12}>
                                     <Typography
                                         variant={"h5"}
@@ -430,7 +438,11 @@ class TransitionResults extends React.Component {
                                             <div style={{ height: "60vh" }} /> // replace this null with trends graph
                                         ) : this.state.view ===
                                           ViewEnum.NOTES ? (
-                                            <div style={{ height: "60vh" }} /> // replace this null with trends graph
+                                            <div style={{ height: "60vh", marginLeft: '165px', marginTop: '100px'}}>
+                                                <NotesListDetailTable
+                                                    data={transitionNotes}
+                                                />
+                                            </div>
                                         ) : this.state.view ===
                                           ViewEnum.NEXT_STEPS ? (
                                             <div style={{ height: "60vh" }} /> // replace this null with next steps content
