@@ -159,20 +159,20 @@ class Firebase {
                 console.log("Error getting documents: ", error);
             });
     };
-
-    handlePushFire = async entry => {
-        const db = firebase.firestore();
-        db.settings({
-            timestampsInSnapshots: true
-        });
-        const userRef = db.collection("observation").add({
-            BehaviorResponse: entry.observable,
-            InstructionTransition: entry.climateType,
-            TeacherID: this.props.teacherId,
-            Timestamp: this.props.firebase.database.ServerValue.TIMESTAMP,
-            Type: "climate"
-        });
-    };
+    //
+    // handlePushFire = async entry => {
+    //     const db = firebase.firestore();
+    //     db.settings({
+    //         timestampsInSnapshots: true
+    //     });
+    //     const userRef = db.collection("observation").add({
+    //         BehaviorResponse: entry.observable,
+    //         InstructionTransition: entry.climateType,
+    //         TeacherID: this.props.teacherId,
+    //         Timestamp: this.props.firebase.database.ServerValue.TIMESTAMP,
+    //         Type: "climate"
+    //     });
+    // };
 }
 
 export default Firebase;

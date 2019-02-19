@@ -96,7 +96,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePushFire("redirection")
+                                        this.handlePush("redirection")
                                     }
                                 >
                                     Redirection
@@ -118,7 +118,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePushFire("nonspecificapproval")
+                                        this.handlePush("nonspecificapproval")
                                     }
                                 >
                                     Non-specific Approval
@@ -143,7 +143,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePushFire("disapproval")
+                                        this.handlePush("disapproval")
                                     }
                                 >
                                     Disapproval
@@ -165,7 +165,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePushFire("specificapproval")
+                                        this.handlePush("specificapproval")
                                     }
                                 >
                                     Specific Approval
