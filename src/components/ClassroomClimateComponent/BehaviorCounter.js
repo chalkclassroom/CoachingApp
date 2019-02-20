@@ -36,6 +36,23 @@ const counterTheme = primary =>
     });
 
 class BehaviorCounter extends React.Component {
+    constructor(props) {
+        super(props);
+        let mEntry = {
+            teacher: this.props.teacherId,
+            observedBy: this.props.firebase.auth.currentUser.uid
+        };
+        this.props.firebase.handleSession(mEntry);
+    }
+//____________________________________________________________________________________________________________________//
+    handlePushFire = entry => {
+        let mEntry = {
+            BehaviorResponse: entry,
+            InstructionTransition: this.props.climateType
+        };
+        this.props.firebase.handlePushFireStore(mEntry);
+    };
+//____________________________________________________________________________________________________________________//
     handlePush = entry => {
         let mEntry = {
             observation: entry,
@@ -96,7 +113,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePush("redirection")
+                                        this.handlePushFire("redirection")
                                     }
                                 >
                                     Redirection
@@ -118,7 +135,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePush("nonspecificapproval")
+                                        this.handlePushFire("nonspecificapproval")
                                     }
                                 >
                                     Non-specific Approval
@@ -143,7 +160,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePush("disapproval")
+                                        this.handlePushFire("disapproval")
                                     }
                                 >
                                     Disapproval
@@ -165,7 +182,7 @@ class BehaviorCounter extends React.Component {
                                     size="large"
                                     style={{ minWidth: 250 }}
                                     onClick={() =>
-                                        this.handlePush("specificapproval")
+                                        this.handlePushFire("specificapproval")
                                     }
                                 >
                                     Specific Approval
@@ -181,7 +198,7 @@ class BehaviorCounter extends React.Component {
 
 BehaviorCounter.propTypes = {
     climateType: PropTypes.string.isRequired,
-    teacherId: PropTypes.string.isRequired
+    teacherId: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => {

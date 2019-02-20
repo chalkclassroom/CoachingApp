@@ -174,11 +174,16 @@ class ClassroomClimate extends React.Component {
                                             this.props.location.state.key.id
                                         }
                                     />
-                                    <BehaviorCounter
-                                        teacherId={
-                                            this.props.location.state.key.id
-                                        }
-                                    />
+                                    <FirebaseContext.Consumer>
+                                        {firebase =>
+                                          <BehaviorCounter
+                                          teacherId={
+                                              this.props.location.state.key.id
+                                          }
+                                          firebase={firebase}
+                                        />}
+                                    </FirebaseContext.Consumer>
+
                                     <div
                                         style={{
                                             margin: 20,
