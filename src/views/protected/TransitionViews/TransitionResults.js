@@ -82,25 +82,30 @@ const ViewEnum = {
 
 // dummy data for transition list detail table, when we read in from DB we can use custom id
 let id = 0;
-function createData(startTime, duration, notes, type) {
+function createTransitionData(startTime, duration, notes, type) {
     id += 1;
     return { id, startTime, duration, notes, type };
 }
 
+function createNotesData(time, notes) {
+  id += 1;
+  return { id, time, notes };
+}
+
 const transitionData = [
-    createData("08:32", "2m 3s", "Breakfast to am meeting", "INSIDE"),
-    createData("08:44", "5m 10s", "Line up for bathroom", "OUTSIDE"),
-    createData("09:01", "1m 7s", "T finding book", "WAIT"),
-    createData("09:37", "1m 56s", "Rotating rooms", "WAIT"),
-    createData("09:56", "3m 2s", "Cleanup after centers", "INSIDE")
+    createTransitionData("08:32", "2m 3s", "Breakfast to am meeting", "INSIDE"),
+    createTransitionData("08:44", "5m 10s", "Line up for bathroom", "OUTSIDE"),
+    createTransitionData("09:01", "1m 7s", "T finding book", "WAIT"),
+    createTransitionData("09:37", "1m 56s", "Rotating rooms", "WAIT"),
+    createTransitionData("09:56", "3m 2s", "Cleanup after centers", "INSIDE")
 ];
 
 const transitionNotes = [
-    createData("08:32", "Kiss your brain"),
-    createData("08:44", "Great super friend"),
-    createData("09:01", "Lots of good jobs"),
-    createData("09:37", "BD frown"),
-    createData("09:56", "Close down center conflict")
+    createNotesData("08:32", "Kiss your brain"),
+    createNotesData("08:44", "Great super friend"),
+    createNotesData("09:01", "Lots of good jobs"),
+    createNotesData("09:37", "BD frown"),
+    createNotesData("09:56", "Close down center conflict")
 ];
 
 class TransitionResults extends React.Component {
