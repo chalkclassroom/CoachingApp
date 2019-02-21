@@ -12,7 +12,6 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { ReactComponent as GenerateReportSVG } from "../../../assets/icons/generateReport.svg";
-
 import { withStyles } from "@material-ui/core/styles";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";

@@ -7,11 +7,13 @@ import {
 } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button/Button";
 import YesNoDialog from "../../components/Shared/YesNoDialog";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
+import angryFace from "../../assets/icons/1-ex-negative-cqref.png";
+import irritatedFace from "../../assets/icons/2-negative-cqref.png";
+import neutralFace from "../../assets/icons/3-flat-cqref.png";
+import positiveInterestFace from "../../assets/icons/4-pleasant-cqref.png";
+import excitedFace from "../../assets/icons/5-vibrant-cqref.png";
 
 function getModalStyle() {
     return {
@@ -25,7 +27,7 @@ function getModalStyle() {
 const styles = theme => ({
     paper: {
         position: "absolute",
-        width: "60%",
+        width: "80%",
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
@@ -50,30 +52,39 @@ class RatingModal extends React.Component {
         value: "undefined"
     };
 
-    handleChange = event => {
-        let ret = 0;
-        const val = event.target.value;
-        switch (val) {
-            case "Extreme Negative":
-                ret = 1;
-                break;
-            case "Negative":
-                ret = 2;
-                break;
-            case "Flat":
-                ret = 3;
-                break;
-            case "Pleasant":
-                ret = 4;
-                break;
-            case "Vibrant":
-                ret = 5;
-                break;
-            default:
-                break;
+    handleAngerClick = event => {
+        if (this.state.value !== "Anger") {
+            this.setState({ value: "Anger" });
+            this.setState({ rating: 1 });
         }
-        this.setState({ value: event.target.value });
-        this.setState({ rating: ret });
+    };
+
+    handleIrritationClick = () => {
+        if (this.state.value !== "Irritation") {
+            this.setState({ value: "Irritation" });
+            this.setState({ rating: 2 });
+        }
+    };
+
+    handleNeutralClick = () => {
+        if (this.state.value !== "Neutral") {
+            this.setState({ value: "Neutral" });
+            this.setState({ rating: 3 });
+        }
+    };
+
+    handlePositiveInterestClick = () => {
+        if (this.state.value !== "Positive Interest") {
+            this.setState({ value: "Positive Interest" });
+            this.setState({ rating: 4 });
+        }
+    };
+
+    handleExcitementClick = () => {
+        if (this.state.value !== "Excitement") {
+            this.setState({ value: "Excitement" });
+            this.setState({ rating: 5 });
+        }
     };
 
     /*
@@ -97,55 +108,149 @@ class RatingModal extends React.Component {
                     <Typography variant="subtitle2" gutterBottom>
                         Please rate the teacher's current tone.
                     </Typography>
+                    <div style={{ height: 20 }}/>
                     <Grid
                         container
-                        alignItems={"center"}
-                        justify={"center"}
                         direction={"row"}
+                        justify={"space-between"}
                     >
-                        <MuiThemeProvider theme={theme}>
-                            <FormControl component="fieldset">
-                                <RadioGroup
-                                    aria-label="position"
-                                    name="position"
-                                    value={this.state.value}
-                                    onChange={this.handleChange}
-                                    row
-                                >
-                                    <FormControlLabel
-                                        value="Extreme Negative"
-                                        control={<Radio color="secondary" />}
-                                        label="Extreme Negative"
-                                        labelPlacement="bottom"
-                                    />
-                                    <FormControlLabel
-                                        value="Negative"
-                                        control={<Radio color="secondary" />}
-                                        label="Negative"
-                                        labelPlacement="bottom"
-                                    />
-                                    <FormControlLabel
-                                        value="Flat"
-                                        control={<Radio color="secondary" />}
-                                        label="Flat"
-                                        labelPlacement="bottom"
-                                    />
-                                    <FormControlLabel
-                                        value="Pleasant"
-                                        control={<Radio color="secondary" />}
-                                        label="Pleasant"
-                                        labelPlacement="bottom"
-                                    />
-                                    <FormControlLabel
-                                        value="Vibrant"
-                                        control={<Radio color="secondary" />}
-                                        label="Vibrant"
-                                        labelPlacement="bottom"
-                                    />
-                                </RadioGroup>
-                            </FormControl>
-                        </MuiThemeProvider>
+                        <Grid item>
+                            <Button
+                                onClick={this.handleAngerClick}
+                                variant={
+                                    this.state.value === "Anger"
+                                        ? "outlined"
+                                        : "text"
+                                }>
+                                <img
+                                    alt="angry face"
+                                    src={angryFace}
+                                    width="100vw"
+                                />
+                            </Button>
+                            <Typography
+                                variant={"h6"}
+                                align={"center"}
+                            >
+                                Anger
+                            </Typography>
+                            <Typography
+                                variant={"body1"}
+                                align={"center"}
+                            >
+                                (yelling, sarcasm)
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                onClick={this.handleIrritationClick}
+                                variant={
+                                    this.state.value === "Irritation"
+                                        ? "outlined"
+                                        : "text"
+                                }>
+                                <img
+                                    alt="irritated face"
+                                    src={irritatedFace}
+                                    width="100vw"
+                                />
+                            </Button>
+                            <Typography
+                                variant={"h6"}
+                                align={"center"}
+                            >
+                                Irritation
+                            </Typography>
+                            <Typography
+                                variant={"body1"}
+                                align={"center"}
+                            >
+                                (grimacing, eye-rolling)
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                onClick={this.handleNeutralClick}
+                                variant={
+                                    this.state.value === "Neutral"
+                                        ? "outlined"
+                                        : "text"
+                                }>
+                                <img
+                                    alt="neutral face"
+                                    src={neutralFace}
+                                    width="100vw"
+                                />
+                            </Button>
+                            <Typography
+                                variant={"h6"}
+                                align={"center"}
+                            >
+                                Neutral
+                            </Typography>
+                            <Typography
+                                variant={"body1"}
+                                align={"center"}
+                            >
+                                (no facial expression)
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                onClick={this.handlePositiveInterestClick}
+                                variant={
+                                    this.state.value === "Positive Interest"
+                                        ? "outlined"
+                                        : "text"
+                                }>
+                                <img
+                                    alt="positive interest face"
+                                    src={positiveInterestFace}
+                                    width="100vw"
+                                />
+                            </Button>
+                            <Typography
+                                variant={"h6"}
+                                align={"center"}
+                            >
+                                Positive Interest
+                            </Typography>
+                            <Typography
+                                variant={"body1"}
+                                align={"center"}
+                            >
+                                (smiling, nodding)
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                onClick={this.handleExcitementClick}
+                                variant={
+                                    this.state.value === "Excitement"
+                                        ? "outlined"
+                                        : "text"
+                                }>
+                                <img
+                                    alt="excited face"
+                                    src={excitedFace}
+                                    width="100vw"
+                                />
+                            </Button>
+                            <Typography
+                                variant={"h6"}
+                                align={"center"}
+                            >
+                                Excitement
+                            </Typography>
+                            <Typography
+                                variant={"body1"}
+                                align={"center"}
+                            >
+                                (laughing, enthusiastic voice)
+                            </Typography>
+                        </Grid>
                     </Grid>
+                    <div style={{ height: 20 }}/>
                     <Grid
                         container
                         alignItems={"center"}
