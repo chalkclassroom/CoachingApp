@@ -10,7 +10,7 @@ import Grid from "@material-ui/core/Grid";
 import spreadsheetData from "../../SPREADSHEET_SECRETS";
 import { connect } from "react-redux";
 import { pushOntoClimateStack } from "../../state/actions/classroom-climate";
-import Firebase from "../Firebase/Firebase";
+// import Firebase from "../Firebase/Firebase";
 
 const REDIRECTION = "#f9a796";
 const NONSPECIFIC = "#ffe79d";
