@@ -10,17 +10,19 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select";
-import { ReactComponent as GenerateReportSVG } from "../../../assets/icons/generateReport.svg";
+import {ReactComponent as GenerateReportSVG} from "../../../assets/icons/generateReport.svg";
 
-import { withStyles } from "@material-ui/core/styles";
+import {withStyles} from "@material-ui/core/styles";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
-import { ImmortalDB } from "immortal-db";
-import { VictoryPie } from "victory-pie";
-import ListDetailTableTransitionResults from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
+import {ImmortalDB} from "immortal-db";
+import {VictoryPie} from "victory-pie";
+import ListDetailTableTransitionResults
+    from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
+import {Line} from 'react-chartjs-2';
 
 const styles = {
     root: {
@@ -82,14 +84,15 @@ const ViewEnum = {
 
 // dummy data for transition list detail table, when we read in from DB we can use custom id
 let id = 0;
+
 function createTransitionData(startTime, duration, notes, type) {
     id += 1;
-    return { id, startTime, duration, notes, type };
+    return {id, startTime, duration, notes, type};
 }
 
 function createNotesData(time, notes) {
-  id += 1;
-  return { id, time, notes };
+    id += 1;
+    return {id, time, notes};
 }
 
 const transitionData = [
@@ -107,6 +110,93 @@ const transitionNotes = [
     createNotesData("09:37", "BD frown"),
     createNotesData("09:56", "Close down center conflict")
 ];
+
+/**
+ * specifies data sets (and formatting) for transition trends graph
+ * @type {{datasets: *[], labels: string[][]}}
+ */
+const transitionTrendData = {
+    labels: [['Jan 5', '0:44:42'], ['Feb 16', '1:13:12'], ['Mar 8', '0:32:57'], ['Apr 23', '0:25:16'], ['May 12', '0:55:32']],
+    datasets: [{
+        label: 'TOTAL',
+        backgroundColor: 'rgb(255, 99, 132)',   //red
+        borderColor: 'rgb(255, 99, 132)',
+        fill: false,
+        lineTension: 0,
+        data: [27, 45, 49, 17, 30],
+    }, {
+        label: 'INSIDE',
+        backgroundColor: 'rgb(75, 192, 192)',   //green
+        borderColor: 'rgb(75, 192, 192)',
+        fill: false,
+        lineTension: 0,
+        data: [7, 5, 25, 0, 15],
+    }, {
+        label: 'OUTSIDE',
+        backgroundColor: 'rgb(255, 205, 86)',   //yellow
+        borderColor: 'rgb(255, 205, 86)',
+        fill: false,
+        lineTension: 0,
+        data: [5, 20, 8, 0, 8],
+    }, {
+        label: 'WAIT',
+        backgroundColor: 'rgb(54, 162, 235)',
+        borderColor: 'rgb(54, 162, 235)',
+        fill: false,
+        lineTension: 0,
+        data: [15, 20, 16, 17, 8,],
+    }],
+};
+
+/**
+ * formatting for transition trends graph, including title and scales for the axes
+ * @type {{showScale: boolean, pointDot: boolean, scales: {yAxes: {ticks: {min: number, max: number, callback: (function(*): string), beginAtZero: boolean}, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[], xAxes: {display: boolean, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[]}, title: {display: boolean, fontSize: number, text: string, fontStyle: string}, showLines: boolean}}
+ */
+const transitionTrendOptions = {
+    showScale: true,
+    pointDot: true,
+    showLines: true,
+    // title: {
+    //     display: true,
+    //     text: 'Transition Time Trends',
+    //     fontSize: 20,
+    //     fontStyle: 'bold'
+    // },
+    // tooltips: {
+    //     mode: 'index',
+    //     intersect: false
+    // },
+    //
+    // hover: {
+    //     mode: 'nearest',
+    //     intersect: true,
+    // },
+    scales: {
+        xAxes: [{
+            display: true,
+            scaleLabel: {
+                display: true,
+                labelString: 'Date & Total Time in Transition',
+                fontStyle: 'bold'
+            }
+        }],
+        yAxes: [{
+            ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 100,
+                callback: function (value) {
+                    return value + '%';
+                }
+            },
+            scaleLabel: {
+                display: true,
+                labelString: 'Percentage of Total Time Spent in Transition',
+                fontStyle: 'bold'
+            }
+        }]
+    }
+};
 
 class TransitionResults extends React.Component {
     constructor(props) {
@@ -133,7 +223,7 @@ class TransitionResults extends React.Component {
         let newEntries = this.state.entries;
         entry.type = this.state.type;
         newEntries.push(entry);
-        this.setState({ entries: newEntries });
+        this.setState({entries: newEntries});
 
         this.handleSpreadsheetAppend(entry);
 
@@ -141,23 +231,23 @@ class TransitionResults extends React.Component {
     }
 
     handleChange = event => {
-        this.setState({ auth: event.target.checked });
+        this.setState({auth: event.target.checked});
     };
 
     handleMenu = event => {
-        this.setState({ anchorEl: event.currentTarget });
+        this.setState({anchorEl: event.currentTarget});
     };
 
     handleClose = () => {
-        this.setState({ anchorEl: null });
+        this.setState({anchorEl: null});
     };
 
     handleHelpModal = () => {
-        this.setState({ help: true });
+        this.setState({help: true});
     };
 
     handleClickAway = () => {
-        this.setState({ help: false });
+        this.setState({help: false});
     };
 
     handleDBinsert = async entry => {
@@ -167,7 +257,7 @@ class TransitionResults extends React.Component {
             JSON.stringify(entry)
         );
 
-        this.setState({ dbCounter: this.state.dbCounter + 1 });
+        this.setState({dbCounter: this.state.dbCounter + 1});
     };
 
     handleSpreadsheetAppend = entry => {
@@ -198,41 +288,41 @@ class TransitionResults extends React.Component {
 
     summaryClick = () => {
         if (this.state.view !== ViewEnum.SUMMARY) {
-            this.setState({ view: ViewEnum.SUMMARY });
+            this.setState({view: ViewEnum.SUMMARY});
         }
     };
 
     listClick = () => {
         if (this.state.view !== ViewEnum.LIST) {
-            this.setState({ view: ViewEnum.LIST });
+            this.setState({view: ViewEnum.LIST});
         }
     };
 
     trendsClick = () => {
         if (this.state.view !== ViewEnum.TRENDS) {
-            this.setState({ view: ViewEnum.TRENDS });
+            this.setState({view: ViewEnum.TRENDS});
         }
     };
 
     notesClick = () => {
         if (this.state.view !== ViewEnum.NOTES) {
-            this.setState({ view: ViewEnum.NOTES });
+            this.setState({view: ViewEnum.NOTES});
         }
     };
 
     nextStepsClick = () => {
         if (this.state.view !== ViewEnum.NEXT_STEPS) {
-            this.setState({ view: ViewEnum.NEXT_STEPS });
+            this.setState({view: ViewEnum.NEXT_STEPS});
         }
     };
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
 
         return (
             <div className={classes.root}>
                 <FirebaseContext.Consumer>
-                    {firebase => <AppBar firebase={firebase} />}
+                    {firebase => <AppBar firebase={firebase}/>}
                 </FirebaseContext.Consumer>
                 <main>
                     <Grid
@@ -377,7 +467,7 @@ class TransitionResults extends React.Component {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <div style={{ height: 20 }}/>
+                                    <div style={{height: 20}}/>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Typography
@@ -391,7 +481,7 @@ class TransitionResults extends React.Component {
                                     <div>
                                         {this.state.view ===
                                         ViewEnum.SUMMARY ? (
-                                            <div style={{ height: "80vh" }}>
+                                            <div style={{height: "80vh"}}>
                                                 <VictoryPie
                                                     data={[
                                                         {
@@ -425,32 +515,29 @@ class TransitionResults extends React.Component {
                                                 />
                                             </div>
                                         ) : this.state.view ===
-                                          ViewEnum.LIST ? (
+                                        ViewEnum.LIST ? (
                                             <div
-                                                style={{
-                                                    height: "60vh",
-                                                    position: "relative",
-                                                    top: "8vh",
-                                                    left: "7%"
-                                                }}
-                                            >
+                                                style={{height: "60vh", position: "relative", marginTop: '100px', left: "7%"}}>
                                                 <ListDetailTableTransitionResults
                                                     data={transitionData}
                                                 />
                                             </div>
                                         ) : this.state.view ===
-                                          ViewEnum.TRENDS ? (
-                                            <div style={{ height: "60vh" }} /> // replace this null with trends graph
+                                        ViewEnum.TRENDS ? (
+                                            <div style={{height: "60vh", marginRight: '50px', marginTop: '100px'}}>
+                                                <Line data={transitionTrendData} options={transitionTrendOptions}
+                                                      width="650" height="400"/>
+                                            </div>
                                         ) : this.state.view ===
-                                          ViewEnum.NOTES ? (
-                                            <div style={{ height: "60vh", marginLeft: '165px', marginTop: '100px'}}>
+                                        ViewEnum.NOTES ? (
+                                            <div style={{height: "60vh", marginLeft: '165px', marginTop: '100px'}}>
                                                 <NotesListDetailTable
                                                     data={transitionNotes}
                                                 />
                                             </div>
                                         ) : this.state.view ===
-                                          ViewEnum.NEXT_STEPS ? (
-                                            <div style={{ height: "60vh" }} /> // replace this null with next steps content
+                                        ViewEnum.NEXT_STEPS ? (
+                                            <div style={{height: "60vh"}}/> // replace this null with next steps content
                                         ) : null}
                                     </div>
                                 </Grid>
