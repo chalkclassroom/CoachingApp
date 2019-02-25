@@ -11,7 +11,7 @@
     "pretty-ms": "^4.0.0",
     "prop-types": "latest",
     "rc-progress": "^2.2.6",
-    "react": "^16.6.1",
+    "react": "^16.8.3",
     "react-chartjs-2": "^2.7.4",
     "react-circle": "^1.1.1",
     "react-circular-progressbar": "^1.0.0",
@@ -37,6 +37,7 @@
     "rxjs": "^6.3.3",
     "slick-carousel": "^1.8.1",
     "styled-components": "^4.1.1",
+    "typescript": "^3.3.3333",
     "victory-pie": "^31.2.0"
   },
   "scripts": {

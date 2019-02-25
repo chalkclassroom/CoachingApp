@@ -97,23 +97,16 @@ class Magic8Menu extends Component {
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
                 <div className="row">
-                    <div className="row" align="center" >
-                        <Typography
-                            style={{ fontSize: "2.4em", color: "#81ECEC"}}
-                        >
-                            Student & Teacher Observation Tool
-                        </Typography>
-                    </div>
                     <div className="row" align="center">
                         <Typography
-                            style={{ fontSize: "3em", color: "#a5a4a4" }}
+                            style={{ fontSize: "2.9em", color: "#000000", marginTop: "5%" }}
                         >
                             Magic 8
                         </Typography>
                     </div>
-                    <div className="row" align="center">
+                    <div className="row">
                         <Typography
-                            style={{ fontSize: "1.5em", color: "#afafaf"}}
+                            style={{ fontSize: "1em", color: "#000000", marginLeft: "17%", marginTop: "2%" }}
                         >
                             Select the skill you'd like to focus on:
                         </Typography>
