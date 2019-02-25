@@ -22,6 +22,7 @@ import { VictoryPie } from "victory-pie";
 import ListDetailTableTransitionResults from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import { Line } from "react-chartjs-2";
+import 'chartjs-plugin-datalabels';
 
 const styles = {
   root: {
@@ -125,36 +126,36 @@ const transitionTrendData = {
   datasets: [
     {
       label: "TOTAL",
-      backgroundColor: "rgb(255, 99, 132)", //red
-      borderColor: "rgb(255, 99, 132)",
+      backgroundColor: "#0988EC", //blue
+      borderColor: "#0988EC",
       fill: false,
       lineTension: 0,
       data: [27, 45, 49, 17, 30]
     },
     {
       label: "INSIDE",
-      backgroundColor: "rgb(75, 192, 192)", //green
-      borderColor: "rgb(75, 192, 192)",
+      backgroundColor: "#E99C2E", //yellow
+      borderColor: "#E99C2E",
       fill: false,
       lineTension: 0,
       data: [7, 5, 25, 0, 15]
     },
     {
       label: "OUTSIDE",
-      backgroundColor: "rgb(255, 205, 86)", //yellow
-      borderColor: "rgb(255, 205, 86)",
+      backgroundColor: "#E55529", //orange
+      borderColor: "#E55529",
       fill: false,
       lineTension: 0,
       data: [5, 20, 8, 0, 8]
     },
-    {
-      label: "WAIT",
-      backgroundColor: "rgb(54, 162, 235)",
-      borderColor: "rgb(54, 162, 235)",
-      fill: false,
-      lineTension: 0,
-      data: [15, 20, 16, 17, 8]
-    }
+    // {
+    //   label: "WAIT",
+    //   backgroundColor: "rgb(54, 162, 235)",
+    //   borderColor: "rgb(54, 162, 235)",
+    //   fill: false,
+    //   lineTension: 0,
+    //   data: [15, 20, 16, 17, 8]
+    // }
   ]
 };
 
@@ -172,15 +173,15 @@ const transitionTrendOptions = {
   //     fontSize: 20,
   //     fontStyle: 'bold'
   // },
-  // tooltips: {
-  //     mode: 'index',
-  //     intersect: false
-  // },
-  //
-  // hover: {
-  //     mode: 'nearest',
-  //     intersect: true,
-  // },
+  tooltips: {
+      mode: 'index',
+      intersect: false
+  },
+
+  hover: {
+      mode: 'nearest',
+      intersect: true,
+  },
   scales: {
     xAxes: [
       {
@@ -209,6 +210,16 @@ const transitionTrendOptions = {
         }
       }
     ]
+  },
+  plugins: {
+    datalabels: {
+      display: 'auto',
+      color: 'gray',
+      align: 'top',
+      formatter: function(value, context) {
+        return value + '%';
+      }
+    }
   }
 };
 
