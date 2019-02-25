@@ -25,6 +25,7 @@ import negativeFace from "../../../assets/icons/2-negative-cqref.png";
 import flatFace from "../../../assets/icons/3-flat-cqref.png";
 import pleasantFace from "../../../assets/icons/4-pleasant-cqref.png";
 import vibrantFace from "../../../assets/icons/5-vibrant-cqref.png";
+import { Bar } from 'react-chartjs-2';
 import ListDetailTableClassroomClimateResults from "../../../components/ResultsComponents/ListDetailTableClassroomClimateResults.js";
 
 const styles = {
@@ -223,6 +224,48 @@ class ClassroomClimateResults extends React.Component {
 
     render() {
         const { classes } = this.props;
+
+        const data = {
+            labels: ['August 19, 2018', 'Sept 30, 2018', 'Oct 22, 2018'],
+            datasets: [
+                {
+                    label: 'Negative',
+                    data: [
+                        10,
+                        20,
+                        30
+                    ],
+                    backgroundColor:[
+                        '#FF0000','#FF0000','#FF0000'
+                    ]
+                },
+                {
+                    label: 'Positive',
+                    data: [
+                        20,
+                        10,
+                        30
+                    ],
+                    backgroundColor:[
+                        '#008000','#008000','#008000'
+                    ]
+                }
+            ],
+        };
+
+        const options = {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            tooltips: {
+                displayColors: true,
+                multiKeyBackground: 'white'
+            }
+        };
 
         return (
             <div className={classes.root}>
@@ -503,7 +546,12 @@ class ClassroomClimateResults extends React.Component {
                                             </div>
                                         ) : this.state.view ===
                                           ViewEnum.TRENDS ? (
-                                            <div style={{ height: "60vh" }} /> // replace this null with trends graph
+                                                <div style={{height: "60vh"}}>
+                                                    <Bar
+                                                    data= {data}
+                                                    options= {options}
+                                                    />
+                                                </div>
                                         ) : this.state.view ===
                                           ViewEnum.NOTES ? (
                                             <div style={{ height: "60vh" }}>
