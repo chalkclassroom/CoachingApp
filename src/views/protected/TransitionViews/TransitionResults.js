@@ -350,7 +350,7 @@ class TransitionResults extends React.Component {
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
-          <Grid container spacing={16} justify="center" direction={"row"}>
+          <Grid container spacing={0} justify="center" direction={"row"} alignItems={"center"}>
             <Grid container item xs={4}>
               <List className={classes.buttonsList}>
                 <ListItem>
@@ -462,18 +462,14 @@ class TransitionResults extends React.Component {
                 </ListItem>
               </List>
             </Grid>
-            <Grid container item xs={8}>
-              <Grid container item direction={"row"}>
-                <Grid item xs={12}>
-                  <Typography variant={"h5"} className={classes.title}>
+            <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
+                <Grid item xs={12} alignItems={"center"} justify={"center"}>
+                  <Typography variant={"h5"} style={{ marginBottom: 20 }}>
                     Transition Time Results
                   </Typography>
                 </Grid>
-                <Grid item xs={12}>
-                  <div style={{ height: 20 }} />
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant={"h7"} className={classes.secondTitle}>
+                <Grid item xs={12} alignItems={"center"} justify={"center"}>
+                  <Typography variant={"h7"}>
                     Total Transition Time:{" "}
                   </Typography>
                 </Grid>
@@ -497,7 +493,7 @@ class TransitionResults extends React.Component {
                             }
                           ]}
                           colorScale={["#E99C2E", "#E55529", "#0988EC"]}
-                          //labelRadius={75}
+                          labelRadius={75}
                           style={{
                             labels: {
                               fill: "black",
@@ -549,7 +545,6 @@ class TransitionResults extends React.Component {
                     ) : null}
                   </div>
                 </Grid>
-              </Grid>
             </Grid>
           </Grid>
         </main>
