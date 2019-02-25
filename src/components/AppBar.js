@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles, AppBar, Toolbar, Button, IconButton} from '@material-ui/core';
+import { withStyles, AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
 import Logo from '../logo.svg'
 import {withRouter} from 'react-router-dom'
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -110,6 +110,9 @@ class CommonAppBar extends React.Component{
                                 >
                                     <img src={Logo} height={'36'} alt={""}/>
                                 </IconButton>
+                                <Typography variant="h6" style={{color:'#FFFFFF',}}>
+                                    Classroom Quality - REF
+                                </Typography>
                                 <div color="inherit" className={classes.grow}/>
                                 <Button color="secondary" variant={"contained"} onClick={this.handleLoginModal}
                                         className={classes.menuButton}>Log In</Button>
