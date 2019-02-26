@@ -12,7 +12,6 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { ReactComponent as GenerateReportSVG } from "../../../assets/icons/generateReport.svg";
-
 import { withStyles } from "@material-ui/core/styles";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
@@ -25,6 +24,8 @@ import negativeFace from "../../../assets/icons/2-negative-cqref.png";
 import flatFace from "../../../assets/icons/3-flat-cqref.png";
 import pleasantFace from "../../../assets/icons/4-pleasant-cqref.png";
 import vibrantFace from "../../../assets/icons/5-vibrant-cqref.png";
+import { Bar } from 'react-chartjs-2';
+// import ListDetailTableClassroomClimateResults from "../../../components/ResultsComponents/ListDetailTableClassroomClimateResults.js";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
 
 const styles = {
@@ -52,7 +53,7 @@ const styles = {
     buttonsList: {
         position: "relative",
         left: "20%",
-        top: "13%"
+        top: "15vh"
     },
     title: {
         position: "relative",
@@ -74,6 +75,11 @@ const styles = {
         right: "10%",
         top: "76%",
         left: "10%"
+    },
+    resultsContent: {
+        height: "60vh",
+        position: "relative",
+        top: "8vh"
     }
 };
 
@@ -224,18 +230,55 @@ class ClassroomClimateResults extends React.Component {
     render() {
         const { classes } = this.props;
 
+        const data = {
+            labels: ['August 19, 2018', 'Sept 30, 2018', 'Oct 22, 2018'],
+            datasets: [
+                {
+                    label: 'Negative',
+                    data: [
+                        10,
+                        20,
+                        30
+                    ],
+                    backgroundColor:[
+                        '#FF0000','#FF0000','#FF0000'
+                    ]
+                },
+                {
+                    label: 'Positive',
+                    data: [
+                        20,
+                        10,
+                        30
+                    ],
+                    backgroundColor:[
+                        '#008000','#008000','#008000'
+                    ]
+                }
+            ],
+        };
+
+        const options = {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            tooltips: {
+                displayColors: true,
+                multiKeyBackground: 'white'
+            }
+        };
+
         return (
             <div className={classes.root}>
                 <FirebaseContext.Consumer>
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
                 <main>
-                    <Grid
-                        container
-                        spacing={16}
-                        justify="center"
-                        direction={"row"}
-                    >
+                    <Grid container spacing={0} justify="center" direction={"row"} alignItems={"center"}>
                         <Grid container item xs={4}>
                             <List className={classes.buttonsList}>
                                 <ListItem>
@@ -361,159 +404,155 @@ class ClassroomClimateResults extends React.Component {
                                 </ListItem>
                             </List>
                         </Grid>
-                        <Grid container item xs={8}>
-                            <Grid container direction={"row"}>
-                                <Typography
-                                    variant={"h5"}
-                                    className={classes.title}
-                                >
-                                    Classroom Climate Results
-                                </Typography>
-                                <Grid item xs={12}>
-                                    <div>
-                                        {this.state.view ===
-                                        ViewEnum.SUMMARY ? (
-                                            <div
-                                                style={{
-                                                    height: "60vh",
-                                                    position: "relative",
-                                                    top: "8vh",
-                                                }}
+                        <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
+                            <Typography
+                                variant={"h5"}
+                            >
+                                Classroom Climate Results
+                            </Typography>
+                            <Grid item xs={10}>
+                                <div>
+                                    {this.state.view ===
+                                    ViewEnum.SUMMARY ? (
+                                        <div className={classes.resultsContent}>
+                                            <Grid
+                                                container
+                                                direction={"row"}
+                                                justify={"space-between"}
                                             >
-                                                <Grid
-                                                    container
-                                                    direction={"row"}
-                                                    justify={"space-between"}
-                                                >
-                                                    <Grid item>
-                                                        <img
-                                                            alt="extreme negative face"
-                                                            src={exNegativeFace}
-                                                            width="100vw"
-                                                        />
-                                                    </Grid>
-                                                    <Grid item>
-                                                        <img
-                                                            alt="negative face"
-                                                            src={negativeFace}
-                                                            width="100vw"
-                                                        />
-                                                    </Grid>
-                                                    <Grid item>
-                                                        <img
-                                                            alt="flat face"
-                                                            src={flatFace}
-                                                            width="100vw"
-                                                        />
-                                                    </Grid>
-                                                    <Grid item>
-                                                        <img
-                                                            alt="pleasant face"
-                                                            src={pleasantFace}
-                                                            width="100vw"
-                                                        />
-                                                    </Grid>
-                                                    <Grid item>
-                                                        <img
-                                                            alt="vibrant face"
-                                                            src={vibrantFace}
-                                                            width="100vw"
-                                                        />
-                                                    </Grid>
+                                                <Grid item>
+                                                    <img
+                                                        alt="extreme negative face"
+                                                        src={exNegativeFace}
+                                                        width="90vw"
+                                                    />
                                                 </Grid>
-                                                <div style={{ height: 20 }}/>
-                                                <LinearProgress
-                                                    variant="determinate"
-                                                    value={75}
-                                                    style={{ height: 20 }}
-                                                />
-                                          <Grid>
-                                           <div class="behavior">
-                                             <div class='disapprovals' style={{display: 'inline-block', marginRight:'150px', marginTop: '100px', marginLeft:'50px'}}>
-                                               <div style={{width: '200px', height: '115px', fontSize: 30, color: '#e17055', textAlign:'center'}} >TOTAL BEHAVIOR DISAPPROVALS</div>
-                                               <div style={{width: '200px', height: '50px', fontSize: 50, color: '#e17055', textAlign:'center', marginBottom:'25px'}}>78</div>
-                                               <div style={{width: '200px', height: '50px', fontSize: 20, backgroundColor:'#d63031', color:"#ffffff", fontWeight:'bold'}}>14 NEGATIVE</div>
-                                               <div style={{width: '200px', height: '50px', fontSize: 20, backgroundColor: '#e17055', color:"#ffffff", fontWeight:'bold'}}>64 REDIRECTIONS</div>
-                                             </div>
-                                             <div class='approvals' style={{display: 'inline-block'}}>
-                                               <div style={{width: '200px', height: '115px', fontSize: 30, color: '#55efc4', display:'inline-block', textAlign:'center'}}>TOTAL BEHAVIOR APPROVALS</div>
-                                                 <div style={{width: '200px', height: '50px', fontSize: 50, color: '#55efc4', textAlign:'center', marginBottom:'25px'}}>53</div>
-                                                 <div style={{width: '200px', height: '50px', fontSize: 20, backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>32 GENERAL</div>
-                                                 <div style={{width: '200px', height: '50px', fontSize: 20, backgroundColor: "#00b894", color:"#ffffff", fontWeight:'bold'}}>21 SPECIFIC</div>
-                                             </div>
-                                           </div>
-                                           </Grid>
-                                            </div>
-                                        ) : this.state.view ===
-                                          ViewEnum.DETAILS ? (
-                                            <div style={{ height: "60vh" }}>
-                                                <VictoryPie
-                                                    data={[
-                                                        {
-                                                            x: "General\n24%",
-                                                            y: 48
-                                                        },
-                                                        {
-                                                            x: "Specific\n16%",
-                                                            y: 32
-                                                        },
-                                                        {
-                                                            x: "Negative\n11%",
-                                                            y: 22
-                                                        },
-                                                        {
-                                                            x: "Redirect\n49%",
-                                                            y: 98
-                                                        }
-                                                    ]}
-                                                    colorScale={[
-                                                        "#55efc4",
-                                                        "#00b894",
-                                                        "#d63031",
-                                                        "#e17055"
-                                                    ]}
-                                                    labelRadius={60}
-                                                    radius={170}
-                                                    style={{
-                                                        labels: {
-                                                            fill: "white",
-                                                            fontSize: 16
-                                                        }
-                                                    }}
-                                                />
-                                                <Grid>
-                                                 <div class="behavior">
-                                                   <div class='disapprovals' style={{display: 'inline-block', marginRight:'50px', marginLeft:'150px'}}>
-                                                     <div style={{width: '200px', height: '50px', fontSize: 24, color: "#d63031", textAlign:'center'}} >BEHAVIOR DISAPPROVALS</div>
-                                                     <div style={{width: '200px', height: '50px', fontSize: 32, color: "#d63031", textAlign:'center'}}>78 (60%)</div>
-                                                     <div style={{width: '255px', height: '50px', fontSize: 20, backgroundColor: "#d63031", color:"#ffffff", fontWeight:'bold'}}>14 NEGATIVE (11%)</div>
-                                                     <div style={{width: '255px', height: '50px', fontSize: 20, backgroundColor: "#e17055", color:"#ffffff", fontWeight:'bold'}}>64 REDIRECTIONS (49%)</div>
+                                                <Grid item>
+                                                    <img
+                                                        alt="negative face"
+                                                        src={negativeFace}
+                                                        width="90vw"
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <img
+                                                        alt="flat face"
+                                                        src={flatFace}
+                                                        width="90vw"
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <img
+                                                        alt="pleasant face"
+                                                        src={pleasantFace}
+                                                        width="90vw"
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <img
+                                                        alt="vibrant face"
+                                                        src={vibrantFace}
+                                                        width="90vw"
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                            <div style={{ height: 10 }}/>
+                                            <LinearProgress
+                                                variant="determinate"
+                                                value={75}
+                                                style={{ height: 10 }}
+                                            />
+                                      <Grid>
+                                      <div class="behavior">
+                                          <div class='disapprovals' style={{display: 'inline-block', marginTop:"10%", marginRight:'15%'}}>
+                                            <div style={{width: '20vw', height: '7vh', fontSize: '1.5em', color: '#e17055', textAlign:'center'}} >TOTAL BEHAVIOR DISAPPROVALS</div>
+                                            <div style={{width: '20vw', height: '7vh', fontSize: '1.74em', color: '#e17055', textAlign:'center'}}>78</div>
+                                            <div style={{width: '20vw', height: '7vh', fontSize: '1.25em', backgroundColor:'#d63031', color:"#ffffff", fontWeight:'bold'}}>14 NEGATIVE</div>
+                                            <div style={{width: '20vw', height: '7vh', fontSize: '1.25em', backgroundColor: '#e17055', color:"#ffffff", fontWeight:'bold'}}>64 REDIRECTIONS</div>
+                                          </div>
+                                          <div class='approvals' style={{display: 'inline-block'}}>
+                                            <div style={{width: '20vw', height: '7vh', fontSize: '1.5em', color: '#55efc4', display:'inline-block', textAlign:'center'}}>TOTAL BEHAVIOR APPROVALS</div>
+                                              <div style={{width: '20vw', height: '7vh', fontSize: '1.75em', color: '#55efc4', textAlign:'center'}}>53</div>
+                                              <div style={{width: '20vw', height: '7vh', fontSize: '1.25em', backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>32 GENERAL</div>
+                                              <div style={{width: '20vw', height: '7vh', fontSize: '1.25em', backgroundColor: "#00b894", color:"#ffffff", fontWeight:'bold'}}>21 SPECIFIC</div>
+                                          </div>
+                                        </div>
+                                       </Grid>
+                                        </div>
+                                    ) : this.state.view ===
+                                      ViewEnum.DETAILS ? (
+                                        <div style = {{height: "60vh", position: "relative"}}>
+                                            <VictoryPie
+                                                data={[
+                                                    {
+                                                        x: "General\n24%",
+                                                        y: 48
+                                                    },
+                                                    {
+                                                        x: "Specific\n16%",
+                                                        y: 32
+                                                    },
+                                                    {
+                                                        x: "Negative\n11%",
+                                                        y: 22
+                                                    },
+                                                    {
+                                                        x: "Redirect\n49%",
+                                                        y: 98
+                                                    }
+                                                ]}
+                                                colorScale={[
+                                                    "#55efc4",
+                                                    "#00b894",
+                                                    "#d63031",
+                                                    "#e17055"
+                                                ]}
+                                                labelRadius={60}
+                                                radius={140}
+                                                style={{
+                                                    labels: {
+                                                        fill: "white",
+                                                        fontSize: 16
+                                                    }
+                                                }}
+                                            />
+                                            <Grid>
+                                                 <div class="behavior" style={{marginRight:"10%"}}>
+                                                   <div class='disapprovals' style={{display: 'inline-block', marginRight:"10%", marginLeft:'5%'}}>
+                                                     <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color: "#d63031", textAlign:'center'}} >BEHAVIOR DISAPPROVALS</div>
+                                                     <div style={{width: '20vw', height: '6vh', fontSize: '1.5em', color: "#d63031", textAlign:'center'}}>78 (60%)</div>
+                                                     <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: "#d63031", color:"#ffffff", fontWeight:'bold'}}>14 NEGATIVE (11%)</div>
+                                                     <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: "#e17055", color:"#ffffff", fontWeight:'bold'}}>64 REDIRECTIONS (49%)</div>
                                                    </div>
                                                    <div class='approvals' style={{display: 'inline-block'}}>
-                                                     <div style={{width: '200px', height: '50px', fontSize: 24, color:  '#55efc4', display:'inline-block', textAlign:'center'}}>BEHAVIOR APPROVALS</div>
-                                                       <div style={{width: '200px', height: '50px', fontSize: 32, color: '#55efc4', textAlign:'center'}}>53 (40%)</div>
-                                                       <div style={{width: '255px', height: '50px', fontSize: 20, backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>32 GENERAL (24%)</div>
-                                                       <div style={{width: '255px', height: '50px', fontSize: 20, backgroundColor: '#00b894', color:"#ffffff", fontWeight:'bold'}}>21 SPECIFIC (16%)</div>
+                                                     <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color:  '#55efc4', display:'inline-block', textAlign:'center'}}>BEHAVIOR APPROVALS</div>
+                                                       <div style={{width: '20vw', height: '6vh', fontSize: '1.5em', color: '#55efc4', textAlign:'center'}}>53 (40%)</div>
+                                                       <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>32 GENERAL (24%)</div>
+                                                       <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#00b894', color:"#ffffff", fontWeight:'bold'}}>21 SPECIFIC (16%)</div>
                                                    </div>
                                                  </div>
                                                  </Grid>
-                                            </div>
-                                        ) : this.state.view ===
-                                          ViewEnum.TRENDS ? (
-                                            <div style={{ height: "60vh" }} /> // replace this null with trends graph
-                                        ) : this.state.view ===
-                                          ViewEnum.NOTES ? (
-                                            <div style={{ height: "60vh", marginLeft: '165px', marginTop: '100px'}}>
-                                                <NotesListDetailTable
-                                                    data={classroomClimateNotes}
+                                        </div>
+                                    ) : this.state.view ===
+                                      ViewEnum.TRENDS ? (
+                                            <div className={classes.resultsContent}>
+                                                <Bar
+                                                data= {data}
+                                                options= {options}
                                                 />
                                             </div>
-                                        ) : this.state.view ===
-                                          ViewEnum.NEXT_STEPS ? (
-                                            <div style={{ height: "60vh" }} /> // replace this null with next steps content
-                                        ) : null}
-                                    </div>
-                                </Grid>
+                                    ) : this.state.view ===
+                                      ViewEnum.NOTES ? (
+                                        <div className={classes.resultsContent}>
+                                            <NotesListDetailTable
+                                                data={classroomClimateNotes}
+                                            />
+                                        </div>
+                                    ) : this.state.view ===
+                                      ViewEnum.NEXT_STEPS ? (
+                                        <div className={classes.resultsContent} /> // replace this null with next steps content
+                                    ) : null}
+                                </div>
                             </Grid>
                         </Grid>
                     </Grid>
