@@ -464,13 +464,13 @@ class TransitionResults extends React.Component {
             </Grid>
             <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
                 <Grid item xs={12} alignItems={"center"} justify={"center"}>
-                  <Typography variant={"h5"} style={{ marginBottom: 20 }}>
+                  <Typography variant={"h5"} style={{ margin: 20, marginLeft: "20vw" }}>
                     Transition Time Results
                   </Typography>
                 </Grid>
                 <Grid item xs={12} alignItems={"center"} justify={"center"}>
-                  <Typography variant={"h7"}>
-                    Total Transition Time:{" "}
+                  <Typography variant={"h7"} style={{ marginLeft: "20vw" }}>
+                    Total Transition Time: {"30.2 minutes"}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -506,7 +506,6 @@ class TransitionResults extends React.Component {
                       <div
                         style={{
                           height: "60vh",
-                          position: "relative",
                           marginTop: "100px",
                           left: "7%"
                         }}

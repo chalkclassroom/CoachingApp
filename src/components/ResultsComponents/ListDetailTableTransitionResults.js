@@ -18,9 +18,9 @@ class ListDetailTableTransitionResults extends React.Component {
 
         return (
             <Paper
-                style={{ width: "90%", overflowX: "auto", marginRight: "10%" }}
+                style={{ width: "60vw", overflowX: "auto"}}
             >
-                <Table className={classes.table}>
+                <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell
