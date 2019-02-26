@@ -10,7 +10,6 @@ import Grid from "@material-ui/core/Grid";
 import spreadsheetData from "../../SPREADSHEET_SECRETS";
 import { connect } from "react-redux";
 import { pushOntoClimateStack } from "../../state/actions/classroom-climate";
-import Firebase from "../Firebase/Firebase";
 
 const REDIRECTION = "#f9a796";
 const NONSPECIFIC = "#ffe79d";
@@ -53,39 +52,6 @@ class BehaviorCounter extends React.Component {
         this.props.firebase.handlePushFireStore(mEntry);
     };
 //____________________________________________________________________________________________________________________//
-    handlePush = entry => {
-        let mEntry = {
-            observation: entry,
-            climateType: this.props.climateType
-        };
-        this.props.pushOntoClimateStack(mEntry);
-        this.handleSpreadsheetInsert(mEntry);
-    };
-
-    handleSpreadsheetInsert = entry => {
-        let url = new URL(spreadsheetData.scriptLink),
-            params = {
-                sheet: "ClassroomClimateBehavior",
-                del: "false",
-                BehaviorResponse: entry.observation,
-                InstructionTransition: entry.climateType,
-                TeacherID: this.props.teacherId
-            };
-        Object.keys(params).forEach(key =>
-            url.searchParams.append(key, params[key])
-        );
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: {
-                "content-type": "application/json"
-            }
-        })
-            .then(response => console.log("Success"))
-            .catch(error => console.error("Error:", error));
-    };
-
     render() {
         return (
             <div
