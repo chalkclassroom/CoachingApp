@@ -48,8 +48,7 @@ const styles = {
   },
   buttonsList: {
     position: "relative",
-    left: "20%",
-    top: "13%"
+    left: "20%"
   },
   title: {
     position: "relative",
@@ -493,12 +492,12 @@ class TransitionResults extends React.Component {
                             }
                           ]}
                           colorScale={["#E99C2E", "#E55529", "#0988EC"]}
-                          labelRadius={75}
+                          labelRadius={60}
                           style={{
-                            labels: {
-                              fill: "black",
-                              fontSize: 12
-                            }
+                              labels: {
+                                  fill: "white",
+                                  fontSize: 12
+                              }
                           }}
                         />
                       </div>
@@ -532,9 +531,7 @@ class TransitionResults extends React.Component {
                     ) : this.state.view === ViewEnum.NOTES ? (
                       <div
                         style={{
-                          height: "60vh",
-                          marginLeft: "165px",
-                          marginTop: "100px"
+                          height: "60vh"
                         }}
                       >
                         <NotesListDetailTable data={transitionNotes} />

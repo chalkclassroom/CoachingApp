@@ -53,7 +53,7 @@ const styles = {
     buttonsList: {
         position: "relative",
         left: "20%",
-        top: "13%"
+        top: "15vh"
     },
     title: {
         position: "relative",
@@ -75,6 +75,11 @@ const styles = {
         right: "10%",
         top: "76%",
         left: "10%"
+    },
+    resultsContent: {
+        height: "60vh",
+        position: "relative",
+        top: "8vh"
     }
 };
 
@@ -409,13 +414,7 @@ class ClassroomClimateResults extends React.Component {
                                 <div>
                                     {this.state.view ===
                                     ViewEnum.SUMMARY ? (
-                                        <div
-                                            style={{
-                                                height: "60vh",
-                                                position: "relative",
-                                                top: "8vh",
-                                            }}
-                                        >
+                                        <div className={classes.resultsContent}>
                                             <Grid
                                                 container
                                                 direction={"row"}
@@ -482,7 +481,7 @@ class ClassroomClimateResults extends React.Component {
                                         </div>
                                     ) : this.state.view ===
                                       ViewEnum.DETAILS ? (
-                                        <div style={{ height: "60vh" }}>
+                                        <div style = {{height: "60vh", position: "relative"}}>
                                             <VictoryPie
                                                 data={[
                                                     {
@@ -509,7 +508,7 @@ class ClassroomClimateResults extends React.Component {
                                                     "#e17055"
                                                 ]}
                                                 labelRadius={60}
-                                                radius={170}
+                                                radius={140}
                                                 style={{
                                                     labels: {
                                                         fill: "white",
@@ -536,7 +535,7 @@ class ClassroomClimateResults extends React.Component {
                                         </div>
                                     ) : this.state.view ===
                                       ViewEnum.TRENDS ? (
-                                            <div style={{height: "60vh"}}>
+                                            <div className={classes.resultsContent}>
                                                 <Bar
                                                 data= {data}
                                                 options= {options}
@@ -544,14 +543,14 @@ class ClassroomClimateResults extends React.Component {
                                             </div>
                                     ) : this.state.view ===
                                       ViewEnum.NOTES ? (
-                                        <div style={{ height: "60vh", marginLeft: '165px', marginTop: '100px'}}>
+                                        <div className={classes.resultsContent}>
                                             <NotesListDetailTable
                                                 data={classroomClimateNotes}
                                             />
                                         </div>
                                     ) : this.state.view ===
                                       ViewEnum.NEXT_STEPS ? (
-                                        <div style={{ height: "60vh" }} /> // replace this null with next steps content
+                                        <div className={classes.resultsContent} /> // replace this null with next steps content
                                     ) : null}
                                 </div>
                             </Grid>
