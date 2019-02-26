@@ -13,6 +13,7 @@ import TransitionLog from "./TransitionLog";
 import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
+import Notes from "../../../components/Notes";
 
 const styles = {
     root: {
@@ -34,7 +35,8 @@ class TransitionTime extends React.Component {
     state = {
         auth: true,
         anchorEl: null,
-        help: false
+        help: false,
+        notes: false
     };
 
     handleChange = event => {
@@ -53,7 +55,15 @@ class TransitionTime extends React.Component {
         this.setState({ help: true });
     };
 
-    handleClickAway = () => {
+    handleNotes = (open) => {
+      if (open) {
+          this.setState({ notes: true });
+      } else {
+          this.setState({ notes: false });
+      }
+    };
+
+    handleClickAwayHelp = () => {
         this.setState({ help: false });
     };
 
@@ -68,12 +78,13 @@ class TransitionTime extends React.Component {
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
                 {this.state.help ? (
-                    <ClickAwayListener onClickAway={this.handleClickAway}>
+                    <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
                         {" "}
                         <TransitionTimeHelp />
                     </ClickAwayListener>
                 ) : (
-                    <div />
+                    this.state.notes ?
+                      <Notes open={true} onClose={this.handleNotes}/> :  <div />
                 )}
                 <main style={{ flex: 1 }}>
                     <Grid container spacing={16}>
