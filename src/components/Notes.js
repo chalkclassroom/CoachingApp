@@ -17,6 +17,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/es/DialogActions/DialogActions";
+import Grid from "@material-ui/core/Grid";
+
 
 
 // import Firebase, {FirebaseContext} from "./Firebase"
@@ -30,6 +32,7 @@ function getModalStyle() {
   };
 }
 
+
 class Notes extends React.Component {
   constructor(props) {
     super(props);
@@ -37,8 +40,7 @@ class Notes extends React.Component {
     this.state = {
       notes: [
         // eventually get call to firebase using firebase id for id field
-        {id: 1, content: "dummy1", timestamp: "12:00"},
-        {id: 2, content: "dummy2", timestamp: "12:04"}
+        {id: 1, content: "Mr. Williams spent too much time gathering students after recess", timestamp: "12:00 PM"},
       ],
       open: this.props.open,
       newNote: ""
@@ -86,15 +88,24 @@ class Notes extends React.Component {
       <div>
         <Dialog
           onClose={this.handleClose}
-          open={this.state.open}>
-          <DialogTitle onClose={this.handleClose}>
-            Notes
-            {this.state.open ? (
-              <IconButton aria-label="Close" className="closeButton" onClick={this.handleClose}>
-                <CloseIcon />
-              </IconButton>
-            ) : null}
-          </DialogTitle>
+          open={this.state.open}
+          fullWidth={true}
+          maxWidth={'md'}>
+          <Grid container direction="row" justify="space-between" alignItems="center">
+            <Grid container item xs={11}>
+              <DialogTitle onClose={this.handleClose}>
+                Notes
+              </DialogTitle>
+            </Grid>
+            <Grid container item xs={1}>
+              {this.state.open ? (
+                  <IconButton aria-label="Close" className="closeButton" onClick={this.handleClose}>
+                    <CloseIcon/>
+                  </IconButton>
+              ) : null}
+            </Grid>
+          </Grid>
+
           <DialogContent className="notesWrapper" >
             {/*style={{ width: "70%", overflowX: "auto", marginTop: "20%", marginLeft: "15%", backgroundColor: "#bdbdbd" }}*/}
             <Paper className="notesTableContainer"
@@ -105,22 +116,26 @@ class Notes extends React.Component {
                   <TableRow>
                     <TableCell
                       style={{
-                        backgroundColor: "#3f51b5",
+                        backgroundColor: this.props.color,
                         color: "white",
                         fontSize: 14
                       }}
                     >
-                      Time
+
                     </TableCell>
                     <TableCell
+
                       style={{
-                        backgroundColor: "#3f51b5",
+                        backgroundColor: this.props.color,
                         color: "white",
-                        fontSize: 14
+                        fontSize: 14,
                       }}
-                      align="right"
                     >
-                      Notes
+                      <Grid container direction="row" justify="center" alignItems="center">
+                        <Grid container item xs={12} alignItems={"center"} justify={"center"}>
+                          Notes
+                        </Grid>
+                      </Grid>
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -128,10 +143,18 @@ class Notes extends React.Component {
                   {this.state.notes.map(note => (
                     <TableRow className="note" key={note.id}>
                       <TableCell component="th" scope="row">
-                        {note.timestamp}
+                        <Grid container direction="row" justify="center" alignItems="center" text-align="center">
+                          <Grid container item xs={12} alignItems={"center"} justify={"center"}>
+                            {note.timestamp}
+                          </Grid>
+                        </Grid>
                       </TableCell>
                       <TableCell align="right">
-                        {note.content}
+                        <Grid container direction="row" justify="center" alignItems="center" text-align="center">
+                          <Grid container item xs={12} alignItems={"center"} justify={"center"}>
+                            {note.content}
+                          </Grid>
+                        </Grid>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -142,23 +165,29 @@ class Notes extends React.Component {
           <DialogActions>
             <form onSubmit={this.handleSubmit}
                   style={{width: "90%", margin: "5%"}}>
-              <TextField
-                id="standard-new-note"
-                label="New Note"
-                placeholder="New Note"
-                multiline
-                className="newNote"
-                margin="5%"
-                variant="standard"
-                style={{width: "83%"}}
-                onChange={this.handleChange}
-              />
-              <IconButton
-                aria-label="add_circle"
-                type="submit"
-                style={{width: "auto", height: "auto", margin: "1%"}}>
-                <AddCircleIcon/>
-              </IconButton>
+              <Grid container direction="row" justify="space-between" alignItems="center">
+                <Grid container item xs={11}>
+                  <TextField
+                    id="standard-new-note"
+                    label="New Note"
+                    placeholder="Type new note here..."
+                    multiline
+                    className="newNote"
+                    margin="5%"
+                    variant="standard"
+                    style={{width: "95%"}}
+                    onChange={this.handleChange}
+                  />
+                </Grid>
+                <Grid container item xs={1}>
+                  <IconButton
+                    aria-label="add_circle"
+                    type="submit"
+                    style={{width: "100%", height: "auto"}}>
+                    <AddCircleIcon/>
+                  </IconButton>
+                </Grid>
+              </Grid>
             </form>
           </DialogActions>
         </Dialog>
@@ -169,7 +198,8 @@ class Notes extends React.Component {
 
 Notes.propTypes = {
   open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  color: PropTypes.string.isRequired
 };
 
 export default Notes;
