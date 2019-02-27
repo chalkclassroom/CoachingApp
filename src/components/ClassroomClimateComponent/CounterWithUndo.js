@@ -53,6 +53,17 @@ const CounterWithUndo = ({
         }
     };
 
+    let handleDelete = entry => {
+        if (climateStackSize > 0) {
+            popOffClimateStack();
+            let mEntry = {
+                BehaviorResponse: entry,
+                Type: "UNDO"
+            };
+            this.props.firebase.handlePushFireStore(mEntry);
+        }
+    };
+
     return (
         <div>
             <Paper className={classes.root} elevation={1}>

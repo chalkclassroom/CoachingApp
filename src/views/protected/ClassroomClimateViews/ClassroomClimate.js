@@ -103,15 +103,15 @@ class ClassroomClimate extends React.Component {
 
     handleSpreadsheetInsert = entry => {
         let url = new URL(spreadsheetData.scriptLink),
-            params = {
-                sheet: "ClassroomClimateTone",
-                del: "false",
-                ToneRating: entry.rating,
-                ToneTimer: entry.ratingInterval,
-                TeacherID: this.props.location.state.key.id
-            };
+          params = {
+              sheet: "ClassroomClimateTone",
+              del: "false",
+              ToneRating: entry.rating,
+              ToneTimer: entry.ratingInterval,
+              TeacherID: this.props.location.state.key.id
+          };
         Object.keys(params).forEach(key =>
-            url.searchParams.append(key, params[key])
+          url.searchParams.append(key, params[key])
         );
         fetch(url, {
             method: "POST",
@@ -121,8 +121,8 @@ class ClassroomClimate extends React.Component {
                 "content-type": "application/json"
             }
         })
-            .then(response => console.log("Success"))
-            .catch(error => console.error("Error:", error));
+          .then(response => console.log("Success"))
+          .catch(error => console.error("Error:", error));
     };
 
     render() {
@@ -130,148 +130,158 @@ class ClassroomClimate extends React.Component {
         const open = Boolean(anchorEl);
 
         return (
-            <div className={this.props.classes.root}>
-                <FirebaseContext.Consumer>
-                    {firebase => <AppBar firebase={firebase} />}
-                </FirebaseContext.Consumer>
-                {this.state.help ? (
-                    <ClickAwayListener onClickAway={this.handleClickAway}>
-                        {" "}
-                        <ClassroomClimateHelp />
-                    </ClickAwayListener>
-                ) : (
-                    <div />
-                )}
-                <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
-                    <RatingModal
-                        handleRatingConfirmation={this.handleRatingConfirmation}
-                    />
-                </Modal>
-                <main style={{ flex: 1 }}>
-                    <Grid container spacing={16}>
-                        <Grid item xs={4}>
-                            <Grid
-                                container
-                                direction={"column"}
-                                justify={"center"}
-                                alignItems={"center"}
-                                spacing={16}
-                            >
-                                <Grid item>
-                                    <CounterWithUndo />
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={8}>
-                            <Grid container spacing={0}>
-                                <Grid
-                                    item
-                                    xs
-                                    style={{ marginBottom: 50, marginTop: 50 }}
-                                >
-                                    <InstructionTransitionToggle
-                                        teacherId={
-                                            this.props.location.state.key.id
-                                        }
-                                    />
-                                    <FirebaseContext.Consumer>
-                                        {firebase =>
-                                          <BehaviorCounter
+          <div className={this.props.classes.root}>
+              <FirebaseContext.Consumer>
+                  {firebase => <AppBar firebase={firebase}/>}
+              </FirebaseContext.Consumer>
+              {this.state.help ? (
+                <ClickAwayListener onClickAway={this.handleClickAway}>
+                    {" "}
+                    <ClassroomClimateHelp/>
+                </ClickAwayListener>
+              ) : (
+                <div/>
+              )}
+              <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
+                  <RatingModal
+                    handleRatingConfirmation={this.handleRatingConfirmation}
+                  />
+              </Modal>
+              <main style={{ flex: 1 }}>
+                  <Grid container spacing={16}>
+                      <Grid item xs={4}>
+                          <Grid
+                            container
+                            direction={"column"}
+                            justify={"center"}
+                            alignItems={"center"}
+                            spacing={16}
+                          >
+                              <Grid item>
+                                  <CounterWithUndo/>
+                              </Grid>
+                          </Grid>
+                      </Grid>
+                      <Grid item xs={8}>
+                          <Grid container spacing={0}>
+                              <Grid
+                                item
+                                xs
+                                style={{ marginBottom: 50, marginTop: 50 }}
+                              >
+                                  <InstructionTransitionToggle
+                                    teacherId={
+                                        this.props.location.state.key.id
+                                    }
+                                  />
+                                  <FirebaseContext.Consumer>
+                                      {firebase =>
+                                        <BehaviorCounter
                                           teacherId={
                                               this.props.location.state.key.id
                                           }
                                           firebase={firebase}
                                         />}
-                                    </FirebaseContext.Consumer>
+                                  </FirebaseContext.Consumer>
 
-                                    <div
-                                        style={{
-                                            margin: 20,
-                                            textAlign: "center"
-                                        }}
-                                    >
-                                        Time until next Tone Rating:
-                                        {ms(this.state.time)}
-                                    </div>
-                                    <Line
-                                        percent={`${100 *
-                                            (this.state.time /
-                                                RATING_INTERVAL)}`}
-                                        strokeWidth="1"
-                                        strokeColor={
-                                            this.state.time > TEN_PERCENT
-                                                ? "#00ff00"
-                                                : "#ff0000"
-                                        }
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <div />
-                </main>
-                <footer>
-                    <Grid
-                        container
-                        alignItems={"center"}
-                        justify={"space-between"}
-                        direction={"row"}
-                    >
-                        <Grid item xs={2}>
-                            <IconButton
-                                aria-owns={open ? "menu-appbar" : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleHelpModal}
-                                color="inherit"
-                            >
-                                <InfoIcon
-                                    color={"secondary"}
-                                    fontSize={"large"}
-                                />
-                            </IconButton>
-                            <IconButton
-                                aria-owns={open ? "menu-appbar" : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleNotes}
-                                color="inherit"
-                            >
-                                <EditIcon
-                                    color={"secondary"}
-                                    fontSize={"large"}
-                                />
-                            </IconButton>
-                        </Grid>
-                        <Grid item xs={8} />
-                        <Grid item xs={2}>
-                            <Grid
-                                container
-                                alignItems={"center"}
-                                justify={"space-between"}
-                                direction={"column"}
-                            >
-                                Start Time:{" "}
-                                {new Date().toLocaleString("en-US", {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    hour12: true
-                                })}
-                                <br />
-                                <YesNoDialog
-                                    buttonText={"Complete Observation"}
-                                    buttonVariant={"contained"}
-                                    buttonColor={"secondary"}
-                                    buttonStyle={{ margin: 10 }}
-                                    dialogTitle={
-                                        "Are you sure you want to complete this observation?"
+                                  <div
+                                    style={{
+                                        margin: 20,
+                                        textAlign: "center"
+                                    }}
+                                  >
+                                      Time until next Tone Rating:
+                                      {ms(this.state.time)}
+                                  </div>
+                                  <Line
+                                    percent={`${100 *
+                                    (this.state.time /
+                                      RATING_INTERVAL)}`}
+                                    strokeWidth="1"
+                                    strokeColor={
+                                        this.state.time > TEN_PERCENT
+                                          ? "#00ff00"
+                                          : "#ff0000"
                                     }
-                                    shouldOpen={true}
-                                    onAccept={() => console.log("hello")}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </footer>
-            </div>
+                                  />
+                              </Grid>
+                          </Grid>
+                      </Grid>
+                  </Grid>
+                  <div/>
+              </main>
+              <footer>
+                  <Grid
+                    container
+                    alignItems={"center"}
+                    justify={"space-between"}
+                    direction={"row"}
+                  >
+                      <Grid item xs={2}>
+                          <IconButton
+                            aria-owns={open ? "menu-appbar" : undefined}
+                            aria-haspopup="true"
+                            onClick={this.handleHelpModal}
+                            color="inherit"
+                          >
+                              <InfoIcon
+                                color={"secondary"}
+                                fontSize={"large"}
+                              />
+                          </IconButton>
+                          <IconButton
+                            aria-owns={open ? "menu-appbar" : undefined}
+                            aria-haspopup="true"
+                            onClick={this.handleNotes}
+                            color="inherit"
+                          >
+                              <EditIcon
+                                color={"secondary"}
+                                fontSize={"large"}
+                              />
+                          </IconButton>
+                      </Grid>
+                      <Grid item xs={8}/>
+                      <Grid item xs={2}>
+                          <Grid
+                            container
+                            alignItems={"center"}
+                            justify={"space-between"}
+                            direction={"column"}
+                          >
+                              Start Time:{" "}
+                              {new Date().toLocaleString("en-US", {
+                                  hour: "numeric",
+                                  minute: "numeric",
+                                  hour12: true
+                              })}
+                              <br/>
+                              <FirebaseContext.Consumer>
+                                  {firebase =>
+                                    <YesNoDialog
+                                      buttonText={"Complete Observation"}
+                                      buttonVariant={"contained"}
+                                      buttonColor={"secondary"}
+                                      buttonStyle={{ margin: 10 }}
+                                      dialogTitle={
+                                          "Are you sure you want to complete this observation?"
+                                      }
+                                      shouldOpen={true}
+                                      onAccept={() => {
+                                          this.props.history.push({
+                                              pathname: "/Home",
+                                              state: this.props.location.state
+                                          });
+                                          firebase.endSession();
+                                      }}
+                                    />
+                                  }
+                              </FirebaseContext.Consumer>
+                          </Grid>
+                      </Grid>
+                  </Grid>
+              </footer>
+          </div>
         );
     }
 }
@@ -281,6 +291,6 @@ ClassroomClimate.propTypes = {
 };
 
 export default connect(
-    null,
-    { appendClimateRating }
+  null,
+  { appendClimateRating }
 )(withStyles(styles)(ClassroomClimate));

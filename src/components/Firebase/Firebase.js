@@ -15,6 +15,8 @@ class Firebase {
       firebase.initializeApp(config);
       this.auth = firebase.auth();
       this.db = firebase.firestore();
+      this.db.settings({timestampsInSnapshots: true});
+      this.db.enablePersistence();
     }
   }
 
@@ -163,11 +165,7 @@ class Firebase {
   sessionRef;
 
   handleSession = async mEntry => {
-    const db = firebase.firestore();
-    db.settings({
-      timestampsInSnapshots: true
-    });
-    this.sessionRef = db.collection("observations").doc();
+    this.sessionRef = this.db.collection("observations").doc();
     this.sessionRef.set({
       observedBy: "/user/" + mEntry.observedBy,
       start: firebase.firestore.FieldValue.serverTimestamp(),
@@ -178,23 +176,15 @@ class Firebase {
   };
 
   endSession = async () => {
-    const db = firebase.firestore();
-    db.settings({
-      timestampsInSnapshots: true
-    });
-    this.sessionRef = db.collection("observations").update({
+    this.sessionRef.update({
       end: firebase.firestore.FieldValue.serverTimestamp()
     });
   };
 
   handlePushFireStore = async mEntry => {
-    const db = firebase.firestore();
-    db.settings({
-      timestampsInSnapshots: true
-    });
     const userRef = this.sessionRef.collection("entries").add({
       BehaviorResponse: mEntry.BehaviorResponse,
-      InstructionTransition: mEntry.InstructionTransition,
+      Type: mEntry.Type,
       Timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
   };

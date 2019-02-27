@@ -43,15 +43,16 @@ class BehaviorCounter extends React.Component {
         };
         this.props.firebase.handleSession(mEntry);
     }
-//____________________________________________________________________________________________________________________//
+
     handlePushFire = entry => {
         let mEntry = {
             BehaviorResponse: entry,
-            InstructionTransition: this.props.climateType
+            Type: this.props.climateType
         };
         this.props.firebase.handlePushFireStore(mEntry);
+        this.props.pushOntoClimateStack(mEntry);
     };
-//____________________________________________________________________________________________________________________//
+
     render() {
         return (
             <div
