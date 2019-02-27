@@ -36,6 +36,7 @@ const styles = createMuiTheme({
     }
 });
 
+
 function PrivateRoute({ component: Component, auth, ...rest }) {
     return (
         <Route
