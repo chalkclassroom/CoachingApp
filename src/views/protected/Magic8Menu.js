@@ -2,16 +2,6 @@ import React, { Component } from "react";
 import "../../App.css";
 import PropTypes from "prop-types";
 import Magic8Card from "../../components/Magic8Card.js";
-import {
-    Add,
-    FormatListNumbered,
-    Headset,
-    HowToReg,
-    InsertEmoticon,
-    People,
-    School,
-    Timer
-} from "@material-ui/icons";
 import { Button, Typography } from "@material-ui/core";
 import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/context";
@@ -81,10 +71,18 @@ class Magic8Menu extends Component {
 
     handleObserve = () => {
         if (this.state.selected !== "none") {
-            this.props.history.push({
+            // get rid of else and the if wrapper if breaks
+            if (this.props.history.location.state.type === "Observe") {
+              this.props.history.push({
                 pathname: `/${this.state.selected}`,
                 state: this.props.location.state
-            });
+              });
+            } else {
+              this.props.history.push({
+                pathname: `/${this.state.selected}Results`,
+                state: this.props.location.state
+              });
+            }
         }
     };
 
@@ -175,7 +173,7 @@ class Magic8Menu extends Component {
                             }}
                             onClick={this.handleObserve}
                         >
-                            Observe
+                            {this.props.type}
                             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
                             <Icon style={{ marginLeft: 5 }}>send</Icon>
                         </Button>
@@ -187,7 +185,8 @@ class Magic8Menu extends Component {
 }
 
 Magic8Menu.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    type: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(Magic8Menu);

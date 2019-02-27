@@ -117,7 +117,7 @@ class ClassroomClimate extends React.Component {
                 del: "false",
                 ToneRating: entry.rating,
                 ToneTimer: entry.ratingInterval,
-                TeacherID: this.props.location.state.key.id
+                TeacherID: this.props.location.state.teacher.key.id
             };
         Object.keys(params).forEach(key =>
             url.searchParams.append(key, params[key])
@@ -182,12 +182,12 @@ class ClassroomClimate extends React.Component {
                                 >
                                     <InstructionTransitionToggle
                                         teacherId={
-                                            this.props.location.state.key.id
+                                            this.props.location.state.teacher.key.id
                                         }
                                     />
                                     <BehaviorCounter
                                         teacherId={
-                                            this.props.location.state.key.id
+                                            this.props.location.state.teacher.key.id
                                         }
                                     />
                                     <div
@@ -271,7 +271,10 @@ class ClassroomClimate extends React.Component {
                                         "Are you sure you want to complete this observation?"
                                     }
                                     shouldOpen={true}
-                                    onAccept={() => console.log("hello")}
+                                    onAccept={() => this.props.history.push({
+                                      pathname: "/Home",
+                                      state: this.props.history.state
+                                    })}
                                 />
                             </Grid>
                         </Grid>

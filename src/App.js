@@ -36,6 +36,15 @@ const styles = createMuiTheme({
     }
 });
 
+const Magic8Page = (props) => {
+  return (
+    <Magic8Menu
+      type={this.props.history.type}
+      {...props}
+    />
+  );
+};
+
 function PrivateRoute({ component: Component, auth, ...rest }) {
     return (
         <Route
@@ -137,14 +146,23 @@ class App extends Component {
                             path="/ClassroomClimate"
                             component={ClassroomClimate}
                         />
-                        <PrivateRoute
-                            auth={this.state.auth}
+                        {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
+                            the type prop into the PrivateRoute function*/}
+                        <Route
                             path="/Magic8Menu"
-                            component={Magic8Menu}
+                            render={props =>
+                              this.state.auth === true ? (
+                                <Magic8Menu {...props} type={props.location.state.type} />
+                              ) : (
+                                <Redirect
+                                  to={{ pathname: "/", state: { from: props.location } }}
+                                />
+                              )
+                            }
                         />
                         <PrivateRoute
                             auth={this.state.auth}
-                            path="/TransitionResults"
+                            path="/TransitionTimeResults"
                             component={TransitionResults}
                         />
                         <PrivateRoute

@@ -109,7 +109,7 @@ class TransitionTime extends React.Component {
                                 <div style={{ margin: 20 }} />
                                 <TransitionType />
                                 <TransitionTimer
-                                    teacherId={this.props.location.state.key.id}
+                                    teacherId={this.props.location.state.teacher.key.id}
                                 />
                             </Grid>
                         </Grid>
@@ -170,7 +170,10 @@ class TransitionTime extends React.Component {
                                         "Are you sure you want to complete this observation?"
                                     }
                                     shouldOpen={true}
-                                    onAccept={() => console.log("hello")}
+                                    onAccept={() => this.props.history.push({
+                                      pathname: "/Home",
+                                      state: this.props.history.state
+                                    })}
                                 />
                             </Grid>
                         </Grid>
