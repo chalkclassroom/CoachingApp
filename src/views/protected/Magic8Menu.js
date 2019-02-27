@@ -17,6 +17,15 @@ import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/context";
 import AppBar from "../../components/AppBar";
 import { withStyles } from "@material-ui/core/styles";
+import AssociativeCooperativeIcon from "../../assets/icons/AssocCoopInteractions.svg";
+import ClassroomClimateIcon from "../../assets/icons/ClassroomClimate.svg";
+import LevelInstructionIcon from "../../assets/icons/LevelofInstruction.svg";
+import ListenToChildrenIcon from "../../assets/icons/ListeningtoChildren.svg";
+import MathInstructionIcon from "../../assets/icons/MathInstruction.svg";
+import SequentialActivitiesIcon from "../../assets/icons/SequentialActivities.svg";
+import StudentEngagementIcon from "../../assets/icons/StudentEngagement.svg";
+import TransitionTimeIcon from "../../assets/icons/TransitionTime.svg";
+
 const CardRow = styled.div`
     position: relative;
     display: block;
@@ -25,7 +34,6 @@ const CardRow = styled.div`
     align-items: center;
     margin-bottom: 2em;
     text-align: center;
-
 `;
 
 const styles = {
@@ -71,20 +79,9 @@ class Magic8Menu extends Component {
     }
 
     handleObserve = () => {
-        let selected = "";
-        switch (this.state.selected) {
-            case "Transition Time":
-                selected = "TransitionTime";
-                break;
-            case "Classroom Climate":
-                selected = "ClassroomClimate";
-                break;
-            default:
-                break;
-        }
-        if (selected !== "") {
+        if (this.state.selected !== "none") {
             this.props.history.push({
-                pathname: `/${selected}`,
+                pathname: `/${this.state.selected}`,
                 state: this.props.location.state
             });
         }
@@ -114,60 +111,52 @@ class Magic8Menu extends Component {
                     </div>
                     <CardRow>
                         <Magic8Card
-                            backgroundColor="#55EFC4"
-                            title="Transition Time"
-                            icon={<Timer />}
+                            title="TransitionTime"
+                            icon={TransitionTimeIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                         />
                         <Magic8Card
-                            backgroundColor="#81ECEC"
-                            title="Classroom Climate"
-                            icon={<InsertEmoticon />}
+                            title="ClassroomClimate"
+                            icon={ClassroomClimateIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                         />
                         <Magic8Card
-                            backgroundColor="#74B9FF"
-                            title="Math Instruction"
-                            icon={<Add />}
+                            title="MathInstruction"
+                            icon={MathInstructionIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                         />
                         <Magic8Card
-                            backgroundColor="#A29BFE"
-                            title="Engagement in Learning"
-                            icon={<School />}
+                            title="StudentEngagement"
+                            icon={StudentEngagementIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                         />
                     </CardRow>
                     <CardRow>
                         <Magic8Card
-                            backgroundColor="#FFEAA7"
-                            title="Level of Instruction"
-                            icon={<HowToReg />}
+                            title="LevelOfInstruction"
+                            icon={LevelInstructionIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                         />
                         <Magic8Card
-                            backgroundColor="#FAB1A0"
-                            title="Listening to Children"
-                            icon={<Headset />}
+                            title="ListeningToChildren"
+                            icon={ListenToChildrenIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                         />
                         <Magic8Card
-                            backgroundColor="#FF7675"
-                            title="Sequential Activities"
-                            icon={<FormatListNumbered />}
+                            title="SequentialActivities"
+                            icon={SequentialActivitiesIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                         />
                         <Magic8Card
-                            backgroundColor="#FD79A8"
-                            title="Associative & Cooperative Interactions"
-                            icon={<People />}
+                            title="AssociativeCooperativeInteractions"
+                            icon={AssociativeCooperativeIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                         />
