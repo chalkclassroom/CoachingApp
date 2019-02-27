@@ -84,7 +84,7 @@ class TransitionTime extends React.Component {
                     </ClickAwayListener>
                 ) : (
                     this.state.notes ?
-                      <Notes open={true} onClose={this.handleNotes} color="#094492"/> :  <div />
+                      <Notes open={true} onClose={this.handleNotes} color="#094492" text="Transition Time Notes"/> :  <div />
                 )}
                 <main style={{ flex: 1 }}>
                     <Grid container spacing={16}>

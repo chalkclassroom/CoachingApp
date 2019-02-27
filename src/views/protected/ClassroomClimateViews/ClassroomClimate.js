@@ -20,6 +20,7 @@ import BehaviorCounter from "../../../components/ClassroomClimateComponent/Behav
 import CounterWithUndo from "../../../components/ClassroomClimateComponent/CounterWithUndo";
 import { connect } from "react-redux";
 import { appendClimateRating } from "../../../state/actions/classroom-climate";
+import Notes from "../../../components/Notes";
 
 /*
     N.B. Time measured in milliseconds.
@@ -89,6 +90,14 @@ class ClassroomClimate extends React.Component {
         this.setState({ help: false });
     };
 
+    handleNotes = (open) => {
+      if (open) {
+          this.setState({ notes: true });
+      } else {
+          this.setState({ notes: false });
+      }
+    };
+
     handleRatingConfirmation = rating => {
         this.setState({ ratingIsOpen: false });
 
@@ -140,6 +149,8 @@ class ClassroomClimate extends React.Component {
                         <ClassroomClimateHelp />
                     </ClickAwayListener>
                 ) : (
+                  this.state.notes ?
+                    <Notes open={true} onClose={this.handleNotes} color="#0988EC" text="Classroom Climate Notes"/> :
                     <div />
                 )}
                 <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
