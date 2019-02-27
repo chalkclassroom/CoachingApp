@@ -144,7 +144,7 @@ class ObserveModal extends React.Component {
                             justify="space-between"
                         >
                             <Typography component={"h6"} variant={"h6"}>
-                                Select a Teacher to Observe
+                                Select a Teacher
                             </Typography>
                             <IconButton style={{ padding: 10 }}>
                                 <Tooltip title={"Close"} placement={"right"}>

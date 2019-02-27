@@ -24,6 +24,7 @@ import NotesListDetailTable from "../../../components/ResultsComponents/NotesLis
 import { Line } from "react-chartjs-2";
 import 'chartjs-plugin-datalabels';
 
+
 const styles = {
   root: {
     flexGrow: 1,
@@ -48,7 +49,8 @@ const styles = {
   },
   buttonsList: {
     position: "relative",
-    left: "20%"
+    left: "20%",
+    top: "15vh"
   },
   title: {
     position: "relative",
@@ -70,6 +72,11 @@ const styles = {
     right: "10%",
     top: "76%",
     left: "10%"
+  },
+  resultsContent: {
+      height: "60vh",
+      position: "relative",
+      top: "8vh"
   }
 };
 
@@ -437,7 +444,7 @@ class TransitionResults extends React.Component {
                 <ListItem>
                   <Button
                     size="large"
-                    color={"inherit"}
+                    color= {"inherit"}
                     variant={
                       this.state.view === ViewEnum.NEXT_STEPS
                         ? "contained"
@@ -475,7 +482,7 @@ class TransitionResults extends React.Component {
                 <Grid item xs={12}>
                   <div>
                     {this.state.view === ViewEnum.SUMMARY ? (
-                      <div style={{ height: "80vh" }}>
+                      <div className={classes.resultsContent}>
                         <VictoryPie
                           data={[
                             {
@@ -502,24 +509,14 @@ class TransitionResults extends React.Component {
                         />
                       </div>
                     ) : this.state.view === ViewEnum.LIST ? (
-                      <div
-                        style={{
-                          height: "60vh",
-                          marginTop: "100px",
-                          left: "7%"
-                        }}
+                      <div className={classes.resultsContent}
                       >
                         <ListDetailTableTransitionResults
                           data={transitionData}
                         />
                       </div>
                     ) : this.state.view === ViewEnum.TRENDS ? (
-                      <div
-                        style={{
-                          height: "60vh",
-                          marginRight: "50px",
-                          marginTop: "100px"
-                        }}
+                      <div className={classes.resultsContent}
                       >
                         <Line
                           data={transitionTrendData}
@@ -529,15 +526,12 @@ class TransitionResults extends React.Component {
                         />
                       </div>
                     ) : this.state.view === ViewEnum.NOTES ? (
-                      <div
-                        style={{
-                          height: "60vh"
-                        }}
+                      <div className={classes.resultsContent}
                       >
                         <NotesListDetailTable data={transitionNotes} />
                       </div>
                     ) : this.state.view === ViewEnum.NEXT_STEPS ? (
-                      <div style={{ height: "60vh" }} /> // replace this null with next steps content
+                      <div className={classes.resultsContent} /> // replace this null with next steps content
                     ) : null}
                   </div>
                 </Grid>

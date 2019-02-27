@@ -36,14 +36,6 @@ const styles = createMuiTheme({
     }
 });
 
-const Magic8Page = (props) => {
-  return (
-    <Magic8Menu
-      type={this.props.history.type}
-      {...props}
-    />
-  );
-};
 
 function PrivateRoute({ component: Component, auth, ...rest }) {
     return (

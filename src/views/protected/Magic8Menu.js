@@ -23,7 +23,6 @@ const CardRow = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin-bottom: 2em;
     text-align: center;
 `;
 
@@ -102,7 +101,11 @@ class Magic8Menu extends Component {
                     </div>
                     <div className="row">
                         <Typography
-                            style={{ fontSize: "1em", color: "#000000", marginLeft: "17%", marginTop: "2%" }}
+                            style={{ fontSize: "1em",
+                                color: "#000000",
+                                marginLeft: "17%",
+                                marginTop: "2%",
+                                marginBottom: "2vh"}}
                         >
                             Select the skill you'd like to focus on:
                         </Typography>
@@ -165,11 +168,12 @@ class Magic8Menu extends Component {
                             style={{
                                 backgroundColor: "#2196F3",
                                 opacity: this.state.allowed ? 1 : 0.5,
-                                marginLeft: "70%",
+                                marginLeft: "75%",
                                 transform: "scale(1.1)",
                                 display: "flex",
                                 marginBottom: "5px",
-                                color: "white"
+                                color: "white",
+                                marginTop: "4vh"
                             }}
                             onClick={this.handleObserve}
                         >
