@@ -177,6 +177,7 @@ class Notes extends React.Component {
                     variant="standard"
                     style={{width: "95%"}}
                     onChange={this.handleChange}
+                    value={this.state.newNote}
                   />
                 </Grid>
                 <Grid container item xs={1}>
