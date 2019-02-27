@@ -94,7 +94,7 @@ class Notes extends React.Component {
           <Grid container direction="row" justify="space-between" alignItems="center">
             <Grid container item xs={11}>
               <DialogTitle onClose={this.handleClose}>
-                Notes
+                {this.props.text}
               </DialogTitle>
             </Grid>
             <Grid container item xs={1}>
@@ -199,7 +199,8 @@ class Notes extends React.Component {
 Notes.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  color: PropTypes.string.isRequired
+  color: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired
 };
 
 export default Notes;

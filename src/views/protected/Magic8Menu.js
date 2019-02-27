@@ -25,6 +25,7 @@ import MathInstructionIcon from "../../assets/icons/MathInstruction.svg";
 import SequentialActivitiesIcon from "../../assets/icons/SequentialActivities.svg";
 import StudentEngagementIcon from "../../assets/icons/StudentEngagement.svg";
 import TransitionTimeIcon from "../../assets/icons/TransitionTime.svg";
+import Icon from '@material-ui/core/Icon'
 
 const CardRow = styled.div`
     position: relative;
@@ -166,14 +167,17 @@ class Magic8Menu extends Component {
                             style={{
                                 backgroundColor: "#2196F3",
                                 opacity: this.state.allowed ? 1 : 0.5,
-                                marginLeft: "71%",
-                                transform: "scale(1.4)",
+                                marginLeft: "70%",
+                                transform: "scale(1.1)",
                                 display: "flex",
-                                marginBottom: "5px"
+                                marginBottom: "5px",
+                                color: "white"
                             }}
                             onClick={this.handleObserve}
                         >
                             Observe
+                            <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+                            <Icon style={{ marginLeft: 5 }}>send</Icon>
                         </Button>
                     </CardRow>
                 </div>
