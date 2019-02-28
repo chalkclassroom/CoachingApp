@@ -11,6 +11,7 @@ import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select";
 import { ReactComponent as GenerateReportSVG } from "../../../assets/icons/generateReport.svg";
+import TransitionTimeIcon from "../../../assets/icons/TransitionTime.svg";
 
 import { withStyles } from "@material-ui/core/styles";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
@@ -49,8 +50,7 @@ const styles = {
   },
   buttonsList: {
     position: "relative",
-    left: "20%",
-    top: "15vh"
+    top: "3vh"
   },
   title: {
     position: "relative",
@@ -357,8 +357,11 @@ class TransitionResults extends React.Component {
         </FirebaseContext.Consumer>
         <main>
           <Grid container spacing={0} justify="center" direction={"row"} alignItems={"center"}>
-            <Grid container item xs={4}>
+            <Grid container item xs={3}>
               <List className={classes.buttonsList}>
+              <ListItem>
+                <img src={TransitionTimeIcon} style={{width:"15vw", height:"10vh", position:"center"}} />
+              </ListItem>
                 <ListItem>
                   <form>
                     <FormControl
@@ -384,7 +387,7 @@ class TransitionResults extends React.Component {
                 <ListItem>
                   <Button
                     size="large"
-                    color={"secondary"}
+                    color={"primary"}
                     variant={
                       this.state.view === ViewEnum.SUMMARY
                         ? "contained"
@@ -414,7 +417,7 @@ class TransitionResults extends React.Component {
                 <ListItem>
                   <Button
                     size="large"
-                    color={"secondary"}
+                    color={"primary"}
                     variant={
                       this.state.view === ViewEnum.TRENDS
                         ? "contained"
@@ -429,7 +432,7 @@ class TransitionResults extends React.Component {
                 <ListItem>
                   <Button
                     size="large"
-                    color={"inherit"}
+                    color={"primary"}
                     variant={
                       this.state.view === ViewEnum.NOTES
                         ? "contained"
@@ -444,7 +447,7 @@ class TransitionResults extends React.Component {
                 <ListItem>
                   <Button
                     size="large"
-                    color= {"inherit"}
+                    color= {"primary"}
                     variant={
                       this.state.view === ViewEnum.NEXT_STEPS
                         ? "contained"
@@ -469,11 +472,9 @@ class TransitionResults extends React.Component {
               </List>
             </Grid>
             <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
-                <Grid item xs={12} alignItems={"center"} justify={"center"}>
-                  <Typography variant={"h5"} style={{ margin: 20, marginLeft: "20vw" }}>
+                  <Typography variant={"h4"} alignItems={"center"} justify={"center"}>
                     Transition Time Results
                   </Typography>
-                </Grid>
                 <Grid item xs={12} alignItems={"center"} justify={"center"}>
                   <Typography variant={"h7"} style={{ marginLeft: "20vw" }}>
                     Total Transition Time: {"30.2 minutes"}

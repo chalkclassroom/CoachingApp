@@ -17,7 +17,7 @@ class NotesListDetailTable extends React.Component {
 
         return (
             <Paper
-                style={{ width: "80%", overflowX: "auto", marginRight: "10%" }}
+                style={{ width: "100%", overflowX: "auto", marginRight: "10%" }}
             >
                 <Table className={classes.table}>
                     <TableHead>

@@ -11,6 +11,7 @@ import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import ClassroomClimateIcon from "../../../assets/icons/ClassroomClimate.svg";
 import { ReactComponent as GenerateReportSVG } from "../../../assets/icons/generateReport.svg";
 import { withStyles } from "@material-ui/core/styles";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
@@ -52,8 +53,7 @@ const styles = {
     },
     buttonsList: {
         position: "relative",
-        left: "20%",
-        top: "15vh"
+        top: "3vh"
     },
     title: {
         position: "relative",
@@ -80,6 +80,11 @@ const styles = {
         height: "60vh",
         position: "relative",
         top: "8vh"
+    },
+    detailsGraph: {
+        height: "60vh",
+        position: "relative",
+        top:"-3vh"
     }
 };
 
@@ -279,8 +284,11 @@ class ClassroomClimateResults extends React.Component {
                 </FirebaseContext.Consumer>
                 <main>
                     <Grid container spacing={0} justify="center" direction={"row"} alignItems={"center"}>
-                        <Grid container item xs={4}>
+                        <Grid container item xs={3}>
                             <List className={classes.buttonsList}>
+                            <ListItem>
+                              <img src={ClassroomClimateIcon} style={{width:"15vw", height:"10vh", position:"center"}} />
+                            </ListItem>
                                 <ListItem>
                                     <form>
                                         <FormControl
@@ -317,7 +325,7 @@ class ClassroomClimateResults extends React.Component {
                                 <ListItem>
                                     <Button
                                         size="large"
-                                        color={"secondary"}
+                                        color={"primary"}
                                         variant={
                                             this.state.view === ViewEnum.SUMMARY
                                                 ? "contained"
@@ -347,7 +355,7 @@ class ClassroomClimateResults extends React.Component {
                                 <ListItem>
                                     <Button
                                         size="large"
-                                        color={"secondary"}
+                                        color={"primary"}
                                         variant={
                                             this.state.view === ViewEnum.TRENDS
                                                 ? "contained"
@@ -362,7 +370,7 @@ class ClassroomClimateResults extends React.Component {
                                 <ListItem>
                                     <Button
                                         size="large"
-                                        color={"inherit"}
+                                        color={"primary"}
                                         variant={
                                             this.state.view === ViewEnum.NOTES
                                                 ? "contained"
@@ -377,7 +385,7 @@ class ClassroomClimateResults extends React.Component {
                                 <ListItem>
                                     <Button
                                         size="large"
-                                        color={"inherit"}
+                                        color={"primary"}
                                         variant={
                                             this.state.view ===
                                             ViewEnum.NEXT_STEPS
@@ -405,11 +413,9 @@ class ClassroomClimateResults extends React.Component {
                             </List>
                         </Grid>
                         <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
-                            <Typography
-                                variant={"h5"}
-                            >
-                                Classroom Climate Results
-                            </Typography>
+                          <Typography variant={"h4"} alignItems={"center"} justify={"center"}>
+                            Classroom Climate Results
+                          </Typography>
                             <Grid item xs={10}>
                                 <div>
                                     {this.state.view ===
@@ -424,35 +430,35 @@ class ClassroomClimateResults extends React.Component {
                                                     <img
                                                         alt="extreme negative face"
                                                         src={exNegativeFace}
-                                                        width="90vw"
+                                                        width="70vw"
                                                     />
                                                 </Grid>
                                                 <Grid item>
                                                     <img
                                                         alt="negative face"
                                                         src={negativeFace}
-                                                        width="90vw"
+                                                        width="70vw"
                                                     />
                                                 </Grid>
                                                 <Grid item>
                                                     <img
                                                         alt="flat face"
                                                         src={flatFace}
-                                                        width="90vw"
+                                                        width="70vw"
                                                     />
                                                 </Grid>
                                                 <Grid item>
                                                     <img
                                                         alt="pleasant face"
                                                         src={pleasantFace}
-                                                        width="90vw"
+                                                        width="70vw"
                                                     />
                                                 </Grid>
                                                 <Grid item>
                                                     <img
                                                         alt="vibrant face"
                                                         src={vibrantFace}
-                                                        width="90vw"
+                                                        width="70vw"
                                                     />
                                                 </Grid>
                                             </Grid>
@@ -460,28 +466,28 @@ class ClassroomClimateResults extends React.Component {
                                             <LinearProgress
                                                 variant="determinate"
                                                 value={75}
-                                                style={{ height: 10 }}
+                                                style={{ height: 10, width: "75vh"}}
                                             />
                                       <Grid>
                                       <div class="behavior">
-                                          <div class='disapprovals' style={{display: 'inline-block', marginTop:"10%", marginRight:'15%'}}>
-                                            <div style={{width: '20vw', height: '7vh', fontSize: '1.5em', color: '#e17055', textAlign:'center'}} >TOTAL BEHAVIOR DISAPPROVALS</div>
-                                            <div style={{width: '20vw', height: '7vh', fontSize: '1.74em', color: '#e17055', textAlign:'center'}}>78</div>
-                                            <div style={{width: '20vw', height: '7vh', fontSize: '1.25em', backgroundColor:'#d63031', color:"#ffffff", fontWeight:'bold'}}>14 NEGATIVE</div>
-                                            <div style={{width: '20vw', height: '7vh', fontSize: '1.25em', backgroundColor: '#e17055', color:"#ffffff", fontWeight:'bold'}}>64 REDIRECTIONS</div>
+                                          <div class='disapprovals' style={{display: 'inline-block', marginTop:"15%", marginRight:'17%'}}>
+                                            <div style={{width: '23vw', height: '8vh', fontSize: '1.75em', color: '#e17055', textAlign:'center'}} >TOTAL BEHAVIOR DISAPPROVALS</div>
+                                            <div style={{width: '23vw', height: '10vh', fontSize: '4em', color: '#e17055', textAlign:'center'}}>78</div>
+                                            <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor:'#d63031', color:"#ffffff", fontWeight:'bold'}}>14 NEGATIVE</div>
+                                            <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor: '#e17055', color:"#ffffff", fontWeight:'bold'}}>64 REDIRECTIONS</div>
                                           </div>
                                           <div class='approvals' style={{display: 'inline-block'}}>
-                                            <div style={{width: '20vw', height: '7vh', fontSize: '1.5em', color: '#55efc4', display:'inline-block', textAlign:'center'}}>TOTAL BEHAVIOR APPROVALS</div>
-                                              <div style={{width: '20vw', height: '7vh', fontSize: '1.75em', color: '#55efc4', textAlign:'center'}}>53</div>
-                                              <div style={{width: '20vw', height: '7vh', fontSize: '1.25em', backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>32 GENERAL</div>
-                                              <div style={{width: '20vw', height: '7vh', fontSize: '1.25em', backgroundColor: "#00b894", color:"#ffffff", fontWeight:'bold'}}>21 SPECIFIC</div>
+                                            <div style={{width: '23vw', height: '8vh', fontSize: '1.75em', color: '#55efc4', display:'inline-block', textAlign:'center'}}>TOTAL BEHAVIOR APPROVALS</div>
+                                              <div style={{width: '23vw', height: '10vh', fontSize: '4em', color: '#55efc4', textAlign:'center'}}>53</div>
+                                              <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>32 GENERAL</div>
+                                              <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor: "#00b894", color:"#ffffff", fontWeight:'bold'}}>21 SPECIFIC</div>
                                           </div>
                                         </div>
                                        </Grid>
                                         </div>
                                     ) : this.state.view ===
                                       ViewEnum.DETAILS ? (
-                                        <div style = {{height: "60vh", position: "relative"}}>
+                                        <div className={classes.detailsGraph}>
                                             <VictoryPie
                                                 data={[
                                                     {
@@ -515,18 +521,20 @@ class ClassroomClimateResults extends React.Component {
                                                         fontSize: 16
                                                     }
                                                 }}
+
+
                                             />
                                             <Grid>
-                                                 <div class="behavior" style={{marginRight:"10%"}}>
+                                                 <div class="behavior" style={{marginRight:"10%", marginLeft:"5%", marginTop:"-12%"}}>
                                                    <div class='disapprovals' style={{display: 'inline-block', marginRight:"10%", marginLeft:'5%'}}>
                                                      <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color: "#d63031", textAlign:'center'}} >BEHAVIOR DISAPPROVALS</div>
-                                                     <div style={{width: '20vw', height: '6vh', fontSize: '1.5em', color: "#d63031", textAlign:'center'}}>78 (60%)</div>
+                                                     <div style={{width: '20vw', height: '7vh', fontSize: '2em', color: "#d63031", textAlign:'center'}}>78 (60%)</div>
                                                      <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: "#d63031", color:"#ffffff", fontWeight:'bold'}}>14 NEGATIVE (11%)</div>
                                                      <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: "#e17055", color:"#ffffff", fontWeight:'bold'}}>64 REDIRECTIONS (49%)</div>
                                                    </div>
                                                    <div class='approvals' style={{display: 'inline-block'}}>
                                                      <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color:  '#55efc4', display:'inline-block', textAlign:'center'}}>BEHAVIOR APPROVALS</div>
-                                                       <div style={{width: '20vw', height: '6vh', fontSize: '1.5em', color: '#55efc4', textAlign:'center'}}>53 (40%)</div>
+                                                       <div style={{width: '20vw', height: '7vh', fontSize: '2em', color: '#55efc4', textAlign:'center'}}>53 (40%)</div>
                                                        <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>32 GENERAL (24%)</div>
                                                        <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#00b894', color:"#ffffff", fontWeight:'bold'}}>21 SPECIFIC (16%)</div>
                                                    </div>
