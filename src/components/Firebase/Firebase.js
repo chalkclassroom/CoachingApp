@@ -188,6 +188,10 @@ class Firebase {
       Timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
   };
+
+  hello = async () => {
+    alert();
+  };
 }
 
 export default Firebase;

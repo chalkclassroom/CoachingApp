@@ -95,34 +95,12 @@ class ClassroomClimate extends React.Component {
         this.props.appendClimateRating(rating);
 
         let entry = {
-            rating: rating,
+            BehaviorResponse: rating,
+            Type: "Rating",
             ratingInterval: RATING_INTERVAL
         };
-        this.handleSpreadsheetInsert(entry);
-    };
-
-    handleSpreadsheetInsert = entry => {
-        let url = new URL(spreadsheetData.scriptLink),
-          params = {
-              sheet: "ClassroomClimateTone",
-              del: "false",
-              ToneRating: entry.rating,
-              ToneTimer: entry.ratingInterval,
-              TeacherID: this.props.location.state.key.id
-          };
-        Object.keys(params).forEach(key =>
-          url.searchParams.append(key, params[key])
-        );
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: {
-                "content-type": "application/json"
-            }
-        })
-          .then(response => console.log("Success"))
-          .catch(error => console.error("Error:", error));
+        let firebase = this.context;
+        firebase.handlePushFireStore(entry);
     };
 
     render() {
@@ -158,7 +136,14 @@ class ClassroomClimate extends React.Component {
                             spacing={16}
                           >
                               <Grid item>
-                                  <CounterWithUndo/>
+                                  <FirebaseContext.Consumer>
+                                      {firebase =>
+                                        <CounterWithUndo
+                                          firebase = {firebase}
+                                        />
+                                      }
+
+                                  </FirebaseContext.Consumer>
                               </Grid>
                           </Grid>
                       </Grid>
@@ -289,6 +274,8 @@ class ClassroomClimate extends React.Component {
 ClassroomClimate.propTypes = {
     classes: PropTypes.object.isRequired
 };
+
+ClassroomClimate.contextType = FirebaseContext;
 
 export default connect(
   null,
