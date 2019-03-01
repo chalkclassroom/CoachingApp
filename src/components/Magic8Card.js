@@ -62,24 +62,13 @@ class Magic8Card extends Component {
                     style={{
                         backgroundColor: this.props.backgroundColor,
                         opacity: this.state.selected ? 0.5 : 1,
-                        height: "100px;"
+                        height: "100px;",
+                        boxShadow: "none"
                     }}
                     onClick={this.onClick}
                 >
                     <CardActionArea style={{ height: "160px", width: "160px" }}>
-                        <Icon
-                            style={{ color: "#FFFFFF", transform: "scale(3)" }}
-                        >
-                            {this.props.icon}
-                        </Icon>
-                        <CardContent className="title">
-                            <Typography
-                                className="titleText"
-                                style={{ color: "#FFFFFF", fontSize: "1.5em", fontWeight: "bold" }}
-                            >
-                                {this.props.title}
-                            </Typography>
-                        </CardContent>
+                        <img src={this.props.icon}/>
                     </CardActionArea>
                 </Card>
             </CardBase>

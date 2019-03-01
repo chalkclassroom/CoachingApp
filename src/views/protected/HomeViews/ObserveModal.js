@@ -124,8 +124,9 @@ class ObserveModal extends React.Component {
         console.log(teacherInfo);
         this.props.history.push({
             pathname: "/Magic8Menu",
-            state: teacherInfo
+            state: {teacher: teacherInfo, type: this.props.type}
         });
+        console.log(this.props.history);
     }
 
     render() {
@@ -143,7 +144,7 @@ class ObserveModal extends React.Component {
                             justify="space-between"
                         >
                             <Typography component={"h6"} variant={"h6"}>
-                                Select a Teacher to Observe
+                                Select a Teacher
                             </Typography>
                             <IconButton style={{ padding: 10 }}>
                                 <Tooltip title={"Close"} placement={"right"}>
@@ -211,7 +212,8 @@ class ObserveModal extends React.Component {
 
 ObserveModal.propTypes = {
     classes: PropTypes.object.isRequired,
-    handleClose: PropTypes.object.isRequired
+    handleClose: PropTypes.object.isRequired,
+    type: PropTypes.string.isRequired
 };
 
 const ObserveModalWithRouter = withRouter(ObserveModal);
