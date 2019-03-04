@@ -35,15 +35,17 @@ const styles = {
 
 class Welcome extends React.Component {
     state = {
-        observeModal: false
+        observeModal: false,
+        type: ""
     };
 
-    showObserveModal = event => {
-        this.setState({ observeModal: true });
+    showObserveModal = (type) => {
+        this.setState({ observeModal: true, type: type});
     };
 
     handleClose = event => {
-        this.setState({ observeModal: false });
+        this.setState({ observeModal: false,
+                            type: ""});
     };
 
     render() {
@@ -100,7 +102,7 @@ class Welcome extends React.Component {
                         </Card>
                         <Card
                             className={classes.card}
-                            onClick={() => this.showObserveModal()}
+                            onClick={() => this.showObserveModal("Observe")}
                         >
                             <CardContent>
                                 <Grid
@@ -133,7 +135,7 @@ class Welcome extends React.Component {
                         justify="space-around"
                         style={{ padding: 40 }}
                     >
-                        <Card className={classes.card}>
+                        <Card className={classes.card} onClick={() => this.showObserveModal("Results")}>
                             <CardContent>
                                 <Grid
                                     container
@@ -189,6 +191,7 @@ class Welcome extends React.Component {
                             <ObserveModal
                                 handleClose={this.handleClose}
                                 firebase={firebase}
+                                type={this.state.type}
                             />
                         )}
                     </FirebaseContext.Consumer>

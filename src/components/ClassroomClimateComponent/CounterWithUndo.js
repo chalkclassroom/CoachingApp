@@ -23,33 +23,18 @@ const CounterWithUndo = ({
     entries,
     classes,
     climateStackSize,
-    popOffClimateStack
+    popOffClimateStack,
+    firebase
 }) => {
-    let handleSpreadsheetDeleteRow = () => {
-        let url = new URL(spreadsheetData.scriptLink),
-            params = {
-                sheet: "ClassroomClimateBehavior",
-                del: "true"
-            };
-        Object.keys(params).forEach(key =>
-            url.searchParams.append(key, params[key])
-        );
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: {
-                "content-type": "application/json"
-            }
-        })
-            .then(response => console.log("Success"))
-            .catch(error => console.error("Error:", error));
-    };
 
-    let handleDeleteRow = () => {
+    let handleDelete = () => {
         if (climateStackSize > 0) {
             popOffClimateStack();
-            handleSpreadsheetDeleteRow();
+            let mEntry = {
+                BehaviorResponse: "UNDO",
+                Type: "UNDO"
+            };
+            firebase.handlePushFireStore(mEntry);
         }
     };
 
@@ -77,7 +62,7 @@ const CounterWithUndo = ({
                     alignItems={"center"}
                 >
                     <Button
-                        onClick={handleDeleteRow}
+                        onClick={handleDelete}
                         variant="contained"
                         color="default"
                     >

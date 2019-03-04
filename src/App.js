@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import "./App.css";
 import WelcomePage from "./views/WelcomeViews/Welcome";
 import ClassroomClimate from "./views/protected/ClassroomClimateViews/ClassroomClimate";
+import ClassroomClimateResults from "./views/protected/ClassroomClimateViews/ClassroomClimateResults";
 import Magic8Menu from "./views/protected/Magic8Menu";
+import TransitionResults from "./views/protected/TransitionViews/TransitionResults";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTime from "./views/protected/TransitionViews/TransitionTime";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPassword";
@@ -33,6 +35,7 @@ const styles = createMuiTheme({
         }
     }
 });
+
 
 function PrivateRoute({ component: Component, auth, ...rest }) {
     return (
@@ -135,10 +138,29 @@ class App extends Component {
                             path="/ClassroomClimate"
                             component={ClassroomClimate}
                         />
+                        {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
+                            the type prop into the PrivateRoute function*/}
+                        <Route
+                            path="/Magic8Menu"
+                            render={props =>
+                              this.state.auth === true ? (
+                                <Magic8Menu {...props} type={props.location.state.type} />
+                              ) : (
+                                <Redirect
+                                  to={{ pathname: "/", state: { from: props.location } }}
+                                />
+                              )
+                            }
+                        />
                         <PrivateRoute
                             auth={this.state.auth}
-                            path="/Magic8Menu"
-                            component={Magic8Menu}
+                            path="/TransitionTimeResults"
+                            component={TransitionResults}
+                        />
+                        <PrivateRoute
+                            auth={this.state.auth}
+                            path="/ClassroomClimateResults"
+                            component={ClassroomClimateResults}
                         />
                         <Route render={() => <h3>No Match</h3>} />
                     </Switch>
