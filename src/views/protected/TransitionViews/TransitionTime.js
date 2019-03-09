@@ -109,7 +109,7 @@ class TransitionTime extends React.Component {
                                 <div style={{ margin: 20 }} />
                                 <TransitionType />
                                 <TransitionTimer
-                                    teacherId={this.props.location.state.teacher.key.id}
+                                    teacherId={this.props.location.state.teacher.id}
                                 />
                             </Grid>
                         </Grid>

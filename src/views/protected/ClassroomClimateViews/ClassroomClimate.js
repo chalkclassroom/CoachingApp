@@ -153,7 +153,7 @@ class ClassroomClimate extends React.Component {
                   {firebase =>
                     <BehaviorCounter
                       teacherId={
-                        this.props.location.state.teacher.key.id
+                        this.props.location.state.teacher.id
                       }
                       firebase={firebase}
                     />}

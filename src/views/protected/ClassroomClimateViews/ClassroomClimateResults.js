@@ -135,8 +135,8 @@ class ClassroomClimateResults extends React.Component {
 
     componentDidMount() {
         console.log(this.props.location.state);
-        this.handleDateFetching(this.props.location.state.teacher.key.id);
-        console.log(this.props.location.state.teacher.key.id)
+        this.handleDateFetching(this.props.location.state.teacher.id);
+        console.log(this.props.location.state.teacher.id)
     }
 
     handleAppend(entry) {
@@ -324,7 +324,7 @@ class ClassroomClimateResults extends React.Component {
                                                 }
                                             >
                                               {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value="">
-                                                <em>{moment(date.start.value).utcOffset('-'+new Date().getTimezoneOffset()).format("MMM Do YY HH:mm A")}</em>
+                                                <em>{moment(date.start.value).format("MMM Do YY HH:mm A")}</em>
                                               </MenuItem>})}
                                             </Select>
                                         </FormControl>
