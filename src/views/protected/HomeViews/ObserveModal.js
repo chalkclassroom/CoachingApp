@@ -101,22 +101,22 @@ class ObserveModal extends React.Component {
     };
 
     componentDidMount() {
-        this.props.firebase.getTeacherList().then(teacherList => {
-            this.setState((previousState, currentProps) => {
-                console.log(previousState.teachers);
-                console.log(teacherList);
+        this.props.firebase.getTeacherList().then(teacherPromiseList => {
 
-                let arraySnapshot = [];
-                let objectSnapshot = teacherList
+            console.log("Modal Obj", teacherPromiseList);
 
-                    Object.keys(objectSnapshot).forEach(key => {
-                        arraySnapshot.push({ key: objectSnapshot[key] });
+            let teacherList = [];
+            teacherPromiseList.forEach(tpromise=>{
+                tpromise.then(data=>{
+                    console.log("Modal Resolved", data);
+                    teacherList.push(data);
+                    console.log(teacherList)
+                      this.setState((previousState, currentProps) => {
+                          return {
+                            teachers: previousState.teachers.concat(data)
+                          }})
                     });
-
-                return {
-                    teachers: previousState.teachers.concat(arraySnapshot)
-                };
-            });
+            })
         });
     }
 
@@ -162,9 +162,7 @@ class ObserveModal extends React.Component {
                             justify="flex-start"
                         >
                             <List className={classes.list}>
-                                {this.state.teachers.map(teacher =>
-                                    console.log(Object.values(teacher)[0])
-                                )}
+                              {this.state.teachers.length===0?<>Fetching... Make sure you have Teachers Paired from your Admin</>:<></>}
                                 {this.state.teachers.map((teacher, index) => (
                                     <ListItem
                                         key={index}
@@ -181,8 +179,7 @@ class ObserveModal extends React.Component {
                                         </ListItemAvatar>
                                         <ListItemText
                                             primary={
-                                                Object.values(teacher)[0]
-                                                    .firstName
+                                                teacher.firstName +" "+ teacher.lastName
                                             }
                                             secondary={
                                                 <React.Fragment>

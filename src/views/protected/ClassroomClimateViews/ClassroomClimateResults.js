@@ -135,8 +135,8 @@ class ClassroomClimateResults extends React.Component {
 
     componentDidMount() {
         console.log(this.props.location.state);
-        this.handleDateFetching(this.props.location.state.teacher.key.id);
-        console.log(this.props.location.state.teacher.key.id)
+        this.handleDateFetching(this.props.location.state.teacher.id);
+        console.log(this.props.location.state.teacher.id)
     }
 
     handleAppend(entry) {

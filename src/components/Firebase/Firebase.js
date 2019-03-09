@@ -107,22 +107,26 @@ class Firebase {
     return firebase
       .firestore()
       .collection("users")
-      .where("role", "==", "teacher")
+      .doc(this.auth.currentUser.uid)
+      .collection("partners")
       .get()
-      .then(function(querySnapshot) {
+      .then( partners => {
         let teacherList = [];
-        querySnapshot.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-          teacherList.push(doc.data());
-        });
-        console.log(teacherList);
+        partners.forEach( (partner) => {
+          console.log(partner.id, "=>", partner.data());
+          teacherList.push(this.getTeacherInfo(partner.id).then((doc=> doc.data()))
+          );
+        })
         return teacherList;
       })
       .catch(function(error) {
         console.log("Error getting documents: ", error);
       });
   };
+
+  getTeacherInfo = async (partnerId) =>{
+     return await firebase.firestore().collection("users").doc(partnerId).get();
+  }
 
   getCoachList = function() {
     return firebase
@@ -242,10 +246,6 @@ class Firebase {
 
     });
 
-  };
-
-  hello = async () => {
-    alert();
   };
 }
 
