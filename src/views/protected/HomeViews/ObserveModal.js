@@ -162,7 +162,7 @@ class ObserveModal extends React.Component {
                             justify="flex-start"
                         >
                             <List className={classes.list}>
-                              {this.state.teachers.length===0?<>Fetching... Make sure you have Teachers Paired from your Admin</>:<></>}
+                              {this.state.teachers.length===0?<>Fetching... Make sure you have Teachers Paired.</>:<></>}
                                 {this.state.teachers.map((teacher, index) => (
                                     <ListItem
                                         key={index}
