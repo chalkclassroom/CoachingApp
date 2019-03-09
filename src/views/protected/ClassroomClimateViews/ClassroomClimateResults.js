@@ -26,7 +26,9 @@ import flatFace from "../../../assets/icons/3-flat-cqref.png";
 import pleasantFace from "../../../assets/icons/4-pleasant-cqref.png";
 import vibrantFace from "../../../assets/icons/5-vibrant-cqref.png";
 import { Bar } from 'react-chartjs-2';
+import moment from 'moment';
 // import ListDetailTableClassroomClimateResults from "../../../components/ResultsComponents/ListDetailTableClassroomClimateResults.js";
+
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
 
 const styles = {
@@ -127,11 +129,14 @@ class ClassroomClimateResults extends React.Component {
         hex: "#FFFFFF",
         entries: [],
         dbCounter: 0, // @Hack @Temporary !!!
-        view: ViewEnum.SUMMARY
+        view: ViewEnum.SUMMARY,
+        sessionDates: []
     };
 
     componentDidMount() {
         console.log(this.props.location.state);
+        this.handleDateFetching(this.props.location.state.teacher.key.id);
+        console.log(this.props.location.state.teacher.key.id)
     }
 
     handleAppend(entry) {
@@ -232,6 +237,18 @@ class ClassroomClimateResults extends React.Component {
         }
     };
 
+      handleDateFetching = (teacherId) => {
+          console.log("handle date fetching called")
+        let firebase = this.context;
+        firebase.fetchClimateSessionDates(teacherId).then(dates=>this.setState({
+          sessionDates: dates,
+        }));
+
+        firebase.fetchAvgToneRating("96ebxou8MO0OYuuNhglc");
+        firebase.fetchBehaviourTypeCount("96ebxou8MO0OYuuNhglc");
+        firebase.fetchBehaviourTrend(teacherId);
+      };
+
     render() {
         const { classes } = this.props;
 
@@ -306,18 +323,9 @@ class ClassroomClimateResults extends React.Component {
                                                     />
                                                 }
                                             >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>
-                                                    Mon, Oct 22, 2018
-                                                </MenuItem>
-                                                <MenuItem value={20}>
-                                                    Tue, Nov 6, 2018
-                                                </MenuItem>
-                                                <MenuItem value={30}>
-                                                    Thurs, Nov 29, 2018
-                                                </MenuItem>
+                                              {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value="">
+                                                <em>{moment(date.start.value).utcOffset('-'+new Date().getTimezoneOffset()).format("MMM Do YY HH:mm A")}</em>
+                                              </MenuItem>})}
                                             </Select>
                                         </FormControl>
                                     </form>
@@ -573,5 +581,7 @@ class ClassroomClimateResults extends React.Component {
 ClassroomClimateResults.propTypes = {
     classes: PropTypes.object.isRequired
 };
+
+ClassroomClimateResults.contextType = FirebaseContext;
 
 export default withStyles(styles)(ClassroomClimateResults);

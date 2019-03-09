@@ -16,7 +16,11 @@ class Firebase {
       this.auth = firebase.auth();
       this.db = firebase.firestore();
       this.db.settings({timestampsInSnapshots: true});
-      this.db.enablePersistence();
+      // this.db.enablePersistence({experimentalTabSynchronization:true}).then(() => {
+      //   console.log("Woohoo! Multi-Tab Persistence!");
+      // }).catch((err=>{console.log("Offline Not Working")}));
+
+      this.functions = firebase.functions();
     }
   }
 
@@ -187,6 +191,57 @@ class Firebase {
       Type: mEntry.Type,
       Timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
+  };
+
+  fetchClimateSessionDates = async teacherId => {
+    var getClimateSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
+
+    return getClimateSessionDatesFirebaseFunction({teacherId: teacherId}).then(function(result) {
+      // Read result of the Cloud Function.
+      var sanitizedMessage = result.data[0];
+      console.log(sanitizedMessage);
+      return sanitizedMessage;
+
+    });
+
+  };
+
+  fetchAvgToneRating = async sessionId => {
+    var getAvgToneRatingFirebaseFunction = this.functions.httpsCallable('funcAvgToneRating');
+
+    return getAvgToneRatingFirebaseFunction({sessionId: sessionId}).then(function(result) {
+      // Read result of the Cloud Function.
+      var sanitizedMessage = result.data[0];
+      console.log(sanitizedMessage);
+      return sanitizedMessage;
+    });
+
+  };
+
+
+  fetchBehaviourTypeCount = async sessionId => {
+    var getBehaviourTypeCountFirebaseFunction = this.functions.httpsCallable('funcBehaviourTypeCount');
+
+    return getBehaviourTypeCountFirebaseFunction({sessionId: sessionId}).then(function(result) {
+      // Read result of the Cloud Function.
+      var sanitizedMessage = result.data[0];
+      console.log(sanitizedMessage);
+      return sanitizedMessage;
+    });
+
+  };
+
+  fetchBehaviourTrend = async teacherId => {
+    var getBehaviourTrendFirebaseFunction = this.functions.httpsCallable('funcBehaviourTrend');
+
+    return getBehaviourTrendFirebaseFunction({teacherId: teacherId}).then(function(result) {
+      // Read result of the Cloud Function.
+      var sanitizedMessage = result.data[0];
+      console.log(sanitizedMessage);
+      return sanitizedMessage;
+
+    });
+
   };
 
   hello = async () => {
