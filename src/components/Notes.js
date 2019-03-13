@@ -18,6 +18,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/es/DialogActions/DialogActions";
 import Grid from "@material-ui/core/Grid";
+import moment from "moment";
 
 
 
@@ -38,13 +39,36 @@ class Notes extends React.Component {
     super(props);
 
     this.state = {
-      notes: [
+      notes: [],
+        //[
         // eventually get call to firebase using firebase id for id field
-        {id: 1, content: "Mr. Williams spent too much time gathering students after recess", timestamp: "12:00 PM"},
-      ],
+        //{id: 1, content: "Mr. Williams spent too much time gathering students after recess", timestamp: "12:00 PM"},
+      //],
       open: this.props.open,
       newNote: ""
     };
+  }
+
+  componentDidMount() {
+    this.props.firebase.handleFetchNotes().then(
+      notesArr => {
+        let formattedNotesArr = [];
+        notesArr.map(note => {
+            let newTimestamp = new Date(note.timestamp.seconds*1000).toLocaleString("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true
+          });
+            formattedNotesArr.push({id: note.id, content: note.content, timestamp: newTimestamp})
+        });
+        this.setState({
+            newNote: "",
+            notes: formattedNotesArr,
+            open: this.props.open
+          });
+        //console.log(this.state);
+      }
+    );
   }
 
   handleOpen = () => {
@@ -61,12 +85,17 @@ class Notes extends React.Component {
   };
 
   handleSubmit = (event) => {
-    //Eventually submit this to firebase and read from DB
+    // submit to firebase DB
+    this.props.firebase.handlePushNotes(this.state.newNote)
+      .then(() =>{/* do nothing */}).catch(() => {
+      console.log("Something wrong with data fetch");
+    });
+
+    // update local state for UI
     let notesArr = [];
     this.state.notes.map((note) => {
       notesArr.push(note);
     });
-    const curTimestamp = new Date();
     let newNoteTimestamp = new Date().toLocaleString("en-US", {
       hour: "numeric",
       minute: "numeric",
@@ -107,7 +136,6 @@ class Notes extends React.Component {
           </Grid>
 
           <DialogContent className="notesWrapper" >
-            {/*style={{ width: "70%", overflowX: "auto", marginTop: "20%", marginLeft: "15%", backgroundColor: "#bdbdbd" }}*/}
             <Paper className="notesTableContainer"
                    style={{width: "90%", overflowX: "auto", margin: "5%" }}>
               <Table className="notesTable"
@@ -121,10 +149,13 @@ class Notes extends React.Component {
                         fontSize: 14
                       }}
                     >
-
+                      <Grid container direction="row" justify="center" alignItems="center">
+                        <Grid container item xs={12} alignItems={"center"} justify={"center"}>
+                          Time
+                        </Grid>
+                      </Grid>
                     </TableCell>
                     <TableCell
-
                       style={{
                         backgroundColor: this.props.color,
                         color: "white",
@@ -140,11 +171,13 @@ class Notes extends React.Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {this.state.notes.map(note => (
+                  {this.state.notes ?
+                    (this.state.notes.map(note => (
                     <TableRow className="note" key={note.id}>
                       <TableCell component="th" scope="row">
                         <Grid container direction="row" justify="center" alignItems="center" text-align="center">
                           <Grid container item xs={12} alignItems={"center"} justify={"center"}>
+                            {/*<em>{moment(note.timestamp.toDate()).format("MMM Do YY HH:mm A")}</em>*/}
                             {note.timestamp}
                           </Grid>
                         </Grid>
@@ -156,8 +189,9 @@ class Notes extends React.Component {
                           </Grid>
                         </Grid>
                       </TableCell>
-                    </TableRow>
-                  ))}
+                    </TableRow>)))
+                      :
+                    <TableRow></TableRow>}
                 </TableBody>
               </Table>
             </Paper>
@@ -201,7 +235,8 @@ Notes.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   color: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired
+  text: PropTypes.string.isRequired,
+  firebase: PropTypes.object.isRequired,
 };
 
 export default Notes;

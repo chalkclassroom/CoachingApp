@@ -123,8 +123,11 @@ class ClassroomClimate extends React.Component {
             <ClassroomClimateHelp/>
           </ClickAwayListener>
         ) : (
-          this.state.notes ?
-            <Notes open={true} onClose={this.handleNotes} color="#0988EC" text="Classroom Climate Notes"/> :
+          this.state.notes ? (
+            <FirebaseContext.Consumer>
+              {firebase => <Notes open={true} onClose={this.handleNotes} color="#0988EC" text="Classroom Climate Notes" firebase={firebase}/>}
+            </FirebaseContext.Consumer>
+            ) :
             <div/>
         )}
         <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
