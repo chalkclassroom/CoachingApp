@@ -30,6 +30,8 @@ import moment from 'moment';
 // import ListDetailTableClassroomClimateResults from "../../../components/ResultsComponents/ListDetailTableClassroomClimateResults.js";
 
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
+import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
+import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter.js";
 
 const styles = {
     root: {
@@ -83,11 +85,6 @@ const styles = {
         position: "relative",
         top: "8vh"
     },
-    detailsGraph: {
-        height: "60vh",
-        position: "relative",
-        top:"-3vh"
-    }
 };
 
 const ViewEnum = {
@@ -130,14 +127,28 @@ class ClassroomClimateResults extends React.Component {
         entries: [],
         dbCounter: 0, // @Hack @Temporary !!!
         view: ViewEnum.SUMMARY,
-        sessionDates: []
+        sessionId: null,
+        sessionDates: [],
+        negativeBehaviorCount: 14,
+        redirectionsBehaviorCount: 64,
+        generalBehaviorCount: 32,
+        specificBehaviorCount: 21,
+        percentage: false,
     };
 
     componentDidMount() {
         console.log(this.props.location.state);
         this.handleDateFetching(this.props.location.state.teacher.id);
         console.log(this.props.location.state.teacher.id)
-    }
+        console.log("handle behavior count results fetching called")
+        let firebase = this.context;
+        firebase.fetchBehaviourTypeCount(this.state.sessionId).then((data)=>{
+          console.log(this.state.negativeBehaviorCount
+            + " " + this.state.redirectionsBehaviorCount
+            + " " + this.state.generalBehaviorCount
+            + " " + this.state.specificBehaviorCount)
+    })
+  }
 
     handleAppend(entry) {
         let newEntries = this.state.entries;
@@ -429,6 +440,7 @@ class ClassroomClimateResults extends React.Component {
                                     {this.state.view ===
                                     ViewEnum.SUMMARY ? (
                                         <div className={classes.resultsContent}>
+                                          {this.state.percentage = false}
                                             <Grid
                                                 container
                                                 direction={"row"}
@@ -477,77 +489,57 @@ class ClassroomClimateResults extends React.Component {
                                                 style={{ height: 10, width: "75vh"}}
                                             />
                                       <Grid>
-                                      <div class="behavior">
-                                          <div class='disapprovals' style={{display: 'inline-block', marginTop:"15%", marginRight:'17%'}}>
-                                            <div style={{width: '23vw', height: '8vh', fontSize: '1.75em', color: '#e17055', textAlign:'center'}} >TOTAL BEHAVIOR DISAPPROVALS</div>
-                                            <div style={{width: '23vw', height: '10vh', fontSize: '4em', color: '#e17055', textAlign:'center'}}>78</div>
-                                            <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor:'#d63031', color:"#ffffff", fontWeight:'bold'}}>14 NEGATIVE</div>
-                                            <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor: '#e17055', color:"#ffffff", fontWeight:'bold'}}>64 REDIRECTIONS</div>
-                                          </div>
-                                          <div class='approvals' style={{display: 'inline-block'}}>
-                                            <div style={{width: '23vw', height: '8vh', fontSize: '1.75em', color: '#55efc4', display:'inline-block', textAlign:'center'}}>TOTAL BEHAVIOR APPROVALS</div>
-                                              <div style={{width: '23vw', height: '10vh', fontSize: '4em', color: '#55efc4', textAlign:'center'}}>53</div>
-                                              <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>32 GENERAL</div>
-                                              <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor: "#00b894", color:"#ffffff", fontWeight:'bold'}}>21 SPECIFIC</div>
-                                          </div>
-                                        </div>
-                                       </Grid>
+                                      <FirebaseContext.Consumer>
+                                        {firebase =>
+                                          <BehaviorCounterResults
+                                            percentage={
+                                              this.state.percentage
+                                            }
+                                            negativeBehaviorCount={
+                                              this.state.negativeBehaviorCount
+                                            }
+                                            redirectionsBehaviorCount={
+                                              this.state.redirectionsBehaviorCount
+                                            }
+                                            generalBehaviorCount={
+                                              this.state.generalBehaviorCount
+                                            }
+                                            specificBehaviorCount={
+                                              this.state.specificBehaviorCount
+                                            }
+                                            firebase={firebase}
+                                          />}
+                                      </FirebaseContext.Consumer>
+                                    </Grid>
+
                                         </div>
                                     ) : this.state.view ===
                                       ViewEnum.DETAILS ? (
                                         <div className={classes.detailsGraph}>
-                                            <VictoryPie
-                                                data={[
-                                                    {
-                                                        x: "General\n24%",
-                                                        y: 48
-                                                    },
-                                                    {
-                                                        x: "Specific\n16%",
-                                                        y: 32
-                                                    },
-                                                    {
-                                                        x: "Negative\n11%",
-                                                        y: 22
-                                                    },
-                                                    {
-                                                        x: "Redirect\n49%",
-                                                        y: 98
-                                                    }
-                                                ]}
-                                                colorScale={[
-                                                    "#55efc4",
-                                                    "#00b894",
-                                                    "#d63031",
-                                                    "#e17055"
-                                                ]}
-                                                labelRadius={60}
-                                                radius={140}
-                                                style={{
-                                                    labels: {
-                                                        fill: "white",
-                                                        fontSize: 16
-                                                    }
-                                                }}
-
-
-                                            />
+                                        {this.state.percentage = true}
                                             <Grid>
-                                                 <div class="behavior" style={{marginRight:"10%", marginLeft:"5%", marginTop:"-12%"}}>
-                                                   <div class='disapprovals' style={{display: 'inline-block', marginRight:"10%", marginLeft:'5%'}}>
-                                                     <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color: "#d63031", textAlign:'center'}} >BEHAVIOR DISAPPROVALS</div>
-                                                     <div style={{width: '20vw', height: '7vh', fontSize: '2em', color: "#d63031", textAlign:'center'}}>78 (60%)</div>
-                                                     <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: "#d63031", color:"#ffffff", fontWeight:'bold'}}>14 NEGATIVE (11%)</div>
-                                                     <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: "#e17055", color:"#ffffff", fontWeight:'bold'}}>64 REDIRECTIONS (49%)</div>
-                                                   </div>
-                                                   <div class='approvals' style={{display: 'inline-block'}}>
-                                                     <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color:  '#55efc4', display:'inline-block', textAlign:'center'}}>BEHAVIOR APPROVALS</div>
-                                                       <div style={{width: '20vw', height: '7vh', fontSize: '2em', color: '#55efc4', textAlign:'center'}}>53 (40%)</div>
-                                                       <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>32 GENERAL (24%)</div>
-                                                       <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#00b894', color:"#ffffff", fontWeight:'bold'}}>21 SPECIFIC (16%)</div>
-                                                   </div>
-                                                 </div>
-                                                 </Grid>
+                                            <FirebaseContext.Consumer>
+                                              {firebase =>
+                                                <BehaviorCounterResults
+                                                  percentage = {
+                                                    this.state.percentage
+                                                  }
+                                                  negativeBehaviorCount={
+                                                    this.state.negativeBehaviorCount
+                                                  }
+                                                  redirectionsBehaviorCount={
+                                                    this.state.redirectionsBehaviorCount
+                                                  }
+                                                  generalBehaviorCount={
+                                                    this.state.generalBehaviorCount
+                                                  }
+                                                  specificBehaviorCount={
+                                                    this.state.specificBehaviorCount
+                                                  }
+                                                  firebase={firebase}
+                                                />}
+                                            </FirebaseContext.Consumer>
+                                            </Grid>
                                         </div>
                                     ) : this.state.view ===
                                       ViewEnum.TRENDS ? (
@@ -581,7 +573,5 @@ class ClassroomClimateResults extends React.Component {
 ClassroomClimateResults.propTypes = {
     classes: PropTypes.object.isRequired
 };
-
 ClassroomClimateResults.contextType = FirebaseContext;
-
 export default withStyles(styles)(ClassroomClimateResults);
