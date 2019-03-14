@@ -14,6 +14,16 @@ const styles = ({
 class BehaviorCounterResults extends React.Component {
     constructor(props){
       super(props);
+      this.behaviorDissaprovalsCount = this.props.negativeBehaviorCount + this.props.redirectionsBehaviorCount;
+      this.behaviorApprovalsCount = this.props.generalBehaviorCount + this.props.specificBehaviorCount;
+      this.generalBehaviorPercent =  ((this.props.generalBehaviorCount/(this.behaviorApprovalsCount +this.behaviorDissaprovalsCount)) *100).toFixed();
+      this.specificBehaviorPercent = ((this.props.specificBehaviorCount/(this.behaviorApprovalsCount +this.behaviorDissaprovalsCount)) *100).toFixed();
+      this.negativeBehaviorPercent = ((this.props.negativeBehaviorCount/(this.behaviorApprovalsCount +this.behaviorDissaprovalsCount)) *100).toFixed();
+      this.redirectionsBehaviorPercent = ((this.props.redirectionsBehaviorCount/(this.behaviorApprovalsCount +this.behaviorDissaprovalsCount)) *100).toFixed();
+      this.behaviorDisapprovalsPercent = ((this.behaviorDissaprovalsCount/(this.behaviorApprovalsCount +this.behaviorDissaprovalsCount)) *100).toFixed();
+      this.behaviorApprovalsPercent = ((this.behaviorApprovalsCount/(this.behaviorApprovalsCount +this.behaviorDissaprovalsCount)) *100).toFixed();
+
+
     }
 
     handlePushFire = entry => {
@@ -29,13 +39,13 @@ class BehaviorCounterResults extends React.Component {
     <div class="behavior">
         <div class='disapprovals' style={{display: 'inline-block', marginTop:"15%", marginRight:'17%'}}>
           <div style={{width: '23vw', height: '8vh', fontSize: '1.75em', color: '#e17055', textAlign:'center'}} >TOTAL BEHAVIOR DISAPPROVALS</div>
-          <div style={{width: '23vw', height: '10vh', fontSize: '4em', color: '#e17055', textAlign:'center'}}> {this.props.negativeBehaviorCount+this.props.redirectionsBehaviorCount} </div>
+          <div style={{width: '23vw', height: '10vh', fontSize: '4em', color: '#e17055', textAlign:'center'}}> {this.behaviorDissaprovalsCount} </div>
           <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor:'#d63031', color:"#ffffff", fontWeight:'bold'}}>{this.props.negativeBehaviorCount} NEGATIVE</div>
           <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor: '#e17055', color:"#ffffff", fontWeight:'bold'}}>{this.props.redirectionsBehaviorCount} REDIRECTIONS</div>
         </div>
         <div class='approvals' style={{display: 'inline-block'}}>
           <div style={{width: '23vw', height: '8vh', fontSize: '1.75em', color: '#55efc4', display:'inline-block', textAlign:'center'}}>TOTAL BEHAVIOR APPROVALS</div>
-            <div style={{width: '23vw', height: '10vh', fontSize: '4em', color: '#55efc4', textAlign:'center'}}> {this.props.generalBehaviorCount + this.props.specificBehaviorCount}</div>
+            <div style={{width: '23vw', height: '10vh', fontSize: '4em', color: '#55efc4', textAlign:'center'}}> {this.behaviorApprovalsCount}</div>
             <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>{this.props.generalBehaviorCount} GENERAL</div>
             <div style={{width: '23vw', height: '6vh', fontSize: '1.25em', backgroundColor: "#00b894", color:"#ffffff", fontWeight:'bold'}}>{this.props.specificBehaviorCount} SPECIFIC</div>
         </div>
@@ -49,19 +59,19 @@ class BehaviorCounterResults extends React.Component {
       <VictoryPie
           data={[
               {
-                  x: "General\n24%",
+                  x: "General \n" + this.generalBehaviorPercent +"%",
                   y: 48
               },
               {
-                  x: "Specific\n16%",
+                  x: "Specific\n" + this.specificBehaviorPercent +"%",
                   y: 32
               },
               {
-                  x: "Negative\n11%",
+                  x: "Negative\n" + this.negativeBehaviorPercent + "%",
                   y: 22
               },
               {
-                  x: "Redirect\n49%",
+                  x: "Redirect\n" + this.redirectionsBehaviorPercent + "%",
                   y: 98
               }
           ]}
@@ -83,23 +93,15 @@ class BehaviorCounterResults extends React.Component {
       <div class="behavior" style={{marginRight:"10%", marginLeft:"5%", marginTop:"-12%"}}>
         <div class='disapprovals' style={{display: 'inline-block', marginRight:"10%", marginLeft:'5%'}}>
           <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color: "#d63031", textAlign:'center'}} >BEHAVIOR DISAPPROVALS</div>
-          <div style={{width: '20vw', height: '7vh', fontSize: '2em', color: "#d63031", textAlign:'center'}}> {this.props.negativeBehaviorCount+this.props.redirectionsBehaviorCount}
-          ({(((this.props.negativeBehaviorCount+ this.props.redirectionsBehaviorCount)/
-            (this.props.negativeBehaviorCount+ this.props.redirectionsBehaviorCount+this.props.generalBehaviorCount+ this.props.specificBehaviorCount)) *100).toFixed()}%)</div>
-          <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: "#d63031", color:"#ffffff", fontWeight:'bold'}}>{this.props.negativeBehaviorCount} NEGATIVE
-          ({((this.props.negativeBehaviorCount/(this.props.negativeBehaviorCount+ this.props.redirectionsBehaviorCount+this.props.generalBehaviorCount+ this.props.specificBehaviorCount)) *100).toFixed()}%)</div>
-          <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: "#e17055", color:"#ffffff", fontWeight:'bold'}}>{this.props.redirectionsBehaviorCount} REDIRECTIONS
-          ({((this.props.redirectionsBehaviorCount/(this.props.negativeBehaviorCount+ this.props.redirectionsBehaviorCount+this.props.generalBehaviorCount+ this.props.specificBehaviorCount)) *100).toFixed()}%)</div>
+          <div style={{width: '20vw', height: '7vh', fontSize: '2em', color: "#d63031", textAlign:'center'}}> {this.behaviorDissaprovalsCount}({this.behaviorDisapprovalsPercent}%) </div>
+          <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: "#d63031", color:"#ffffff", fontWeight:'bold'}}>{this.props.negativeBehaviorCount} NEGATIVE ({this.negativeBehaviorPercent}%)</div>
+          <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: "#e17055", color:"#ffffff", fontWeight:'bold'}}>{this.props.redirectionsBehaviorCount} REDIRECTIONS ({this.redirectionsBehaviorPercent}%)</div>
         </div>
         <div class='approvals' style={{display: 'inline-block'}}>
           <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color:  '#55efc4', display:'inline-block', textAlign:'center'}}>BEHAVIOR APPROVALS</div>
-            <div style={{width: '20vw', height: '7vh', fontSize: '2em', color: '#55efc4', textAlign:'center'}}> {this.props.generalBehaviorCount + this.props.specificBehaviorCount}
-            ({(((this.props.generalBehaviorCount+ this.props.specificBehaviorCount)/
-              (this.props.negativeBehaviorCount+ this.props.redirectionsBehaviorCount+this.props.generalBehaviorCount+ this.props.specificBehaviorCount)) *100).toFixed()}%)</div>
-            <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>{this.props.generalBehaviorCount} GENERAL
-             ({((this.props.generalBehaviorCount/(this.props.negativeBehaviorCount+ this.props.redirectionsBehaviorCount+this.props.generalBehaviorCount+ this.props.specificBehaviorCount)) *100).toFixed()}%)</div>
-            <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#00b894', color:"#ffffff", fontWeight:'bold'}}>{this.props.specificBehaviorCount} SPECIFIC
-             ({((this.props.specificBehaviorCount/(this.props.negativeBehaviorCount+ this.props.redirectionsBehaviorCount+this.props.generalBehaviorCount+ this.props.specificBehaviorCount)) *100).toFixed()}%)</div>
+            <div style={{width: '20vw', height: '7vh', fontSize: '2em', color: '#55efc4', textAlign:'center'}}> {this.behaviorApprovalsCount}({this.behaviorApprovalsPercent}%) </div>
+            <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#55efc4', color:"#ffffff", fontWeight:'bold'}}>{this.props.generalBehaviorCount} GENERAL ({this.generalBehaviorPercent}%)</div>
+            <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#00b894', color:"#ffffff", fontWeight:'bold'}}>{this.props.specificBehaviorCount} SPECIFIC ({this.specificBehaviorPercent}%)</div>
         </div>
       </div>
       </Grid>
