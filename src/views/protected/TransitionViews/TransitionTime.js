@@ -83,8 +83,11 @@ class TransitionTime extends React.Component {
                         <TransitionTimeHelp />
                     </ClickAwayListener>
                 ) : (
-                    this.state.notes ?
-                      <Notes open={true} onClose={this.handleNotes} color="#094492" text="Transition Time Notes"/> :  <div />
+                    this.state.notes ? (
+                        <FirebaseContext.Consumer>
+                          {firebase => <Notes open={true} onClose={this.handleNotes} color="#094492" text="Transition Time Notes" firebase={firebase}/>}
+                        </FirebaseContext.Consumer>
+                      ) :  <div />
                 )}
                 <main style={{ flex: 1 }}>
                     <Grid container spacing={16}>

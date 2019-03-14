@@ -126,7 +126,7 @@ class Firebase {
 
   getTeacherInfo = async (partnerId) =>{
      return await firebase.firestore().collection("users").doc(partnerId).get();
-  }
+  };
 
   getCoachList = function() {
     return firebase
@@ -195,6 +195,28 @@ class Firebase {
       Type: mEntry.Type,
       Timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
+  };
+
+  handlePushNotes = async mNote => {
+    const noteRef = this.sessionRef.collection("notes").add({
+      Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      Note: mNote
+    });
+  };
+
+  handleFetchNotes = async () => {
+    return this.sessionRef.collection("notes")
+      .get()
+      .then(function(querySnapshot) {
+        let notesArr = [];
+        querySnapshot.forEach(function(doc) {
+          //console.log("doc data: ", doc.data());
+          // doc.data() is never undefined for query doc snapshots
+          notesArr.push({id: doc.id, content: doc.data().Note, timestamp: doc.data().Timestamp});
+        });
+        //console.log("Logging firebase notesArr: ", notesArr);
+        return notesArr;
+      });
   };
 
   fetchClimateSessionDates = async teacherId => {
