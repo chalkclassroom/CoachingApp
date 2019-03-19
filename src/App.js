@@ -9,7 +9,6 @@ import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTime from "./views/protected/TransitionViews/TransitionTime";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPassword";
 import HomePage from "./views/protected/HomeViews/Home";
-
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -17,6 +16,8 @@ import {
     MuiThemeProvider,
     withStyles
 } from "@material-ui/core/styles";
+import AssociativeCooperativeInteractions
+    from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractions";
 
 const styles = createMuiTheme({
     palette: {
@@ -137,6 +138,11 @@ class App extends Component {
                             auth={this.state.auth}
                             path="/ClassroomClimate"
                             component={ClassroomClimate}
+                        />
+                        <PrivateRoute
+                            auth={this.state.auth}
+                            path="/AssociativeCooperativeInteractions"
+                            component={AssociativeCooperativeInteractions}
                         />
                         {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                             the type prop into the PrivateRoute function*/}
