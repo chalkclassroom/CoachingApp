@@ -16,7 +16,6 @@ import BehaviorCounter from "../../../components/ClassroomClimateComponent/Behav
 import { connect } from "react-redux";
 import Notes from "../../../components/Notes";
 import Typography from "@material-ui/core/Typography";
-import CenterRatingPopUp from "../../../components/AssociativeCooperativeComponents/CenterRatingPopUp"
 import InstructionTransitionToggle from "../../../components/ClassroomClimateComponent/InstructionTransitionToggle";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
 
@@ -97,9 +96,6 @@ class AssociativeCooperativeInteractions extends React.Component {
                         ) :
                         <div/>
                 )}
-                <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
-                    <CenterRatingPopUp/>
-                </Modal>
                 <main style={{ flex: 1 }}>
                     <Grid container xs={12}
                           alignItems={"center"}
