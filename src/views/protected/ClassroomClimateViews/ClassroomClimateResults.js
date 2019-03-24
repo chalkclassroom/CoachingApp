@@ -31,7 +31,9 @@ import moment from 'moment';
 
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
 import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
+import AverageToneRating from "../../../components/ResultsComponents/AverageToneRating.js";
 import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter.js";
+
 
 const styles = {
     root: {
@@ -271,8 +273,13 @@ class ClassroomClimateResults extends React.Component {
         }, () => {
 
                   let firebase = this.context;
-                  firebase.fetchAvgToneRating(this.state.sessionId);
-                  firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=>console.log("attempt", json))
+                  firebase.fetchAvgToneRating(this.state.sessionId).then(json=>json.map(toneRating=>{
+                    this.setState({
+                      averageToneRating:toneRating.average
+                    })
+                  }));
+
+                  firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=>console.log("attempt behavior count: ", json))
                   //.gets json, then map to the state
                   firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=>json.map(behavior=>{
                     switch (behavior.behaviorResponse) {
@@ -479,53 +486,17 @@ class ClassroomClimateResults extends React.Component {
                                     ViewEnum.SUMMARY ? (
                                         <div className={classes.resultsContent}>
                                           {this.state.percentage = false}
-                                            <Grid
-                                                container
-                                                direction={"row"}
-                                                justify={"space-between"}
-                                            >
-                                                <Grid item>
-                                                    <img
-                                                        alt="extreme negative face"
-                                                        src={exNegativeFace}
-                                                        width="70vw"
-                                                    />
-                                                </Grid>
-                                                <Grid item>
-                                                    <img
-                                                        alt="negative face"
-                                                        src={negativeFace}
-                                                        width="70vw"
-                                                    />
-                                                </Grid>
-                                                <Grid item>
-                                                    <img
-                                                        alt="flat face"
-                                                        src={flatFace}
-                                                        width="70vw"
-                                                    />
-                                                </Grid>
-                                                <Grid item>
-                                                    <img
-                                                        alt="pleasant face"
-                                                        src={pleasantFace}
-                                                        width="70vw"
-                                                    />
-                                                </Grid>
-                                                <Grid item>
-                                                    <img
-                                                        alt="vibrant face"
-                                                        src={vibrantFace}
-                                                        width="70vw"
-                                                    />
-                                                </Grid>
-                                            </Grid>
-                                            <div style={{ height: 10 }}/>
-                                            <LinearProgress
-                                                variant="determinate"
-                                                value={75}
-                                                style={{ height: 10, width: "75vh"}}
-                                            />
+                                      <Grid>
+                                      <FirebaseContext.Consumer>
+                                        {firebase =>
+                                          <AverageToneRating
+                                          averageToneRating={
+                                            this.state.averageToneRating
+                                          }
+                                          firebase={firebase}
+                                        />}
+                                      </FirebaseContext.Consumer>
+                                      </Grid>
                                       <Grid>
                                       <FirebaseContext.Consumer>
                                         {firebase =>
