@@ -11,7 +11,7 @@ export default (state = initialState, action) => {
       if (
         action.centerName === "" ||
         state.associativeCenters.some(
-          center => center.name === action.centerName
+          center => center.name === action.centerName.toLowerCase()
         )
       ) {
         return {
@@ -22,13 +22,13 @@ export default (state = initialState, action) => {
         ...state,
         associativeCenters: [
           ...state.associativeCenters,
-          { name: action.centerName, count: 0 }
+          { name: action.centerName.toLowerCase(), count: 0 }
         ]
       };
     case UPDATE_CENTER_COUNT:
       let newCenters = [...state.associativeCenters];
       newCenters.some(center => {
-        if (center.name === action.centerName) {
+        if (center.name === action.centerName.toLowerCase()) {
           ++center.count;
           return true;
         }

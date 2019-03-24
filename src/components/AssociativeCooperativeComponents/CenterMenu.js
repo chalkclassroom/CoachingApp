@@ -126,7 +126,7 @@ class CenterMenu extends React.Component {
 
   render() {
     return (
-      <Grid container spacing={8}>
+      <Grid container spacing={40}>
         <NewCenterDialog
           open={this.state.addDialog}
           handleClose={this.handleClose}

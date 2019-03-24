@@ -109,7 +109,6 @@ class AssociativeCooperativeInteractions extends React.Component {
               <CenterMenu />
             </Grid>
           </Grid>
-          <div />
         </main>
         <footer>
           <Grid
