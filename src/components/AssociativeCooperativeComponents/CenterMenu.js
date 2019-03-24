@@ -1,12 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
-import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import purple from "@material-ui/core/colors/purple";
 import grey from "@material-ui/core/colors/grey";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -14,6 +10,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import {
+  addNewCenter,
+  incrementCenterCount
+} from "../../state/actions/associative-cooperative";
 
 const styles = theme => ({
   root: {
@@ -25,13 +25,6 @@ const styles = theme => ({
   },
   grow: {
     flexGrow: 1
-  },
-  cssRoot: {
-    color: theme.palette.getContrastText(purple[500]),
-    backgroundColor: purple[500],
-    "&:hover": {
-      backgroundColor: purple[700]
-    }
   }
 });
 
@@ -98,14 +91,7 @@ class NewCenterDialog extends React.Component {
 
 class CenterMenu extends React.Component {
   state = {
-    addDialog: false,
-    centers: [
-      { name: "a", count: 0 },
-      { name: "b", count: 1 },
-      { name: "c", count: 2 },
-      { name: "d", count: 3 },
-      { name: "e", count: 3 }
-    ]
+    addDialog: false
   };
 
   handleClickOpen = () => {
@@ -117,16 +103,7 @@ class CenterMenu extends React.Component {
   };
 
   handleAddCenter = centerName => {
-    if (
-      centerName === "" ||
-      this.state.centers.some(center => center.name === centerName)
-    ) {
-      this.handleClose();
-      return;
-    }
-    let newCenters = [...this.state.centers, { name: centerName, count: 0 }];
-    this.setState({ centers: newCenters });
-    console.log(centerName);
+    this.props.addNewCenter(centerName);
     this.handleClose();
   };
 
@@ -144,15 +121,7 @@ class CenterMenu extends React.Component {
 
   // Exit point for a center visit.
   finishCenterVisit = centerName => {
-    let newCenters = [...this.state.centers];
-    newCenters.some(center => {
-      if (center.name === centerName) {
-        ++center.count;
-        return true;
-      }
-      return false;
-    });
-    this.setState({ centers: newCenters });
+    this.props.incrementCenterCount(centerName);
   };
 
   render() {
@@ -163,7 +132,7 @@ class CenterMenu extends React.Component {
           handleClose={this.handleClose}
           handleSubmit={this.handleAddCenter}
         />
-        {this.state.centers.map((center, index) => (
+        {this.props.centers.map((center, index) => (
           <Grid item xs={3}>
             <VisitCenterButton
               centerName={center.name}
@@ -190,4 +159,15 @@ class CenterMenu extends React.Component {
   }
 }
 
-export default withStyles(styles)(CenterMenu);
+const mapStateToProps = state => {
+  return {
+    centers: state.associativeCenterState.associativeCenters
+  };
+};
+
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    { addNewCenter, incrementCenterCount }
+  )(CenterMenu)
+);
