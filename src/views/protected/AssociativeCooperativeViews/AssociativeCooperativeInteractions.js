@@ -9,35 +9,34 @@ import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import AppBar from "../../../components/AppBar";
-import { Line } from "rc-progress";
 import ms from "pretty-ms";
 import FirebaseContext from "../../../components/Firebase/context";
-import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter";
 import { connect } from "react-redux";
 import Notes from "../../../components/Notes";
 import Typography from "@material-ui/core/Typography";
 import InstructionTransitionToggle from "../../../components/ClassroomClimateComponent/InstructionTransitionToggle";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
+import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenu";
 
-const styles = ({
-    root: {
-        flexGrow: 1,
-        backgroundColor: "#ffffff",
-        display: "flex",
-        minHeight: "100vh",
-        flexDirection: "column"
-    },
-    grow: {
-        flexGrow: 1
-    }
-});
+const styles = {
+  root: {
+    flexGrow: 1,
+    backgroundColor: "#ffffff",
+    display: "flex",
+    minHeight: "100vh",
+    flexDirection: "column"
+  },
+  grow: {
+    flexGrow: 1
+  }
+};
 
 class AssociativeCooperativeInteractions extends React.Component {
     state = {
         auth: true,
         anchorEl: null,
         help: false,
-        ratingIsOpen: true,
+        ratingIsOpen: false,
         ratings: [],
         climateType: false
     };
@@ -50,7 +49,7 @@ class AssociativeCooperativeInteractions extends React.Component {
     handleClickAway = () => {
         this.setState({ help: false });
     };
-    handleNotes = (open) => {
+    handleNotes = open => {
         if (open) {
             this.setState({ notes: true });
         } else {
@@ -59,19 +58,6 @@ class AssociativeCooperativeInteractions extends React.Component {
     };
     handleRatingConfirmation = rating => {
         this.setState({ ratingIsOpen: false });
-
-        /* from RatingModal for ClassroomClimate
-
-        this.props.appendClimateRating(rating);
-
-        let entry = {
-            BehaviorResponse: rating,
-            Type: "Rating",
-            ratingInterval: RATING_INTERVAL
-        };
-        let firebase = this.context;
-        firebase.handlePushFireStore(entry);
-        */
     };
 
     render() {
@@ -88,30 +74,35 @@ class AssociativeCooperativeInteractions extends React.Component {
                         {" "}
                         <ClassroomClimateHelp/>
                     </ClickAwayListener>
+                ) : this.state.notes ? (
+                    <FirebaseContext.Consumer>
+                        {firebase => (
+                            <Notes
+                                open={true}
+                                onClose={this.handleNotes}
+                                color="#0988EC"
+                                text="Classroom Climate Notes"
+                                firebase={firebase}
+                            />
+                        )}
+                    </FirebaseContext.Consumer>
                 ) : (
-                    this.state.notes ? (
-                            <FirebaseContext.Consumer>
-                                {firebase => <Notes open={true} onClose={this.handleNotes} color="#0988EC" text="Classroom Climate Notes" firebase={firebase}/>}
-                            </FirebaseContext.Consumer>
-                        ) :
-                        <div/>
+                    <div/>
                 )}
                 <main style={{ flex: 1 }}>
-                    <Grid container xs={12}
-                          alignItems={"center"}
-                          justify={"center"}
-                          direction={"column"}>
-
-                        <Typography variant={"h4"} alignItems={"center"} justify={"center"}>
-                            Associative and Cooperative Interactions
-                        </Typography>
-                        <Grid container xs={12}
-                              alignItems={"center"}
-                              justify={"center"}
-                              direction={"row"}>
+                    <Grid
+                        container
+                        alignItems={"center"}
+                        justify={"center"}
+                        direction={"row"}
+                    >
+                        <Grid item xs={3}>
+                            <div>Placeholder for sidebar</div>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <CenterMenu/>
                         </Grid>
                     </Grid>
-                    <div/>
                 </main>
                 <footer>
                     <Grid
@@ -144,7 +135,7 @@ class AssociativeCooperativeInteractions extends React.Component {
                                 />
                             </IconButton>
                         </Grid>
-                        <Grid container xs={8}/>
+                        <Grid item xs={8}/>
                         <Grid item xs={2}>
                             <Grid
                                 container
@@ -159,28 +150,20 @@ class AssociativeCooperativeInteractions extends React.Component {
                                     hour12: true
                                 })}
                                 <br/>
-                                <FirebaseContext.Consumer>
-                                    {firebase =>
-                                        <YesNoDialog
-                                            buttonText={"Complete Observation"}
-                                            buttonVariant={"contained"}
-                                            buttonColor={"secondary"}
-                                            buttonStyle={{ margin: 10 }}
-                                            dialogTitle={
-                                                "Are you sure you want to complete this observation?"
-                                            }
-                                            shouldOpen={true}
-                                            onAccept={() => {
-                                                this.props.emptyClimateStack();
-                                                this.props.history.push({
-                                                    pathname: "/Home",
-                                                    state: this.props.history.state
-                                                });
-                                                firebase.endSession();
-                                            }}
-                                        />
+                                <YesNoDialog
+                                    buttonText={"Complete Observation"}
+                                    buttonVariant={"contained"}
+                                    buttonColor={"secondary"}
+                                    buttonStyle={{ margin: 10 }}
+                                    dialogTitle={
+                                        "Are you sure you want to complete this observation?"
                                     }
-                                </FirebaseContext.Consumer>
+                                    shouldOpen={true}
+                                    onAccept={() => this.props.history.push({
+                                        pathname: "/Home",
+                                        state: this.props.history.state
+                                    })}
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -191,7 +174,7 @@ class AssociativeCooperativeInteractions extends React.Component {
 }
 
 AssociativeCooperativeInteractions.propTypes = {
-    classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(AssociativeCooperativeInteractions);

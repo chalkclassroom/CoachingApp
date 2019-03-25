@@ -31,7 +31,9 @@ import moment from 'moment';
 
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
 import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
+import AverageToneRating from "../../../components/ResultsComponents/AverageToneRating.js";
 import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter.js";
+
 
 const styles = {
     root: {
@@ -129,11 +131,13 @@ class ClassroomClimateResults extends React.Component {
         view: ViewEnum.SUMMARY,
         sessionId: null,
         sessionDates: [],
-        negativeBehaviorCount: 14,
-        redirectionsBehaviorCount: 64,
-        generalBehaviorCount: 32,
-        specificBehaviorCount: 21,
+        disapprovalBehaviorCount: 0,
+        redirectionsBehaviorCount: 0,
+        nonspecificBehaviorCount: 0,
+        specificBehaviorCount: 0,
+        averageToneRating:0,
         percentage: false,
+        sessionId: null,
     };
 
     componentDidMount() {
@@ -143,9 +147,9 @@ class ClassroomClimateResults extends React.Component {
         console.log("handle behavior count results fetching called")
         let firebase = this.context;
         firebase.fetchBehaviourTypeCount(this.state.sessionId).then((data)=>{
-          console.log(this.state.negativeBehaviorCount
+          console.log(this.state.disapprovalBehaviorCount
             + " " + this.state.redirectionsBehaviorCount
-            + " " + this.state.generalBehaviorCount
+            + " " + this.state.nonspecificBehaviorCount
             + " " + this.state.specificBehaviorCount)
     })
   }
@@ -252,13 +256,60 @@ class ClassroomClimateResults extends React.Component {
           console.log("handle date fetching called")
         let firebase = this.context;
         firebase.fetchClimateSessionDates(teacherId).then(dates=>this.setState({
-          sessionDates: dates,
+          sessionDates: dates
         }));
 
-        firebase.fetchAvgToneRating("96ebxou8MO0OYuuNhglc");
-        firebase.fetchBehaviourTypeCount("96ebxou8MO0OYuuNhglc");
+        firebase.fetchAvgToneRating(this.state.sessionId);
+        firebase.fetchBehaviourTypeCount(this.state.sessionId);
         firebase.fetchBehaviourTrend(teacherId);
       };
+
+
+
+      changeSessionId = (event) =>{
+        console.log("sessionId",event.target.value);
+        this.setState({
+          sessionId: event.target.value,
+        }, () => {
+
+                  let firebase = this.context;
+                  firebase.fetchAvgToneRating(this.state.sessionId).then(json=>json.map(toneRating=>{
+                    this.setState({
+                      averageToneRating:toneRating.average
+                    })
+                  }));
+
+                  firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=>console.log("attempt behavior count: ", json))
+                  //.gets json, then map to the state
+                  firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=>json.map(behavior=>{
+                    switch (behavior.behaviorResponse) {
+                      case "specificapproval":
+                          this.setState({
+                            specificBehaviorCount:behavior.count
+                          })
+                          break;
+                          case "nonspecificapproval":
+                              this.setState({
+                                  nonspecificBehaviorCount:behavior.count
+                              })
+                          break;
+                      case "disapproval":
+                          this.setState({
+                              disapprovalBehaviorCount:behavior.count
+                          })
+                      break;
+                      case "redirection":
+                          this.setState({
+                              redirectionsBehaviorCount:behavior.count
+                          })
+                      break;
+
+                      default:
+
+                    }
+                  }))
+            });
+      }
 
     render() {
         const { classes } = this.props;
@@ -267,7 +318,7 @@ class ClassroomClimateResults extends React.Component {
             labels: ['August 19, 2018', 'Sept 30, 2018', 'Oct 22, 2018'],
             datasets: [
                 {
-                    label: 'Negative',
+                    label: 'Disapproval',
                     data: [
                         10,
                         20,
@@ -326,15 +377,9 @@ class ClassroomClimateResults extends React.Component {
                                             <InputLabel htmlFor="filled-age-simple">
                                                 Date
                                             </InputLabel>
-                                            <Select
-                                                input={
-                                                    <FilledInput
-                                                        name="age"
-                                                        id="filled-age-simple"
-                                                    />
-                                                }
-                                            >
-                                              {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value="">
+                                            <Select  value={this.state.sessionId}
+                                              onChange={this.changeSessionId}>
+                                              {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>
                                                 <em>{moment(date.start.value).format("MMM Do YY HH:mm A")}</em>
                                               </MenuItem>})}
                                             </Select>
@@ -441,53 +486,17 @@ class ClassroomClimateResults extends React.Component {
                                     ViewEnum.SUMMARY ? (
                                         <div className={classes.resultsContent}>
                                           {this.state.percentage = false}
-                                            <Grid
-                                                container
-                                                direction={"row"}
-                                                justify={"space-between"}
-                                            >
-                                                <Grid item>
-                                                    <img
-                                                        alt="extreme negative face"
-                                                        src={exNegativeFace}
-                                                        width="70vw"
-                                                    />
-                                                </Grid>
-                                                <Grid item>
-                                                    <img
-                                                        alt="negative face"
-                                                        src={negativeFace}
-                                                        width="70vw"
-                                                    />
-                                                </Grid>
-                                                <Grid item>
-                                                    <img
-                                                        alt="flat face"
-                                                        src={flatFace}
-                                                        width="70vw"
-                                                    />
-                                                </Grid>
-                                                <Grid item>
-                                                    <img
-                                                        alt="pleasant face"
-                                                        src={pleasantFace}
-                                                        width="70vw"
-                                                    />
-                                                </Grid>
-                                                <Grid item>
-                                                    <img
-                                                        alt="vibrant face"
-                                                        src={vibrantFace}
-                                                        width="70vw"
-                                                    />
-                                                </Grid>
-                                            </Grid>
-                                            <div style={{ height: 10 }}/>
-                                            <LinearProgress
-                                                variant="determinate"
-                                                value={75}
-                                                style={{ height: 10, width: "75vh"}}
-                                            />
+                                      <Grid>
+                                      <FirebaseContext.Consumer>
+                                        {firebase =>
+                                          <AverageToneRating
+                                          averageToneRating={
+                                            this.state.averageToneRating
+                                          }
+                                          firebase={firebase}
+                                        />}
+                                      </FirebaseContext.Consumer>
+                                      </Grid>
                                       <Grid>
                                       <FirebaseContext.Consumer>
                                         {firebase =>
@@ -495,14 +504,14 @@ class ClassroomClimateResults extends React.Component {
                                             percentage={
                                               this.state.percentage
                                             }
-                                            negativeBehaviorCount={
-                                              this.state.negativeBehaviorCount
+                                            disapprovalBehaviorCount={
+                                              this.state.disapprovalBehaviorCount
                                             }
                                             redirectionsBehaviorCount={
                                               this.state.redirectionsBehaviorCount
                                             }
-                                            generalBehaviorCount={
-                                              this.state.generalBehaviorCount
+                                            nonspecificBehaviorCount={
+                                              this.state.nonspecificBehaviorCount
                                             }
                                             specificBehaviorCount={
                                               this.state.specificBehaviorCount
@@ -524,14 +533,14 @@ class ClassroomClimateResults extends React.Component {
                                                   percentage = {
                                                     this.state.percentage
                                                   }
-                                                  negativeBehaviorCount={
-                                                    this.state.negativeBehaviorCount
+                                                  disapprovalBehaviorCount={
+                                                    this.state.disapprovalBehaviorCount
                                                   }
                                                   redirectionsBehaviorCount={
                                                     this.state.redirectionsBehaviorCount
                                                   }
-                                                  generalBehaviorCount={
-                                                    this.state.generalBehaviorCount
+                                                  nonspecificBehaviorCount={
+                                                    this.state.nonspecificBehaviorCount
                                                   }
                                                   specificBehaviorCount={
                                                     this.state.specificBehaviorCount
