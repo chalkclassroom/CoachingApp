@@ -32,6 +32,7 @@ import moment from 'moment';
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
 import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
 import AverageToneRating from "../../../components/ResultsComponents/AverageToneRating.js";
+import ClimateTrendsGraph from "../../../components/ResultsComponents/ClimateTrendsGraph.js";
 import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter.js";
 
 
@@ -129,7 +130,6 @@ class ClassroomClimateResults extends React.Component {
         entries: [],
         dbCounter: 0, // @Hack @Temporary !!!
         view: ViewEnum.SUMMARY,
-        sessionId: null,
         sessionDates: [],
         disapprovalBehaviorCount: 0,
         redirectionsBehaviorCount: 0,
@@ -138,12 +138,18 @@ class ClassroomClimateResults extends React.Component {
         averageToneRating:0,
         percentage: false,
         sessionId: null,
+        trendsDates: [],
+        trendsPos: [],
+        trendsNeg: [],
+        trendsPosCol: [],
+        trendsNegCol: []
     };
 
     componentDidMount() {
+        let teacherId = this.props.location.state.teacher.id;
         console.log(this.props.location.state);
         this.handleDateFetching(this.props.location.state.teacher.id);
-        console.log(this.props.location.state.teacher.id)
+        console.log(teacherId);
         console.log("handle behavior count results fetching called")
         let firebase = this.context;
         firebase.fetchBehaviourTypeCount(this.state.sessionId).then((data)=>{
@@ -151,7 +157,8 @@ class ClassroomClimateResults extends React.Component {
             + " " + this.state.redirectionsBehaviorCount
             + " " + this.state.nonspecificBehaviorCount
             + " " + this.state.specificBehaviorCount)
-    })
+        });
+        this.handleTrendsFetching(teacherId);
   }
 
     handleAppend(entry) {
@@ -264,6 +271,49 @@ class ClassroomClimateResults extends React.Component {
         firebase.fetchBehaviourTrend(teacherId);
       };
 
+      handleTrendsFetching = (teacherId) => {
+        let firebase = this.context;
+        let dateArray = [];
+        let posArray =[];
+        let negArray = [];
+        let posBkgColor = [];
+        let negBkgColor = [];
+        firebase.fetchBehaviourTrend(teacherId).then(dataSet => {
+          dataSet.map(data => {
+            dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
+            posArray.push(data.positive);
+            negArray.push(data.negative);
+            posBkgColor.push('#008000');
+            negBkgColor.push('#FF0000');
+          });
+          this.setState({
+            trendsDates: dateArray,
+            trendsPos: posArray,
+            trendsNeg: negArray,
+            trendsPosCol: posBkgColor,
+            trendsNegCol: negBkgColor
+          })
+        });
+      };
+
+      trendsFormatData = () => {
+        return {
+          labels: this.state.trendsDates,
+          datasets:  [
+            {
+              label: 'Disapproval',
+              data: this.state.trendsNeg,
+              backgroundColor: this.state.trendsNegCol
+            },
+            {
+              label: 'Positive',
+              data: this.state.trendsPos,
+              backgroundColor: this.state.trendsPosCol
+            }
+          ]
+        }
+      };
+
 
 
       changeSessionId = (event) =>{
@@ -279,82 +329,40 @@ class ClassroomClimateResults extends React.Component {
                     })
                   }));
 
-                  firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=>console.log("attempt behavior count: ", json))
+                  firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=>console.log("attempt behavior count: ", json));
                   //.gets json, then map to the state
                   firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=>json.map(behavior=>{
                     switch (behavior.behaviorResponse) {
                       case "specificapproval":
                           this.setState({
                             specificBehaviorCount:behavior.count
-                          })
+                          });
                           break;
                           case "nonspecificapproval":
                               this.setState({
                                   nonspecificBehaviorCount:behavior.count
-                              })
+                              });
                           break;
                       case "disapproval":
                           this.setState({
                               disapprovalBehaviorCount:behavior.count
-                          })
+                          });
                       break;
                       case "redirection":
                           this.setState({
                               redirectionsBehaviorCount:behavior.count
-                          })
+                          });
                       break;
 
                       default:
 
                     }
-                  }))
-            });
-      }
+                  }));
+        });
+      };
 
     render() {
         const { classes } = this.props;
-
-        const data = {
-            labels: ['August 19, 2018', 'Sept 30, 2018', 'Oct 22, 2018'],
-            datasets: [
-                {
-                    label: 'Disapproval',
-                    data: [
-                        10,
-                        20,
-                        30
-                    ],
-                    backgroundColor:[
-                        '#FF0000','#FF0000','#FF0000'
-                    ]
-                },
-                {
-                    label: 'Positive',
-                    data: [
-                        20,
-                        10,
-                        30
-                    ],
-                    backgroundColor:[
-                        '#008000','#008000','#008000'
-                    ]
-                }
-            ],
-        };
-
-        const options = {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            },
-            tooltips: {
-                displayColors: true,
-                multiKeyBackground: 'white'
-            }
-        };
 
         return (
             <div className={classes.root}>
@@ -553,9 +561,8 @@ class ClassroomClimateResults extends React.Component {
                                     ) : this.state.view ===
                                       ViewEnum.TRENDS ? (
                                             <div className={classes.resultsContent}>
-                                                <Bar
-                                                data= {data}
-                                                options= {options}
+                                              <ClimateTrendsGraph
+                                                data={this.trendsFormatData}
                                                 />
                                             </div>
                                     ) : this.state.view ===
