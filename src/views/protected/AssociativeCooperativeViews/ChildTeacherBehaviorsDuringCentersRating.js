@@ -18,6 +18,7 @@ import AppBar from "../../../components/AppBar";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener/ClickAwayListener";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
 import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
+import Card from "@material-ui/core/Card/Card";
 
 const styles = ({
     root: {
@@ -45,7 +46,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
         anchorEl: null,
         help: false,
         ratings: [],
-        checked: [0]
+        checked: [0],
+        people: undefined
     };
     handleRatingModal = () => {
         this.setState({ ratingIsOpen: true });
@@ -103,6 +105,30 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
         });
     };
 
+    handleChild1Click = () => {
+        if (this.state.people !== TeacherChildEnum.CHILD_1) {
+            this.setState({ people: TeacherChildEnum.CHILD_1});
+        }
+    };
+
+    handleChild2Click = () => {
+        if (this.state.people !== TeacherChildEnum.CHILD_2) {
+            this.setState({ people: TeacherChildEnum.CHILD_2});
+        }
+    };
+
+    handleChild1TeacherClick = () => {
+        if (this.state.people !== TeacherChildEnum.CHILD_1_TEACHER) {
+            this.setState({ people: TeacherChildEnum.CHILD_1_TEACHER});
+        }
+    };
+
+    handleChild2TeacherClick = () => {
+        if (this.state.people !== TeacherChildEnum.CHILD_2_TEACHER) {
+            this.setState({ people: TeacherChildEnum.CHILD_2_TEACHER});
+        }
+    };
+
     render() {
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
@@ -125,7 +151,7 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                         ) :
                         <div/>
                 )}
-                <main style={{ flex: 1 }}>
+                <main >
                     <Grid alignItems={"center"} direction={"row"} justify={"center"}>
                         <Grid>
                             <Button size={"small"}
@@ -138,13 +164,13 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                             container
                             alignItems="center"
                             direction="column"
-                            xs={10}
+                            xs={12}
                         >
                             <Typography variant="h4" gutterBottom>
                                 Writing
                             </Typography>
                             <div style={{ height: 20 }} />
-                            <Grid container direction={"row"} justify={"space-between"}>
+                            <Grid container direction={"row"} justify={"space-between"} xs={10}>
                                 <Grid item>
                                     <Button
                                         onClick={this.handleChild1Click}
@@ -180,78 +206,84 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                 </Grid>
                             </Grid>
                             <div style={{ height: 20 }} />
-                            <Grid container direction={"row"}>
-                                <Grid item xs={6}>
-                                    <Typography variant="h6">
-                                        Child Behaviors
-                                    </Typography>
-                                    <List>
-                                        <ListItem onClick={this.handleToggle(1)}>
-                                            <Checkbox
-                                                checked={this.state.checked.indexOf(1) !== -1}/>
-                                            <ListItemText>
-                                                <b>Talking</b> to adult or peer about <b>current activity</b>
-                                            </ListItemText>
-                                        </ListItem>
-                                        <ListItem onClick={this.handleToggle(2)}>
-                                            <Checkbox
-                                                checked={this.state.checked.indexOf(2) !== -1}/>
-                                            <ListItemText>
-                                                Engaging <b>together</b> in an <b>open-ended activity</b> without clear roles or order
-                                            </ListItemText>
-                                        </ListItem>
-                                        <ListItem onClick={this.handleToggle(3)}>
-                                            <Checkbox
-                                                checked={this.state.checked.indexOf(3) !== -1}/>
-                                            <ListItemText>
-                                                Following <b>formal rules of a game</b> and/or taking turns
-                                            </ListItemText>
-                                        </ListItem>
-                                        <ListItem onClick={this.handleToggle(4)}>
-                                            <Checkbox
-                                                checked={this.state.checked.indexOf(4) !== -1}/>
-                                            <ListItemText>
-                                                Speaking or acting according to a <b>predetermined scenario</b> (e.g., restaurant, grocery store)
-                                            </ListItemText>
-                                        </ListItem>
-                                    </List>
+                            <Grid container direction={"row"} spacing={16} xs={12}>
+                                <Grid xs={1}/>
+                                <Grid item xs={5}>
+                                    <Card>
+                                        <Typography variant="h6" align={"center"}>
+                                            Child Behaviors
+                                        </Typography>
+                                        <List>
+                                            <ListItem onClick={this.handleToggle(1)}>
+                                                <Checkbox
+                                                    checked={this.state.checked.indexOf(1) !== -1}/>
+                                                <ListItemText>
+                                                    <b>Talking</b> to adult or peer about <b>current activity</b>
+                                                </ListItemText>
+                                            </ListItem>
+                                            <ListItem onClick={this.handleToggle(2)}>
+                                                <Checkbox
+                                                    checked={this.state.checked.indexOf(2) !== -1}/>
+                                                <ListItemText>
+                                                    Engaging <b>together</b> in an <b>open-ended activity</b> without clear roles or order
+                                                </ListItemText>
+                                            </ListItem>
+                                            <ListItem onClick={this.handleToggle(3)}>
+                                                <Checkbox
+                                                    checked={this.state.checked.indexOf(3) !== -1}/>
+                                                <ListItemText>
+                                                    Following <b>formal rules of a game</b> and/or taking turns
+                                                </ListItemText>
+                                            </ListItem>
+                                            <ListItem onClick={this.handleToggle(4)}>
+                                                <Checkbox
+                                                    checked={this.state.checked.indexOf(4) !== -1}/>
+                                                <ListItemText>
+                                                    Speaking or acting according to a <b>predetermined scenario</b> (e.g., restaurant, grocery store)
+                                                </ListItemText>
+                                            </ListItem>
+                                        </List>
+                                    </Card>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <Typography variant="h6">
-                                        Teacher Behaviors
-                                    </Typography>
-                                    <List>
-                                        <ListItem onClick={this.handleToggle(5)}>
-                                            <Checkbox
-                                                checked={this.state.checked.indexOf(5) !== -1}/>
-                                            <ListItemText>
-                                                <b>Participating</b> in children’s play
-                                            </ListItemText>
-                                        </ListItem>
-                                        <ListItem onClick={this.handleToggle(6)}>
-                                            <Checkbox
-                                                checked={this.state.checked.indexOf(6) !== -1}/>
-                                            <ListItemText>
-                                                <b>Asking questions</b> to check for understanding or extend children’s thinking
-                                            </ListItemText>
-                                        </ListItem>
-                                        <ListItem onClick={this.handleToggle(7)}>
-                                            <Checkbox
-                                                checked={this.state.checked.indexOf(7) !== -1}/>
-                                            <ListItemText>
-                                                <b>Encouraging</b> children to <b>share</b>,
-                                                <b>work</b>, or <b>interact</b> with each other
-                                            </ListItemText>
-                                        </ListItem>
-                                        <ListItem onClick={this.handleToggle(8)}>
-                                            <Checkbox
-                                                checked={this.state.checked.indexOf(8) !== -1}/>
-                                            <ListItemText>
-                                                Helping children find the <b>words to communicate</b>
-                                            </ListItemText>
-                                        </ListItem>
-                                    </List>
+                                <Grid item xs={5}>
+                                    <Card>
+                                        <Typography variant="h6" align={"center"}>
+                                            Teacher Behaviors
+                                        </Typography>
+                                        <List>
+                                            <ListItem onClick={this.handleToggle(5)}>
+                                                <Checkbox
+                                                    checked={this.state.checked.indexOf(5) !== -1}/>
+                                                <ListItemText>
+                                                    <b>Participating</b> in children’s play
+                                                </ListItemText>
+                                            </ListItem>
+                                            <ListItem onClick={this.handleToggle(6)}>
+                                                <Checkbox
+                                                    checked={this.state.checked.indexOf(6) !== -1}/>
+                                                <ListItemText>
+                                                    <b>Asking questions</b> to check for understanding or extend children’s thinking
+                                                </ListItemText>
+                                            </ListItem>
+                                            <ListItem onClick={this.handleToggle(7)}>
+                                                <Checkbox
+                                                    checked={this.state.checked.indexOf(7) !== -1}/>
+                                                <ListItemText>
+                                                    <b>Encouraging</b> children to <b>share</b>,
+                                                    <b>work</b>, or <b>interact</b> with each other
+                                                </ListItemText>
+                                            </ListItem>
+                                            <ListItem onClick={this.handleToggle(8)}>
+                                                <Checkbox
+                                                    checked={this.state.checked.indexOf(8) !== -1}/>
+                                                <ListItemText>
+                                                    Helping children find the <b>words to communicate</b>
+                                                </ListItemText>
+                                            </ListItem>
+                                        </List>
+                                    </Card>
                                 </Grid>
+                                <Grid xs={1}/>
                             </Grid>
                             <Grid
                                 container
