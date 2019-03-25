@@ -219,6 +219,22 @@ class Firebase {
       });
   };
 
+  handleFetchNotes = async (sessionId) => {
+    this.sessionRef = this.db.collection("observations").doc(sessionId);
+    return this.sessionRef.collection("notes")
+      .get()
+      .then(function(querySnapshot) {
+        let notesArr = [];
+        querySnapshot.forEach(function(doc) {
+          //console.log("doc data: ", doc.data());
+          // doc.data() is never undefined for query doc snapshots
+          notesArr.push({id: doc.id, content: doc.data().Note, timestamp: doc.data().Timestamp});
+        });
+        //console.log("Logging firebase notesArr: ", notesArr);
+        return notesArr;
+      });
+  };
+
   fetchClimateSessionDates = async teacherId => {
     var getClimateSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
 
