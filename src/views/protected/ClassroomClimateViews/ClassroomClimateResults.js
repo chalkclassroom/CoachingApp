@@ -26,10 +26,7 @@ import negativeFace from "../../../assets/icons/2-negative-cqref.png";
 import flatFace from "../../../assets/icons/3-flat-cqref.png";
 import pleasantFace from "../../../assets/icons/4-pleasant-cqref.png";
 import vibrantFace from "../../../assets/icons/5-vibrant-cqref.png";
-import { Bar } from 'react-chartjs-2';
 import moment from 'moment';
-// import ListDetailTableClassroomClimateResults from "../../../components/ResultsComponents/ListDetailTableClassroomClimateResults.js";
-
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
 import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
 import AverageToneRating from "../../../components/ResultsComponents/AverageToneRating.js";
@@ -98,16 +95,6 @@ const ViewEnum = {
     NOTES: 4,
     NEXT_STEPS: 5
 };
-
-// dummy data for classroom climate list detail table, when we read in from DB we can use custom id
-// let id = 0;
-function createData(time, notes) {
-    // id += 1;
-    return { time, notes };
-}
-
-
-// end of list detail table data
 
 class ClassroomClimateResults extends React.Component {
     constructor(props) {
@@ -256,7 +243,7 @@ class ClassroomClimateResults extends React.Component {
     };
 
       handleDateFetching = (teacherId) => {
-          console.log("handle date fetching called")
+        console.log("handle date fetching called");
         let firebase = this.context;
         firebase.fetchClimateSessionDates(teacherId).then(dates=>this.setState({
           sessionDates: dates
@@ -334,8 +321,12 @@ class ClassroomClimateResults extends React.Component {
 
 
 
-      changeSessionId = (event) =>{
+      changeSessionId = (event) => {
         console.log("sessionId",event.target.value);
+        let specificCount = 0;
+        let nonspecificCount = 0;
+        let disapprovalCount = 0;
+        let redirectionCount = 0;
         this.setState({
           sessionId: event.target.value,
         }, () => {
@@ -343,39 +334,32 @@ class ClassroomClimateResults extends React.Component {
                   let firebase = this.context;
                   firebase.fetchAvgToneRating(this.state.sessionId).then(json=>json.map(toneRating=>{
                     this.setState({
-                      averageToneRating:toneRating.average
+                      averageToneRating: toneRating.average
                     })
                   }));
 
                   firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=>console.log("attempt behavior count: ", json));
                   //.gets json, then map to the state
-                  firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=>json.map(behavior=>{
-                    switch (behavior.behaviorResponse) {
-                      case "specificapproval":
-                          this.setState({
-                            specificBehaviorCount:behavior.count
-                          });
-                          break;
-                          case "nonspecificapproval":
-                              this.setState({
-                                  nonspecificBehaviorCount:behavior.count
-                              });
-                          break;
-                      case "disapproval":
-                          this.setState({
-                              disapprovalBehaviorCount:behavior.count
-                          });
-                      break;
-                      case "redirection":
-                          this.setState({
-                              redirectionsBehaviorCount:behavior.count
-                          });
-                      break;
 
-                      default:
-
-                    }
-                  }));
+                  firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json=> {
+                    json.map(behavior => {
+                      if (behavior.behaviorResponse === "specificapproval") {
+                        specificCount = behavior.count;
+                      } else if (behavior.behaviorResponse === "nonspecificapproval") {
+                        nonspecificCount = behavior.count;
+                      } else if (behavior.behaviorResponse === "disapproval") {
+                        disapprovalCount = behavior.count;
+                      } else if (behavior.behaviorResponse === "redirection") {
+                        redirectionCount = behavior.count;
+                      }
+                    });
+                    this.setState({
+                      redirectionsBehaviorCount: redirectionCount,
+                      disapprovalBehaviorCount: disapprovalCount,
+                      nonspecificBehaviorCount: nonspecificCount,
+                      specificBehaviorCount: specificCount
+                    });
+                  });
         });
       };
 
@@ -406,22 +390,6 @@ class ClassroomClimateResults extends React.Component {
                                       <em>{moment(date.start.value).format("MMM Do YY HH:mm A")}</em>
                                     </MenuItem>})}
                                   </TextField>
-                                    {/*<form>*/}
-                                        {/*<FormControl*/}
-                                            {/*variant="filled"*/}
-                                            {/*className={classes.viewButtons}*/}
-                                        {/*>*/}
-                                            {/*<InputLabel htmlFor="filled-age-simple">*/}
-                                                {/*Date*/}
-                                            {/*</InputLabel>*/}
-                                            {/*<Select  value={this.state.sessionId}*/}
-                                              {/*onChange={this.changeSessionId}>*/}
-                                              {/*{this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>*/}
-                                                {/*<em>{moment(date.start.value).format("MMM Do YY HH:mm A")}</em>*/}
-                                              {/*</MenuItem>})}*/}
-                                            {/*</Select>*/}
-                                        {/*</FormControl>*/}
-                                    {/*</form>*/}
                                 </ListItem>
                                 <ListItem>
                                     <Button
