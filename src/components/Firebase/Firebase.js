@@ -285,6 +285,57 @@ class Firebase {
     });
 
   };
+
+  fetchTransitionSessionDates = async teacherId => {
+    var getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
+
+    return getTransitionSessionDatesFirebaseFunction({teacherId: teacherId}).then(function(result) {
+      // Read result of the Cloud Function.
+      var sanitizedMessage = result.data[0];
+      console.log(sanitizedMessage);
+      return sanitizedMessage;
+
+    });
+
+  };
+
+  fetchTransitionTypeCount = async sessionId => {
+    var getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable('funcTransitionTypeCount');
+
+    return getTransitionTypeCountFirebaseFunction({sessionId: sessionId}).then(function(result) {
+      // Read result of the Cloud Function.
+      var sanitizedMessage = result.data[0];
+      console.log(sanitizedMessage);
+      return sanitizedMessage;
+    });
+
+  };
+
+  fetchTransitions = async sessionId => {
+    var getTransitionsFirebaseFunction = this.functions.httpsCallable('funcTransitions');
+
+    return getTransitionsFirebaseFunction({sessionId: sessionId}).then(function(result) {
+      // Read result of the Cloud Function.
+      var sanitizedMessage = result.data[0];
+      console.log(sanitizedMessage);
+      return sanitizedMessage;
+    });
+
+  };
+
+  fetchTransitionTrend = async teacherId => {
+    var getTransitionTrendFirebaseFunction = this.functions.httpsCallable('funcTransitionTrend');
+
+    return getTransitionTrendFirebaseFunction({teacherId: teacherId}).then(function(result) {
+      // Read result of the Cloud Function.
+      var sanitizedMessage = result.data[0];
+      console.log(sanitizedMessage);
+      return sanitizedMessage;
+
+    });
+
+  };
+
 }
 
 export default Firebase;
