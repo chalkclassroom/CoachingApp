@@ -97,7 +97,7 @@ class ClassroomClimate extends React.Component {
       ratingInterval: RATING_INTERVAL
     };
     let firebase = this.context;
-    firebase.handlePushFireStore(entry);
+    firebase.handlePushClimate(entry);
   };
 
   componentDidMount() {

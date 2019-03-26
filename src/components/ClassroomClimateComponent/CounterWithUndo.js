@@ -34,7 +34,7 @@ const CounterWithUndo = ({
                 BehaviorResponse: "UNDO",
                 Type: "UNDO"
             };
-            firebase.handlePushFireStore(mEntry);
+            firebase.handlePushClimate(mEntry);
         }
     };
 

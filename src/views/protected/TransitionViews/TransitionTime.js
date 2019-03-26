@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
 import InfoIcon from "@material-ui/icons/Help";
 import EditIcon from "@material-ui/icons/Edit";
-import { withStyles } from "@material-ui/core/styles";
+import {withStyles} from "@material-ui/core/styles";
 import TransitionTimeHelp from "./TransitionTimeHelp";
 import TransitionType from "./TransitionType";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -40,56 +40,57 @@ class TransitionTime extends React.Component {
     };
 
     handleChange = event => {
-        this.setState({ auth: event.target.checked });
+        this.setState({auth: event.target.checked});
     };
 
     handleMenu = event => {
-        this.setState({ anchorEl: event.currentTarget });
+        this.setState({anchorEl: event.currentTarget});
     };
 
     handleClose = () => {
-        this.setState({ anchorEl: null });
+        this.setState({anchorEl: null});
     };
 
     handleHelpModal = () => {
-        this.setState({ help: true });
+        this.setState({help: true});
     };
 
     handleNotes = (open) => {
-      if (open) {
-          this.setState({ notes: true });
-      } else {
-          this.setState({ notes: false });
-      }
+        if (open) {
+            this.setState({notes: true});
+        } else {
+            this.setState({notes: false});
+        }
     };
 
     handleClickAwayHelp = () => {
-        this.setState({ help: false });
+        this.setState({help: false});
     };
 
     render() {
-        const { classes } = this.props;
-        const { anchorEl } = this.state;
+        const {classes} = this.props;
+        const {anchorEl} = this.state;
         const open = Boolean(anchorEl);
 
         return (
             <div className={classes.root}>
                 <FirebaseContext.Consumer>
-                    {firebase => <AppBar firebase={firebase} />}
+                    {firebase => <AppBar firebase={firebase}/>}
                 </FirebaseContext.Consumer>
                 {this.state.help ? (
                     <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
                         {" "}
-                        <TransitionTimeHelp />
+                        <TransitionTimeHelp/>
                     </ClickAwayListener>
                 ) : (
                     this.state.notes ? (
                         <FirebaseContext.Consumer>
-                          {firebase => <Notes open={true} onClose={this.handleNotes} color="#094492" text="Transition Time Notes" firebase={firebase}/>}
+                            {firebase => <Notes open={true} onClose={this.handleNotes} color="#094492"
+                                                text="Transition Time Notes" firebase={firebase}/>}
                         </FirebaseContext.Consumer>
-                      ) :  <div />
+                    ) : <div/>
                 )}
-                <main style={{ flex: 1 }}>
+                <main style={{flex: 1}}>
                     <Grid container spacing={16}>
                         <Grid item xs={4}>
                             <Grid
@@ -98,8 +99,8 @@ class TransitionTime extends React.Component {
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                <div style={{ margin: 20 }} />
-                                <TransitionLog />
+                                <div style={{margin: 20}}/>
+                                <TransitionLog/>
                             </Grid>
                         </Grid>
                         <Grid item xs={8}>
@@ -109,11 +110,12 @@ class TransitionTime extends React.Component {
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                <div style={{ margin: 20 }} />
-                                <TransitionType />
-                                <TransitionTimer
-                                    teacherId={this.props.location.state.teacher.id}
-                                />
+                                <div style={{margin: 20}}/>
+                                <TransitionType/>
+                                <FirebaseContext.Consumer>
+                                    {firebase => <TransitionTimer teacherId={this.props.location.state.teacher.id}
+                                                                  firebase={firebase}/>}
+                                </FirebaseContext.Consumer>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -149,7 +151,7 @@ class TransitionTime extends React.Component {
                                 />
                             </IconButton>
                         </Grid>
-                        <Grid item xs={8} />
+                        <Grid item xs={8}/>
                         <Grid item xs={2}>
                             <Grid
                                 container
@@ -163,21 +165,27 @@ class TransitionTime extends React.Component {
                                     minute: "numeric",
                                     hour12: true
                                 })}
-                                <br />
-                                <YesNoDialog
-                                    buttonText={"Complete Observation"}
-                                    buttonVariant={"contained"}
-                                    buttonColor={"secondary"}
-                                    buttonStyle={{ margin: 10 }}
-                                    dialogTitle={
-                                        "Are you sure you want to complete this observation?"
-                                    }
-                                    shouldOpen={true}
-                                    onAccept={() => this.props.history.push({
-                                      pathname: "/Home",
-                                      state: this.props.history.state
-                                    })}
-                                />
+                                <br/>
+                                <FirebaseContext.Consumer>
+                                    {firebase =>
+                                        <YesNoDialog
+                                            buttonText={"Complete Observation"}
+                                            buttonVariant={"contained"}
+                                            buttonColor={"secondary"}
+                                            buttonStyle={{margin: 10}}
+                                            dialogTitle={
+                                                "Are you sure you want to complete this observation?"
+                                            }
+                                            shouldOpen={true}
+                                            onAccept={() => {
+                                                this.props.history.push({
+                                                    pathname: "/Home",
+                                                    state: this.props.history.state
+                                                });
+                                                firebase.endSession();
+                                            }}
+                                        />}
+                                </FirebaseContext.Consumer>
                             </Grid>
                         </Grid>
                     </Grid>

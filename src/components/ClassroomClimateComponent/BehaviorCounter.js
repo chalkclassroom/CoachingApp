@@ -15,7 +15,8 @@ class BehaviorCounter extends React.Component {
         super(props);
         let mEntry = {
             teacher: this.props.teacherId,
-            observedBy: this.props.firebase.auth.currentUser.uid
+            observedBy: this.props.firebase.auth.currentUser.uid,
+            type: "Climate"
         };
         this.props.firebase.handleSession(mEntry);
     }

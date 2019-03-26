@@ -41,6 +41,12 @@ class TransitionTimer extends React.Component {
     constructor(props) {
         super(props);
         this.onCancel = this.onCancel.bind(this);
+        let mEntry = {
+            teacher: this.props.teacherId,
+            observedBy: this.props.firebase.auth.currentUser.uid,
+            type: "Transition"
+        };
+        this.props.firebase.handleSession(mEntry);
     }
 
     state = {
@@ -91,33 +97,7 @@ class TransitionTimer extends React.Component {
 
     handleAppend = entry => {
         this.props.pushOntoTransitionStack(entry);
-        this.handleSpreadsheetAppend(entry);
-    };
-
-    handleSpreadsheetAppend = entry => {
-        let url = new URL(spreadsheetData.scriptLink),
-            params = {
-                sheet: "TransitionTime",
-                del: "false",
-                TrnStart: entry.start,
-                TrnEnd: entry.end,
-                TrnDur: entry.duration,
-                TrnType: entry.transitionType,
-                TeacherID: this.props.teacherId
-            };
-        Object.keys(params).forEach(key =>
-            url.searchParams.append(key, params[key])
-        );
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: {
-                "content-type": "application/json"
-            }
-        })
-            .then(response => console.log("Success"))
-            .catch(error => console.error("Error:", error));
+        this.props.firebase.handlePushTransition(entry)
     };
 
     render() {
