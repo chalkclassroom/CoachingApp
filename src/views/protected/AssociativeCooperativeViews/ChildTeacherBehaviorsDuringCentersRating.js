@@ -5,7 +5,6 @@ import Grid from "@material-ui/core/Grid";
 import InfoIcon from "@material-ui/icons/Help";
 import EditIcon from "@material-ui/icons/Edit";
 import { withStyles } from "@material-ui/core/styles";
-import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import Notes from "../../../components/Notes";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button/Button";
@@ -49,9 +48,6 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
         checked: [0],
         people: undefined
     };
-    handleRatingModal = () => {
-        this.setState({ ratingIsOpen: true });
-    };
     handleHelpModal = () => {
         this.setState({ help: true });
     };
@@ -90,6 +86,13 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
     };
 
     handleToggle = value => () => {
+        // If checkbox pressed is currently disabled
+        // This doesn't work idk why
+        if ((value === this.childValue(value) && this.childDisabled())
+            || (value === this.teacherValue(value) && this.teacherDisabled())) {
+            return;
+        }
+
         const { checked } = this.state;
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
@@ -103,6 +106,24 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
         this.setState({
             checked: newChecked,
         });
+    };
+
+    childDisabled = () => {
+        return this.state.people === undefined;
+    };
+
+    teacherDisabled = () => {
+        return this.state.people === TeacherChildEnum.CHILD_1
+            || this.state.people === TeacherChildEnum.CHILD_2
+            || this.state.people === undefined;
+    };
+
+    childValue = value => {
+      return value >= 1 && value <= 4;
+    };
+
+    teacherValue = value => {
+        return value >= 5 && value <= 8;
     };
 
     handleChild1Click = () => {
@@ -214,30 +235,38 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                             Child Behaviors
                                         </Typography>
                                         <List>
-                                            <ListItem onClick={this.handleToggle(1)}>
+                                            <ListItem onClick={this.handleToggle(1)}
+                                                      disabled={this.childDisabled()}>
                                                 <Checkbox
-                                                    checked={this.state.checked.indexOf(1) !== -1}/>
+                                                    checked={!this.childDisabled()
+                                                    && this.state.checked.indexOf(1) !== -1}/>
                                                 <ListItemText>
                                                     <b>Talking</b> to adult or peer about <b>current activity</b>
                                                 </ListItemText>
                                             </ListItem>
-                                            <ListItem onClick={this.handleToggle(2)}>
+                                            <ListItem onClick={this.handleToggle(2)}
+                                                      disabled={this.childDisabled()}>
                                                 <Checkbox
-                                                    checked={this.state.checked.indexOf(2) !== -1}/>
+                                                    checked={!this.childDisabled()
+                                                    && this.state.checked.indexOf(2) !== -1}/>
                                                 <ListItemText>
                                                     Engaging <b>together</b> in an <b>open-ended activity</b> without clear roles or order
                                                 </ListItemText>
                                             </ListItem>
-                                            <ListItem onClick={this.handleToggle(3)}>
+                                            <ListItem onClick={this.handleToggle(3)}
+                                                      disabled={this.childDisabled()}>
                                                 <Checkbox
-                                                    checked={this.state.checked.indexOf(3) !== -1}/>
+                                                    checked={!this.childDisabled()
+                                                    && this.state.checked.indexOf(3) !== -1}/>
                                                 <ListItemText>
                                                     Following <b>formal rules of a game</b> and/or taking turns
                                                 </ListItemText>
                                             </ListItem>
-                                            <ListItem onClick={this.handleToggle(4)}>
+                                            <ListItem onClick={this.handleToggle(4)}
+                                                      disabled={this.childDisabled()}>
                                                 <Checkbox
-                                                    checked={this.state.checked.indexOf(4) !== -1}/>
+                                                    checked={!this.childDisabled()
+                                                    && this.state.checked.indexOf(4) !== -1}/>
                                                 <ListItemText>
                                                     Speaking or acting according to a <b>predetermined scenario</b> (e.g., restaurant, grocery store)
                                                 </ListItemText>
@@ -251,31 +280,39 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                             Teacher Behaviors
                                         </Typography>
                                         <List>
-                                            <ListItem onClick={this.handleToggle(5)}>
+                                            <ListItem onClick={this.handleToggle(5)}
+                                                      disabled={this.teacherDisabled()}>
                                                 <Checkbox
-                                                    checked={this.state.checked.indexOf(5) !== -1}/>
+                                                    checked={!this.teacherDisabled()
+                                                    && this.state.checked.indexOf(5) !== -1}/>
                                                 <ListItemText>
                                                     <b>Participating</b> in children’s play
                                                 </ListItemText>
                                             </ListItem>
-                                            <ListItem onClick={this.handleToggle(6)}>
+                                            <ListItem onClick={this.handleToggle(6)}
+                                                      disabled={this.teacherDisabled()}>
                                                 <Checkbox
-                                                    checked={this.state.checked.indexOf(6) !== -1}/>
+                                                    checked={!this.teacherDisabled()
+                                                    && this.state.checked.indexOf(6) !== -1}/>
                                                 <ListItemText>
                                                     <b>Asking questions</b> to check for understanding or extend children’s thinking
                                                 </ListItemText>
                                             </ListItem>
-                                            <ListItem onClick={this.handleToggle(7)}>
+                                            <ListItem onClick={this.handleToggle(7)}
+                                                      disabled={this.teacherDisabled()}>
                                                 <Checkbox
-                                                    checked={this.state.checked.indexOf(7) !== -1}/>
+                                                    checked={!this.teacherDisabled()
+                                                    && this.state.checked.indexOf(7) !== -1}/>
                                                 <ListItemText>
                                                     <b>Encouraging</b> children to <b>share</b>,
                                                     <b>work</b>, or <b>interact</b> with each other
                                                 </ListItemText>
                                             </ListItem>
-                                            <ListItem onClick={this.handleToggle(8)}>
+                                            <ListItem onClick={this.handleToggle(8)}
+                                                      disabled={this.teacherDisabled()}>
                                                 <Checkbox
-                                                    checked={this.state.checked.indexOf(8) !== -1}/>
+                                                    checked={!this.teacherDisabled()
+                                                    && this.state.checked.indexOf(8) !== -1}/>
                                                 <ListItemText>
                                                     Helping children find the <b>words to communicate</b>
                                                 </ListItemText>
