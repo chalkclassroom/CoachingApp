@@ -41,6 +41,12 @@ class TransitionTimer extends React.Component {
     constructor(props) {
         super(props);
         this.onCancel = this.onCancel.bind(this);
+        let mEntry = {
+            teacher: this.props.teacherId,
+            observedBy: this.props.firebase.auth.currentUser.uid,
+            type: "Transition"
+        };
+        this.props.firebase.handleSession(mEntry);
     }
 
     state = {
@@ -92,6 +98,7 @@ class TransitionTimer extends React.Component {
     handleAppend = entry => {
         this.props.pushOntoTransitionStack(entry);
         this.handleSpreadsheetAppend(entry);
+        this.props.firebase.handlePushTransition(entry)
     };
 
     handleSpreadsheetAppend = entry => {
