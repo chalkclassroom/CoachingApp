@@ -219,7 +219,7 @@ class Firebase {
       });
   };
 
-  handleFetchNotes = async (sessionId) => {
+  handleFetchNotesResults = async (sessionId) => {
     this.sessionRef = this.db.collection("observations").doc(sessionId);
     return this.sessionRef.collection("notes")
       .get()

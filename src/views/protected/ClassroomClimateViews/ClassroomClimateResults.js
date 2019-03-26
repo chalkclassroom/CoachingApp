@@ -106,13 +106,7 @@ function createData(time, notes) {
     return { time, notes };
 }
 
-const classroomClimateNotes = [
-    createData("08:32", "Kiss your brain"),
-    createData("08:44", "Great super friend"),
-    createData("09:01", "Lots of good jobs"),
-    createData("09:37", "BD frown"),
-    createData("09:56", "Close down center conflict")
-];
+
 // end of list detail table data
 
 class ClassroomClimateResults extends React.Component {
@@ -143,7 +137,8 @@ class ClassroomClimateResults extends React.Component {
         trendsPos: [],
         trendsNeg: [],
         trendsPosCol: [],
-        trendsNegCol: []
+        trendsNegCol: [],
+        notes: []
     };
 
     componentDidMount() {
@@ -297,6 +292,28 @@ class ClassroomClimateResults extends React.Component {
         });
       };
 
+      handleNotesFetching = (sessionId) => {
+        let firebase = this.context;
+        firebase.handleFetchNotesResults(sessionId).then(
+          notesArr => {
+            console.log(notesArr);
+            let formattedNotesArr = [];
+            notesArr.map(note => {
+                let newTimestamp = new Date(note.timestamp.seconds*1000).toLocaleString("en-US", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true
+              });
+                formattedNotesArr.push({id: note.id, content: note.content, timestamp: newTimestamp})
+            });
+            console.log(formattedNotesArr);
+            this.setState({
+                notes: formattedNotesArr,
+              });
+          }
+        );
+      }
+
       trendsFormatData = () => {
         return {
           labels: this.state.trendsDates,
@@ -322,7 +339,7 @@ class ClassroomClimateResults extends React.Component {
         this.setState({
           sessionId: event.target.value,
         }, () => {
-
+                  this.handleNotesFetching(this.state.sessionId);
                   let firebase = this.context;
                   firebase.fetchAvgToneRating(this.state.sessionId).then(json=>json.map(toneRating=>{
                     this.setState({
@@ -581,7 +598,7 @@ class ClassroomClimateResults extends React.Component {
                                       ViewEnum.NOTES ? (
                                         <div className={classes.resultsContent}>
                                             <NotesListDetailTable
-                                                data={classroomClimateNotes}
+                                                data={this.state.notes}
                                             />
                                         </div>
                                     ) : this.state.view ===

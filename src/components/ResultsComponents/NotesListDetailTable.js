@@ -47,9 +47,9 @@ class NotesListDetailTable extends React.Component {
                         {this.props.data.map(row => (
                             <TableRow className={classes.row} key={row.id}>
                                 <TableCell component="th" scope="row">
-                                    {row.time}
+                                    {row.timestamp}
                                 </TableCell>
-                                <TableCell align="right">{row.notes}</TableCell>
+                                <TableCell align="right">{row.content}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
