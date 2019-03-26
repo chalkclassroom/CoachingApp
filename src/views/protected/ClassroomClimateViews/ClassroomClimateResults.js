@@ -8,6 +8,7 @@ import ListItem from "@material-ui/core/ListItem";
 import FilledInput from "@material-ui/core/FilledInput";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import TextField from '@material-ui/core/TextField';
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -377,22 +378,33 @@ class ClassroomClimateResults extends React.Component {
                               <img src={ClassroomClimateIcon} style={{width:"15vw", height:"10vh", position:"center"}} />
                             </ListItem>
                                 <ListItem>
-                                    <form>
-                                        <FormControl
-                                            variant="filled"
-                                            className={classes.viewButtons}
-                                        >
-                                            <InputLabel htmlFor="filled-age-simple">
-                                                Date
-                                            </InputLabel>
-                                            <Select  value={this.state.sessionId}
-                                              onChange={this.changeSessionId}>
-                                              {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>
-                                                <em>{moment(date.start.value).format("MMM Do YY HH:mm A")}</em>
-                                              </MenuItem>})}
-                                            </Select>
-                                        </FormControl>
-                                    </form>
+                                  <TextField
+                                    select
+                                    className={classes.viewButtons}
+                                    label="Date"
+                                    value={this.state.sessionId}
+                                    onChange={this.changeSessionId}
+                                    InputLabelProps={{ shrink: true }}>
+                                    {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>
+                                      <em>{moment(date.start.value).format("MMM Do YY HH:mm A")}</em>
+                                    </MenuItem>})}
+                                  </TextField>
+                                    {/*<form>*/}
+                                        {/*<FormControl*/}
+                                            {/*variant="filled"*/}
+                                            {/*className={classes.viewButtons}*/}
+                                        {/*>*/}
+                                            {/*<InputLabel htmlFor="filled-age-simple">*/}
+                                                {/*Date*/}
+                                            {/*</InputLabel>*/}
+                                            {/*<Select  value={this.state.sessionId}*/}
+                                              {/*onChange={this.changeSessionId}>*/}
+                                              {/*{this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>*/}
+                                                {/*<em>{moment(date.start.value).format("MMM Do YY HH:mm A")}</em>*/}
+                                              {/*</MenuItem>})}*/}
+                                            {/*</Select>*/}
+                                        {/*</FormControl>*/}
+                                    {/*</form>*/}
                                 </ListItem>
                                 <ListItem>
                                     <Button
