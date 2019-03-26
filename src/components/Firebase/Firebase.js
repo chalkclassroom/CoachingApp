@@ -286,23 +286,10 @@ class Firebase {
 
   };
 
-  fetchTransitionSessionDates = async teacherId => {
-    var getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
+  fetchTransitionLog = async sessionId => {
+    var fetchTransitionLogFirebaseFunction = this.functions.httpsCallable('fetchTransitionsLog');
 
-    return getTransitionSessionDatesFirebaseFunction({teacherId: teacherId}).then(function(result) {
-      // Read result of the Cloud Function.
-      var sanitizedMessage = result.data[0];
-      console.log(sanitizedMessage);
-      return sanitizedMessage;
-
-    });
-
-  };
-
-  fetchTransitionTypeCount = async sessionId => {
-    var getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable('funcTransitionTypeCount');
-
-    return getTransitionTypeCountFirebaseFunction({sessionId: sessionId}).then(function(result) {
+    return fetchTransitionLogFirebaseFunction({sessionId: sessionId}).then(function(result) {
       // Read result of the Cloud Function.
       var sanitizedMessage = result.data[0];
       console.log(sanitizedMessage);
@@ -311,22 +298,10 @@ class Firebase {
 
   };
 
-  fetchTransitions = async sessionId => {
-    var getTransitionsFirebaseFunction = this.functions.httpsCallable('funcTransitions');
+  fetchTransitionsTrend = async teacherId => {
+    var fetchTransitionsTrendFirebaseFunction = this.functions.httpsCallable('fetchTransitionsTrend');
 
-    return getTransitionsFirebaseFunction({sessionId: sessionId}).then(function(result) {
-      // Read result of the Cloud Function.
-      var sanitizedMessage = result.data[0];
-      console.log(sanitizedMessage);
-      return sanitizedMessage;
-    });
-
-  };
-
-  fetchTransitionTrend = async teacherId => {
-    var getTransitionTrendFirebaseFunction = this.functions.httpsCallable('funcTransitionTrend');
-
-    return getTransitionTrendFirebaseFunction({teacherId: teacherId}).then(function(result) {
+    return fetchTransitionsTrendFirebaseFunction({teacherId: teacherId}).then(function(result) {
       // Read result of the Cloud Function.
       var sanitizedMessage = result.data[0];
       console.log(sanitizedMessage);
