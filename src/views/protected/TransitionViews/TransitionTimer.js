@@ -97,34 +97,7 @@ class TransitionTimer extends React.Component {
 
     handleAppend = entry => {
         this.props.pushOntoTransitionStack(entry);
-        this.handleSpreadsheetAppend(entry);
         this.props.firebase.handlePushTransition(entry)
-    };
-
-    handleSpreadsheetAppend = entry => {
-        let url = new URL(spreadsheetData.scriptLink),
-            params = {
-                sheet: "TransitionTime",
-                del: "false",
-                TrnStart: entry.start,
-                TrnEnd: entry.end,
-                TrnDur: entry.duration,
-                TrnType: entry.transitionType,
-                TeacherID: this.props.teacherId
-            };
-        Object.keys(params).forEach(key =>
-            url.searchParams.append(key, params[key])
-        );
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: {
-                "content-type": "application/json"
-            }
-        })
-            .then(response => console.log("Success"))
-            .catch(error => console.error("Error:", error));
     };
 
     render() {
