@@ -18,6 +18,12 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener/ClickAwayList
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
 import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
 import Card from "@material-ui/core/Card/Card";
+import Line from "rc-progress/es/Line";
+import ms from "pretty-ms";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 
 const styles = ({
     root: {
@@ -39,6 +45,9 @@ const TeacherChildEnum = {
     CHILD_2_TEACHER: 4
 };
 
+const RATING_INTERVAL = 60000;
+const TEN_PERCENT = 0.1 * RATING_INTERVAL;
+
 class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
     state = {
         auth: true,
@@ -46,10 +55,36 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
         help: false,
         ratings: [],
         checked: [0],
-        people: undefined
+        people: undefined,
+        time: RATING_INTERVAL,
+        timeUpOpen: false
     };
+    tick = () => {
+        if (this.state.time <= 0) {
+            this.handleTimeUpNotification();
+            this.setState({ time: RATING_INTERVAL });
+        } else {
+            if (this.state.time - 1000 < 0) {
+                this.setState({ time: 0 });
+            } else {
+                this.setState({ time: this.state.time - 1000 });
+            }
+        }
+    };
+    componentDidMount() {
+        this.timer = setInterval(this.tick, 1000);
+    }
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
     handleHelpModal = () => {
         this.setState({ help: true });
+    };
+    handleTimeUpNotification = () => {
+        this.setState({ timeUpOpen: true });
+    }
+    handleTimeUpClose = () => {
+        this.setState({ timeUpOpen: false });
     };
     handleClickAway = () => {
         this.setState({ help: false });
@@ -172,6 +207,16 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                         ) :
                         <div/>
                 )}
+                <Dialog open={this.state.timeUpOpen}
+                    onClose={this.handleTimeUpClose} aria-labelledby="simple-dialog-title">
+                    <DialogTitle id="simple-dialog-title">Time's Up</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            You've spent one minute observing this center. It may
+                            be time to finalize your responses and move on to the next center.
+                        </DialogContentText>
+                    </DialogContent>
+                </Dialog>
                 <main >
                     <Grid alignItems={"center"} direction={"row"} justify={"center"}>
                         <Grid>
@@ -320,7 +365,28 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                         </List>
                                     </Card>
                                 </Grid>
-                                <Grid xs={1}/>
+                                <Grid xs={1}>
+                                    <Line
+                                        style={{ transform: "rotate(270deg)" }}
+                                        percent={`${100 *
+                                        (this.state.time /
+                                            RATING_INTERVAL)}`}
+                                        strokeWidth="8"
+                                        strokeColor={
+                                            this.state.time > TEN_PERCENT
+                                                ? "#009365"
+                                                : "#E55529"
+                                        }
+                                    />
+                                    <div
+                                        style={{
+                                            paddingTop: 50,
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        {ms(this.state.time)}
+                                    </div>
+                                </Grid>
                             </Grid>
                             <Grid
                                 container

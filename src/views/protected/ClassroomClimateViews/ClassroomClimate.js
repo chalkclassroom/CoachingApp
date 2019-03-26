@@ -171,8 +171,8 @@ class ClassroomClimate extends React.Component {
                   strokeWidth="4"
                   strokeColor={
                     this.state.time > TEN_PERCENT
-                      ? "#00ff00"
-                      : "#ff0000"
+                      ? "#009365"
+                      : "#E55529"
                   }
                 />
                 <div
