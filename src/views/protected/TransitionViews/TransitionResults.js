@@ -7,6 +7,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import FilledInput from "@material-ui/core/FilledInput";
 import InputLabel from "@material-ui/core/InputLabel";
+import TextField from '@material-ui/core/TextField';
 import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select";
@@ -25,6 +26,7 @@ import { Line } from "react-chartjs-2";
 import 'chartjs-plugin-datalabels';
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
+import moment from 'moment';
 
 
 const styles = {
@@ -122,6 +124,7 @@ class TransitionResults extends React.Component {
   constructor(props) {
     super(props);
     this.handleAppend = this.handleAppend.bind(this);
+    this.handleTypeChange = this.handleTypeChange.bind(this);
   }
 
   state = {
@@ -132,11 +135,18 @@ class TransitionResults extends React.Component {
     hex: "#FFFFFF",
     entries: [],
     dbCounter: 0, // @Hack @Temporary !!!
-    view: ViewEnum.SUMMARY
+    view: ViewEnum.SUMMARY,
+    sessionId: null,
+    sessionDates: [],
   };
 
   componentDidMount() {
     console.log(this.props.location.state);
+    let teacherId = this.props.location.state.teacher.id;
+    console.log(this.props.location.state);
+    this.handleDateFetching(this.props.location.state.teacher.id);
+    console.log(teacherId);
+    console.log("handle behavior count results fetching called");
   }
 
   handleAppend(entry) {
@@ -153,6 +163,11 @@ class TransitionResults extends React.Component {
   handleChange = event => {
     this.setState({ auth: event.target.checked });
   };
+
+  handleTypeChange(newType) {
+      this.setState({ type: newType });
+      this.changeHex(newType);
+  }
 
   handleMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -206,6 +221,7 @@ class TransitionResults extends React.Component {
       .catch(error => console.error("Error:", error));
   };
 
+
   summaryClick = () => {
     if (this.state.view !== ViewEnum.SUMMARY) {
       this.setState({ view: ViewEnum.SUMMARY });
@@ -236,9 +252,28 @@ class TransitionResults extends React.Component {
     }
   };
 
+  handleDateFetching = (teacherId) => {
+    console.log("handle date fetching called");
+    let firebase = this.context;
+    firebase.fetchTransitionSessionDates(teacherId).then(dates=>this.setState({
+      sessionDates: dates
+    }));
+
+    console.log("Session Dates: " + this.state.sessionDates)
+
+  };
+
+  changeSessionId = (event) => {
+    console.log("sessionId",event.target.value);
+    this.setState({
+      sessionId: event.target.value,
+    }, () => {
+
+    });
+  };
+
   render() {
     const { classes } = this.props;
-
 
     return (
       <div className={classes.root}>
@@ -252,28 +287,19 @@ class TransitionResults extends React.Component {
               <ListItem>
                 <img src={TransitionTimeIcon} style={{width:"15vw", height:"10vh", position:"center"}} />
               </ListItem>
-                <ListItem>
-                  <form>
-                    <FormControl
-                      variant="filled"
-                      className={classes.viewButtons}
-                    >
-                      <InputLabel htmlFor="filled-age-simple">Date</InputLabel>
-                      <Select
-                        input={
-                          <FilledInput name="age" id="filled-age-simple" />
-                        }
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Mon, Oct 22, 2018</MenuItem>
-                        <MenuItem value={20}>Tue, Nov 6, 2018</MenuItem>
-                        <MenuItem value={30}>Thurs, Nov 29, 2018</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </form>
-                </ListItem>
+              <ListItem>
+                <TextField
+                  select
+                  className={classes.viewButtons}
+                  label="Date"
+                  value={this.state.sessionId}
+                  onChange={this.changeSessionId}
+                  InputLabelProps={{ shrink: true }}>
+                  {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>
+                    <em>{moment(date.start.value).format("MMM Do YY HH:mm A")}</em>
+                  </MenuItem>})}
+                </TextField>
+              </ListItem>
                 <ListItem>
                   <Button
                     size="large"
@@ -409,4 +435,5 @@ TransitionResults.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
+TransitionResults.contextType = FirebaseContext;
 export default withStyles(styles)(TransitionResults);
