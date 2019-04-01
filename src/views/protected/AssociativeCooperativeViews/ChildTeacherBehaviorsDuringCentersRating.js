@@ -57,7 +57,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
         checked: [0],
         people: undefined,
         time: RATING_INTERVAL,
-        timeUpOpen: false
+        timeUpOpen: false,
+        peopleWarning: false
     };
     tick = () => {
         if (this.state.time <= 0) {
@@ -82,9 +83,12 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
     };
     handleTimeUpNotification = () => {
         this.setState({ timeUpOpen: true });
-    }
+    };
     handleTimeUpClose = () => {
         this.setState({ timeUpOpen: false });
+    };
+    handlePeopleWarningClose = () => {
+        this.setState({ peopleWarning: false });
     };
     handleClickAway = () => {
         this.setState({ help: false });
@@ -96,28 +100,24 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
             this.setState({ notes: false });
         }
     };
-    handleRatingConfirmation = rating => {
-        this.setState({ ratingIsOpen: false });
-
-        /* from RatingModal for ClassroomClimate
-
-        this.props.appendClimateRating(rating);
-
-        let entry = {
-            BehaviorResponse: rating,
-            Type: "Rating",
-            ratingInterval: RATING_INTERVAL
-        };
-        let firebase = this.context;
-        firebase.handlePushFireStore(entry);
-        */
-    };
 
     handleBackButton = () => {
         this.props.history.push({
             pathname: "/AssociativeCooperativeInteractions",
             state: this.props.history.state
         });
+    };
+
+    handleSubmit = () => {
+        if (this.state.people === undefined){
+            this.setState({ peopleWarning: true});
+
+        }else {
+            this.props.history.push({
+                pathname: "/AssociativeCooperativeInteractions",
+                state: this.props.history.state
+            });
+        }
     };
 
     handleToggle = value => () => {
@@ -221,6 +221,16 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                         <DialogContentText id="alert-dialog-description">
                             You've spent one minute observing this center. It may
                             be time to finalize your responses and move on to the next center.
+                        </DialogContentText>
+                    </DialogContent>
+                </Dialog>
+                <Dialog open={this.state.peopleWarning}
+                        onClose={this.handlePeopleWarningClose} aria-labelledby="simple-dialog-title">
+                    <DialogTitle id="simple-dialog-title">Wait!</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Please select the number of children and teachers at
+                            the center before submitting your rating.
                         </DialogContentText>
                     </DialogContent>
                 </Dialog>
@@ -413,6 +423,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                     variant={"contained"}
                                     color={"secondary"}
                                     style={{ margin: 10 }}
+                                    onClick={this.handleSubmit}
+                                    style={{marginTop:20}}
                                 >
                                     Submit
                                 </Button>
