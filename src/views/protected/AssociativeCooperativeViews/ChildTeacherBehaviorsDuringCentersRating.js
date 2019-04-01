@@ -121,6 +121,7 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
     };
 
     handleToggle = value => () => {
+        // Prevents updating state of checkbox when disabled
         if (value <= 4 && this.childDisabled()
             || value >= 5 && this.teacherDisabled()){
             return;
