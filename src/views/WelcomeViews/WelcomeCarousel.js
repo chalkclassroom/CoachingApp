@@ -1,9 +1,7 @@
 import React from "react";
-
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 import { withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
 import slide1 from "../../assets/slides/slide1.png";

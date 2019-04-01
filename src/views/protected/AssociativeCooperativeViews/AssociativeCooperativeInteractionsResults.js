@@ -21,8 +21,8 @@ import { ImmortalDB } from "immortal-db";
 import ListDetailTableTransitionResults from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import 'chartjs-plugin-datalabels';
-import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
-import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
+import ChildTeacherBehaviorSlider
+    from "../../../components/AssociativeCooperativeComponents/ChildTeacherBehaviorSlider";
 
 
 const styles = {
@@ -372,6 +372,7 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                                 <div>
                                     {this.state.view === ViewEnum.SUMMARY ? (
                                         <div className={classes.resultsContent}>
+                                            <ChildTeacherBehaviorSlider/>
                                         </div>
                                     ) : this.state.view === ViewEnum.LIST ? (
                                         <div className={classes.resultsContent}>
