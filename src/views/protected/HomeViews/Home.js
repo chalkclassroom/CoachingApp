@@ -67,7 +67,7 @@ class Welcome extends React.Component {
                         variant={"h3"}
                         align={"center"}
                     >
-                        Welcome Coach!
+                        Welcome, Coach!
                     </Typography>
                     <Grid
                         container
