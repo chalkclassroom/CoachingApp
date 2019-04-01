@@ -137,6 +137,9 @@ class TransitionResults extends React.Component {
 
   componentDidMount() {
     console.log(this.props.location.state);
+    console.log(this.context);
+    let teacherId = this.props.location.state.teacher.id;
+    this.context.fetchTransitionTrend(teacherId);
   }
 
   handleAppend(entry) {
@@ -204,6 +207,13 @@ class TransitionResults extends React.Component {
     })
       .then(response => console.log("Success"))
       .catch(error => console.error("Error:", error));
+  };
+
+  handleTrendsFetch = (teacherId) => {
+    let firebase = this.context;
+    firebase.fetchTransitionSessionDates(teacherId).then(dataSet => {
+
+    });
   };
 
   summaryClick = () => {
@@ -408,5 +418,5 @@ class TransitionResults extends React.Component {
 TransitionResults.propTypes = {
   classes: PropTypes.object.isRequired
 };
-
+TransitionResults.contextType = FirebaseContext;
 export default withStyles(styles)(TransitionResults);
