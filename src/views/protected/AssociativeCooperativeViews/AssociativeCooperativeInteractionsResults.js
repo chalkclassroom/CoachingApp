@@ -18,11 +18,12 @@ import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
-import ListDetailTableTransitionResults from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import 'chartjs-plugin-datalabels';
 import ChildTeacherBehaviorSlider
-    from "../../../components/AssociativeCooperativeComponents/ChildTeacherBehaviorSlider";
+    from "../../../components/AssociativeCooperativeComponents/ChildTeacherBehaviorPieSlider";
+import ChildTeacherBehaviorDetailsSlider
+    from "../../../components/AssociativeCooperativeComponents/ChildTeacherBehaviorDetailsSlider";
 
 
 const styles = {
@@ -81,7 +82,7 @@ const styles = {
 
 const ViewEnum = {
     SUMMARY: 1,
-    LIST: 2,
+    DETAILS: 2,
     TRENDS: 3,
     NOTES: 4,
     NEXT_STEPS: 5
@@ -211,8 +212,8 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
     };
 
     listClick = () => {
-        if (this.state.view !== ViewEnum.LIST) {
-            this.setState({ view: ViewEnum.LIST });
+        if (this.state.view !== ViewEnum.DETAILS) {
+            this.setState({ view: ViewEnum.DETAILS });
         }
     };
 
@@ -292,14 +293,14 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                                         size="large"
                                         color={"primary"}
                                         variant={
-                                            this.state.view === ViewEnum.LIST
+                                            this.state.view === ViewEnum.DETAILS
                                                 ? "contained"
                                                 : "outlined"
                                         }
                                         className={classes.viewButtons}
                                         onClick={this.listClick}
                                     >
-                                        List Detail
+                                        Details
                                     </Button>
                                 </ListItem>
                                 <ListItem>
@@ -374,8 +375,9 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                                         <div className={classes.resultsContent}>
                                             <ChildTeacherBehaviorSlider/>
                                         </div>
-                                    ) : this.state.view === ViewEnum.LIST ? (
+                                    ) : this.state.view === ViewEnum.DETAILS ? (
                                         <div className={classes.resultsContent}>
+                                            <ChildTeacherBehaviorDetailsSlider/>
                                         </div>
                                     ) : this.state.view === ViewEnum.TRENDS ? (
                                         <div className={classes.resultsContent}

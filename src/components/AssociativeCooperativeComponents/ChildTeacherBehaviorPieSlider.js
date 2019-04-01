@@ -11,7 +11,7 @@ const styles = {
 };
 
 
-class ChildTeacherBehaviorSlider extends React.Component {
+class ChildTeacherBehaviorPieSlider extends React.Component {
     render() {
         const { classes } = this.props;
         var settings = {
@@ -44,9 +44,9 @@ class ChildTeacherBehaviorSlider extends React.Component {
     }
 }
 
-ChildTeacherBehaviorSlider.propTypes = {
+ChildTeacherBehaviorPieSlider.propTypes = {
     classes: PropTypes.object.isRequired,
     data: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ChildTeacherBehaviorSlider);
+export default withStyles(styles)(ChildTeacherBehaviorPieSlider);

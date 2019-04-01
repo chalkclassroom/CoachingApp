@@ -85,7 +85,7 @@ const styles = {
 
 const ViewEnum = {
   SUMMARY: 1,
-  LIST: 2,
+  DETAILS: 2,
   TRENDS: 3,
   NOTES: 4,
   NEXT_STEPS: 5
