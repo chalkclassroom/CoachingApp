@@ -116,7 +116,7 @@ const transitionNotes = [
     createNotesData("09:56", "Close down center conflict")
 ];
 
-class AssociativeCooperativeResults extends React.Component {
+class AssociativeCooperativeInteractionsResults extends React.Component {
     constructor(props) {
         super(props);
         this.handleAppend = this.handleAppend.bind(this);
@@ -398,8 +398,8 @@ class AssociativeCooperativeResults extends React.Component {
     }
 }
 
-AssociativeCooperativeResults.propTypes = {
+AssociativeCooperativeInteractionsResults.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(AssociativeCooperativeResults);
+export default withStyles(styles)(AssociativeCooperativeInteractionsResults);
