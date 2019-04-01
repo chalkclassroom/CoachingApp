@@ -121,6 +121,10 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
     };
 
     handleToggle = value => () => {
+        if (value <= 4 && this.childDisabled()
+            || value >= 5 && this.teacherDisabled()){
+            return;
+        }
         const { checked } = this.state;
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
@@ -156,7 +160,7 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                 // If there are teacher ratings checked, remove them
                 if (checked.indexOf(i) !== -1){
                     let currentIndex = checked.indexOf(i);
-                    newChecked.splice(currentIndex, 1);
+                    newChecked.splice(currentIndex);
                 }
             }
             this.setState({ checked: newChecked});
@@ -173,7 +177,7 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                 // If there are teacher ratings checked, remove them
                 if (checked.indexOf(i) !== -1){
                     let currentIndex = checked.indexOf(i);
-                    newChecked.splice(currentIndex, 1);
+                    newChecked.splice(currentIndex);
                 }
             }
             this.setState({ checked: newChecked});
@@ -216,11 +220,10 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                 )}
                 <Dialog open={this.state.timeUpOpen}
                         onClose={this.handleTimeUpClose} aria-labelledby="simple-dialog-title">
-                    <DialogTitle id="simple-dialog-title">Time's Up</DialogTitle>
+                    <DialogTitle id="simple-dialog-title">Don't forget to circulate!</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            You've spent one minute observing this center. It may
-                            be time to finalize your responses and move on to the next center.
+                            You've been at the Writing center for 1 minute.
                         </DialogContentText>
                     </DialogContent>
                 </Dialog>
