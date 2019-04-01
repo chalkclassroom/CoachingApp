@@ -18,6 +18,12 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener/ClickAwayList
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
 import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
 import Card from "@material-ui/core/Card/Card";
+import Line from "rc-progress/es/Line";
+import ms from "pretty-ms";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 
 const styles = ({
     root: {
@@ -39,6 +45,9 @@ const TeacherChildEnum = {
     CHILD_2_TEACHER: 4
 };
 
+const RATING_INTERVAL = 60000;
+const TEN_PERCENT = 0.1 * RATING_INTERVAL;
+
 class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
     state = {
         auth: true,
@@ -46,10 +55,40 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
         help: false,
         ratings: [],
         checked: [0],
-        people: undefined
+        people: undefined,
+        time: RATING_INTERVAL,
+        timeUpOpen: false,
+        peopleWarning: false
     };
+    tick = () => {
+        if (this.state.time <= 0) {
+            this.handleTimeUpNotification();
+            this.setState({ time: RATING_INTERVAL });
+        } else {
+            if (this.state.time - 1000 < 0) {
+                this.setState({ time: 0 });
+            } else {
+                this.setState({ time: this.state.time - 1000 });
+            }
+        }
+    };
+    componentDidMount() {
+        this.timer = setInterval(this.tick, 1000);
+    }
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
     handleHelpModal = () => {
         this.setState({ help: true });
+    };
+    handleTimeUpNotification = () => {
+        this.setState({ timeUpOpen: true });
+    };
+    handleTimeUpClose = () => {
+        this.setState({ timeUpOpen: false });
+    };
+    handlePeopleWarningClose = () => {
+        this.setState({ peopleWarning: false });
     };
     handleClickAway = () => {
         this.setState({ help: false });
@@ -61,22 +100,6 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
             this.setState({ notes: false });
         }
     };
-    handleRatingConfirmation = rating => {
-        this.setState({ ratingIsOpen: false });
-
-        /* from RatingModal for ClassroomClimate
-
-        this.props.appendClimateRating(rating);
-
-        let entry = {
-            BehaviorResponse: rating,
-            Type: "Rating",
-            ratingInterval: RATING_INTERVAL
-        };
-        let firebase = this.context;
-        firebase.handlePushFireStore(entry);
-        */
-    };
 
     handleBackButton = () => {
         this.props.history.push({
@@ -85,14 +108,19 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
         });
     };
 
-    handleToggle = value => () => {
-        // If checkbox pressed is currently disabled
-        // This doesn't work idk why
-        if ((value === this.childValue(value) && this.childDisabled())
-            || (value === this.teacherValue(value) && this.teacherDisabled())) {
-            return;
-        }
+    handleSubmit = () => {
+        if (this.state.people === undefined){
+            this.setState({ peopleWarning: true});
 
+        }else {
+            this.props.history.push({
+                pathname: "/AssociativeCooperativeInteractions",
+                state: this.props.history.state
+            });
+        }
+    };
+
+    handleToggle = value => () => {
         const { checked } = this.state;
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
@@ -118,23 +146,37 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
             || this.state.people === undefined;
     };
 
-    childValue = value => {
-      return value >= 1 && value <= 4;
-    };
-
-    teacherValue = value => {
-        return value >= 5 && value <= 8;
-    };
-
     handleChild1Click = () => {
         if (this.state.people !== TeacherChildEnum.CHILD_1) {
             this.setState({ people: TeacherChildEnum.CHILD_1});
+
+            const { checked } = this.state;
+            const newChecked = [...checked];
+            for (let i = 5; i <= 8; i++){
+                // If there are teacher ratings checked, remove them
+                if (checked.indexOf(i) !== -1){
+                    let currentIndex = checked.indexOf(i);
+                    newChecked.splice(currentIndex, 1);
+                }
+            }
+            this.setState({ checked: newChecked});
         }
     };
 
     handleChild2Click = () => {
         if (this.state.people !== TeacherChildEnum.CHILD_2) {
             this.setState({ people: TeacherChildEnum.CHILD_2});
+
+            const { checked } = this.state;
+            const newChecked = [...checked];
+            for (let i = 5; i <= 8; i++){
+                // If there are teacher ratings checked, remove them
+                if (checked.indexOf(i) !== -1){
+                    let currentIndex = checked.indexOf(i);
+                    newChecked.splice(currentIndex, 1);
+                }
+            }
+            this.setState({ checked: newChecked});
         }
     };
 
@@ -172,11 +214,31 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                         ) :
                         <div/>
                 )}
+                <Dialog open={this.state.timeUpOpen}
+                        onClose={this.handleTimeUpClose} aria-labelledby="simple-dialog-title">
+                    <DialogTitle id="simple-dialog-title">Time's Up</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            You've spent one minute observing this center. It may
+                            be time to finalize your responses and move on to the next center.
+                        </DialogContentText>
+                    </DialogContent>
+                </Dialog>
+                <Dialog open={this.state.peopleWarning}
+                        onClose={this.handlePeopleWarningClose} aria-labelledby="simple-dialog-title">
+                    <DialogTitle id="simple-dialog-title">Wait!</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Please select the number of children and teachers at
+                            the center before submitting your rating.
+                        </DialogContentText>
+                    </DialogContent>
+                </Dialog>
                 <main >
                     <Grid alignItems={"center"} direction={"row"} justify={"center"}>
                         <Grid>
                             <Button size={"small"}
-                                onClick={this.handleBackButton}>
+                                    onClick={this.handleBackButton}>
                                 <KeyboardArrowLeft/>
                                 Back
                             </Button>
@@ -239,7 +301,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                                       disabled={this.childDisabled()}>
                                                 <Checkbox
                                                     checked={!this.childDisabled()
-                                                    && this.state.checked.indexOf(1) !== -1}/>
+                                                    && this.state.checked.indexOf(1) !== -1}
+                                                    disabled={this.childDisabled()}/>
                                                 <ListItemText>
                                                     <b>Talking</b> to adult or peer about <b>current activity</b>
                                                 </ListItemText>
@@ -248,7 +311,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                                       disabled={this.childDisabled()}>
                                                 <Checkbox
                                                     checked={!this.childDisabled()
-                                                    && this.state.checked.indexOf(2) !== -1}/>
+                                                    && this.state.checked.indexOf(2) !== -1}
+                                                    disabled={this.childDisabled()}/>
                                                 <ListItemText>
                                                     Engaging <b>together</b> in an <b>open-ended activity</b> without clear roles or order
                                                 </ListItemText>
@@ -257,7 +321,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                                       disabled={this.childDisabled()}>
                                                 <Checkbox
                                                     checked={!this.childDisabled()
-                                                    && this.state.checked.indexOf(3) !== -1}/>
+                                                    && this.state.checked.indexOf(3) !== -1}
+                                                    disabled={this.childDisabled()}/>
                                                 <ListItemText>
                                                     Following <b>formal rules of a game</b> and/or taking turns
                                                 </ListItemText>
@@ -266,7 +331,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                                       disabled={this.childDisabled()}>
                                                 <Checkbox
                                                     checked={!this.childDisabled()
-                                                    && this.state.checked.indexOf(4) !== -1}/>
+                                                    && this.state.checked.indexOf(4) !== -1}
+                                                    disabled={this.childDisabled()}/>
                                                 <ListItemText>
                                                     Speaking or acting according to a <b>predetermined scenario</b> (e.g., restaurant, grocery store)
                                                 </ListItemText>
@@ -284,7 +350,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                                       disabled={this.teacherDisabled()}>
                                                 <Checkbox
                                                     checked={!this.teacherDisabled()
-                                                    && this.state.checked.indexOf(5) !== -1}/>
+                                                    && this.state.checked.indexOf(5) !== -1}
+                                                    disabled={this.teacherDisabled()}/>
                                                 <ListItemText>
                                                     <b>Participating</b> in children’s play
                                                 </ListItemText>
@@ -293,7 +360,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                                       disabled={this.teacherDisabled()}>
                                                 <Checkbox
                                                     checked={!this.teacherDisabled()
-                                                    && this.state.checked.indexOf(6) !== -1}/>
+                                                    && this.state.checked.indexOf(6) !== -1}
+                                                    disabled={this.teacherDisabled()}/>
                                                 <ListItemText>
                                                     <b>Asking questions</b> to check for understanding or extend children’s thinking
                                                 </ListItemText>
@@ -302,7 +370,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                                       disabled={this.teacherDisabled()}>
                                                 <Checkbox
                                                     checked={!this.teacherDisabled()
-                                                    && this.state.checked.indexOf(7) !== -1}/>
+                                                    && this.state.checked.indexOf(7) !== -1}
+                                                    disabled={this.teacherDisabled()}/>
                                                 <ListItemText>
                                                     <b>Encouraging</b> children to <b>share</b>,
                                                     <b>work</b>, or <b>interact</b> with each other
@@ -312,7 +381,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                                       disabled={this.teacherDisabled()}>
                                                 <Checkbox
                                                     checked={!this.teacherDisabled()
-                                                    && this.state.checked.indexOf(8) !== -1}/>
+                                                    && this.state.checked.indexOf(8) !== -1}
+                                                    disabled={this.teacherDisabled()}/>
                                                 <ListItemText>
                                                     Helping children find the <b>words to communicate</b>
                                                 </ListItemText>
@@ -320,7 +390,28 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                         </List>
                                     </Card>
                                 </Grid>
-                                <Grid xs={1}/>
+                                <Grid xs={1}>
+                                    <Line
+                                        style={{ transform: "rotate(270deg)" }}
+                                        percent={`${100 *
+                                        (this.state.time /
+                                            RATING_INTERVAL)}`}
+                                        strokeWidth="8"
+                                        strokeColor={
+                                            this.state.time > TEN_PERCENT
+                                                ? "#009365"
+                                                : "#E55529"
+                                        }
+                                    />
+                                    <div
+                                        style={{
+                                            paddingTop: 50,
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        {ms(this.state.time)}
+                                    </div>
+                                </Grid>
                             </Grid>
                             <Grid
                                 container
@@ -332,6 +423,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                                     variant={"contained"}
                                     color={"secondary"}
                                     style={{ margin: 10 }}
+                                    onClick={this.handleSubmit}
+                                    style={{marginTop:20}}
                                 >
                                     Submit
                                 </Button>

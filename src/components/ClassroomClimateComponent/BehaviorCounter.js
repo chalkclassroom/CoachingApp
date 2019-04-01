@@ -26,7 +26,7 @@ class BehaviorCounter extends React.Component {
             BehaviorResponse: entry,
             Type: this.props.climateType
         };
-        this.props.firebase.handlePushFireStore(mEntry);
+        this.props.firebase.handlePushClimate(mEntry);
         this.props.pushOntoClimateStack(mEntry);
     };
 
@@ -39,7 +39,7 @@ class BehaviorCounter extends React.Component {
         BehaviorResponse: "UNDO",
         Type: "UNDO"
       };
-      this.props.firebase.handlePushFireStore(mEntry);
+      this.props.firebase.handlePushClimate(mEntry);
     }
   };
 
