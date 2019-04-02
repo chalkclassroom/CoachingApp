@@ -14,6 +14,7 @@ import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
+import Typography from "@material-ui/core/Typography/Typography";
 
 const styles = {
     root: {
@@ -92,6 +93,7 @@ class TransitionTime extends React.Component {
                 )}
                 <main style={{flex: 1}}>
                     <Grid container spacing={16}>
+
                         <Grid item xs={4}>
                             <Grid
                                 container

@@ -33,7 +33,7 @@ const styles = theme => ({
     "&$iOSChecked": {
       color: theme.palette.common.white,
       "& + $iOSBar": {
-        backgroundColor: "#74B9FF"
+        backgroundColor: "#4FD9B3"
       }
     },
     transition: theme.transitions.create("transform", {
@@ -56,7 +56,7 @@ const styles = theme => ({
     marginLeft: -21,
     border: "solid 1px",
     borderColor: theme.palette.grey[400],
-    backgroundColor: "#81ECEC",
+    backgroundColor: "#094492",
     opacity: 1,
     transition: theme.transitions.create(["background-color", "border"])
   },

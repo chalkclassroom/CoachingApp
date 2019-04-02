@@ -15,15 +15,15 @@ import FirebaseContext from "../../../components/Firebase/context";
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: "#ff0000"
+            main: "#0988EC"
         },
         secondary: cyan
     }
 });
 
 const COLOR_1 = "#F9A796";
-const COLOR_2 = "#FFE79D";
-const COLOR_3 = "#4DEDBC";
+const COLOR_2 = "#E99C2E";
+const COLOR_3 = "#E55529";
 
 let getHexFromType = type => {
     switch (type) {
@@ -139,7 +139,7 @@ class TransitionTimer extends React.Component {
                         <div style={{ margin: 2 }} />
                         <Button
                             variant="contained"
-                            color="secondary"
+                            color="primary"
                             disabled={this.props.transitionType === null}
                             aria-label="Start"
                             onClick={this.onStart}

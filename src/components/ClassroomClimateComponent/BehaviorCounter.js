@@ -48,8 +48,8 @@ class BehaviorCounter extends React.Component {
       <g fill="rgba(255,255,255,0)" style={{
         stroke:
           this.props.climateType === "instruction"
-            ? "#76e9e9"
-            : "#68b0ff"
+            ? "#094492"
+            : "#4FD9B3"
       }} strokeWidth={30}>
         <path
           stroke="none"
@@ -63,7 +63,7 @@ class BehaviorCounter extends React.Component {
       <g data-name="Group 1" onClick={() =>
         this.handlePushFire("specificapproval")
       }>
-        <g data-name="Rectangle 2" fill="#55efc4" stroke="#fff" strokeWidth={2}>
+        <g data-name="Rectangle 2" fill="#009365" stroke="#fff" strokeWidth={2}>
           <path stroke="none" d="M207.843 19.553h150v150h-150z"/>
           <path fill="none" d="M208.843 20.553h148v148h-148z"/>
         </g>
@@ -83,7 +83,7 @@ class BehaviorCounter extends React.Component {
           {"Approval"}
         </tspan>
       </text>
-      <g data-name="Path 2" fill="#ff7675" onClick={() =>
+      <g data-name="Path 2" fill="#E55529" onClick={() =>
         this.handlePushFire("disapproval")
       }>
         <path d="M356.843 544.553h-148v-148h148v148z"/>
@@ -104,7 +104,7 @@ class BehaviorCounter extends React.Component {
           {"Disapproval"}
         </tspan>
       </text>
-      <g data-name="Rectangle 4" fill="#fab1a0" stroke="#fff" strokeWidth={2} onClick={() =>
+      <g data-name="Rectangle 4" fill="#E99C2E" stroke="#fff" strokeWidth={2} onClick={() =>
         this.handlePushFire("redirection")}>
         <path stroke="none" d="M42.843 213.553h150v150h-150z"/>
         <path fill="none" d="M43.843 214.553h148v148h-148z"/>
@@ -121,7 +121,7 @@ class BehaviorCounter extends React.Component {
         </tspan>
       </text>
       <g>
-        <g data-name="Path 1" fill="#fede78" onClick={() =>
+        <g data-name="Path 1" fill="#FFD300" onClick={() =>
           this.handlePushFire("nonspecificapproval")
         }>
           <path d="M522.843 362.553h-148v-148h148v148z"/>
