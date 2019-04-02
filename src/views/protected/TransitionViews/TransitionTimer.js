@@ -10,6 +10,7 @@ import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import { connect } from "react-redux";
 import { pushOntoTransitionStack } from "../../../state/actions/transition-time";
+import FirebaseContext from "../../../components/Firebase/context";
 
 const theme = createMuiTheme({
     palette: {
@@ -28,9 +29,9 @@ let getHexFromType = type => {
     switch (type) {
         case "Wait Time":
             return COLOR_1;
-        case "Inside Classroom":
+        case "inside":
             return COLOR_2;
-        case "Outside Classroom":
+        case "outside":
             return COLOR_3;
         default:
             return "#FFFFFF";
@@ -44,7 +45,7 @@ class TransitionTimer extends React.Component {
         let mEntry = {
             teacher: this.props.teacherId,
             observedBy: this.props.firebase.auth.currentUser.uid,
-            type: "Transition"
+            type: "transition"
         };
         this.props.firebase.handleSession(mEntry);
     }
@@ -63,8 +64,8 @@ class TransitionTimer extends React.Component {
                 clearInterval(this.timer);
                 let end = new Date();
                 let entry = {
-                    start: this.state.start.toLocaleString(),
-                    end: end.toLocaleString(),
+                    start: this.state.start.toISOString(),
+                    end: end.toISOString(),
                     duration: ms(this.state.time),
                     transitionType: this.props.transitionType
                 };
@@ -97,7 +98,9 @@ class TransitionTimer extends React.Component {
 
     handleAppend = entry => {
         this.props.pushOntoTransitionStack(entry);
-        this.props.firebase.handlePushTransition(entry)
+        console.log(this.props.firebase);
+        let firebase = this.context;
+        firebase.handlePushTransition(entry);
     };
 
     render() {
@@ -171,7 +174,7 @@ const mapStateToProps = state => {
         transitionType: state.transitionTypeState.transitionType
     };
 };
-
+TransitionTimer.contextType = FirebaseContext;
 export default connect(
     mapStateToProps,
     { pushOntoTransitionStack }

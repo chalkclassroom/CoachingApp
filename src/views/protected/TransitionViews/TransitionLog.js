@@ -22,11 +22,9 @@ const styles = theme => ({
 
 let getHexFromType = type => {
     switch (type) {
-        case "Wait Time":
-            return COLOR_1;
-        case "Inside Classroom":
+        case "inside":
             return COLOR_2;
-        case "Outside Classroom":
+        case "outside":
             return COLOR_3;
         default:
             return "#FFFFFF";
@@ -65,11 +63,11 @@ const TransitionLog = ({ entries, classes }) => {
                                         )
                                     }}
                                 >
-                                    {entry.end}
+                                    {new Date(entry.end).toLocaleString()}
                                     <br />
                                     Duration:{entry.duration}
                                     <br />
-                                    Type:{entry.transitionType}
+                                    Type:{entry.transitionType === 'inside' ? "Inside Classroom" : "Outside Classroom"}
                                 </ListItem>
                             </React.Fragment>
                         ))}

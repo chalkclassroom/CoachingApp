@@ -190,7 +190,7 @@ class Firebase {
     };
 
     handlePushTransition = async mEntry => {
-        console.log("calling handlePushTransition");
+      console.log("Type: ", mEntry.transitionType);
         const userRef = this.sessionRef.collection("entries").add({
             TrnStart: mEntry.start,
             TrnEnd: mEntry.end,

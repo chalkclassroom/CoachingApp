@@ -47,11 +47,11 @@ class TransitionType extends React.Component {
 
     const transitionTypes = [
       {
-        name: "Inside Classroom",
+        name: "inside",
         color: COLOR_2
       },
       {
-        name: "Outside Classroom",
+        name: "outside",
         color: COLOR_3
       }
     ];
@@ -68,7 +68,7 @@ class TransitionType extends React.Component {
                   style={{ maxWidth: 100, minHeight: 67 }}
                   onClick={() => this.props.toggleNewTransitionType(type.name)}
                 >
-                  {type.name}
+                  {type.name === 'inside' ? "Inside Classroom" : "Outside Classroom"}
                 </Button>
               </MuiThemeProvider>
             </Grid>
