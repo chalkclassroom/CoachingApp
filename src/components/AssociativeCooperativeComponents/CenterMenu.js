@@ -10,10 +10,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import ChildTeacherBehaviorsDuringCentersRating from "./ChildTeacherBehaviorsDuringCentersRating";
 import {
   addNewCenter,
   incrementCenterCount
 } from "../../state/actions/associative-cooperative";
+
+// TODO: X in top right corner, press and hold to remove/edit the center.
 
 const styles = theme => ({
   root: {
@@ -91,7 +94,9 @@ class NewCenterDialog extends React.Component {
 
 class CenterMenu extends React.Component {
   state = {
-    addDialog: false
+    addDialog: false,
+    ratingScreen: false,
+    currentCenter: undefined
   };
 
   handleClickOpen = () => {
@@ -102,6 +107,10 @@ class CenterMenu extends React.Component {
     this.setState({ addDialog: false });
   };
 
+  toggleRatingScreen = () => {
+    this.setState({ ratingScreen: !this.state.ratingScreen });
+  };
+
   handleAddCenter = centerName => {
     this.props.addNewCenter(centerName);
     this.handleClose();
@@ -109,53 +118,59 @@ class CenterMenu extends React.Component {
 
   // Entry point for a center visit.
   handleCenterVisit = centerName => {
-    let success = true;
-    /*
-      Add logic here for the center rating pop up. 
-      If the submission succeeds, then we call finishCenterVisit to add to the visit count.
-    */
-    if (success) {
-      this.finishCenterVisit(centerName);
-    }
+    this.toggleRatingScreen();
+    this.setState({ currentCenter: centerName });
   };
 
   // Exit point for a center visit.
   finishCenterVisit = centerName => {
-    this.props.incrementCenterCount(centerName);
+    if (centerName !== undefined) {
+      this.props.incrementCenterCount(centerName);
+    }
   };
 
   render() {
-    return (
-      <Grid container spacing={40}>
-        <NewCenterDialog
-          open={this.state.addDialog}
-          handleClose={this.handleClose}
-          handleSubmit={this.handleAddCenter}
+    if (this.state.ratingScreen) {
+      return (
+        <ChildTeacherBehaviorsDuringCentersRating
+          currentCenter={this.state.currentCenter}
+          toggleScreen={this.toggleRatingScreen}
+          finishVisit={centerName => this.finishCenterVisit(centerName)}
         />
-        {this.props.centers.map((center, index) => (
+      );
+    } else {
+      return (
+        <Grid container spacing={40}>
+          <NewCenterDialog
+            open={this.state.addDialog}
+            handleClose={this.handleClose}
+            handleSubmit={this.handleAddCenter}
+          />
+          {this.props.centers.map((center, index) => (
+            <Grid item xs={3}>
+              <VisitCenterButton
+                centerName={center.name}
+                visitCount={center.count}
+                onClick={() => this.handleCenterVisit(center.name)}
+              />
+            </Grid>
+          ))}
           <Grid item xs={3}>
-            <VisitCenterButton
-              centerName={center.name}
-              visitCount={center.count}
-              onClick={() => this.handleCenterVisit(center.name)}
-            />
+            <Button
+              variant="contained"
+              style={{
+                minHeight: 150,
+                minWidth: 150,
+                backgroundColor: grey[400]
+              }}
+              onClick={this.handleClickOpen}
+            >
+              Add Center <br /> <br /> +
+            </Button>
           </Grid>
-        ))}
-        <Grid item xs={3}>
-          <Button
-            variant="contained"
-            style={{
-              minHeight: 150,
-              minWidth: 150,
-              backgroundColor: grey[400]
-            }}
-            onClick={this.handleClickOpen}
-          >
-            Add Center <br /> <br /> +
-          </Button>
         </Grid>
-      </Grid>
-    );
+      );
+    }
   }
 }
 

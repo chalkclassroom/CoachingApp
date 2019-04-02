@@ -96,10 +96,10 @@ class AssociativeCooperativeInteractions extends React.Component {
                         justify={"center"}
                         direction={"row"}
                     >
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
                             <div>Placeholder for sidebar</div>
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={10}>
                             <CenterMenu/>
                         </Grid>
                     </Grid>
