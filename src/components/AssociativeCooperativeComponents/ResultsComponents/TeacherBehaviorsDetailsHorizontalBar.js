@@ -12,16 +12,17 @@ const styles = {
  * @type {{datasets: *[], labels: string[][]}}
  */
 const teacherBehaviorsData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: ['Participating in children’s play',
+        'Asking questions to check for understanding or extend children’s thinking',
+        'Encouraging children to share, work, or interact with each other',
+        'Helping children find the words to communicate'],
     datasets: [
         {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            borderColor: 'rgba(255,99,132,1)',
-            borderWidth: 1,
-            hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-            hoverBorderColor: 'rgba(255,99,132,1)',
-            data: [65, 59, 80, 81, 56, 55, 40]
+            label: 'Interactions',
+            backgroundColor: '#90c4ed',
+            borderColor: '#0988EC',
+            borderWidth: 2,
+            data: [65, 59, 80, 81]
         }
     ]
 };

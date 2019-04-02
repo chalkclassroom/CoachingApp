@@ -1,10 +1,31 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
-import { VictoryPie } from "victory-pie";
+import { Pie } from "react-chartjs-2";
 
 const styles = {
     //idk how this works
+};
+
+const transitionData = {
+    labels: [
+        'Inside Transition',
+        'Outside Transition',
+        'Learning Activity (No Transition)'
+    ],
+    datasets: [{
+        data: [300, 50, 100],
+        backgroundColor: [
+            '#E99C2E',
+            '#E55529',
+            '#0988EC'
+        ],
+        hoverBackgroundColor: [
+            '#E99C2E',
+            '#E55529',
+            '#0988EC'
+        ]
+    }]
 };
 
 class TransitionTimePie extends React.Component {
@@ -12,29 +33,9 @@ class TransitionTimePie extends React.Component {
         const { classes } = this.props;
 
         return (
-            <VictoryPie
-                data={[
-                    {
-                        x: "Inside Transition\n(17%)",
-                        y: 15
-                    },
-                    {
-                        x: "Outside Transition\n(17%)",
-                        y: 12
-                    },
-                    {
-                        x: "Non-Transition\n(17%)",
-                        y: 47
-                    }
-                ]}
-                colorScale={["#E99C2E", "#E55529", "#0988EC"]}
-                labelRadius={60}
-                style={{
-                    labels: {
-                        fill: "white",
-                        fontSize: 12
-                    }
-                }}
+            <Pie data={transitionData}
+                 width="650"
+                 height="400"
             />
         );
     }

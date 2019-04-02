@@ -12,16 +12,17 @@ const styles = {
  * @type {{datasets: *[], labels: string[][]}}
  */
 const childBehaviorsData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: ['Talking to each other about current activity',
+        'Engaging in pretend play without clear roles or order',
+        'Following formal rules and/or taking turns',
+        'Speaking or acting in character during a clear pretend play scenario'],
     datasets: [
         {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            borderColor: 'rgba(255,99,132,1)',
-            borderWidth: 1,
-            hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-            hoverBorderColor: 'rgba(255,99,132,1)',
-            data: [65, 59, 80, 81, 56, 55, 40]
+            label:'Number of Times Oberserved',
+            backgroundColor: '#a086c9',
+            borderColor: '#6F39C4',
+            borderWidth: 2,
+            data: [65, 59, 80, 81]
         }
     ]
 };

@@ -21,9 +21,9 @@ import { ImmortalDB } from "immortal-db";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import 'chartjs-plugin-datalabels';
 import ChildTeacherBehaviorSlider
-    from "../../../components/AssociativeCooperativeComponents/ChildTeacherBehaviorPieSlider";
+    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
 import ChildTeacherBehaviorDetailsSlider
-    from "../../../components/AssociativeCooperativeComponents/ChildTeacherBehaviorDetailsSlider";
+    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
 
 
 const styles = {

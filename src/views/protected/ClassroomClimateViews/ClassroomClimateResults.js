@@ -15,19 +15,11 @@ import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
-import { VictoryPie } from "victory-pie";
-import exNegativeFace from "../../../assets/icons/1-ex-negative-cqref.png";
-import negativeFace from "../../../assets/icons/2-negative-cqref.png";
-import flatFace from "../../../assets/icons/3-flat-cqref.png";
-import pleasantFace from "../../../assets/icons/4-pleasant-cqref.png";
-import vibrantFace from "../../../assets/icons/5-vibrant-cqref.png";
 import moment from 'moment';
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
 import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
 import AverageToneRating from "../../../components/ResultsComponents/AverageToneRating.js";
 import ClimateTrendsGraph from "../../../components/ResultsComponents/ClimateTrendsGraph.js";
-import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter.js";
-
 
 const styles = {
     root: {
