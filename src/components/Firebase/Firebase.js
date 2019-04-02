@@ -190,6 +190,7 @@ class Firebase {
     };
 
     handlePushTransition = async mEntry => {
+        console.log("calling handlePushTransition");
         const userRef = this.sessionRef.collection("entries").add({
             TrnStart: mEntry.start,
             TrnEnd: mEntry.end,
@@ -245,18 +246,18 @@ class Firebase {
             });
     };
 
-    fetchClimateSessionDates = async teacherId => {
-        var getClimateSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
-
-        return getClimateSessionDatesFirebaseFunction({teacherId: teacherId}).then(function (result) {
-            // Read result of the Cloud Function.
-            var sanitizedMessage = result.data[0];
-            console.log(sanitizedMessage);
-            return sanitizedMessage;
-
-        });
-
-    };
+    // fetchClimateSessionDates = async teacherId => {
+    //     var getClimateSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
+    //
+    //     return getClimateSessionDatesFirebaseFunction({teacherId: teacherId}).then(function (result) {
+    //         // Read result of the Cloud Function.
+    //         var sanitizedMessage = result.data[0];
+    //         console.log(sanitizedMessage);
+    //         return sanitizedMessage;
+    //
+    //     });
+    //
+    // };
 
     fetchAvgToneRating = async sessionId => {
         var getAvgToneRatingFirebaseFunction = this.functions.httpsCallable('funcAvgToneRating');
@@ -296,10 +297,10 @@ class Firebase {
 
     };
 
-    fetchTransitionSessionDates = async teacherId => {
+    fetchSessionDates = async (teacherId, sessionType) => {
         var getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
 
-        return getTransitionSessionDatesFirebaseFunction({teacherId: teacherId}).then(function (result) {
+        return getTransitionSessionDatesFirebaseFunction({teacherId: teacherId, type: sessionType}).then(function (result) {
             // Read result of the Cloud Function.
             var sanitizedMessage = result.data[0];
             console.log(sanitizedMessage);
