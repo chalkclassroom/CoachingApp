@@ -1,16 +1,16 @@
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
-import grey from "@material-ui/core/colors/grey";
-import TextField from "@material-ui/core/TextField";
+import ChildTeacherBehaviorsDuringCentersRating from "./ResultsComponents/ChildTeacherBehaviorsDuringCentersRating";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import ChildTeacherBehaviorsDuringCentersRating from "./ResultsComponents/ChildTeacherBehaviorsDuringCentersRating";
+import Grid from "@material-ui/core/Grid";
+import React from "react";
+import TextField from "@material-ui/core/TextField";
+import grey from "@material-ui/core/colors/grey";
+import { connect } from "react-redux";
+import { withStyles } from "@material-ui/core/styles";
 import {
   addNewCenter,
   incrementCenterCount
