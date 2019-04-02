@@ -253,8 +253,8 @@ class ClassroomClimateResults extends React.Component {
             dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
             posArray.push(data.positive);
             negArray.push(data.negative);
-            posBkgColor.push('#008000');
-            negBkgColor.push('#FF0000');
+            posBkgColor.push('#009365');
+            negBkgColor.push('#E55529');
           });
           this.setState({
             trendsDates: dateArray,

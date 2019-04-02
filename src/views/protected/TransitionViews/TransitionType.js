@@ -11,8 +11,8 @@ import { connect } from "react-redux";
 import { toggleNewTransitionType } from "../../../state/actions/transition-time";
 
 // const COLOR_1 = "#F9A796";
-const COLOR_2 = "#FFE79D";
-const COLOR_3 = "#4DEDBC";
+const COLOR_2 = "#E99C2E";
+const COLOR_3 = "#E55529";
 
 const styles = theme => ({
   root: {
