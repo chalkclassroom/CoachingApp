@@ -197,36 +197,36 @@ class TransitionResults extends React.Component {
     this.setState({ dbCounter: this.state.dbCounter + 1 });
   };
 
-  handleSpreadsheetAppend = entry => {
-    let url = new URL(spreadsheetData.scriptLink),
-      params = {
-        sheet: "TransitionTime",
-        del: "false",
-        TrnStart: entry.start,
-        TrnEnd: entry.end,
-        TrnDur: entry.duration,
-        TrnType: entry.type,
-        TeacherID: this.props.location.state.key.id
-      };
-    Object.keys(params).forEach(key =>
-      url.searchParams.append(key, params[key])
-    );
-    fetch(url, {
-      method: "POST",
-      credentials: "include",
-      mode: "no-cors",
-      headers: {
-        "content-type": "application/json"
-      }
-    })
-      .then(response => console.log("Success"))
-      .catch(error => console.error("Error:", error));
-  };
+  // handleSpreadsheetAppend = entry => {
+  //   let url = new URL(spreadsheetData.scriptLink),
+  //     params = {
+  //       sheet: "TransitionTime",
+  //       del: "false",
+  //       TrnStart: entry.start,
+  //       TrnEnd: entry.end,
+  //       TrnDur: entry.duration,
+  //       TrnType: entry.type,
+  //       TeacherID: this.props.location.state.key.id
+  //     };
+  //   Object.keys(params).forEach(key =>
+  //     url.searchParams.append(key, params[key])
+  //   );
+  //   fetch(url, {
+  //     method: "POST",
+  //     credentials: "include",
+  //     mode: "no-cors",
+  //     headers: {
+  //       "content-type": "application/json"
+  //     }
+  //   })
+  //     .then(response => console.log("Success"))
+  //     .catch(error => console.error("Error:", error));
+  // };
 
 
   handleTrendsFetch = (teacherId) => {
     let firebase = this.context;
-    firebase.fetchTransitionSessionDates(teacherId).then(dataSet => {
+    firebase.fetchSessionDates(teacherId, 'transition').then(dataSet => {
 
     });
   };
@@ -264,7 +264,7 @@ class TransitionResults extends React.Component {
   handleDateFetching = (teacherId) => {
     console.log("handle date fetching called");
     let firebase = this.context;
-    firebase.fetchTransitionSessionDates(teacherId).then(dates=>this.setState({
+    firebase.fetchSessionDates(teacherId, 'transition').then(dates=>this.setState({
       sessionDates: dates
     }));
 
