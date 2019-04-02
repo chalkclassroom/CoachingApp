@@ -232,7 +232,7 @@ class ClassroomClimateResults extends React.Component {
       handleDateFetching = (teacherId) => {
         console.log("handle date fetching called");
         let firebase = this.context;
-        firebase.fetchClimateSessionDates(teacherId).then(dates=>this.setState({
+        firebase.fetchSessionDates(teacherId, 'climate').then(dates=>this.setState({
           sessionDates: dates
         }));
 
