@@ -1,28 +1,27 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button/Button";
-import List from "@material-ui/core/List/List";
-import ListItem from "@material-ui/core/ListItem/ListItem";
-import Checkbox from "@material-ui/core/Checkbox/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText/ListItemText";
-import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
 import Card from "@material-ui/core/Card/Card";
-import Line from "rc-progress/es/Line";
-import ms from "pretty-ms";
+import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import Grid from "@material-ui/core/Grid";
+import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
+import Line from "rc-progress/es/Line";
+import List from "@material-ui/core/List/List";
+import ListItem from "@material-ui/core/ListItem/ListItem";
+import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import PropTypes from "prop-types";
+import React from "react";
+import Typography from "@material-ui/core/Typography";
+import ms from "pretty-ms";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = {
   root: {
     flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    minHeight: "100vh",
     flexDirection: "column"
   },
   grow: {
@@ -460,7 +459,6 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                 <Button
                   variant={"contained"}
                   color={"secondary"}
-                  style={{ margin: 10 }}
                   onClick={this.handleSubmit}
                   style={{ marginTop: 20 }}
                 >

@@ -1,16 +1,16 @@
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import { withStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
-import grey from "@material-ui/core/colors/grey";
-import TextField from "@material-ui/core/TextField";
+import ChildTeacherBehaviorsDuringCentersRating from "./ResultsComponents/ChildTeacherBehaviorsDuringCentersRating";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import ChildTeacherBehaviorsDuringCentersRating from "./ResultsComponents/ChildTeacherBehaviorsDuringCentersRating";
+import Grid from "@material-ui/core/Grid";
+import React from "react";
+import TextField from "@material-ui/core/TextField";
+import grey from "@material-ui/core/colors/grey";
+import { connect } from "react-redux";
+import { withStyles } from "@material-ui/core/styles";
 import {
   addNewCenter,
   incrementCenterCount
@@ -23,7 +23,6 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    minHeight: "100vh",
     flexDirection: "column"
   },
   grow: {
@@ -140,14 +139,20 @@ class CenterMenu extends React.Component {
       );
     } else {
       return (
-        <Grid container spacing={40}>
+        <Grid
+          container
+          spacing={16}
+          justify="flex-start"
+          alignItems="center"
+          direction="row"
+        >
           <NewCenterDialog
             open={this.state.addDialog}
             handleClose={this.handleClose}
             handleSubmit={this.handleAddCenter}
           />
           {this.props.centers.map((center, index) => (
-            <Grid item xs={3}>
+            <Grid item xs={3} style={{ textAlign: "center" }}>
               <VisitCenterButton
                 centerName={center.name}
                 visitCount={center.count}
@@ -155,7 +160,7 @@ class CenterMenu extends React.Component {
               />
             </Grid>
           ))}
-          <Grid item xs={3}>
+          <Grid item xs={3} style={{ textAlign: "center" }}>
             <Button
               variant="contained"
               style={{
