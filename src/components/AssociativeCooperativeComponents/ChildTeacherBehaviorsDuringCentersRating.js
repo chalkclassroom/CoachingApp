@@ -227,6 +227,9 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
                   this.props.currentCenter.substr(1)}
               </Typography>
               <div style={{ height: 20 }} />
+              <Typography variant={"subtitle2"} gutterBottom style={{marginLeft: -450}}>
+                Please select the number of children and teachers at the center:
+              </Typography>
               <Grid
                 container
                 direction={"row"}

@@ -97,13 +97,6 @@ class AssociativeCooperativeInteractions extends React.Component {
             justify={"center"}
             direction={"row"}
           >
-              <Typography variant={"h4"}
-                          alignItems={"center"}
-                          justify={"center"}
-                          style={{marginBottom: 30}}
-              >
-                  Associative & Cooperative Interactions
-              </Typography>
             <Grid item xs={12}>
               <CenterMenu />
             </Grid>
