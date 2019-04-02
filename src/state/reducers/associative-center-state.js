@@ -1,6 +1,7 @@
 import {
   ADD_NEW_CENTER,
-  UPDATE_CENTER_COUNT
+  UPDATE_CENTER_COUNT,
+  DELETE_ALL_CENTERS
 } from "../actions/associative-cooperative";
 
 const initialState = { associativeCenters: [] };
@@ -38,6 +39,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         associativeCenters: newCenters
+      };
+    case DELETE_ALL_CENTERS:
+      return {
+        ...state,
+        associativeCenters: []
       };
     default:
       return state;

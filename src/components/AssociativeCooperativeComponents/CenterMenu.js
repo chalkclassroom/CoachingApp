@@ -23,7 +23,6 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    minHeight: "100vh",
     flexDirection: "column"
   },
   grow: {
@@ -140,14 +139,20 @@ class CenterMenu extends React.Component {
       );
     } else {
       return (
-        <Grid container spacing={40}>
+        <Grid
+          container
+          spacing={16}
+          justify="flex-start"
+          alignItems="center"
+          direction="row"
+        >
           <NewCenterDialog
             open={this.state.addDialog}
             handleClose={this.handleClose}
             handleSubmit={this.handleAddCenter}
           />
           {this.props.centers.map((center, index) => (
-            <Grid item xs={3}>
+            <Grid item xs={3} style={{ textAlign: "center" }}>
               <VisitCenterButton
                 centerName={center.name}
                 visitCount={center.count}
@@ -155,7 +160,7 @@ class CenterMenu extends React.Component {
               />
             </Grid>
           ))}
-          <Grid item xs={3}>
+          <Grid item xs={3} style={{ textAlign: "center" }}>
             <Button
               variant="contained"
               style={{

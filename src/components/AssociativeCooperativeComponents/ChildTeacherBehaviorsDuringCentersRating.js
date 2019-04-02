@@ -22,7 +22,6 @@ const styles = {
     flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    minHeight: "100vh",
     flexDirection: "column"
   },
   grow: {
