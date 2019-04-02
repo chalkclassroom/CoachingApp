@@ -197,7 +197,7 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              You've been at the Writing center for 1 minute.
+              You've been at the {this.props.currentCenter} center for 1 minute.
             </DialogContentText>
           </DialogContent>
         </Dialog>
@@ -224,7 +224,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
             </Grid>
             <Grid container alignItems="center" direction="column" xs={12}>
               <Typography variant="h4" gutterBottom>
-                Writing
+                {this.props.currentCenter[0].toUpperCase() +
+                  this.props.currentCenter.substr(1)}
               </Typography>
               <div style={{ height: 20 }} />
               <Grid
