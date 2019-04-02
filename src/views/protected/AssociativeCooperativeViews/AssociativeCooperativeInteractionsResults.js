@@ -24,6 +24,9 @@ import ChildTeacherBehaviorSlider
     from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
 import ChildTeacherBehaviorDetailsSlider
     from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
+import ChildTeacherBehaviorTrendsSlider
+    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+
 
 
 const styles = {
@@ -380,8 +383,8 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                                             <ChildTeacherBehaviorDetailsSlider/>
                                         </div>
                                     ) : this.state.view === ViewEnum.TRENDS ? (
-                                        <div className={classes.resultsContent}
-                                        >
+                                        <div className={classes.resultsContent}>
+                                            <ChildTeacherBehaviorTrendsSlider/>
                                         </div>
                                     ) : this.state.view === ViewEnum.NOTES ? (
                                         <div className={classes.resultsContent}
