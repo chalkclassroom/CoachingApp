@@ -44,7 +44,18 @@ class TeacherBehaviorTrendsVerticalBar extends React.Component {
         return (
             <Bar data={teacherBehaviorsData}
                            width="650"
-                           height="400"/>
+                           height="400"
+                 options={{
+                     scales: {
+                         yAxes: [{
+                             ticks: {
+                                 suggestedMin: 0,
+                                 suggestedMax: 10
+                             }
+                         }]
+                     }
+                 }}
+            />
         );
     }
 }

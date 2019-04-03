@@ -33,7 +33,8 @@ const childBehaviorsData = {
 
         }
 
-    ]
+]
+
 };
 
 class ChildBehaviorTrendsVerticalBar extends React.Component {
@@ -43,7 +44,19 @@ class ChildBehaviorTrendsVerticalBar extends React.Component {
         return (
             <Bar data={childBehaviorsData}
                            width="650"
-                           height="400"/>
+                           height="400"
+                 options={{
+                     scales: {
+                         yAxes: [{
+                             ticks: {
+                                 suggestedMin: 0,
+                                 suggestedMax: 40
+                             }
+                         }]
+                     }
+                 }}
+            />
+
         );
     }
 }
