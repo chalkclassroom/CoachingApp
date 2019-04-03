@@ -96,7 +96,12 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
-      // NOTE(thomas): Add firebase submission logic here?
+      this.props.firebase.helloWorld();
+      let mEntry = {
+        checked: this.state.checked,
+        people: this.state.people
+      };
+      this.props.firebase.handlePushAC(mEntry);
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();
     }
