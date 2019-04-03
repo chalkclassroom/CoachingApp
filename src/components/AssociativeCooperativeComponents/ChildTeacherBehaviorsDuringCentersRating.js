@@ -96,7 +96,6 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
-      this.props.firebase.helloWorld();
       let mEntry = {
         checked: this.state.checked,
         people: this.state.people
