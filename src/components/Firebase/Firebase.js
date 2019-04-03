@@ -173,7 +173,7 @@ class Firebase {
     sessionRef;
 
     handleSession = async mEntry => {
-        this.sessionRef = this.db.collection("observationss").doc();
+        this.sessionRef = this.db.collection("observations").doc();
         this.sessionRef.set({
             observedBy: "/user/" + mEntry.observedBy,
             start: firebase.firestore.FieldValue.serverTimestamp(),
