@@ -1,5 +1,5 @@
 import Button from "@material-ui/core/Button";
-import ChildTeacherBehaviorsDuringCentersRating from "./ResultsComponents/ChildTeacherBehaviorsDuringCentersRating";
+import ChildTeacherBehaviorsDuringCentersRating from "./ChildTeacherBehaviorsDuringCentersRating";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
