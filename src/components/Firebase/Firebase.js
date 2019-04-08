@@ -189,8 +189,19 @@ class Firebase {
         });
     };
 
+    helloWorld = async () => {
+        alert("Hello World!!");
+    };
+
+    handlePushAC = async mEntry => {
+        const userRef = this.sessionRef.collection("entries").add({
+            Checked: mEntry.checked,
+            People: mEntry.people,
+            Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    };
+
     handlePushTransition = async mEntry => {
-      console.log("Type: ", mEntry.transitionType);
         const userRef = this.sessionRef.collection("entries").add({
             TrnStart: mEntry.start,
             TrnEnd: mEntry.end,
@@ -300,7 +311,10 @@ class Firebase {
     fetchSessionDates = async (teacherId, sessionType) => {
         var getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
 
-        return getTransitionSessionDatesFirebaseFunction({teacherId: teacherId, type: sessionType}).then(function (result) {
+        return getTransitionSessionDatesFirebaseFunction({
+            teacherId: teacherId,
+            type: sessionType
+        }).then(function (result) {
             // Read result of the Cloud Function.
             var sanitizedMessage = result.data[0];
             console.log(sanitizedMessage);

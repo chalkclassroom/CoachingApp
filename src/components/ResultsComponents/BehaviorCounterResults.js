@@ -42,7 +42,7 @@ class BehaviorCounterResults extends React.Component {
 
     else {
     return (
-      <Grid container direction={"column"} spacing={32}>
+      <Grid >
           <Grid item>
             <Pie
                data={{
