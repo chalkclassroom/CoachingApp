@@ -28,7 +28,6 @@ import TransitionTimePie from "../../../components/ResultsComponents/TransitionT
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import moment from 'moment';
 
-
 const styles = {
   root: {
     flexGrow: 1,
@@ -138,17 +137,16 @@ class TransitionResults extends React.Component {
     view: ViewEnum.SUMMARY,
     sessionId: null,
     sessionDates: [],
+    notes: []
   };
 
   componentDidMount() {
     console.log(this.props.location.state);
     console.log(this.context);
     let teacherId = this.props.location.state.teacher.id;
-    this.context.fetchTransitionTrend(teacherId);
-    console.log(this.props.location.state);
+    this.handleTrendsFetch(teacherId);
+
     this.handleDateFetching(this.props.location.state.teacher.id);
-    console.log(teacherId);
-    console.log("handle behavior count results fetching called");
   }
 
   handleAppend(entry) {
@@ -226,9 +224,41 @@ class TransitionResults extends React.Component {
 
   handleTrendsFetch = (teacherId) => {
     let firebase = this.context;
-    firebase.fetchSessionDates(teacherId, 'transition').then(dataSet => {
-
+    let dateArray = [];
+    let insideArray = [];
+    let outsideArray =[];
+    let totalArray = [];
+    firebase.fetchTransitionTrend(teacherId).then(dataSet => {
+        console.log("Trends dataSet", dataSet);
+        dataSet.map( data => {
+          dateArray.push(moment(data.date.value).format("MMM Do YYYY"));
+          insideArray.push(data.inside);
+          outsideArray.push(data.outside);
+          totalArray.push(data.total);
+        });
     });
+  };
+
+  handleNotesFetching = (sessionId) => {
+    let firebase = this.context;
+    firebase.handleFetchNotesResults(sessionId).then(
+      notesArr => {
+        console.log(notesArr);
+        let formattedNotesArr = [];
+        notesArr.map(note => {
+          let newTimestamp = new Date(note.timestamp.seconds*1000).toLocaleString("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true
+          });
+          formattedNotesArr.push({id: note.id, content: note.content, timestamp: newTimestamp})
+        });
+        console.log(formattedNotesArr);
+        this.setState({
+          notes: formattedNotesArr,
+        });
+      }
+    );
   };
 
   summaryClick = () => {
@@ -277,7 +307,7 @@ class TransitionResults extends React.Component {
     this.setState({
       sessionId: event.target.value,
     }, () => {
-
+      this.handleNotesFetching(this.state.sessionId);
     });
   };
 
@@ -425,7 +455,7 @@ class TransitionResults extends React.Component {
                     ) : this.state.view === ViewEnum.NOTES ? (
                       <div className={classes.resultsContent}
                       >
-                        <NotesListDetailTable data={transitionNotes} />
+                        <NotesListDetailTable data={this.state.notes} />
                       </div>
                     ) : this.state.view === ViewEnum.NEXT_STEPS ? (
                       <div className={classes.resultsContent} /> // replace this null with next steps content
