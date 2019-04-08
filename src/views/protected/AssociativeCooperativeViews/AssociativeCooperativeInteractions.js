@@ -14,7 +14,7 @@ import FirebaseContext from "../../../components/Firebase/context";
 import { connect } from "react-redux";
 import Notes from "../../../components/Notes";
 import Typography from "@material-ui/core/Typography";
-import InstructionTransitionToggle from "../../../components/ClassroomClimateComponent/InstructionTransitionToggle";
+import InstructionTransitionToggle from "../../../components/ClassroomClimateComponent/LearningActivityTransitionToggle";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
 import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenu";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";

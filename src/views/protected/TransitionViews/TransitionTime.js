@@ -93,7 +93,6 @@ class TransitionTime extends React.Component {
                 )}
                 <main style={{flex: 1}}>
                     <Grid container spacing={16}>
-
                         <Grid item xs={4}>
                             <Grid
                                 container
@@ -112,7 +111,13 @@ class TransitionTime extends React.Component {
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                <div style={{margin: 20}}/>
+                                <Typography variant={"h4"}
+                                            alignItems={"center"}
+                                            justify={"center"}
+                                            gutterBottom
+                                            style={{marginBottom: 5}}>
+                                    Transition Time
+                                </Typography>
                                 <TransitionType/>
                                 <FirebaseContext.Consumer>
                                     {firebase => <TransitionTimer teacherId={this.props.location.state.teacher.id}
