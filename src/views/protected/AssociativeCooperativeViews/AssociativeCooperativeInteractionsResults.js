@@ -364,7 +364,7 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                             </List>
                         </Grid>
                         <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
-                            <Typography variant={"h4"} alignItems={"center"} justify={"center"}>
+                            <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
                                 Associative & Cooperative Interactions Results
                             </Typography>
                             <Grid item xs={12} alignItems={"center"} justify={"center"}>
