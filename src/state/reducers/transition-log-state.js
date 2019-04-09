@@ -1,4 +1,7 @@
-import { TRANSITION_APPEND_LOG } from "../actions/transition-time";
+import {
+  TRANSITION_APPEND_LOG,
+  RESET_TRANSITION_TIME
+} from "../actions/transition-time";
 
 const initialState = { transitionStack: [] };
 
@@ -8,6 +11,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         transitionStack: [...state.transitionStack, action.entry]
+      };
+    case RESET_TRANSITION_TIME:
+      return {
+        ...state,
+        transitionStack: []
       };
     default:
       return state;
