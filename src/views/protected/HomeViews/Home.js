@@ -36,7 +36,8 @@ const styles = {
 class Welcome extends React.Component {
     state = {
         observeModal: false,
-        type: ""
+        type: "",
+        coachName: ""
     };
 
     showObserveModal = (type) => {
@@ -46,6 +47,13 @@ class Welcome extends React.Component {
     handleClose = event => {
         this.setState({ observeModal: false,
                             type: ""});
+    };
+
+    componentDidMount (){
+        let firebase = this.context;
+        firebase.getCoachFirstName().then(name=>{
+            this.setState({ coachName: name});
+        })
     };
 
     render() {
@@ -67,7 +75,7 @@ class Welcome extends React.Component {
                         variant={"h3"}
                         align={"center"}
                     >
-                        Welcome, Coach!
+                        Welcome, {this.state.coachName}
                     </Typography>
                     <Grid
                         container
@@ -207,4 +215,5 @@ Welcome.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
+Welcome.contextType = FirebaseContext;
 export default withStyles(styles)(Welcome);
