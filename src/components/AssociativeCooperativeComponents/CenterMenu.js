@@ -19,11 +19,8 @@ import {
 import FirebaseContext from "../Firebase/context";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import CommentIcon from "@material-ui/icons/Comment";
 
 // TODO: X in top right corner, press and hold to remove/edit the center.
 
@@ -105,8 +102,6 @@ class CenterChecklist extends React.Component {
     this.setState({
       checked: newChecked
     });
-
-    console.log(newChecked);
   };
 
   handleDone = () => {
@@ -146,6 +141,7 @@ class CenterChecklist extends React.Component {
                     role={undefined}
                     dense
                     button
+                    disableRipple
                     onClick={this.handleToggle(value)}
                   >
                     <Checkbox
@@ -169,6 +165,7 @@ class CenterChecklist extends React.Component {
                     role={undefined}
                     dense
                     button
+                    disableRipple
                     onClick={this.handleToggle(value)}
                   >
                     <Checkbox
