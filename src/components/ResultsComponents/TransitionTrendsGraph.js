@@ -125,7 +125,7 @@ class TransitionTrendsGraph extends React.Component {
 
         return (
             <Line
-                data={transitionTrendData}
+                data={this.props.data}
                 options={transitionTrendOptions}
                 width="650"
                 height="400"

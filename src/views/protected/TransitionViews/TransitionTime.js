@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
 import InfoIcon from "@material-ui/icons/Help";
 import EditIcon from "@material-ui/icons/Edit";
-import {withStyles} from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import TransitionTimeHelp from "./TransitionTimeHelp";
 import TransitionType from "./TransitionType";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -15,6 +15,8 @@ import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import Typography from "@material-ui/core/Typography/Typography";
+import { connect } from "react-redux";
+import { resetTransitionTime } from "../../../state/actions/transition-time";
 
 const styles = {
     root: {
@@ -41,57 +43,64 @@ class TransitionTime extends React.Component {
     };
 
     handleChange = event => {
-        this.setState({auth: event.target.checked});
+        this.setState({ auth: event.target.checked });
     };
 
     handleMenu = event => {
-        this.setState({anchorEl: event.currentTarget});
+        this.setState({ anchorEl: event.currentTarget });
     };
 
     handleClose = () => {
-        this.setState({anchorEl: null});
+        this.setState({ anchorEl: null });
     };
 
     handleHelpModal = () => {
-        this.setState({help: true});
+        this.setState({ help: true });
     };
 
-    handleNotes = (open) => {
+    handleNotes = open => {
         if (open) {
-            this.setState({notes: true});
+            this.setState({ notes: true });
         } else {
-            this.setState({notes: false});
+            this.setState({ notes: false });
         }
     };
 
     handleClickAwayHelp = () => {
-        this.setState({help: false});
+        this.setState({ help: false });
     };
 
     render() {
-        const {classes} = this.props;
-        const {anchorEl} = this.state;
+        const { classes } = this.props;
+        const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
         return (
             <div className={classes.root}>
                 <FirebaseContext.Consumer>
-                    {firebase => <AppBar firebase={firebase}/>}
+                    {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
                 {this.state.help ? (
                     <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
                         {" "}
-                        <TransitionTimeHelp/>
+                        <TransitionTimeHelp />
                     </ClickAwayListener>
+                ) : this.state.notes ? (
+                    <FirebaseContext.Consumer>
+                        {firebase => (
+                            <Notes
+                                open={true}
+                                onClose={this.handleNotes}
+                                color="#094492"
+                                text="Transition Time Notes"
+                                firebase={firebase}
+                            />
+                        )}
+                    </FirebaseContext.Consumer>
                 ) : (
-                    this.state.notes ? (
-                        <FirebaseContext.Consumer>
-                            {firebase => <Notes open={true} onClose={this.handleNotes} color="#094492"
-                                                text="Transition Time Notes" firebase={firebase}/>}
-                        </FirebaseContext.Consumer>
-                    ) : <div/>
+                    <div />
                 )}
-                <main style={{flex: 1}}>
+                <main style={{ flex: 1 }}>
                     <Grid container spacing={16}>
                         <Grid item xs={4}>
                             <Grid
@@ -100,8 +109,8 @@ class TransitionTime extends React.Component {
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                <div style={{margin: 20}}/>
-                                <TransitionLog/>
+                                <div style={{ margin: 20 }} />
+                                <TransitionLog />
                             </Grid>
                         </Grid>
                         <Grid item xs={8}>
@@ -111,17 +120,15 @@ class TransitionTime extends React.Component {
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                <Typography variant={"h4"}
-                                            alignItems={"center"}
-                                            justify={"center"}
-                                            gutterBottom
-                                            style={{marginBottom: 5}}>
-                                    Transition Time
-                                </Typography>
-                                <TransitionType/>
+                                <div style={{ margin: 20 }} />
+                                <TransitionType />
                                 <FirebaseContext.Consumer>
-                                    {firebase => <TransitionTimer teacherId={this.props.location.state.teacher.id}
-                                                                  firebase={firebase}/>}
+                                    {firebase => (
+                                        <TransitionTimer
+                                            teacherId={this.props.location.state.teacher.id}
+                                            firebase={firebase}
+                                        />
+                                    )}
                                 </FirebaseContext.Consumer>
                             </Grid>
                         </Grid>
@@ -141,10 +148,7 @@ class TransitionTime extends React.Component {
                                 onClick={this.handleHelpModal}
                                 color="inherit"
                             >
-                                <InfoIcon
-                                    color={"secondary"}
-                                    fontSize={"large"}
-                                />
+                                <InfoIcon color={"secondary"} fontSize={"large"} />
                             </IconButton>
                             <IconButton
                                 aria-owns={open ? "menu-appbar" : undefined}
@@ -152,13 +156,10 @@ class TransitionTime extends React.Component {
                                 onClick={this.handleNotes}
                                 color="inherit"
                             >
-                                <EditIcon
-                                    color={"secondary"}
-                                    fontSize={"large"}
-                                />
+                                <EditIcon color={"secondary"} fontSize={"large"} />
                             </IconButton>
                         </Grid>
-                        <Grid item xs={8}/>
+                        <Grid item xs={8} />
                         <Grid item xs={2}>
                             <Grid
                                 container
@@ -172,26 +173,28 @@ class TransitionTime extends React.Component {
                                     minute: "numeric",
                                     hour12: true
                                 })}
-                                <br/>
+                                <br />
                                 <FirebaseContext.Consumer>
-                                    {firebase =>
+                                    {firebase => (
                                         <YesNoDialog
                                             buttonText={"Complete Observation"}
                                             buttonVariant={"contained"}
                                             buttonColor={"secondary"}
-                                            buttonStyle={{margin: 10}}
+                                            buttonStyle={{ margin: 10 }}
                                             dialogTitle={
                                                 "Are you sure you want to complete this observation?"
                                             }
                                             shouldOpen={true}
                                             onAccept={() => {
+                                                this.props.resetTransitionTime();
                                                 this.props.history.push({
                                                     pathname: "/Home",
                                                     state: this.props.history.state
                                                 });
                                                 firebase.endSession();
                                             }}
-                                        />}
+                                        />
+                                    )}
                                 </FirebaseContext.Consumer>
                             </Grid>
                         </Grid>
@@ -206,4 +209,7 @@ TransitionTime.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(TransitionTime);
+export default connect(
+    null,
+    { resetTransitionTime }
+)(withStyles(styles)(TransitionTime));

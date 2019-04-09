@@ -28,7 +28,6 @@ import TransitionTimePie from "../../../components/ResultsComponents/TransitionT
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import moment from 'moment';
 
-
 const styles = {
   root: {
     flexGrow: 1,
@@ -138,17 +137,23 @@ class TransitionResults extends React.Component {
     view: ViewEnum.SUMMARY,
     sessionId: null,
     sessionDates: [],
+    notes: [],
+    trendsDates: [],
+    trendsInside:  [],
+    trendsOutside: [],
+    trendsTotal:  [],
+    trendsTotalColor: "#0988EC",
+    trendsInsideColor: "#E99C2E",
+    trendsOutsideColor: "#E55529"
   };
 
   componentDidMount() {
     console.log(this.props.location.state);
     console.log(this.context);
     let teacherId = this.props.location.state.teacher.id;
-    this.context.fetchTransitionTrend(teacherId);
-    console.log(this.props.location.state);
+    this.handleTrendsFetch(teacherId);
+
     this.handleDateFetching(this.props.location.state.teacher.id);
-    console.log(teacherId);
-    console.log("handle behavior count results fetching called");
   }
 
   handleAppend(entry) {
@@ -226,9 +231,111 @@ class TransitionResults extends React.Component {
 
   handleTrendsFetch = (teacherId) => {
     let firebase = this.context;
-    firebase.fetchSessionDates(teacherId, 'transition').then(dataSet => {
+    let dateArray = [];
+    let insideArray = [];
+    let outsideArray =[];
+    let totalArray = [];
+    let formattedTime;
+    firebase.fetchTransitionTrend(teacherId).then(dataSet => {
+        console.log("Trends dataSet", dataSet);
+        dataSet.map( data => {
+          formattedTime = this.handleTrendsFormatTime(data.total);
+          dateArray.push([moment(data.startDate.value).format("MMM Do"), formattedTime]);
+          insideArray.push(Math.floor(data.inside / data.sessionTotal * 100));
+          outsideArray.push(Math.floor(data.outside / data.sessionTotal * 100));
+          totalArray.push(Math.floor(data.total / data.sessionTotal * 100));
+        });
 
+        this.setState({
+          trendsDates: dateArray,
+          trendsInside: insideArray,
+          trendsOutside: outsideArray,
+          trendsTotal: totalArray
+        });
+        console.log("trends date array: ", this.state.trendsDates);
+        console.log("trends inside array: ", this.state.trendsInside);
+        console.log("trends outside array: ", this.state.trendsOutside);
+        console.log("trends total array: ", this.state.trendsTotal);
     });
+  };
+
+  handleTrendsFormatTime = (totalTime) => {
+    let seconds = Math.floor(totalTime / 1000 % 60);
+    let minutes =  Math.floor(totalTime / 1000 / 60 % 60);
+    let hours = Math.floor(totalTime / 1000 / 3600 % 60);
+    let secondsString = "";
+    let minutesString = "";
+
+    if (seconds < 10) {
+      secondsString = "0" + seconds.toString();
+    } else {
+      secondsString = seconds.toString();
+    }
+
+    if (minutes < 10) {
+      minutesString = "0" + minutes.toString();
+    } else {
+      minutesString = minutes.toString();
+    }
+
+    let formattedTime = hours.toString() + ":" + minutesString + ":" + secondsString;
+    console.log("formatted time is ", formattedTime);
+
+    return formattedTime;
+  };
+
+  handleTrendsFormatData = () => {
+    return {
+      labels: this.state.trendsDates,
+      datasets:  [
+        {
+          label: 'TOTAL',
+          backgroundColor: this.state.trendsTotalColor,
+          borderColor: this.state.trendsTotalColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsTotal,
+        },
+        {
+          label: 'INSIDE',
+          backgroundColor: this.state.trendsTotalColor,
+          borderColor: this.state.trendsInsideColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsInside,
+        },
+        {
+          label: 'OUTSIDE',
+          backgroundColor: this.state.trendsOutsideColor,
+          borderColor: this.state.trendsOutsideColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsOutside,
+        }
+      ]
+    }
+  };
+
+  handleNotesFetching = (sessionId) => {
+    let firebase = this.context;
+    firebase.handleFetchNotesResults(sessionId).then(
+      notesArr => {
+        console.log(notesArr);
+        let formattedNotesArr = [];
+        notesArr.map(note => {
+          let newTimestamp = new Date(note.timestamp.seconds*1000).toLocaleString("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true
+          });
+          formattedNotesArr.push({id: note.id, content: note.content, timestamp: newTimestamp})
+        });
+        console.log(formattedNotesArr);
+        this.setState({
+          notes: formattedNotesArr,
+        });
+      }
+    );
   };
 
   summaryClick = () => {
@@ -277,7 +384,7 @@ class TransitionResults extends React.Component {
     this.setState({
       sessionId: event.target.value,
     }, () => {
-
+      this.handleNotesFetching(this.state.sessionId);
     });
   };
 
@@ -305,7 +412,7 @@ class TransitionResults extends React.Component {
                   onChange={this.changeSessionId}
                   InputLabelProps={{ shrink: true }}>
                   {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>
-                    <em>{moment(date.start.value).format("MMM Do YY HH:mm A")}</em>
+                    <em>{moment(date.sessionStart.value).format("MMM Do YY HH:mm A")}</em>
                   </MenuItem>})}
                 </TextField>
               </ListItem>
@@ -420,12 +527,12 @@ class TransitionResults extends React.Component {
                     ) : this.state.view === ViewEnum.TRENDS ? (
                       <div className={classes.resultsContent}
                       >
-                        <TransitionTrendsGraph/>
+                        <TransitionTrendsGraph data={this.handleTrendsFormatData}/>
                       </div>
                     ) : this.state.view === ViewEnum.NOTES ? (
                       <div className={classes.resultsContent}
                       >
-                        <NotesListDetailTable data={transitionNotes} />
+                        <NotesListDetailTable data={this.state.notes} />
                       </div>
                     ) : this.state.view === ViewEnum.NEXT_STEPS ? (
                       <div className={classes.resultsContent} /> // replace this null with next steps content

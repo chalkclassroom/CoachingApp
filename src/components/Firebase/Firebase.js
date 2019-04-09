@@ -340,8 +340,8 @@ class Firebase {
 
     };
 
-    fetchTransitionTypeCount = async sessionId => {
-        var getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable('funcTransitionTypeCount');
+    fetchTransitionSummary = async sessionId => {
+        var getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable('funcTransitionOfSession');
 
         return getTransitionTypeCountFirebaseFunction({sessionId: sessionId}).then(function (result) {
             // Read result of the Cloud Function.
@@ -352,8 +352,8 @@ class Firebase {
 
     };
 
-    fetchTransitions = async sessionId => {
-        var getTransitionsFirebaseFunction = this.functions.httpsCallable('funcTransitions');
+    fetchTransitionLog = async sessionId => {
+        var getTransitionsFirebaseFunction = this.functions.httpsCallable('funcTransitionLog');
 
         return getTransitionsFirebaseFunction({sessionId: sessionId}).then(function (result) {
             // Read result of the Cloud Function.

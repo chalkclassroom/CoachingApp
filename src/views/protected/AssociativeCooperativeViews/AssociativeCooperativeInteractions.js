@@ -9,12 +9,9 @@ import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import AppBar from "../../../components/AppBar";
-import ms from "pretty-ms";
 import FirebaseContext from "../../../components/Firebase/context";
 import { connect } from "react-redux";
 import Notes from "../../../components/Notes";
-import Typography from "@material-ui/core/Typography";
-import InstructionTransitionToggle from "../../../components/ClassroomClimateComponent/LearningActivityTransitionToggle";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
 import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenu";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
@@ -28,7 +25,7 @@ const styles = {
         flexDirection: "column"
     },
     grow: {
-        flexGrow: 1
+        flexGrow: 0
     }
 };
 
@@ -68,7 +65,12 @@ class AssociativeCooperativeInteractions extends React.Component {
         return (
             <div className={this.props.classes.root}>
                 <FirebaseContext.Consumer>
-                    {firebase => <AppBar firebase={firebase} />}
+                    {firebase => (
+                        <AppBar
+                            firebase={firebase}
+                            classes={{ root: this.props.classes.grow }}
+                        />
+                    )}
                 </FirebaseContext.Consumer>
                 {this.state.help ? (
                     <ClickAwayListener onClickAway={this.handleClickAway}>
@@ -91,20 +93,9 @@ class AssociativeCooperativeInteractions extends React.Component {
                     <div />
                 )}
                 <main style={{ flex: 1 }}>
-                    <Grid
-                        container
-                        alignItems={"center"}
-                        justify={"center"}
-                        direction={"row"}
-                    >
-                        <Grid item xs={12}>
-                            <FirebaseContext.Consumer>
-                                {firebase => (
-                                    <CenterMenu firebase={firebase}/>
-                                )}
-                            </FirebaseContext.Consumer>
-                        </Grid>
-                    </Grid>
+                    <FirebaseContext.Consumer>
+                        {firebase => <CenterMenu firebase={firebase} />}
+                    </FirebaseContext.Consumer>
                 </main>
                 <footer>
                     <Grid
@@ -147,27 +138,27 @@ class AssociativeCooperativeInteractions extends React.Component {
                                 })}
                                 <br />
                                 <FirebaseContext.Consumer>
-                                    {firebase =>
-                                <YesNoDialog
-                                    buttonText={"Complete Observation"}
-                                    buttonVariant={"contained"}
-                                    buttonColor={"secondary"}
-                                    buttonStyle={{ margin: 10 }}
-                                    dialogTitle={
-                                        "Are you sure you want to complete this observation?"
-                                    }
-                                    shouldOpen={true}
-                                    onAccept={() => {
-                                        this.props.deleteAllCenters();
-                                        this.props.history.push({
-                                            pathname: "/Home",
-                                            state: this.props.history.state
-                                        });
-                                        firebase.endSession();
-                                    }}
-                                />
-                                }
-                            </FirebaseContext.Consumer>
+                                    {firebase => (
+                                        <YesNoDialog
+                                            buttonText={"Complete Observation"}
+                                            buttonVariant={"contained"}
+                                            buttonColor={"secondary"}
+                                            buttonStyle={{ margin: 10 }}
+                                            dialogTitle={
+                                                "Are you sure you want to complete this observation?"
+                                            }
+                                            shouldOpen={true}
+                                            onAccept={() => {
+                                                this.props.deleteAllCenters();
+                                                this.props.history.push({
+                                                    pathname: "/Home",
+                                                    state: this.props.history.state
+                                                });
+                                                firebase.endSession();
+                                            }}
+                                        />
+                                    )}
+                                </FirebaseContext.Consumer>
                             </Grid>
                         </Grid>
                     </Grid>
