@@ -211,8 +211,8 @@ class Firebase {
 
     handlePushAC = async mEntry => {
         const userRef = this.sessionRef.collection("entries").add({
-            Checked: mEntry.checked,
-            People: mEntry.people,
+            Checked: mEntry.checked.slice(1),
+            PeopleType: mEntry.people,
             Timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
     };
