@@ -110,7 +110,7 @@ class TransitionTimer extends React.Component {
 
         return (
             <MuiThemeProvider theme={theme}>
-                <div style={{ width: 400, marginTop: 20 }}>
+                <div style={{ width: 400 }}>
                     <CircularProgressbar
                         background
                         percentage={this.state.percentage}
