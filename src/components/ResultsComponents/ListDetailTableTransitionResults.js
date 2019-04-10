@@ -49,16 +49,6 @@ class ListDetailTableTransitionResults extends React.Component {
                                 }}
                                 align="right"
                             >
-                                Notes
-                            </TableCell>
-                            <TableCell
-                                style={{
-                                    backgroundColor: "#3f51b5",
-                                    color: "white",
-                                    fontSize: 14
-                                }}
-                                align="right"
-                            >
                                 Type
                             </TableCell>
                         </TableRow>
@@ -72,7 +62,7 @@ class ListDetailTableTransitionResults extends React.Component {
                                 <TableCell align="right">
                                     {row.duration}
                                 </TableCell>
-                                <TableCell align="right">{row.notes}</TableCell>
+
                                 {row.type === "INSIDE" ? (
                                     <TableCell
                                         style={{
@@ -93,17 +83,7 @@ class ListDetailTableTransitionResults extends React.Component {
                                     >
                                         {row.type}
                                     </TableCell>
-                                ) : row.type === "WAIT" ? (
-                                    <TableCell
-                                        style={{
-                                            backgroundColor: "#69f0ae",
-                                            color: "black",
-                                            fontSize: 14
-                                        }}
-                                    >
-                                        {row.type}
-                                    </TableCell>
-                                ) : null}
+                                )  : null}
                             </TableRow>
                         ))}
                     </TableBody>

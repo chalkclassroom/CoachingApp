@@ -69,6 +69,7 @@ class TransitionTimer extends React.Component {
                     duration: ms(this.state.time),
                     transitionType: this.props.transitionType
                 };
+                console.log(entry.start);
                 this.setState({ time: 0 });
                 this.handleAppend(entry);
             } else {

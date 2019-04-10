@@ -91,33 +91,7 @@ const ViewEnum = {
 };
 
 // dummy data for transition list detail table, when we read in from DB we can use custom id
-let id = 0;
 
-function createTransitionData(startTime, duration, notes, type) {
-  id += 1;
-  return { id, startTime, duration, notes, type };
-}
-
-function createNotesData(time, notes) {
-  id += 1;
-  return { id, time, notes };
-}
-
-const transitionData = [
-  createTransitionData("08:32", "2m 3s", "Breakfast to am meeting", "INSIDE"),
-  createTransitionData("08:44", "5m 10s", "Line up for bathroom", "OUTSIDE"),
-  createTransitionData("09:01", "1m 7s", "T finding book", "WAIT"),
-  createTransitionData("09:37", "1m 56s", "Rotating rooms", "WAIT"),
-  createTransitionData("09:56", "3m 2s", "Cleanup after centers", "INSIDE")
-];
-
-const transitionNotes = [
-  createNotesData("08:32", "Kiss your brain"),
-  createNotesData("08:44", "Great super friend"),
-  createNotesData("09:01", "Lots of good jobs"),
-  createNotesData("09:37", "BD frown"),
-  createNotesData("09:56", "Close down center conflict")
-];
 
 class TransitionResults extends React.Component {
   constructor(props) {
@@ -138,6 +112,7 @@ class TransitionResults extends React.Component {
     sessionId: null,
     sessionDates: [],
     notes: [],
+    log: [],
     trendsDates: [],
     trendsInside:  [],
     trendsOutside: [],
@@ -338,6 +313,31 @@ class TransitionResults extends React.Component {
     );
   };
 
+  handleListDetailFetching = (sessionId) => {
+    let firebase = this.context;
+    firebase.fetchTransitionLog(sessionId).then(
+      logArr => {
+        console.log(logArr);
+        let formattedLogArr = [];
+        let newId = 0;
+        logArr.map(log => {
+          newId += 1;
+          let startTime = new moment(log.transitionStart.value);
+          let newStartTime = startTime.format("hh:mm A");
+          let endTime = new moment(log.transitionEnd.value);
+          console.log(newStartTime);
+          let dur = moment.duration(endTime.diff(startTime));
+          let newDuration = dur.minutes() + "m " + dur.seconds() + "s";
+          formattedLogArr.push({id: newId, startTime: newStartTime, duration: newDuration, type: log.type.toUpperCase()});
+        });
+        console.log(formattedLogArr);
+        this.setState({
+          log: formattedLogArr,
+        });
+    }
+  );
+  };
+
   summaryClick = () => {
     if (this.state.view !== ViewEnum.SUMMARY) {
       this.setState({ view: ViewEnum.SUMMARY });
@@ -385,6 +385,7 @@ class TransitionResults extends React.Component {
       sessionId: event.target.value,
     }, () => {
       this.handleNotesFetching(this.state.sessionId);
+      this.handleListDetailFetching(this.state.sessionId);
     });
   };
 
@@ -521,7 +522,7 @@ class TransitionResults extends React.Component {
                     ) : this.state.view === ViewEnum.LIST ? (
                       <div className={classes.resultsContent}>
                         <ListDetailTableTransitionResults
-                          data={transitionData}
+                          data={this.state.log}
                         />
                       </div>
                     ) : this.state.view === ViewEnum.TRENDS ? (
