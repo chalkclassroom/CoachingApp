@@ -20,7 +20,7 @@ import { appendClimateRating, emptyClimateStack } from "../../../state/actions/c
 import Notes from "../../../components/Notes";
 import Typography from "@material-ui/core/Typography";
 
-import InstructionTransitionToggle from "../../../components/ClassroomClimateComponent/InstructionTransitionToggle";
+import LearningActivityTransitionToggle from "../../../components/ClassroomClimateComponent/LearningActivityTransitionToggle";
 /*
     N.B. Time measured in milliseconds.
 
@@ -140,7 +140,6 @@ class ClassroomClimate extends React.Component {
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}>
-
             <Typography variant={"h4"} alignItems={"center"} justify={"center"}>
               Classroom Climate
             </Typography>
@@ -223,7 +222,7 @@ class ClassroomClimate extends React.Component {
                   alignItems={"center"}
                   justify={"center"}
                   direction={"row"}>
-              <InstructionTransitionToggle/>
+              <LearningActivityTransitionToggle/>
             </Grid>
             <Grid item xs={2}>
               <Grid

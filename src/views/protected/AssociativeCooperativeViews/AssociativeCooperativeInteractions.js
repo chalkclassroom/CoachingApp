@@ -17,162 +17,162 @@ import CenterMenu from "../../../components/AssociativeCooperativeComponents/Cen
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
 
 const styles = {
-  root: {
-    flexGrow: 1,
-    backgroundColor: "#ffffff",
-    display: "flex",
-    minHeight: "100vh",
-    flexDirection: "column"
-  },
-  grow: {
-    flexGrow: 0
-  }
+    root: {
+        flexGrow: 1,
+        backgroundColor: "#ffffff",
+        display: "flex",
+        minHeight: "100vh",
+        flexDirection: "column"
+    },
+    grow: {
+        flexGrow: 0
+    }
 };
 
 class AssociativeCooperativeInteractions extends React.Component {
-  state = {
-    auth: true,
-    anchorEl: null,
-    help: false,
-    ratingIsOpen: false,
-    ratings: [],
-    climateType: false
-  };
-  handleRatingModal = () => {
-    this.setState({ ratingIsOpen: true });
-  };
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-  handleClickAway = () => {
-    this.setState({ help: false });
-  };
-  handleNotes = open => {
-    if (open) {
-      this.setState({ notes: true });
-    } else {
-      this.setState({ notes: false });
-    }
-  };
-  handleRatingConfirmation = rating => {
-    this.setState({ ratingIsOpen: false });
-  };
+    state = {
+        auth: true,
+        anchorEl: null,
+        help: false,
+        ratingIsOpen: false,
+        ratings: [],
+        climateType: false
+    };
+    handleRatingModal = () => {
+        this.setState({ ratingIsOpen: true });
+    };
+    handleHelpModal = () => {
+        this.setState({ help: true });
+    };
+    handleClickAway = () => {
+        this.setState({ help: false });
+    };
+    handleNotes = open => {
+        if (open) {
+            this.setState({ notes: true });
+        } else {
+            this.setState({ notes: false });
+        }
+    };
+    handleRatingConfirmation = rating => {
+        this.setState({ ratingIsOpen: false });
+    };
 
-  render() {
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
+    render() {
+        const { anchorEl } = this.state;
+        const open = Boolean(anchorEl);
 
-    return (
-      <div className={this.props.classes.root}>
-        <FirebaseContext.Consumer>
-          {firebase => (
-            <AppBar
-              firebase={firebase}
-              classes={{ root: this.props.classes.grow }}
-            />
-          )}
-        </FirebaseContext.Consumer>
-        {this.state.help ? (
-          <ClickAwayListener onClickAway={this.handleClickAway}>
-            {" "}
-            <ClassroomClimateHelp />
-          </ClickAwayListener>
-        ) : this.state.notes ? (
-          <FirebaseContext.Consumer>
-            {firebase => (
-              <Notes
-                open={true}
-                onClose={this.handleNotes}
-                color="#0988EC"
-                text="Classroom Climate Notes"
-                firebase={firebase}
-              />
-            )}
-          </FirebaseContext.Consumer>
-        ) : (
-          <div />
-        )}
-        <main style={{ flex: 1 }}>
-          <FirebaseContext.Consumer>
-            {firebase => <CenterMenu firebase={firebase} />}
-          </FirebaseContext.Consumer>
-        </main>
-        <footer>
-          <Grid
-            container
-            alignItems={"center"}
-            justify={"space-between"}
-            direction={"row"}
-          >
-            <Grid item xs={2}>
-              <IconButton
-                aria-owns={open ? "menu-appbar" : undefined}
-                aria-haspopup="true"
-                onClick={this.handleHelpModal}
-                color="inherit"
-              >
-                <InfoIcon color={"secondary"} fontSize={"large"} />
-              </IconButton>
-              <IconButton
-                aria-owns={open ? "menu-appbar" : undefined}
-                aria-haspopup="true"
-                onClick={this.handleNotes}
-                color="inherit"
-              >
-                <EditIcon color={"secondary"} fontSize={"large"} />
-              </IconButton>
-            </Grid>
-            <Grid item xs={8} />
-            <Grid item xs={2}>
-              <Grid
-                container
-                alignItems={"center"}
-                justify={"space-between"}
-                direction={"column"}
-              >
-                Start Time:{" "}
-                {new Date().toLocaleString("en-US", {
-                  hour: "numeric",
-                  minute: "numeric",
-                  hour12: true
-                })}
-                <br />
+        return (
+            <div className={this.props.classes.root}>
                 <FirebaseContext.Consumer>
-                  {firebase => (
-                    <YesNoDialog
-                      buttonText={"Complete Observation"}
-                      buttonVariant={"contained"}
-                      buttonColor={"secondary"}
-                      buttonStyle={{ margin: 10 }}
-                      dialogTitle={
-                        "Are you sure you want to complete this observation?"
-                      }
-                      shouldOpen={true}
-                      onAccept={() => {
-                        this.props.deleteAllCenters();
-                        this.props.history.push({
-                          pathname: "/Home",
-                          state: this.props.history.state
-                        });
-                        firebase.endSession();
-                      }}
-                    />
-                  )}
+                    {firebase => (
+                        <AppBar
+                            firebase={firebase}
+                            classes={{ root: this.props.classes.grow }}
+                        />
+                    )}
                 </FirebaseContext.Consumer>
-              </Grid>
-            </Grid>
-          </Grid>
-        </footer>
-      </div>
-    );
-  }
+                {this.state.help ? (
+                    <ClickAwayListener onClickAway={this.handleClickAway}>
+                        {" "}
+                        <ClassroomClimateHelp />
+                    </ClickAwayListener>
+                ) : this.state.notes ? (
+                    <FirebaseContext.Consumer>
+                        {firebase => (
+                            <Notes
+                                open={true}
+                                onClose={this.handleNotes}
+                                color="#0988EC"
+                                text="Classroom Climate Notes"
+                                firebase={firebase}
+                            />
+                        )}
+                    </FirebaseContext.Consumer>
+                ) : (
+                    <div />
+                )}
+                <main style={{ flex: 1 }}>
+                    <FirebaseContext.Consumer>
+                        {firebase => <CenterMenu firebase={firebase} />}
+                    </FirebaseContext.Consumer>
+                </main>
+                <footer>
+                    <Grid
+                        container
+                        alignItems={"center"}
+                        justify={"space-between"}
+                        direction={"row"}
+                    >
+                        <Grid item xs={2}>
+                            <IconButton
+                                aria-owns={open ? "menu-appbar" : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleHelpModal}
+                                color="inherit"
+                            >
+                                <InfoIcon color={"secondary"} fontSize={"large"} />
+                            </IconButton>
+                            <IconButton
+                                aria-owns={open ? "menu-appbar" : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleNotes}
+                                color="inherit"
+                            >
+                                <EditIcon color={"secondary"} fontSize={"large"} />
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={8} />
+                        <Grid item xs={2}>
+                            <Grid
+                                container
+                                alignItems={"center"}
+                                justify={"space-between"}
+                                direction={"column"}
+                            >
+                                Start Time:{" "}
+                                {new Date().toLocaleString("en-US", {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true
+                                })}
+                                <br />
+                                <FirebaseContext.Consumer>
+                                    {firebase => (
+                                        <YesNoDialog
+                                            buttonText={"Complete Observation"}
+                                            buttonVariant={"contained"}
+                                            buttonColor={"secondary"}
+                                            buttonStyle={{ margin: 10 }}
+                                            dialogTitle={
+                                                "Are you sure you want to complete this observation?"
+                                            }
+                                            shouldOpen={true}
+                                            onAccept={() => {
+                                                this.props.deleteAllCenters();
+                                                this.props.history.push({
+                                                    pathname: "/Home",
+                                                    state: this.props.history.state
+                                                });
+                                                firebase.endSession();
+                                            }}
+                                        />
+                                    )}
+                                </FirebaseContext.Consumer>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </footer>
+            </div>
+        );
+    }
 }
 
 AssociativeCooperativeInteractions.propTypes = {
-  classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired
 };
 
 export default connect(
-  null,
-  { deleteAllCenters }
+    null,
+    { deleteAllCenters }
 )(withStyles(styles)(AssociativeCooperativeInteractions));

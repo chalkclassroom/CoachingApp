@@ -70,7 +70,7 @@ const styles = theme => ({
 });
 
 
-class InstructionTransitionToggle extends React.Component {
+class LearningActivityTransitionToggle extends React.Component {
 
   handleChange = () => {
     this.props.climateType === "transition" ? this.props.toggleNewClimateType("instruction") : this.props.toggleNewClimateType("transition");
@@ -104,14 +104,14 @@ class InstructionTransitionToggle extends React.Component {
               label="Transition"
             />
             }
-            label="Instruction"
+            label="Learning Activity"
             labelPlacement="start"
           />
         );
     }
 }
 
-InstructionTransitionToggle.propTypes = {
+LearningActivityTransitionToggle.propTypes = {
   climateType: PropTypes.string.isRequired,
     classes: PropTypes.object.isRequired
 };
@@ -126,5 +126,5 @@ export default withStyles(styles)(
     connect(
       mapStateToProps,
       { pushOntoClimateStack, toggleNewClimateType }
-    )(InstructionTransitionToggle)
+    )(LearningActivityTransitionToggle)
 );

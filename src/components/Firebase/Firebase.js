@@ -149,6 +149,22 @@ class Firebase {
             });
     };
 
+    getCoachFirstName = function () {
+        return firebase
+            .firestore()
+            .collection("users")
+            .doc(this.auth.currentUser.uid)
+            .get()
+            .then(function(doc) {
+                    // Document was found in the cache. If no cached document exists,
+                    // an error will be returned to the 'catch' block below.
+                    console.log("Cached document data:", doc.data());
+                    return doc.data().firstName;
+                }).catch(function(error) {
+                    console.log("Error getting cached document:", error);
+                });
+    };
+
     getAdminList = function () {
         return firebase
             .firestore()
@@ -195,8 +211,8 @@ class Firebase {
 
     handlePushAC = async mEntry => {
         const userRef = this.sessionRef.collection("entries").add({
-            Checked: mEntry.checked,
-            People: mEntry.people,
+            Checked: mEntry.checked.slice(1),
+            PeopleType: mEntry.people,
             Timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
     };
