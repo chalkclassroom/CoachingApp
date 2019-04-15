@@ -39,7 +39,7 @@ const TeacherChildEnum = {
 const RATING_INTERVAL = 60000;
 const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
-class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
+class CenterRatingChecklistAssocCoop extends React.Component {
   state = {
     auth: true,
     anchorEl: null,
@@ -480,8 +480,8 @@ class ChildTeacherBehaviorsDuringCentersRating extends React.Component {
   }
 }
 
-ChildTeacherBehaviorsDuringCentersRating.propTypes = {
+CenterRatingChecklistAssocCoop.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ChildTeacherBehaviorsDuringCentersRating);
+export default withStyles(styles)(CenterRatingChecklistAssocCoop);
