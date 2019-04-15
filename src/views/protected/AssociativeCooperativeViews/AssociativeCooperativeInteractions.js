@@ -36,7 +36,8 @@ class AssociativeCooperativeInteractions extends React.Component {
         help: false,
         ratingIsOpen: false,
         ratings: [],
-        climateType: false
+        climateType: false,
+        completeEnabled: false,
     };
     handleRatingModal = () => {
         this.setState({ ratingIsOpen: true });
@@ -57,6 +58,9 @@ class AssociativeCooperativeInteractions extends React.Component {
     handleRatingConfirmation = rating => {
         this.setState({ ratingIsOpen: false });
     };
+    handleCompleteButton = enable => {
+        this.setState({ completeEnabled: enable });
+    }
 
     render() {
         const { anchorEl } = this.state;
@@ -94,7 +98,7 @@ class AssociativeCooperativeInteractions extends React.Component {
                 )}
                 <main style={{ flex: 1 }}>
                     <FirebaseContext.Consumer>
-                        {firebase => <CenterMenu firebase={firebase} />}
+                        {firebase => <CenterMenu firebase={firebase} onStatusChange={this.handleCompleteButton}/>}
                     </FirebaseContext.Consumer>
                 </main>
                 <footer>
@@ -137,7 +141,10 @@ class AssociativeCooperativeInteractions extends React.Component {
                                     hour12: true
                                 })}
                                 <br />
-                                <FirebaseContext.Consumer>
+                                {!this.state.completeEnabled ?
+                                    <div/>
+                                    :
+                                    <FirebaseContext.Consumer>
                                     {firebase => (
                                         <YesNoDialog
                                             buttonText={"Complete Observation"}
@@ -158,7 +165,8 @@ class AssociativeCooperativeInteractions extends React.Component {
                                             }}
                                         />
                                     )}
-                                </FirebaseContext.Consumer>
+                                    </FirebaseContext.Consumer>
+                                }
                             </Grid>
                         </Grid>
                     </Grid>

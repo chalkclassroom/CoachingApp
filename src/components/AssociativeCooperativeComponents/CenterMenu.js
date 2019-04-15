@@ -21,6 +21,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
+import PropTypes from "prop-types";
+import Notes from "../Notes";
 
 // TODO: X in top right corner, press and hold to remove/edit the center.
 
@@ -269,10 +271,12 @@ class CenterMenu extends React.Component {
 
   switchToCenterMenu = () => {
     this.setState({ status: CENTER_MENU });
+    this.props.onStatusChange(true);
   };
 
   switchToRatingScreen = () => {
     this.setState({ status: RATING_SCREEN });
+    this.props.onStatusChange(false);
   };
 
   handleAddCenter = centerName => {
@@ -380,6 +384,10 @@ const mapStateToProps = state => {
   return {
     centers: state.associativeCenterState.associativeCenters
   };
+};
+
+CenterMenu.propTypes = {
+    onStatusChange: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(
