@@ -88,7 +88,7 @@ class AssociativeCooperativeInteractions extends React.Component {
                                 open={true}
                                 onClose={this.handleNotes}
                                 color="#0988EC"
-                                text="Classroom Climate Notes"
+                                text="Associative Cooperative Notes"
                                 firebase={firebase}
                             />
                         )}
