@@ -13,7 +13,7 @@ import FirebaseContext from "../../../components/Firebase/context";
 import { connect } from "react-redux";
 import Notes from "../../../components/Notes";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
-import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenu";
+import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
 
 const styles = {

@@ -1,5 +1,5 @@
 import Button from "@material-ui/core/Button";
-import ChildTeacherBehaviorsDuringCentersRating from "./ChildTeacherBehaviorsDuringCentersRating";
+import CenterRatingChecklistAssocCoop from "./CenterRatingChecklistAssocCoop";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -22,7 +22,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import PropTypes from "prop-types";
-import Notes from "../Notes";
 
 // TODO: X in top right corner, press and hold to remove/edit the center.
 
@@ -240,7 +239,7 @@ const CENTER_CHECKLIST = 0;
 const CENTER_MENU = 1;
 const RATING_SCREEN = 2;
 
-class CenterMenu extends React.Component {
+class CenterMenuAssocCoop extends React.Component {
   constructor(props) {
     super(props);
     let mEntry = {
@@ -367,7 +366,7 @@ class CenterMenu extends React.Component {
         );
       case RATING_SCREEN:
         return (
-          <ChildTeacherBehaviorsDuringCentersRating
+          <CenterRatingChecklistAssocCoop
             currentCenter={this.state.currentCenter}
             toggleScreen={this.switchToCenterMenu}
             finishVisit={centerName => this.finishCenterVisit(centerName)}
@@ -386,7 +385,7 @@ const mapStateToProps = state => {
   };
 };
 
-CenterMenu.propTypes = {
+CenterMenuAssocCoop.propTypes = {
     onStatusChange: PropTypes.func.isRequired
 };
 
@@ -394,5 +393,5 @@ export default withStyles(styles)(
   connect(
     mapStateToProps,
     { addNewCenter, incrementCenterCount }
-  )(CenterMenu)
+  )(CenterMenuAssocCoop)
 );
