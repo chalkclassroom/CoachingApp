@@ -19,6 +19,12 @@ import {
 import AssociativeCooperativeInteractions from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractions";
 import AssociativeCooperativeInteractionsResults from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResults";
 import SequentialActivities from "./views/protected/SequentialActivitiesViews/SequentialActivities";
+import SequentialActivitiesResults from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResults";
+<<<<<<< HEAD
+import SequentialActivities from "./views/protected/SequentialActivitiesViews/SequentialActivities";
+=======
+import SequentialActivitiesResults from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResults";
+>>>>>>> 1500c1bdf61487544b2f3df447305f3bf7a3419e
 
 const styles = createMuiTheme({
   palette: {
@@ -140,11 +146,16 @@ class App extends Component {
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsResults"
               component={AssociativeCooperativeInteractionsResults}
+              />
+            <PrivateRoute
+            auth={this.state.auth}
+            path="/SequentialActivities"
+            component={SequentialActivities}
             />
             <PrivateRoute
-                auth={this.state.auth}
-                path="/SequentialActivities"
-                component={SequentialActivities}
+            auth={this.state.auth}
+            path="/SequentialActivitiesResults"
+            component={SequentialActivitiesResults}
             />
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                             the type prop into the PrivateRoute function*/}

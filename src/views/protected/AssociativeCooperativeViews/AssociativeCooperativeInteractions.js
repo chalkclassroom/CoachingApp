@@ -15,6 +15,7 @@ import Notes from "../../../components/Notes";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
 import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
+import Recs from "./AssociativeCooperativeRecs";
 
 const styles = {
     root: {
@@ -38,6 +39,14 @@ class AssociativeCooperativeInteractions extends React.Component {
         ratings: [],
         climateType: false,
         completeEnabled: false,
+        recs: true,
+    };
+    handleRecsModal = open => {
+        if (open) {
+            this.setState({ recs: true });
+        } else {
+            this.setState({ recs: false });
+        }
     };
     handleRatingModal = () => {
         this.setState({ ratingIsOpen: true });
@@ -93,6 +102,16 @@ class AssociativeCooperativeInteractions extends React.Component {
                             />
                         )}
                     </FirebaseContext.Consumer>
+                ) : this.state.recs ? (
+                  <FirebaseContext.Consumer>
+                      {firebase => (
+                        <Recs
+                          open={true}
+                          onClose={this.handleRecsModal}
+                          firebase={firebase}
+                        />
+                      )}
+                  </FirebaseContext.Consumer>
                 ) : (
                     <div />
                 )}

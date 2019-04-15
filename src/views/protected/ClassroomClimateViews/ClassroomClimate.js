@@ -19,6 +19,7 @@ import { connect } from "react-redux";
 import { appendClimateRating, emptyClimateStack } from "../../../state/actions/classroom-climate";
 import Notes from "../../../components/Notes";
 import Typography from "@material-ui/core/Typography";
+import Recs from "./ClassroomClimateRecs";
 
 import LearningActivityTransitionToggle from "../../../components/ClassroomClimateComponent/LearningActivityTransitionToggle";
 /*
@@ -56,7 +57,8 @@ class ClassroomClimate extends React.Component {
     time: RATING_INTERVAL,
     ratingIsOpen: false,
     ratings: [],
-    climateType: false
+    climateType: false,
+    recs: true,
   };
   tick = () => {
     if (this.state.time <= 0) {
@@ -68,6 +70,13 @@ class ClassroomClimate extends React.Component {
       } else {
         this.setState({ time: this.state.time - 1000 });
       }
+    }
+  };
+  handleRecsModal = open => {
+    if (open) {
+      this.setState({ recs: true });
+    } else {
+      this.setState({ recs: false });
     }
   };
   handleRatingModal = () => {
@@ -122,13 +131,30 @@ class ClassroomClimate extends React.Component {
             {" "}
             <ClassroomClimateHelp/>
           </ClickAwayListener>
+        ) : this.state.notes ? (
+          <FirebaseContext.Consumer>
+            {firebase => (
+              <Notes
+                open={true}
+                onClose={this.handleNotes}
+                color="#0988EC"
+                text="Classroom Climate Notes"
+                firebase={firebase}
+              />
+            )}
+          </FirebaseContext.Consumer>
+        ) : this.state.recs ? (
+          <FirebaseContext.Consumer>
+            {firebase => (
+              <Recs
+                open={true}
+                onClose={this.handleRecsModal}
+                firebase={firebase}
+              />
+            )}
+          </FirebaseContext.Consumer>
         ) : (
-          this.state.notes ? (
-            <FirebaseContext.Consumer>
-              {firebase => <Notes open={true} onClose={this.handleNotes} color="#0988EC" text="Classroom Climate Notes" firebase={firebase}/>}
-            </FirebaseContext.Consumer>
-            ) :
-            <div/>
+          <div />
         )}
         <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
           <RatingModal
