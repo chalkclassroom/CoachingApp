@@ -18,6 +18,7 @@ import {
 } from "@material-ui/core/styles";
 import AssociativeCooperativeInteractions from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractions";
 import AssociativeCooperativeInteractionsResults from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResults";
+import SequentialActivitiesResults from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResults";
 
 const styles = createMuiTheme({
   palette: {
@@ -139,6 +140,11 @@ class App extends Component {
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsResults"
               component={AssociativeCooperativeInteractionsResults}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/SequentialActivitiesResults"
+                component={SequentialActivitiesResults}
             />
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                             the type prop into the PrivateRoute function*/}
