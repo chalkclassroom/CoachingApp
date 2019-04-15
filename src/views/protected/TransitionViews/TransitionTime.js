@@ -17,6 +17,7 @@ import Notes from "../../../components/Notes";
 import Typography from "@material-ui/core/Typography/Typography";
 import { connect } from "react-redux";
 import { resetTransitionTime } from "../../../state/actions/transition-time";
+import Recs from "./TransitionTimeRecs";
 
 const styles = {
     root: {
@@ -39,7 +40,16 @@ class TransitionTime extends React.Component {
         auth: true,
         anchorEl: null,
         help: false,
-        notes: false
+        notes: false,
+        recs: true,
+    };
+
+    handleRecsModal = open => {
+        if (open) {
+            this.setState({ recs: true });
+        } else {
+            this.setState({ recs: false });
+        }
     };
 
     handleChange = event => {
@@ -97,8 +107,18 @@ class TransitionTime extends React.Component {
                             />
                         )}
                     </FirebaseContext.Consumer>
+                ) : this.state.recs ? (
+                  <FirebaseContext.Consumer>
+                      {firebase => (
+                        <Recs
+                          open={true}
+                          onClose={this.handleRecsModal}
+                          firebase={firebase}
+                        />
+                      )}
+                  </FirebaseContext.Consumer>
                 ) : (
-                    <div />
+                  <div />
                 )}
                 <main style={{ flex: 1 }}>
                     <Grid container spacing={16}>

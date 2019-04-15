@@ -15,7 +15,6 @@ import Notes from "../../../components/Notes";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
 import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
-import Recs from "./AssociativeCooperativeRecs";
 
 const styles = {
     root: {
@@ -30,7 +29,7 @@ const styles = {
     }
 };
 
-class AssociativeCooperativeInteractions extends React.Component {
+class SequentialActivities extends React.Component {
     state = {
         auth: true,
         anchorEl: null,
@@ -39,14 +38,6 @@ class AssociativeCooperativeInteractions extends React.Component {
         ratings: [],
         climateType: false,
         completeEnabled: false,
-        recs: true,
-    };
-    handleRecsModal = open => {
-        if (open) {
-            this.setState({ recs: true });
-        } else {
-            this.setState({ recs: false });
-        }
     };
     handleRatingModal = () => {
         this.setState({ ratingIsOpen: true });
@@ -97,21 +88,11 @@ class AssociativeCooperativeInteractions extends React.Component {
                                 open={true}
                                 onClose={this.handleNotes}
                                 color="#0988EC"
-                                text="Associative Cooperative Notes"
+                                text="Sequential Activities Notes"
                                 firebase={firebase}
                             />
                         )}
                     </FirebaseContext.Consumer>
-                ) : this.state.recs ? (
-                  <FirebaseContext.Consumer>
-                      {firebase => (
-                        <Recs
-                          open={true}
-                          onClose={this.handleRecsModal}
-                          firebase={firebase}
-                        />
-                      )}
-                  </FirebaseContext.Consumer>
                 ) : (
                     <div />
                 )}
@@ -164,26 +145,26 @@ class AssociativeCooperativeInteractions extends React.Component {
                                     <div/>
                                     :
                                     <FirebaseContext.Consumer>
-                                    {firebase => (
-                                        <YesNoDialog
-                                            buttonText={"Complete Observation"}
-                                            buttonVariant={"contained"}
-                                            buttonColor={"secondary"}
-                                            buttonStyle={{ margin: 10 }}
-                                            dialogTitle={
-                                                "Are you sure you want to complete this observation?"
-                                            }
-                                            shouldOpen={true}
-                                            onAccept={() => {
-                                                this.props.deleteAllCenters();
-                                                this.props.history.push({
-                                                    pathname: "/Home",
-                                                    state: this.props.history.state
-                                                });
-                                                firebase.endSession();
-                                            }}
-                                        />
-                                    )}
+                                        {firebase => (
+                                            <YesNoDialog
+                                                buttonText={"Complete Observation"}
+                                                buttonVariant={"contained"}
+                                                buttonColor={"secondary"}
+                                                buttonStyle={{ margin: 10 }}
+                                                dialogTitle={
+                                                    "Are you sure you want to complete this observation?"
+                                                }
+                                                shouldOpen={true}
+                                                onAccept={() => {
+                                                    this.props.deleteAllCenters();
+                                                    this.props.history.push({
+                                                        pathname: "/Home",
+                                                        state: this.props.history.state
+                                                    });
+                                                    firebase.endSession();
+                                                }}
+                                            />
+                                        )}
                                     </FirebaseContext.Consumer>
                                 }
                             </Grid>
@@ -195,11 +176,11 @@ class AssociativeCooperativeInteractions extends React.Component {
     }
 }
 
-AssociativeCooperativeInteractions.propTypes = {
+SequentialActivities.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
 export default connect(
     null,
     { deleteAllCenters }
-)(withStyles(styles)(AssociativeCooperativeInteractions));
+)(withStyles(styles)(SequentialActivities));

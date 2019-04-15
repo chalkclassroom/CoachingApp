@@ -85,8 +85,8 @@ class BehaviorCounterResults extends React.Component {
               ({((this.props.redirectionsBehaviorCount/((this.props.disapprovalBehaviorCount + this.props.redirectionsBehaviorCount)+ (this.props.nonspecificBehaviorCount + this.props.specificBehaviorCount))) *100).toFixed()}%)</div>
             </div>
             <div class='approvals' style={{display: 'inline-block'}}>
-              <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color:  '#55efc4', display:'inline-block', textAlign:'center'}}>BEHAVIOR APPROVALS</div>
-                <div style={{width: '20vw', height: '7vh', fontSize: '2em', color: '#55efc4', textAlign:'center'}}> {this.props.specificBehaviorCount+this.props.nonspecificBehaviorCount}
+              <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color:  '#009365', display:'inline-block', textAlign:'center'}}>BEHAVIOR APPROVALS</div>
+                <div style={{width: '20vw', height: '7vh', fontSize: '2em', color: '#009365', textAlign:'center'}}> {this.props.specificBehaviorCount+this.props.nonspecificBehaviorCount}
                 ({(((this.props.nonspecificBehaviorCount + this.props.specificBehaviorCount)/((this.props.disapprovalBehaviorCount + this.props.redirectionsBehaviorCount)+ (this.props.nonspecificBehaviorCount + this.props.specificBehaviorCount))) *100).toFixed()}%) </div>
                 <div style={{width: '20vw', height: '4vh', fontSize: '1em', backgroundColor: '#FFD300', color:"#ffffff", fontWeight:'bold'}}>{this.props.nonspecificBehaviorCount} NON SPECIFIC
                 ({((this.props.nonspecificBehaviorCount/((this.props.disapprovalBehaviorCount + this.props.redirectionsBehaviorCount)+ (this.props.nonspecificBehaviorCount + this.props.specificBehaviorCount))) *100).toFixed()}%)</div>
