@@ -20,11 +20,6 @@ import AssociativeCooperativeInteractions from "./views/protected/AssociativeCoo
 import AssociativeCooperativeInteractionsResults from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResults";
 import SequentialActivities from "./views/protected/SequentialActivitiesViews/SequentialActivities";
 import SequentialActivitiesResults from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResults";
-<<<<<<< HEAD
-import SequentialActivities from "./views/protected/SequentialActivitiesViews/SequentialActivities";
-=======
-import SequentialActivitiesResults from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResults";
->>>>>>> 1500c1bdf61487544b2f3df447305f3bf7a3419e
 
 const styles = createMuiTheme({
   palette: {
