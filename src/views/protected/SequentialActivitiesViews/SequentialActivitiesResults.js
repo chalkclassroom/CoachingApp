@@ -20,6 +20,9 @@ import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import 'chartjs-plugin-datalabels';
+import ChildTeacherBehaviorSlider
+    from "../../../components/SequentialActivitiesComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
+
 
 
 const styles = {
@@ -336,7 +339,7 @@ class SequentialActivitiesResults extends React.Component {
                                 <div>
                                     {this.state.view === ViewEnum.SUMMARY ? (
                                         <div className={classes.resultsContent}>
-
+                                            <ChildTeacherBehaviorSlider/>
                                         </div>
                                     ) : this.state.view === ViewEnum.DETAILS ? (
                                         <div className={classes.resultsContent}>
