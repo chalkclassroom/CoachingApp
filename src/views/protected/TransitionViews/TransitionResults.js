@@ -278,7 +278,7 @@ class TransitionResults extends React.Component {
         },
         {
           label: 'INSIDE',
-          backgroundColor: this.state.trendsTotalColor,
+          backgroundColor: this.state.trendsInsideColor,
           borderColor: this.state.trendsInsideColor,
           fill: false,
           lineTension: 0,

@@ -13,174 +13,185 @@ import FirebaseContext from "../../../components/Firebase/context";
 import { connect } from "react-redux";
 import Notes from "../../../components/Notes";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
-import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
-import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
+import CenterMenu from "../../../components/SequentialActivitiesComponents/CenterMenuSequentialActivities";
+import { deleteAllCenters } from "../../../state/actions/sequential-activities";
 
 const styles = {
-    root: {
-        flexGrow: 1,
-        backgroundColor: "#ffffff",
-        display: "flex",
-        minHeight: "100vh",
-        flexDirection: "column"
-    },
-    grow: {
-        flexGrow: 0
-    }
+  root: {
+    flexGrow: 1,
+    backgroundColor: "#ffffff",
+    display: "flex",
+    minHeight: "100vh",
+    flexDirection: "column"
+  },
+  grow: {
+    flexGrow: 0
+  }
 };
 
 class SequentialActivities extends React.Component {
-    state = {
-        auth: true,
-        anchorEl: null,
-        help: false,
-        ratingIsOpen: false,
-        ratings: [],
-        climateType: false,
-        completeEnabled: false,
-    };
-    handleRatingModal = () => {
-        this.setState({ ratingIsOpen: true });
-    };
-    handleHelpModal = () => {
-        this.setState({ help: true });
-    };
-    handleClickAway = () => {
-        this.setState({ help: false });
-    };
-    handleNotes = open => {
-        if (open) {
-            this.setState({ notes: true });
-        } else {
-            this.setState({ notes: false });
-        }
-    };
-    handleRatingConfirmation = rating => {
-        this.setState({ ratingIsOpen: false });
-    };
-    handleCompleteButton = enable => {
-        this.setState({ completeEnabled: enable });
+  state = {
+    auth: true,
+    anchorEl: null,
+    help: false,
+    ratingIsOpen: false,
+    ratings: [],
+    climateType: false,
+    completeEnabled: false
+  };
+
+  handleRatingModal = () => {
+    this.setState({ ratingIsOpen: true });
+  };
+
+  handleHelpModal = () => {
+    this.setState({ help: true });
+  };
+
+  handleClickAway = () => {
+    this.setState({ help: false });
+  };
+
+  handleNotes = open => {
+    if (open) {
+      this.setState({ notes: true });
+    } else {
+      this.setState({ notes: false });
     }
+  };
 
-    render() {
-        const { anchorEl } = this.state;
-        const open = Boolean(anchorEl);
+  handleRatingConfirmation = rating => {
+    this.setState({ ratingIsOpen: false });
+  };
 
-        return (
-            <div className={this.props.classes.root}>
-                <FirebaseContext.Consumer>
-                    {firebase => (
-                        <AppBar
-                            firebase={firebase}
-                            classes={{ root: this.props.classes.grow }}
-                        />
-                    )}
-                </FirebaseContext.Consumer>
-                {this.state.help ? (
-                    <ClickAwayListener onClickAway={this.handleClickAway}>
-                        {" "}
-                        <ClassroomClimateHelp />
-                    </ClickAwayListener>
-                ) : this.state.notes ? (
-                    <FirebaseContext.Consumer>
-                        {firebase => (
-                            <Notes
-                                open={true}
-                                onClose={this.handleNotes}
-                                color="#0988EC"
-                                text="Sequential Activities Notes"
-                                firebase={firebase}
-                            />
-                        )}
-                    </FirebaseContext.Consumer>
+  handleCompleteButton = enable => {
+    this.setState({ completeEnabled: enable });
+  };
+
+  render() {
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
+
+    return (
+      <div className={this.props.classes.root}>
+        <FirebaseContext.Consumer>
+          {firebase => (
+            <AppBar
+              firebase={firebase}
+              classes={{ root: this.props.classes.grow }}
+            />
+          )}
+        </FirebaseContext.Consumer>
+        {this.state.help ? (
+          <ClickAwayListener onClickAway={this.handleClickAway}>
+            {" "}
+            <ClassroomClimateHelp />
+          </ClickAwayListener>
+        ) : this.state.notes ? (
+          <FirebaseContext.Consumer>
+            {firebase => (
+              <Notes
+                open={true}
+                onClose={this.handleNotes}
+                color="#0988EC"
+                text="Sequential Activities Notes"
+                firebase={firebase}
+              />
+            )}
+          </FirebaseContext.Consumer>
+        ) : (
+          <div />
+        )}
+        <main style={{ flex: 1 }}>
+          <FirebaseContext.Consumer>
+            {firebase => (
+              <CenterMenu
+                firebase={firebase}
+                onStatusChange={this.handleCompleteButton}
+              />
+            )}
+          </FirebaseContext.Consumer>
+        </main>
+        <footer>
+          <Grid
+            container
+            alignItems={"center"}
+            justify={"space-between"}
+            direction={"row"}
+          >
+            <Grid item xs={2}>
+              <IconButton
+                aria-owns={open ? "menu-appbar" : undefined}
+                aria-haspopup="true"
+                onClick={this.handleHelpModal}
+                color="inherit"
+              >
+                <InfoIcon color={"secondary"} fontSize={"large"} />
+              </IconButton>
+              <IconButton
+                aria-owns={open ? "menu-appbar" : undefined}
+                aria-haspopup="true"
+                onClick={this.handleNotes}
+                color="inherit"
+              >
+                <EditIcon color={"secondary"} fontSize={"large"} />
+              </IconButton>
+            </Grid>
+            <Grid item xs={8} />
+            <Grid item xs={2}>
+              <Grid
+                container
+                alignItems={"center"}
+                justify={"space-between"}
+                direction={"column"}
+              >
+                Start Time:{" "}
+                {new Date().toLocaleString("en-US", {
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: true
+                })}
+                <br />
+                {!this.state.completeEnabled ? (
+                  <div />
                 ) : (
-                    <div />
+                  <FirebaseContext.Consumer>
+                    {firebase => (
+                      <YesNoDialog
+                        buttonText={"Complete Observation"}
+                        buttonVariant={"contained"}
+                        buttonColor={"secondary"}
+                        buttonStyle={{ margin: 10 }}
+                        dialogTitle={
+                          "Are you sure you want to complete this observation?"
+                        }
+                        shouldOpen={true}
+                        onAccept={() => {
+                          this.props.deleteAllCenters();
+                          this.props.history.push({
+                            pathname: "/Home",
+                            state: this.props.history.state
+                          });
+                          firebase.endSession();
+                        }}
+                      />
+                    )}
+                  </FirebaseContext.Consumer>
                 )}
-                <main style={{ flex: 1 }}>
-                    <FirebaseContext.Consumer>
-                        {firebase => <CenterMenu firebase={firebase} onStatusChange={this.handleCompleteButton}/>}
-                    </FirebaseContext.Consumer>
-                </main>
-                <footer>
-                    <Grid
-                        container
-                        alignItems={"center"}
-                        justify={"space-between"}
-                        direction={"row"}
-                    >
-                        <Grid item xs={2}>
-                            <IconButton
-                                aria-owns={open ? "menu-appbar" : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleHelpModal}
-                                color="inherit"
-                            >
-                                <InfoIcon color={"secondary"} fontSize={"large"} />
-                            </IconButton>
-                            <IconButton
-                                aria-owns={open ? "menu-appbar" : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleNotes}
-                                color="inherit"
-                            >
-                                <EditIcon color={"secondary"} fontSize={"large"} />
-                            </IconButton>
-                        </Grid>
-                        <Grid item xs={8} />
-                        <Grid item xs={2}>
-                            <Grid
-                                container
-                                alignItems={"center"}
-                                justify={"space-between"}
-                                direction={"column"}
-                            >
-                                Start Time:{" "}
-                                {new Date().toLocaleString("en-US", {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    hour12: true
-                                })}
-                                <br />
-                                {!this.state.completeEnabled ?
-                                    <div/>
-                                    :
-                                    <FirebaseContext.Consumer>
-                                        {firebase => (
-                                            <YesNoDialog
-                                                buttonText={"Complete Observation"}
-                                                buttonVariant={"contained"}
-                                                buttonColor={"secondary"}
-                                                buttonStyle={{ margin: 10 }}
-                                                dialogTitle={
-                                                    "Are you sure you want to complete this observation?"
-                                                }
-                                                shouldOpen={true}
-                                                onAccept={() => {
-                                                    this.props.deleteAllCenters();
-                                                    this.props.history.push({
-                                                        pathname: "/Home",
-                                                        state: this.props.history.state
-                                                    });
-                                                    firebase.endSession();
-                                                }}
-                                            />
-                                        )}
-                                    </FirebaseContext.Consumer>
-                                }
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </footer>
-            </div>
-        );
-    }
+              </Grid>
+            </Grid>
+          </Grid>
+        </footer>
+      </div>
+    );
+  }
 }
 
 SequentialActivities.propTypes = {
-    classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired
 };
 
 export default connect(
-    null,
-    { deleteAllCenters }
+  null,
+  { deleteAllCenters }
 )(withStyles(styles)(SequentialActivities));
