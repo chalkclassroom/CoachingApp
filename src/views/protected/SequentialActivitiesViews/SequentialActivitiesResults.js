@@ -22,6 +22,8 @@ import NotesListDetailTable from "../../../components/ResultsComponents/NotesLis
 import 'chartjs-plugin-datalabels';
 import ChildTeacherBehaviorSlider
     from "../../../components/SequentialActivitiesComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
+import ChildTeacherBehaviorDetailsSlider
+    from "../../../components/SequentialActivitiesComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
 
 
 
@@ -343,7 +345,7 @@ class SequentialActivitiesResults extends React.Component {
                                         </div>
                                     ) : this.state.view === ViewEnum.DETAILS ? (
                                         <div className={classes.resultsContent}>
-
+                                            <ChildTeacherBehaviorDetailsSlider/>
                                         </div>
                                     ) : this.state.view === ViewEnum.TRENDS ? (
                                         <div className={classes.resultsContent}>

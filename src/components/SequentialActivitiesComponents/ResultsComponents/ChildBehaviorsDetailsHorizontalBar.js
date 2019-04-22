@@ -12,17 +12,19 @@ const styles = {
  * @type {{datasets: *[], labels: string[][]}}
  */
 const childBehaviorsData = {
-    labels: ['Talking to each other about current activity',
-        'Engaging in pretend play without clear roles or order',
-        'Following formal rules and/or taking turns',
-        'Speaking or acting in character during a clear pretend play scenario'],
+    labels: ['Using regular objects in a sequential way',
+        'Writing names or meaningful messages',
+        'Drawing meaninful images',
+        'Using sequential materials in a prescribed way',
+        'Following formal rules of a game and/or taking turns',
+        'Speaking or acting according to a predetermined scenario'],
     datasets: [
         {
             label:'Number of Times Observed',
-            backgroundColor: '#a086c9',
-            borderColor: '#6F39C4',
+            backgroundColor: '#FFD300',
+            borderColor: '#FFD300',
             borderWidth: 2,
-            data: [65, 59, 80, 81]
+            data: [3, 8, 2, 7, 2, 1]
         }
     ]
 };
@@ -34,7 +36,19 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component {
         return (
             <HorizontalBar data={childBehaviorsData}
                            width="650"
-                           height="400"/>
+                           height="400"
+                           options={{
+                               scales: {
+                                   xAxes: [{
+                                       ticks: {
+                                           suggestedMin: 0,
+                                           suggestedMax: 10
+                                       }
+                                   }]
+                               }
+                           }}/>
+
+
         );
     }
 }

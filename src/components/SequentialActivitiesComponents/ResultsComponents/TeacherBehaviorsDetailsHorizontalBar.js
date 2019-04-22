@@ -12,17 +12,16 @@ const styles = {
  * @type {{datasets: *[], labels: string[][]}}
  */
 const teacherBehaviorsData = {
-    labels: ['Participating in children’s play',
-        'Asking questions to check for understanding or extend children’s thinking',
-        'Encouraging children to share, work, or interact with each other',
-        'Helping children find the words to communicate'],
+    labels: ['Encourage sequential use of materials',
+            'Demonstrating the steps to an activity',
+            'Helping children act out a play or a they have read'],
     datasets: [
         {
             label: 'Number of Times Observed',
-            backgroundColor: '#90c4ed',
+            backgroundColor: '#0988EC',
             borderColor: '#0988EC',
             borderWidth: 2,
-            data: [65, 59, 80, 81]
+            data: [9, 5, 4]
         }
     ]
 };
@@ -34,7 +33,17 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component {
         return (
             <HorizontalBar data={teacherBehaviorsData}
                            width="650"
-                           height="400"/>
+                           height="400"
+                           options={{
+                               scales: {
+                                   xAxes: [{
+                                       ticks: {
+                                           suggestedMin: 0,
+                                           suggestedMax: 10
+                                       }
+                                   }]
+                               }
+                           }}/>
         );
     }
 }
