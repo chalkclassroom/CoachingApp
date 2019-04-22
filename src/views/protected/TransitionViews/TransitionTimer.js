@@ -77,7 +77,7 @@ class TransitionTimer extends React.Component {
                 let mStart = new Date();
                 this.setState({ start: mStart });
                 this.timer = setInterval(() => {
-                    this.setState({ time: Date.now() - startTime });
+                    this.setState({ time: Math.round(Date.now() - startTime) });
                 }, 1000);
             }
             return { isOn: !state.isOn };
