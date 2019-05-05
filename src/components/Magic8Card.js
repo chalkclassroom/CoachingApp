@@ -9,6 +9,8 @@ import {
     Typography
 } from "@material-ui/core";
 import styled from "styled-components";
+import Overlay from "react-image-overlay";
+import lock from "../assets/lock48.png"
 
 const styles = {
     title: {
@@ -62,13 +64,22 @@ class Magic8Card extends Component {
                     style={{
                         backgroundColor: this.props.backgroundColor,
                         opacity: this.state.selected ? 0.5 : 1,
-                        height: "100px;",
+                        height: "160px;",
                         boxShadow: "none"
                     }}
                     onClick={this.onClick}
                 >
                     <CardActionArea style={{ height: "160px", width: "160px" }}>
-                        <img src={this.props.icon}/>
+                        <Overlay
+                            url={this.props.icon} // required
+                            overlayUrl={lock} // required
+                            imageHeight={160}
+                            position={'center'}
+                            overlayWidth={180}
+                            overlayHeight={140}
+                            overlayPadding={10}
+                            watermark={true}
+                        />
                     </CardActionArea>
                 </Card>
             </CardBase>
