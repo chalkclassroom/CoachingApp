@@ -20,7 +20,10 @@ import AssociativeCooperativeInteractions from "./views/protected/AssociativeCoo
 import AssociativeCooperativeInteractionsResults from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResults";
 import SequentialActivities from "./views/protected/SequentialActivitiesViews/SequentialActivities";
 import SequentialActivitiesResults from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResults";
-import TrainingHome from "./views/protected/TrainingViews/TrainingHome";
+import ACTrainingHome from "./views/protected/AssociativeCooperativeViews/ACTrainingHome";
+import ClassroomClimateTrainingHome from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingHome";
+import SequentialTrainingHome from "./views/protected/SequentialActivitiesViews/SequentialTrainingHome";
+import TransitionTrainingHome from "./views/protected/TransitionViews/TransitionTrainingHome";
 
 
 const styles = createMuiTheme({
@@ -156,8 +159,23 @@ class App extends Component {
             />
             <PrivateRoute
                 auth={this.state.auth}
-                path="/TrainingHome"
-                component={TrainingHome}
+                path="/ACTrainingHome"
+                component={ACTrainingHome}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/ClassroomClimateTrainingHome"
+                component={ClassroomClimateTrainingHome}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/SequentialTrainingHome"
+                component={SequentialTrainingHome}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/TransitionTrainingHome"
+                component={TransitionTrainingHome}
             />
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                             the type prop into the PrivateRoute function*/}

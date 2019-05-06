@@ -1,5 +1,5 @@
 import React from "react";
-import { DefaultPlayer as Video } from 'react-html5video';
+import { DefaultPlayer as Video } from 'react-html5video/dist';
 import 'react-html5video/dist/styles.css';
 const sintelTrailer = 'http://techslides.com/demos/sample-videos/small.mp4';
 

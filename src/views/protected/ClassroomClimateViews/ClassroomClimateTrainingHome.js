@@ -1,31 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
-import MenuItem from "@material-ui/core/MenuItem";
-import Grid from "@material-ui/core/Grid";
+import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import FilledInput from "@material-ui/core/FilledInput";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import IconButton from "@material-ui/core/IconButton/IconButton";
-import Select from "@material-ui/core/Select";
-import { ReactComponent as GenerateReportSVG } from "../../../assets/icons/generateReport.svg";
+import List from "@material-ui/core/List/index";
+import ListItem from "@material-ui/core/ListItem/index";
 import TransitionTimeIcon from "../../../assets/icons/TransitionTime.svg";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
-import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import 'chartjs-plugin-datalabels';
 import TrainingVideo
-    from "../TrainingViews/TrainingVideo";
-import ChildTeacherBehaviorDetailsSlider
-    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
+    from "../../../components/Shared/TrainingVideo";
 import ChildTeacherBehaviorTrendsSlider
     from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
-import TrainingQuestionnaire from "./TrainingQuestionnaire";
+import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 
 
 
@@ -120,7 +110,7 @@ const transitionNotes = [
     createNotesData("09:56", "Close down center conflict")
 ];
 
-class TrainingHome extends React.Component {
+class ClassroomClimateTrainingHome extends React.Component {
     constructor(props) {
         super(props);
         this.handleAppend = this.handleAppend.bind(this);
@@ -345,8 +335,8 @@ class TrainingHome extends React.Component {
     }
 }
 
-TrainingHome.propTypes = {
+ClassroomClimateTrainingHome.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(TrainingHome);
+export default withStyles(styles)(ClassroomClimateTrainingHome);
