@@ -48,7 +48,7 @@ class BehaviorCounter extends React.Component {
       <g fill="rgba(255,255,255,0)" style={{
         stroke:
           this.props.climateType === "instruction"
-            ? "#094492"
+            ? "#6465bb"
             : "#4FD9B3"
       }} strokeWidth={30}>
         <path
@@ -182,10 +182,641 @@ class BehaviorCounter extends React.Component {
   };
 
 
+    // CustomUI2 = props => {
+    //     return (
+    //     <svg width={688} height={600} {...props}>
+    //         <defs>
+    //             <style>
+    //                 {
+    //                     '.prefix__cls-3{fill:none;stroke:#6465bb;stroke-width:1.8px;stroke-linecap:square}'
+    //                 }
+    //             </style>
+    //             <linearGradient
+    //                 id="prefix__linear-gradient"
+    //                 x1={0.42}
+    //                 y1={0.86}
+    //                 x2={0.806}
+    //                 gradientUnits="objectBoundingBox"
+    //             >
+    //                 <stop offset={0} stopColor="#029164" />
+    //                 <stop offset={1} stopColor="#1dbe89" />
+    //             </linearGradient>
+    //             <filter
+    //                 id="prefix__Rectangle"
+    //                 x={0}
+    //                 y={371}
+    //                 width={228}
+    //                 height={229}
+    //                 filterUnits="userSpaceOnUse"
+    //             >
+    //                 <feOffset dy={4} />
+    //                 <feGaussianBlur stdDeviation={5} result="blur" />
+    //                 <feFlood floodColor="#949494" />
+    //                 <feComposite operator="in" in2="blur" />
+    //                 <feComposite in="SourceGraphic" />
+    //             </filter>
+    //             <linearGradient
+    //                 id="prefix__linear-gradient-2"
+    //                 x1={0.711}
+    //                 y1={-0.112}
+    //                 x2={0.468}
+    //                 y2={0.85}
+    //                 gradientUnits="objectBoundingBox"
+    //             >
+    //                 <stop offset={0} stopColor="#ffc061" />
+    //                 <stop offset={1} stopColor="#e99c2e" />
+    //             </linearGradient>
+    //             <filter
+    //                 id="prefix__Rectangle_Copy_3"
+    //                 x={460}
+    //                 y={0}
+    //                 width={228}
+    //                 height={229}
+    //                 filterUnits="userSpaceOnUse"
+    //             >
+    //                 <feOffset dy={4} />
+    //                 <feGaussianBlur stdDeviation={5} result="blur-2" />
+    //                 <feFlood floodColor="#949494" />
+    //                 <feComposite operator="in" in2="blur-2" />
+    //                 <feComposite in="SourceGraphic" />
+    //             </filter>
+    //             <linearGradient
+    //                 id="prefix__linear-gradient-3"
+    //                 x1={0.707}
+    //                 y1={0.081}
+    //                 x2={0.5}
+    //                 y2={1}
+    //                 gradientUnits="objectBoundingBox"
+    //             >
+    //                 <stop offset={0} stopColor="#fb6988" />
+    //                 <stop offset={1} stopColor="#f53850" />
+    //             </linearGradient>
+    //             <filter
+    //                 id="prefix__Rectangle_Copy"
+    //                 x={460}
+    //                 y={371}
+    //                 width={228}
+    //                 height={229}
+    //                 filterUnits="userSpaceOnUse"
+    //             >
+    //                 <feOffset dy={4} />
+    //                 <feGaussianBlur stdDeviation={5} result="blur-3" />
+    //                 <feFlood floodColor="#949494" />
+    //                 <feComposite operator="in" in2="blur-3" />
+    //                 <feComposite in="SourceGraphic" />
+    //             </filter>
+    //             <linearGradient
+    //                 id="prefix__linear-gradient-4"
+    //                 x1={0.755}
+    //                 y1={-0.044}
+    //                 x2={0.552}
+    //                 y2={0.443}
+    //                 gradientUnits="objectBoundingBox"
+    //             >
+    //                 <stop offset={0} stopColor="#c169e5" />
+    //                 <stop offset={1} stopColor="#9337d3" />
+    //             </linearGradient>
+    //             <filter
+    //                 id="prefix__Rectangle_Copy_2"
+    //                 x={0}
+    //                 y={2}
+    //                 width={228}
+    //                 height={229}
+    //                 filterUnits="userSpaceOnUse"
+    //             >
+    //                 <feOffset dy={4} />
+    //                 <feGaussianBlur stdDeviation={5} result="blur-4" />
+    //                 <feFlood floodColor="#646464" floodOpacity={0.502} />
+    //                 <feComposite operator="in" in2="blur-4" />
+    //                 <feComposite in="SourceGraphic" />
+    //             </filter>
+    //         </defs>
+    //         <g
+    //             id="prefix__Selection_Circles"
+    //             data-name="Selection Circles"
+    //             transform="translate(15 11)"
+    //         >
+    //             <g
+    //                 id="prefix__Group_4"
+    //                 data-name="Group 4"
+    //                 transform="translate(68 67)"
+    //                 fill="#6465bb"
+    //             >
+    //                 <path
+    //                     id="prefix__Combined_Shape"
+    //                     data-name="Combined Shape"
+    //                     d="M524 446H0V0h524v446zM41 37v376h442V37z"
+    //                 />
+    //                 <text
+    //                     id="prefix___3"
+    //                     data-name={'responses'}
+    //                     transform="translate(264.5 220)"
+    //                     fontFamily="Helvetica-Bold,Helvetica"
+    //                     fontWeight={700}
+    //                     fontSize={40}
+    //                 >
+    //                     <tspan x={-11.123} y={0}>
+    //                         {this.props.climateStackSize}
+    //                     </tspan>
+    //                 </text>
+    //             </g>
+    //             <g id="prefix__undo" transform="translate(300.5 308.88)"  onClick={() =>
+    //                 this.handleUndo()
+    //             }>
+    //                 <path
+    //                     id="prefix__Path_1"
+    //                     data-name="Path 1"
+    //                     className="prefix__cls-3"
+    //                     d="M17.207 24.207H3V10"
+    //                     transform="translate(0 .7)"
+    //                 />
+    //                 <path
+    //                     id="prefix__Path_2"
+    //                     data-name="Path 2"
+    //                     className="prefix__cls-3"
+    //                     d="M5 19.224C19.207 5.017 40.73 7.077 50.461 22.065"
+    //                     transform="translate(3.683)"
+    //                 />
+    //                 <path
+    //                     id="prefix__Path_3"
+    //                     data-name="Path 3"
+    //                     d="M3 24.907l5.683-5.683"
+    //                     strokeLinecap="round"
+    //                     fill="none"
+    //                     stroke="#6465bb"
+    //                     strokeWidth={1.8}
+    //                 />
+    //             </g>
+    //             <g id="prefix__Specific_Approval" data-name="Specific Approval" onClick={() =>
+    //                 this.handlePushFire("specificapproval")}>
+    //                 <g transform="translate(-15 -11)" filter="url(#prefix__Rectangle)">
+    //                     <rect
+    //                         id="prefix__Rectangle-2"
+    //                         data-name="Rectangle"
+    //                         width={198}
+    //                         height={199}
+    //                         rx={99}
+    //                         transform="translate(15 382)"
+    //                         fill="url(#prefix__linear-gradient)"
+    //                     />
+    //                 </g>
+    //                 <text
+    //                     id="prefix__Specific_Approval-2"
+    //                     data-name="Specific Approval"
+    //                     transform="translate(99.5 482)"
+    //                     fontSize={21}
+    //                     fill="#bdffd8"
+    //                     fontFamily="Helvetica-Bold,Helvetica"
+    //                     fontWeight={700}
+    //                 >
+    //                     <tspan x={-91.224} y={0}>
+    //                         {'Specific Approval'}
+    //                     </tspan>
+    //                 </text>
+    //             </g>
+    //             <g id="prefix__Redirection">
+    //                 <g
+    //                     transform="translate(-15 -11)"
+    //                     filter="url(#prefix__Rectangle_Copy_3)"
+    //                 >
+    //                     <rect
+    //                         id="prefix__Rectangle_Copy_3-2"
+    //                         data-name="Rectangle Copy 3"
+    //                         width={198}
+    //                         height={199}
+    //                         rx={99}
+    //                         transform="translate(475 11)"
+    //                         fill="url(#prefix__linear-gradient-2)"
+    //                     />
+    //                 </g>
+    //                 <text
+    //                     id="prefix__Redirection-2"
+    //                     data-name="Redirection"
+    //                     transform="translate(505 89.315)"
+    //                     fill="#fff7ec"
+    //                     fontSize={21}
+    //                     fontFamily="Helvetica-Bold,Helvetica"
+    //                     fontWeight={700}
+    //                 >
+    //                     <tspan x={0} y={16}>
+    //                         {'Redirection'}
+    //                     </tspan>
+    //                 </text>
+    //             </g>
+    //             <g id="prefix__Non-Specific_Approval" data-name="Non-Specific Approval">
+    //                 <g transform="translate(-15 -11)" filter="url(#prefix__Rectangle_Copy)">
+    //                     <rect
+    //                         id="prefix__Rectangle_Copy-2"
+    //                         data-name="Rectangle Copy"
+    //                         width={198}
+    //                         height={199}
+    //                         rx={99}
+    //                         transform="translate(475 382)"
+    //                         fill="url(#prefix__linear-gradient-3)"
+    //                     />
+    //                 </g>
+    //                 <text
+    //                     id="prefix__Non-Specific_Approval"
+    //                     data-name="Non-Specific Approval"
+    //                     transform="translate(499 432.315)"
+    //                     fill="#ffeaed"
+    //                     fontSize={21}
+    //                     fontFamily="Helvetica-Bold,Helvetica"
+    //                     fontWeight={700}
+    //                 >
+    //                     <tspan x={36.093} y={16}>
+    //                         {'Non-'}
+    //                     </tspan>
+    //                     <tspan x={19.733} y={37}>
+    //                         {'Specific'}
+    //                     </tspan>
+    //                     <tspan x={14.493} y={58}>
+    //                         {'Approval'}
+    //                     </tspan>
+    //                 </text>
+    //             </g>
+    //             <g id="prefix__Disapproval_" data-name="Disapproval">
+    //                 <g
+    //                     transform="translate(-15 -11)"
+    //                     filter="url(#prefix__Rectangle_Copy_2)"
+    //                 >
+    //                     <rect
+    //                         id="prefix__Rectangle_Copy_2-2"
+    //                         data-name="Rectangle Copy 2"
+    //                         width={198}
+    //                         height={199}
+    //                         rx={99}
+    //                         transform="translate(15 13)"
+    //                         fill="url(#prefix__linear-gradient-4)"
+    //                     />
+    //                 </g>
+    //                 <text
+    //                     id="prefix__Disapproval"
+    //                     transform="translate(24 87)"
+    //                     fill="#f4e3ff"
+    //                     fontSize={21}
+    //                     fontFamily="Helvetica-Bold,Helvetica"
+    //                     fontWeight={700}
+    //                 >
+    //                     <tspan x={15.397} y={16}>
+    //                         {'Disapproval'}
+    //                     </tspan>
+    //                 </text>
+    //             </g>
+    //             <text
+    //                 id="prefix__Total_Reponses:"
+    //                 data-name="Total Reponses:"
+    //                 transform="translate(333 240)"
+    //                 fontSize={21}
+    //                 fontFamily="Helvetica-Bold,Helvetica"
+    //                 fontWeight={700}
+    //                 fill="#6465bb"
+    //             >
+    //                 <tspan x={-83.821} y={0}>
+    //                     {'Total Reponses: '}
+    //                 </tspan>
+    //             </text>
+    //         </g>
+    //     </svg>
+    // )};
+
+    CustomUI2 = props => {
+        return (
+        <svg width={595.172} height={555.055} {...props}>
+            <defs>
+                <style>{'.prefix__cls-1{fill:#6465bb}'}</style>
+                <linearGradient
+                    id="prefix__linear-gradient"
+                    x1={0.42}
+                    y1={0.86}
+                    x2={0.806}
+                    gradientUnits="objectBoundingBox"
+                >
+                    <stop offset={0} stopColor="#029164" />
+                    <stop offset={1} stopColor="#1dbe89" />
+                </linearGradient>
+                <filter
+                    id="prefix__Rectangle"
+                    x={378.117}
+                    y={336.625}
+                    width={217.055}
+                    height={218}
+                    filterUnits="userSpaceOnUse"
+                >
+                    <feOffset dy={4} />
+                    <feGaussianBlur stdDeviation={5} result="blur" />
+                    <feFlood floodColor="#949494" />
+                    <feComposite operator="in" in2="blur" />
+                    <feComposite in="SourceGraphic" />
+                </filter>
+                <linearGradient
+                    id="prefix__linear-gradient-2"
+                    x1={0.711}
+                    y1={-0.112}
+                    x2={0.468}
+                    y2={0.85}
+                    gradientUnits="objectBoundingBox"
+                >
+                    <stop offset={0} stopColor="#ffc061" />
+                    <stop offset={1} stopColor="#e99c2e" />
+                </linearGradient>
+                <filter
+                    id="prefix__Rectangle_Copy_3"
+                    x={0}
+                    y={0}
+                    width={217.055}
+                    height={218}
+                    filterUnits="userSpaceOnUse"
+                >
+                    <feOffset dy={4} />
+                    <feGaussianBlur stdDeviation={5} result="blur-2" />
+                    <feFlood floodColor="#949494" />
+                    <feComposite operator="in" in2="blur-2" />
+                    <feComposite in="SourceGraphic" />
+                </filter>
+                <linearGradient
+                    id="prefix__linear-gradient-3"
+                    x1={0.707}
+                    y1={0.081}
+                    x2={0.5}
+                    y2={1}
+                    gradientUnits="objectBoundingBox"
+                >
+                    <stop offset={0} stopColor="#fb6988" />
+                    <stop offset={1} stopColor="#f53850" />
+                </linearGradient>
+                <filter
+                    id="prefix__Rectangle_Copy"
+                    x={0}
+                    y={337.055}
+                    width={217.055}
+                    height={218}
+                    filterUnits="userSpaceOnUse"
+                >
+                    <feOffset dy={4} />
+                    <feGaussianBlur stdDeviation={5} result="blur-3" />
+                    <feFlood floodColor="#949494" />
+                    <feComposite operator="in" in2="blur-3" />
+                    <feComposite in="SourceGraphic" />
+                </filter>
+                <linearGradient
+                    id="prefix__linear-gradient-4"
+                    x1={0.755}
+                    y1={-0.044}
+                    x2={0.552}
+                    y2={0.443}
+                    gradientUnits="objectBoundingBox"
+                >
+                    <stop offset={0} stopColor="#c169e5" />
+                    <stop offset={1} stopColor="#9337d3" />
+                </linearGradient>
+                <filter
+                    id="prefix__Rectangle_Copy_2"
+                    x={376.117}
+                    y={11.152}
+                    width={217.055}
+                    height={218}
+                    filterUnits="userSpaceOnUse"
+                >
+                    <feOffset dy={4} />
+                    <feGaussianBlur stdDeviation={5} result="blur-4" />
+                    <feFlood floodColor="#646464" floodOpacity={0.502} />
+                    <feComposite operator="in" in2="blur-4" />
+                    <feComposite in="SourceGraphic" />
+                </filter>
+            </defs>
+            <g
+                id="prefix__Selection_Circles"
+                data-name="Selection Circles"
+                transform="translate(24.117 20.35)"
+            >
+                <g id="prefix__Group_4" data-name="Group 4" transform="translate(68 72)" style={{
+                    stroke:
+                        this.props.climateType === "instruction"
+                            ? "#6465BB"
+                            : "#4FD9B3"
+                }}>
+                    <path
+                        id="prefix__Combined_Shape"
+                        data-name="Combined Shape"
+                        className="prefix__cls-1"
+                        style={{
+                            fill:
+                                this.props.climateType === "instruction"
+                                    ? "#6465BB"
+                                    : "#4FD9B3"
+                        }}
+                        d="M406.883 388.276H0V0h406.883v388.275zM31.837 32.211v327.335h343.21V32.211z"
+                    />
+                </g>
+                <text
+                    id="ClimateStack"
+                    data-name={'ClimateStackSize'}
+                    transform="translate(271.841 274.519)"
+                    fontFamily="Helvetica-Bold,Helvetica"
+                    fontWeight={700}
+                    fontSize={30}
+                    fill="#6465bb"
+                >
+                    <tspan x={-8.342} y={0}>
+                        {this.props.climateStackSize}
+                    </tspan>
+                </text>
+                <g
+                    id="prefix__Specific_Approval"
+                    data-name="Specific Approval"
+                    transform="translate(185 445.275)"
+                    data-name="Group 1" onClick={() =>
+                    this.handlePushFire("specificapproval")}
+                >
+                    <g
+                        transform="translate(-209.12 -465.63)"
+                        filter="url(#prefix__Rectangle)"
+                    >
+                        <rect
+                            id="prefix__Rectangle-2"
+                            data-name="Rectangle"
+                            width={187.055}
+                            height={188}
+                            rx={93.528}
+                            transform="translate(393.12 347.63)"
+                            fill="url(#prefix__linear-gradient)"
+                        />
+                    </g>
+                    <text
+                        id="prefix__Specific_Approval-2"
+                        data-name="Specific Approval"
+                        transform="translate(277.071 -28.531)"
+                        fontSize={20}
+                        fill="#bdffd8"
+                        fontFamily="Helvetica-Bold,Helvetica"
+                        fontWeight={700}
+                    >
+                        <tspan x={-41.128} y={0}>
+                            {'Specific '}
+                        </tspan>
+                        <tspan x={-46.118} y={19}>
+                            {'Approval'}
+                        </tspan>
+                    </text>
+                </g>
+                <g id="prefix__Redirection" transform="translate(-9.117 -9.35)"
+                   data-name="Group 1" onClick={() =>
+                    this.handlePushFire("redirection")}>
+                    <g
+                        transform="translate(-15 -11)"
+                        filter="url(#prefix__Rectangle_Copy_3)"
+                    >
+                        <rect
+                            id="prefix__Rectangle_Copy_3-2"
+                            data-name="Rectangle Copy 3"
+                            width={187.055}
+                            height={188}
+                            rx={93.528}
+                            transform="translate(15 11)"
+                            fill="url(#prefix__linear-gradient-2)"
+                        />
+                    </g>
+                    <text
+                        id="prefix__Redirection-2"
+                        data-name="Redirection"
+                        transform="translate(35.864 85.414)"
+                        fill="#fff7ec"
+                        fontSize={20}
+                        fontFamily="Helvetica-Bold,Helvetica"
+                        fontWeight={700}
+                    >
+                        <tspan x={0} y={15}>
+                            {'Redirection'}
+                        </tspan>
+                    </text>
+                </g>
+                <g
+                    id="prefix__Non-Specific_Approval"
+                    data-name="Non-Specific Approval"
+                    transform="translate(9.883 359.705)"
+                    onClick={() =>
+                        this.handlePushFire("nonspecificapproval")
+                    }
+                >
+                    <g
+                        transform="translate(-34 -380.06)"
+                        filter="url(#prefix__Rectangle_Copy)"
+                    >
+                        <path
+                            id="prefix__Rectangle_Copy-2"
+                            data-name="Rectangle Copy"
+                            d="M93.528 0a93.528 93.528 0 0 1 93.528 93.528v.945A93.528 93.528 0 0 1 0 94.472v-.945A93.528 93.528 0 0 1 93.528 0z"
+                            transform="translate(15 348.06)"
+                            fill="url(#prefix__linear-gradient-3)"
+                        />
+                    </g>
+                    <text
+                        id="prefix__Non-Specific_Approval"
+                        data-name="Non-Specific Approval"
+                        transform="translate(-4.491 47.393)"
+                        fill="#ffeaed"
+                        fontSize={20}
+                        fontFamily="Helvetica-Bold,Helvetica"
+                        fontWeight={700}
+                    >
+                        <tspan x={18.28} y={15}>
+                            {'Non-Specific'}
+                        </tspan>
+                        <tspan x={36.058} y={36}>
+                            {'Approval'}
+                        </tspan>
+                    </text>
+                </g>
+                <g
+                    id="prefix__Disapproval_"
+                    data-name="Disapproval"
+                    transform="translate(487 -123.198)"
+                    data-name="Group 1" onClick={() =>
+                    this.handlePushFire("disapproval")}
+                >
+                    <g
+                        transform="translate(-511.12 102.85)"
+                        filter="url(#prefix__Rectangle_Copy_2)"
+                    >
+                        <rect
+                            id="prefix__Rectangle_Copy_2-2"
+                            data-name="Rectangle Copy 2"
+                            width={187.055}
+                            height={188}
+                            rx={93.528}
+                            transform="translate(391.12 22.15)"
+                            fill="url(#prefix__linear-gradient-4)"
+                        />
+                    </g>
+                    <text
+                        id="prefix__Disapproval"
+                        transform="translate(-98.212 206.89)"
+                        fill="#f4e3ff"
+                        fontSize={20}
+                        fontFamily="Helvetica-Bold,Helvetica"
+                        fontWeight={700}
+                    >
+                        <tspan x={14.446} y={15}>
+                            {'Disapproval'}
+                        </tspan>
+                    </text>
+                </g>
+                <g
+                    id="prefix__undo-arrow-in-a-black-circle"
+                    transform="translate(246.5 296.275)" onClick={() =>
+                    this.handleUndo()}
+                    >
+                    <svg width={50} height={50} {...props}>
+                        <path
+                            data-name="Path 1"
+                            d="M6.629 18.196l5.29 25.649 30.863-3.085-4.591-31.55L16.35 7.09z"
+                            fill="#fff"
+                            stroke="#6465bb"
+                            style={{
+                                stroke:
+                                    this.props.climateType === "instruction"
+                                        ? "#6465bb"
+                                        : "#4FD9B3"
+                            }}
+                            strokeMiterlimit={10}
+                        />
+                        <path
+                            data-name="Path 2"
+                            d="M25 0A25 25 0 1 1 0 25 25 25 0 0 1 25 0zm-3.125 34.375v-6.25s12.5-3.125 18.75 6.25a18.749 18.749 0 0 0-18.75-18.75v-6.25l-12.5 12.5z"
+                            fill="#6465bb"
+                            style={{
+                                fill:
+                                    this.props.climateType === "instruction"
+                                        ? "#6465bb"
+                                        : "#4FD9B3"
+                            }}
+                        />
+                    </svg>
+                </g>
+                <text
+                    id="prefix__Total_Reponses:"
+                    data-name="Total Reponses:"
+                    transform="translate(271.681 215.786)"
+                    fontSize={17}
+                    fontFamily="Helvetica-Bold,Helvetica"
+                    fontWeight={700}
+                    fill="#6465bb"
+                >
+                    <tspan x={-22.039} y={0}>
+                        {'Total '}
+                    </tspan>
+                    <tspan x={-45.351} y={17}>
+                        {'Responses'}
+                    </tspan>
+                </text>
+            </g>
+        </svg>
+    )};
   render() {
     return (
       <>
-        {this.CustomUI(this.props)}
+        {this.CustomUI2(this.props)}
       </>
         );
     }
