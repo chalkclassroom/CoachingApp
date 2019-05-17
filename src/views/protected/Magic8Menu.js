@@ -39,6 +39,18 @@ const styles = {
     }
 };
 
+const MAP = {
+    "None": 0,
+    "TransitionTime": 1,
+    "ClassroomClimate": 2,
+    "MathInstruction": 3,
+    "StudentEngagement": 4,
+    "LevelOfInstruction": 5,
+    "ListeningToChildren": 6,
+    "SequentialActivities": 7,
+    "AssociativeCooperativeInteractions": 8
+};
+
 class Magic8Menu extends Component {
     constructor(props) {
         super(props);
@@ -46,9 +58,14 @@ class Magic8Menu extends Component {
         this.state = {
             allowed: false,
             numSelected: 0,
-            selected: "none"
+            selected: "none",
+            unlocked: []
         };
+
+        this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this)
     }
+
+
 
     onClick(selected, title) {
         if (selected && this.state.numSelected > 0) {
@@ -69,21 +86,40 @@ class Magic8Menu extends Component {
     }
 
     handleObserve = () => {
-        if (this.state.selected !== "none") {
-            // get rid of else and the if wrapper if breaks
-            if (this.props.history.location.state.type === "Observe") {
-              this.props.history.push({
-                pathname: `/${this.state.selected}`,
-                state: this.props.location.state
-              });
+        if (this.state.unlocked.includes(MAP[this.state.selected])) {
+                if (this.props.history.location.state.type === "Observe") {
+                    this.props.history.push({
+                        pathname: `/${this.state.selected}`,
+                        state: this.props.location.state
+                    });
+                } else {
+                    this.props.history.push({
+                        pathname: `/${this.state.selected}Results`,
+                        state: this.props.location.state
+                    });
+                }
             } else {
-              this.props.history.push({
-                pathname: `/${this.state.selected}Results`,
-                state: this.props.location.state
-              });
+                console.log("Not unlocked");
+                this.props.history.push({
+                    pathname: `/${this.state.selected}TrainingHome`,
+                    state: this.props.location.state
+                });
             }
-        }
     };
+
+    setUnlockedSectionsState(){
+        let firebase = this.context;
+        firebase.getUnlockedSections().then((unlocked)=>{
+            console.log(unlocked);
+            this.setState({
+                unlocked: unlocked
+            });
+        });
+    }
+
+    componentDidMount() {
+        this.setUnlockedSectionsState();
+    }
 
     render() {
         return (
@@ -117,24 +153,28 @@ class Magic8Menu extends Component {
                             icon={TransitionTimeIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
+                            unlocked={this.state.unlocked.includes(1)}
                         />
                         <Magic8Card
                             title="ClassroomClimate"
                             icon={ClassroomClimateIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
+                            unlocked={this.state.unlocked.includes(2)}
                         />
                         <Magic8Card
                             title="MathInstruction"
                             icon={MathInstructionIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
+                            unlocked={this.state.unlocked.includes(3)}
                         />
                         <Magic8Card
                             title="StudentEngagement"
                             icon={StudentEngagementIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
+                            unlocked={this.state.unlocked.includes(4)}
                         />
                     </CardRow>
                     <CardRow>
@@ -143,24 +183,28 @@ class Magic8Menu extends Component {
                             icon={LevelInstructionIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
+                            unlocked={this.state.unlocked.includes(5)}
                         />
                         <Magic8Card
                             title="ListeningToChildren"
                             icon={ListenToChildrenIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
+                            unlocked={this.state.unlocked.includes(6)}
                         />
                         <Magic8Card
                             title="SequentialActivities"
                             icon={SequentialActivitiesIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
+                            unlocked={this.state.unlocked.includes(7)}
                         />
                         <Magic8Card
                             title="AssociativeCooperativeInteractions"
                             icon={AssociativeCooperativeIcon}
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
+                            unlocked={this.state.unlocked.includes(8)}
                         />
                     </CardRow>
                     <CardRow>
@@ -193,4 +237,5 @@ Magic8Menu.propTypes = {
     type: PropTypes.string.isRequired
 };
 
+Magic8Menu.contextType = FirebaseContext;
 export default withStyles(styles)(Magic8Menu);

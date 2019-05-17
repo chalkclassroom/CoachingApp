@@ -120,7 +120,7 @@ const transitionNotes = [
     createNotesData("09:56", "Close down center conflict")
 ];
 
-class SequentialTrainingHome extends React.Component {
+class AssociativeCooperativeInteractionsTrainingHome extends React.Component {
     constructor(props) {
         super(props);
         this.handleAppend = this.handleAppend.bind(this);
@@ -311,7 +311,7 @@ class SequentialTrainingHome extends React.Component {
                         </Grid>
                         <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
                             <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
-                                Training: Transition Time Tool
+                                Training: Associative & Cooperative Tool
                             </Typography>
                             <Grid item xs={12}>
                                 <div>
@@ -332,7 +332,7 @@ class SequentialTrainingHome extends React.Component {
                                     ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
                                         <div className={classes.resultsContent}
                                         >
-                                            <TrainingQuestionnaire/>
+                                            <TrainingQuestionnaire section={8}/>
                                         </div> // replace this null with next steps content
                                     ) :  null}
                                 </div>
@@ -345,8 +345,8 @@ class SequentialTrainingHome extends React.Component {
     }
 }
 
-SequentialTrainingHome.propTypes = {
+AssociativeCooperativeInteractionsTrainingHome.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(SequentialTrainingHome);
+export default withStyles(styles)(AssociativeCooperativeInteractionsTrainingHome);

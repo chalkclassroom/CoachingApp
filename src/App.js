@@ -20,10 +20,10 @@ import AssociativeCooperativeInteractions from "./views/protected/AssociativeCoo
 import AssociativeCooperativeInteractionsResults from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResults";
 import SequentialActivities from "./views/protected/SequentialActivitiesViews/SequentialActivities";
 import SequentialActivitiesResults from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResults";
-import ACTrainingHome from "./views/protected/AssociativeCooperativeViews/ACTrainingHome";
+import AssociativeCooperativeInteractionsTrainingHome from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingHome";
 import ClassroomClimateTrainingHome from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingHome";
-import SequentialTrainingHome from "./views/protected/SequentialActivitiesViews/SequentialTrainingHome";
-import TransitionTrainingHome from "./views/protected/TransitionViews/TransitionTrainingHome";
+import SequentialActivitiesTrainingHome from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingHome";
+import TransitionTimeTrainingHome from "./views/protected/TransitionViews/TransitionTimeTrainingHome";
 
 
 const styles = createMuiTheme({
@@ -159,8 +159,8 @@ class App extends Component {
             />
             <PrivateRoute
                 auth={this.state.auth}
-                path="/ACTrainingHome"
-                component={ACTrainingHome}
+                path="/AssociativeCooperativeInteractionsTrainingHome"
+                component={AssociativeCooperativeInteractionsTrainingHome}
             />
             <PrivateRoute
                 auth={this.state.auth}
@@ -169,13 +169,13 @@ class App extends Component {
             />
             <PrivateRoute
                 auth={this.state.auth}
-                path="/SequentialTrainingHome"
-                component={SequentialTrainingHome}
+                path="/SequentialActivitiesTrainingHome"
+                component={SequentialActivitiesTrainingHome}
             />
             <PrivateRoute
                 auth={this.state.auth}
-                path="/TransitionTrainingHome"
-                component={TransitionTrainingHome}
+                path="/TransitionTimeTrainingHome"
+                component={TransitionTimeTrainingHome}
             />
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                             the type prop into the PrivateRoute function*/}

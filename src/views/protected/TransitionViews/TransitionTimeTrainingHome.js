@@ -120,7 +120,7 @@ const transitionNotes = [
     createNotesData("09:56", "Close down center conflict")
 ];
 
-class ACTrainingHome extends React.Component {
+class TransitionTimeTrainingHome extends React.Component {
     constructor(props) {
         super(props);
         this.handleAppend = this.handleAppend.bind(this);
@@ -311,13 +311,13 @@ class ACTrainingHome extends React.Component {
                         </Grid>
                         <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
                             <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
-                                Training: Associative & Cooperative Time Tool
+                                Training: Transition Time Tool
                             </Typography>
                             <Grid item xs={12}>
                                 <div>
                                     {this.state.view === ViewEnum.CONCEPTS ? (
                                         <div className={classes.resultsContent}>
-                                            <TrainingVideo/>
+                                            <TrainingVideo videoUrl = {'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Transition_TrainingVid.mp4?alt=media&token=b7071289-0b59-4a8b-a23b-00f9b5b9ba37'}/>
                                         </div>
                                     ) : this.state.view === ViewEnum.EXAMPLE ? (
                                         <div className={classes.resultsContent}>
@@ -332,7 +332,7 @@ class ACTrainingHome extends React.Component {
                                     ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
                                         <div className={classes.resultsContent}
                                         >
-                                            <TrainingQuestionnaire/>
+                                            <TrainingQuestionnaire section={1}/>
                                         </div> // replace this null with next steps content
                                     ) :  null}
                                 </div>
@@ -345,8 +345,8 @@ class ACTrainingHome extends React.Component {
     }
 }
 
-ACTrainingHome.propTypes = {
+TransitionTimeTrainingHome.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ACTrainingHome);
+export default withStyles(styles)(TransitionTimeTrainingHome);

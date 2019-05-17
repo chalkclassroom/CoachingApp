@@ -301,13 +301,13 @@ class ClassroomClimateTrainingHome extends React.Component {
                         </Grid>
                         <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
                             <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
-                                Training: Transition Time Tool
+                                Training: Classroom Climate Tool
                             </Typography>
                             <Grid item xs={12}>
                                 <div>
                                     {this.state.view === ViewEnum.CONCEPTS ? (
                                         <div className={classes.resultsContent}>
-                                            <TrainingVideo/>
+                                            <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/CC_TrainingVid.mp4?alt=media&token=f9804efd-bcd2-4436-88f1-25be0725532f'}/>
                                         </div>
                                     ) : this.state.view === ViewEnum.EXAMPLE ? (
                                         <div className={classes.resultsContent}>
@@ -322,7 +322,7 @@ class ClassroomClimateTrainingHome extends React.Component {
                                     ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
                                         <div className={classes.resultsContent}
                                         >
-                                            <TrainingQuestionnaire/>
+                                            <TrainingQuestionnaire section={2}/>
                                         </div> // replace this null with next steps content
                                     ) :  null}
                                 </div>

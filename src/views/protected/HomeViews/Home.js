@@ -54,6 +54,8 @@ class Welcome extends React.Component {
         firebase.getCoachFirstName().then(name=>{
             this.setState({ coachName: name});
         })
+        firebase.handleFetchTrainingStatus();
+        firebase.handleFetchQuestions('transition')
     };
 
     render() {

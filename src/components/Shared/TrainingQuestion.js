@@ -7,6 +7,8 @@ import FormHelperText from '@material-ui/core/FormHelperText/index';
 import FormControlLabel from '@material-ui/core/FormControlLabel/index';
 import FormControl from '@material-ui/core/FormControl/index';
 import FormLabel from '@material-ui/core/FormLabel/index';
+import Typography from "@material-ui/core/Typography";
+import Modal from "@material-ui/core/Modal";
 
 const styles = theme => ({
     root: {
@@ -20,13 +22,42 @@ const styles = theme => ({
     },
 });
 
+
+
 class TrainingQuestion extends React.Component {
-    state = {
-        value: 'female',
-    };
+
+    constructor(props){
+        super(props);
+        this.state = {
+            selected: this.props.selected,
+            question:this.props.question,
+            options:this.props.options,
+            answer:this.props.answer
+        };
+    }
+
+    componentWillReceiveProps(nextProps){
+        const {question, answer, options,selected} = nextProps;
+        console.log(this.props);
+
+        this.setState({
+            answer,
+            question,
+            options,
+            selected
+        })
+    }
 
     handleChange = event => {
-        this.setState({ value: event.target.value });
+            this.setState({ selected: event.target.value })
+
+            console.log(event.target.value, this.state.answer)
+            if(event.target.value == this.state.answer){
+                console.log("Correct Answer")
+                this.props.incrementCorrectResponsesHandler();
+            }else{
+                console.log("Wrong Answer")
+            }
     };
 
     render() {
@@ -35,19 +66,20 @@ class TrainingQuestion extends React.Component {
         return (
             <div className={classes.root}>
                 <FormControl component="fieldset" className={classes.formControl}>
-                    <FormLabel component="legend">1. What are the potential benefits of reducing transition time?</FormLabel>
+                    <Typography component="h5" variant={"h5"}>{this.state.question}</Typography>
                     <RadioGroup
                         aria-label="Gender"
                         name="gender1"
                         className={classes.group}
-                        value={this.state.value}
+                        value={this.state.selected}
                         onChange={this.handleChange}
                     >
-                        <FormControlLabel value="1" control={<Radio />} label="Female" />
-                        <FormControlLabel value="2" control={<Radio />} label="Male" />
-                        <FormControlLabel value="3" control={<Radio />} label="Other" />
-                        <FormControlLabel value="4" control={<Radio />} label="Other" />
-                        <FormControlLabel value="5" control={<Radio />} label="Other" />
+                        {this.state.options.map((option, index) => {
+                                console.log(option, index, this.state.selected, this.state.selected == index)
+                                return <FormControlLabel key={index} value={index}
+                                                         control={<Radio checked={this.state.selected == index}/>} label={option}/>;
+
+                        })}
                     </RadioGroup>
                 </FormControl>
             </div>
@@ -57,6 +89,7 @@ class TrainingQuestion extends React.Component {
 
 TrainingQuestion.propTypes = {
     classes: PropTypes.object.isRequired,
+    incrementCorrectResponsesHandler: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(TrainingQuestion);

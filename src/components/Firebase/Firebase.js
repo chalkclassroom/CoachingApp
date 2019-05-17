@@ -9,6 +9,7 @@ const config = {
     messagingSenderId: "353838544707"
 };
 
+
 class Firebase {
     constructor() {
         if (!firebase.apps.length) {
@@ -16,9 +17,9 @@ class Firebase {
             this.auth = firebase.auth();
             this.db = firebase.firestore();
             this.db.settings({timestampsInSnapshots: true});
-            this.db.enablePersistence({experimentalTabSynchronization:true}).then(() => {
-              console.log("Woohoo! Multi-Tab Persistence!");
-            }).catch((err=>{console.log("Offline Not Working")}));
+            // this.db.enablePersistence({experimentalTabSynchronization:true}).then(() => {
+            //   console.log("Woohoo! Multi-Tab Persistence!");
+            // }).catch((err=>{console.log("Offline Not Working")}));
 
             this.functions = firebase.functions();
         }
@@ -217,6 +218,42 @@ class Firebase {
         });
     };
 
+    handleUnlockSection = async section => {
+        return firebase
+            .firestore()
+            .collection("users")
+            .doc(this.auth.currentUser.uid)
+            .update({
+                unlocked: firebase.firestore.FieldValue.arrayUnion(section)
+            });
+    };
+
+    getUnlockedSections = async () => {
+        return firebase
+            .firestore()
+            .collection("users")
+            .doc(this.auth.currentUser.uid)
+            .get()
+            .then(function(doc) {
+                // Document was found in the cache. If no cached document exists,
+                // an error will be returned to the 'catch' block below.
+                console.log("Cached document data:", doc.data());
+                console.log(doc.data());
+
+                if (doc.data().unlocked === undefined) {
+                    console.log("test", doc.data());
+                    return [];
+                } else {
+                    return doc.data().unlocked;
+                }
+
+                //return doc.data().unlocked;
+
+            }).catch(function(error) {
+                console.log("Error getting cached document:", error);
+            });
+    };
+
     handlePushTransition = async mEntry => {
         const userRef = this.sessionRef.collection("entries").add({
             TrnStart: mEntry.start,
@@ -256,6 +293,45 @@ class Firebase {
                 return notesArr;
             });
     };
+
+    handleFetchTrainingStatus = async () => {
+        return firebase
+            .firestore()
+            .collection("users")
+            .doc(this.auth.currentUser.uid)
+            .get()
+            .then(function(doc) {
+                // Document was found in the cache. If no cached document exists,
+                // an error will be returned to the 'catch' block below.
+                console.log("Cached document data:", doc.data().training);
+                return doc.data().training;
+            }).catch(function(error) {
+                console.log("Error getting cached document:", error);
+            });
+    };
+
+    handleFetchQuestions = async (section) => {
+        return firebase
+            .firestore()
+            .collection("questionbank")
+            .doc(section)
+            .collection("questions")
+            .get()
+            .then(questions => {
+                let questionList = [];
+                questions.forEach((question) => {
+                    console.log(question.id, "=>", question.data());
+                    questionList.push(question.data());
+                })
+                console.log(questionList)
+                return questionList;
+            })
+            .catch(function (error) {
+                console.log("Error getting documents: ", error);
+            });
+    };
+
+
 
     handleFetchNotesResults = async (sessionId) => {
         this.sessionRef = this.db.collection("observations").doc(sessionId);

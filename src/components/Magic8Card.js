@@ -9,7 +9,6 @@ import {
     Typography
 } from "@material-ui/core";
 import styled from "styled-components";
-import Overlay from "react-image-overlay";
 import lock from "../assets/lock48.png"
 
 const styles = {
@@ -37,12 +36,27 @@ const CardBase = styled.div`
     border-radius: 5px;
 `;
 
+const BackgroundImage = styled.div`
+      flex: 1,
+      width: null,
+      height: null`;
+
+const Overlay = styled.div`
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    z-index: 1000;
+    opacity: 0.8
+    `;
+
 class Magic8Card extends Component {
     constructor(props) {
         super(props);
         this.onClick = this.onClick.bind(this);
         this.state = {
-            selected: false
+            selected: false,
         };
     }
 
@@ -58,6 +72,8 @@ class Magic8Card extends Component {
     }
 
     render() {
+
+        console.log(this.props.unlocked);
         return (
             <CardBase>
                 <Card
@@ -70,16 +86,21 @@ class Magic8Card extends Component {
                     onClick={this.onClick}
                 >
                     <CardActionArea style={{ height: "160px", width: "160px" }}>
-                        <Overlay
-                            url={this.props.icon} // required
-                            overlayUrl={lock} // required
-                            imageHeight={160}
-                            position={'center'}
-                            overlayWidth={180}
-                            overlayHeight={140}
-                            overlayPadding={10}
-                            watermark={true}
-                        />
+                        <BackgroundImage>
+                            <img src={this.props.icon} style={{display:"block"}}/>
+                        </BackgroundImage>
+                        {this.props.unlocked?
+                            <div/> :
+                            <Overlay>
+                            <img src={lock} style={{color: "white",
+                            fontSize: 100,
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            textAlign: "center"}}/>
+                            </Overlay>
+                        }
                     </CardActionArea>
                 </Card>
             </CardBase>
