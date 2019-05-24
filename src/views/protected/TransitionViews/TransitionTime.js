@@ -18,6 +18,7 @@ import Typography from "@material-ui/core/Typography/Typography";
 import { connect } from "react-redux";
 import { resetTransitionTime } from "../../../state/actions/transition-time";
 import Recs from "./TransitionTimeRecs";
+import TransitionTypeSel from "./TransitionTypeSel";
 
 const styles = {
     root: {
@@ -122,7 +123,7 @@ class TransitionTime extends React.Component {
                 )}
                 <main style={{ flex: 1 }}>
                     <Grid container spacing={16}>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <Grid
                                 container
                                 alignItems={"center"}
@@ -133,7 +134,7 @@ class TransitionTime extends React.Component {
                                 <TransitionLog />
                             </Grid>
                         </Grid>
-                        <Grid item xs={8}>
+                        <Grid item xs={1}>
                             <Grid
                                 container
                                 alignItems={"center"}
@@ -141,6 +142,17 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 <div style={{ margin: 20 }} />
+                                <TransitionTypeSel/>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Grid
+                                container
+                                alignItems={"center"}
+                                justify={"center"}
+                                direction={"column"}
+                            >
+                                <div style={{ margin: 10 }} />
                                 <TransitionType />
                                 <FirebaseContext.Consumer>
                                     {firebase => (
