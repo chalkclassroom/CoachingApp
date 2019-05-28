@@ -393,18 +393,18 @@ class TransitionResults extends React.Component {
       this.handleListDetailFetching(this.state.sessionId);
       let firebase = this.context;
 
-      firebase.fetchTransitionSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].inside));
+      //firebase.fetchTransitionSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].inside));
 
-      firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
-          this.setState({
-            insideTime: summary[0].inside,
-            outsideTime: summary[0].outside,
-            totalTime: summary[0].total,
-            sessionTotal: summary[0].sessionTotal,
-            learningActivityTime: summary[0].sessionTotal - summary[0].total
+      // firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
+      //     this.setState({
+      //       insideTime: summary[0].inside,
+      //       outsideTime: summary[0].outside,
+      //       totalTime: summary[0].total,
+      //       sessionTotal: summary[0].sessionTotal,
+      //       learningActivityTime: summary[0].sessionTotal - summary[0].total
 
 
-      })});
+      // })});
     });
   };
 
@@ -536,7 +536,7 @@ class TransitionResults extends React.Component {
                   <div>
                     {this.state.view === ViewEnum.SUMMARY ? (
                       <div className={classes.resultsContent}>
-                        <TransitionTimePie insideTime={this.state.insideTime} outsideTime={this.state.outsideTime} learningActivityTime={this.state.learningActivityTime}/>
+                        {/* <TransitionTimePie insideTime={this.state.insideTime} outsideTime={this.state.outsideTime} learningActivityTime={this.state.learningActivityTime}/> */}
                       </div>
                     ) : this.state.view === ViewEnum.LIST ? (
                       <div className={classes.resultsContent}>

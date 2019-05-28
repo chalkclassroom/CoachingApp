@@ -134,7 +134,7 @@ class TransitionTime extends React.Component {
                                 <TransitionLog />
                             </Grid>
                         </Grid>
-                        <Grid item xs={1}>
+                        <Grid item xs={2}>
                             <Grid
                                 container
                                 alignItems={"center"}
@@ -145,15 +145,15 @@ class TransitionTime extends React.Component {
                                 <TransitionTypeSel/>
                             </Grid>
                         </Grid>
-                        <Grid item xs={8}>
+                        <Grid item xs={7}>
                             <Grid
                                 container
                                 alignItems={"center"}
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                <div style={{ margin: 10 }} />
-                                <TransitionType />
+                                {/* <div style={{ margin: 10 }} />
+                                <TransitionType /> */}
                                 <FirebaseContext.Consumer>
                                     {firebase => (
                                         <TransitionTimer

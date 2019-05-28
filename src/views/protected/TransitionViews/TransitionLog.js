@@ -58,16 +58,14 @@ const TransitionLog = ({ entries, classes }) => {
                                 <Divider />
                                 <ListItem
                                     style={{
-                                        backgroundColor: getHexFromType(
-                                            entry.transitionType
-                                        )
+                                        backgroundColor: "#759FE5"
                                     }}
                                 >
                                     {new Date(entry.end).toLocaleString()}
                                     <br />
                                     Duration:{entry.duration}
                                     <br />
-                                    Type:{entry.transitionType === 'inside' ? "Inside Classroom" : "Outside Classroom"}
+                                    {/* Type:{entry.transitionType === 'inside' ? "Inside Classroom" : "Outside Classroom"} */}
                                 </ListItem>
                             </React.Fragment>
                         ))}

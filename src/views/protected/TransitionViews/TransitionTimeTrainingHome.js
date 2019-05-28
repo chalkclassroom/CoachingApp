@@ -94,9 +94,9 @@ const ViewEnum = {
 // dummy data for transition list detail table, when we read in from DB we can use custom id
 let id = 0;
 
-function createTransitionData(startTime, duration, notes, type) {
+function createTransitionData(startTime, duration, notes) {
     id += 1;
-    return { id, startTime, duration, notes, type };
+    return { id, startTime, duration, notes};
 }
 
 function createNotesData(time, notes) {
@@ -105,11 +105,11 @@ function createNotesData(time, notes) {
 }
 
 const transitionData = [
-    createTransitionData("08:32", "2m 3s", "Breakfast to am meeting", "INSIDE"),
-    createTransitionData("08:44", "5m 10s", "Line up for bathroom", "OUTSIDE"),
-    createTransitionData("09:01", "1m 7s", "T finding book", "WAIT"),
-    createTransitionData("09:37", "1m 56s", "Rotating rooms", "WAIT"),
-    createTransitionData("09:56", "3m 2s", "Cleanup after centers", "INSIDE")
+    createTransitionData("08:32", "2m 3s", "Breakfast to am meeting"),
+    createTransitionData("08:44", "5m 10s", "Line up for bathroom"),
+    createTransitionData("09:01", "1m 7s", "T finding book"),
+    createTransitionData("09:37", "1m 56s", "Rotating rooms"),
+    createTransitionData("09:56", "3m 2s", "Cleanup after centers")
 ];
 
 const transitionNotes = [

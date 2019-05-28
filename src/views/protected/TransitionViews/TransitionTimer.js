@@ -113,6 +113,7 @@ class TransitionTimer extends React.Component {
             <MuiThemeProvider theme={theme}>
                 <div style={{ width: 400 }}>
                     <CircularProgressbar
+                        fill = "#19468D"
                         background
                         percentage={this.state.percentage}
                         text={
@@ -121,13 +122,11 @@ class TransitionTimer extends React.Component {
                         initialAnimation={false}
                         styles={{
                             path: {
-                                stroke: getHexFromType(
-                                    this.props.transitionType
-                                )
+                                stroke: "#19468D"
                             },
                             text: { fill: "#000", fontSize: "16px" },
                             background: {
-                                fill: getHexFromType(this.props.transitionType)
+                                fill: "#19468D"
                             }
                         }}
                     />
@@ -141,15 +140,16 @@ class TransitionTimer extends React.Component {
                         <Button
                             variant="contained"
                             color="primary"
-                            disabled={this.props.transitionType === null}
+                            // disabled={this.props.transitionType === null}
                             aria-label="Start"
                             onClick={this.onStart}
                         >
-                            {this.state.isOn
+                            {/* {this.state.isOn
                                 ? "End Transition"
                                 : this.props.transitionType === null
-                                ? "Please choose a transition type"
-                                : "Start New Transition"}
+                                ? "Please choose a transition type":
+                                 "Start New Transition"} */}
+                                 {this.state.isOn ? "End Transition" : "Start new Transition"}
                         </Button>
                         <div style={{ margin: 2 }} />
                         <YesNoDialog
