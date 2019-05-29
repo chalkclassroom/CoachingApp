@@ -150,10 +150,10 @@ function secondRow(props) {
     </Grid> 
     </div>) 
 }
-firstRow.propTypes = {
+secondRow.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
 // export default withStyles(styles)(IconLabelButtons);
 
-export default withStyles(styles)(firstRow)
+export default withStyles(styles)(secondRow)

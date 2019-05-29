@@ -19,6 +19,7 @@ import { connect } from "react-redux";
 import { resetTransitionTime } from "../../../state/actions/transition-time";
 import Recs from "./TransitionTimeRecs";
 import TransitionTypeSel from "./TransitionTypeSel";
+import TransitionTypeSel1 from "./TransitionTypeSel1";
 
 const styles = {
     root: {
@@ -142,10 +143,21 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 <div style={{ margin: 20 }} />
+                                <TransitionTypeSel1/>
+                            </Grid>
+                            </Grid> 
+                            <Grid item xs={2}>
+                            <Grid
+                                container
+                                alignItems={"center"}
+                                justify={"center"}
+                                direction={"column"}
+                            >
+                                <div style={{ margin: 20 }} />
                                 <TransitionTypeSel/>
                             </Grid>
                         </Grid>
-                        <Grid item xs={7}>
+                        <Grid item xs={5}>
                             <Grid
                                 container
                                 alignItems={"center"}
