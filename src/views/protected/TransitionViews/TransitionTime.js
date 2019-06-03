@@ -6,7 +6,6 @@ import InfoIcon from "@material-ui/icons/Help";
 import EditIcon from "@material-ui/icons/Edit";
 import { withStyles } from "@material-ui/core/styles";
 import TransitionTimeHelp from "./TransitionTimeHelp";
-import TransitionType from "./TransitionType";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
@@ -14,7 +13,6 @@ import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
-import Typography from "@material-ui/core/Typography/Typography";
 import { connect } from "react-redux";
 import { resetTransitionTime } from "../../../state/actions/transition-time";
 import Recs from "./TransitionTimeRecs";
@@ -143,7 +141,7 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 <div style={{ margin: 20 }} />
-                                <TransitionTypeSel1/>
+                                <TransitionTypeSel/>
                             </Grid>
                             </Grid> 
                             <Grid item xs={2}>
@@ -154,7 +152,7 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 <div style={{ margin: 20 }} />
-                                <TransitionTypeSel/>
+                                <TransitionTypeSel1/>
                             </Grid>
                         </Grid>
                         <Grid item xs={5}>

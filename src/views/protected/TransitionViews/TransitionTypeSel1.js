@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import { withStyles, createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
-import { lightGreen, lightBlue, green, white, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
+import { withStyles, createMuiTheme} from '@material-ui/core/styles';
+import { lightGreen, white, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
 import ChildWaiting from "../../../assets/icons/ChildWaiting.svg"; 
 import WaitinginLine from "../../../assets/icons/WaitinginLine.svg"; 
@@ -94,7 +94,7 @@ function firstRow(props) {
     style = {themes.palette.travelingColor}>
     <img alt = "Walking" src = {Walking} height = '100' width = '100'/> 
   </Button>
- <text style = {{textAlign: 'center'}}>Traveling outside classroom</text> 
+ <text style = {{textAlign: 'center'}}>Traveling outside the classroom</text> 
  <Button
     /* Use classes property to inject custom styles */
     classes={{ root: classes.button, label: classes.label }}
