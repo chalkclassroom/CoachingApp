@@ -25,7 +25,7 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
             <Slider {...settings}>
                 <div>
                     <Grid justify={"center"} direction={"column"}>
-                        <Typography align={"center"}>
+                        <Typography align={"center"} variant = {'h2'}>
                             Child Behaviors
                         </Typography>
                         <ChildBehaviorsPie/>
@@ -33,7 +33,7 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
                 </div>
                 <div>
                     <Grid justify={"center"} direction={"column"}>
-                        <Typography align={"center"}>
+                        <Typography align={"center"} variant = {'h2'}>
                             Teacher Behaviors
                         </Typography>
                         <TeacherBehaviorsPie/>
