@@ -317,7 +317,7 @@ class TransitionTimeTrainingHome extends React.Component {
                                 <div>
                                     {this.state.view === ViewEnum.CONCEPTS ? (
                                         <div className={classes.resultsContent}>
-                                            <TrainingVideo videoUrl = {'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Transition_TrainingVid.mp4?alt=media&token=b7071289-0b59-4a8b-a23b-00f9b5b9ba37'}/>
+                                            <TrainingVideo videoUrl = {'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT%20Concepts%205-31-19.mp4?alt=media&token=0f968fb5-047a-4fb9-90ec-7149b40a3e9c'}/>
                                         </div>
                                     ) : this.state.view === ViewEnum.EXAMPLE ? (
                                         <div className={classes.resultsContent}>

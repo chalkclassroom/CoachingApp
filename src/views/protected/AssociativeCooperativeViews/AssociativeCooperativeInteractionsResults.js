@@ -20,12 +20,16 @@ import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import 'chartjs-plugin-datalabels';
-import ChildTeacherBehaviorSlider
-    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
 import ChildTeacherBehaviorDetailsSlider
     from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
 import ChildTeacherBehaviorTrendsSlider
     from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+import moment from 'moment';
+import TextField from "@material-ui/core/TextField";
+import ChildTeacherBehaviorPieSlider
+    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
+
+
 
 
 
@@ -91,39 +95,11 @@ const ViewEnum = {
     NEXT_STEPS: 5
 };
 
-// dummy data for transition list detail table, when we read in from DB we can use custom id
-let id = 0;
-
-function createTransitionData(startTime, duration, notes, type) {
-    id += 1;
-    return { id, startTime, duration, notes, type };
-}
-
-function createNotesData(time, notes) {
-    id += 1;
-    return { id, time, notes };
-}
-
-const transitionData = [
-    createTransitionData("08:32", "2m 3s", "Breakfast to am meeting", "INSIDE"),
-    createTransitionData("08:44", "5m 10s", "Line up for bathroom", "OUTSIDE"),
-    createTransitionData("09:01", "1m 7s", "T finding book", "WAIT"),
-    createTransitionData("09:37", "1m 56s", "Rotating rooms", "WAIT"),
-    createTransitionData("09:56", "3m 2s", "Cleanup after centers", "INSIDE")
-];
-
-const transitionNotes = [
-    createNotesData("08:32", "Kiss your brain"),
-    createNotesData("08:44", "Great super friend"),
-    createNotesData("09:01", "Lots of good jobs"),
-    createNotesData("09:37", "BD frown"),
-    createNotesData("09:56", "Close down center conflict")
-];
-
 class AssociativeCooperativeInteractionsResults extends React.Component {
     constructor(props) {
         super(props);
         this.handleAppend = this.handleAppend.bind(this);
+        this.handleTypeChange = this.handleTypeChange.bind(this);
     }
 
     state = {
@@ -134,11 +110,37 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
         hex: "#FFFFFF",
         entries: [],
         dbCounter: 0, // @Hack @Temporary !!!
-        view: ViewEnum.SUMMARY
+        view: ViewEnum.SUMMARY,
+        sessionId: null,
+        sessionDates: [],
+        trendsDates: [],
+        trendsNoOpp:  [],
+        trendsNoAC: [],
+        trendsAC:  [],
+        trendsNoOppColor: "#F44336",
+        trendsNoACColor: "#E99C2E",
+        trendsACColor: "#6F39C4",
+        trendsNoSupportColor: "#E99C2E",
+        trendsSupportColor: "#0988EC",
+        noOppTime: null,
+        noAcTime: null,
+        acTime: null,
+        noSupportTime: null,
+        supportTime: null,
+        totalTime: null,
+        sessionTotal: null,
+        learningActivityTime: null,
+        notes: []
+
     };
 
     componentDidMount() {
         console.log(this.props.location.state);
+        let teacherId = this.props.location.state.teacher.id;
+        this.handleTrendsFetch(teacherId);
+
+        //this.handleChildACTrendFetch(teacherId);
+        this.handleDateFetching(this.props.location.state.teacher.id);
     }
 
     handleAppend(entry) {
@@ -155,6 +157,11 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
     handleChange = event => {
         this.setState({ auth: event.target.checked });
     };
+
+    handleTypeChange(newType) {
+        this.setState({ type: newType });
+        this.changeHex(newType);
+    }
 
     handleMenu = event => {
         this.setState({ anchorEl: event.currentTarget });
@@ -182,30 +189,197 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
         this.setState({ dbCounter: this.state.dbCounter + 1 });
     };
 
-    handleSpreadsheetAppend = entry => {
-        let url = new URL(spreadsheetData.scriptLink),
-            params = {
-                sheet: "TransitionTime",
-                del: "false",
-                TrnStart: entry.start,
-                TrnEnd: entry.end,
-                TrnDur: entry.duration,
-                TrnType: entry.type,
-                TeacherID: this.props.location.state.key.id
-            };
-        Object.keys(params).forEach(key =>
-            url.searchParams.append(key, params[key])
-        );
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: {
-                "content-type": "application/json"
+    // handleSpreadsheetAppend = entry => {
+    //     let url = new URL(spreadsheetData.scriptLink),
+    //         params = {
+    //             sheet: "TransitionTime",
+    //             del: "false",
+    //             TrnStart: entry.start,
+    //             TrnEnd: entry.end,
+    //             TrnDur: entry.duration,
+    //             TrnType: entry.type,
+    //             TeacherID: this.props.location.state.key.id
+    //         };
+    //     Object.keys(params).forEach(key =>
+    //         url.searchParams.append(key, params[key])
+    //     );
+    //     fetch(url, {
+    //         method: "POST",
+    //         credentials: "include",
+    //         mode: "no-cors",
+    //         headers: {
+    //             "content-type": "application/json"
+    //         }
+    //     })
+    //         .then(response => console.log("Success"))
+    //         .catch(error => console.error("Error:", error));
+    // };
+
+    // handleChildACTrendFetch = (sessionId) => {
+    //     let firebase = this.context;
+    //     let dateArray = [];
+    //     let noOppArray = [];
+    //     let noACArray =[];
+    //     let ACArray = [];
+    //     let formattedTime;
+    //     firebase.fetchChildACTrend(sessionId).then(dataSet => {
+    //         console.log("Trends dataSet", dataSet);
+    //         dataSet.map( data => {
+    //             formattedTime = this.handleTrendsFormatTime(data.total);
+    //             dateArray.push([moment(data.startDate.value).format("MMM Do"), formattedTime]);
+    //             noOppArray.push(Math.floor(data.noOpp / data.sessionTotal * 100));
+    //             noACArray.push(Math.floor(data.noAC / data.sessionTotal * 100));
+    //             ACArray.push(Math.floor(data.AC / data.sessionTotal * 100));
+    //         });
+    //
+    //         this.setState({
+    //             trendsDates: dateArray,
+    //             trendsNoOpp: noOppArray,
+    //             trendsNoAC: noACArray,
+    //             trendsAC: ACArray
+    //         });
+    //
+    //         console.log("trends date array: ", this.state.trendsDates);
+    //         console.log("trends no opportunity array: ", this.state.trendsNoOpp);
+    //         console.log("trends no ac array: ", this.state.trendsNoAC);
+    //         console.log("trends ac array: ", this.state.trendsNoOpp);
+    //     });
+    // };
+
+    handleTrendsFetch = (teacherId) => {
+        let firebase = this.context;
+        let dateArray = [];
+        let noOppArray = [];
+        let noACArray =[];
+        let ACArray = [];
+        let formattedTime;
+        firebase.fetchChildACTrend(teacherId).then(dataSet => {
+            console.log("Trends dataSet", dataSet);
+            dataSet.map( data => {
+                formattedTime = this.handleTrendsFormatTime(data.total);
+                dateArray.push([moment(data.startDate.value).format("MMM Do"), formattedTime]);
+                noOppArray.push(Math.floor(data.noOpp / data.sessionTotal * 100));
+                noACArray.push(Math.floor(data.noAC / data.sessionTotal * 100));
+                ACArray.push(Math.floor(data.AC / data.sessionTotal * 100));
+            });
+
+            this.setState({
+                trendsDates: dateArray,
+                trendsNoOpp: noOppArray,
+                trendsNoAC: noACArray,
+                trendsAC: ACArray
+            });
+
+            console.log("trends date array: ", this.state.trendsDates);
+            console.log("trends no opportunity array: ", this.state.trendsNoOpp);
+            console.log("trends no ac array: ", this.state.trendsNoAC);
+            console.log("trends ac array: ", this.state.trendsNoOpp);
+        });
+    };
+
+
+    handleTrendsFormatTime = (totalTime) => {
+        let seconds = Math.floor(totalTime / 1000 % 60);
+        let minutes =  Math.floor(totalTime / 1000 / 60 % 60);
+        let hours = Math.floor(totalTime / 1000 / 3600 % 60);
+        let secondsString = "";
+        let minutesString = "";
+
+        if (seconds < 10) {
+            secondsString = "0" + seconds.toString();
+        } else {
+            secondsString = seconds.toString();
+        }
+
+        if (minutes < 10) {
+            minutesString = "0" + minutes.toString();
+        } else {
+            minutesString = minutes.toString();
+        }
+
+        let formattedTime = hours.toString() + ":" + minutesString + ":" + secondsString;
+        console.log("formatted time is ", formattedTime);
+
+        return formattedTime;
+    };
+
+    handleTrendsFormatData = () => {
+        return {
+            labels: this.state.trendsDates,
+            datasets:  [
+                {
+                    label: 'No Opportunity',
+                    backgroundColor: this.state.trendsNoOppColor,
+                    borderColor: this.state.trendsNoOppColor,
+                    fill: false,
+                    lineTension: 0,
+                    data: this.state.trendsNoOpp,
+                },
+                {
+                    label: 'No Assoc./Coop. Interaction',
+                    backgroundColor: this.state.trendsNoACColor,
+                    borderColor: this.state.trendsNoACColor,
+                    fill: false,
+                    lineTension: 0,
+                    data: this.state.trendsNoAC,
+                },
+                {
+                    label: 'Associative and/or Cooperative',
+                    backgroundColor: this.state.trendsACColor,
+                    borderColor: this.state.trendsACColor,
+                    fill: false,
+                    lineTension: 0,
+                    data: this.state.trendsAC,
+                },
+            ]
+        }
+    };
+
+    handleNotesFetching = (sessionId) => {
+        let firebase = this.context;
+        firebase.handleFetchNotesResults(sessionId).then(
+            notesArr => {
+                console.log(notesArr);
+                let formattedNotesArr = [];
+                notesArr.map(note => {
+                    let newTimestamp = new Date(note.timestamp.seconds*1000).toLocaleString("en-US", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true
+                    });
+                    formattedNotesArr.push({id: note.id, content: note.content, timestamp: newTimestamp})
+                });
+                console.log(formattedNotesArr);
+                this.setState({
+                    notes: formattedNotesArr,
+                });
             }
-        })
-            .then(response => console.log("Success"))
-            .catch(error => console.error("Error:", error));
+        );
+    };
+
+    handleListDetailFetching = (sessionId) => {
+        let firebase = this.context;
+        firebase.fetchACDetails(sessionId).then(
+            logArr => {
+                console.log(logArr);
+                let formattedLogArr = [];
+                let newId = 0;
+                logArr.map(log => {
+                    newId += 1;
+                    let startTime = new moment(log.sessionStart.value);
+                    let newStartTime = startTime.format("hh:mm A");
+                    let endTime = new moment(log.sessionEnd.value);
+                    console.log(newStartTime);
+                    let dur = moment.duration(endTime.diff(startTime));
+                    let newDuration = dur.minutes() + "m " + dur.seconds() + "s";
+                    formattedLogArr.push({id: newId, startTime: newStartTime, duration: newDuration, type: log.type.toUpperCase()});
+                });
+                console.log(formattedLogArr);
+                this.setState({
+                    log: formattedLogArr,
+                });
+            }
+        );
     };
 
     summaryClick = () => {
@@ -238,6 +412,41 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
         }
     };
 
+    handleDateFetching = (teacherId) => {
+        console.log("handle date fetching called");
+        let firebase = this.context;
+        firebase.fetchSessionDates(teacherId, 'ac').then(dates=>this.setState({
+            sessionDates: dates
+        }));
+
+        console.log("Session Dates: " + this.state.sessionDates)
+
+    };
+
+    changeSessionId = (event) => {
+        console.log("sessionId",event.target.value);
+        this.setState({
+            sessionId: event.target.value,
+        }, () => {
+            this.handleNotesFetching(this.state.sessionId);
+            this.handleListDetailFetching(this.state.sessionId);
+            let firebase = this.context;
+
+            firebase.fetchChildACSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].childAC));
+
+            firebase.fetchChildACSummary(this.state.sessionId).then(summary=>{
+                this.setState({
+                    noOppTime: summary[0].noopp,
+                    noAcTime: summary[0].noac,
+                    acTime: summary[0].yesac,
+                    totalTime: summary[0].total,
+                    sessionTotal: summary[0].sessionTotal,
+                    learningActivityTime: summary[0].sessionTotal - summary[0].total
+
+                })});
+        });
+    };
+
     render() {
         const { classes } = this.props;
 
@@ -255,26 +464,17 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                                     <img src={AssocCoopIcon} style={{width:"15vw", height:"10vh", position:"center"}} />
                                 </ListItem>
                                 <ListItem>
-                                    <form>
-                                        <FormControl
-                                            variant="filled"
-                                            className={classes.viewButtons}
-                                        >
-                                            <InputLabel htmlFor="filled-age-simple">Date</InputLabel>
-                                            <Select
-                                                input={
-                                                    <FilledInput name="age" id="filled-age-simple" />
-                                                }
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Mon, Oct 22, 2018</MenuItem>
-                                                <MenuItem value={20}>Tue, Nov 6, 2018</MenuItem>
-                                                <MenuItem value={30}>Thurs, Nov 29, 2018</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </form>
+                                    <TextField
+                                        select
+                                        className={classes.viewButtons}
+                                        label="Date"
+                                        value={this.state.sessionId}
+                                        onChange={this.changeSessionId}
+                                        InputLabelProps={{ shrink: true }}>
+                                        {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>
+                                            <em>{moment(date.sessionStart.value).format("MMM Do YY hh:mm A")}</em>
+                                        </MenuItem>})}
+                                    </TextField>
                                 </ListItem>
                                 <ListItem>
                                     <Button
@@ -376,7 +576,12 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                                 <div>
                                     {this.state.view === ViewEnum.SUMMARY ? (
                                         <div className={classes.resultsContent}>
-                                            <ChildTeacherBehaviorSlider/>
+                                            <ChildTeacherBehaviorPieSlider
+                                            acTime = {this.state.acTime}
+                                            noAcTime = {this.state.noAcTime}
+                                            noOppTime = {this.state.noOppTime}
+
+                                            />
                                         </div>
                                     ) : this.state.view === ViewEnum.DETAILS ? (
                                         <div className={classes.resultsContent}>
@@ -384,12 +589,12 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                                         </div>
                                     ) : this.state.view === ViewEnum.TRENDS ? (
                                         <div className={classes.resultsContent}>
-                                            <ChildTeacherBehaviorTrendsSlider/>
+                                            <ChildTeacherBehaviorTrendsSlider data = {this.handleTrendsFormatData}/>
                                         </div>
                                     ) : this.state.view === ViewEnum.NOTES ? (
                                         <div className={classes.resultsContent}
                                         >
-                                            <NotesListDetailTable data={transitionNotes} />
+                                            <NotesListDetailTable data={this.state.notes} />
                                         </div>
                                     ) : this.state.view === ViewEnum.NEXT_STEPS ? (
                                         <div className={classes.resultsContent} /> // replace this null with next steps content
@@ -407,5 +612,5 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
 AssociativeCooperativeInteractionsResults.propTypes = {
     classes: PropTypes.object.isRequired
 };
-
+AssociativeCooperativeInteractionsResults.contextType = FirebaseContext;
 export default withStyles(styles)(AssociativeCooperativeInteractionsResults);

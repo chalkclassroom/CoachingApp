@@ -9,7 +9,6 @@ import TableBody from "@material-ui/core/TableBody/TableBody";
 import Paper from "@material-ui/core/Paper/Paper";
 
 const styles = {
-    //idk how this works
 };
 class NotesListDetailTable extends React.Component {
     render() {
@@ -24,7 +23,7 @@ class NotesListDetailTable extends React.Component {
                         <TableRow>
                             <TableCell
                                 style={{
-                                    backgroundColor: "#3f51b5",
+                                    backgroundColor: "#2196f3",
                                     color: "white",
                                     fontSize: 14
                                 }}
@@ -33,7 +32,7 @@ class NotesListDetailTable extends React.Component {
                             </TableCell>
                             <TableCell
                                 style={{
-                                    backgroundColor: "#3f51b5",
+                                    backgroundColor: "#2196f3",
                                     color: "white",
                                     fontSize: 14
                                 }}

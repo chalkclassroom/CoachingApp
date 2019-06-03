@@ -90,9 +90,6 @@ const ViewEnum = {
   NEXT_STEPS: 5
 };
 
-// dummy data for transition list detail table, when we read in from DB we can use custom id
-
-
 class TransitionResults extends React.Component {
   constructor(props) {
     super(props);
@@ -236,6 +233,7 @@ class TransitionResults extends React.Component {
         console.log("trends inside array: ", this.state.trendsInside);
         console.log("trends outside array: ", this.state.trendsOutside);
         console.log("trends total array: ", this.state.trendsTotal);
+        console.log("test");
     });
   };
 
@@ -432,7 +430,7 @@ class TransitionResults extends React.Component {
                   onChange={this.changeSessionId}
                   InputLabelProps={{ shrink: true }}>
                   {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>
-                    <em>{moment(date.sessionStart.value).format("MMM Do YY HH:mm A")}</em>
+                    <em>{moment(date.sessionStart.value).format("MMM Do YY hh:mm A")}</em>
                   </MenuItem>})}
                 </TextField>
               </ListItem>

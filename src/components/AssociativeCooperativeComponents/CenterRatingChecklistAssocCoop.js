@@ -36,6 +36,17 @@ const TeacherChildEnum = {
   CHILD_2_TEACHER: 4
 };
 
+const teacherBehaviors = {
+  noSupp: 'no support',
+  support: 'support'
+};
+
+const childBehaviors = {
+  noOpp: 'no opportunity',
+  ac: 'ac',
+  noAc: 'no ac'
+};
+
 const RATING_INTERVAL = 60000;
 const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
@@ -48,7 +59,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
     people: undefined,
     time: RATING_INTERVAL,
     timeUpOpen: false,
-    peopleWarning: false
+    peopleWarning: false,
+    acType: ''
   };
 
   tick = () => {
@@ -98,7 +110,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
     } else {
       let mEntry = {
         checked: this.state.checked,
-        people: this.state.people
+        people: this.state.people,
+        acType: this.state.acType
       };
       this.props.firebase.handlePushAC(mEntry);
       this.props.finishVisit(this.props.currentCenter);
@@ -109,8 +122,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
   handleToggle = value => () => {
     // Prevents updating state of checkbox when disabled
     if (
-      (value <= 4 && this.childDisabled()) ||
-      (value >= 5 && this.teacherDisabled())
+      (value <= 5 && this.childDisabled()) ||
+      (value >= 6 && this.teacherDisabled())
     ) {
       return;
     }
@@ -130,7 +143,10 @@ class CenterRatingChecklistAssocCoop extends React.Component {
   };
 
   childDisabled = () => {
-    return this.state.people === undefined;
+    return (
+        this.state.people === TeacherChildEnum.CHILD_1 ||
+        this.state.people === undefined
+    );
   };
 
   teacherDisabled = () => {
@@ -144,6 +160,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
   handleChild1Click = () => {
     if (this.state.people !== TeacherChildEnum.CHILD_1) {
       this.setState({ people: TeacherChildEnum.CHILD_1 });
+      this.setState({acType: teacherBehaviors.noSupp});
+      this.setState({acType: childBehaviors.noOpp});
 
       const { checked } = this.state;
       const newChecked = [...checked];
@@ -161,6 +179,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
   handleChild2Click = () => {
     if (this.state.people !== TeacherChildEnum.CHILD_2) {
       this.setState({ people: TeacherChildEnum.CHILD_2 });
+      this.setState({acType: teacherBehaviors.noSupp});
+      this.setState({acType: childBehaviors.ac});
 
       const { checked } = this.state;
       const newChecked = [...checked];
@@ -178,12 +198,18 @@ class CenterRatingChecklistAssocCoop extends React.Component {
   handleChild1TeacherClick = () => {
     if (this.state.people !== TeacherChildEnum.CHILD_1_TEACHER) {
       this.setState({ people: TeacherChildEnum.CHILD_1_TEACHER });
+      this.setState({acType: teacherBehaviors.support});
+      this.setState({acType: childBehaviors.ac});
+
     }
   };
 
   handleChild2TeacherClick = () => {
     if (this.state.people !== TeacherChildEnum.CHILD_2_TEACHER) {
       this.setState({ people: TeacherChildEnum.CHILD_2_TEACHER });
+      this.setState({acType: teacherBehaviors.support});
+      this.setState({acType: childBehaviors.ac});
+
     }
   };
 
@@ -364,6 +390,21 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           grocery store)
                         </ListItemText>
                       </ListItem>
+                      <ListItem
+                          onClick={this.handleToggle(5)}
+                          disabled={this.childDisabled()}
+                      >
+                        <Checkbox
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.checked.indexOf(5) !== -1
+                            }
+                            disabled={this.childDisabled()}
+                        />
+                        <ListItemText>
+                          None
+                        </ListItemText>
+                      </ListItem>
                     </List>
                   </Card>
                 </Grid>
@@ -373,21 +414,6 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                       Teacher Behaviors
                     </Typography>
                     <List>
-                      <ListItem
-                        onClick={this.handleToggle(5)}
-                        disabled={this.teacherDisabled()}
-                      >
-                        <Checkbox
-                          checked={
-                            !this.teacherDisabled() &&
-                            this.state.checked.indexOf(5) !== -1
-                          }
-                          disabled={this.teacherDisabled()}
-                        />
-                        <ListItemText>
-                          <b>Participating</b> in children’s play
-                        </ListItemText>
-                      </ListItem>
                       <ListItem
                         onClick={this.handleToggle(6)}
                         disabled={this.teacherDisabled()}
@@ -400,8 +426,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           disabled={this.teacherDisabled()}
                         />
                         <ListItemText>
-                          <b>Asking questions</b> to check for understanding or
-                          extend children’s thinking
+                          <b>Participating</b> in children’s play
                         </ListItemText>
                       </ListItem>
                       <ListItem
@@ -416,8 +441,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           disabled={this.teacherDisabled()}
                         />
                         <ListItemText>
-                          <b>Encouraging</b> children to <b>share</b>,
-                          <b>work</b>, or <b>interact</b> with each other
+                          <b>Asking questions</b> to check for understanding or
+                          extend children’s thinking
                         </ListItemText>
                       </ListItem>
                       <ListItem
@@ -432,7 +457,38 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           disabled={this.teacherDisabled()}
                         />
                         <ListItemText>
+                          <b>Encouraging</b> children to <b>share</b>,
+                          <b>work</b>, or <b>interact</b> with each other
+                        </ListItemText>
+                      </ListItem>
+                      <ListItem
+                        onClick={this.handleToggle(9)}
+                        disabled={this.teacherDisabled()}
+                      >
+                        <Checkbox
+                          checked={
+                            !this.teacherDisabled() &&
+                            this.state.checked.indexOf(9) !== -1
+                          }
+                          disabled={this.teacherDisabled()}
+                        />
+                        <ListItemText>
                           Helping children find the <b>words to communicate</b>
+                        </ListItemText>
+                      </ListItem>
+                      <ListItem
+                          onClick={this.handleToggle(10)}
+                          disabled={this.teacherDisabled()}
+                      >
+                        <Checkbox
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.checked.indexOf(10) !== -1
+                            }
+                            disabled={this.teacherDisabled()}
+                        />
+                        <ListItemText>
+                          None
                         </ListItemText>
                       </ListItem>
                     </List>

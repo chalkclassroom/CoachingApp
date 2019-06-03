@@ -18,23 +18,98 @@ const childBehaviorsData = {
       ],
     datasets: [
         {
-            label:'2+ People, No Assoc./Coop. Interaction',
-            backgroundColor: '#E99C2E',
-            borderColor: '#E99C2E',
-            borderWidth: 2,
+            label:"No Opportunity",
+            backgroundColor: '#F44336',
+            borderColor: '#F44336',
+            fill: false,
+            lineTension: 0,
             data: [32, 27, 29]
         },
         {
-          label: "Associative and/or Cooperative",
-          backgroundColor: '#6F39C4',
-          borderColor: '#6F39C4',
-          borderWidth: 2,
-          data: [12, 14, 19]
+            label: "No Assoc./Coop. Interaction",
+            backgroundColor: '#E99C2E',
+            borderColor: '#E99C2E',
+            fill: false,
+            lineTension: 0,
+            data: [12, 14, 19]
 
-        }
+        },
+        {
+            label: "Associative and/or Cooperative",
+            backgroundColor: '#6F39C4',
+            borderColor: '#6F39C4',
+            fill: false,
+            lineTension: 0,
+            data: [14, 20, 29]
+        },
 
 ]
 
+};
+
+/**
+ * formatting for A&C child behavior trends graph, including title and scales for the axes
+ * @type {{showScale: boolean, pointDot: boolean, scales: {yAxes: {ticks: {min: number, max: number, callback: (function(*): string), beginAtZero: boolean}, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[], xAxes: {display: boolean, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[]}, title: {display: boolean, fontSize: number, text: string, fontStyle: string}, showLines: boolean}}
+ */
+const ChildBehaviorTrendsOptions = {
+    showScale: true,
+    pointDot: true,
+    showLines: true,
+    // title: {
+    //     display: true,
+    //     text: 'Transition Time Trends',
+    //     fontSize: 20,
+    //     fontStyle: 'bold'
+    // },
+    tooltips: {
+        mode: 'index',
+        intersect: false
+    },
+
+    hover: {
+        mode: 'nearest',
+        intersect: true,
+    },
+    scales: {
+        xAxes: [
+            {
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: "Date",
+                    fontStyle: "bold"
+                }
+            }
+        ],
+        yAxes: [
+            {
+                ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
+                    callback: function(value) {
+                        return value + "%";
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: "% of Visits",
+                    fontStyle: "bold"
+                }
+            }
+        ]
+    },
+
+    plugins: {
+        datalabels: {
+            display: 'auto',
+            color: 'gray',
+            align: 'top',
+            formatter: function(value, context) {
+                return value + '%';
+            }
+        }
+    }
 };
 
 class ChildBehaviorTrendsVerticalBar extends React.Component {
@@ -42,21 +117,12 @@ class ChildBehaviorTrendsVerticalBar extends React.Component {
         const { classes } = this.props;
 
         return (
-            <Bar data={childBehaviorsData}
-                           width="650"
-                           height="400"
-                 options={{
-                     scales: {
-                         yAxes: [{
-                             ticks: {
-                                 suggestedMin: 0,
-                                 suggestedMax: 40
-                             }
-                         }]
-                     }
-                 }}
+            <Line
+                data={this.props.data}
+                options={ChildBehaviorTrendsOptions}
+                width="650"
+                height="400"
             />
-
         );
     }
 }

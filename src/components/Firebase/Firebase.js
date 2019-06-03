@@ -17,9 +17,9 @@ class Firebase {
             this.auth = firebase.auth();
             this.db = firebase.firestore();
             this.db.settings({timestampsInSnapshots: true});
-            // this.db.enablePersistence({experimentalTabSynchronization:true}).then(() => {
-            //   console.log("Woohoo! Multi-Tab Persistence!");
-            // }).catch((err=>{console.log("Offline Not Working")}));
+            this.db.enablePersistence({experimentalTabSynchronization:true}).then(() => {
+              console.log("Woohoo! Multi-Tab Persistence!");
+            }).catch((err=>{console.log("Offline Not Working")}));
 
             this.functions = firebase.functions();
         }
@@ -214,7 +214,8 @@ class Firebase {
         const userRef = this.sessionRef.collection("entries").add({
             Checked: mEntry.checked.slice(1),
             PeopleType: mEntry.people,
-            Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            acType: mEntry.type
         });
     };
 
@@ -452,6 +453,71 @@ class Firebase {
         });
 
     };
+
+    fetchACDetails = async sessionId => {
+        var getACDetailsFirebaseFunction = this.functions.httpsCallable('funcACDetails');
+
+        return getACDetailsFirebaseFunction({sessionId: sessionId}).then(function (result) {
+            // Read result of the Cloud Function.
+            var sanitizedMessage = result.data[0];
+            console.log(sanitizedMessage);
+            return sanitizedMessage;
+
+        });
+
+    };
+
+    fetchChildACSummary = async sessionId => {
+        var getChildACSummaryFirebaseFunction = this.functions.httpsCallable('funcChildACSummary');
+
+        return getChildACSummaryFirebaseFunction({sessionId: sessionId}).then(function (result) {
+            // Read result of the Cloud Function.
+            var sanitizedMessage = result.data[0];
+            console.log(sanitizedMessage);
+            return sanitizedMessage;
+
+        });
+
+    };
+
+    fetchTeacherACSummary = async sessionId => {
+        var getTeacherACSummaryFirebaseFunction = this.functions.httpsCallable('funcTeacherACSummary');
+
+        return getTeacherACSummaryFirebaseFunction({sessionId: sessionId}).then(function (result) {
+            // Read result of the Cloud Function.
+            var sanitizedMessage = result.data[0];
+            console.log(sanitizedMessage);
+            return sanitizedMessage;
+
+        });
+
+    };
+
+    fetchChildACTrend = async teacherId => {
+        var getChildACTrendFirebaseFunction = this.functions.httpsCallable('funcChildACTrend');
+
+        return getChildACTrendFirebaseFunction({teacherId: teacherId}).then(function (result) {
+            // Read result of the Cloud Function.
+            var sanitizedMessage = result.data[0];
+            console.log(sanitizedMessage);
+            return sanitizedMessage;
+
+        });
+    };
+
+    fetchTeacherACTrend = async sessionId => {
+        var getTeacherACTrendFirebaseFunction = this.functions.httpsCallable('funcTeacherACTrend');
+
+        return getTeacherACTrendFirebaseFunction({sessionId: sessionId}).then(function (result) {
+            // Read result of the Cloud Function.
+            var sanitizedMessage = result.data[0];
+            console.log(sanitizedMessage);
+            return sanitizedMessage;
+
+        });
+
+    };
+
 
 }
 

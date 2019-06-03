@@ -41,6 +41,8 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
                 </div>
             </Slider>
         );
+
+
     }
 }
 

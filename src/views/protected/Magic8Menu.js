@@ -132,7 +132,7 @@ class Magic8Menu extends Component {
                         <Typography
                             style={{ fontSize: "2.9em", color: "#000000", marginTop: "5%" }}
                         >
-                            Magic 8
+                            Magic 8™
                         </Typography>
                     </div>
                     <div className="row">
