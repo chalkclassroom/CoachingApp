@@ -31,10 +31,11 @@ class BehaviorCounter extends React.Component {
     };
 
 
-  handleUndo = () => {
-    if (this.props.climateStackSize > 0) {
-      this.props.popOffClimateStack();
+    handleUndo = () => {
+        if (this.props.climateStackSize > 0) {
+            this.props.popOffClimateStack();
 
+//<<<<<<< Updated upstream
       let mEntry = {
         BehaviorResponse: "UNDO",
         Type: "UNDO"
@@ -46,6 +47,7 @@ class BehaviorCounter extends React.Component {
 
     CustomUI2 = props => {
         return (
+//<<<<<<< Updated upstream
         <svg width={595.172} height={555.055} {...props}>
             <defs>
                 <style>{'.prefix__cls-1{fill:#6465bb}'}</style>
@@ -401,20 +403,20 @@ class BehaviorCounter extends React.Component {
 BehaviorCounter.propTypes = {
     climateType: PropTypes.string.isRequired,
     teacherId: PropTypes.string.isRequired,
-  climateStackSize: PropTypes.number.isRequired
+    climateStackSize: PropTypes.number.isRequired
 
 };
 
 const mapStateToProps = state => {
     return {
-      climateType: state.climateTypeState.climateType,
-      climateStackSize: state.climateStackState.climateStack.length
+        climateType: state.climateTypeState.climateType,
+        climateStackSize: state.climateStackState.climateStack.length
     };
 };
 
 export default withStyles(styles)(
     connect(
         mapStateToProps,
-      { pushOntoClimateStack, popOffClimateStack }
+        { pushOntoClimateStack, popOffClimateStack }
     )(BehaviorCounter)
 );

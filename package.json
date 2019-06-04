@@ -74,7 +74,7 @@
   },
   "homepage": "https://cqrefpwa.firebaseapp.com",
   "devDependencies": {
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "prettier": "^1.16.4"
   }
 }

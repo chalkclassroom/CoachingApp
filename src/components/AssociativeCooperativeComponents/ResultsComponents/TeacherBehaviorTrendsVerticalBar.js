@@ -37,24 +37,81 @@ const teacherBehaviorsData = {
     ]
 };
 
+/**
+ * formatting for A&C teacher behavior trends graph, including title and scales for the axes
+ * @type {{showScale: boolean, pointDot: boolean, scales: {yAxes: {ticks: {min: number, max: number, callback: (function(*): string), beginAtZero: boolean}, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[], xAxes: {display: boolean, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[]}, title: {display: boolean, fontSize: number, text: string, fontStyle: string}, showLines: boolean}}
+ */
+const TeacherBehaviorTrendsOptions = {
+    showScale: true,
+    pointDot: true,
+    showLines: true,
+    // title: {
+    //     display: true,
+    //     text: 'Transition Time Trends',
+    //     fontSize: 20,
+    //     fontStyle: 'bold'
+    // },
+    tooltips: {
+        mode: 'index',
+        intersect: false
+    },
+
+    hover: {
+        mode: 'nearest',
+        intersect: true,
+    },
+    scales: {
+        xAxes: [
+            {
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: "Date",
+                    fontStyle: "bold"
+                }
+            }
+        ],
+        yAxes: [
+            {
+                ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
+                    callback: function(value) {
+                        return value + "%";
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: "% of Visits",
+                    fontStyle: "bold"
+                }
+            }
+        ]
+    },
+
+    plugins: {
+        datalabels: {
+            display: 'auto',
+            color: 'gray',
+            align: 'top',
+            formatter: function(value, context) {
+                return value + '%';
+            }
+        }
+    }
+};
+
 class TeacherBehaviorTrendsVerticalBar extends React.Component {
     render() {
         const { classes } = this.props;
 
         return (
-            <Bar data={teacherBehaviorsData}
-                           width="650"
-                           height="400"
-                 options={{
-                     scales: {
-                         yAxes: [{
-                             ticks: {
-                                 suggestedMin: 0,
-                                 suggestedMax: 10
-                             }
-                         }]
-                     }
-                 }}
+            <Line
+                data={this.props.data}
+                options={TeacherBehaviorTrendsOptions}
+                width="650"
+                height="400"
             />
         );
     }

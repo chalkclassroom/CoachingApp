@@ -14,32 +14,31 @@ const styles = {
 class ChildTeacherBehaviorDetailsSlider extends React.Component {
     render() {
         const { classes } = this.props;
-        var settings = {
-            dots: true,
-            infinite: true,
-            speed: 500,
-            slidesToShow: 1,
-            slidesToScroll: 1
-        };
+        // var settings = {
+        //     dots: true,
+        //     infinite: true,
+        //     speed: 500,
+        //     slidesToShow: 1,
+        //     slidesToScroll: 1
+        // };
         return (
-            <Slider {...settings}>
-                <div>
-                    <Grid justify={"center"} direction={"column"}>
-                        <Typography align={"center"}>
-                            Child Behaviors
-                        </Typography>
-                        <ChildBehaviorsDetailsHorizontalBar/>
-                    </Grid>
-                </div>
-                <div>
-                    <Grid justify={"center"} direction={"column"}>
-                        <Typography align={"center"}>
-                            Teacher Behaviors
-                        </Typography>
-                        <TeacherBehaviorsDetailsHorizontalBar/>
-                    </Grid>
-                </div>
-            </Slider>
+            <div>
+                <Grid justify={"center"} direction={"column"}>
+                    <Typography align={"center"}>
+                        Child Behaviors
+                    </Typography>
+                    <ChildBehaviorsDetailsHorizontalBar/>
+                </Grid>
+
+
+                <Grid justify={"center"} direction={"column"}>
+                    <Typography align={"center"}>
+                        Teacher Behaviors
+                    </Typography>
+                    <TeacherBehaviorsDetailsHorizontalBar/>
+                </Grid>
+            </div>
+
         );
     }
 }

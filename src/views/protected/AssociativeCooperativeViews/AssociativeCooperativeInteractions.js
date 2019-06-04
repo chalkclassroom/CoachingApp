@@ -16,6 +16,7 @@ import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/
 import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
 import Recs from "./AssociativeCooperativeRecs";
+import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter";
 
 const styles = {
     root: {
@@ -117,7 +118,9 @@ class AssociativeCooperativeInteractions extends React.Component {
                 )}
                 <main style={{ flex: 1 }}>
                     <FirebaseContext.Consumer>
-                        {firebase => <CenterMenu firebase={firebase} onStatusChange={this.handleCompleteButton}/>}
+                        {firebase => <CenterMenu   teacherId={
+                            this.props.location.state.teacher.id
+                        } firebase={firebase} onStatusChange={this.handleCompleteButton}/>}
                     </FirebaseContext.Consumer>
                 </main>
                 <footer>
