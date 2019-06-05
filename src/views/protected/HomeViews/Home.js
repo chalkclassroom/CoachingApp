@@ -146,6 +146,7 @@ class Welcome extends React.Component {
                         style={{ padding: 40 }}
                     >
                         <Card className={classes.card} onClick={() => this.showObserveModal("Results")}>
+                            
                             <CardContent>
                                 <Grid
                                     container

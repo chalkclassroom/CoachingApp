@@ -87,7 +87,7 @@ class ClassroomClimateResults extends React.Component {
     constructor(props) {
         super(props);
         this.handleAppend = this.handleAppend.bind(this);
-        this.handleTypeChange = this.handleTypeChange.bind(this);
+        // this.handleTypeChange = this.handleTypeChange.bind(this);
     }
 
     state = {
@@ -133,7 +133,7 @@ class ClassroomClimateResults extends React.Component {
 
     handleAppend(entry) {
         let newEntries = this.state.entries;
-        entry.type = this.state.type;
+        // entry.type = this.state.type;
         newEntries.push(entry);
         this.setState({ entries: newEntries });
 
@@ -142,10 +142,10 @@ class ClassroomClimateResults extends React.Component {
         this.handleDBinsert(entry);
     }
 
-    handleTypeChange(newType) {
-        this.setState({ type: newType });
-        this.changeHex(newType);
-    }
+    // handleTypeChange(newType) {
+    //     this.setState({ type: newType });
+    //     this.changeHex(newType);
+    // }
 
     handleChange = event => {
         this.setState({ auth: event.target.checked });

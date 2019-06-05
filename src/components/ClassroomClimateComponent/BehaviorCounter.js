@@ -24,7 +24,8 @@ class BehaviorCounter extends React.Component {
     handlePushFire = entry => {
         let mEntry = {
             BehaviorResponse: entry,
-            Type: this.props.climateType
+            // Type: this.props.climateType
+            Type: 'climate'
         };
         this.props.firebase.handlePushClimate(mEntry);
         this.props.pushOntoClimateStack(mEntry);
@@ -157,21 +158,21 @@ class BehaviorCounter extends React.Component {
                 transform="translate(24.117 20.35)"
             >
                 <g id="prefix__Group_4" data-name="Group 4" transform="translate(68 72)" style={{
-                    stroke:
-                        this.props.climateType === "instruction"
-                            ? "#6465BB"
-                            : "#4FD9B3"
+                    // stroke:
+                    //     this.props.climateType === "instruction"
+                    //         ? "#6465BB"
+                    //         : "#4FD9B3"
                 }}>
                     <path
                         id="prefix__Combined_Shape"
                         data-name="Combined Shape"
                         className="prefix__cls-1"
-                        style={{
-                            fill:
-                                this.props.climateType === "instruction"
-                                    ? "#6465BB"
-                                    : "#4FD9B3"
-                        }}
+                        // style={{
+                        //     fill:
+                        //         this.props.climateType === "instruction"
+                        //             ? "#6465BB"
+                        //             : "#4FD9B3"
+                        // }}
                         d="M406.883 388.276H0V0h406.883v388.275zM31.837 32.211v327.335h343.21V32.211z"
                     />
                 </g>
@@ -183,12 +184,12 @@ class BehaviorCounter extends React.Component {
                     fontWeight={700}
                     fontSize={30}
                     fill="#6465bb"
-                    style={{
-                                fill:
-                                    this.props.climateType === "instruction"
-                                        ? "#6465bb"
-                                        : "#4FD9B3"
-                            }}
+                    // style={{
+                    //             fill:
+                    //                 this.props.climateType === "instruction"
+                    //                     ? "#6465bb"
+                    //                     : "#4FD9B3"
+                    //         }}
                 >
                     <tspan x={-8.342} y={0}>
                         {this.props.climateStackSize}
@@ -345,24 +346,24 @@ class BehaviorCounter extends React.Component {
                             d="M6.629 18.196l5.29 25.649 30.863-3.085-4.591-31.55L16.35 7.09z"
                             fill="#fff"
                             stroke="#6465bb"
-                            style={{
-                                stroke:
-                                    this.props.climateType === "instruction"
-                                        ? "#6465bb"
-                                        : "#4FD9B3"
-                            }}
+                            // style={{
+                            //     stroke:
+                            //         this.props.climateType === "instruction"
+                            //             ? "#6465bb"
+                            //             : "#4FD9B3"
+                            // }}
                             strokeMiterlimit={10}
                         />
                         <path
                             data-name="Path 2"
                             d="M25 0A25 25 0 1 1 0 25 25 25 0 0 1 25 0zm-3.125 34.375v-6.25s12.5-3.125 18.75 6.25a18.749 18.749 0 0 0-18.75-18.75v-6.25l-12.5 12.5z"
                             fill="#6465bb"
-                            style={{
-                                fill:
-                                    this.props.climateType === "instruction"
-                                        ? "#6465bb"
-                                        : "#4FD9B3"
-                            }}
+                            // style={{
+                            //     fill:
+                            //         this.props.climateType === "instruction"
+                            //             ? "#6465bb"
+                            //             : "#4FD9B3"
+                            // }}
                         />
                     </svg>
                 </g>
@@ -374,12 +375,12 @@ class BehaviorCounter extends React.Component {
                     fontFamily="Helvetica-Bold,Helvetica"
                     fontWeight={700}
                     fill="#6465bb"
-                    style={{
-                                fill:
-                                    this.props.climateType === "instruction"
-                                        ? "#6465bb"
-                                        : "#4FD9B3"
-                            }}
+                    // style={{
+                    //             fill:
+                    //                 this.props.climateType === "instruction"
+                    //                     ? "#6465bb"
+                    //                     : "#4FD9B3"
+                    //         }}
                 >
                     <tspan x={-22.039} y={0}>
                         {'Total '}
@@ -401,7 +402,7 @@ class BehaviorCounter extends React.Component {
 }
 
 BehaviorCounter.propTypes = {
-    climateType: PropTypes.string.isRequired,
+    // climateType: PropTypes.string.isRequired,
     teacherId: PropTypes.string.isRequired,
     climateStackSize: PropTypes.number.isRequired
 
@@ -409,7 +410,7 @@ BehaviorCounter.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        climateType: state.climateTypeState.climateType,
+        // climateType: state.climateTypeState.climateType,
         climateStackSize: state.climateStackState.climateStack.length
     };
 };

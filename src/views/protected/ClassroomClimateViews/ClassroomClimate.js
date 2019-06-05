@@ -21,7 +21,7 @@ import Notes from "../../../components/Notes";
 import Typography from "@material-ui/core/Typography";
 import Recs from "./ClassroomClimateRecs";
 
-import LearningActivityTransitionToggle from "../../../components/ClassroomClimateComponent/LearningActivityTransitionToggle";
+// import LearningActivityTransitionToggle from "../../../components/ClassroomClimateComponent/LearningActivityTransitionToggle";
 /*
     N.B. Time measured in milliseconds.
 
@@ -57,7 +57,7 @@ class ClassroomClimate extends React.Component {
     time: RATING_INTERVAL,
     ratingIsOpen: false,
     ratings: [],
-    climateType: false,
+    // climateType: false,
     recs: true,
   };
   tick = () => {
@@ -243,12 +243,6 @@ class ClassroomClimate extends React.Component {
                   fontSize={"large"}
                 />
               </IconButton>
-            </Grid>
-            <Grid container xs={8}
-                  alignItems={"center"}
-                  justify={"center"}
-                  direction={"row"}>
-              <LearningActivityTransitionToggle/>
             </Grid>
             <Grid item xs={2}>
               <Grid

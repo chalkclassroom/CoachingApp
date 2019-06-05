@@ -80,8 +80,9 @@ class ChildBehaviorsPie extends React.Component {
                         },
                         title: function(tooltipItem, data) {
                             return data.labels[tooltipItem[0].index];
-                        }
-                    }
+                        },
+                    },
+                    bodyFontSize: 16
                 }
             }}
                  width="650"
