@@ -21,6 +21,7 @@ import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
 // import Firebase from "./Firebase";
+import Magic8Menu from "../views/protected/Magic8Menu"
 
 const drawerWidth = 240;
 
@@ -101,9 +102,8 @@ const styles = theme => ({
 class BurgerMenu extends React.Component {
     state = {
         menu: 0,
-        open: this.props.open
-    };
-
+        open: this.props.open 
+    }
     handleDrawerOpen = () => {
         this.setState({ open: true });
     };
@@ -114,7 +114,6 @@ class BurgerMenu extends React.Component {
 
     render() {
         const { classes } = this.props;
-
         return (
             <Drawer
                 variant="temporary"
@@ -186,7 +185,10 @@ class BurgerMenu extends React.Component {
                         <ListItemIcon>
                             <Magic8Icon />
                         </ListItemIcon>
-                        <ListItemText primary="Magic 8 Materials" />
+                        <ListItemText primary="Magic 8 Materials" 
+                                      onClick = {
+                                          () => this.props.history.push("/Magic8Menu")}
+                        />
                     </ListItem>
                     <ListItem
                         button

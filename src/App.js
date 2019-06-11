@@ -183,7 +183,7 @@ class App extends Component {
               path="/Magic8Menu"
               render={props =>
                 this.state.auth === true ? (
-                  <Magic8Menu {...props} type={props.location.state.type} />
+                  <Magic8Menu {...props} type={props.location.state.type === "Results" ? "Results" : "Observe"} />
                 ) : (
                   <Redirect
                     to={{ pathname: "/", state: { from: props.location } }}
