@@ -305,9 +305,9 @@ class SequentialActivitiesResults extends React.Component {
             this.handleListDetailFetching(this.state.sessionId);
             let firebase = this.context;
 
-            firebase.fetchChildACSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].childAC));
+            firebase.fetchChildSeqSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].childAC));
 
-            firebase.fetchChildACSummary(this.state.sessionId).then(summary=>{
+            firebase.fetchChildSeqSummary(this.state.sessionId).then(summary=>{
                 this.setState({
                     noOppTime: summary[0].noopp,
                     noAcTime: summary[0].noac,

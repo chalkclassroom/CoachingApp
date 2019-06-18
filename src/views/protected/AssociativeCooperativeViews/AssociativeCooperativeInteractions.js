@@ -67,6 +67,7 @@ class AssociativeCooperativeInteractions extends React.Component {
     };
     handleRatingConfirmation = rating => {
         this.setState({ ratingIsOpen: false });
+
     };
     handleCompleteButton = enable => {
         this.setState({ completeEnabled: enable });

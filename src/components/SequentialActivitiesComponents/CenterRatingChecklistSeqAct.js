@@ -102,7 +102,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
         checked: this.state.checked,
         people: this.state.people
       };
-      this.props.firebase.handlePushAC(mEntry);
+
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();
     }

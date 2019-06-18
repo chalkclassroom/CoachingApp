@@ -214,8 +214,17 @@ class Firebase {
         const userRef = this.sessionRef.collection("entries").add({
             Checked: mEntry.checked.slice(1),
             PeopleType: mEntry.people,
-            Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            acType: mEntry.type
+            acType: mEntry.type,
+            Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    };
+
+    handlePushSequential = async mEntry => {
+        const userRef = this.sessionRef.collection("entries").add({
+            Checked: mEntry.checked.slice(1),
+            PeopleType: mEntry.people,
+            seqType: mEntry.type,
+            Timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
     };
 
@@ -467,10 +476,36 @@ class Firebase {
 
     };
 
+    fetchSeqDetails = async sessionId => {
+        var getSeqDetailsFirebaseFunction = this.functions.httpsCallable('funcSeqDetails');
+
+        return getSeqDetailsFirebaseFunction({sessionId: sessionId}).then(function (result) {
+            // Read result of the Cloud Function.
+            var sanitizedMessage = result.data[0];
+            console.log(sanitizedMessage);
+            return sanitizedMessage;
+
+        });
+
+    };
+
     fetchChildACSummary = async sessionId => {
         var getChildACSummaryFirebaseFunction = this.functions.httpsCallable('funcChildACSummary');
 
         return getChildACSummaryFirebaseFunction({sessionId: sessionId}).then(function (result) {
+            // Read result of the Cloud Function.
+            var sanitizedMessage = result.data[0];
+            console.log(sanitizedMessage);
+            return sanitizedMessage;
+
+        });
+
+    };
+
+    fetchChildSeqSummary = async sessionId => {
+        var getChildSeqSummaryFirebaseFunction = this.functions.httpsCallable('funcChildSeqSummary');
+
+        return getChildSeqSummaryFirebaseFunction({sessionId: sessionId}).then(function (result) {
             // Read result of the Cloud Function.
             var sanitizedMessage = result.data[0];
             console.log(sanitizedMessage);
@@ -493,10 +528,35 @@ class Firebase {
 
     };
 
+    fetchTeacherSeqSummary = async sessionId => {
+        var getTeacherSeqSummaryFirebaseFunction = this.functions.httpsCallable('funcTeacherSeqSummary');
+
+        return getTeacherSeqSummaryFirebaseFunction({sessionId: sessionId}).then(function (result) {
+            // Read result of the Cloud Function.
+            var sanitizedMessage = result.data[0];
+            console.log(sanitizedMessage);
+            return sanitizedMessage;
+
+        });
+
+    };
+
     fetchChildACTrend = async teacherId => {
         var getChildACTrendFirebaseFunction = this.functions.httpsCallable('funcChildACTrend');
 
         return getChildACTrendFirebaseFunction({teacherId: teacherId}).then(function (result) {
+            // Read result of the Cloud Function.
+            var sanitizedMessage = result.data[0];
+            console.log(sanitizedMessage);
+            return sanitizedMessage;
+
+        });
+    };
+
+    fetchChildSeqTrend = async teacherId => {
+        var getChildSeqTrendFirebaseFunction = this.functions.httpsCallable('funcChildSeqTrend');
+
+        return getChildSeqTrendFirebaseFunction({teacherId: teacherId}).then(function (result) {
             // Read result of the Cloud Function.
             var sanitizedMessage = result.data[0];
             console.log(sanitizedMessage);
@@ -517,6 +577,21 @@ class Firebase {
         });
 
     };
+
+    fetchTeacherSeqTrend = async sessionId => {
+        var getTeacherSeqTrendFirebaseFunction = this.functions.httpsCallable('funcTeacherSeqTrend');
+
+        return getTeacherSeqTrendFirebaseFunction({sessionId: sessionId}).then(function (result) {
+            // Read result of the Cloud Function.
+            var sanitizedMessage = result.data[0];
+            console.log(sanitizedMessage);
+            return sanitizedMessage;
+
+        });
+
+    };
+
+
 
 
 }
