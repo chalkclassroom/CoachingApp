@@ -28,6 +28,8 @@ import moment from 'moment';
 import TextField from "@material-ui/core/TextField";
 import ChildTeacherBehaviorPieSlider
     from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
+import ChildBehaviorsPie
+    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildBehaviorsPie";
 
 
 
@@ -117,6 +119,8 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
         trendsNoOpp:  [],
         trendsNoAC: [],
         trendsAC:  [],
+        trendsNoSupport: [],
+        trendsSupport: [],
         trendsNoOppColor: "#F44336",
         trendsNoACColor: "#E99C2E",
         trendsACColor: "#6F39C4",
@@ -137,7 +141,8 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
     componentDidMount() {
         console.log(this.props.location.state);
         let teacherId = this.props.location.state.teacher.id;
-        this.handleTrendsFetch(teacherId);
+        this.handleChildTrendsFetch(teacherId);
+        this.handleTeacherTrendsFetch(teacherId);
 
         //this.handleChildACTrendFetch(teacherId);
         this.handleDateFetching(this.props.location.state.teacher.id);
@@ -246,7 +251,7 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
     //     });
     // };
 
-    handleTrendsFetch = (teacherId) => {
+    handleChildTrendsFetch = (teacherId) => {
         let firebase = this.context;
         let dateArray = [];
         let noOppArray = [];
@@ -258,7 +263,7 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
             dataSet.map( data => {
                 formattedTime = this.handleTrendsFormatTime(data.total);
                 dateArray.push([moment(data.startDate.value).format("MMM Do"), formattedTime]);
-                noOppArray.push(Math.floor(data.noOpp / data.sessionTotal * 100));
+                noOppArray.push(Math.floor(data.noOpportunity / data.sessionTotal * 100));
                 noACArray.push(Math.floor(data.noAC / data.sessionTotal * 100));
                 ACArray.push(Math.floor(data.AC / data.sessionTotal * 100));
             });
@@ -274,6 +279,35 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
             console.log("trends no opportunity array: ", this.state.trendsNoOpp);
             console.log("trends no ac array: ", this.state.trendsNoAC);
             console.log("trends ac array: ", this.state.trendsNoOpp);
+        });
+    };
+
+    handleTeacherTrendsFetch = (teacherId) => {
+        let firebase = this.context;
+        let dateArray = [];
+        let noSupportArray = [];
+        let supportArray =[];
+        let ACArray = [];
+        let formattedTime;
+        firebase.fetchTeacherACTrend(teacherId).then(dataSet => {
+            console.log("Trends dataSet", dataSet);
+            dataSet.map( data => {
+                formattedTime = this.handleTrendsFormatTime(data.total);
+                dateArray.push([moment(data.startDate.value).format("MMM Do"), formattedTime]);
+                noSupportArray.push(Math.floor(data.noSupport / data.sessionTotal * 100));
+                supportArray.push(Math.floor(data.supportArray / data.sessionTotal * 100));
+                ACArray.push(Math.floor(data.AC / data.sessionTotal * 100));
+            });
+
+            this.setState({
+                trendsDates: dateArray,
+                trendsNoSupport: noSupportArray,
+                trendsSupport: supportArray
+            });
+
+            console.log("trends date array: ", this.state.trendsDates);
+            console.log("trends no support array: ", this.state.trendsNoSupport);
+            console.log("trends support array: ", this.state.trendsSupport);
         });
     };
 
@@ -303,7 +337,7 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
         return formattedTime;
     };
 
-    handleTrendsFormatData = () => {
+    handleTrendsChildFormatData = () => {
         return {
             labels: this.state.trendsDates,
             datasets:  [
@@ -330,6 +364,31 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                     fill: false,
                     lineTension: 0,
                     data: this.state.trendsAC,
+                },
+            ]
+
+        }
+    };
+
+    handleTrendsTeacherFormatData = () => {
+        return {
+            labels: this.state.trendsDates,
+            datasets:  [
+                {
+                    label: 'No Support',
+                    backgroundColor: this.state.trendsNoSupportColor,
+                    borderColor: this.state.trendsNoSupportColor,
+                    fill: false,
+                    lineTension: 0,
+                    data: this.state.trendsNoSupport,
+                },
+                {
+                    label: 'Teacher Support',
+                    backgroundColor: this.state.trendsSupportColor,
+                    borderColor: this.state.trendsSupportColor,
+                    fill: false,
+                    lineTension: 0,
+                    data: this.state.trendsSupport,
                 },
             ]
         }
@@ -433,12 +492,24 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
             let firebase = this.context;
 
             firebase.fetchChildACSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].childAC));
+            firebase.fetchTeacherACSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].teacherAC));
+
 
             firebase.fetchChildACSummary(this.state.sessionId).then(summary=>{
                 this.setState({
                     noOppTime: summary[0].noopp,
                     noAcTime: summary[0].noac,
                     acTime: summary[0].yesac,
+                    totalTime: summary[0].total,
+                    sessionTotal: summary[0].sessionTotal,
+                    learningActivityTime: summary[0].sessionTotal - summary[0].total
+
+                })});
+
+            firebase.fetchTeacherACSummary(this.state.sessionId).then(summary=>{
+                this.setState({
+                    noSupportTime: summary[0].nosupp,
+                    supportTime: summary[0].supp,
                     totalTime: summary[0].total,
                     sessionTotal: summary[0].sessionTotal,
                     learningActivityTime: summary[0].sessionTotal - summary[0].total
@@ -569,19 +640,20 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                             </Typography>
                             <Grid item xs={12} alignItems={"center"} justify={"center"}>
                                 <Typography variant={"h7"} style={{ marginLeft: "20vw" }}>
-                                    Total Observation Time: {"30.2 minutes"}
+                                    Total Observation Time: {this.state.totalTime}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
                                 <div>
                                     {this.state.view === ViewEnum.SUMMARY ? (
                                         <div className={classes.resultsContent}>
-                                            <ChildTeacherBehaviorPieSlider
-                                            acTime = {this.state.acTime}
-                                            noAcTime = {this.state.noAcTime}
-                                            noOppTime = {this.state.noOppTime}
-
-                                            />
+                                            {<ChildTeacherBehaviorPieSlider
+                                                acTime = {this.state.acTime}
+                                                noAcTime = {this.state.noAcTime}
+                                                noOppTime = {this.state.noOppTime}
+                                                supportTime = {this.state.supportTime}
+                                                noSupportTime = {this.state.noSupportTime}
+                                            />}
                                         </div>
                                     ) : this.state.view === ViewEnum.DETAILS ? (
                                         <div className={classes.resultsContent}>
@@ -589,7 +661,10 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                                         </div>
                                     ) : this.state.view === ViewEnum.TRENDS ? (
                                         <div className={classes.resultsContent}>
-                                            <ChildTeacherBehaviorTrendsSlider data = {this.handleTrendsFormatData}/>
+                                            <ChildTeacherBehaviorTrendsSlider
+                                                childData = {this.handleTrendsChildFormatData}
+                                                teacherData = {this.handleTrendsTeacherFormatData}
+                                            />
                                         </div>
                                     ) : this.state.view === ViewEnum.NOTES ? (
                                         <div className={classes.resultsContent}

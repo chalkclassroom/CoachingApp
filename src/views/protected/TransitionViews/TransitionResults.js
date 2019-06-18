@@ -527,14 +527,17 @@ class TransitionResults extends React.Component {
                   </Typography>
                 <Grid item xs={12} alignItems={"center"} justify={"center"}>
                   <Typography variant={"h7"} style={{ marginLeft: "20vw" }}>
-                    Total Transition Time: {"30.2 minutes"}
+                    Total Transition Time: {this.state.totalTime}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <div>
                     {this.state.view === ViewEnum.SUMMARY ? (
                       <div className={classes.resultsContent}>
-                        {/* <TransitionTimePie insideTime={this.state.insideTime} outsideTime={this.state.outsideTime} learningActivityTime={this.state.learningActivityTime}/> */}
+                        { <TransitionTimePie
+                            insideTime={this.state.insideTime}
+                            outsideTime={this.state.outsideTime}
+                            learningActivityTime={this.state.learningActivityTime}/> }
                       </div>
                     ) : this.state.view === ViewEnum.LIST ? (
                       <div className={classes.resultsContent}>

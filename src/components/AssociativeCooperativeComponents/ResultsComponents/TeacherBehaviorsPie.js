@@ -10,23 +10,23 @@ const styles = {
 /**
  * specifies data sets (and formatting) for child behaviors pie chart
  */
-const teacherBehaviorsData = {
-    labels: [
-        'Teacher Support for Assoc./Coop. Interactions',
-        'Teacher Present, No Support'
-    ],
-    datasets: [{
-        data: [300, 50],
-        backgroundColor: [
-            '#0988EC',
-            '#E99C2E'
-        ],
-        hoverBackgroundColor: [
-            '#0988EC',
-            '#E99C2E'
-        ]
-    }]
-};
+// const teacherBehaviorsData = {
+//     labels: [
+//         'Teacher Support for Assoc./Coop. Interactions',
+//         'Teacher Present, No Support'
+//     ],
+//     datasets: [{
+//         data: [300, 50],
+//         backgroundColor: [
+//             '#0988EC',
+//             '#E99C2E'
+//         ],
+//         hoverBackgroundColor: [
+//             '#0988EC',
+//             '#E99C2E'
+//         ]
+//     }]
+// };
 
 class TeacherBehaviorsPie extends React.Component {
     constructor(props){
@@ -58,6 +58,7 @@ class TeacherBehaviorsPie extends React.Component {
                     '#0988EC',
                     '#E99C2E',
                 ]
+
             }]
 
 
