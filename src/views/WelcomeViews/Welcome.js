@@ -20,14 +20,14 @@ class Welcome extends React.Component {
 
     render() {
         const {classes} = this.props;
-        return (
+        return ( 
             <div className={classes.root}>
                         <FirebaseContext.Consumer>
                             {
                                 firebase => <AppBar firebase={firebase}/>
                             }
                         </FirebaseContext.Consumer>
-                        <WelcomeCarousel/>
+                        <WelcomeCarousel/> 
             </div>
         );
     }
