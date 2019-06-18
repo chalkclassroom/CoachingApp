@@ -168,7 +168,7 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component {
                         </Typography>
 
                         <Line
-                            data={this.props.data}
+                            data={this.props.childData}
                             options = {ChildBehaviorTrendsOptions}
                             width="650"
                             height="400"
@@ -182,7 +182,7 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component {
                         </Typography>
 
                         <Line
-                            data={this.props.data}
+                            data={this.props.teacherData}
                             options = {TeacherBehaviorTrendsOptions}
                             width="650"
                             height="400"

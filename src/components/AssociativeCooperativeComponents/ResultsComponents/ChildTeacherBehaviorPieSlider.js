@@ -28,7 +28,11 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
                         <Typography align={"center"}>
                             Child Behaviors
                         </Typography>
-                        <ChildBehaviorsPie/>
+                        <ChildBehaviorsPie
+                            acTime = {this.props.acTime}
+                            noAcTime = {this.props.noAcTime}
+                            noOppTime = {this.props.noOppTime}
+                        />
                     </Grid>
                 </div>
                 <div>
@@ -36,7 +40,10 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
                         <Typography align={"center"}>
                             Teacher Behaviors
                         </Typography>
-                        <TeacherBehaviorsPie/>
+                        <TeacherBehaviorsPie
+                            supportTime = {this.props.supportTime}
+                            noSupportTime = {this.props.noSupportTime}
+                        />
                     </Grid>
                 </div>
             </Slider>

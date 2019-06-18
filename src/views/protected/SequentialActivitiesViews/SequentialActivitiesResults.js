@@ -24,6 +24,8 @@ import ChildTeacherBehaviorSlider
     from "../../../components/SequentialActivitiesComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
 import ChildTeacherBehaviorDetailsSlider
     from "../../../components/SequentialActivitiesComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
+import moment from "../AssociativeCooperativeViews/AssociativeCooperativeInteractionsResults";
+import TextField from "@material-ui/core/TextField";
 
 
 
@@ -104,7 +106,14 @@ class SequentialActivitiesResults extends React.Component {
         hex: "#FFFFFF",
         entries: [],
         dbCounter: 0, // @Hack @Temporary !!!
-        view: ViewEnum.SUMMARY
+        view: ViewEnum.SUMMARY,
+        sessionId: null,
+        sessionDates: [],
+        totalTime: null,
+        sessionTotal: null,
+        learningActivityTime: null,
+        notes: []
+
     };
 
     componentDidMount() {
@@ -152,30 +161,109 @@ class SequentialActivitiesResults extends React.Component {
         this.setState({ dbCounter: this.state.dbCounter + 1 });
     };
 
-    handleSpreadsheetAppend = entry => {
-        let url = new URL(spreadsheetData.scriptLink),
-            params = {
-                sheet: "TransitionTime",
-                del: "false",
-                TrnStart: entry.start,
-                TrnEnd: entry.end,
-                TrnDur: entry.duration,
-                TrnType: entry.type,
-                TeacherID: this.props.location.state.key.id
-            };
-        Object.keys(params).forEach(key =>
-            url.searchParams.append(key, params[key])
-        );
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: {
-                "content-type": "application/json"
+    // handleSpreadsheetAppend = entry => {
+    //     let url = new URL(spreadsheetData.scriptLink),
+    //         params = {
+    //             sheet: "TransitionTime",
+    //             del: "false",
+    //             TrnStart: entry.start,
+    //             TrnEnd: entry.end,
+    //             TrnDur: entry.duration,
+    //             TrnType: entry.type,
+    //             TeacherID: this.props.location.state.key.id
+    //         };
+    //     Object.keys(params).forEach(key =>
+    //         url.searchParams.append(key, params[key])
+    //     );
+    //     fetch(url, {
+    //         method: "POST",
+    //         credentials: "include",
+    //         mode: "no-cors",
+    //         headers: {
+    //             "content-type": "application/json"
+    //         }
+    //     })
+    //         .then(response => console.log("Success"))
+    //         .catch(error => console.error("Error:", error));
+    // };
+
+    handleTrendsFormatTime = (totalTime) => {
+        let seconds = Math.floor(totalTime / 1000 % 60);
+        let minutes =  Math.floor(totalTime / 1000 / 60 % 60);
+        let hours = Math.floor(totalTime / 1000 / 3600 % 60);
+        let secondsString = "";
+        let minutesString = "";
+
+        if (seconds < 10) {
+            secondsString = "0" + seconds.toString();
+        } else {
+            secondsString = seconds.toString();
+        }
+
+        if (minutes < 10) {
+            minutesString = "0" + minutes.toString();
+        } else {
+            minutesString = minutes.toString();
+        }
+
+        let formattedTime = hours.toString() + ":" + minutesString + ":" + secondsString;
+        console.log("formatted time is ", formattedTime);
+
+        return formattedTime;
+    };
+
+    handleTrendsFormatData = () => {
+        return {
+            labels: this.state.trendsDates,
+            datasets:  [
+                {
+                    label: 'No Opportunity',
+                    backgroundColor: this.state.trendsNoOppColor,
+                    borderColor: this.state.trendsNoOppColor,
+                    fill: false,
+                    lineTension: 0,
+                    data: this.state.trendsNoOpp,
+                },
+                {
+                    label: 'No Assoc./Coop. Interaction',
+                    backgroundColor: this.state.trendsNoACColor,
+                    borderColor: this.state.trendsNoACColor,
+                    fill: false,
+                    lineTension: 0,
+                    data: this.state.trendsNoAC,
+                },
+                {
+                    label: 'Associative and/or Cooperative',
+                    backgroundColor: this.state.trendsACColor,
+                    borderColor: this.state.trendsACColor,
+                    fill: false,
+                    lineTension: 0,
+                    data: this.state.trendsAC,
+                },
+            ]
+        }
+    };
+
+    handleNotesFetching = (sessionId) => {
+        let firebase = this.context;
+        firebase.handleFetchNotesResults(sessionId).then(
+            notesArr => {
+                console.log(notesArr);
+                let formattedNotesArr = [];
+                notesArr.map(note => {
+                    let newTimestamp = new Date(note.timestamp.seconds*1000).toLocaleString("en-US", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true
+                    });
+                    formattedNotesArr.push({id: note.id, content: note.content, timestamp: newTimestamp})
+                });
+                console.log(formattedNotesArr);
+                this.setState({
+                    notes: formattedNotesArr,
+                });
             }
-        })
-            .then(response => console.log("Success"))
-            .catch(error => console.error("Error:", error));
+        );
     };
 
     summaryClick = () => {
@@ -208,6 +296,54 @@ class SequentialActivitiesResults extends React.Component {
         }
     };
 
+    changeSessionId = (event) => {
+        console.log("sessionId",event.target.value);
+        this.setState({
+            sessionId: event.target.value,
+        }, () => {
+            this.handleNotesFetching(this.state.sessionId);
+            this.handleListDetailFetching(this.state.sessionId);
+            let firebase = this.context;
+
+            firebase.fetchChildACSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].childAC));
+
+            firebase.fetchChildACSummary(this.state.sessionId).then(summary=>{
+                this.setState({
+                    noOppTime: summary[0].noopp,
+                    noAcTime: summary[0].noac,
+                    acTime: summary[0].yesac,
+                    totalTime: summary[0].total,
+                    sessionTotal: summary[0].sessionTotal,
+                    learningActivityTime: summary[0].sessionTotal - summary[0].total
+
+                })});
+        });
+    };
+
+    changeSessionId = (event) => {
+        console.log("sessionId",event.target.value);
+        this.setState({
+            sessionId: event.target.value,
+        }, () => {
+            this.handleNotesFetching(this.state.sessionId);
+            this.handleListDetailFetching(this.state.sessionId);
+            //let firebase = this.context;
+
+            //firebase.fetchChildACSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].childAC));
+
+            // firebase.fetchChildACSummary(this.state.sessionId).then(summary=>{
+            //     this.setState({
+            //         noOppTime: summary[0].noopp,
+            //         noAcTime: summary[0].noac,
+            //         acTime: summary[0].yesac,
+            //         totalTime: summary[0].total,
+            //         sessionTotal: summary[0].sessionTotal,
+            //         learningActivityTime: summary[0].sessionTotal - summary[0].total
+            //
+            //     })});
+        });
+    };
+
     render() {
         const { classes } = this.props;
 
@@ -225,26 +361,17 @@ class SequentialActivitiesResults extends React.Component {
                                     <img src={SequentialActivitiesIcon} style={{width:"15vw", height:"10vh", position:"center"}} />
                                 </ListItem>
                                 <ListItem>
-                                    <form>
-                                        <FormControl
-                                            variant="filled"
-                                            className={classes.viewButtons}
-                                        >
-                                            <InputLabel htmlFor="filled-age-simple">Date</InputLabel>
-                                            <Select
-                                                input={
-                                                    <FilledInput name="age" id="filled-age-simple" />
-                                                }
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Mon, Oct 22, 2018</MenuItem>
-                                                <MenuItem value={20}>Tue, Nov 6, 2018</MenuItem>
-                                                <MenuItem value={30}>Thurs, Nov 29, 2018</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </form>
+                                    <TextField
+                                        select
+                                        className={classes.viewButtons}
+                                        label="Date"
+                                        value={this.state.sessionId}
+                                        onChange={this.changeSessionId}
+                                        InputLabelProps={{ shrink: true }}>
+                                        {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>
+                                            <em>{moment(date.sessionStart.value).format("MMM Do YY hh:mm A")}</em>
+                                        </MenuItem>})}
+                                    </TextField>
                                 </ListItem>
                                 <ListItem>
                                     <Button
