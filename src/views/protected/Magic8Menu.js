@@ -50,7 +50,6 @@ const MAP = {
     "SequentialActivities": 7,
     "AssociativeCooperativeInteractions": 8
 };
-
 class Magic8Menu extends Component {
     constructor(props) {
         super(props);
@@ -59,7 +58,7 @@ class Magic8Menu extends Component {
             allowed: false,
             numSelected: 0,
             selected: "none",
-            unlocked: []
+            unlocked: [], 
         };
 
         this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this)
@@ -91,7 +90,7 @@ class Magic8Menu extends Component {
                     this.props.history.push({
                         pathname: `/${this.state.selected}`,
                         state: this.props.location.state
-                    });
+                    })
                 } else {
                     this.props.history.push({
                         pathname: `/${this.state.selected}Results`,
@@ -103,7 +102,7 @@ class Magic8Menu extends Component {
                 this.props.history.push({
                     pathname: `/${this.state.selected}TrainingHome`,
                     state: this.props.location.state
-                });
+                })
             }
     };
 
@@ -221,7 +220,9 @@ class Magic8Menu extends Component {
                             }}
                             onClick={this.handleObserve}
                         >
-                            {this.props.type}
+                        {
+                        this.state.unlocked.includes(MAP[this.state.selected]) ? 'Observe' : 'Start Training' }
+                            
                             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
                             <Icon style={{ marginLeft: 5 }}>send</Icon>
                         </Button>

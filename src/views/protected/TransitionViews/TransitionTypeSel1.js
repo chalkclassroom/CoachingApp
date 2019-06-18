@@ -94,7 +94,7 @@ function firstRow(props) {
     style = {themes.palette.travelingColor}>
     <img alt = "Walking" src = {Walking} height = '100' width = '100'/> 
   </Button>
- <text style = {{textAlign: 'center'}}>Traveling outside the classroom</text> 
+ <text style = {{textAlign: 'center'}}>Traveling outside classroom</text> 
  <Button
     /* Use classes property to inject custom styles */
     classes={{ root: classes.button, label: classes.label }}
