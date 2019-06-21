@@ -10,7 +10,8 @@ import TransitionTime from "./views/protected/TransitionViews/TransitionTime";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPassword";
 import HomePage from "./views/protected/HomeViews/Home";
 //
-import MyTeachers from "./views/protected/MyTeachers/TeacherLists"
+import MyTeachers from "./views/protected/MyTeachers/TeacherLists";
+import TeacherDetail from './views/protected/MyTeachers/TeacherDetail';
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -181,8 +182,8 @@ class App extends Component {
             //
             <PrivateRoute
               auth={this.state.auth}
-              path="/MyTeachers"
-              component={MyTeachers}
+              path="/MyTeachers/TeacherDetail"
+              component={TeacherDetail}
             />
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                             the type prop into the PrivateRoute function*/}

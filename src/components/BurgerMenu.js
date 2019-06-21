@@ -174,7 +174,7 @@ class BurgerMenu extends React.Component {
                         </ListItemIcon>
                         <ListItemText
                             primary="My Teachers"
-                            onClick={() => this.props.history.push("/MyTeachers")}
+                            onClick={() => this.props.history.push("/MyTeachers/TeacherDetail")}
                         />
                     </ListItem>
                     <ListItem
