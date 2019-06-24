@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 
@@ -25,13 +25,13 @@ function LabeledInfo(props) {
   const { container, labelStyle, fieldStyle } = styles;
 
   const { label, field } = props;
-  var formatted = field;
-  formatted = formatted.split("\n").join("fffff");
 
   return(
     <div style={ container }>
       <p style={ labelStyle }>{label}:</p>
-      <p style={ fieldStyle }>{formatted}</p>
+      <p style={ fieldStyle }>{field.split('\\n').map((item,key) => {
+        return <Fragment key={key}>{item}<br/></Fragment>
+      })}</p>
     </div>
   )
 }

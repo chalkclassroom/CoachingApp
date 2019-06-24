@@ -29,7 +29,7 @@ const styles = {
     //borderColor: '#000000',
     //borderWidth: 2,
     //borderStyle: 'solid',
-    margin: '2% 8% 0em 8%',
+    margin: '2% 5% 0em 5%',
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
@@ -38,9 +38,9 @@ const styles = {
   },
   button: {
     color: '#333333',
-    //borderWidth: 1,
-    //borderColor: '#333333',
-    //borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: '#333333',
+    borderStyle: 'solid',
     borderRadius: 3,
     textTransform: 'none'
   },
@@ -68,8 +68,15 @@ const styles = {
     //borderColor: '#00FFFF',
     //borderStyle: 'solid',
     marginTop: '1.5em',
+    padding: '0px',
     width: '50%',
-    flexGrow: 1
+    flexGrow: 1,
+    display: 'grid',
+    gridTemplateColumns: '25% 25% 25% 25%',
+    gridTemplateRows: '50% 50%',
+    // justifyContent: 'space-evenly',
+    // alignItems: 'flex-start',
+    // alignContent: 'stretch'
   },
   teacherHeader: {
     //borderWidth: 2,
@@ -79,14 +86,36 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     fontSize: '2em',
-    marginTop: '2em',
+    marginTop: '1em',
     width: '50%'
   },
   actionButton: {
     marginRight: '2em'
+  },
+  magicEightItem: {
+    margin: '3% 3% 15% 3%',
+    flexBasis: '22%',
+    listStyleType: 'none',
+    textAlign: 'center'
+  },
+  svgStyle: {
+    height: '160px',
+    width: '160px'
+  },
+  magicEightButton: {
+    marginBottom: '15%',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 0,
+    borderRadius: 20,
+    borderColor: '#FFFFFF',
+    padding: '0px',
+    width:'80%',
+    boxShadow: '0px 0px 0px'
   }
-
 };
+
+const orderedMagicEight = [<TransitionTimeSvg />, <ClassroomClimateSvg />, <ListeningToChildrenSvg/>, <LevelOfInstructionSvg />,
+                           <MathInstructionSvg />, <StudentEngagementSvg />,<SequentialActivitiesSvg />, <AssocCoopInteractionsSvg />];
 
 class TeacherDetail extends Component {
 
@@ -123,11 +152,11 @@ class TeacherDetail extends Component {
                   Teacher
                 </span>
             <div style={{marginRight: '2em'}}>
-              <Fab aria-label="Edit" className={classes.actionButton} style={{backgroundColor: '#FDBF28'}}>
-                <EditOutlinedIcon style={{color: '#FFFFFF'}} />
+              <Fab aria-label="Edit" className={classes.actionButton} style={{backgroundColor: '#F9FE49'}}>
+                <EditOutlinedIcon style={{color: '#555555'}} />
               </Fab>
-              <Fab aria-label="Delete" className={classes.actionButton} style={{backgroundColor: '#DC143C'}}>
-                <DeleteForeverIcon style={{color: '#FFFFFF'}}/>
+              <Fab aria-label="Delete" className={classes.actionButton} style={{backgroundColor: '#FF3836'}}>
+                <DeleteForeverIcon style={{color: '#555555'}}/>
               </Fab>
             </div>
           </div>
@@ -141,9 +170,72 @@ class TeacherDetail extends Component {
               <LabeledInfo label="Email" field="knewman@vanderbilt.edu"/>
               <LabeledInfo label="Notes" field="Really sensitive about her tone\nWorking on behavior management"/>
             </div>
-            <div className={classes.magicEightCard}>
-
-            </div>
+            <ol className={classes.magicEightCard}>
+              <li key={0} className={classes.magicEightItem}>
+                <Button variant='contained' className={classes.magicEightButton}>
+                  <TransitionTimeSvg/>
+                </Button>
+                <span>Last Observed:<br/>
+                1-1-2-19</span><br/>
+                <span>Goals Met: 0</span>
+              </li>
+              <li key={1} className={classes.magicEightItem}>
+                <Button variant='contained' className={classes.magicEightButton}>
+                  <ClassroomClimateSvg/>
+                </Button>
+                <span>Last Observed:<br/>
+                1-1-2-19</span><br/>
+                <span>Goals Met: 0</span>
+              </li>
+              <li key={2} className={classes.magicEightItem}>
+                <Button variant='contained' className={classes.magicEightButton}>
+                  <ListeningToChildrenSvg/>
+                </Button>
+                <span>Last Observed:<br/>
+                1-1-2-19</span><br/>
+                <span>Goals Met: 0</span>
+              </li>
+              <li key={3} className={classes.magicEightItem}>
+                <Button variant='contained' className={classes.magicEightButton}>
+                  <LevelOfInstructionSvg/>
+                </Button>
+                <span>Last Observed:<br/>
+                1-1-2-19</span><br/>
+                <span>Goals Met: 0</span>
+              </li>
+              <li key={4} className={classes.magicEightItem}>
+                <Button variant='contained' className={classes.magicEightButton}>
+                  <MathInstructionSvg/>
+                </Button>
+                <span>Last Observed:<br/>
+                1-1-2-19</span><br/>
+                <span>Goals Met: 0</span>
+              </li>
+              <li key={5} className={classes.magicEightItem}>
+                <Button variant='contained' className={classes.magicEightButton}>
+                  <StudentEngagementSvg/>
+                </Button>
+                <span>Last Observed:<br/>
+                1-1-2-19</span><br/>
+                <span>Goals Met: 0</span>
+              </li>
+              <li key={6} className={classes.magicEightItem}>
+                <Button variant='contained' className={classes.magicEightButton}>
+                  <SequentialActivitiesSvg/>
+                </Button>
+                <span>Last Observed:<br/>
+                1-1-2-19</span><br/>
+                <span>Goals Met: 0</span>
+              </li>
+              <li key={7} className={classes.magicEightItem}>
+                <Button variant='contained' className={classes.magicEightButton}>
+                  <AssocCoopInteractionsSvg/>
+                </Button>
+                <span>Last Observed:<br/>
+                1-1-2-19</span><br/>
+                <span>Goals Met: 0</span>
+              </li>
+            </ol>
           </Grid>
         </div>
       </div>
