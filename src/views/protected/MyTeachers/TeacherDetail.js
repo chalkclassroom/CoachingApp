@@ -10,50 +10,47 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '../../../components/AppBar';
 import LabeledInfo from '../../../components/MyTeachersComponents/LabeledInfo';
-import { ReactComponent as TransitionTimeSvg } from '../../../assets/icons/TransitionTime.svg';
-import { ReactComponent as StudentEngagementSvg } from '../../../assets/icons/StudentEngagement.svg';
-import { ReactComponent as SequentialActivitiesSvg } from '../../../assets/icons/SequentialActivities.svg';
-import { ReactComponent as ListeningToChildrenSvg } from '../../../assets/icons/ListeningtoChildren.svg';
-import { ReactComponent as MathInstructionSvg } from '../../../assets/icons/MathInstruction.svg';
-import { ReactComponent as LevelOfInstructionSvg } from '../../../assets/icons/LevelofInstruction.svg';
-import { ReactComponent as ClassroomClimateSvg } from '../../../assets/icons/ClassroomClimate.svg';
-import { ReactComponent as AssocCoopInteractionsSvg } from '../../../assets/icons/AssocCoopInteractions.svg';
+import TransitionTimeSvg from '../../../assets/icons/TransitionTime.svg';
+import StudentEngagementSvg from '../../../assets/icons/StudentEngagement.svg';
+import SequentialActivitiesSvg from '../../../assets/icons/SequentialActivities.svg';
+import ListeningToChildrenSvg from '../../../assets/icons/ListeningtoChildren.svg';
+import MathInstructionSvg from '../../../assets/icons/MathInstruction.svg';
+import LevelOfInstructionSvg from '../../../assets/icons/LevelofInstruction.svg';
+import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimate.svg';
+import AssocCoopInteractionsSvg from '../../../assets/icons/AssocCoopInteractions.svg';
 // import Firebase from "../../../components/Firebase";
 
 const styles = {
   root: {
     flexGrow: 1,
-    width: '100%'
+    width: '100%',
+    maxHeight: '100%'
   },
   container: {
-    //borderColor: '#000000',
-    //borderWidth: 2,
-    //borderStyle: 'solid',
-    margin: '2% 5% 0em 5%',
+    //border: '2px solid #000000',
+    margin: '2% 10% 0em 10%',
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
     //justifyContent: 'flex-start',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    maxHeight: '50%'
   },
   button: {
     color: '#333333',
-    borderWidth: 1,
-    borderColor: '#333333',
-    borderStyle: 'solid',
+    //border: '1px solid #333333',
     borderRadius: 3,
     textTransform: 'none'
   },
   contentContainer: {
+    //border: '2px solid #F700FF',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%'
   },
   teacherCard: {
-    //borderWidth: 2,
-    //borderColor: '#7FFF00',
-    //borderStyle: 'solid',
+    //border: '2px solid #7FFF00',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -64,10 +61,7 @@ const styles = {
     fontSize: '1.5em'
   },
   magicEightCard: {
-    //borderWidth: 2,
-    //borderColor: '#00FFFF',
-    //borderStyle: 'solid',
-    marginTop: '1.5em',
+    //border: '2px solid #00FFFF',
     padding: '0px',
     width: '50%',
     flexGrow: 1,
@@ -79,9 +73,7 @@ const styles = {
     // alignContent: 'stretch'
   },
   teacherHeader: {
-    //borderWidth: 2,
-    //borderColor: '#DC143C',
-    //borderStyle: 'solid',
+    //border: '2px solid #DC143C',
     flexGrow: 1,
     display: 'flex',
     justifyContent: 'space-between',
@@ -90,10 +82,11 @@ const styles = {
     width: '50%'
   },
   actionButton: {
-    marginRight: '2em'
+    //marginRight: '2em'
+    marginLeft: '1em'
   },
   magicEightItem: {
-    margin: '3% 3% 15% 3%',
+    margin: '3% 3% 30% 3%',
     flexBasis: '22%',
     listStyleType: 'none',
     textAlign: 'center'
@@ -105,17 +98,20 @@ const styles = {
   magicEightButton: {
     marginBottom: '15%',
     backgroundColor: '#FFFFFF',
-    borderWidth: 0,
-    borderRadius: 20,
-    borderColor: '#FFFFFF',
+    border: '0px none #FFFFFF',
+    borderRadius: '10%',
     padding: '0px',
     width:'80%',
-    boxShadow: '0px 0px 0px'
+    boxShadow: 'none'
+  },
+  img: {
+    maxHeight: '100px',
+    margin: '5%'
   }
 };
 
-const orderedMagicEight = [<TransitionTimeSvg />, <ClassroomClimateSvg />, <ListeningToChildrenSvg/>, <LevelOfInstructionSvg />,
-                           <MathInstructionSvg />, <StudentEngagementSvg />,<SequentialActivitiesSvg />, <AssocCoopInteractionsSvg />];
+const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg, ListeningToChildrenSvg, LevelOfInstructionSvg,
+                           MathInstructionSvg, StudentEngagementSvg, SequentialActivitiesSvg, AssocCoopInteractionsSvg];
 
 class TeacherDetail extends Component {
 
@@ -151,12 +147,12 @@ class TeacherDetail extends Component {
                   <b>Katherine Newman</b><br/>
                   Teacher
                 </span>
-            <div style={{marginRight: '2em'}}>
-              <Fab aria-label="Edit" className={classes.actionButton} style={{backgroundColor: '#F9FE49'}}>
+            <div style={{}}>
+              <Fab aria-label="Edit" className={classes.actionButton} size='small' style={{backgroundColor: '#F9FE49'}}>
                 <EditOutlinedIcon style={{color: '#555555'}} />
               </Fab>
-              <Fab aria-label="Delete" className={classes.actionButton} style={{backgroundColor: '#FF3836'}}>
-                <DeleteForeverIcon style={{color: '#555555'}}/>
+              <Fab aria-label="Delete" className={classes.actionButton} size='small' style={{backgroundColor: '#FF3836'}}>
+                <DeleteForeverIcon style={{color: '#C9C9C9'}}/>
               </Fab>
             </div>
           </div>
@@ -171,70 +167,16 @@ class TeacherDetail extends Component {
               <LabeledInfo label="Notes" field="Really sensitive about her tone\nWorking on behavior management"/>
             </div>
             <ol className={classes.magicEightCard}>
-              <li key={0} className={classes.magicEightItem}>
-                <Button variant='contained' className={classes.magicEightButton}>
-                  <TransitionTimeSvg/>
-                </Button>
-                <span>Last Observed:<br/>
-                1-1-2-19</span><br/>
-                <span>Goals Met: 0</span>
-              </li>
-              <li key={1} className={classes.magicEightItem}>
-                <Button variant='contained' className={classes.magicEightButton}>
-                  <ClassroomClimateSvg/>
-                </Button>
-                <span>Last Observed:<br/>
-                1-1-2-19</span><br/>
-                <span>Goals Met: 0</span>
-              </li>
-              <li key={2} className={classes.magicEightItem}>
-                <Button variant='contained' className={classes.magicEightButton}>
-                  <ListeningToChildrenSvg/>
-                </Button>
-                <span>Last Observed:<br/>
-                1-1-2-19</span><br/>
-                <span>Goals Met: 0</span>
-              </li>
-              <li key={3} className={classes.magicEightItem}>
-                <Button variant='contained' className={classes.magicEightButton}>
-                  <LevelOfInstructionSvg/>
-                </Button>
-                <span>Last Observed:<br/>
-                1-1-2-19</span><br/>
-                <span>Goals Met: 0</span>
-              </li>
-              <li key={4} className={classes.magicEightItem}>
-                <Button variant='contained' className={classes.magicEightButton}>
-                  <MathInstructionSvg/>
-                </Button>
-                <span>Last Observed:<br/>
-                1-1-2-19</span><br/>
-                <span>Goals Met: 0</span>
-              </li>
-              <li key={5} className={classes.magicEightItem}>
-                <Button variant='contained' className={classes.magicEightButton}>
-                  <StudentEngagementSvg/>
-                </Button>
-                <span>Last Observed:<br/>
-                1-1-2-19</span><br/>
-                <span>Goals Met: 0</span>
-              </li>
-              <li key={6} className={classes.magicEightItem}>
-                <Button variant='contained' className={classes.magicEightButton}>
-                  <SequentialActivitiesSvg/>
-                </Button>
-                <span>Last Observed:<br/>
-                1-1-2-19</span><br/>
-                <span>Goals Met: 0</span>
-              </li>
-              <li key={7} className={classes.magicEightItem}>
-                <Button variant='contained' className={classes.magicEightButton}>
-                  <AssocCoopInteractionsSvg/>
-                </Button>
-                <span>Last Observed:<br/>
-                1-1-2-19</span><br/>
-                <span>Goals Met: 0</span>
-              </li>
+              {sortedSvg.map((item, key) =>
+                <li key={key} className={classes.magicEightItem}>
+                  <Button variant='contained' className={classes.magicEightButton}>
+                    <img src={item} alt="Magic Eight not found" className={classes.img}/>
+                  </Button>
+                  <span>Last Observed:<br />
+                  1-1-2019</span><br/>
+                  <span>Goals Met: 0</span>
+                </li>
+              )}
             </ol>
           </Grid>
         </div>
