@@ -152,7 +152,7 @@ class SignUpModal extends React.Component {
                                     </Card>
                                     <Card
                                         className={classes.card}
-                                        onClick={() => this.handleChangeRole(2)}
+                                        // onClick={() => this.handleChangeRole(2)}
                                     >
                                         <CardContent>
                                             <Grid
@@ -183,7 +183,7 @@ class SignUpModal extends React.Component {
                                     </Card>
                                     <Card
                                         className={classes.card}
-                                        onClick={() => this.handleChangeRole(3)}
+                                        // onClick={() => this.handleChangeRole(3)}
                                     >
                                         <CardContent>
                                             <Grid

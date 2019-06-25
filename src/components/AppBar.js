@@ -10,6 +10,8 @@ import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu"
 import BurgerMenu from "./BurgerMenu";
 // import Firebase, {FirebaseContext} from "./Firebase"
+import { createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 
 const styles = {
@@ -22,8 +24,23 @@ const styles = {
     menuButton: {
         marginLeft: -12,
         marginRight: 20,
+        "&:hover" : {
+            backgroundColor: "#FFC35C"
+        },
     },
+    
 };
+
+const theme = createMuiTheme ({
+    palette: {
+        primary: {
+            main: '#A1C4FD'
+        },
+        secondary: {
+            main: '#FFFFFF'
+        }
+    }
+})
 
 class CommonAppBar extends React.Component{
 
@@ -78,6 +95,7 @@ class CommonAppBar extends React.Component{
         const {classes} = this.props;
 
         return (
+            <MuiThemeProvider theme = {theme}>
             <div className={classes.root}>
                 {this.state.auth?
                         <AppBar position="static" color={"primary"}>
@@ -91,9 +109,26 @@ class CommonAppBar extends React.Component{
                                     )}
                                     onClick={(event)=>this.handleMenu(event)}
                                 >
-                                    <MenuIcon/>
+                                    <MenuIcon color = "secondary"/>
                                 </IconButton>
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="Logo"
+                                    className={classNames(
+                                        classes.menuButton,
+                                        classes.menuButtonHidden,
+                                    )}
+                                    style={{backgroundColor: '#FFFFFF', margin:10}}
+                                >
+                                    <img src={Logo} height={'36'} alt={""}/>
+                                </IconButton>
+                                <Typography variant="h6" style={{color:'#FFFFFF',}}>
+                                    Classroom Quality - REF
+                                </Typography>
                                 <div color="inherit" className={classes.grow}/>
+                                <Button color="secondary" className={classes.menuButton}>Team</Button>       
+                                <Button color="secondary" className={classes.menuButton}>Advisors</Button>    
+                                <Button color="secondary" className={classes.menuButton}>About</Button> 
                             </Toolbar>
                             <BurgerMenu open={this.state.open} handleClose={this.handleMenu} firebase={this.props.firebase}/>
                         </AppBar>
@@ -114,10 +149,13 @@ class CommonAppBar extends React.Component{
                                     Classroom Quality - REF
                                 </Typography>
                                 <div color="inherit" className={classes.grow}/>
-                                <Button color="secondary" variant={"contained"} onClick={this.handleLoginModal}
+                                <Button color="secondary" onClick={this.handleLoginModal}
                                         className={classes.menuButton}>Log In</Button>
-                                <Button color="secondary" variant={"contained"} onClick={this.handleSignupModal}
+                                <Button color="secondary"  onClick={this.handleSignupModal} onHover
                                         className={classes.menuButton}>Sign Up</Button>
+                                <Button color="secondary" className={classes.menuButton}>Team</Button>       
+                                <Button color="secondary" className={classes.menuButton}>Advisors</Button>    
+                                <Button color="secondary" className={classes.menuButton}>About</Button>  
                             </Toolbar>
                             {this.state.loginModal ?
                                 <ClickAwayListener onClickAway={this.handleClickAway}> <LoginModal
@@ -128,6 +166,7 @@ class CommonAppBar extends React.Component{
                         </AppBar>
                   }
                 </div>
+                </MuiThemeProvider>
         );
     }
 }
