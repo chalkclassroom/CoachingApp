@@ -6,10 +6,9 @@ function LabeledInfo(props) {
 
   const styles = {
     container: {
-      //borderStyle: 'solid',
-      //borderWidth: 2,
-      //borderColor: '#FD8328',
-      flexGrow: 1
+      //border: '2px solid #FD8328',
+      flexGrow: 1,
+      marginRight: '0em'
     },
     labelStyle: {
       fontSize: '0.7em',

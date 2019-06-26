@@ -28,7 +28,7 @@ const styles = {
   },
   container: {
     //border: '2px solid #000000',
-    margin: '2% 10% 0em 10%',
+    margin: '2% 10% 0 10%',
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
@@ -42,6 +42,16 @@ const styles = {
     borderRadius: 3,
     textTransform: 'none'
   },
+  teacherHeader: {
+    //border: '2px solid #DC143C',
+    flexGrow: 1,
+    display: 'flex',
+    justifyContent: 'space-between',
+    fontSize: '2em',
+    marginTop: '1em',
+    minWidth: '40%',
+    maxWidth: '50%'
+  },
   contentContainer: {
     //border: '2px solid #F700FF',
     display: 'flex',
@@ -53,7 +63,7 @@ const styles = {
     //border: '2px solid #7FFF00',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'stretch',
     flexGrow: 1,
     marginTop: '1em',
@@ -72,15 +82,6 @@ const styles = {
     // alignItems: 'flex-start',
     // alignContent: 'stretch'
   },
-  teacherHeader: {
-    //border: '2px solid #DC143C',
-    flexGrow: 1,
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontSize: '2em',
-    marginTop: '1em',
-    width: '50%'
-  },
   actionButton: {
     //marginRight: '2em'
     marginLeft: '1em'
@@ -90,10 +91,6 @@ const styles = {
     flexBasis: '22%',
     listStyleType: 'none',
     textAlign: 'center'
-  },
-  svgStyle: {
-    height: '160px',
-    width: '160px'
   },
   magicEightButton: {
     marginBottom: '15%',
@@ -107,7 +104,52 @@ const styles = {
   img: {
     maxHeight: '100px',
     margin: '5%'
+  },
+  // '@media only screen and (max-width:1270px)': {
+  //   container: {
+  //     margin: '2% 7% 0 7%'
+  //   }
+  // },
+
+  // iPad Landscape
+  '@media only screen and (max-width:1024px) and (orientation:landscape)': {
+    container: {
+      margin: '2% 7% 0 7%'
+    },
+    teacherHeader: {
+      minWidth: '50%',
+      maxWidth: '60%'
+    },
+    teacherCard: {
+      width: '40%',
+      fontSize: '1.3em'
+    },
+    magicEightCard: {
+      width: '60%'
+    }
+  },
+
+  //iPad Portrait
+  '@media only screen and (max-width:768px) and (orientation:portrait)': {
+    container: {
+      margin: '2% 5% 0 5%'
+    },
+    teacherHeader: {
+      minWidth: '60%'
+    },
+    contentContainer: {
+      flexDirection: 'column',
+      justifyContent: 'flex-start'
+    },
+    teacherCard: {
+      flexFlow: 'row wrap',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      width: '100%',
+      fontSize: '1.3em'
+    }
   }
+
 };
 
 const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg, ListeningToChildrenSvg, LevelOfInstructionSvg,
@@ -147,7 +189,7 @@ class TeacherDetail extends Component {
                   <b>Katherine Newman</b><br/>
                   Teacher
                 </span>
-            <div style={{}}>
+            <div>
               <Fab aria-label="Edit" className={classes.actionButton} size='small' style={{backgroundColor: '#F9FE49'}}>
                 <EditOutlinedIcon style={{color: '#555555'}} />
               </Fab>
@@ -158,7 +200,7 @@ class TeacherDetail extends Component {
           </div>
           <Grid direction="row" justify="space-between" alignItems="stretch" className={classes.contentContainer}>
             <div className={classes.teacherCard}>
-              <div style={{display:'flex', flexDirection:'row'}}>
+              <div style={{display:'flex', flexDirection:'row', minWidth:'45%'}}>
                 <LabeledInfo label="First Name" field="Katherine"/>
                 <LabeledInfo label="Last Name" field="Newman"/>
               </div>
