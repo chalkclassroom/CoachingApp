@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-
 function LabeledInfo(props) {
 
   const styles = {
@@ -22,15 +21,14 @@ function LabeledInfo(props) {
   };
 
   const { container, labelStyle, fieldStyle } = styles;
-
   const { label, field } = props;
 
   return(
     <div style={ container }>
       <p style={ labelStyle }>{label}:</p>
-      <p style={ fieldStyle }>{field.split('\\n').map((item,key) => {
-        return <Fragment key={key}>{item}<br/></Fragment>
-      })}</p>
+      <p style={ fieldStyle }>{field.split('\\n').map((item,key) =>
+        <Fragment key={key}>{item}<br/></Fragment>
+      )}</p>
     </div>
   )
 }
@@ -39,6 +37,5 @@ LabeledInfo.propTypes = {
   label: PropTypes.string.isRequired,
   field: PropTypes.string.isRequired
 };
-
 
 export default LabeledInfo;

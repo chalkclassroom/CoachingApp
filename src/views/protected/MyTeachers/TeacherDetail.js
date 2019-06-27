@@ -8,6 +8,11 @@ import Fab from '@material-ui/core/Fab';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import AppBar from '../../../components/AppBar';
 import LabeledInfo from '../../../components/MyTeachersComponents/LabeledInfo';
 import TransitionTimeSvg from '../../../assets/icons/TransitionTime.svg';
@@ -32,13 +37,11 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
-    //justifyContent: 'flex-start',
     alignItems: 'flex-start',
     maxHeight: '50%'
   },
   button: {
     color: '#333333',
-    //border: '1px solid #333333',
     borderRadius: 3,
     textTransform: 'none'
   },
@@ -74,20 +77,17 @@ const styles = {
     //border: '2px solid #00FFFF',
     padding: '0px',
     width: '50%',
+    margin: '0',
     flexGrow: 1,
     display: 'grid',
     gridTemplateColumns: '25% 25% 25% 25%',
-    gridTemplateRows: '50% 50%',
-    // justifyContent: 'space-evenly',
-    // alignItems: 'flex-start',
-    // alignContent: 'stretch'
+    gridTemplateRows: '50% 50%'
   },
   actionButton: {
-    //marginRight: '2em'
     marginLeft: '1em'
   },
   magicEightItem: {
-    margin: '3% 3% 30% 3%',
+    margin: '3% 3% 15% 3%',
     flexBasis: '22%',
     listStyleType: 'none',
     textAlign: 'center'
@@ -105,13 +105,107 @@ const styles = {
     maxHeight: '100px',
     margin: '5%'
   },
-  // '@media only screen and (max-width:1270px)': {
-  //   container: {
-  //     margin: '2% 7% 0 7%'
-  //   }
-  // },
 
-  // iPad Landscape
+  //Minor Breakpoint -> Shrinking desktop window
+  '@media only screen and (max-width:1270px)': {
+    container: {
+      margin: '2% 7% 0 7%'
+    }
+  },
+
+  //Minor Breakpoint -> Shrinking desktop window
+  '@media only screen and (max-width:1145px)': {
+    container: {
+      margin: '2% 5% 0 5%'
+    },
+    teacherHeader: {
+      minWidth: '50%'
+    }
+  },
+
+  // iPad Pro 12.9" Portrait
+  '@media only screen and (max-width:1024px) and (orientation:portrait)': {
+    container: {
+      margin: '2% 5% 0 5%',
+      fontSize: '1.5em'
+    },
+    teacherHeader: {
+      minWidth: '60%',
+      borderBottom: '1px solid #B3D8E6'
+    },
+    contentContainer: {
+      flexDirection: 'column',
+      justifyContent: 'flex-start'
+    },
+    teacherCard: {
+      flexFlow: 'row wrap',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      width: '100%',
+      fontSize: '1.3em',
+      borderBottom: '1px solid #B3D8E6'
+    },
+    magicEightCard: {
+      width: '100%',
+      margin: '1em 0 0 0'
+    }
+  },
+
+  // iPad Pro 10.5" Portrait
+  '@media only screen and (max-width:834px) and (orientation: portrait)': {
+    container: {
+      margin: '2% 5% 0 5%',
+      fontSize: '1em'
+    },
+    teacherHeader: {
+      minWidth: '60%',
+      borderBottom: '1px solid #B3D8E6'
+    },
+    contentContainer: {
+      flexDirection: 'column',
+      justifyContent: 'flex-start'
+    },
+    teacherCard: {
+      flexFlow: 'row wrap',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      width: '100%',
+      fontSize: '1.3em',
+      borderBottom: '1px solid #B3D8E6'
+    },
+    magicEightCard: {
+      width: '100%',
+      margin: '2em 0 0 0'
+    }
+  },
+
+  //iPad-Mini Portrait
+  '@media only screen and (max-width:768px) and (orientation:portrait)': {
+    container: {
+      margin: '2% 5% 0 5%'
+    },
+    teacherHeader: {
+      minWidth: '60%',
+      borderBottom: '1px solid #B3D8E6'
+    },
+    contentContainer: {
+      flexDirection: 'column',
+      justifyContent: 'flex-start'
+    },
+    teacherCard: {
+      flexFlow: 'row wrap',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      width: '100%',
+      borderBottom: '1px solid #B3D8E6'
+    },
+    magicEightCard: {
+      width: '100%',
+      margin: 0
+    }
+  },
+
+  // iPad-Mini Landscape
   '@media only screen and (max-width:1024px) and (orientation:landscape)': {
     container: {
       margin: '2% 7% 0 7%'
@@ -128,28 +222,6 @@ const styles = {
       width: '60%'
     }
   },
-
-  //iPad Portrait
-  '@media only screen and (max-width:768px) and (orientation:portrait)': {
-    container: {
-      margin: '2% 5% 0 5%'
-    },
-    teacherHeader: {
-      minWidth: '60%'
-    },
-    contentContainer: {
-      flexDirection: 'column',
-      justifyContent: 'flex-start'
-    },
-    teacherCard: {
-      flexFlow: 'row wrap',
-      justifyContent: 'space-between',
-      alignItems: 'flex-start',
-      width: '100%',
-      fontSize: '1.3em'
-    }
-  }
-
 };
 
 const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg, ListeningToChildrenSvg, LevelOfInstructionSvg,
@@ -169,8 +241,41 @@ class TeacherDetail extends Component {
       isDeleting: false
     };
 
+    this.handleEditClick = this.handleEditClick.bind(this);
+    this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
 
   }
+
+  handleEditOpen = (e) => {
+    e.preventDefault();
+    this.setState({
+      isEditing: true
+    });
+  };
+
+  handleDeleteOpen = (e) => {
+    e.preventDefault();
+    this.setState({
+      isDeleting: true
+    })
+  };
+
+  handleCloseModal = (e) => {
+    e.preventDefault();
+    const { firstName, lastName, school, email, notes } = this.props.teacher;
+    this.setState({
+      inputFirstName: firstName,
+      inputLastName: lastName,
+      inputSchool: school,
+      inputEmail: email,
+      inputNotes: notes,
+      isEditing: false,
+      isDeleting: false
+    });
+  };
+
+
 
   render() {
     const { classes } = this.props;
@@ -179,6 +284,7 @@ class TeacherDetail extends Component {
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
+
         <div className={classes.container}>
           <Button variant="contained" size="medium" className={classes.button}>
             <ChevronLeftRoundedIcon />
@@ -214,9 +320,9 @@ class TeacherDetail extends Component {
                   <Button variant='contained' className={classes.magicEightButton}>
                     <img src={item} alt="Magic Eight not found" className={classes.img}/>
                   </Button>
-                  <span>Last Observed:<br />
-                  1-1-2019</span><br/>
-                  <span>Goals Met: 0</span>
+                  <p>Last Observed:<br />
+                  1-1-2019</p>
+                  <p>Goals Met: 0</p>
                 </li>
               )}
             </ol>
