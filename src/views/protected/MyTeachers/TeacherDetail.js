@@ -105,6 +105,15 @@ const styles = {
     maxHeight: '100px',
     margin: '5%'
   },
+  deleteModalButtonContainer: {
+    display: 'flex',
+    justifyContent: 'space-around'
+  },
+  deleteModalButton: {
+    border: '2px solid #000000',
+    textTransform: 'none',
+    fontSize: '1em'
+  },
 
   //Minor Breakpoint -> Shrinking desktop window
   '@media only screen and (max-width:1270px)': {
@@ -231,21 +240,33 @@ class TeacherDetail extends Component {
 
   constructor (props) {
     super(props);
+    // const { firstName, lastName, school, email, notes } = this.props.teacher;
     this.state = {
-      inputFirstName: "Katherine",
-      inputLastName: "Newman",
-      inputSchool: "Ruby Major Elementary",
-      inputEmail: "knewman@vanderbilt.edu",
-      inputNotes: "Really sensitive about her tone\nWorking on behavior management",
+      firstName: "Katherine",
+      lastName: "Newman",
+      school: "Ruby Major Elementary",
+      email: "knewman@vanderbilt.edu",
+      notes: "Really sensitive about her tone\nWorking on behavior management",
+      inputFirstName: "Katherine",            // firstName
+      inputLastName: "Newman",                // lastName
+      inputSchool: "Ruby Major Elementary",   // school
+      inputEmail: "knewman@vanderbilt.edu",   // email
+      inputNotes: "Really sensitive about her tone\nWorking on behavior management",  // notes
       isEditing: false,
       isDeleting: false
     };
 
-    this.handleEditClick = this.handleEditClick.bind(this);
-    this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.handleEditOpen = this.handleEditOpen.bind(this);
+    this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
 
   }
+
+  componentDidMount = props => {
+    const uid = this.props.teacherID;
+    // call to firebase fetching teacher object with uID
+  };
 
   handleEditOpen = (e) => {
     e.preventDefault();
@@ -263,7 +284,7 @@ class TeacherDetail extends Component {
 
   handleCloseModal = (e) => {
     e.preventDefault();
-    const { firstName, lastName, school, email, notes } = this.props.teacher;
+    const { firstName, lastName, school, email, notes } = this.state;
     this.setState({
       inputFirstName: firstName,
       inputLastName: lastName,
@@ -279,12 +300,14 @@ class TeacherDetail extends Component {
 
   render() {
     const { classes } = this.props;
+    const { firstName, lastName, school, email, notes, inputFirstName, inputLastName,
+            inputSchool, inputEmail, inputNotes, isEditing, isDeleting } = this.state;
+
     return(
       <div className={classes.root}>
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-
         <div className={classes.container}>
           <Button variant="contained" size="medium" className={classes.button}>
             <ChevronLeftRoundedIcon />
@@ -296,10 +319,12 @@ class TeacherDetail extends Component {
                   Teacher
                 </span>
             <div>
-              <Fab aria-label="Edit" className={classes.actionButton} size='small' style={{backgroundColor: '#F9FE49'}}>
+              <Fab aria-label="Edit" onClick={this.handleEditOpen} className={classes.actionButton} size='small'
+                   style={{backgroundColor: '#F9FE49'}}>
                 <EditOutlinedIcon style={{color: '#555555'}} />
               </Fab>
-              <Fab aria-label="Delete" className={classes.actionButton} size='small' style={{backgroundColor: '#FF3836'}}>
+              <Fab aria-label="Delete" onClick={this.handleDeleteOpen} className={classes.actionButton} size='small'
+                   style={{backgroundColor: '#FF3836'}}>
                 <DeleteForeverIcon style={{color: '#C9C9C9'}}/>
               </Fab>
             </div>
@@ -327,6 +352,27 @@ class TeacherDetail extends Component {
               )}
             </ol>
           </Grid>
+          <Dialog
+            open={isDeleting}
+            onClose={this.handleCloseModal}
+            aria-labelledby="delete-teacher-modal"
+            aria-describedby="prompts a coach to confirm deleting a teacher from MyTeachers"
+          >
+            <DialogTitle id="delete-teacher-title" style={{textAlign: 'center'}}>
+              Are you sure you want to remove <b style={{textDecoration: 'underline', color: '#007DAF'}}>
+              {`${firstName} ${lastName}`}</b> from your MyTeachers list?
+            </DialogTitle>
+            <DialogActions className={classes.deleteModalButtonContainer}>
+              <Button onClick={this.handleCloseModal} className={classes.deleteModalButton}
+                      style={{borderColor: '#09A1B3'}}>
+                No,<b style={{color: '#09A1B3', padding:'0 0.3em 0 0.3em'}}>KEEP</b>{`${firstName} ${lastName}`}
+              </Button>
+              <Button onClick={this.handleCloseModal} className={classes.deleteModalButton} autoFocus
+                      style={{borderColor: '#F1231C'}}>
+                Yes,<b style={{color: '#F1231C', padding:'0 0.3em 0 0.3em'}}>DELETE</b>{`${firstName} ${lastName}`}
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </div>
     )
@@ -335,7 +381,7 @@ class TeacherDetail extends Component {
 }
 
 TeacherDetail.propTypes = {
-  //teacher: PropTypes.object.isRequired,
+  teacherID: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired
 };
 
