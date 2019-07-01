@@ -18,6 +18,10 @@ import { resetTransitionTime } from "../../../state/actions/transition-time";
 import Recs from "./TransitionTimeRecs";
 import TransitionTypeSel from "./TransitionTypeSel";
 import TransitionTypeSel1 from "./TransitionTypeSel1";
+import Dashboard from "../../../components/Dashboard";
+import Dashboard2 from "../../../components/Dashboard2";
+
+
 
 const styles = {
     root: {
@@ -128,9 +132,15 @@ class TransitionTime extends React.Component {
                                 alignItems={"center"}
                                 justify={"center"}
                                 direction={"column"}
+                                
                             >
                                 <div style={{ margin: 20 }} />
-                                <TransitionLog />
+                                <Dashboard 
+                                    magic8="Transition Time"
+                                    color="#094492"
+                                    infoDisplay= {<TransitionLog />}
+                                    submitFunc={resetTransitionTime()}
+                                />
                             </Grid>
                         </Grid>
                         <Grid item xs={2}>
@@ -143,8 +153,8 @@ class TransitionTime extends React.Component {
                                 <div style={{ margin: 20 }} />
                                 <TransitionTypeSel/>
                             </Grid>
-                            </Grid> 
-                            <Grid item xs={2}>
+                        </Grid> 
+                        <Grid item xs={2}>
                             <Grid
                                 container
                                 alignItems={"center"}
@@ -162,8 +172,8 @@ class TransitionTime extends React.Component {
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                {/* <div style={{ margin: 10 }} />
-                                <TransitionType /> */}
+                                <div style={{ margin: 10 }} />
+                                {/*<TransitionType /> */}
                                 <FirebaseContext.Consumer>
                                     {firebase => (
                                         <TransitionTimer
@@ -176,7 +186,7 @@ class TransitionTime extends React.Component {
                         </Grid>
                     </Grid>
                 </main>
-                <footer>
+                {/* <footer>
                     <Grid
                         container
                         alignItems={"center"}
@@ -220,8 +230,8 @@ class TransitionTime extends React.Component {
                                     {firebase => (
                                         <YesNoDialog
                                             buttonText={"Complete Observation"}
-                                            buttonVariant={"contained"}
-                                            buttonColor={"secondary"}
+                                            buttonVariant={"outlined"}
+                                            buttonColor="#094492"
                                             buttonStyle={{ margin: 10 }}
                                             dialogTitle={
                                                 "Are you sure you want to complete this observation?"
@@ -241,7 +251,7 @@ class TransitionTime extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
-                </footer>
+                </footer> */}
             </div>
         );
     }
