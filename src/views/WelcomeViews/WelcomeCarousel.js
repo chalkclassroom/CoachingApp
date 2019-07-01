@@ -4,13 +4,11 @@ import PropTypes from "prop-types";
 import topIllustration from "../../assets/icons/HomepageIllustration.svg"
 import Helmet from 'react-helmet';
 import childrenWalking from '../../assets/icons/Benefits2.png'
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import slide1 from "../../assets/slides/slide1.png";
 import slide2 from "../../assets/slides/slide2.png";
 import slide3 from "../../assets/slides/slide3.png";
-import slide4 from "../../assets/slides/slide4.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 

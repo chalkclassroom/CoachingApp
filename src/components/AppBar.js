@@ -12,7 +12,10 @@ import BurgerMenu from "./BurgerMenu";
 // import Firebase, {FirebaseContext} from "./Firebase"
 import { createMuiTheme } from '@material-ui/core/styles';
 import { MuiThemeProvider } from '@material-ui/core/styles';
-
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+//pages
+import About from '../views/WelcomeViews/About.js' 
+import TransitionTimeTrainingHome from '../views/protected/TransitionViews/TransitionTimeTrainingHome';
 
 const styles = {
     root: {
@@ -39,7 +42,8 @@ const theme = createMuiTheme ({
         secondary: {
             main: '#FFFFFF'
         }
-    }
+    }, 
+    shadows: ["none"],
 })
 
 class CommonAppBar extends React.Component{
@@ -126,9 +130,14 @@ class CommonAppBar extends React.Component{
                                     Classroom Quality - REF
                                 </Typography>
                                 <div color="inherit" className={classes.grow}/>
-                                <Button color="secondary" className={classes.menuButton}>Team</Button>       
-                                <Button color="secondary" className={classes.menuButton}>Advisors</Button>    
-                                <Button color="secondary" className={classes.menuButton}>About</Button> 
+                                <Router>
+                                <div>
+                                <Link to = "/team"style={{ textDecoration: 'none' }} ><Button color="secondary" className={classes.menuButton}
+                                onClick={() => this.props.history.push("/team")}>Team</Button></Link>
+                                <Link to = "/about"style={{ textDecoration: 'none' }} ><Button color="secondary" className={classes.menuButton}
+                                onClick={() => this.props.history.push("/about")}>About</Button></Link>
+                                </div>
+                                </Router> 
                             </Toolbar>
                             <BurgerMenu open={this.state.open} handleClose={this.handleMenu} firebase={this.props.firebase}/>
                         </AppBar>
@@ -153,9 +162,14 @@ class CommonAppBar extends React.Component{
                                         className={classes.menuButton}>Log In</Button>
                                 <Button color="secondary"  onClick={this.handleSignupModal} onHover
                                         className={classes.menuButton}>Sign Up</Button>
-                                <Button color="secondary" className={classes.menuButton}>Team</Button>       
-                                <Button color="secondary" className={classes.menuButton}>Advisors</Button>    
-                                <Button color="secondary" className={classes.menuButton}>About</Button>  
+                                <Router>
+                                    <div>
+                                <Link to = "/team"style={{ textDecoration: 'none' }} ><Button color="secondary" className={classes.menuButton}
+                                onClick={() => this.props.history.push("/team")}>Team</Button></Link>
+                                <Link to = "/about"style={{ textDecoration: 'none' }} ><Button color="secondary" className={classes.menuButton}
+                                onClick={() => this.props.history.push("/about")}>About</Button></Link>
+                                </div>   
+                                </Router>        
                             </Toolbar>
                             {this.state.loginModal ?
                                 <ClickAwayListener onClickAway={this.handleClickAway}> <LoginModal

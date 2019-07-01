@@ -24,6 +24,8 @@ import AssociativeCooperativeInteractionsTrainingHome from "./views/protected/As
 import ClassroomClimateTrainingHome from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingHome";
 import SequentialActivitiesTrainingHome from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingHome";
 import TransitionTimeTrainingHome from "./views/protected/TransitionViews/TransitionTimeTrainingHome";
+import About from "./views/WelcomeViews/About";
+import Team from "./views/WelcomeViews/Team";
 
 
 const styles = createMuiTheme({
@@ -127,6 +129,15 @@ class App extends Component {
               path="/Home"
               component={HomePage}
             />
+            <PrivateRoute
+            auth={this.state.auth || !this.state.auth}
+            path="/about"
+            component={About}
+              />
+            <PrivateRoute
+            auth={this.state.auth || !this.state.auth}
+            path = "/team"
+            component = {Team}/>
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTime"

@@ -10,9 +10,12 @@ import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 import Card from "@material-ui/core/Card";
-import { ReactComponent as CoachSvg } from "../../assets/icons/coach.svg";
+import {ReactComponent as CoachSvg} from "../../assets/icons/coach.svg";
+// import Coach from "../../assets/icons/coach.svg";
 import { ReactComponent as TeacherSvg } from "../../assets/icons/teacher.svg";
-import { ReactComponent as ManagerSvg } from "../../assets/icons/manager.svg";
+import { ReactComponent as TeacherComingSoon } from "../../assets/icons/teacherComingSoon.svg";
+import {ReactComponent as newManager} from "../../assets/icons/NewManager.svg";
+import { ReactComponent as ManagerComingSoon } from "../../assets/icons/managerComingSoon.svg";
 import CardContent from "@material-ui/core/CardContent";
 function getModalStyle() {
     return {
@@ -163,12 +166,18 @@ class SignUpModal extends React.Component {
                                                 justify="flex-start"
                                             >
                                                 <Grid item>
-                                                    <TeacherSvg
+                                                    {/* <TeacherSvg
                                                         style={{
                                                             height: "100",
                                                             width: "100"
                                                         }}
-                                                    />
+                                                    /> */}
+                                                    <TeacherComingSoon
+                                                         style={{
+                                                            height: "100",
+                                                            width: "100"
+                                                        }} /> 
+
                                                 </Grid>
                                                 <Grid item>
                                                     <Typography
@@ -194,7 +203,13 @@ class SignUpModal extends React.Component {
                                                 justify="flex-start"
                                             >
                                                 <Grid item>
-                                                    <ManagerSvg
+                                                    {/* <ManagerSvg
+                                                        style={{
+                                                            height: "100",
+                                                            width: "100"
+                                                        }}
+                                                    /> */}
+                                                    <ManagerComingSoon
                                                         style={{
                                                             height: "100",
                                                             width: "100"
