@@ -13,6 +13,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
 import AppBar from '../../../components/AppBar';
 import LabeledInfo from '../../../components/MyTeachersComponents/LabeledInfo';
 import TransitionTimeSvg from '../../../assets/icons/TransitionTime.svg';
@@ -240,17 +241,17 @@ class TeacherDetail extends Component {
 
   constructor (props) {
     super(props);
-    // const { firstName, lastName, school, email, notes } = this.props.teacher;
     this.state = {
-      firstName: "Katherine",
-      lastName: "Newman",
-      school: "Ruby Major Elementary",
-      email: "knewman@vanderbilt.edu",
+      uuid: "",
+      firstName: "Practice",
+      lastName: "Teacher",
+      school: "Elum Entaree School",
+      email: "practice@teacher.edu",
       notes: "Really sensitive about her tone\nWorking on behavior management",
-      inputFirstName: "Katherine",            // firstName
-      inputLastName: "Newman",                // lastName
-      inputSchool: "Ruby Major Elementary",   // school
-      inputEmail: "knewman@vanderbilt.edu",   // email
+      inputFirstName: "Practice",            // firstName
+      inputLastName: "Teacher",              // lastName
+      inputSchool: "Elum Entaree School",    // school
+      inputEmail: "practice@teacher.edu",    // email
       inputNotes: "Really sensitive about her tone\nWorking on behavior management",  // notes
       isEditing: false,
       isDeleting: false
@@ -260,29 +261,37 @@ class TeacherDetail extends Component {
     this.handleEditOpen = this.handleEditOpen.bind(this);
     this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
-
+    this.handleEditText = this.handleEditText.bind(this);
+    this.handleEditConfirm = this.handleEditConfirm.bind(this);
+    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
+    this.handleBackClick = this.handleBackClick.bind(this);
   }
 
-  componentDidMount = props => {
-    const uid = this.props.teacherID;
+  componentDidMount () {
+    // const uid = this.props.teacherID;
     // call to firebase fetching teacher object with uID
+    this.forceUpdate();
   };
 
-  handleEditOpen = (e) => {
+  handleBackClick (e) {
+    // Route back to MyTeachers page
+  };
+
+  handleEditOpen (e) {
     e.preventDefault();
     this.setState({
       isEditing: true
     });
   };
 
-  handleDeleteOpen = (e) => {
+  handleDeleteOpen (e) {
     e.preventDefault();
     this.setState({
       isDeleting: true
     })
   };
 
-  handleCloseModal = (e) => {
+  handleCloseModal (e) {
     e.preventDefault();
     const { firstName, lastName, school, email, notes } = this.state;
     this.setState({
@@ -296,12 +305,55 @@ class TeacherDetail extends Component {
     });
   };
 
+  handleEditText (e, field) {
+    e.preventDefault();
+    switch (field) {
+      case "first-name":
+        this.setState({inputFirstName: e.target.value});
+        break;
+      case "last-name":
+        this.setState({inputLastName: e.target.value});
+        break;
+      case "school":
+        this.setState({inputSchool: e.target.value});
+        break;
+      case "email":
+        this.setState({inputEmail: e.target.value});
+        break;
+      case "notes":
+        this.setState({inputNotes: e.target.value});
+        break;
+      default:
+        console.log("Should never be here.");
+        break;
+    }
+  };
 
+  handleEditConfirm (e) {
+    e.preventDefault();
+    // Send push call to firebase to edit teacher's (partner's) field(s) in dB
+    // get an updated snapshot of teacher info
+    // update this.state
+    this.setState({
+      isEditing: false
+    });
+    this.forceUpdate();
+  };
+
+  handleDeleteConfirm (e) {
+    e.preventDefault();
+    // Send call to firebase to pop this teacher's ID from the coach's 'partners' list
+    // get an updated snapshot of the teacher info
+    // update this.state
+    this.setState({
+      isDeleting: false
+    });
+    this.forceUpdate();
+  };
 
   render() {
     const { classes } = this.props;
-    const { firstName, lastName, school, email, notes, inputFirstName, inputLastName,
-            inputSchool, inputEmail, inputNotes, isEditing, isDeleting } = this.state;
+    const { firstName, lastName, school, email, notes, isEditing, isDeleting } = this.state;
 
     return(
       <div className={classes.root}>
@@ -309,15 +361,15 @@ class TeacherDetail extends Component {
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.container}>
-          <Button variant="contained" size="medium" className={classes.button}>
+          <Button variant="contained" size="medium" className={classes.button} onClick={this.handleBackClick}>
             <ChevronLeftRoundedIcon />
             <b>My Teachers</b>
           </Button>
           <div className={classes.teacherHeader}>
-                <span>
-                  <b>Katherine Newman</b><br/>
-                  Teacher
-                </span>
+            <span>
+              <b>Katherine Newman</b><br/>
+              Teacher
+            </span>
             <div>
               <Fab aria-label="Edit" onClick={this.handleEditOpen} className={classes.actionButton} size='small'
                    style={{backgroundColor: '#F9FE49'}}>
@@ -332,12 +384,12 @@ class TeacherDetail extends Component {
           <Grid direction="row" justify="space-between" alignItems="stretch" className={classes.contentContainer}>
             <div className={classes.teacherCard}>
               <div style={{display:'flex', flexDirection:'row', minWidth:'45%'}}>
-                <LabeledInfo label="First Name" field="Katherine"/>
-                <LabeledInfo label="Last Name" field="Newman"/>
+                <LabeledInfo label="First Name" field={firstName}/>
+                <LabeledInfo label="Last Name" field={lastName}/>
               </div>
-              <LabeledInfo label="School" field="Ruby Major Elementary"/>
-              <LabeledInfo label="Email" field="knewman@vanderbilt.edu"/>
-              <LabeledInfo label="Notes" field="Really sensitive about her tone\nWorking on behavior management"/>
+              <LabeledInfo label="School" field={school}/>
+              <LabeledInfo label="Email" field={email}/>
+              <LabeledInfo label="Notes" field={notes}/>
             </div>
             <ol className={classes.magicEightCard}>
               {sortedSvg.map((item, key) =>
@@ -345,6 +397,7 @@ class TeacherDetail extends Component {
                   <Button variant='contained' className={classes.magicEightButton}>
                     <img src={item} alt="Magic Eight not found" className={classes.img}/>
                   </Button>
+                  {/* Logic for getting recent observation/number of goals met*/}
                   <p>Last Observed:<br />
                   1-1-2019</p>
                   <p>Goals Met: 0</p>
@@ -360,16 +413,80 @@ class TeacherDetail extends Component {
           >
             <DialogTitle id="delete-teacher-title" style={{textAlign: 'center'}}>
               Are you sure you want to remove <b style={{textDecoration: 'underline', color: '#007DAF'}}>
-              {`${firstName} ${lastName}`}</b> from your MyTeachers list?
+              {firstName} {lastName}</b> from MyTeachers?
             </DialogTitle>
             <DialogActions className={classes.deleteModalButtonContainer}>
-              <Button onClick={this.handleCloseModal} className={classes.deleteModalButton}
-                      style={{borderColor: '#09A1B3'}}>
-                No,<b style={{color: '#09A1B3', padding:'0 0.3em 0 0.3em'}}>KEEP</b>{`${firstName} ${lastName}`}
-              </Button>
               <Button onClick={this.handleCloseModal} className={classes.deleteModalButton} autoFocus
+                      style={{borderColor: '#09A1B3'}}>
+                No,<b style={{color: '#09A1B3', padding:'0 0.3em 0 0.3em'}}>KEEP</b>{firstName} {lastName}
+              </Button>
+              <Button onClick={this.handleDeleteConfirm} className={classes.deleteModalButton}
                       style={{borderColor: '#F1231C'}}>
-                Yes,<b style={{color: '#F1231C', padding:'0 0.3em 0 0.3em'}}>DELETE</b>{`${firstName} ${lastName}`}
+                Yes,<b style={{color: '#F1231C', padding:'0 0.3em 0 0.3em'}}>DELETE</b>{firstName} {lastName}
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog open={isEditing} onClose={this.handleCloseModal} aria-labelledby="edit-teacher-title">
+            <DialogTitle id="edit-teacher-title">Edit {firstName} {lastName}'s Info</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Make edits to the form below and confirm to update this teacher's information.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                defaultValue={firstName}
+                onChange={this.handleEditText.bind(this, "first-name")}
+                margin="dense"
+                id="first-name"
+                label="First Name"
+                type="text"
+                fullWidth
+              />
+              <TextField
+                defaultValue={lastName}
+                onChange={this.handleEditText.bind(this, "last-name")}
+                margin="dense"
+                id="last-name"
+                label="Last Name"
+                type="text"
+                fullWidth
+              />
+              <TextField
+                defaultValue={school}
+                onChage={this.handleEditText.bind(this, "school")}
+                margin="dense"
+                id="school"
+                label="School"
+                type="text"
+                fullWidth
+              />
+              <TextField
+                defaultValue={email}
+                onChange={this.handleEditText.bind(this, "email")}
+                margin="dense"
+                id="email"
+                label="Email"
+                type="email"
+                fullWidth
+              />
+              <TextField
+                defaultValue={notes}
+                onChange={this.handleEditText.bind(this, "notes")}
+                margin="dense"
+                id="notes"
+                label="Notes"
+                multiline
+                rows={10}
+                rowsMax={10}
+                fullWidth
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleCloseModal} style={{color:'#F1231C'}}>
+                Cancel
+              </Button>
+              <Button onClick={this.handleEditConfirm} style={{color:'#09A1B3'}}>
+                Confirm Edits
               </Button>
             </DialogActions>
           </Dialog>
@@ -377,7 +494,6 @@ class TeacherDetail extends Component {
       </div>
     )
   }
-
 }
 
 TeacherDetail.propTypes = {
