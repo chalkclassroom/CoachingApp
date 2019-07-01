@@ -367,7 +367,7 @@ class TeacherDetail extends Component {
           </Button>
           <div className={classes.teacherHeader}>
             <span>
-              <b>Katherine Newman</b><br/>
+              <b>{firstName} {lastName}</b><br/>
               Teacher
             </span>
             <div>
