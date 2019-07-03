@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import FirebaseContext from '../../../components/Firebase/context';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -24,7 +25,7 @@ import MathInstructionSvg from '../../../assets/icons/MathInstruction.svg';
 import LevelOfInstructionSvg from '../../../assets/icons/LevelofInstruction.svg';
 import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimate.svg';
 import AssocCoopInteractionsSvg from '../../../assets/icons/AssocCoopInteractions.svg';
-// import Firebase from "../../../components/Firebase";
+ import Firebase from "../../../components/Firebase";
 
 const styles = {
   root: {
@@ -231,7 +232,7 @@ const styles = {
     magicEightCard: {
       width: '60%'
     }
-  },
+  }
 };
 
 const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg, ListeningToChildrenSvg, LevelOfInstructionSvg,
@@ -241,18 +242,20 @@ class TeacherDetail extends Component {
 
   constructor (props) {
     super(props);
+    //const { id, firstName,lastName, email } = this.props.teacherInfo; // { school }
     this.state = {
-      uuid: "",
-      firstName: "Practice",
-      lastName: "Teacher",
-      school: "Elum Entaree School",
-      email: "practice@teacher.edu",
-      notes: "Really sensitive about her tone\nWorking on behavior management",
-      inputFirstName: "Practice",            // firstName
-      inputLastName: "Teacher",              // lastName
-      inputSchool: "Elum Entaree School",    // school
-      inputEmail: "practice@teacher.edu",    // email
-      inputNotes: "Really sensitive about her tone\nWorking on behavior management",  // notes
+      // ...props.teacherInfo,
+      teacherUID: "EYaU6BCbNUcPTSsxU14G9IaGXHJ3", //props.teacherID, EYaU6BCbNUcPTSsxU14G9IaGXHJ3
+      firstName: "Practice",                      //props.firstName
+      lastName: "Teacher",                        //props.lastName
+      school: "Elum Entaree School",              //props.school
+      email: "practice@teacher.edu",              //props.email
+      notes: "",
+      inputFirstName: "",
+      inputLastName: "",
+      inputSchool: "",
+      inputEmail: "",
+      inputNotes: "",
       isEditing: false,
       isDeleting: false
     };
@@ -268,31 +271,39 @@ class TeacherDetail extends Component {
   }
 
   componentDidMount () {
-    // const uid = this.props.teacherID;
-    // call to firebase fetching teacher object with uID
-    this.forceUpdate();
+    let firebase = this.context;
+    firebase.getTeacherInfo(this.state.teacherUID)
+      .then( teacherInfo => {
+        this.setState({
+          firstName: teacherInfo.firstName,
+          lastName: teacherInfo.lastName,
+          email: teacherInfo.email,
+          notes: teacherInfo.notes
+        }); // Automatically forces a re-render
+      })
+      .catch( error => {
+        console.log("Error fetching Teacher Info's:", error);
+      });
   };
 
-  handleBackClick (e) {
+  handleBackClick () {
     // Route back to MyTeachers page
+
   };
 
-  handleEditOpen (e) {
-    e.preventDefault();
+  handleEditOpen () {
     this.setState({
       isEditing: true
     });
   };
 
-  handleDeleteOpen (e) {
-    e.preventDefault();
+  handleDeleteOpen () {
     this.setState({
       isDeleting: true
     })
   };
 
-  handleCloseModal (e) {
-    e.preventDefault();
+  handleCloseModal () {
     const { firstName, lastName, school, email, notes } = this.state;
     this.setState({
       inputFirstName: firstName,
@@ -305,32 +316,13 @@ class TeacherDetail extends Component {
     });
   };
 
-  handleEditText (e, field) {
-    e.preventDefault();
-    switch (field) {
-      case "first-name":
-        this.setState({inputFirstName: e.target.value});
-        break;
-      case "last-name":
-        this.setState({inputLastName: e.target.value});
-        break;
-      case "school":
-        this.setState({inputSchool: e.target.value});
-        break;
-      case "email":
-        this.setState({inputEmail: e.target.value});
-        break;
-      case "notes":
-        this.setState({inputNotes: e.target.value});
-        break;
-      default:
-        console.log("Should never be here.");
-        break;
-    }
+  handleEditText (e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
   };
 
-  handleEditConfirm (e) {
-    e.preventDefault();
+  handleEditConfirm () {
     // Send push call to firebase to edit teacher's (partner's) field(s) in dB
     // get an updated snapshot of teacher info
     // update this.state
@@ -340,11 +332,11 @@ class TeacherDetail extends Component {
     this.forceUpdate();
   };
 
-  handleDeleteConfirm (e) {
-    e.preventDefault();
+  handleDeleteConfirm () {
     // Send call to firebase to pop this teacher's ID from the coach's 'partners' list
-    // get an updated snapshot of the teacher info
-    // update this.state
+    // get an updated snapshot of the teacherList
+    // Navigate back to teacher's list
+    // Show a modal for confirming the deletion
     this.setState({
       isDeleting: false
     });
@@ -381,7 +373,7 @@ class TeacherDetail extends Component {
               </Fab>
             </div>
           </div>
-          <Grid direction="row" justify="space-between" alignItems="stretch" className={classes.contentContainer}>
+          <Grid container direction="row" justify="space-between" alignItems="stretch" className={classes.contentContainer}>
             <div className={classes.teacherCard}>
               <div style={{display:'flex', flexDirection:'row', minWidth:'45%'}}>
                 <LabeledInfo label="First Name" field={firstName}/>
@@ -435,45 +427,50 @@ class TeacherDetail extends Component {
               <TextField
                 autoFocus
                 defaultValue={firstName}
-                onChange={this.handleEditText.bind(this, "first-name")}
+                onChange={this.handleEditText}
                 margin="dense"
                 id="first-name"
+                name="firstName"
                 label="First Name"
                 type="text"
                 fullWidth
               />
               <TextField
                 defaultValue={lastName}
-                onChange={this.handleEditText.bind(this, "last-name")}
+                onChange={this.handleEditText}
                 margin="dense"
                 id="last-name"
+                name="lastName"
                 label="Last Name"
                 type="text"
                 fullWidth
               />
               <TextField
                 defaultValue={school}
-                onChage={this.handleEditText.bind(this, "school")}
+                onChage={this.handleEditText}
                 margin="dense"
                 id="school"
+                name="school"
                 label="School"
                 type="text"
                 fullWidth
               />
               <TextField
                 defaultValue={email}
-                onChange={this.handleEditText.bind(this, "email")}
+                onChange={this.handleEditText}
                 margin="dense"
                 id="email"
+                name="email"
                 label="Email"
                 type="email"
                 fullWidth
               />
               <TextField
                 defaultValue={notes}
-                onChange={this.handleEditText.bind(this, "notes")}
+                onChange={this.handleEditText}
                 margin="dense"
                 id="notes"
+                name="notes"
                 label="Notes"
                 multiline
                 rows={10}
@@ -497,9 +494,18 @@ class TeacherDetail extends Component {
 }
 
 TeacherDetail.propTypes = {
-  teacherID: PropTypes.string.isRequired,
+  // teacherInfo: PropTypes.object.isRequired,
+  // teacher: {
+  //   id: "",
+  //   firstName: "",
+  //   lastName: "",
+  //   email: "",
+  //   school: "",
+  //   notes: ""
+  // }
   classes: PropTypes.object.isRequired
 };
 
 TeacherDetail.contextType = FirebaseContext;
-export default withStyles(styles)(TeacherDetail);
+const TeacherDetailWithRouter = withRouter(TeacherDetail);
+export default withStyles(styles)(TeacherDetailWithRouter);

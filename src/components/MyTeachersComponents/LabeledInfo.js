@@ -17,18 +17,31 @@ function LabeledInfo(props) {
     fieldStyle: {
       marginBottom: '0.6em',
       marginTop: '0em'
+    },
+    notesContainer: {
+      overflowY: 'scroll',
+      maxHeight: '4.5em',
+      borderBottom:'1px solid #C7C7C7'
     }
   };
 
-  const { container, labelStyle, fieldStyle } = styles;
+  const { container, labelStyle, fieldStyle, notesContainer } = styles;
   const { label, field } = props;
 
   return(
     <div style={ container }>
       <p style={ labelStyle }>{label}:</p>
-      <p style={ fieldStyle }>{field.split('\\n').map((item,key) =>
-        <Fragment key={key}>{item}<br/></Fragment>
-      )}</p>
+      {label === "Notes" ? (
+        <div style={ notesContainer }>
+          <p style={ fieldStyle }>{field.split('\n').map((item, key) =>
+            <Fragment key={key}>{item}<br/></Fragment>
+          )}</p>
+        </div>
+      ) : (
+        <p style={ fieldStyle }>{field.split('\n').map((item, key) =>
+          <Fragment key={key}>{item}<br/></Fragment>
+        )}</p>
+      )}
     </div>
   )
 }

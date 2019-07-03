@@ -148,9 +148,23 @@ class Firebase {
       });
   };
 
-
-  getTeacherInfo = async (partnerId) => {
-    return await firebase.firestore().collection("users").doc(partnerId).get();
+  // Retrieves a teacher's User data
+  // @param partnerID -> UID retrieved from a coach's 'partners' list
+  // @return teacher's user object with corresponding ID
+  getTeacherInfo = function(partnerId) {
+    return this.db
+      .collection("users")
+      .doc(partnerId)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return doc.data();
+        } else {
+          console.log("Partner's ID is 'undefined' in dB.")
+        }
+      }).catch(error => {
+        console.log("Error occurred when getting document:", error);
+      })
   };
 
   getTeacherFirstName = function() {
