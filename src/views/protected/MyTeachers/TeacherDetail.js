@@ -337,9 +337,8 @@ class TeacherDetail extends Component {
         email: inputEmail,
         notes: inputNotes,
         isEditing: false
-        // Open confirmation Modal for Successful Edit
       }, () => this.handleEditAlert(true))
-    } else { // Edit failed
+    } else {
       this.handleCloseModal();
       this.handleEditAlert(false);
     }
