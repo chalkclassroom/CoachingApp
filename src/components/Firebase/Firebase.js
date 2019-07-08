@@ -149,12 +149,12 @@ class Firebase {
   };
 
   // Retrieves a teacher's User data
-  // @param partnerID -> UID retrieved from a coach's 'partners' list
-  // @return teacher's user object with corresponding ID
-  getTeacherInfo = function(partnerId) {
+  // @param:string partnerID -> UID retrieved from a coach's 'partners' list
+  // @return:object teacher's user object with corresponding ID
+  getTeacherInfo = function(partnerID) {
     return this.db
       .collection("users")
-      .doc(partnerId)
+      .doc(partnerID)
       .get()
       .then(doc => {
         if (doc.exists) {
@@ -165,6 +165,46 @@ class Firebase {
       }).catch(error => {
         console.log("Error occurred when getting document:", error);
       })
+  };
+
+  // Pushes edits to a teacher's User data
+  // @param:string partnerID -> UID retrieved from a coach's 'partners' list
+  // @param:object edits -> object containing edited information
+  // @return:boolean -> true on success, false o/w
+  setTeacherInfo = function(partnerID, edits) {
+    const { firstName, lastName, school, email, notes } = edits;
+    return this.db
+      .collection("users")
+      .doc(partnerID)
+      .set({
+        firstName: firstName,
+        lastName: lastName,
+        school: school,
+        email: email,
+        notes: notes
+      }, { merge: true })
+      .then(() => true )
+      .catch(error => {
+        console.log("Error occurred when writing document:", error);
+        return false;
+      })
+  };
+
+  removePartner = function(partnerID) {
+    if (partnerID === "") {
+      console.log("You can't delete the Practice Teacher!")
+    } else {
+      return this.db
+        .collection("users")
+        .doc(this.auth.currentUser.uid)
+        .collection("partners")
+        .doc(partnerID)
+        .delete()
+        .then(() =>
+          console.log("Teacher successfully removed from Partners list!"))
+        .catch(error => console.log("An error occurred trying to remove the teacher from" +
+          " the Partners list: ", error))
+    }
   };
 
   getTeacherFirstName = function() {

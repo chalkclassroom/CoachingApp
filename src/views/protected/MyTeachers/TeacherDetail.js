@@ -250,24 +250,25 @@ class TeacherDetail extends Component {
       lastName: "Teacher",                        //props.lastName
       school: "Elum Entaree School",              //props.school
       email: "practice@teacher.edu",              //props.email
-      notes: "",
-      inputFirstName: "",
-      inputLastName: "",
-      inputSchool: "",
-      inputEmail: "",
-      inputNotes: "",
+      notes: "FAKE NOTES",
+      inputFirstName: "Practice",
+      inputLastName: "Teacher",
+      inputSchool: "Elum Entaree School",
+      inputEmail: "practice@teacher.edu",
+      inputNotes: "FAKE NOTES",
       isEditing: false,
-      isDeleting: false
+      isDeleting: false,
+      editAlert: false,
+      alertText: ""
     };
 
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.handleEditOpen = this.handleEditOpen.bind(this);
-    this.handleDeleteOpen = this.handleDeleteOpen.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleEditText = this.handleEditText.bind(this);
     this.handleEditConfirm = this.handleEditConfirm.bind(this);
     this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
     this.handleBackClick = this.handleBackClick.bind(this);
+    this.handleEditAlert = this.handleEditAlert.bind(this);
   }
 
   componentDidMount () {
@@ -277,8 +278,14 @@ class TeacherDetail extends Component {
         this.setState({
           firstName: teacherInfo.firstName,
           lastName: teacherInfo.lastName,
+          school: teacherInfo.school,
           email: teacherInfo.email,
-          notes: teacherInfo.notes
+          notes: teacherInfo.notes,
+          inputFirstName: teacherInfo.firstName,
+          inputLastName: teacherInfo.lastName,
+          inputSchool: teacherInfo.school,
+          inputEmail: teacherInfo.email,
+          inputNotes: teacherInfo.notes
         }); // Automatically forces a re-render
       })
       .catch( error => {
@@ -289,18 +296,6 @@ class TeacherDetail extends Component {
   handleBackClick () {
     // Route back to MyTeachers page
 
-  };
-
-  handleEditOpen () {
-    this.setState({
-      isEditing: true
-    });
-  };
-
-  handleDeleteOpen () {
-    this.setState({
-      isDeleting: true
-    })
   };
 
   handleCloseModal () {
@@ -326,26 +321,79 @@ class TeacherDetail extends Component {
     // Send push call to firebase to edit teacher's (partner's) field(s) in dB
     // get an updated snapshot of teacher info
     // update this.state
-    this.setState({
-      isEditing: false
-    });
-    this.forceUpdate();
+    const { teacherUID, inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes } = this.state;
+    let firebase = this.context;
+    if (firebase.setTeacherInfo(teacherUID, {
+      firstName: inputFirstName,
+      lastName: inputLastName,
+      school: inputSchool,
+      email: inputEmail,
+      notes: inputNotes }))
+    { // Edit successfully written
+      this.setState({
+        firstName: inputFirstName,
+        lastName: inputLastName,
+        school: inputSchool,
+        email: inputEmail,
+        notes: inputNotes,
+        isEditing: false
+        // Open confirmation Modal for Successful Edit
+      }, () => this.handleEditAlert(true))
+    } else { // Edit failed
+      this.handleCloseModal();
+      this.handleEditAlert(false);
+    }
+  };
+
+  handleEditAlert (successful) {
+    if (successful) {
+      this.setState({
+        editAlert: true,
+        alertText: "Edit Successfully Written!"
+      }, () => setTimeout(
+        () => this.setState({ editAlert: false}), 1500))
+    } else {
+      this.setState({
+        editAlert: true,
+        alertText: "Something went wrong... try refreshing your page or logging out and back in."
+      }, () => setTimeout(
+        () => this.setState( { editAlert: false }), 3000))
+    }
   };
 
   handleDeleteConfirm () {
-    // Send call to firebase to pop this teacher's ID from the coach's 'partners' list
-    // get an updated snapshot of the teacherList
-    // Navigate back to teacher's list
-    // Show a modal for confirming the deletion
-    this.setState({
-      isDeleting: false
-    });
-    this.forceUpdate();
+    let firebase = this.context;
+    firebase.removePartner(this.state.teacherUID)
+      .then(() => { this.setState({
+        teacherUID: "",
+        firstName: "Practice",
+        lastName: "Teacher",
+        school: "Elum Entaree School",
+        email: "practice@teacher.edu",
+        notes: "...",
+        inputFirstName: "Practice",
+        inputLastName: "Teacher",
+        inputSchool: "Elum Entaree School",
+        inputEmail: "practice@teacher.edu",
+        inputNotes: "...",
+        isEditing: false,
+        isDeleting: false,
+        editAlert: false,
+        alertText: ""
+      })
+      // Navigate back to previous Page
+      })
+      .catch(() => this.setState({
+        editAlert: true,
+        alertText: "Something went wrong removing this teacher... try refreshing your page or logging" +
+          " out and back in."
+      }, () => setTimeout(
+        () => this.setState({ editAlert: false }), 3000)));
   };
 
   render() {
     const { classes } = this.props;
-    const { firstName, lastName, school, email, notes, isEditing, isDeleting } = this.state;
+    const { firstName, lastName, school, email, notes, isEditing, isDeleting, editAlert, alertText } = this.state;
 
     return(
       <div className={classes.root}>
@@ -363,12 +411,12 @@ class TeacherDetail extends Component {
               Teacher
             </span>
             <div>
-              <Fab aria-label="Edit" onClick={this.handleEditOpen} className={classes.actionButton} size='small'
-                   style={{backgroundColor: '#F9FE49'}}>
+              <Fab aria-label="Edit" onClick={() => this.setState({isEditing: true})}
+                   className={classes.actionButton} size='small' style={{backgroundColor: '#F9FE49'}}>
                 <EditOutlinedIcon style={{color: '#555555'}} />
               </Fab>
-              <Fab aria-label="Delete" onClick={this.handleDeleteOpen} className={classes.actionButton} size='small'
-                   style={{backgroundColor: '#FF3836'}}>
+              <Fab aria-label="Delete" onClick={() => this.setState({isDeleting: true})}
+                   className={classes.actionButton} size='small' style={{backgroundColor: '#FF3836'}}>
                 <DeleteForeverIcon style={{color: '#C9C9C9'}}/>
               </Fab>
             </div>
@@ -405,7 +453,7 @@ class TeacherDetail extends Component {
           >
             <DialogTitle id="delete-teacher-title" style={{textAlign: 'center'}}>
               Are you sure you want to remove <b style={{textDecoration: 'underline', color: '#007DAF'}}>
-              {firstName} {lastName}</b> from MyTeachers?
+              {firstName} {lastName}</b> from My Teachers?
             </DialogTitle>
             <DialogActions className={classes.deleteModalButtonContainer}>
               <Button onClick={this.handleCloseModal} className={classes.deleteModalButton} autoFocus
@@ -430,7 +478,7 @@ class TeacherDetail extends Component {
                 onChange={this.handleEditText}
                 margin="dense"
                 id="first-name"
-                name="firstName"
+                name="inputFirstName"
                 label="First Name"
                 type="text"
                 fullWidth
@@ -440,17 +488,17 @@ class TeacherDetail extends Component {
                 onChange={this.handleEditText}
                 margin="dense"
                 id="last-name"
-                name="lastName"
+                name="inputLastName"
                 label="Last Name"
                 type="text"
                 fullWidth
               />
               <TextField
                 defaultValue={school}
-                onChage={this.handleEditText}
+                onChange={this.handleEditText}
                 margin="dense"
                 id="school"
-                name="school"
+                name="inputSchool"
                 label="School"
                 type="text"
                 fullWidth
@@ -460,7 +508,7 @@ class TeacherDetail extends Component {
                 onChange={this.handleEditText}
                 margin="dense"
                 id="email"
-                name="email"
+                name="inputEmail"
                 label="Email"
                 type="email"
                 fullWidth
@@ -470,7 +518,7 @@ class TeacherDetail extends Component {
                 onChange={this.handleEditText}
                 margin="dense"
                 id="notes"
-                name="notes"
+                name="inputNotes"
                 label="Notes"
                 multiline
                 rows={10}
@@ -486,6 +534,14 @@ class TeacherDetail extends Component {
                 Confirm Edits
               </Button>
             </DialogActions>
+          </Dialog>
+          <Dialog
+            open={editAlert}
+            onClose={() => this.setState({ editAlert: false })}
+            aria-labelledby="edit-alert-label"
+            aria-describedby="edit-alert-description"
+          >
+            <DialogTitle id="edit-alert-title">{alertText}</DialogTitle>
           </Dialog>
         </div>
       </div>
