@@ -1,505 +1,368 @@
 import React from "react";
-import PropTypes from "prop-types";
-import ReactDOM from "react-dom";
-import { withRouter } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
-import { makeStyles} from "@material-ui/core/styles";
-import { createMuiTheme } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+import Paper from "@material-ui/core/Paper";
+import TransitionTime from "../../../assets/icons/TransitionTime.png";
+import ClassroomClimate from "../../../assets/icons/ClassroomClimate.png";
+import MathInstruction from "../../../assets/icons/MathInstruction.png";
+import StudentEngagement from "../../../assets/icons/StudentEngagement.png";
+import LevelofInstruction from "../../../assets/icons/LevelofInstruction.png";
+import ListeningtoChildren from "../../../assets/icons/ListeningtoChildren.png";
+import SequentialActivities from "../../../assets/icons/SequentialActivities.png";
+import AssocCoopInteratcions from "../../../assets/icons/AssocCoopInteractions.png";
+import ObserveIcon from "../../../assets/icons/ObserveIcon.png";
+import ConferencePlan from "../../../assets/icons/ConferencePlan.png";
+import ActionPlan from "../../../assets/icons/ActionPlan.png";
+import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import FolderIcon from "@material-ui/icons/Folder";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Modal from "@material-ui/core/Modal";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Box from "@material-ui/core/Box";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Typography from "@material-ui/core/Typography";
 
 
-const currencies = [
-  {
-    value: "USD",
-    label: "$"
-  },
-  {
-    value: "EUR",
-    label: "€"
-  },
-  {
-    value: "BTC",
-    label: "฿"
-  },
-  {
-    value: "JPY",
-    label: "¥"
-  }
-];
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
 
-const theme = createMuiTheme({
-  typography: {
-    htmlFontSize: 10
-  }
+  },
+  row: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.background.default
+    }
+  },
+  table: {
+    marginLeft: 80,
+    maxWidth: 960
+  },
+  search: {
+  width: 200,
+  height: 15,
+  marginBottom: 15,
+  marginLeft: 80,
+  lineHeight: 28,
+  padding: 8,
+},
 });
 
-var FontAwesome = require("react-fontawesome");
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-const useStyles=makeStyles(theme => ({
-  paper: {
-    position: "absolute",
-    width: "40%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    borderRadius: 8
-  },
-  root: {
-    width: "100%",
-    backgroundColor: theme.palette.background.paper
-  },
-  list: {
-    width: "100%",
-    height: "500",
-    backgroundColor: theme.palette.background.paper
-  },
-  inline: {
-    display: "inline"
-  },
-  grow: {
-    flexGrow: 1
-  },
-  title: {
-    fontSize: 14
-  },
-  iconButton: {
-    padding: 20
-  },
-  input: {
-    marginLeft: 10,
-    flex: 1
-  },
-  pos: {
-    marginBottom: 12
-  },
-  fab: {
-    margin: theme.spacing.unit
-  },
-
-}));
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
-  };
-}
-
-function SimpleModal(props) {
-  const [open, setOpen] = React.useState(false);
-  const [openForm, setOpenForm] = React.useState(false);
-  const [dialog, setOpenDialog] = React.useState(false);
-  const [search, setSearch] = React.useState(false);
-  // getModalStyle is not a pure function, we roll the style only on the first render
-  const [modalStyle] = React.useState(getModalStyle);
-  const [values, setValues] = React.useState({
-    name: "Cat in the Hat",
-    email: "Controlled",
-    school: "11"
-  });
-
-  const addIcon = React.createRef();
 
 
-  const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value });
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-    // props.queryItem('name', 1111)
-  };
-
-  const closeModel = () => {
-    setOpen(false);
-    props.addItem(JSON.parse(JSON.stringify(values)));
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const editItem = (e) => {
-    handleClickOpen();
-  };
-
-  const deleteItem = (e) => {
-    props.deleteItem(e.target.dataset.index);
-  };
-
-  function handleClickOpen(e) {
-    let arr = JSON.parse(e.target.dataset.arr);
-    localStorage.setItem("name", arr.name);
-    values.name = arr.name;
-    values.school = arr.school;
-    values.email = arr.email;
-    setOpenForm(true);
+class TeacherLists extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      teachers: [],
+      search:false,
+      values:{
+        lastName:"",
+        firstName:"",
+        email:""
+      }
+    };
+    this.selectTeacher = this.selectTeacher.bind(this);
+    this.componentDidMount=this.componentDidMount.bind(this);
   }
 
-  function handleCloseForm() {
-    setOpenForm(false);
+
+    componentDidMount() {
+    let firebase = this.context;
+    firebase.getTeacherList().then(getTeacherList=>{
+      console.log("Teacher List", getTeacherList);
+      let teacherList = [];
+      getTeacherList.forEach(tGet=>{
+        tGet.then(data=>{
+          console.log("Modal Resolved", data);
+          teacherList.push(data);
+          console.log(teacherList);
+          this.setState((previousState, currentProps) => {
+            return {
+              teachers: previousState.teachers.concat(data)
+            }})
+        });
+      })
+    })
+  };
+
+
+  onChange = e => {
+    const text = e.target.value;
+    this.setState({
+      teachers: this.state.teachers.filter(item => {
+        return item.lastName.indexOf(text) !== -1 || item.firstName.indexOf(text) !== -1 || item.email.indexOf(text) !== -1;
+      })
+    });
+  };
+
+  //goes to teacher detail page, pathname needs to be changed later
+  selectTeacher(teacherInfo) {
+    console.log(teacherInfo);
+    this.props.history.push({
+      pathname: "/Magic8Menu",
+      state: {teacher: teacherInfo, type: this.props.type}
+    });
+    console.log(this.props.history);
   }
 
-  const chkEdit = () => {
-    setOpenDialog(true);
-  };
+  render() {
+    const { classes } = this.props;
 
-  // confirm editing
-  const handleDialogChk = () => {
-    props.editItem(localStorage.getItem("name"), values);
-    setOpenForm(false);
-    setOpenDialog(false);
-  };
-
-  const handleDialogClose = () => {
-    setOpenDialog(false);
-    setOpenForm(false);
-  };
-
-  const openSearch = () => {
-    setSearch(true);
-    values.email = "";
-    values.name = "";
-    addIcon.current.style.display = "none";
-  };
-
-  const closeSearch = () => {
-    setSearch(false);
-    addIcon.current.style.display = "block";
-  };
-
-  const startSearch = () => {
-    if (values.name.trim().length != 0) {
-      props.queryItem("name", values.name.trim());
-    } else {
-      props.queryItem("email", values.email.trim());
-    }
-    setSearch(false);
-    addIcon.current.style.display = "block";
-  };
-
-  const classes = useStyles();
-
-  return (
-    <div>
-      <div className={classes.root}>
+    return (
+      < div className={classes.root}>
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
-
-        <link
-          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-          rel="stylesheet"
-        />
-        <div className="navbar">
-          <FontAwesome name="bars"/>
-        </div>
-        <div className="content">
-          <div className="search">
-            <FontAwesome onClick={openSearch} name="search" className="search-icon"/>
-            <input onBlur="" className="search-input" type="text"/>
-            <span className="add-wrap" ref={addIcon}>
-            <FontAwesome onClick={handleOpen} name="bars" className="add-icon"/>
-          </span>
-          </div>
-          <div className="list-wrap">
-            <List>
-              {props.defaultList.map((value, index) => (
-                <ListItem key={index} button>
-                  <ListItemText primary={value.name}/>
-                  <ListItemText primary={value.email}/>
-                  <ListItemText primary={value.school}/>
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="Delete">
-                      <FontAwesome name="bars" className="add-icon" onClick={handleClickOpen} data-index={index}
-                                   data-arr={JSON.stringify(value)}/>
-                    </IconButton>
-                    <IconButton edge="end" aria-label="Delete">
-                      <DeleteIcon onClick={deleteItem} data-index={index}/>
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
-          </div>
-          <Modal
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
-            open={open}
-            onClose={closeModel}
+        <Grid
+          container
+          alignItems="center"
+          direction="column"
+          justify="space-between"
+          style={{ padding: 10 }}
+        >
+          <Typography
+            component={"h4"}
+            variant={"h4"}
+            align={"center"}
           >
-            <div style={modalStyle} className={classes.paper}>
-              <form className={classes.container} noValidate autoComplete="off">
-                <Box>
-                  <TextField
-                    id="outlined-name"
-                    label="Name"
-                    className={classes.textField}
-                    value={values.name}
-                    onChange={handleChange("name")}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </Box>
-                <Box>
-                  <TextField
-                    id="outlined-name"
-                    label="Name"
-                    className={classes.textField}
-                    value={values.email}
-                    onChange={handleChange("email")}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </Box>
-                <Box>
-                  <TextField
-                    id="outlined-name"
-                    label="Name"
-                    className={classes.textField}
-                    value={values.school}
-                    onChange={handleChange("school")}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </Box>
-                <Box onClick={closeModel}>
-                  <Button variant="contained" color="primary" className={classes.button}>
-                    Primary
-                  </Button>
-                </Box>
-              </form>
-            </div>
-          </Modal>
-          <Dialog open={openForm} onClose={handleCloseForm} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                To subscribe to this website, please enter your email address here. We will send updates
-                occasionally.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                value={values.name}
-                margin="dense"
-                id="name"
-                label="nameEdit"
-                type="text"
-                onChange={handleChange("name")}
-                fullWidth
-              />
-              <TextField
-                autoFocus
-                value={values.email}
-                onChange={handleChange("email")}
-                margin="dense"
-                id="email"
-                label="emailEdit"
-                type="email"
-                fullWidth
-              />
-              <TextField
-                autoFocus
-                onChange={handleChange("school")}
-                value={values.school}
-                margin="dense"
-                id="name"
-                label="schoolEdit"
-                type="email"
-                fullWidth
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={chkEdit} color="primary">
-                confirm editing
-              </Button>
-              <Button onClick={handleCloseForm} color="primary">
-                cancel editing
-              </Button>
-            </DialogActions>
-          </Dialog>
+            My Teachers
+          </Typography>
+        </Grid>
+        <input onChange={this.onChange} placeholder="Search..." className={classes.search}/>
+        <Grid
+          container
+          direction="row"
+          alignItems="flex-start"
+          justify="space-between"
+          style={{
+           paddingBottom:180
+          }}
+        >
+        <Table className={classes.table} >
+          <TableHead >
+            <TableRow>
+              <TableCell
+                align="left"
+                style={{
+                  color: "black",
+                  fontSize: 14,
+                  padding:20,
+                }}>
+                Last
+                <br/>
+                Name
+              </TableCell>
+              <TableCell
+                style={{
+                  color: "black",
+                  fontSize: 14,
+                  padding:20,
+                }}>
+                First
+                <br/>
+                Name
+              </TableCell>
+              <TableCell
+                style={{
+                  color: "black",
+                  fontSize: 14,
+                  padding:24
+                }}
+              >Email
+              </TableCell>
 
-          <Dialog
-            open={dialog}
-            onClose={handleDialogClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                confirm again if edit or not
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDialogChk} color="primary">
-                confirm
-              </Button>
-              <Button onClick={handleDialogClose} color="primary" autoFocus>
-                cancel
-              </Button>
-            </DialogActions>
-          </Dialog>
+              <TableCell
+                align="center"
+                style={{
+                  padding: 16
+                }}
+              >
+                <img width="55" height="55" style={{ borderRadius: 2 }} alt="" src={TransitionTime}/>
+              </TableCell>
+              <TableCell
+                align="center"
+                style={{
+                  padding: 16
+                }}>
+                <img width="55" height="55" style={{ borderRadius: 2 }} alt="" src={ClassroomClimate}/>
+              </TableCell>
+              <TableCell
+                align="center"
+                style={{
+                  padding: 16
+                }}>
+                <img width="55" height="55" style={{ borderRadius: 2 }} alt="" src={MathInstruction}/>
+              </TableCell>
+              <TableCell
+                align="center"
+                style={{
+                  padding: 16
+                }}>
+                <img width="55" height="55" style={{ borderRadius: 2 }} alt="" src={StudentEngagement}/>
+              </TableCell>
+              <TableCell
+                align="center"
+                style={{
+                  padding: 16
+                }}>
+                <img width="55" height="55" style={{ borderRadius: 2 }} alt="" src={LevelofInstruction}/>
+              </TableCell>
+              <TableCell
+                align="center"
+                style={{
+                  padding: 16
+                }}>
+                <img width="55" height="55" style={{ borderRadius: 2 }} alt="" src={ListeningtoChildren}/>
+              </TableCell>
+              <TableCell
+                align="center"
+                style={{
+                  padding: 16
+                }}>
+                <img width="55" height="55" style={{ borderRadius: 2 }} alt="" src={SequentialActivities}/>
+              </TableCell>
+              <TableCell
+                align="center"
+                style={{
+                  padding: 16
+                }}>
+                <img width="55" height="55" style={{ borderRadius: 2 }} alt="" src={AssocCoopInteratcions}/>
+              </TableCell>
+              <TableCell
+                style={{
+                  color: "black",
+                  fontSize: 14,
+                  padding: 16
+                }}
+              >
+                Goals
+                <br/>
+                Met
+              </TableCell>
 
-          <Modal
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
-            open={search}
-            onClose={closeSearch}
+            </TableRow>
+          </TableHead>
+          <TableBody> {this.state.teachers.map((teacher, index)=>(
+            <TableRow className={classes.row} key={index}
+                      onClick={() => this.selectTeacher(teacher)}>
+              <TableCell align="left" style={{ padding: 20 }}> {teacher.lastName} </TableCell>
+              <TableCell align="left" style={{ padding: 20 }}>{teacher.firstName}</TableCell>
+              <TableCell align="left" style={{ padding: 24 }}>{teacher.email}</TableCell>
+
+              <TableCell
+                align="center" style={{ padding: 16 }}>
+                {teacher.unlocked.indexOf(1) !== -1 &&
+                <img src={ObserveIcon} style={{ borderRadius: 4, display: "block",  }}
+                     width="40" height="40" alt=""/>
+                }
+              </TableCell>
+              <TableCell align="center" style={{ padding: 16 }}>
+                {teacher.unlocked.indexOf(2) !== -1 &&
+                <img src={ObserveIcon} style={{ borderRadius: 4, display: "block",  }}
+                     width="40" height="40" alt=""/>
+                }
+              </TableCell>
+              <TableCell align="center" style={{ padding: 16 }}>
+                {teacher.unlocked.indexOf(3) !== -1 &&
+                <img src={ObserveIcon} style={{ borderRadius: 4, display: "block", }}
+                     width="40" height="40" alt=""/>
+                }
+              </TableCell>
+              <TableCell align="center" style={{ padding: 16 }}>
+                {teacher.unlocked.indexOf(4) !== -1 &&
+                <img src={ObserveIcon} style={{ borderRadius: 4, display: "block",  }}
+                     width="40" height="40" alt=""/>
+                }
+              </TableCell>
+              <TableCell align="center" style={{ padding: 16 }}>
+                {teacher.unlocked.indexOf(5) !== -1 &&
+                <img src={ObserveIcon} style={{ borderRadius: 4, display: "block", }}
+                     width="40" height="40" alt=""/>
+                }
+              </TableCell>
+              <TableCell align="center" style={{ padding: 16 }}>
+                {teacher.unlocked.indexOf(6) !== -1 &&
+                <img src={ObserveIcon} style={{ borderRadius: 4, display: "block", }}
+                     width="40" height="40" alt=""/>
+                }
+              </TableCell>
+              <TableCell align="center" style={{ padding: 16 }}>
+                {teacher.unlocked.indexOf(7) !== -1 &&
+                <img src={ObserveIcon} style={{ borderRadius: 4, display: "block", }}
+                     width="40" height="40" alt=""/>
+                }
+              </TableCell>
+              <TableCell align="center" style={{ padding: 16 }}>
+                {teacher.unlocked.indexOf(8) !== -1 &&
+                <img src={ObserveIcon} style={{ borderRadius: 4, display: "block", }}
+                     width="40" height="40" alt=""/>
+                }
+              </TableCell>
+              <TableCell align="center" style={{ padding: 16 }}>{teacher.goals}</TableCell>
+            </TableRow>
+          ))}
+          </TableBody>
+        </Table>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          alignItems="flex-end"
+          justify="space-around"
+          style={{
+            padding: 10,
+            marginLeft:80
+          }}
+        >
+          <Grid item
+                container
+                xs={4}
+                alignItems="center"
+                direction="row"
+                justify="flex-start"
+                style={{
+                  fontSize: 20
+                }}
           >
-            <div style={modalStyle} className={classes.paper}>
-              <form className={classes.container} noValidate autoComplete="off">
-                <TextField
-                  id="standard-name"
-                  label="Name"
-                  className={classes.textField}
-                  value={values.name}
-                  onChange={handleChange("name")}
-                  margin="normal"
-                  autoFocus
-                />
-                <TextField
-                  id="standard-uncontrolled"
-                  label="Uncontrolled"
-                  defaultValue="foo"
-                  value={values.email}
-                  className={classes.textField}
-                  onChange={handleChange("email")}
-                  margin="normal"
-                />
-                <Box>
-                  <Button onClick={startSearch} color="primary">
-                    search
-                  </Button>
-                </Box>
-              </form>
-            </div>
-          </Modal>
-        </div>
+            <img width="40" height="40" alt="" src={ObserveIcon}/> = Observed
+          </Grid>
+          <Grid item
+                container
+                xs={4}
+                alignItems="center"
+                direction="row"
+                justify="flex-start"
+                style={{
+                  fontSize: 20
+                }}
+          >
+            <img width="40" height="40" alt="" src={ConferencePlan}/> = Conference Prep
+          </Grid>
+          <Grid item
+                container
+                xs={4}
+                alignItems="center"
+                direction="row"
+                justify="flex-start"
+                style={{
+                  fontSize: 20
+                }}
+          >
+            <img width="40" height="40" alt="" src={ActionPlan}/> = Co-created Action plan
+          </Grid>
+        </Grid>
       </div>
-    </div>
-  );
-}
-
-class TeacherLists extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      defaultList: [
-        {
-          name: 1,
-          email: 2,
-          school: 3
-        },
-        {
-          name: "aaa",
-          email: "bb",
-          school: 3333
-        }, {
-          name: 111,
-          email: 2,
-          school: 3
-        }
-      ],
-      allList: []
-    };
-  }
-
-  componentWillMount() {
-    this.setState((state) => ({
-      allList: [...state.defaultList]
-    }));
-  }
-
-  editItem = (key, value) => {
-    let index = this.state.defaultList.findIndex(item => item.name === key);
-    let newArr = [...this.state.defaultList];
-    newArr[index] = value;
-    this.setState({
-      defaultList: newArr
-    });
-  };
-
-  queryItem = (key, value) => {
-    let list = [...this.state.defaultList];
-    let newArr = [];
-    for (var i = 0; i < list.length; i++) {
-      if (("" + list[i][key]).indexOf(value) != -1) {
-        newArr.push(list[i]);
-      }
-    }
-    this.setState({
-      defaultList: newArr,
-      allList: list
-    });
-  };
-
-  deleteItem = (index) => {
-    let arr = [...this.state.defaultList];
-    arr.splice(index, 1);
-    this.setState({
-      defaultList: arr
-    });
-  };
-
-  addItem = (value) => {
-    this.setState((state) => ({
-      defaultList: [...this.state.defaultList, value]
-    }));
-  };
-
-  render() {
-    let { defaultList, allList } = this.state;
-    return (
-
-      <SimpleModal
-        allList={allList}
-        editItem={this.editItem}
-        defaultList={defaultList}
-        deleteItem={this.deleteItem}
-        addItem={this.addItem}
-        queryItem={this.queryItem}
-      />
-
     );
   }
 }
 
+
 TeacherLists.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+
 };
 
 TeacherLists.contextType = FirebaseContext;
-export default TeacherLists;
-
-
+export default withStyles(styles)(TeacherLists);
