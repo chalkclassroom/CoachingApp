@@ -25,7 +25,6 @@ import MathInstructionSvg from '../../../assets/icons/MathInstruction.svg';
 import LevelOfInstructionSvg from '../../../assets/icons/LevelofInstruction.svg';
 import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimate.svg';
 import AssocCoopInteractionsSvg from '../../../assets/icons/AssocCoopInteractions.svg';
- import Firebase from "../../../components/Firebase";
 
 const styles = {
   root: {
@@ -236,20 +235,20 @@ const styles = {
 };
 
 const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg, ListeningToChildrenSvg, LevelOfInstructionSvg,
-                           MathInstructionSvg, StudentEngagementSvg, SequentialActivitiesSvg, AssocCoopInteractionsSvg];
+                   MathInstructionSvg, StudentEngagementSvg, SequentialActivitiesSvg, AssocCoopInteractionsSvg];
 
 class TeacherDetail extends Component {
 
   constructor (props) {
     super(props);
-    //const { id, firstName,lastName, email } = this.props.teacherInfo; // { school }
+    //const { id, firstName, lastName, email, school, notes } = this.props.teacher;
     this.state = {
-      // ...props.teacherInfo,
-      teacherUID: "EYaU6BCbNUcPTSsxU14G9IaGXHJ3", //props.teacherID, EYaU6BCbNUcPTSsxU14G9IaGXHJ3
-      firstName: "Practice",                      //props.firstName
-      lastName: "Teacher",                        //props.lastName
-      school: "Elum Entaree School",              //props.school
-      email: "practice@teacher.edu",              //props.email
+      // ...props.teacher,
+      teacherUID: "EYaU6BCbNUcPTSsxU14G9IaGXHJ3", //id, EYaU6BCbNUcPTSsxU14G9IaGXHJ3
+      firstName: "Practice",                      //firstName
+      lastName: "Teacher",                        //lastName
+      school: "Elum Entaree School",              //school
+      email: "practice@teacher.edu",              //email
       notes: "FAKE NOTES",
       inputFirstName: "Practice",
       inputLastName: "Teacher",
@@ -266,9 +265,8 @@ class TeacherDetail extends Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleEditText = this.handleEditText.bind(this);
     this.handleEditConfirm = this.handleEditConfirm.bind(this);
-    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
-    this.handleBackClick = this.handleBackClick.bind(this);
     this.handleEditAlert = this.handleEditAlert.bind(this);
+    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
   }
 
   componentDidMount () {
@@ -289,13 +287,8 @@ class TeacherDetail extends Component {
         }); // Automatically forces a re-render
       })
       .catch( error => {
-        console.log("Error fetching Teacher Info's:", error);
+        console.log("Error fetching Teacher's Info:", error);
       });
-  };
-
-  handleBackClick () {
-    // Route back to MyTeachers page
-
   };
 
   handleCloseModal () {
@@ -318,9 +311,6 @@ class TeacherDetail extends Component {
   };
 
   handleEditConfirm () {
-    // Send push call to firebase to edit teacher's (partner's) field(s) in dB
-    // get an updated snapshot of teacher info
-    // update this.state
     const { teacherUID, inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes } = this.state;
     let firebase = this.context;
     if (firebase.setTeacherInfo(teacherUID, {
@@ -379,7 +369,7 @@ class TeacherDetail extends Component {
         isDeleting: false,
         editAlert: false,
         alertText: ""
-      })
+      });
       // Navigate back to previous Page
       })
       .catch(() => this.setState({
@@ -400,7 +390,8 @@ class TeacherDetail extends Component {
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.container}>
-          <Button variant="contained" size="medium" className={classes.button} onClick={this.handleBackClick}>
+          <Button variant="contained" size="medium" className={classes.button}
+                  onClick={null}>
             <ChevronLeftRoundedIcon />
             <b>My Teachers</b>
           </Button>
@@ -409,16 +400,20 @@ class TeacherDetail extends Component {
               <b>{firstName} {lastName}</b><br/>
               Teacher
             </span>
-            <div>
-              <Fab aria-label="Edit" onClick={() => this.setState({isEditing: true})}
-                   className={classes.actionButton} size='small' style={{backgroundColor: '#F9FE49'}}>
-                <EditOutlinedIcon style={{color: '#555555'}} />
-              </Fab>
-              <Fab aria-label="Delete" onClick={() => this.setState({isDeleting: true})}
-                   className={classes.actionButton} size='small' style={{backgroundColor: '#FF3836'}}>
-                <DeleteForeverIcon style={{color: '#C9C9C9'}}/>
-              </Fab>
-            </div>
+            { this.state.teacherUID !== "EYaU6BCbNUcPTSsxU14G9IaGXHJ3" ? (
+              null  // Logic used to prevent deleting and editing the Practice Teacher
+            ) : (
+              <div>
+                <Fab aria-label="Edit" onClick={() => this.setState({isEditing: true})}
+                     className={classes.actionButton} size='small' style={{backgroundColor: '#F9FE49'}}>
+                  <EditOutlinedIcon style={{color: '#555555'}} />
+                </Fab>
+                <Fab aria-label="Delete" onClick={() => this.setState({isDeleting: true})}
+                     className={classes.actionButton} size='small' style={{backgroundColor: '#FF3836'}}>
+                  <DeleteForeverIcon style={{color: '#C9C9C9'}}/>
+                </Fab>
+              </div>
+            )}
           </div>
           <Grid container direction="row" justify="space-between" alignItems="stretch" className={classes.contentContainer}>
             <div className={classes.teacherCard}>
@@ -448,7 +443,7 @@ class TeacherDetail extends Component {
             open={isDeleting}
             onClose={this.handleCloseModal}
             aria-labelledby="delete-teacher-modal"
-            aria-describedby="prompts a coach to confirm deleting a teacher from MyTeachers"
+            aria-describedby="prompts a coach to confirm deleting a teacher from My Teachers"
           >
             <DialogTitle id="delete-teacher-title" style={{textAlign: 'center'}}>
               Are you sure you want to remove <b style={{textDecoration: 'underline', color: '#007DAF'}}>
@@ -549,7 +544,7 @@ class TeacherDetail extends Component {
 }
 
 TeacherDetail.propTypes = {
-  // teacherInfo: PropTypes.object.isRequired,
+  // teacher: PropTypes.object.isRequired,
   // teacher: {
   //   id: "",
   //   firstName: "",
@@ -562,5 +557,4 @@ TeacherDetail.propTypes = {
 };
 
 TeacherDetail.contextType = FirebaseContext;
-const TeacherDetailWithRouter = withRouter(TeacherDetail);
-export default withStyles(styles)(TeacherDetailWithRouter);
+export default withStyles(styles)(withRouter(TeacherDetail));
