@@ -339,8 +339,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           disabled={this.childDisabled()}
                         />
                         <ListItemText>
-                          <b>Talking</b> to adult or peer about{" "}
-                          <b>current activity</b>
+                          Participating in a <b>conversation</b> about a{" "}
+                          <b>shared activity</b>
                         </ListItemText>
                       </ListItem>
                       <ListItem
@@ -388,9 +388,9 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           disabled={this.childDisabled()}
                         />
                         <ListItemText>
-                          Speaking or acting according to a{" "}
-                          <b>predetermined scenario</b> (e.g., restaurant,
-                          grocery store)
+                          Talking about or doing an activity together that has a{" "}
+                          <b>predetermined sequence</b> (e.g., acting out restaurant in a dramatic play;
+                          doing pattern blocks together)
                         </ListItemText>
                       </ListItem>
                       <ListItem
@@ -444,8 +444,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           disabled={this.teacherDisabled()}
                         />
                         <ListItemText>
-                          <b>Asking questions</b> to check for understanding or
-                          extend children’s thinking
+                          Asking questions to{" "}
+                          <b>extend children’s thinking</b> about their shared activity
                         </ListItemText>
                       </ListItem>
                       <ListItem

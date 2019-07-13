@@ -36,12 +36,24 @@ const styles = {
 };
 
 class TransitionTime extends React.Component {
-    state = {
-        auth: true,
-        anchorEl: null,
-        help: false,
-        notes: false,
-        recs: true,
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            auth: true,
+            anchorEl: null,
+            help: false,
+            notes: false,
+            recs: true,
+            transitionType: "none"
+        };
+
+
+        this.handleTransitionType = this.handleTransitionType.bind(this)
+    }
+
+    handleTransitionType = type => {
+        this.setState({transitionType: type});
     };
 
     handleRecsModal = open => {
@@ -141,7 +153,7 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 <div style={{ margin: 20 }} />
-                                <TransitionTypeSel/>
+                                <TransitionTypeSel handleTransitionType = {this.handleTransitionType}/>
                             </Grid>
                             </Grid> 
                             <Grid item xs={2}>
@@ -152,7 +164,7 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 <div style={{ margin: 20 }} />
-                                <TransitionTypeSel1/>
+                                {/* <TransitionTypeSel1/> */}
                             </Grid>
                         </Grid>
                         <Grid item xs={5}>

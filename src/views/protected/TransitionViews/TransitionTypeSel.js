@@ -67,94 +67,108 @@ otherColor: {
   }, 
 })
 
-function firstRow(props) {
-  const { classes } = props;
-  return (
-    <div>
-    <Grid container spacing={1} justify = "center">
-    <Grid container item xs = {11}
-    justify = "center">
-    <Grid
-      container
-      alignItems={"center"}
-      justify={"center"}
-      direction={"column"}>
-     <Button
-    /* Use classes property to inject custom styles */
-    classes={{ root: classes.button, label: classes.label }}
-    variant="raised"
-    style = {themes.palette.waitingColor}>
-    <img alt = "Waiting in line" src = {WaitinginLine} height = '100' width = '100'/> 
-  </Button>
-  Waiting in line/lining up 
-  <Button
-    /* Use classes property to inject custom styles */
-    classes={{ root: classes.button, label: classes.label }}
-    variant="raised"
-    style = {themes.palette.travelingColor}>
-    <img alt = "Walking" src = {Walking} height = '100' width = '100'/> 
-  </Button>
- <text style = {{textAlign: 'center'}}>Traveling outside the classroom</text> 
- <Button
-    /* Use classes property to inject custom styles */
-    classes={{ root: classes.button, label: classes.label }}
-    variant="raised"
-    style = {themes.palette.childWaitingColor}>
-    <img alt = "Child waiting" src = {ChildWaiting} height = '100' width = '100'/> 
-  </Button>
- <text style = {{textAlign: 'center'}}>Children waiting on teacher/materials</text> 
-  </Grid>
-  </Grid> 
-  </Grid> 
-    </div>
-  );
-}
-function secondRow(props) {
-  const {classes} = props
-  return (
-  <div>
-    <Grid container spacing={1} justify = "center">
-      <Grid container item xs = {11}
-      justify = "center">
-      <Grid
-        container
-        alignItems={"center"}
-        justify={"center"}
-        direction={"column"}>
-      <Button
-      /* Use classes property to inject custom styles */
-      classes={{ root: classes.button, label: classes.label }}
-      variant="raised"
-      style = {themes.palette.classroomRoutinesColor}>
-      <img alt = "classroom routines" src = {ClassroomRoutines} height = '100' width = '100'/> 
-    </Button>
-    Classroom Routines
-    <Button
-      /* Use classes property to inject custom styles */
-      classes={{ root: classes.button, label: classes.label }}
-      variant="raised"
-      style = {themes.palette.bmiColor}>
-      <img alt = "Behavior Management Disruption" src = {bmi} height = '100' width = '100'/> 
-    </Button>
-  <text style = {{textAlign: 'center'}}>Behavior Management Disruption</text> 
-  <Button
-      /* Use classes property to inject custom styles */
-      classes={{ root: classes.button, label: classes.label }}
-      variant="raised"
-      style = {themes.palette.otherColor}>
-      <img alt = "otherg" src = {other} height = '100' width = '100'/> 
-    </Button>
-  <text style = {{textAlign: 'center'}}>Other</text> 
-    </Grid>
-    </Grid> 
-    </Grid> 
-    </div>) 
+
+class TransitionTypeSel extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+        <>
+          <div>
+            <Grid container spacing={1} justify="center">
+              <Grid container item xs={11}
+                    justify="center">
+                <Grid
+                    container
+                    alignItems={"center"}
+                    justify={"center"}
+                    direction={"column"}>
+                  <Button onClick={()=>this.props.handleTransitionType("waiting")}
+                      /* Use classes property to inject custom styles */
+                          classes={{root: classes.button, label: classes.label}}
+                          variant="raised"
+                          style={themes.palette.waitingColor}>
+                    <img alt="Waiting in line" src={WaitinginLine} height='100' width='100'/>
+
+                  </Button>
+                  Waiting in line/lining up
+                  <Button onClick={()=>this.props.handleTransitionType("traveling")}
+                      /* Use classes property to inject custom styles */
+                      classes={{root: classes.button, label: classes.label}}
+                      variant="raised"
+                      style={themes.palette.travelingColor}>
+                    <img alt="Walking" src={Walking} height='100' width='100'/>
+                  </Button>
+                  <text style={{textAlign: 'center'}}>Traveling outside the classroom</text>
+                  <Button onClick={()=>this.props.handleTransitionType("child waiting")}
+                      /* Use classes property to inject custom styles */
+                      classes={{root: classes.button, label: classes.label}}
+                      variant="raised"
+                      style={themes.palette.childWaitingColor}>
+                    <img alt="Child waiting" src={ChildWaiting} height='100' width='100'/>
+                  </Button>
+                  <text style={{textAlign: 'center'}}>Children waiting on teacher/materials</text>
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
+
+          <div>
+            <Grid container spacing={1} justify="center">
+              <Grid container item xs={11}
+                    justify="center">
+                <Grid
+                    container
+                    alignItems={"center"}
+                    justify={"center"}
+                    direction={"column"}>
+                  <Button onClick={()=>this.props.handleTransitionType("classroom routines")}
+                      /* Use classes property to inject custom styles */
+                      classes={{root: classes.button, label: classes.label}}
+                      variant="raised"
+                      style={themes.palette.classroomRoutinesColor}>
+                    <img alt="classroom routines" src={ClassroomRoutines} height='100' width='100'/>
+                  </Button>
+                  Classroom Routines
+                  <Button onClick={()=>this.props.handleTransitionType("behavior management disruption")}
+                      /* Use classes property to inject custom styles */
+                      classes={{root: classes.button, label: classes.label}}
+                      variant="raised"
+                      style={themes.palette.bmiColor}>
+                    <img alt="Behavior Management Disruption" src={bmi} height='100' width='100'/>
+                  </Button>
+                  <text style={{textAlign: 'center'}}>Behavior Management Disruption</text>
+                  <Button onClick={()=>this.props.handleTransitionType("other")}
+                      /* Use classes property to inject custom styles */
+                      classes={{root: classes.button, label: classes.label}}
+                      variant="raised"
+                      style={themes.palette.otherColor}>
+                    <img alt="otherg" src={other} height='100' width='100'/>
+                  </Button>
+                  <text style={{textAlign: 'center'}}>Other</text>
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
+
+
+        </>
+    );
+
+
+  }
+
 }
 
-firstRow.propTypes = {
+TransitionTypeSel.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
 // export default withStyles(styles)(IconLabelButtons);
 
-export default withStyles(styles)(firstRow)
+export default withStyles(styles)(TransitionTypeSel)

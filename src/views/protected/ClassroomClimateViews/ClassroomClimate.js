@@ -100,7 +100,7 @@ class ClassroomClimate extends React.Component {
 
     let entry = {
       BehaviorResponse: rating,
-      Type: "Rating",
+      Type: "Rat",
       ratingInterval: RATING_INTERVAL
     };
     let firebase = this.context;
