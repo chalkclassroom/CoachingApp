@@ -126,12 +126,13 @@ class CommonAppBar extends React.Component{
                                 >
                                     <img src={Logo} height={'36'} alt={""}/>
                                 </IconButton>
-                                <Typography variant="h6" style={{color:'#FFFFFF',}}>
+                               <Typography variant="h6" style={{color:'#FFFFFF',}} onClick = {() => this.props.history.push()}>
                                     Classroom Quality - REF
                                 </Typography>
                                 <div color="inherit" className={classes.grow}/>
                                 <Router>
                                 <div>
+                                <Link to = "/" style = {{textDecoration: 'none'}}><Button color = "secondary" className= {classes.menuButton} onClick = {() => this.props.history.push("/")}>Homepage</Button></Link>
                                 <Link to = "/team"style={{ textDecoration: 'none' }} ><Button color="secondary" className={classes.menuButton}
                                 onClick={() => this.props.history.push("/team")}>Team</Button></Link>
                                 <Link to = "/about"style={{ textDecoration: 'none' }} ><Button color="secondary" className={classes.menuButton}
