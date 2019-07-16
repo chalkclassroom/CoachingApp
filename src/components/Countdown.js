@@ -14,7 +14,8 @@ class Countdown extends React.Component{
         super(props);
 
         this.state ={
-            time: RATING_INTERVAL,
+            time: this.props.timerTime,
+            tenPercent: 0.1 * this.props.timerTime,
             ratingIsOpen: false,
             color:"",
 
@@ -24,7 +25,7 @@ class Countdown extends React.Component{
     tick = () => {
         if (this.state.time <= 0) {
           this.handleRatingModal();
-          this.setState({ time: RATING_INTERVAL });
+          this.setState({ time: this.props.timerTime });
         } else {
             if (this.state.time - 1000 < 0) {
                 this.setState({ time: 0 });
@@ -60,11 +61,11 @@ class Countdown extends React.Component{
                         style={{ transform: "rotate(270deg)" }}
                         percent={`${100 *
                         (this.state.time /
-                            RATING_INTERVAL)}`}
+                            this.props.timerTime)}`}
                         strokeWidth="10"
                         strokeColor={
                             this.state.time > TEN_PERCENT
-                                ? "#0988ec"
+                                ? this.props.color
                                 : "#E55529"
                         }
                         

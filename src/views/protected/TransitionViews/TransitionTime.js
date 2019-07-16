@@ -19,7 +19,6 @@ import Recs from "./TransitionTimeRecs";
 import TransitionTypeSel from "./TransitionTypeSel";
 import TransitionTypeSel1 from "./TransitionTypeSel1";
 import Dashboard from "../../../components/Dashboard";
-import Dashboard2 from "../../../components/Dashboard2";
 
 
 
@@ -139,7 +138,8 @@ class TransitionTime extends React.Component {
                                     magic8="Transition Time"
                                     color="#094492"
                                     infoDisplay= {<TransitionLog />}
-                                    submitFunc={resetTransitionTime()}
+                                    infoPlacement = "center"
+                                    completeObservation={true}
                                 />
                             </Grid>
                         </Grid>

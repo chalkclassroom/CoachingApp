@@ -187,8 +187,9 @@ class ClassroomClimate extends React.Component {
                   <Dashboard 
                            magic8="Classroom Climate"
                            color="#0988ec"
-                           infoDisplay= {<Countdown color="0988ec"/>}
-                           submitFunc={emptyClimateStack()}
+                           infoDisplay= {<Countdown color="#0988ec" timerTime={130000}/>}
+                           infoPlacement="center"
+                           completeObservation={true}
                   />
                 </Grid>
               </Grid>

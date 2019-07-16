@@ -33,7 +33,13 @@ import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTim
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
 import YesNoDialog from "./Shared/YesNoDialog";
 import { resetTransitionTime } from "../state/actions/transition-time";
+import { emptyClimateStack } from "../state/actions/classroom-climate";
+import { deleteAllCenters } from "../state/actions/associative-cooperative";
 import { connect } from "react-redux";
+import IncompleteObservation from "./IncompleteObservation.js";
+import TotalVisitCount from "./TotalVisitCount.js";
+
+
 
 
 
@@ -43,9 +49,6 @@ class Dashboard extends React.Component {
         super(props);
 
         this.state = {
-            magic8: "",
-            color: "",
-            infoDisplay: "",
             notes: false,
             help: false,
             auth: true,
@@ -55,8 +58,11 @@ class Dashboard extends React.Component {
                 hour12: true
             }),
             submitFunc: null,
+            alignFormat: "center",
+            incomplete: false, 
         }
     }
+
 
     handleHelpModal = () => {
         this.setState({ help: true });
@@ -74,8 +80,18 @@ class Dashboard extends React.Component {
         }
     };
 
+    handleIncomplete = () => {
+        this.setState({ incomplete: true });
+    };
+
+    handleClickAwayIncomplete = () => {
+        this.setState({ incomplete: false });
+    }
+
     render(){
+        const magic8 = this.props.magic8;
         return(
+            
             <div>
                 {this.state.help ? (
                     <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
@@ -105,11 +121,16 @@ class Dashboard extends React.Component {
                             />
                         )}
                     </FirebaseContext.Consumer>
+                ) : this.state.incomplete ? (
+                    <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
+                        <IncompleteObservation />
+                    </ClickAwayListener>                    
                 ) : (
                     <div />
                 )}
                 <Card style = {{
-                    border: "3px solid gray",
+                    border: "3px solid #d9d9d9",
+                    borderRadius: 10,
                     backgroundColor: "#fff",
                     height: "100%",
                     boxShadow: "5px",
@@ -134,7 +155,7 @@ class Dashboard extends React.Component {
                                 : this.props.magic8==="Sequential Activities" ? SequentialIcon
                                 : AssocCoopIcon} alt="Magic 8 Icon" width="100px" height="100px"/>
                         </Grid>
-                        <Grid item style={{marginTop:"5px"}}>
+                        <Grid item style={{marginTop:"5px", height: "41vh", width:"90%", marginLeft:"5px", marginRight:"5px", display: "flex", alignItems: this.props.infoPlacement, justifyItems: "center"}}>
                             {this.props.infoDisplay}
                         </Grid>
                         <Grid item lg container style={{marginTop:"5px"}} direction="row" spacing={16} class="help" alignItems="center" alignContent="center">
@@ -164,8 +185,8 @@ class Dashboard extends React.Component {
                         <Grid item style={{marginTop:"5px"}}>
                             Start Time: {this.state.time}
                         </Grid>
-                        <Grid item style={{marginTop: "5px", marginBottom: "10px", marginLeft: "5px", marginRight: "5px", alignContent: "flex-end", display: "flex"}}>
-                            {/* <Button variant="outlined" style={{color: this.props.color, borderColor: this.props.color, borderWidth: "2px", fontSize: "15px", alignSelf: "flex-end", marginTop: "auto"}}> <b>COMPLETE OBSERVATION</b> </Button> */}
+                        {this.props.completeObservation ? 
+                        <Grid item style={{marginTop: "5px", marginBottom: "10px", marginLeft: "10px", marginRight: "10px", alignContent: "flex-end", display: "flex"}}>
                             <FirebaseContext.Consumer>
                                 {firebase => (
                                     <YesNoDialog
@@ -178,7 +199,9 @@ class Dashboard extends React.Component {
                                         }
                                         shouldOpen={true}
                                         onAccept={() => {
-                                            this.props.submitFunc();
+                                            magic8 === "Classroom Climate" ? this.props.emptyClimateStack()
+                                            : magic8 === "Transition Time" ? this.props.resetTransitionTime()
+                                            : this.props.deleteAllCenters();
                                             this.props.history.push({
                                                 pathname: "/Home",
                                                 state: this.props.history.state
@@ -188,7 +211,12 @@ class Dashboard extends React.Component {
                                     />
                                 )}
                             </FirebaseContext.Consumer>
+                        </Grid> 
+                        :
+                        <Grid item style={{marginTop: "5px", marginBottom: "10px", marginLeft: "10px", marginRight: "10px", alignContent: "flex-end", display: "flex"}}>
+                            <Button variant="outlined" onClick={this.handleIncomplete} style={{color: "#d9d9d9", borderColor: "#d9d9d9", borderWidth: "2px", fontSize: "15px", alignSelf: "flex-end", marginTop: "auto"}}> <b>COMPLETE OBSERVATION</b> </Button>
                         </Grid>
+                                    }
                     </Grid>
                 </Card>
             </div>
@@ -200,9 +228,10 @@ Dashboard.propTypes = {
     magic8: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired,
     infoDisplay: PropTypes.instanceOf(Element).isRequired,
+    submitFunc: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
     null,
-    { resetTransitionTime }
+    { resetTransitionTime , emptyClimateStack, deleteAllCenters}
 )(Dashboard));

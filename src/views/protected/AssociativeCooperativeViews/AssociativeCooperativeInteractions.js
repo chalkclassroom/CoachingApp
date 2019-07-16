@@ -123,7 +123,7 @@ class AssociativeCooperativeInteractions extends React.Component {
                         } firebase={firebase} onStatusChange={this.handleCompleteButton}/>}
                     </FirebaseContext.Consumer>
                 </main>
-                <footer>
+                {/* <footer>
                     <Grid
                         container
                         alignItems={"center"}
@@ -192,7 +192,7 @@ class AssociativeCooperativeInteractions extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
-                </footer>
+                </footer> */}
             </div>
         );
     }

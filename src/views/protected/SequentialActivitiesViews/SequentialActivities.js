@@ -112,7 +112,7 @@ class SequentialActivities extends React.Component {
             )}
           </FirebaseContext.Consumer>
         </main>
-        <footer>
+{/*         <footer>
           <Grid
             container
             alignItems={"center"}
@@ -181,7 +181,7 @@ class SequentialActivities extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-        </footer>
+        </footer> */}
       </div>
     );
   }

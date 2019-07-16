@@ -16,6 +16,8 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import ms from "pretty-ms";
 import { withStyles } from "@material-ui/core/styles";
+import Dashboard from "../Dashboard";
+import Countdown from "../Countdown";
 
 const styles = {
   root: {
@@ -244,8 +246,27 @@ class CenterRatingChecklistAssocCoop extends React.Component {
           </DialogContent>
         </Dialog>
         <main>
-          <Grid alignItems={"center"} direction={"row"} justify={"center"}>
+          <Grid container alignItems={"center"} direction={"row"} justify={"center"}>
+            <Grid item xs={3}>
+              <Grid
+                container
+                alignItems={"center"}
+                justify={"center"}
+                direction={"column"}
+              >
+                <div style={{ margin: 20 }} />
+                <Dashboard 
+                  magic8="Associative and Cooperative"
+                  color="#6f39c4"
+                  infoDisplay= {<Countdown color="#6f39c4" timerTime={60000} />}
+                  infoPlacement="center"
+                  completeObservation={false}
+                />
+              </Grid>
+            </Grid>
+            <Grid item xs={9}>
             <Grid>
+              <div style={{ margin: 10 }} />
               <Button size={"small"} onClick={this.handleBackButton}>
                 <KeyboardArrowLeft />
                 Back
@@ -257,18 +278,20 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                   this.props.currentCenter.substr(1)}
               </Typography>
               <div style={{ height: 20 }} />
-              <Typography variant={"subtitle2"} gutterBottom style={{marginLeft: -450}}>
+              <Typography variant={"subtitle2"} gutterBottom>
                 Please select the number of children and teachers at the center:
               </Typography>
               <Grid
                 container
                 direction={"row"}
-                justify={"space-between"}
-                xs={10}
+                justify={"space-around"}
+                xs={12}
+               
               >
                 <Grid item>
                   <Button
                     onClick={this.handleChild1Click}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_1
                         ? "contained"
@@ -281,6 +304,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                 <Grid item>
                   <Button
                     onClick={this.handleChild2Click}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_2
                         ? "contained"
@@ -293,6 +317,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                 <Grid item>
                   <Button
                     onClick={this.handleChild1TeacherClick}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_1_TEACHER
                         ? "contained"
@@ -305,6 +330,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                 <Grid item>
                   <Button
                     onClick={this.handleChild2TeacherClick}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_2_TEACHER
                         ? "contained"
@@ -317,8 +343,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
               </Grid>
               <div style={{ height: 20 }} />
               <Grid container direction={"row"} spacing={16} xs={12}>
-                <Grid xs={1} />
-                <Grid item xs={5}>
+                {/* <Grid xs={1} /> */}
+                <Grid item xs={6}>
                   <Card>
                     <Typography variant="h6" align={"center"}>
                       Child Behaviors
@@ -408,7 +434,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                     </List>
                   </Card>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={6}>
                   <Card>
                     <Typography variant="h6" align={"center"}>
                       Teacher Behaviors
@@ -494,24 +520,6 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                     </List>
                   </Card>
                 </Grid>
-                <Grid xs={1}>
-                  <Line
-                    style={{ transform: "rotate(270deg)" }}
-                    percent={`${100 * (this.state.time / RATING_INTERVAL)}`}
-                    strokeWidth="8"
-                    strokeColor={
-                      this.state.time > TEN_PERCENT ? "#009365" : "#E55529"
-                    }
-                  />
-                  <div
-                    style={{
-                      paddingTop: 50,
-                      textAlign: "center"
-                    }}
-                  >
-                    {ms(this.state.time)}
-                  </div>
-                </Grid>
               </Grid>
               <Grid
                 container
@@ -520,7 +528,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                 direction={"row"}
               >
                 <Button
-                  variant={"contained"}
+                  variant="contained"
                   color={"secondary"}
                   onClick={this.handleSubmit}
                   style={{ marginTop: 20 }}
@@ -528,6 +536,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                   Submit
                 </Button>
               </Grid>
+            </Grid>
             </Grid>
           </Grid>
         </main>
