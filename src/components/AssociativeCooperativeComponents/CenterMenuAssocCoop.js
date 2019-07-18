@@ -314,7 +314,7 @@ class CenterMenuAssocCoop extends React.Component {
       case CENTER_MENU:
         return (
           <div>
-            <Grid justify="center" alignItems="stretch" direction="row">
+            <Grid justify="center" alignItems="stretch" direction="row" style={{margin: 10}}>
               <Grid justify="flex-start" alignItems="center" direction="row">
                 
                 <Grid container spacing={0} direction="row" alignItems="center">
@@ -330,7 +330,7 @@ class CenterMenuAssocCoop extends React.Component {
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                <div style={{ margin: 20 }} />
+                                {/* <div style={{ margin: 20 }} /> */}
                                 <Dashboard 
                                     magic8="Associative and Cooperative"
                                     color="#6f39c4"

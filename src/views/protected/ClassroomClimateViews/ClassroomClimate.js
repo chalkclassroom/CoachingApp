@@ -167,7 +167,8 @@ class ClassroomClimate extends React.Component {
           <Grid container xs={12}
                 alignItems={"center"}
                 justify={"center"}
-                direction={"column"}>
+                direction={"column"}
+                style={{ margin: 10}}>
             <Grid container xs={12}
                   alignItems={"center"}
                   justify={"center"}
