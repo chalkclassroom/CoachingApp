@@ -64,7 +64,7 @@ class Countdown extends React.Component{
                             this.props.timerTime)}`}
                         strokeWidth="10"
                         strokeColor={
-                            this.state.time > TEN_PERCENT
+                            this.state.time > this.state.tenPercent
                                 ? this.props.color
                                 : "#E55529"
                         }
