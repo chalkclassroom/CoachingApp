@@ -22,6 +22,9 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import PropTypes from "prop-types";
+import Dashboard from "../Dashboard";
+import TotalVisitCount from "../TotalVisitCount";
+import TransitionLog from "../../views/protected/TransitionViews/TransitionLog";
 
 // TODO: X in top right corner, press and hold to remove/edit the center.
 
@@ -253,8 +256,10 @@ class CenterMenuAssocCoop extends React.Component {
   state = {
     addDialog: false,
     status: CENTER_CHECKLIST,
-    currentCenter: undefined
+    currentCenter: undefined,
+    totalVisitCount: 0,
   };
+
 
   handleClickOpen = () => {
     this.setState({ addDialog: true });
@@ -293,6 +298,7 @@ class CenterMenuAssocCoop extends React.Component {
   finishCenterVisit = centerName => {
     if (centerName !== undefined) {
       this.props.incrementCenterCount(centerName);
+      this.setState({totalVisitCount: this.state.totalVisitCount + 1})
     }
   };
 
@@ -308,30 +314,39 @@ class CenterMenuAssocCoop extends React.Component {
       case CENTER_MENU:
         return (
           <div>
-            <Grid justify="flex-start" alignItems="center" direction="column">
-              <Typography
-                component="h4"
-                variant="h4"
-                align="center"
-                style={{ padding: "10px" }}
-              >
-                Associative and Cooperative Interactions
-              </Typography>
-            </Grid>
-
             <Grid justify="center" alignItems="stretch" direction="row">
               <Grid justify="flex-start" alignItems="center" direction="row">
-                <Grid container spacing={0}>
+                
+                <Grid container spacing={0} direction="row" alignItems="center">
                   <NewCenterDialog
                     open={this.state.addDialog}
                     handleClose={this.handleClose}
                     handleSubmit={this.handleAddCenter}
                   />
+                  <Grid item xs={3}>
+                    <Grid
+                                container
+                                alignItems={"center"}
+                                justify={"center"}
+                                direction={"column"}
+                            >
+                                <div style={{ margin: 20 }} />
+                                <Dashboard 
+                                    magic8="Associative and Cooperative"
+                                    color="#6f39c4"
+                                    infoDisplay= {<TotalVisitCount count={this.state.totalVisitCount} />}
+                                    infoPlacement = "flex-start"
+                                    completeObservation={true}
+                                />
+                                </Grid>
+                                </Grid>
+                   <Grid container xs={9}>         
                   {this.props.centers.map((center, index) => (
+
                     <Grid
                       item
-                      xs={3}
-                      style={{ textAlign: "center", padding: "10px" }}
+                      xs={4}
+                      style={{ textAlign: "center", padding: "10px"}}
                     >
                       <VisitCenterButton
                         centerName={center.name}
@@ -342,8 +357,8 @@ class CenterMenuAssocCoop extends React.Component {
                   ))}
                   <Grid
                     item
-                    xs={3}
-                    style={{ textAlign: "center", padding: "10px" }}
+                    xs={4}
+                    style={{ textAlign: "center", padding: "10px"}}
                   >
                     <Button
                       variant="contained"
@@ -359,6 +374,7 @@ class CenterMenuAssocCoop extends React.Component {
                       Add Center <br /> <br /> +
                     </Button>
                   </Grid>
+                  </Grid>    
                 </Grid>
               </Grid>
             </Grid>

@@ -18,6 +18,8 @@ import ms from "pretty-ms";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import { toggleSequentialMaterials } from "../../state/actions/sequential-activities";
+import Dashboard from "../Dashboard";
+import Countdown from "../Countdown";
 
 const styles = {
   root: {
@@ -223,8 +225,27 @@ class CenterRatingChecklistSeqAct extends React.Component {
           </DialogContent>
         </Dialog>
         <main>
-          <Grid alignItems={"center"} direction={"row"} justify={"center"}>
+          <Grid container alignItems={"center"} direction={"row"} justify={"center"}>
+            <Grid item xs={3}>
+              <Grid
+                container
+                alignItems={"center"}
+                justify={"center"}
+                direction={"column"}
+              >
+                {/* <div style={{ margin: 20 }} /> */}
+                <Dashboard
+                  magic8="Sequential Activities"
+                  color="#ffd300"
+                  infoDisplay = {<Countdown color="#ffd300" timerTime={60000} />}
+                  infoPlacement = "center"
+                  completeObservation = {false}
+                />
+              </Grid>
+            </Grid>
+            <Grid item xs={9}>
             <Grid>
+            <div style={{ margin: 10 }} />
               <Button size={"small"} onClick={this.handleBackButton}>
                 <KeyboardArrowLeft />
                 Back
@@ -239,19 +260,19 @@ class CenterRatingChecklistSeqAct extends React.Component {
               <Typography
                 variant={"subtitle2"}
                 gutterBottom
-                style={{ marginLeft: -450 }}
               >
                 Please select the number of children and teachers at the center:
               </Typography>
               <Grid
                 container
                 direction={"row"}
-                justify={"space-between"}
-                xs={10}
+                justify={"space-around"}
+                xs={12}
               >
                 <Grid item>
                   <Button
                     onClick={this.handleChild1Click}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_1
                         ? "contained"
@@ -264,6 +285,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 <Grid item>
                   <Button
                     onClick={this.handleChild2Click}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_2
                         ? "contained"
@@ -276,6 +298,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 <Grid item>
                   <Button
                     onClick={this.handleChild1TeacherClick}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_1_TEACHER
                         ? "contained"
@@ -288,6 +311,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 <Grid item>
                   <Button
                     onClick={this.handleChild2TeacherClick}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_2_TEACHER
                         ? "contained"
@@ -300,8 +324,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
               </Grid>
               <div style={{ height: 20 }} />
               <Grid container direction={"row"} spacing={16} xs={12}>
-                <Grid xs={1} />
-                <Grid item xs={5}>
+                <Grid item xs={6}>
                   <Card>
                     <Typography variant="h6" align={"center"}>
                       Child Behaviors
@@ -419,7 +442,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                     </List>
                   </Card>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={6}>
                   <Card>
                     <Typography variant="h6" align={"center"}>
                       Teacher Behaviors
@@ -489,7 +512,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                     </List>
                   </Card>
                 </Grid>
-                <Grid xs={1}>
+                {/* <Grid xs={1}>
                   <Line
                     style={{ transform: "rotate(270deg)" }}
                     percent={`${100 * (this.state.time / RATING_INTERVAL)}`}
@@ -506,7 +529,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                   >
                     {ms(this.state.time)}
                   </div>
-                </Grid>
+                </Grid> */}
               </Grid>
               <Grid
                 container
@@ -515,7 +538,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 direction={"row"}
               >
                 <Button
-                  variant={"contained"}
+                  variant="contained"
                   color={"secondary"}
                   onClick={this.handleSubmit}
                   style={{ marginTop: 20 }}
@@ -523,6 +546,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                   Submit
                 </Button>
               </Grid>
+            </Grid>
             </Grid>
           </Grid>
         </main>

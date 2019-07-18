@@ -33,6 +33,7 @@ class YesNoDialog extends React.Component {
         open: false
     };
 
+
     handleClickOpen = () => {
         if (this.props.shouldOpen) {
             this.setState({ open: true });
@@ -55,17 +56,22 @@ class YesNoDialog extends React.Component {
     render() {
         return (
             <div>
-                <MuiThemeProvider theme={theme}>
+                {/* <MuiThemeProvider theme={theme}> */}
                     <Button
                         onClick={this.handleClickOpen}
                         style={this.props.buttonStyle}
                         variant={this.props.buttonVariant}
                         color={this.props.buttonColor}
                         aria-label={this.props.buttonAriaLabel}
+                        style={{
+                            color:this.props.buttonColor, 
+                            borderColor:this.props.buttonColor, 
+                            borderWidth:"2px",
+                            fontSize:"15px"}}
                     >
                         {this.props.buttonText}
                     </Button>
-                </MuiThemeProvider>
+                {/* </MuiThemeProvider> */}
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}

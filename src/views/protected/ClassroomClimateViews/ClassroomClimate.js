@@ -21,7 +21,11 @@ import Notes from "../../../components/Notes";
 import Typography from "@material-ui/core/Typography";
 import Recs from "./ClassroomClimateRecs";
 
-// import LearningActivityTransitionToggle from "../../../components/ClassroomClimateComponent/LearningActivityTransitionToggle";
+import LearningActivityTransitionToggle from "../../../components/ClassroomClimateComponent/LearningActivityTransitionToggle";
+import Dashboard from "../../../components/Dashboard";
+import TransitionLog from "../TransitionViews/TransitionLog";
+import Countdown from "../../../components/Countdown";
+
 /*
     N.B. Time measured in milliseconds.
 
@@ -164,17 +168,30 @@ class ClassroomClimate extends React.Component {
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}>
-            <Typography variant={"h4"} alignItems={"center"} justify={"center"}>
-              Classroom Climate
-            </Typography>
             <Grid container xs={12}
                   alignItems={"center"}
                   justify={"center"}
                   direction={"row"}>
-              <Grid item xs={2}/>
-              <Grid container xs={8} alignItems={"center"}
+              <Grid item xs={3}>
+                <Grid
+                  container
+                  alignItems={"center"}
+                  justify={"center"}
+                  direction={"column"}
+                >
+                  <Dashboard 
+                           magic8="Classroom Climate"
+                           color="#0988ec"
+                           infoDisplay= {<Countdown color="#0988ec" timerTime={130000}/>}
+                           infoPlacement="center"
+                           completeObservation={true}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container xs={9} alignItems={"center"}
                     justify={"center"}
-                    direction={"row"}>
+                    direction={"column"}
+                    >
                 <FirebaseContext.Consumer>
                   {firebase =>
                     <BehaviorCounter
@@ -185,103 +202,10 @@ class ClassroomClimate extends React.Component {
                     />}
                 </FirebaseContext.Consumer>
               </Grid>
-              <Grid item xs={2}>
-                <Line
-                  style={{ transform: "rotate(270deg)" }}
-                  percent={`${100 *
-                  (this.state.time /
-                    RATING_INTERVAL)}`}
-                  strokeWidth="4"
-                  strokeColor={
-                    this.state.time > TEN_PERCENT
-                      ? "#009365"
-                      : "#E55529"
-                  }
-                />
-                <div
-                  style={{
-                    paddingTop: 150,
-                    textAlign: "center"
-                  }}
-                >
-                  {ms(this.state.time)}
-                </div>
-              </Grid>
             </Grid>
           </Grid>
           <div/>
         </main>
-        <footer>
-          <Grid
-            container
-            alignItems={"center"}
-            justify={"space-between"}
-            direction={"row"}
-          >
-            <Grid item xs={2}>
-              <IconButton
-                aria-owns={open ? "menu-appbar" : undefined}
-                aria-haspopup="true"
-                onClick={this.handleHelpModal}
-                color="inherit"
-              >
-                <InfoIcon
-                  color={"secondary"}
-                  fontSize={"large"}
-                />
-              </IconButton>
-              <IconButton
-                aria-owns={open ? "menu-appbar" : undefined}
-                aria-haspopup="true"
-                onClick={this.handleNotes}
-                color="inherit"
-              >
-                <EditIcon
-                  color={"secondary"}
-                  fontSize={"large"}
-                />
-              </IconButton>
-            </Grid>
-            <Grid item xs={2}>
-              <Grid
-                container
-                alignItems={"center"}
-                justify={"space-between"}
-                direction={"column"}
-              >
-                Start Time:{" "}
-                {new Date().toLocaleString("en-US", {
-                  hour: "numeric",
-                  minute: "numeric",
-                  hour12: true
-                })}
-                <br/>
-                <FirebaseContext.Consumer>
-                  {firebase =>
-                    <YesNoDialog
-                      buttonText={"Complete Observation"}
-                      buttonVariant={"contained"}
-                      buttonColor={"secondary"}
-                      buttonStyle={{ margin: 10 }}
-                      dialogTitle={
-                        "Are you sure you want to complete this observation?"
-                      }
-                      shouldOpen={true}
-                      onAccept={() => {
-                        this.props.emptyClimateStack();
-                        this.props.history.push({
-                          pathname: "/Home",
-                          state: this.props.history.state
-                        });
-                        firebase.endSession();
-                      }}
-                    />
-                  }
-                </FirebaseContext.Consumer>
-              </Grid>
-            </Grid>
-          </Grid>
-        </footer>
       </div>
     );
   }

@@ -16,7 +16,9 @@ const styles = theme => ({
     root: {
         ...theme.mixins.gutters(),
         paddingTop: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 2
+        paddingBottom: theme.spacing.unit * 2,
+        marginLeft: "5%",
+        marginRight: "5%",
     }
 });
 
@@ -41,9 +43,9 @@ const TransitionLog = ({ entries, classes }) => {
                 <Divider />
                 <div
                     style={{
-                        maxHeight: "50vh",
+                        height: "28vh",
                         display: "flex",
-                        flexDirection: "column-reverse",
+                        flexDirection: "column",
                         flexGrow: 1,
                         overflow: "auto"
                     }}

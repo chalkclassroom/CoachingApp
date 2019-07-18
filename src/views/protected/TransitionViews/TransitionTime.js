@@ -18,6 +18,9 @@ import { resetTransitionTime } from "../../../state/actions/transition-time";
 import Recs from "./TransitionTimeRecs";
 import TransitionTypeSel from "./TransitionTypeSel";
 import TransitionTypeSel1 from "./TransitionTypeSel1";
+import Dashboard from "../../../components/Dashboard";
+
+
 
 const styles = {
     root: {
@@ -133,16 +136,22 @@ class TransitionTime extends React.Component {
                   <div />
                 )}
                 <main style={{ flex: 1 }}>
-                    <Grid container spacing={16}>
+                    <Grid container spacing={16} alignItems="center">
                         <Grid item xs={3}>
                             <Grid
                                 container
                                 alignItems={"center"}
                                 justify={"center"}
                                 direction={"column"}
+                                
                             >
-                                <div style={{ margin: 20 }} />
-                                <TransitionLog />
+                                <Dashboard 
+                                    magic8="Transition Time"
+                                    color="#094492"
+                                    infoDisplay= {<TransitionLog />}
+                                    infoPlacement = "center"
+                                    completeObservation={true}
+                                />
                             </Grid>
                         </Grid>
                         <Grid item xs={2}>
@@ -155,8 +164,8 @@ class TransitionTime extends React.Component {
                                 <div style={{ margin: 20 }} />
                                 <TransitionTypeSel handleTransitionType = {this.handleTransitionType}/>
                             </Grid>
-                            </Grid> 
-                            <Grid item xs={2}>
+                        </Grid> 
+                        <Grid item xs={2}>
                             <Grid
                                 container
                                 alignItems={"center"}
@@ -174,8 +183,7 @@ class TransitionTime extends React.Component {
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                {/* <div style={{ margin: 10 }} />
-                                <TransitionType /> */}
+                                <div style={{ margin: 10 }} />
                                 <FirebaseContext.Consumer>
                                     {firebase => (
                                         <TransitionTimer
@@ -188,72 +196,6 @@ class TransitionTime extends React.Component {
                         </Grid>
                     </Grid>
                 </main>
-                <footer>
-                    <Grid
-                        container
-                        alignItems={"center"}
-                        justify={"space-between"}
-                        direction={"row"}
-                    >
-                        <Grid item xs={2}>
-                            <IconButton
-                                aria-owns={open ? "menu-appbar" : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleHelpModal}
-                                color="inherit"
-                            >
-                                <InfoIcon color={"secondary"} fontSize={"large"} />
-                            </IconButton>
-                            <IconButton
-                                aria-owns={open ? "menu-appbar" : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleNotes}
-                                color="inherit"
-                            >
-                                <EditIcon color={"secondary"} fontSize={"large"} />
-                            </IconButton>
-                        </Grid>
-                        <Grid item xs={8} />
-                        <Grid item xs={2}>
-                            <Grid
-                                container
-                                alignItems={"center"}
-                                justify={"space-between"}
-                                direction={"column"}
-                            >
-                                Start Time:{" "}
-                                {new Date().toLocaleString("en-US", {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    hour12: true
-                                })}
-                                <br />
-                                <FirebaseContext.Consumer>
-                                    {firebase => (
-                                        <YesNoDialog
-                                            buttonText={"Complete Observation"}
-                                            buttonVariant={"contained"}
-                                            buttonColor={"secondary"}
-                                            buttonStyle={{ margin: 10 }}
-                                            dialogTitle={
-                                                "Are you sure you want to complete this observation?"
-                                            }
-                                            shouldOpen={true}
-                                            onAccept={() => {
-                                                this.props.resetTransitionTime();
-                                                this.props.history.push({
-                                                    pathname: "/Home",
-                                                    state: this.props.history.state
-                                                });
-                                                firebase.endSession();
-                                            }}
-                                        />
-                                    )}
-                                </FirebaseContext.Consumer>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </footer>
             </div>
         );
     }
