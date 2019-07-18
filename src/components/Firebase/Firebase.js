@@ -106,23 +106,21 @@ class Firebase {
   };
 
   getTeacherList = function() {
-    return firebase
-      .firestore()
+    return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)
       .collection("partners")
       .get()
       .then(partners => {
         let teacherList = [];
-        partners.forEach((partner) => {
-          console.log(partner.id, "=>", partner.data());
-          teacherList.push(this.getTeacherInfo(partner.id).then((doc => doc.data()))
-          );
+        partners.forEach(partner => {
+          //console.log(partner.id, "=>", partner.data());
+          teacherList.push(this.getTeacherInfo(partner.id));
         });
         return teacherList;
       })
       .catch(function(error) {
-        console.log("Error getting documents: ", error);
+        console.log("Error getting partner list: ", error);
       });
   };
 

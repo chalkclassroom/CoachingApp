@@ -241,32 +241,53 @@ class TeacherDetail extends Component {
 
   constructor (props) {
     super(props);
-    //const { id, firstName, lastName, email, school, notes } = this.props.teacher;
-    this.state = {
-      // ...props.teacher,
-      teacherUID: "EYaU6BCbNUcPTSsxU14G9IaGXHJ3", //id, EYaU6BCbNUcPTSsxU14G9IaGXHJ3
-      firstName: "Practice",                      //firstName
-      lastName: "Teacher",                        //lastName
-      school: "Elum Entaree School",              //school
-      email: "practice@teacher.edu",              //email
-      notes: "FAKE NOTES",
-      inputFirstName: "Practice",
-      inputLastName: "Teacher",
-      inputSchool: "Elum Entaree School",
-      inputEmail: "practice@teacher.edu",
-      inputNotes: "FAKE NOTES",
-      isEditing: false,
-      isDeleting: false,
-      editAlert: false,
-      alertText: ""
-    };
 
-    this.componentDidMount = this.componentDidMount.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
-    this.handleEditText = this.handleEditText.bind(this);
-    this.handleEditConfirm = this.handleEditConfirm.bind(this);
-    this.handleEditAlert = this.handleEditAlert.bind(this);
-    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
+    if (this.props.location.state !== undefined) { // Came from 'My Teachers'
+      const { id, firstName, lastName, school, email, notes } = this.props.location.state.teacher;
+      this.state = {
+        teacherUID: id,
+        firstName: firstName,
+        lastName: lastName,
+        school: school,
+        email: email,
+        notes: notes,
+        inputFirstName: firstName,
+        inputLastName: lastName,
+        inputSchool: school,
+        inputEmail: email,
+        inputNotes: notes,
+        isEditing: false,
+        isDeleting: false,
+        editAlert: false,
+        alertText: ""
+      };
+    } else {
+      const id = this.props.match.params.teacherid; // Entered URL w/o navigating from 'My Teachers'
+      this.state = {
+        teacherUID: id,
+        firstName: "...",
+        lastName: "...",
+        school: "...",
+        email: "...",
+        notes: "...",
+        inputFirstName: "",
+        inputLastName: "",
+        inputSchool: "",
+        inputEmail: "",
+        inputNotes: "",
+        isEditing: false,
+        isDeleting: false,
+        editAlert: false,
+        alertText: ""
+      };
+
+      this.componentDidMount = this.componentDidMount.bind(this);
+      this.handleCloseModal = this.handleCloseModal.bind(this);
+      this.handleEditText = this.handleEditText.bind(this);
+      this.handleEditConfirm = this.handleEditConfirm.bind(this);
+      this.handleEditAlert = this.handleEditAlert.bind(this);
+      this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
+    }
   }
 
   componentDidMount () {
@@ -369,9 +390,8 @@ class TeacherDetail extends Component {
         isDeleting: false,
         editAlert: false,
         alertText: ""
-      });
-      // Navigate back to previous Page
-      })
+      },
+        () => this.props.history.replace("/MyTeachers"));})
       .catch(() => this.setState({
         editAlert: true,
         alertText: "Something went wrong removing this teacher... try refreshing your page or logging" +
@@ -391,7 +411,7 @@ class TeacherDetail extends Component {
         </FirebaseContext.Consumer>
         <div className={classes.container}>
           <Button variant="contained" size="medium" className={classes.button}
-                  onClick={null}>
+                  onClick={() => this.props.history.replace("/MyTeachers")}>
             <ChevronLeftRoundedIcon />
             <b>My Teachers</b>
           </Button>
@@ -429,7 +449,7 @@ class TeacherDetail extends Component {
               {sortedSvg.map((item, key) =>
                 <li key={key} className={classes.magicEightItem}>
                   <Button variant='contained' className={classes.magicEightButton}>
-                    <img src={item} alt="Magic Eight not found" className={classes.img}/>
+                    <img src={item} alt="Magic Eight" className={classes.img}/>
                   </Button>
                   {/* Logic for getting recent observation/number of goals met*/}
                   <p>Last Observed:<br />
@@ -544,16 +564,8 @@ class TeacherDetail extends Component {
 }
 
 TeacherDetail.propTypes = {
-  // teacher: PropTypes.object.isRequired,
-  // teacher: {
-  //   id: "",
-  //   firstName: "",
-  //   lastName: "",
-  //   email: "",
-  //   school: "",
-  //   notes: ""
-  // }
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  //teacher: PropTypes.object.isRequired
 };
 
 TeacherDetail.contextType = FirebaseContext;
