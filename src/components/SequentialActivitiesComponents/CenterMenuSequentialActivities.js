@@ -125,7 +125,7 @@ class CenterChecklist extends React.Component {
             align="center"
             style={{ padding: "10px" }}
           >
-            Which centers are present?
+            Which centers are open?
           </Typography>
           <Typography>
             You will have the opportunity to add additional centers if the ones
