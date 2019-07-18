@@ -201,6 +201,7 @@ class Dashboard extends React.Component {
                                         onAccept={() => {
                                             magic8 === "Classroom Climate" ? this.props.emptyClimateStack()
                                             : magic8 === "Transition Time" ? this.props.resetTransitionTime()
+                                            : magic8 === "Sequential Activities" ? this.props.deleteAllCenters()
                                             : this.props.deleteAllCenters();
                                             this.props.history.push({
                                                 pathname: "/Home",

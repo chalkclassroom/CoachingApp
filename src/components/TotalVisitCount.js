@@ -18,12 +18,12 @@ class TotalVisitCount extends React.Component{
                 height="28vh"
                 // justifyItems="center"
                 >
-                    <Grid >
+                    <Grid>
                     <div style={{ margin: 20 }} />
                         <Typography variant="h5" component="h3">
                             Total Visits:
                         </Typography>
-                        <Typography variant="h5" component="h3" style={{alignItems: "center", alignContent: "center", justifyContent: "center"}}>
+                        <Typography variant="h4" component="h3" align="center" style={{alignItems: "center", alignContent: "center", justifyContent: "center", marginTop: 5}}>
                             {this.props.count}
                         </Typography>
                     </Grid>

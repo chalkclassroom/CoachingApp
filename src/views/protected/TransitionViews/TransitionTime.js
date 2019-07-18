@@ -124,7 +124,7 @@ class TransitionTime extends React.Component {
                   <div />
                 )}
                 <main style={{ flex: 1 }}>
-                    <Grid container spacing={16}>
+                    <Grid container spacing={16} alignItems="center">
                         <Grid item xs={3}>
                             <Grid
                                 container

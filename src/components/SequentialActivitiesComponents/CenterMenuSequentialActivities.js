@@ -326,7 +326,7 @@ class CenterMenuSequentialActivities extends React.Component {
 
             <Grid justify="center" alignItems="stretch" direction="row">
               <Grid justify="flex-start" alignItems="center" direction="row">
-                <Grid container spacing={0} direction="row">
+                <Grid container spacing={0} direction="row" alignItems="center">
                   <NewCenterDialog
                     open={this.state.addDialog}
                     handleClose={this.handleClose}

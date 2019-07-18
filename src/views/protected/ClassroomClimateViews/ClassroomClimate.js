@@ -170,9 +170,6 @@ class ClassroomClimate extends React.Component {
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}>
-            <Typography variant={"h4"} alignItems={"center"} justify={"center"}>
-              Classroom Climate
-            </Typography>
             <Grid container xs={12}
                   alignItems={"center"}
                   justify={"center"}
