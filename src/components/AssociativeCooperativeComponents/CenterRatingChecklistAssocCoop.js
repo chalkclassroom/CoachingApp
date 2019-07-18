@@ -254,7 +254,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                 justify={"center"}
                 direction={"column"}
               >
-                <div style={{ margin: 20 }} />
+                {/* <div style={{ margin: 20 }} /> */}
                 <Dashboard 
                   magic8="Associative and Cooperative"
                   color="#6f39c4"
@@ -343,7 +343,6 @@ class CenterRatingChecklistAssocCoop extends React.Component {
               </Grid>
               <div style={{ height: 20 }} />
               <Grid container direction={"row"} spacing={16} xs={12}>
-                {/* <Grid xs={1} /> */}
                 <Grid item xs={6}>
                   <Card>
                     <Typography variant="h6" align={"center"}>

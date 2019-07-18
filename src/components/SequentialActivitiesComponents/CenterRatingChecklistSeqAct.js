@@ -233,7 +233,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 justify={"center"}
                 direction={"column"}
               >
-                <div style={{ margin: 20 }} />
+                {/* <div style={{ margin: 20 }} /> */}
                 <Dashboard
                   magic8="Sequential Activities"
                   color="#ffd300"
@@ -272,6 +272,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 <Grid item>
                   <Button
                     onClick={this.handleChild1Click}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_1
                         ? "contained"
@@ -284,6 +285,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 <Grid item>
                   <Button
                     onClick={this.handleChild2Click}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_2
                         ? "contained"
@@ -296,6 +298,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 <Grid item>
                   <Button
                     onClick={this.handleChild1TeacherClick}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_1_TEACHER
                         ? "contained"
@@ -308,6 +311,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 <Grid item>
                   <Button
                     onClick={this.handleChild2TeacherClick}
+                    size="small"
                     variant={
                       this.state.people === TeacherChildEnum.CHILD_2_TEACHER
                         ? "contained"
@@ -320,7 +324,6 @@ class CenterRatingChecklistSeqAct extends React.Component {
               </Grid>
               <div style={{ height: 20 }} />
               <Grid container direction={"row"} spacing={16} xs={12}>
-                {/* <Grid xs={1} /> */}
                 <Grid item xs={6}>
                   <Card>
                     <Typography variant="h6" align={"center"}>

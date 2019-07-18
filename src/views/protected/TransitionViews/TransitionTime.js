@@ -133,7 +133,6 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                                 
                             >
-                                <div style={{ margin: 20 }} />
                                 <Dashboard 
                                     magic8="Transition Time"
                                     color="#094492"
@@ -173,7 +172,6 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 <div style={{ margin: 10 }} />
-                                {/*<TransitionType /> */}
                                 <FirebaseContext.Consumer>
                                     {firebase => (
                                         <TransitionTimer
@@ -186,72 +184,6 @@ class TransitionTime extends React.Component {
                         </Grid>
                     </Grid>
                 </main>
-                {/* <footer>
-                    <Grid
-                        container
-                        alignItems={"center"}
-                        justify={"space-between"}
-                        direction={"row"}
-                    >
-                        <Grid item xs={2}>
-                            <IconButton
-                                aria-owns={open ? "menu-appbar" : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleHelpModal}
-                                color="inherit"
-                            >
-                                <InfoIcon color={"secondary"} fontSize={"large"} />
-                            </IconButton>
-                            <IconButton
-                                aria-owns={open ? "menu-appbar" : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleNotes}
-                                color="inherit"
-                            >
-                                <EditIcon color={"secondary"} fontSize={"large"} />
-                            </IconButton>
-                        </Grid>
-                        <Grid item xs={8} />
-                        <Grid item xs={2}>
-                            <Grid
-                                container
-                                alignItems={"center"}
-                                justify={"space-between"}
-                                direction={"column"}
-                            >
-                                Start Time:{" "}
-                                {new Date().toLocaleString("en-US", {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    hour12: true
-                                })}
-                                <br />
-                                <FirebaseContext.Consumer>
-                                    {firebase => (
-                                        <YesNoDialog
-                                            buttonText={"Complete Observation"}
-                                            buttonVariant={"outlined"}
-                                            buttonColor="#094492"
-                                            buttonStyle={{ margin: 10 }}
-                                            dialogTitle={
-                                                "Are you sure you want to complete this observation?"
-                                            }
-                                            shouldOpen={true}
-                                            onAccept={() => {
-                                                this.props.resetTransitionTime();
-                                                this.props.history.push({
-                                                    pathname: "/Home",
-                                                    state: this.props.history.state
-                                                });
-                                                firebase.endSession();
-                                            }}
-                                        />
-                                    )}
-                                </FirebaseContext.Consumer>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </footer> */}
             </div>
         );
     }

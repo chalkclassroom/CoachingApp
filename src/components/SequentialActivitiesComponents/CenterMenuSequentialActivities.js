@@ -313,17 +313,6 @@ class CenterMenuSequentialActivities extends React.Component {
       case CENTER_MENU:
         return (
           <div>
-            {/* <Grid justify="flex-start" alignItems="center" direction="column">
-              <Typography
-                component="h4"
-                variant="h4"
-                align="center"
-                style={{ padding: "10px" }}
-              >
-                Sequential Activities
-              </Typography>
-            </Grid> */}
-
             <Grid justify="center" alignItems="stretch" direction="row">
               <Grid justify="flex-start" alignItems="center" direction="row">
                 <Grid container spacing={0} direction="row" alignItems="center">
