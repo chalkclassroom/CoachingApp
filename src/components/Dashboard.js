@@ -60,9 +60,22 @@ class Dashboard extends React.Component {
             submitFunc: null,
             alignFormat: "center",
             incomplete: false, 
+            icon: null,
+            lookForsIcon: null,
+            notesIcon: null
         }
     }
 
+    componentDidMount = () => {
+        this.props.magic8 === "Transition Time" ? this.setState({icon: TransitionTimeIcon, lookForsIcon: TransitionTimeLookFors, notesIcon: TransitionTimeNotes})
+        : this.props.magic8 === "Classroom Climate" ? this.setState({icon: ClassroomClimateIcon, lookForsIcon: ClassroomClimateLookFors, notesIcon: ClassroomClimateNotes})
+        : this.props.magic8 === "Math" ? this.setState({icon: MathIcon, lookForsIcon: MathLookFors, notesIcon: MathNotes})
+        : this.props.magic8 === "Level of Engagement" ? this.setState({icon: EngagementIcon, lookForsIcon: EngagementLookFors, notesIcon: EngagementNotes})
+        : this.props.magic8 === "Level of Instruction" ? this.setState({icon: InstructionIcon, lookForsIcon: InstructionLookFors, notesIcon: InstructionNotes})
+        : this.props.magic8 === "Listening to Children" ? this.setState({icon: ListeningIcon, lookForsIcon: ListeningLookFors, notesIcon: ListeningNotes})
+        : this.props.magic8 === "Sequential Activities" ? this.setState({icon: SequentialIcon, lookForsIcon: SequentialLookFors, notesIcon: SequentialNotes})
+        : this.setState({icon: AssocCoopIcon, lookForsIcon: AssocCoopLookFors, notesIcon: AssocCoopNotes})
+    };
 
     handleHelpModal = () => {
         this.setState({ help: true });
@@ -146,14 +159,7 @@ class Dashboard extends React.Component {
                 }}>
                     <Grid container flexGrow={1} padding="50" spacing={0} direction="column" justify="center" alignItems="center">
                         <Grid item style={{marginTop:"10px"}}>
-                            <img src={this.props.magic8==="Transition Time" ? TransitionTimeIcon
-                                : this.props.magic8==="Classroom Climate" ? ClassroomClimateIcon
-                                : this.props.magic8==="Math" ? MathIcon
-                                : this.props.magic8==="Level of Engagement" ? EngagementIcon
-                                : this.props.magic8==="Level of Instruction" ? InstructionIcon
-                                : this.props.magic8==="Listening to Children" ? ListeningIcon
-                                : this.props.magic8==="Sequential Activities" ? SequentialIcon
-                                : AssocCoopIcon} alt="Magic 8 Icon" width="100px" height="100px"/>
+                            <img src={ this.state.icon} alt="Magic 8 Icon" width="100px" height="100px"/>
                         </Grid>
                         <Grid item style={{marginTop:"5px", height: "41vh", width:"90%", marginLeft:"5px", marginRight:"5px", display: "flex", alignItems: this.props.infoPlacement, justifyItems: "center"}}>
                             {this.props.infoDisplay}
@@ -161,24 +167,10 @@ class Dashboard extends React.Component {
                         <Grid item lg container style={{marginTop:"5px"}} direction="row" spacing={16} class="help" alignItems="center" alignContent="center">
                             <Grid item lg styles={{flex:1, flexDirection: "row", justifyContent: "space-between", padding: "20%", flexWrap: "nowrap"}}>
                                 <Button className="lookFor" onClick={this.handleHelpModal} styles={{width: '90%'}}>
-                                    <img src={this.props.magic8==="Transition Time" ? TransitionTimeLookFors
-                                        : this.props.magic8==="Classroom Climate" ? ClassroomClimateLookFors
-                                        : this.props.magic8==="Math" ? MathLookFors
-                                        : this.props.magic8==="Level of Engagement" ? EngagementLookFors
-                                        : this.props.magic8==="Level of Instruction" ? InstructionLookFors
-                                        : this.props.magic8==="Listening to Children" ? ListeningLookFors
-                                        : this.props.magic8==="Sequential Activities" ? SequentialLookFors
-                                        : AssocCoopLookFors} alt="Look-Fors" width="60px" />
+                                    <img src={this.state.lookForsIcon} alt="Look-Fors" width="60px" />
                                 </Button>
                                 <Button className="notes" onClick={this.handleNotes} styles={{width: '40%'}}>
-                                    <img src={this.props.magic8==="Transition Time" ? TransitionTimeNotes
-                                        : this.props.magic8==="Classroom Climate" ? ClassroomClimateNotes
-                                        : this.props.magic8==="Math" ? MathNotes
-                                        : this.props.magic8==="Level of Engagement" ? EngagementNotes
-                                        : this.props.magic8==="Level of Instruction" ? InstructionNotes
-                                        : this.props.magic8==="Listening to Children" ? ListeningNotes
-                                        : this.props.magic8==="Sequential Activities" ? SequentialNotes
-                                        : AssocCoopNotes} alt="Notes" width="60px"/>
+                                    <img src={this.state.notesIcon} alt="Notes" width="60px"/>
                                 </Button>
                             </Grid>
                         </Grid>
