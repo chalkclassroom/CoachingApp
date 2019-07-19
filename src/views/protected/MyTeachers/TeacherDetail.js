@@ -282,11 +282,6 @@ class TeacherDetail extends Component {
       };
 
       this.componentDidMount = this.componentDidMount.bind(this);
-      this.handleCloseModal = this.handleCloseModal.bind(this);
-      this.handleEditText = this.handleEditText.bind(this);
-      this.handleEditConfirm = this.handleEditConfirm.bind(this);
-      this.handleEditAlert = this.handleEditAlert.bind(this);
-      this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
     }
   }
 
@@ -312,7 +307,7 @@ class TeacherDetail extends Component {
       });
   };
 
-  handleCloseModal () {
+  handleCloseModal = () => {
     const { firstName, lastName, school, email, notes } = this.state;
     this.setState({
       inputFirstName: firstName,
@@ -321,17 +316,18 @@ class TeacherDetail extends Component {
       inputEmail: email,
       inputNotes: notes,
       isEditing: false,
-      isDeleting: false
+      isDeleting: false,
+      alertText: ""
     });
   };
 
-  handleEditText (e) {
+  handleEditText = e => {
     this.setState({
       [e.target.name]: e.target.value
     });
   };
 
-  handleEditConfirm () {
+  handleEditConfirm = () => {
     const { teacherUID, inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes } = this.state;
     let firebase = this.context;
     if (firebase.setTeacherInfo(teacherUID, {
@@ -355,7 +351,7 @@ class TeacherDetail extends Component {
     }
   };
 
-  handleEditAlert (successful) {
+  handleEditAlert = successful => {
     if (successful) {
       this.setState({
         editAlert: true,
@@ -371,7 +367,7 @@ class TeacherDetail extends Component {
     }
   };
 
-  handleDeleteConfirm () {
+  handleDeleteConfirm = () => {
     let firebase = this.context;
     firebase.removePartner(this.state.teacherUID)
       .then(() => { this.setState({
@@ -420,7 +416,7 @@ class TeacherDetail extends Component {
               <b>{firstName} {lastName}</b><br/>
               Teacher
             </span>
-            { this.state.teacherUID !== "EYaU6BCbNUcPTSsxU14G9IaGXHJ3" ? (
+            { this.state.teacherUID === "rJxNhJmzjRZP7xg29Ko6" ? (
               null  // Logic used to prevent deleting and editing the Practice Teacher
             ) : (
               <div>
@@ -465,12 +461,13 @@ class TeacherDetail extends Component {
             aria-labelledby="delete-teacher-modal"
             aria-describedby="prompts a coach to confirm deleting a teacher from My Teachers"
           >
-            <DialogTitle id="delete-teacher-title" style={{textAlign: 'center'}}>
-              Are you sure you want to remove <b style={{textDecoration: 'underline', color: '#007DAF'}}>
+            <DialogTitle id="delete-teacher-title" style={{ textAlign:'center' }}>
+              Are you sure you want to remove <b style={{ textDecoration:'underline', color:'#007DAF' }}>
               {firstName} {lastName}</b> from My Teachers?
             </DialogTitle>
             <DialogActions className={classes.deleteModalButtonContainer}>
-              <Button onClick={this.handleCloseModal} className={classes.deleteModalButton} autoFocus
+              <Button onClick={() => this.setState({ isDeleting:false })}
+                      className={classes.deleteModalButton} autoFocus
                       style={{borderColor: '#09A1B3'}}>
                 No,<b style={{color: '#09A1B3', padding:'0 0.3em 0 0.3em'}}>KEEP</b>{firstName} {lastName}
               </Button>
@@ -551,7 +548,7 @@ class TeacherDetail extends Component {
           </Dialog>
           <Dialog
             open={editAlert}
-            onClose={() => this.setState({ editAlert: false })}
+            onClose={() => this.setState({ editAlert:false, alertText:"" })}
             aria-labelledby="edit-alert-label"
             aria-describedby="edit-alert-description"
           >

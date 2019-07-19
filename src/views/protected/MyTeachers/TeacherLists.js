@@ -23,6 +23,12 @@ import ConferencePlan from "../../../assets/icons/ConferencePlan.png";
 import ActionPlan from "../../../assets/icons/ActionPlan.png";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
 
 // Other teacher's IDs to populate List and test mechanics
 
@@ -56,8 +62,11 @@ const styles = theme => ({
     maxWidth: '100%',
     width: '100%',
     //border: '1px solid #00FFF6',
-    overflow: 'scroll',
-    fontSize: '1.5em'
+    overflow: 'auto',
+    //overflowY: 'hidden',
+    maxHeight: '16em',
+    fontSize: '1.5em',
+    boxShadow: '0px 1px 1px 1px #888888'
   },
   actionContainer: {
     display: 'flex',
@@ -77,13 +86,19 @@ const styles = theme => ({
     color: '#000000',
     fontSize: '0.8em',
     padding: '0.5em',
-    maxWidth: '12em'
+    maxWidth: '12em',
+    position: 'sticky',
+    top: 0,
+    backgroundColor: '#FFFFFF'
   },
   emailCellHeader: {
     color: '#000000',
     fontSize: '0.8em',
     padding: '0.5em',
-    maxWidth: '12em'
+    maxWidth: '12em',
+    position: 'sticky',
+    top: 0,
+    backgroundColor: '#FFFFFF'
   },
   magicEightIcon: {
     height: '55px',
@@ -144,10 +159,20 @@ const styles = theme => ({
     }
   },
 
+  // iPad Pro 12.9" Portrait
+  '@media only screen and (max-width:1024px) and (orientation:portrait)': {
+    table: {
+      maxHeight: '38em'
+    }
+  },
+
   // iPad Pro 10.5" Portrait
   '@media only screen and (max-width:834px) and (orientation: portrait)': {
     magicEightCell: {
       display: 'none'
+    },
+    table: {
+      maxHeight: '30em'
     }
   },
 
@@ -164,6 +189,9 @@ const styles = theme => ({
     },
     magicEightCell: {
       display: 'none'
+    },
+    table: {
+      maxHeight: '25em'
     }
   },
 
@@ -191,10 +219,17 @@ class TeacherLists extends Component {
     super(props);
     this.state = {
       teachers: [],
-      searched: []
+      searched: [],
+      isAdding: false,
+      inputFirstName: "",
+      inputLastName: "",
+      inputSchool: "",
+      inputEmail: "",
+      inputNotes: "",
+      addAlert: false,
+      alertText: ""
     };
 
-    this.selectTeacher = this.selectTeacher.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
@@ -219,7 +254,7 @@ class TeacherLists extends Component {
   };
 
   onChangeText = e => {
-    const text = e.target.value;
+    const text = e.target.value.toLowerCase();
     if (text === "") {
       this.setState(prevState => {
         return { searched: prevState.teachers } // original teacher list
@@ -227,22 +262,98 @@ class TeacherLists extends Component {
     } else {
       this.setState(prevState => {
         return {
-          searched: prevState.teachers.filter( item =>
-            item.lastName.indexOf(text) !== -1 || item.firstName.indexOf(text) !== -1 || item.email.indexOf(text) !== -1
+          searched: prevState.teachers.filter(item =>
+            item.lastName.toLowerCase().indexOf(text) !== -1 ||
+            item.firstName.toLowerCase().indexOf(text) !== -1 ||
+            item.email.toLowerCase().indexOf(text) !== -1
           )}
       })
     }
   };
 
-  selectTeacher (teacherInfo) {
+  selectTeacher = teacherInfo => {
     this.props.history.push({
       pathname: `/MyTeachers/${teacherInfo.id}`,
       state: {teacher: teacherInfo, type: this.props.type }
     });
-  }
+  };
+
+  handleAddText = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  handleAddConfirm = () => {
+    const {inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes} = this.state;
+    console.log(inputFirstName, inputLastName, inputSchool);
+    let firebase = this.context;
+    firebase.addTeacher({
+      firstName: inputFirstName,
+      lastName: inputLastName,
+      school: inputSchool,
+      email: inputEmail,
+      notes: inputNotes
+    })
+      .then(id => {
+        console.log(typeof(id));
+        console.log(id);
+        firebase.getTeacherInfo(id)
+          .then(teacherInfo => {
+            this.setState(prevState => {
+              return {
+                teachers: prevState.teachers.concat(teacherInfo),
+                searched: prevState.teachers.concat(teacherInfo)
+              }
+            }, () => {
+              this.handleCloseModal();
+              this.handleAddAlert(true);
+            })
+          })
+          .catch(e => {
+            console.log("Error occurred fetching new teacher's info: ", e);
+            this.handleCloseModal();
+            this.handleAddAlert(false);
+          })
+      })
+      .catch(e => {
+        console.log("Error occurred adding teacher to dB: ", e);
+        this.handleCloseModal();
+        this.handleAddAlert(false);
+      });
+  };
+
+  handleAddAlert = successful => {
+    if (successful) {
+      this.setState({
+        addAlert: true,
+        alertText: "Teacher successfully added!"
+      }, () => setTimeout(
+        () => this.setState({ addAlert: false, alertText: ""}), 1500))
+    } else {
+      this.setState({
+        addAlert: true,
+        alertText: "Something went wrong... try refreshing your page or logging out and back in."
+      }, () => setTimeout(
+        () => this.setState( { addAlert: false, alertText: "" }), 3000))
+    }
+  };
+
+  handleCloseModal = () => {
+    this.setState({
+      inputFirstName: "",
+      inputLastName: "",
+      inputSchool: "",
+      inputEmail: "",
+      inputNotes: "",
+      isAdding: false,
+      alertText: ""
+    });
+  };
 
   render() {
     const { classes } = this.props;
+    const { isAdding, addAlert, alertText } = this.state;
 
     return (
       <div className={classes.root}>
@@ -262,7 +373,7 @@ class TeacherLists extends Component {
               variant="outlined"
               onChange={this.onChangeText}
             />
-            <Fab aria-label="Add Teacher" onClick={null}
+            <Fab aria-label="Add Teacher" onClick={() => this.setState({isAdding: true})}
                  className={classes.actionButton} size='small'>
               <AddIcon style={{color: '#FFFFFF'}} />
             </Fab>
@@ -281,7 +392,8 @@ class TeacherLists extends Component {
                     Email
                   </TableCell>
                   {sortedSvg.map((item, key) =>
-                    <TableCell className={classes.magicEightCell} >
+                    <TableCell className={classes.magicEightCell}
+                               style={{position:'sticky', top:0, backgroundColor:'#FFFFFF'}}>
                       <img src={item} alt={sortedAltText[key]}
                            className={classes.magicEightIcon}/>
                     </TableCell>
@@ -300,12 +412,14 @@ class TeacherLists extends Component {
                   <TableCell className={classes.emailField}>{teacher.email}</TableCell>
                   {[...Array(8).keys()].map( key =>
                     <TableCell className={classes.magicEightCell}>
-                      {teacher.unlocked.indexOf(key+1) !== -1 &&
-                      <img src={ObserveIcon} className={classes.unlockedIcon} alt="Observed" />
+                      {
+                        teacher.unlocked !== undefined &&
+                        teacher.unlocked.indexOf(key+1) !== -1 &&
+                        <img src={ObserveIcon} className={classes.unlockedIcon} alt="Observed" />
                       }
                     </TableCell>
                   )}
-                  <TableCell className={classes.nameField}>{teacher.goals}</TableCell>
+                  <TableCell className={classes.nameField}>{teacher.goals !== undefined && teacher.goals}</TableCell>
                 </TableRow>
                 ))}
               </TableBody>
@@ -325,6 +439,82 @@ class TeacherLists extends Component {
               = Co-created Action plan
             </div>
           </div>
+          <Dialog open={isAdding} onClose={this.handleCloseModal} aria-labelledby="edit-teacher-title">
+            <DialogTitle id="edit-teacher-title">Add a New Teacher</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Make edits to the form below and confirm to add a teacher to your My Teachers list.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                required
+                onChange={this.handleAddText}
+                margin="dense"
+                id="first-name"
+                name="inputFirstName"
+                label="First Name"
+                type="text"
+                fullWidth
+              />
+              <TextField
+                required
+                onChange={this.handleAddText}
+                margin="dense"
+                id="last-name"
+                name="inputLastName"
+                label="Last Name"
+                type="text"
+                fullWidth
+              />
+              <TextField
+                required
+                onChange={this.handleAddText}
+                margin="dense"
+                id="school"
+                name="inputSchool"
+                label="School"
+                type="text"
+                fullWidth
+              />
+              <TextField
+                required
+                onChange={this.handleAddText}
+                margin="dense"
+                id="email"
+                name="inputEmail"
+                label="Email"
+                type="email"
+                fullWidth
+              />
+              <TextField
+                onChange={this.handleAddText}
+                margin="dense"
+                id="notes"
+                name="inputNotes"
+                label="Notes"
+                multiline
+                rows={10}
+                rowsMax={10}
+                fullWidth
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleCloseModal} style={{color:'#F1231C'}}>
+                Cancel
+              </Button>
+              <Button onClick={this.handleAddConfirm} style={{color:'#09A1B3'}}>
+                Add New Teacher
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={addAlert}
+            onClose={() => this.setState({ addAlert:false, alertText:"" })}
+            aria-labelledby="edit-alert-label"
+            aria-describedby="edit-alert-description"
+          >
+            <DialogTitle id="edit-alert-title">{alertText}</DialogTitle>
+          </Dialog>
         </div>
       </div>
     );

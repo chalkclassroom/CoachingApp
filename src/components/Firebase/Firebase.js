@@ -188,6 +188,42 @@ class Firebase {
       })
   };
 
+  // Adds a teacher to the dB AND to the coach's 'partners' list
+  // @param:object teacherInfo -> object containing teacher's information
+  // @return:string -> id on success, empty string "" o/w
+  addTeacher = function(teacherInfo) {
+    const { firstName, lastName, school, email, notes } = teacherInfo;
+    console.log(firstName, lastName, school);
+    var newTeacherRef = this.db.collection("users").doc(); // auto-generated iD
+    return newTeacherRef.set({
+      firstName: firstName,
+      lastName: lastName,
+      school: school,
+      email: email,
+      notes: notes,
+      role: "teacher",
+      id: newTeacherRef.id
+    })
+      .then( () => {
+        const id = newTeacherRef.id; // get new iD
+        return this.db
+          .collection("users")
+          .doc(this.auth.currentUser.uid)
+          .collection("partners")
+          .doc(id)
+          .set({})
+          .then(() => id)
+          .catch(error => {
+            console.log("Error occurred when adding teacher to coach's partner list: ", error);
+            return "";
+          })
+      })
+      .catch( error => {
+        console.log("Error occurred when adding teacher to dB: ", error);
+        return "";
+      })
+  };
+
   removePartner = function(partnerID) {
     if (partnerID === "") {
       console.log("You can't delete the Practice Teacher!")
