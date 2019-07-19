@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 const COLOR_1 = "#F9A796";
 const COLOR_2 = "#E99C2E";
 const COLOR_3 = "#E55529";
+const obsTime= null;
 
 const styles = theme => ({
     root: {
@@ -63,9 +64,9 @@ const TransitionLog = ({ entries, classes }) => {
                                         backgroundColor: "#759FE5"
                                     }}
                                 >
-                                    {new Date(entry.end).toLocaleString()}
+                                    {new Date(entry.end).toLocaleTimeString([],{hour:'numeric',minute:'numeric'})}
                                     <br />
-                                    Duration:{entry.duration}
+                                    Duration: {entry.duration}
                                     <br />
                                     {/* Type:{entry.transitionType === 'inside' ? "Inside Classroom" : "Outside Classroom"} */}
                                 </ListItem>
