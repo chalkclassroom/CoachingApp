@@ -112,7 +112,7 @@ class TransitionTimeHelp extends React.Component {
               the <strong>primary</strong> reason for that transition. <strong>Change </strong>  
               the button if the primary reason changes during the same transition. 
               Choose the <strong>“Other”</strong> button if the reason for the transition is not represented 
-              in the other buttons, and you will be prompted to explain in the Notes.
+              in the other buttons, and you will be prompted to explain the reason in the Notes.
               </Typography>
               <Table>
                 <TableHead>
