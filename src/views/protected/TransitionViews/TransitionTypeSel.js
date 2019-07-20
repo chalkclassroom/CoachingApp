@@ -22,13 +22,55 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     width: 130, 
     height: 130, 
-    textAlign: 'center'
+    textAlign: 'center',
+    // boxShadow: "5px 5px #d3d3d3"
   },
   label: {
     flexDirection: 'column ', 
     textAlign: 'center'
   },
 });
+
+const raisedThemes = createMuiTheme({
+  palette: {
+    waitingColor: {
+      backgroundColor: lightGreen[300], color:'#000',
+      textColor: white,
+      primaryTextColor: white,
+      boxShadow: "8px 8px #a9a9a9"
+    },
+    travelingColor: {
+      backgroundColor: orange[400], color: '#000',
+      textColor: white, 
+      primaryTextColor: white,
+      boxShadow: "8px 8px #a9a9a9"
+    },
+    childWaitingColor: { 
+      backgroundColor: deepOrange[400], color: '#000',
+      textColor: white,
+      primaryTextColor: white, 
+      boxShadow: "8px 8px #a9a9a9"
+    }, 
+    classroomRoutinesColor: { 
+      backgroundColor: blue[300], color: '#000',
+      textColor: white,
+      primaryTextColor: white, 
+      boxShadow: "8px 8px #a9a9a9"
+    }, 
+    bmiColor: { 
+      backgroundColor: red['A200'], color: '#000',
+      textColor: white,
+      primaryTextColor: white, 
+      boxShadow: "8px 8px #a9a9a9"
+    }, 
+    otherColor: { 
+      backgroundColor: indigo['A200'], color: '#000',
+      textColor: white,
+      primaryTextColor: white, 
+      boxShadow: "8px 8px #a9a9a9"
+    }
+  }
+})
 
 const themes = createMuiTheme({
   palette: {
@@ -40,7 +82,7 @@ const themes = createMuiTheme({
   travelingColor: { 
     backgroundColor: orange[400], color: '#000',
     textColor: white, 
-    primaryTextColor: white, 
+    primaryTextColor: white,
 }, 
 childWaitingColor: { 
   backgroundColor: deepOrange[400], color: '#000',
@@ -78,7 +120,114 @@ class TransitionTypeSel extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      lineSelected: false,
+      travelingSelected: false,
+      waitingSelected: false,
+      routinesSelected: false,
+      behaviorSelected: false,
+      otherSelected: false,
+    };
   }
+
+  handleLineButton = type => {
+    this.props.handleTransitionType(type);
+    if (this.state.lineSelected) {
+      this.setState({lineSelected: false})
+    } else {
+      this.setState({
+        lineSelected: true,
+        travelingSelected: false,
+        waitingSelected: false,
+        routinesSelected: false,
+        behaviorSelected: false,
+        otherSelected: false
+      });
+    }
+  };
+
+  handleTravelingButton = type => {
+    this.props.handleTransitionType(type);
+    if (this.state.travelingSelected) {
+      this.setState({travelingSelected: false})
+    } else {
+      this.setState({
+        lineSelected: false,
+        travelingSelected: true,
+        waitingSelected: false,
+        routinesSelected: false,
+        behaviorSelected: false,
+        otherSelected: false
+      });
+    }
+  };
+
+  handleWaitingButton = type => {
+    this.props.handleTransitionType(type);
+    if (this.state.waitingSelected) {
+      this.setState({waitingSelected: false})
+    } else {
+      this.setState({
+        lineSelected: false,
+        travelingSelected: false,
+        waitingSelected: true,
+        routinesSelected: false,
+        behaviorSelected: false,
+        otherSelected: false
+      });
+    }
+  };
+
+  handleRoutinesButton = type => {
+    this.props.handleTransitionType(type);
+    if (this.state.routinesSelected) {
+      this.setState({routinesSelected: false})
+    } else {
+      this.setState({
+        lineSelected: false,
+        travelingSelected: false,
+        waitingSelected: false,
+        routinesSelected: true,
+        behaviorSelected: false,
+        otherSelected: false
+      });
+    }
+  };
+
+  handleBehaviorButton = type => {
+    this.props.handleTransitionType(type);
+    if (this.state.behaviorSelected) {
+      this.setState({behaviorSelected: false})
+    } else {
+      this.setState({
+        lineSelected: false,
+        travelingSelected: false,
+        waitingSelected: false,
+        routinesSelected: false,
+        behaviorSelected: true,
+        otherSelected: false
+      });
+    }
+  };
+
+  handleOtherButton = type => {
+    this.props.handleTransitionType(type);
+    if (this.state.otherSelected) {
+      this.setState({otherSelected: false})
+    } else {
+      this.setState({
+        lineSelected: false,
+        travelingSelected: false,
+        waitingSelected: false,
+        routinesSelected: false,
+        behaviorSelected: false,
+        otherSelected: true
+      });
+      this.props.handleNotes(true);
+    }
+  };
+
 
   render() {
     const { classes } = this.props;
@@ -92,11 +241,11 @@ class TransitionTypeSel extends React.Component {
             justify="center"
             direction="column">
               <Grid item>
-                <Button onClick={()=>this.props.handleTransitionType("waiting")}
+                <Button onClick={() => this.handleLineButton("waiting")}
                       /* Use classes property to inject custom styles */
                           classes={{root: classes.button, label: classes.label}}
                           variant="raised"
-                          style={themes.palette.waitingColor}>
+                          style={this.state.lineSelected ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}>
                     <img alt="Waiting in line" src={WaitinginLine} height='100' width='100'/>
 
                 </Button>
@@ -109,11 +258,11 @@ class TransitionTypeSel extends React.Component {
               <br>
               </br>
               <Grid item>
-                <Button onClick={()=>this.props.handleTransitionType("traveling")}
+                <Button onClick={()=>this.handleTravelingButton("traveling")}
                       
                       classes={{root: classes.button, label: classes.label}}
                      variant="raised"
-                     style={themes.palette.travelingColor}>
+                     style={this.state.travelingSelected ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}>
                    <img alt="Walking" src={Walking} height='100' width='100'/>
                 </Button>
               </Grid>
@@ -123,11 +272,11 @@ class TransitionTypeSel extends React.Component {
               <br>
               </br>
               <Grid item>
-                <Button onClick={()=>this.props.handleTransitionType("child waiting")}
+                <Button onClick={()=>this.handleWaitingButton("child waiting")}
                       
                       classes={{root: classes.button, label: classes.label}}
                       variant="raised"
-                      style={themes.palette.childWaitingColor}>
+                      style={this.state.waitingSelected ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}>
                     <img alt="Child waiting" src={ChildWaiting} height='100' width='100'/>
                 </Button>
               </Grid>
@@ -140,11 +289,11 @@ class TransitionTypeSel extends React.Component {
             justify="center"
             direction="column">
               <Grid item>
-                <Button onClick={()=>this.props.handleTransitionType("classroom routines")}
+                <Button onClick={()=>this.handleRoutinesButton("classroom routines")}
                      
                      classes={{root: classes.button, label: classes.label}}
                      variant="raised"
-                     style={themes.palette.classroomRoutinesColor}>
+                     style={this.state.routinesSelected ? raisedThemes.palette.classroomRoutinesColor : themes.palette.classroomRoutinesColor}>
                    <img alt="classroom routines" src={ClassroomRoutines} height='100' width='100'/>
                 </Button>
               </Grid>
@@ -156,11 +305,11 @@ class TransitionTypeSel extends React.Component {
               <br>
               </br>
               <Grid item>
-                <Button onClick={()=>this.props.handleTransitionType("behavior management disruption")}
+                <Button onClick={()=>this.handleBehaviorButton("behavior management disruption")}
                       
                       classes={{root: classes.button, label: classes.label}}
                       variant="raised"
-                      style={themes.palette.bmiColor}>
+                      style={this.state.behaviorSelected ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}>
                     <img alt="Behavior Management Disruption" src={bmi} height='100' width='100'/>
                 </Button>
               </Grid>
@@ -170,11 +319,11 @@ class TransitionTypeSel extends React.Component {
               <br>
               </br>
               <Grid item>
-                <Button onClick={()=>this.props.handleTransitionType("other")}
+                <Button onClick={()=>this.handleOtherButton("other")}
                       
                       classes={{root: classes.button, label: classes.label}}
                       variant="raised"
-                      style={themes.palette.otherColor}>
+                      style={this.state.otherSelected ? raisedThemes.palette.otherColor : themes.palette.otherColor}>
                     <img alt="otherg" src={other} height='100' width='100'/>
                 </Button>
               </Grid>

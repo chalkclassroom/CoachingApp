@@ -48,7 +48,8 @@ class TransitionTime extends React.Component {
             help: false,
             notes: false,
             recs: true,
-            transitionType: "none"
+            transitionType: "none", 
+            open: false,
         };
 
 
@@ -162,7 +163,10 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 
-                                <TransitionTypeSel handleTransitionType = {this.handleTransitionType}/>
+                                <TransitionTypeSel 
+                                    handleTransitionType = {this.handleTransitionType}
+                                    handleNotes = {this.handleNotes}
+                                />
                             </Grid>
                         </Grid> 
                         {/* <Grid item xs={2}>
