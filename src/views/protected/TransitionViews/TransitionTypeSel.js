@@ -11,6 +11,12 @@ import ClassroomRoutines from "../../../assets/icons/classroomRoutines.svg";
 import bmi from "../../../assets/icons/BehaviorManagementDisruption.svg"; 
 import { red } from '@material-ui/core/es/colors';
 import other from "../../../assets/icons/other.svg"; 
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
@@ -78,8 +84,109 @@ class TransitionTypeSel extends React.Component {
     const { classes } = this.props;
 
     return (
-        <>
-          <div>
+      <div>
+        <Grid container alignItems="flex-start" direction={"row"}>
+          <Grid item xs={6}
+            align="center"
+            alignItems="center"
+            justify="center"
+            direction="column">
+              <Grid item>
+                <Button onClick={()=>this.props.handleTransitionType("waiting")}
+                      /* Use classes property to inject custom styles */
+                          classes={{root: classes.button, label: classes.label}}
+                          variant="raised"
+                          style={themes.palette.waitingColor}>
+                    <img alt="Waiting in line" src={WaitinginLine} height='100' width='100'/>
+
+                </Button>
+              </Grid>
+              <Grid item>
+                Waiting in line/
+                <br/>
+                lining up
+              </Grid>
+              <br>
+              </br>
+              <Grid item>
+                <Button onClick={()=>this.props.handleTransitionType("traveling")}
+                      
+                      classes={{root: classes.button, label: classes.label}}
+                     variant="raised"
+                     style={themes.palette.travelingColor}>
+                   <img alt="Walking" src={Walking} height='100' width='100'/>
+                </Button>
+              </Grid>
+              <Grid item>
+                Traveling outside the classroom
+              </Grid>
+              <br>
+              </br>
+              <Grid item>
+                <Button onClick={()=>this.props.handleTransitionType("child waiting")}
+                      
+                      classes={{root: classes.button, label: classes.label}}
+                      variant="raised"
+                      style={themes.palette.childWaitingColor}>
+                    <img alt="Child waiting" src={ChildWaiting} height='100' width='100'/>
+                </Button>
+              </Grid>
+              <Grid item>
+                Children waiting on teacher/materials
+              </Grid>
+          </Grid>
+          <Grid item xs={6} align="center"
+            alignItems="center"
+            justify="center"
+            direction="column">
+              <Grid item>
+                <Button onClick={()=>this.props.handleTransitionType("classroom routines")}
+                     
+                     classes={{root: classes.button, label: classes.label}}
+                     variant="raised"
+                     style={themes.palette.classroomRoutinesColor}>
+                   <img alt="classroom routines" src={ClassroomRoutines} height='100' width='100'/>
+                </Button>
+              </Grid>
+              <Grid item>
+                Classroom Routines
+              </Grid>
+              <br>
+              </br>
+              <br>
+              </br>
+              <Grid item>
+                <Button onClick={()=>this.props.handleTransitionType("behavior management disruption")}
+                      
+                      classes={{root: classes.button, label: classes.label}}
+                      variant="raised"
+                      style={themes.palette.bmiColor}>
+                    <img alt="Behavior Management Disruption" src={bmi} height='100' width='100'/>
+                </Button>
+              </Grid>
+              <Grid item>
+                Behavior Management Disruption
+              </Grid>
+              <br>
+              </br>
+              <Grid item>
+                <Button onClick={()=>this.props.handleTransitionType("other")}
+                      
+                      classes={{root: classes.button, label: classes.label}}
+                      variant="raised"
+                      style={themes.palette.otherColor}>
+                    <img alt="otherg" src={other} height='100' width='100'/>
+                </Button>
+              </Grid>
+              <Grid item>
+                Other
+              </Grid>
+              <br>
+              </br>
+            </Grid>
+        </Grid>
+      </div>
+          /* <div>
             <Grid container spacing={1} justify="center">
               <Grid container item xs={11}
                     justify="center">
@@ -89,7 +196,7 @@ class TransitionTypeSel extends React.Component {
                     justify={"center"}
                     direction={"column"}>
                   <Button onClick={()=>this.props.handleTransitionType("waiting")}
-                      /* Use classes property to inject custom styles */
+                      
                           classes={{root: classes.button, label: classes.label}}
                           variant="raised"
                           style={themes.palette.waitingColor}>
@@ -98,15 +205,15 @@ class TransitionTypeSel extends React.Component {
                   </Button>
                   Waiting in line/lining up
                   <Button onClick={()=>this.props.handleTransitionType("traveling")}
-                      /* Use classes property to inject custom styles */
-                      classes={{root: classes.button, label: classes.label}}
+                      
+                       classes={{root: classes.button, label: classes.label}}
                       variant="raised"
                       style={themes.palette.travelingColor}>
                     <img alt="Walking" src={Walking} height='100' width='100'/>
                   </Button>
                   <text style={{textAlign: 'center'}}>Traveling outside the classroom</text>
                   <Button onClick={()=>this.props.handleTransitionType("child waiting")}
-                      /* Use classes property to inject custom styles */
+                      
                       classes={{root: classes.button, label: classes.label}}
                       variant="raised"
                       style={themes.palette.childWaitingColor}>
@@ -128,7 +235,7 @@ class TransitionTypeSel extends React.Component {
                     justify={"center"}
                     direction={"column"}>
                   <Button onClick={()=>this.props.handleTransitionType("classroom routines")}
-                      /* Use classes property to inject custom styles */
+                     
                       classes={{root: classes.button, label: classes.label}}
                       variant="raised"
                       style={themes.palette.classroomRoutinesColor}>
@@ -136,7 +243,7 @@ class TransitionTypeSel extends React.Component {
                   </Button>
                   Classroom Routines
                   <Button onClick={()=>this.props.handleTransitionType("behavior management disruption")}
-                      /* Use classes property to inject custom styles */
+                      
                       classes={{root: classes.button, label: classes.label}}
                       variant="raised"
                       style={themes.palette.bmiColor}>
@@ -144,7 +251,7 @@ class TransitionTypeSel extends React.Component {
                   </Button>
                   <text style={{textAlign: 'center'}}>Behavior Management Disruption</text>
                   <Button onClick={()=>this.props.handleTransitionType("other")}
-                      /* Use classes property to inject custom styles */
+                      
                       classes={{root: classes.button, label: classes.label}}
                       variant="raised"
                       style={themes.palette.otherColor}>
@@ -154,10 +261,8 @@ class TransitionTypeSel extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-          </div>
-
-
-        </>
+          </div>  */
+ 
     );
 
 

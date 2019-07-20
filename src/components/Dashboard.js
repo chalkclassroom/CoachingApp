@@ -158,10 +158,10 @@ class Dashboard extends React.Component {
                     flexWrap: "nowrap"
                 }}>
                     <Grid container flexGrow={1} padding="50" spacing={0} direction="column" justify="center" alignItems="center">
-                        <Grid item style={{marginTop:"10px"}}>
+                        <Grid item style={{marginTop:"10px", marginBottom:"5px"}}>
                             <img src={ this.state.icon} alt="Magic 8 Icon" width="100px" height="100px"/>
                         </Grid>
-                        <Grid item style={{marginTop:"5px", height: "41vh", width:"90%", marginLeft:"5px", marginRight:"5px", display: "flex", alignItems: this.props.infoPlacement, justifyItems: "center"}}>
+                        <Grid item style={{marginTop:"5px", height: "41vh", width:"90%", marginLeft:"5px", marginRight:"5px", marginTop:"5px", marginBottom:"5px", display: "flex", alignItems: this.props.infoPlacement, justifyItems: "center"}}>
                             {this.props.infoDisplay}
                         </Grid>
                         <Grid item lg container style={{marginTop:"5px"}} direction="row" spacing={16} class="help" alignItems="center" alignContent="center">

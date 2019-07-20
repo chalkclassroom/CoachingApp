@@ -154,18 +154,18 @@ class TransitionTime extends React.Component {
                                 />
                             </Grid>
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={4} justify="center">
                             <Grid
                                 container
                                 alignItems={"center"}
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                <div style={{ margin: 20 }} />
+                                
                                 <TransitionTypeSel handleTransitionType = {this.handleTransitionType}/>
                             </Grid>
                         </Grid> 
-                        <Grid item xs={2}>
+                        {/* <Grid item xs={2}>
                             <Grid
                                 container
                                 alignItems={"center"}
@@ -173,9 +173,9 @@ class TransitionTime extends React.Component {
                                 direction={"column"}
                             >
                                 <div style={{ margin: 20 }} />
-                                {/* <TransitionTypeSel1/> */}
+                                <TransitionTypeSel1/>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs={5}>
                             <Grid
                                 container
