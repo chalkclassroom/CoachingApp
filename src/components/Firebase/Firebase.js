@@ -27,13 +27,11 @@ class Firebase {
   }
 
   firebaseEmailSignUp = async function(userData, role) {
-    console.log(role);
-    console.log(userData);
     await this.auth
       .createUserWithEmailAndPassword(userData.email, userData.password)
       .then(function(userInfo) {
         console.log("Create user and sign in Success", userInfo);
-        var data = Object.assign(
+        const data = Object.assign(
           {},
           {
             email: userData.email,
@@ -43,17 +41,26 @@ class Firebase {
             id: userInfo.user.uid
           }
         );
-
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(userInfo.user.uid)
-          .set(data)
-          .then(function(docRef) {
+        const docRef = firebase.firestore().collection('users').doc(userInfo.user.uid);
+        docRef.set(data)
+          .then( () => {
             console.log("Document written with ID: ", docRef.id);
+            if (role === 'coach') {
+              docRef.collection('partners')
+                .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher Uid
+                .set({})
+                .then( () => {
+                  console.log("Practice Teacher added to coach!");
+                })
+                .catch( error => {
+                  console.error("Error occurred while assigning practice teacher to coach: ", error);
+                })
+            } else {
+              console.log("User properly added to Firebase!");
+            }
           })
           .catch(function(error) {
-            console.error("Error adding document: ", error);
+            console.error("Error adding coach: ", error);
           });
 
         // firebase.database().ref('users/' + role +'/'+ userInfo.user.uid).set(data).then(function(ref) {//use 'child' and 'set' combination to save data in your own generated key
@@ -120,7 +127,7 @@ class Firebase {
         return teacherList;
       })
       .catch(function(error) {
-        console.log("Error getting partner list: ", error);
+        console.error("Error getting partner list: ", error);
       });
   };
 
@@ -142,7 +149,7 @@ class Firebase {
         return teacherList;
       })
       .catch(function(error) {
-        console.log("Error getting documents: ", error);
+        console.error("Error getting documents: ", error);
       });
   };
 
@@ -161,7 +168,7 @@ class Firebase {
           console.log("Partner's ID is 'undefined' in dB.")
         }
       }).catch(error => {
-        console.log("Error occurred when getting document:", error);
+        console.error("Error occurred when getting document:", error);
       })
   };
 
@@ -170,22 +177,26 @@ class Firebase {
   // @param:object edits -> object containing edited information
   // @return:boolean -> true on success, false o/w
   setTeacherInfo = function(partnerID, edits) {
-    const { firstName, lastName, school, email, notes } = edits;
-    return this.db
-      .collection("users")
-      .doc(partnerID)
-      .set({
-        firstName: firstName,
-        lastName: lastName,
-        school: school,
-        email: email,
-        notes: notes
-      }, { merge: true })
-      .then(() => true )
-      .catch(error => {
-        console.log("Error occurred when writing document:", error);
-        return false;
-      })
+    if (partnerID === "rJxNhJmzjRZP7xg29Ko6") {
+      console.log("You can't edit the Practice Teacher!")
+    } else {
+      const { firstName, lastName, school, email, notes } = edits;
+      return this.db
+        .collection("users")
+        .doc(partnerID)
+        .set({
+          firstName: firstName,
+          lastName: lastName,
+          school: school,
+          email: email,
+          notes: notes
+        }, { merge: true })
+        .then(() => true )
+        .catch(error => {
+          console.error("Error occurred when writing document:", error);
+          return false;
+        })
+    }
   };
 
   // Adds a teacher to the dB AND to the coach's 'partners' list
@@ -194,7 +205,7 @@ class Firebase {
   addTeacher = function(teacherInfo) {
     const { firstName, lastName, school, email, notes } = teacherInfo;
     console.log(firstName, lastName, school);
-    var newTeacherRef = this.db.collection("users").doc(); // auto-generated iD
+    let newTeacherRef = this.db.collection("users").doc(); // auto-generated iD
     return newTeacherRef.set({
       firstName: firstName,
       lastName: lastName,
@@ -214,18 +225,18 @@ class Firebase {
           .set({})
           .then(() => id)
           .catch(error => {
-            console.log("Error occurred when adding teacher to coach's partner list: ", error);
+            console.error("Error occurred when adding teacher to coach's partner list: ", error);
             return "";
           })
       })
       .catch( error => {
-        console.log("Error occurred when adding teacher to dB: ", error);
+        console.error("Error occurred when adding teacher to dB: ", error);
         return "";
       })
   };
 
   removePartner = function(partnerID) {
-    if (partnerID === "") {
+    if (partnerID === "rJxNhJmzjRZP7xg29Ko6") {
       console.log("You can't delete the Practice Teacher!")
     } else {
       return this.db
@@ -236,7 +247,7 @@ class Firebase {
         .delete()
         .then(() =>
           console.log("Teacher successfully removed from Partners list!"))
-        .catch(error => console.log("An error occurred trying to remove the teacher from" +
+        .catch( error => console.error("An error occurred trying to remove the teacher from" +
           " the Partners list: ", error))
     }
   };
@@ -253,7 +264,7 @@ class Firebase {
         console.log("Cached document data:", doc.data());
         return doc.data().firstName;
       }).catch(function(error) {
-        console.log("Error getting cached document:", error);
+        console.error("Error getting cached document:", error);
       });
   };
 
@@ -269,7 +280,7 @@ class Firebase {
         console.log("Cached document data:", doc.data());
         return doc.data().lastName;
       }).catch(function(error) {
-        console.log("Error getting cached document:", error);
+        console.error("Error getting cached document:", error);
       });
   };
 
@@ -285,7 +296,7 @@ class Firebase {
         console.log("Cached document data:", doc.data());
         return doc.data().email;
       }).catch(function(error) {
-        console.log("Error getting cached document:", error);
+        console.error("Error getting cached document:", error);
       });
   };
 
@@ -301,7 +312,7 @@ class Firebase {
         console.log("Cached document data:", doc.data());
         return doc.data().name;
       }).catch(function(error) {
-        console.log("Error getting cached document:", error);
+        console.error("Error getting cached document:", error);
       });
   };
 
@@ -317,7 +328,7 @@ class Firebase {
         console.log("Cached document data:", doc());
         return doc.id();
       }).catch(function(error) {
-        console.log("Error getting cached document:", error);
+        console.error("Error getting cached document:", error);
       });
   };
 
@@ -339,7 +350,7 @@ class Firebase {
         return teacherList;
       })
       .catch(function(error) {
-        console.log("Error getting documents: ", error);
+        console.error("Error getting documents: ", error);
       });
   };
 
@@ -355,7 +366,7 @@ class Firebase {
         console.log("Cached document data:", doc.data());
         return doc.data().firstName;
       }).catch(function(error) {
-        console.log("Error getting cached document:", error);
+        console.error("Error getting cached document:", error);
       });
   };
 
@@ -376,7 +387,7 @@ class Firebase {
         return teacherList;
       })
       .catch(function(error) {
-        console.log("Error getting documents: ", error);
+        console.error("Error getting documents: ", error);
       });
   };
 

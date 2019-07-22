@@ -2,19 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import FirebaseContext from '../../../components/Firebase/context';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import Fab from '@material-ui/core/Fab';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import Grid from '@material-ui/core/Grid';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
 import AppBar from '../../../components/AppBar';
 import LabeledInfo from '../../../components/MyTeachersComponents/LabeledInfo';
 import TransitionTimeSvg from '../../../assets/icons/TransitionTime.svg';
@@ -25,6 +12,19 @@ import MathInstructionSvg from '../../../assets/icons/MathInstruction.svg';
 import LevelOfInstructionSvg from '../../../assets/icons/LevelofInstruction.svg';
 import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimate.svg';
 import AssocCoopInteractionsSvg from '../../../assets/icons/AssocCoopInteractions.svg';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
 
 const styles = {
   root: {
@@ -256,6 +256,11 @@ class TeacherDetail extends Component {
         inputSchool: school,
         inputEmail: email,
         inputNotes: notes,
+        fnErrorText: "",
+        lnErrorText: "",
+        schoolErrorText: "",
+        emailErrorText: "",
+        notesErrorText: "",
         isEditing: false,
         isDeleting: false,
         editAlert: false,
@@ -275,6 +280,11 @@ class TeacherDetail extends Component {
         inputSchool: "",
         inputEmail: "",
         inputNotes: "",
+        fnErrorText: "",
+        lnErrorText: "",
+        schoolErrorText: "",
+        emailErrorText: "",
+        notesErrorText: "",
         isEditing: false,
         isDeleting: false,
         editAlert: false,
@@ -303,7 +313,7 @@ class TeacherDetail extends Component {
         }); // Automatically forces a re-render
       })
       .catch( error => {
-        console.log("Error fetching Teacher's Info:", error);
+        console.error("Error fetching Teacher's Info:", error);
       });
   };
 
@@ -315,6 +325,11 @@ class TeacherDetail extends Component {
       inputSchool: school,
       inputEmail: email,
       inputNotes: notes,
+      fnErrorText: "",
+      lnErrorText: "",
+      schoolErrorText: "",
+      emailErrorText: "",
+      notesErrorText: "",
       isEditing: false,
       isDeleting: false,
       alertText: ""
@@ -322,32 +337,89 @@ class TeacherDetail extends Component {
   };
 
   handleEditText = e => {
+    const type = e.target.name;
+    const val = e.target.value;
     this.setState({
-      [e.target.name]: e.target.value
-    });
+        [type]: val
+      }, () => this.validateInputText(type, val));
+  };
+
+  validateInputText = (type, val) => {
+    switch(type) {
+      case "inputFirstName":
+        if (! /^[a-zA-Z ]{2,30}$/.test(val)) {
+          this.setState({ fnErrorText: "Invalid first name."})
+        } else {
+          this.setState({ fnErrorText: "" })
+        }
+        break;
+      case "inputLastName":
+        if (! /^[a-zA-Z ]{2,30}$/.test(val)) {
+          this.setState({ lnErrorText: "Invalid last name."})
+        } else {
+          this.setState({ lnErrorText: "" })
+        }
+        break;
+      case "inputEmail":
+        if (! /^\S+@\S+$/.test(val)) {
+          this.setState({ emailErrorText: "Invalid email address."})
+        } else {
+          this.setState({ emailErrorText: "" })
+        }
+        break;
+      case "inputSchool":
+        if (! /^[a-zA-Z ]{2,50}$/.test(val)) {
+          this.setState({ schoolErrorText: "Invalid school (max 50 characters)."})
+        } else {
+          this.setState({ schoolErrorText: "" })
+        }
+        break;
+      case "inputNotes":
+        if (val.length > 250) {
+          this.setState({ notesErrorText: "Max 250 characters."})
+        } else {
+          this.setState({ notesErrorText: "" })
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   handleEditConfirm = () => {
-    const { teacherUID, inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes } = this.state;
-    let firebase = this.context;
-    if (firebase.setTeacherInfo(teacherUID, {
-      firstName: inputFirstName,
-      lastName: inputLastName,
-      school: inputSchool,
-      email: inputEmail,
-      notes: inputNotes }))
-    { // Edit successfully written
-      this.setState({
+    if ( !!this.state.fnErrorText ||
+         !!this.state.lnErrorText ||
+         !!this.state.emailErrorText ||
+         !!this.state.schoolErrorText ||
+         !!this.state.notesErrorText) {
+      return null
+    } else {
+      const { teacherUID, inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes } = this.state;
+      let firebase = this.context;
+      if (firebase.setTeacherInfo(teacherUID, {
         firstName: inputFirstName,
         lastName: inputLastName,
         school: inputSchool,
         email: inputEmail,
-        notes: inputNotes,
-        isEditing: false
-      }, () => this.handleEditAlert(true))
-    } else {
-      this.handleCloseModal();
-      this.handleEditAlert(false);
+        notes: inputNotes }))
+      { // Edit successfully written
+        this.setState({
+          firstName: inputFirstName,
+          lastName: inputLastName,
+          school: inputSchool,
+          email: inputEmail,
+          notes: inputNotes,
+          isEditing: false,
+          fnErrorText: "",
+          lnErrorText: "",
+          schoolErrorText: "",
+          emailErrorText: "",
+          notesErrorText: ""
+        }, () => this.handleEditAlert(true))
+      } else {
+        this.handleCloseModal();
+        this.handleEditAlert(false);
+      }
     }
   };
 
@@ -382,6 +454,11 @@ class TeacherDetail extends Component {
         inputSchool: "Elum Entaree School",
         inputEmail: "practice@teacher.edu",
         inputNotes: "...",
+        fnErrorText: "",
+        lnErrorText: "",
+        schoolErrorText: "",
+        emailErrorText: "",
+        notesErrorText: "",
         isEditing: false,
         isDeleting: false,
         editAlert: false,
@@ -398,7 +475,22 @@ class TeacherDetail extends Component {
 
   render() {
     const { classes } = this.props;
-    const { firstName, lastName, school, email, notes, isEditing, isDeleting, editAlert, alertText } = this.state;
+    const {
+      firstName,
+      lastName,
+      school,
+      email,
+      notes,
+      isEditing,
+      isDeleting,
+      editAlert,
+      alertText,
+      fnErrorText,
+      lnErrorText,
+      schoolErrorText,
+      emailErrorText,
+      notesErrorText
+    } = this.state;
 
     return(
       <div className={classes.root}>
@@ -416,9 +508,9 @@ class TeacherDetail extends Component {
               <b>{firstName} {lastName}</b><br/>
               Teacher
             </span>
-            { this.state.teacherUID === "rJxNhJmzjRZP7xg29Ko6" ? (
-              null  // Logic used to prevent deleting and editing the Practice Teacher
-            ) : (
+            { this.state.teacherUID === "rJxNhJmzjRZP7xg29Ko6" ?
+              null  // Prevent deleting and editing the Practice Teacher!
+              : (
               <div>
                 <Fab aria-label="Edit" onClick={() => this.setState({isEditing: true})}
                      className={classes.actionButton} size='small' style={{backgroundColor: '#F9FE49'}}>
@@ -492,6 +584,8 @@ class TeacherDetail extends Component {
                 name="inputFirstName"
                 label="First Name"
                 type="text"
+                helperText={fnErrorText}
+                error={!!fnErrorText}
                 fullWidth
               />
               <TextField
@@ -502,6 +596,8 @@ class TeacherDetail extends Component {
                 name="inputLastName"
                 label="Last Name"
                 type="text"
+                helperText={lnErrorText}
+                error={!!lnErrorText}
                 fullWidth
               />
               <TextField
@@ -512,6 +608,8 @@ class TeacherDetail extends Component {
                 name="inputSchool"
                 label="School"
                 type="text"
+                helperText={schoolErrorText}
+                error={!!schoolErrorText}
                 fullWidth
               />
               <TextField
@@ -522,6 +620,8 @@ class TeacherDetail extends Component {
                 name="inputEmail"
                 label="Email"
                 type="email"
+                helperText={emailErrorText}
+                error={!!emailErrorText}
                 fullWidth
               />
               <TextField
@@ -531,6 +631,8 @@ class TeacherDetail extends Component {
                 id="notes"
                 name="inputNotes"
                 label="Notes"
+                helperText={notesErrorText}
+                error={!!notesErrorText}
                 multiline
                 rows={10}
                 rowsMax={10}
@@ -561,8 +663,7 @@ class TeacherDetail extends Component {
 }
 
 TeacherDetail.propTypes = {
-  classes: PropTypes.object.isRequired,
-  //teacher: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired
 };
 
 TeacherDetail.contextType = FirebaseContext;

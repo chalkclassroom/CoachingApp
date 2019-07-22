@@ -1,15 +1,8 @@
-import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TextField from '@material-ui/core/TextField';
-import AddIcon from '@material-ui/icons/Add';
-import Fab from '@material-ui/core/Fab';
-import FirebaseContext from "../../../components/Firebase/context";
-import AppBar from "../../../components/AppBar";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import FirebaseContext from '../../../components/Firebase/context';
+import AppBar from '../../../components/AppBar';
 import TransitionTimeSvg from '../../../assets/icons/TransitionTime.svg';
 import StudentEngagementSvg from '../../../assets/icons/StudentEngagement.svg';
 import SequentialActivitiesSvg from '../../../assets/icons/SequentialActivities.svg';
@@ -18,27 +11,31 @@ import MathInstructionSvg from '../../../assets/icons/MathInstruction.svg';
 import LevelOfInstructionSvg from '../../../assets/icons/LevelofInstruction.svg';
 import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimate.svg';
 import AssocCoopInteractionsSvg from '../../../assets/icons/AssocCoopInteractions.svg';
-import ObserveIcon from "../../../assets/icons/observeIcon.png";
-import ConferencePlan from "../../../assets/icons/ConferencePlan.png";
-import ActionPlan from "../../../assets/icons/ActionPlan.png";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-
-// Other teacher's IDs to populate List and test mechanics
-
+import ObserveIcon from '../../../assets/icons/observeIcon.png';
+import ConferencePlan from '../../../assets/icons/ConferencePlan.png';
+import ActionPlan from '../../../assets/icons/ActionPlan.png';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
+import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
   root: {
+    //border: '1px solid #000000',
     flexGrow: 1,
     width: '100%',
     minHeight: '768px',
-    //border: '1px solid #000000',
     margin: 0,
     padding: 0
   },
@@ -58,12 +55,11 @@ const styles = theme => ({
     alignSelf: 'center',
     fontSize: '2.2em'
   },
-  table: {
+  tableContainer: {
+    //border: '1px solid #00FFF6',
     maxWidth: '100%',
     width: '100%',
-    //border: '1px solid #00FFF6',
     overflow: 'auto',
-    //overflowY: 'hidden',
     maxHeight: '16em',
     fontSize: '1.5em',
     boxShadow: '0px 1px 1px 1px #888888'
@@ -112,10 +108,10 @@ const styles = theme => ({
     maxWidth: '1.8em'
   },
   nameField: {
+    //border: '1px solid #4C00FF'
     textAlign: 'left',
     padding: '0.5em',
     overflow: 'hidden',
-    //border: '1px solid #4C00FF'
     maxWidth: '7em'
   },
   emailField: {
@@ -131,20 +127,20 @@ const styles = theme => ({
     borderRadius: 4
   },
   legendContainer: {
+    //border: '1px solid #FF56FF',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '1em',
-    //border: '1px solid #FF56FF',
     margin:'1.5em 0 0 0',
     justifySelf: 'center',
     overflow: 'scroll'
   },
   legendItem: {
+    //border: '1px solid #97FF00'
     display: 'flex',
     alignItems:'center',
-    fontSize: '1.3em',
-    //border: '1px solid #97FF00'
+    fontSize: '1.3em'
   },
   legendIcon: {
     height: '40px',
@@ -161,7 +157,7 @@ const styles = theme => ({
 
   // iPad Pro 12.9" Portrait
   '@media only screen and (max-width:1024px) and (orientation:portrait)': {
-    table: {
+    tableContainer: {
       maxHeight: '38em'
     }
   },
@@ -171,7 +167,7 @@ const styles = theme => ({
     magicEightCell: {
       display: 'none'
     },
-    table: {
+    tableContainer: {
       maxHeight: '30em'
     }
   },
@@ -190,7 +186,7 @@ const styles = theme => ({
     magicEightCell: {
       display: 'none'
     },
-    table: {
+    tableContainer: {
       maxHeight: '25em'
     }
   },
@@ -226,6 +222,11 @@ class TeacherLists extends Component {
       inputSchool: "",
       inputEmail: "",
       inputNotes: "",
+      fnErrorText: "",
+      lnErrorText: "",
+      schoolErrorText: "",
+      emailErrorText: "",
+      notesErrorText: "",
       addAlert: false,
       alertText: ""
     };
@@ -248,8 +249,8 @@ class TeacherLists extends Component {
           });
         });
       })
-      .catch(e => {
-        console.log("Error occurred fetching teacher list: ", e)
+      .catch( e => {
+        console.error("Error occurred fetching teacher list: ", e)
       })
   };
 
@@ -262,7 +263,7 @@ class TeacherLists extends Component {
     } else {
       this.setState(prevState => {
         return {
-          searched: prevState.teachers.filter(item =>
+          searched: prevState.teachers.filter( item =>
             item.lastName.toLowerCase().indexOf(text) !== -1 ||
             item.firstName.toLowerCase().indexOf(text) !== -1 ||
             item.email.toLowerCase().indexOf(text) !== -1
@@ -279,48 +280,98 @@ class TeacherLists extends Component {
   };
 
   handleAddText = e => {
+    const type = e.target.name;
+    const val = e.target.value;
     this.setState({
-      [e.target.name]: e.target.value
-    });
+      [type]: val
+    }, () => this.validateInputText(type, val));
+  };
+
+  validateInputText = (type, val) => {
+    switch(type) {
+      case "inputFirstName":
+        if (! /^[a-zA-Z ]{2,30}$/.test(val)) {
+          this.setState({ fnErrorText: "Invalid first name."})
+        } else {
+          this.setState({ fnErrorText: "" })
+        }
+        break;
+      case "inputLastName":
+        if (! /^[a-zA-Z ]{2,30}$/.test(val)) {
+          this.setState({ lnErrorText: "Invalid last name."})
+        } else {
+          this.setState({ lnErrorText: "" })
+        }
+        break;
+      case "inputEmail":
+        if (! /^\S+@\S+$/.test(val)) {
+          this.setState({ emailErrorText: "Invalid email address."})
+        } else {
+          this.setState({ emailErrorText: "" })
+        }
+        break;
+      case "inputSchool":
+        if (! /^[a-zA-Z ]{2,100}$/.test(val)) {
+          this.setState({ schoolErrorText: "Invalid school (max 100 characters)."})
+        } else {
+          this.setState({ schoolErrorText: "" })
+        }
+        break;
+      case "inputNotes":
+        if (val.length > 250) {
+          this.setState({ notesErrorText: "Max 250 characters."})
+        } else {
+          this.setState({ notesErrorText: "" })
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   handleAddConfirm = () => {
-    const {inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes} = this.state;
-    console.log(inputFirstName, inputLastName, inputSchool);
-    let firebase = this.context;
-    firebase.addTeacher({
-      firstName: inputFirstName,
-      lastName: inputLastName,
-      school: inputSchool,
-      email: inputEmail,
-      notes: inputNotes
-    })
-      .then(id => {
-        console.log(typeof(id));
-        console.log(id);
-        firebase.getTeacherInfo(id)
-          .then(teacherInfo => {
-            this.setState(prevState => {
-              return {
-                teachers: prevState.teachers.concat(teacherInfo),
-                searched: prevState.teachers.concat(teacherInfo)
-              }
-            }, () => {
-              this.handleCloseModal();
-              this.handleAddAlert(true);
-            })
-          })
-          .catch(e => {
-            console.log("Error occurred fetching new teacher's info: ", e);
-            this.handleCloseModal();
-            this.handleAddAlert(false);
-          })
+    if ( // any inputs cause an error
+         !!this.state.fnErrorText ||
+         !!this.state.lnErrorText ||
+         !!this.state.emailErrorText ||
+         !!this.state.schoolErrorText ||
+         !!this.state.notesErrorText) {
+      return null
+    } else {
+      const {inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes} = this.state;
+      let firebase = this.context;
+      firebase.addTeacher({
+        firstName: inputFirstName,
+        lastName: inputLastName,
+        school: inputSchool,
+        email: inputEmail,
+        notes: inputNotes
       })
-      .catch(e => {
-        console.log("Error occurred adding teacher to dB: ", e);
-        this.handleCloseModal();
-        this.handleAddAlert(false);
-      });
+        .then( id => {
+          firebase.getTeacherInfo(id)
+            .then( teacherInfo => {
+              this.setState(prevState => {
+                return {
+                  teachers: prevState.teachers.concat(teacherInfo),
+                  searched: prevState.teachers.concat(teacherInfo)
+                }
+              }, () => {
+                this.handleCloseModal();
+                this.handleAddAlert(true);
+              })
+            })
+            .catch( e => {
+              console.error("Error occurred fetching new teacher's info: ", e);
+              this.handleCloseModal();
+              this.handleAddAlert(false);
+            })
+        })
+        .catch(e => {
+          console.log("Error occurred adding teacher to dB: ", e);
+          this.handleCloseModal();
+          this.handleAddAlert(false);
+        });
+    }
   };
 
   handleAddAlert = successful => {
@@ -346,6 +397,11 @@ class TeacherLists extends Component {
       inputSchool: "",
       inputEmail: "",
       inputNotes: "",
+      fnErrorText: "",
+      lnErrorText: "",
+      schoolErrorText: "",
+      emailErrorText: "",
+      notesErrorText: "",
       isAdding: false,
       alertText: ""
     });
@@ -353,7 +409,16 @@ class TeacherLists extends Component {
 
   render() {
     const { classes } = this.props;
-    const { isAdding, addAlert, alertText } = this.state;
+    const {
+      isAdding,
+      addAlert,
+      alertText,
+      fnErrorText,
+      lnErrorText,
+      emailErrorText,
+      schoolErrorText,
+      notesErrorText
+    } = this.state;
 
     return (
       <div className={classes.root}>
@@ -373,12 +438,12 @@ class TeacherLists extends Component {
               variant="outlined"
               onChange={this.onChangeText}
             />
-            <Fab aria-label="Add Teacher" onClick={() => this.setState({isAdding: true})}
+            <Fab aria-label="Add Teacher" onClick={() => this.setState({ isAdding: true })}
                  className={classes.actionButton} size='small'>
               <AddIcon style={{color: '#FFFFFF'}} />
             </Fab>
           </div>
-          <div className={classes.table}>
+          <div className={classes.tableContainer}>
             <Table>
               <TableHead>
                 <TableRow>
@@ -439,8 +504,8 @@ class TeacherLists extends Component {
               = Co-created Action plan
             </div>
           </div>
-          <Dialog open={isAdding} onClose={this.handleCloseModal} aria-labelledby="edit-teacher-title">
-            <DialogTitle id="edit-teacher-title">Add a New Teacher</DialogTitle>
+          <Dialog open={isAdding} onClose={this.handleCloseModal} aria-labelledby="add-teacher-title">
+            <DialogTitle id="add-teacher-title">Add a New Teacher</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 Make edits to the form below and confirm to add a teacher to your My Teachers list.
@@ -453,6 +518,8 @@ class TeacherLists extends Component {
                 id="first-name"
                 name="inputFirstName"
                 label="First Name"
+                helperText={fnErrorText}
+                error={!!fnErrorText}
                 type="text"
                 fullWidth
               />
@@ -463,6 +530,8 @@ class TeacherLists extends Component {
                 id="last-name"
                 name="inputLastName"
                 label="Last Name"
+                helperText={lnErrorText}
+                error={!!lnErrorText}
                 type="text"
                 fullWidth
               />
@@ -473,6 +542,8 @@ class TeacherLists extends Component {
                 id="school"
                 name="inputSchool"
                 label="School"
+                helperText={schoolErrorText}
+                error={!!schoolErrorText}
                 type="text"
                 fullWidth
               />
@@ -483,6 +554,8 @@ class TeacherLists extends Component {
                 id="email"
                 name="inputEmail"
                 label="Email"
+                helperText={emailErrorText}
+                error={!!emailErrorText}
                 type="email"
                 fullWidth
               />
@@ -492,6 +565,8 @@ class TeacherLists extends Component {
                 id="notes"
                 name="inputNotes"
                 label="Notes"
+                helperText={notesErrorText}
+                error={!!notesErrorText}
                 multiline
                 rows={10}
                 rowsMax={10}
@@ -510,10 +585,10 @@ class TeacherLists extends Component {
           <Dialog
             open={addAlert}
             onClose={() => this.setState({ addAlert:false, alertText:"" })}
-            aria-labelledby="edit-alert-label"
-            aria-describedby="edit-alert-description"
+            aria-labelledby="add-alert-label"
+            aria-describedby="add-alert-description"
           >
-            <DialogTitle id="edit-alert-title">{alertText}</DialogTitle>
+            <DialogTitle id="add-alert-title">{alertText}</DialogTitle>
           </Dialog>
         </div>
       </div>
