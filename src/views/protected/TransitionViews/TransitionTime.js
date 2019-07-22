@@ -48,8 +48,9 @@ class TransitionTime extends React.Component {
             help: false,
             notes: false,
             recs: true,
-            transitionType: "none", 
+            transitionType: null, 
             open: false,
+            transitionEnded: false,
         };
 
 
@@ -57,7 +58,13 @@ class TransitionTime extends React.Component {
     }
 
     handleTransitionType = type => {
+        console.log(this.state.transitionType);
+        if (this.state.transitionEnded) {
+            this.setState({transitionEnded: false});
+        }
         this.setState({transitionType: type});
+        console.log(type);
+        console.log(this.state.transitionType);
     };
 
     handleRecsModal = open => {
@@ -67,6 +74,11 @@ class TransitionTime extends React.Component {
             this.setState({ recs: false });
         }
     };
+
+    handleEndTransition = () => {
+        this.setState({transitionEnded: true});
+        this.setState({transitionType: null});
+    }
 
     handleChange = event => {
         this.setState({ auth: event.target.checked });
@@ -166,6 +178,8 @@ class TransitionTime extends React.Component {
                                 <TransitionTypeSel 
                                     handleTransitionType = {this.handleTransitionType}
                                     handleNotes = {this.handleNotes}
+                                    transitionType={this.state.transitionType}
+                                    transitionEnded={this.state.transitionEnded}
                                 />
                             </Grid>
                         </Grid> 
@@ -187,12 +201,13 @@ class TransitionTime extends React.Component {
                                 justify={"center"}
                                 direction={"column"}
                             >
-                                <div style={{ margin: 10 }} />
                                 <FirebaseContext.Consumer>
                                     {firebase => (
                                         <TransitionTimer
                                             teacherId={this.props.location.state.teacher.id}
                                             firebase={firebase}
+                                            typeSelected={this.state.transitionType === null ? false : true}
+                                            handleEndTransition={this.handleEndTransition}
                                         />
                                     )}
                                 </FirebaseContext.Consumer>

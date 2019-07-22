@@ -131,13 +131,10 @@ class TransitionTypeSel extends React.Component {
     };
   }
 
-  handleLineButton = type => {
-    this.props.handleTransitionType(type);
-    if (this.state.lineSelected) {
-      this.setState({lineSelected: false})
-    } else {
+  componentDidUpdate = (prevProps) => {
+    if (!prevProps.transitionEnded && this.props.transitionEnded) {
       this.setState({
-        lineSelected: true,
+        lineSelected: false,
         travelingSelected: false,
         waitingSelected: false,
         routinesSelected: false,
@@ -145,87 +142,79 @@ class TransitionTypeSel extends React.Component {
         otherSelected: false
       });
     }
+  };
+
+  handleLineButton = type => {
+    this.props.handleTransitionType(type);
+    this.setState({
+      lineSelected: true,
+      travelingSelected: false,
+      waitingSelected: false,
+      routinesSelected: false,
+      behaviorSelected: false,
+      otherSelected: false
+    });
   };
 
   handleTravelingButton = type => {
     this.props.handleTransitionType(type);
-    if (this.state.travelingSelected) {
-      this.setState({travelingSelected: false})
-    } else {
-      this.setState({
-        lineSelected: false,
-        travelingSelected: true,
-        waitingSelected: false,
-        routinesSelected: false,
-        behaviorSelected: false,
-        otherSelected: false
-      });
-    }
+    this.setState({
+      lineSelected: false,
+      travelingSelected: true,
+      waitingSelected: false,
+      routinesSelected: false,
+      behaviorSelected: false,
+      otherSelected: false
+    });
   };
 
   handleWaitingButton = type => {
     this.props.handleTransitionType(type);
-    if (this.state.waitingSelected) {
-      this.setState({waitingSelected: false})
-    } else {
-      this.setState({
-        lineSelected: false,
-        travelingSelected: false,
-        waitingSelected: true,
-        routinesSelected: false,
-        behaviorSelected: false,
-        otherSelected: false
-      });
-    }
+    this.setState({
+      lineSelected: false,
+      travelingSelected: false,
+      waitingSelected: true,
+      routinesSelected: false,
+      behaviorSelected: false,
+      otherSelected: false
+    });
   };
 
   handleRoutinesButton = type => {
     this.props.handleTransitionType(type);
-    if (this.state.routinesSelected) {
-      this.setState({routinesSelected: false})
-    } else {
-      this.setState({
-        lineSelected: false,
-        travelingSelected: false,
-        waitingSelected: false,
-        routinesSelected: true,
-        behaviorSelected: false,
-        otherSelected: false
-      });
-    }
+    this.setState({
+      lineSelected: false,
+      travelingSelected: false,
+      waitingSelected: false,
+      routinesSelected: true,
+      behaviorSelected: false,
+      otherSelected: false
+    });
   };
 
   handleBehaviorButton = type => {
     this.props.handleTransitionType(type);
-    if (this.state.behaviorSelected) {
-      this.setState({behaviorSelected: false})
-    } else {
-      this.setState({
-        lineSelected: false,
-        travelingSelected: false,
-        waitingSelected: false,
-        routinesSelected: false,
-        behaviorSelected: true,
-        otherSelected: false
-      });
-    }
+    this.setState({
+      lineSelected: false,
+      travelingSelected: false,
+      waitingSelected: false,
+      routinesSelected: false,
+      behaviorSelected: true,
+      otherSelected: false
+    });
   };
 
   handleOtherButton = type => {
     this.props.handleTransitionType(type);
-    if (this.state.otherSelected) {
-      this.setState({otherSelected: false})
-    } else {
-      this.setState({
-        lineSelected: false,
-        travelingSelected: false,
-        waitingSelected: false,
-        routinesSelected: false,
-        behaviorSelected: false,
-        otherSelected: true
-      });
-      this.props.handleNotes(true);
-    }
+    this.setState({
+      lineSelected: false,
+      travelingSelected: false,
+      waitingSelected: false,
+      routinesSelected: false,
+      behaviorSelected: false,
+      otherSelected: true
+    });
+    this.props.handleNotes(true);
   };
 
 
@@ -234,6 +223,8 @@ class TransitionTypeSel extends React.Component {
 
     return (
       <div>
+        {/* {this.props.transitionEnded ? <div> {this.componentWillUnmount} </div> : <div/>}
+        {console.log(this.props.transitionEnded)} */}
         <Grid container alignItems="flex-start" direction={"row"}>
           <Grid item xs={6}
             align="center"
@@ -267,7 +258,9 @@ class TransitionTypeSel extends React.Component {
                 </Button>
               </Grid>
               <Grid item>
-                Traveling outside the classroom
+                Traveling outside 
+                <br />
+                the classroom
               </Grid>
               <br>
               </br>
@@ -298,7 +291,7 @@ class TransitionTypeSel extends React.Component {
                 </Button>
               </Grid>
               <Grid item>
-                Classroom Routines
+                Classroom routines
               </Grid>
               <br>
               </br>
@@ -314,7 +307,9 @@ class TransitionTypeSel extends React.Component {
                 </Button>
               </Grid>
               <Grid item>
-                Behavior Management Disruption
+                Behavior management 
+                <br />
+                disruption
               </Grid>
               <br>
               </br>
@@ -324,7 +319,7 @@ class TransitionTypeSel extends React.Component {
                       classes={{root: classes.button, label: classes.label}}
                       variant="raised"
                       style={this.state.otherSelected ? raisedThemes.palette.otherColor : themes.palette.otherColor}>
-                    <img alt="otherg" src={other} height='100' width='100'/>
+                    <img alt="other" src={other} height='100' width='100'/>
                 </Button>
               </Grid>
               <Grid item>

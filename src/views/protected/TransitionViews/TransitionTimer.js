@@ -72,6 +72,7 @@ class TransitionTimer extends React.Component {
                 console.log(entry.start);
                 this.setState({ time: 0 });
                 this.handleAppend(entry);
+                this.props.handleEndTransition();
             } else {
                 const startTime = Date.now() - this.state.time;
                 let mStart = new Date();
@@ -91,6 +92,7 @@ class TransitionTimer extends React.Component {
             time: 0,
             percentage: 0
         });
+        this.props.handleEndTransition();
     };
 
     componentWillUnmount() {
@@ -140,7 +142,7 @@ class TransitionTimer extends React.Component {
                         <Button
                             variant="contained"
                             color="primary"
-                            // disabled={this.props.transitionType === null}
+                            disabled={!this.props.typeSelected}
                             aria-label="Start"
                             onClick={this.onStart}
                         >
