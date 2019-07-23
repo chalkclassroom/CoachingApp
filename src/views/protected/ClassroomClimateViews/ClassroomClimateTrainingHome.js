@@ -307,7 +307,7 @@ class ClassroomClimateTrainingHome extends React.Component {
                                 <div>
                                     {this.state.view === ViewEnum.CONCEPTS ? (
                                         <div className={classes.resultsContent}>
-                                            <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/CC_TrainingVid.mp4?alt=media&token=f9804efd-bcd2-4436-88f1-25be0725532f'}/>
+                                            <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/CC%20Concepts%207-17-19.mp4?alt=media&token=2375a7d2-3c6e-4eec-a9c0-a29214db9cdf'}/>
                                         </div>
                                     ) : this.state.view === ViewEnum.EXAMPLE ? (
                                         <div className={classes.resultsContent}>
