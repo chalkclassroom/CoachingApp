@@ -182,29 +182,28 @@ class RatingModal extends React.Component {
             alignItems={"center"}
             justify={"center"}
             direction={"row"}
+            style={{spacing: 4}}
           >
-            <YesNoDialog
-              buttonText={"Confirm Rating"}
-              buttonVariant={"contained"}
-              buttonColor={"secondary"}
-              buttonStyle={{ margin: 10 }}
-              dialogTitle={`Are you sure you want to submit a rating of ${
-                this.state.value
-              }?`}
-              onAccept={this.props.handleRatingConfirmation}
-              onAcceptParams={this.state.rating}
-              shouldOpen={true}
-            />
-            <YesNoDialog
-              buttonText={"Skip Rating"}
-              buttonVariant={"contained"}
-              buttonColor={"primary"}
-              buttonStyle={{ margin: 10 }}
-              dialogTitle={`Are you sure you want to skip this rating? This option should only be used in exceptional circumstances.`}
-              onAccept={this.props.handleRatingConfirmation}
-              onAcceptParams={0}
-              shouldOpen={true}
-            />
+            <Grid item xs={3} />
+            <Grid item xs={3}>
+              <Button variant="contained" onClick={this.props.handleRatingConfirmation.bind(this,this.state.rating)} style={{backgroundColor:"#0988ec", fontSize:"15px", padding:"5px"}}>
+                Confirm Rating
+              </Button>
+            </Grid>
+            <Grid item xs={3}>
+              <YesNoDialog
+                buttonText={"Skip Rating"}
+                buttonVariant={"contained"}
+                buttonColor={"#e55529"}
+                backgroundColor={"#fff"}
+                buttonStyle={{ margin: 10 }}
+                dialogTitle={`Are you sure you want to skip this rating? This option should only be used in exceptional circumstances.`}
+                onAccept={this.props.handleRatingConfirmation}
+                onAcceptParams={0}
+                shouldOpen={true}
+              />
+              </Grid>
+            <Grid item xs={3} />
           </Grid>
         </Grid>
       </div>

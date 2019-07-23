@@ -25,6 +25,7 @@ import LearningActivityTransitionToggle from "../../../components/ClassroomClima
 import Dashboard from "../../../components/Dashboard";
 import TransitionLog from "../TransitionViews/TransitionLog";
 import Countdown from "../../../components/Countdown";
+import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
 
 /*
     N.B. Time measured in milliseconds.
@@ -61,6 +62,7 @@ class ClassroomClimate extends React.Component {
     ratings: [],
     // climateType: false,
     recs: true,
+    incompleteRating: false,
   };
   tick = () => {
     if (this.state.time <= 0) {
@@ -98,18 +100,26 @@ class ClassroomClimate extends React.Component {
     }
   };
   handleRatingConfirmation = rating => {
-    this.setState({ ratingIsOpen: false });
+    if (rating === 0) {
+      this.setState({ incompleteRating: true});
+    } else {
+      this.setState({ ratingIsOpen: false });
 
-    this.props.appendClimateRating(rating);
+      this.props.appendClimateRating(rating);
 
-    let entry = {
-      BehaviorResponse: rating,
-      Type: "Rat",
-      ratingInterval: RATING_INTERVAL
-    };
-    let firebase = this.context;
-    firebase.handlePushClimate(entry);
+      let entry = {
+        BehaviorResponse: rating,
+        Type: "Rat",
+        ratingInterval: RATING_INTERVAL
+      };
+      let firebase = this.context;
+      firebase.handlePushClimate(entry);
+    }
   };
+
+  handleClickAwayIncomplete = () => {
+    this.setState({ incompleteRating: false });
+  }
 
   componentDidMount() {
     this.timer = setInterval(this.tick, 1000);
@@ -162,6 +172,11 @@ class ClassroomClimate extends React.Component {
           <RatingModal
             handleRatingConfirmation={this.handleRatingConfirmation}
           />
+        </Modal>
+        <Modal open={this.state.incompleteRating}>
+          <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
+            <EmptyToneRating />
+          </ClickAwayListener>
         </Modal>
         <main style={{ flex: 1 }}>
           <Grid container xs={12}

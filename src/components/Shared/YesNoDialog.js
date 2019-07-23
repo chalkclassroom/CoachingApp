@@ -65,6 +65,7 @@ class YesNoDialog extends React.Component {
                         aria-label={this.props.buttonAriaLabel}
                         style={{
                             color:this.props.buttonColor, 
+                            backgroundColor:this.props.backgroundColor,
                             borderColor:this.props.buttonColor, 
                             borderWidth:"2px",
                             fontSize:"15px"}}
