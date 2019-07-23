@@ -36,7 +36,7 @@ import EmptyToneRating from "../../../components/ClassroomClimateComponent/Empty
     and then allow for 2 full minutes in between ratings.
  */
 
-const RATING_INTERVAL = 130000;
+const RATING_INTERVAL = 1000;
 const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
 const styles = ({
@@ -100,22 +100,22 @@ class ClassroomClimate extends React.Component {
     }
   };
   handleRatingConfirmation = rating => {
-    if (rating === 0) {
-      this.setState({ incompleteRating: true});
-    } else {
-      this.setState({ ratingIsOpen: false });
+    this.setState({ ratingIsOpen: false });
 
-      this.props.appendClimateRating(rating);
+    this.props.appendClimateRating(rating);
 
-      let entry = {
-        BehaviorResponse: rating,
-        Type: "Rat",
-        ratingInterval: RATING_INTERVAL
-      };
-      let firebase = this.context;
-      firebase.handlePushClimate(entry);
-    }
+    let entry = {
+      BehaviorResponse: rating,
+      Type: "Rat",
+      ratingInterval: RATING_INTERVAL
+    };
+    let firebase = this.context;
+    firebase.handlePushClimate(entry);
   };
+
+  handleIncomplete = () => {
+    this.setState({ incompleteRating: true });
+  }
 
   handleClickAwayIncomplete = () => {
     this.setState({ incompleteRating: false });
@@ -171,6 +171,7 @@ class ClassroomClimate extends React.Component {
         <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
           <RatingModal
             handleRatingConfirmation={this.handleRatingConfirmation}
+            handleIncomplete={this.handleIncomplete}
           />
         </Modal>
         <Modal open={this.state.incompleteRating}>

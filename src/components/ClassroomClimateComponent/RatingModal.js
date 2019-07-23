@@ -95,62 +95,104 @@ class RatingModal extends React.Component {
           </Typography>
           <div style={{ height: 20 }} />
           <Grid container direction={"row"} justify={"space-between"}>
-            <Grid item>
-              <Button
-                onClick={this.handleAngerClick}
-                variant={this.state.value === "Anger" ? "outlined" : "text"}
-              >
-                <img alt="angry face" src={angryFace} width="100vw" />
-              </Button>
-              <Typography variant={"h6"} align={"center"}>
-                Anger
-              </Typography>
-              <Typography variant={"body1"} align={"center"}>
-                (yelling, sarcasm)
-              </Typography>
+            <Grid item xs={2.4}
+              align="center"
+              alignItems="center"
+              justify="center"
+              direction={"column"}
+              style={{width:"20%"}}
+            >
+              <Grid item>
+                <Button
+                  onClick={this.handleAngerClick}
+                  variant={this.state.value === "Anger" ? "contained" : "text"}
+                >
+                  <Typography variant="h2" align={"center"}>
+                    1
+                  </Typography>
+                  {/* <img alt="angry face" src={angryFace} width="100vw" /> */}
+                </Button>
+                <Typography variant={"h6"} align={"center"}>
+                  Anger
+                </Typography>
+                <Typography variant={"body1"} align={"center"}>
+                  (yelling, sarcasm)
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Button
-                onClick={this.handleIrritationClick}
-                variant={
-                  this.state.value === "Irritation" ? "outlined" : "text"
-                }
-              >
-                <img alt="irritated face" src={irritatedFace} width="100vw" />
-              </Button>
-              <Typography variant={"h6"} align={"center"}>
-                Irritation
-              </Typography>
-              <Typography variant={"body1"} align={"center"}>
-                (grimacing, eye-rolling)
-              </Typography>
+            <Grid item xs={2.4}
+              align="center"
+              alignItems="center"
+              justify="center"
+              direction={"column"}
+              style={{width:"20%"}}
+            >
+              <Grid item>
+                <Button
+                  onClick={this.handleIrritationClick}
+                  variant={
+                    this.state.value === "Irritation" ? "contained" : "text"
+                  }
+                >
+                  <Typography variant="h2" align={"center"}>
+                    2
+                  </Typography>
+                  {/* <img alt="irritated face" src={irritatedFace} width="100vw" /> */}
+                </Button>
+                <Typography variant={"h6"} align={"center"}>
+                  Irritation
+                </Typography>
+                <Typography variant={"body1"} align={"center"}>
+                  (grimacing, eye-rolling)
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Button
-                onClick={this.handleNeutralClick}
-                variant={this.state.value === "Neutral" ? "outlined" : "text"}
-              >
-                <img alt="neutral face" src={neutralFace} width="100vw" />
-              </Button>
-              <Typography variant={"h6"} align={"center"}>
-                Neutral
-              </Typography>
-              <Typography variant={"body1"} align={"center"}>
-                (no facial expression)
-              </Typography>
+            <Grid item xs={2.4}
+              align="center"
+              alignItems="center"
+              justify="center"
+              direction={"column"}
+              style={{width:"20%"}}
+            >
+              <Grid item>
+                <Button
+                  onClick={this.handleNeutralClick}
+                  variant={this.state.value === "Neutral" ? "contained" : "text"}
+                >
+                  <Typography variant="h2" align={"center"}>
+                    3
+                  </Typography>
+                  {/* <img alt="neutral face" src={neutralFace} width="100vw" /> */}
+                </Button>
+                <Typography variant={"h6"} align={"center"}>
+                  Neutral
+                </Typography>
+                <Typography variant={"body1"} align={"center"}>
+                  (no facial expression)
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
+            <Grid item xs={2.4}
+              align="center"
+              alignItems="center"
+              justify="center"
+              direction={"column"}
+              style={{width:"20%"}}
+            >
               <Button
                 onClick={this.handlePositiveInterestClick}
                 variant={
-                  this.state.value === "Positive Interest" ? "outlined" : "text"
+                  this.state.value === "Positive Interest" ? "contained" : "text"
                 }
               >
-                <img
+                <Typography variant="h2" align={"center"}>
+                  4
+                </Typography>
+                {/* <img
                   alt="positive interest face"
                   src={positiveInterestFace}
                   width="100vw"
-                />
+                /> */}
               </Button>
               <Typography variant={"h6"} align={"center"}>
                 Positive Interest
@@ -159,14 +201,23 @@ class RatingModal extends React.Component {
                 (smiling, nodding)
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid item xs={2.4}
+              align="center"
+              alignItems="center"
+              justify="center"
+              direction={"column"}
+              style={{width:"20%"}}
+            >
               <Button
                 onClick={this.handleExcitementClick}
                 variant={
-                  this.state.value === "Excitement" ? "outlined" : "text"
+                  this.state.value === "Excitement" ? "contained" : "text"
                 }
               >
-                <img alt="excited face" src={excitedFace} width="100vw" />
+                <Typography variant="h2" align={"center"}>
+                  5
+                </Typography>
+                {/* <img alt="excited face" src={excitedFace} width="100vw" /> */}
               </Button>
               <Typography variant={"h6"} align={"center"}>
                 Excitement
@@ -180,13 +231,14 @@ class RatingModal extends React.Component {
           <Grid
             container
             alignItems={"center"}
+            align="center"
             justify={"center"}
             direction={"row"}
             style={{spacing: 4}}
           >
             <Grid item xs={3} />
-            <Grid item xs={3}>
-              <Button variant="contained" onClick={this.props.handleRatingConfirmation.bind(this,this.state.rating)} style={{backgroundColor:"#0988ec", fontSize:"15px", padding:"5px"}}>
+            <Grid item xs={3} justify={"center"}>
+              <Button variant="contained" onClick={this.state.rating===0? this.props.handleIncomplete : this.props.handleRatingConfirmation.bind(this,this.state.rating)} style={{backgroundColor:"#0988ec", fontSize:"15px", width:"170px"}}>
                 Confirm Rating
               </Button>
             </Grid>
@@ -195,6 +247,7 @@ class RatingModal extends React.Component {
                 buttonText={"Skip Rating"}
                 buttonVariant={"contained"}
                 buttonColor={"#e55529"}
+                buttonWidth={"170px"}
                 backgroundColor={"#fff"}
                 buttonStyle={{ margin: 10 }}
                 dialogTitle={`Are you sure you want to skip this rating? This option should only be used in exceptional circumstances.`}

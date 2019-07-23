@@ -68,6 +68,7 @@ class YesNoDialog extends React.Component {
                             backgroundColor:this.props.backgroundColor,
                             borderColor:this.props.buttonColor, 
                             borderWidth:"2px",
+                            width: this.props.buttonWidth,
                             fontSize:"15px"}}
                     >
                         {this.props.buttonText}
