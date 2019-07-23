@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -92,10 +93,8 @@ class LoginForm extends React.Component{
     handleSubmit = (event) =>{
         this.validateState();
         if (!this.state.errors){
-            this.props.firebase.firebaseEmailSignIn({email: this.state.email, password: this.state.password}, this.props.role).then(function(isSuccess) {
-                if(isSuccess){
-                    this.props.history.push('/Home');
-                }
+            this.props.firebase.firebaseEmailSignIn({email: this.state.email, password: this.state.password}, this.props.role).then( () => {
+                this.props.history.push('/Home');
             });
             }
         };
@@ -157,4 +156,4 @@ LoginForm.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(LoginForm);
+export default withStyles(styles)(withRouter(LoginForm));
