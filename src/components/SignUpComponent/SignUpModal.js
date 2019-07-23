@@ -16,6 +16,11 @@ import { ReactComponent as TeacherSvg } from "../../assets/icons/teacher.svg";
 import { ReactComponent as TeacherComingSoon } from "../../assets/icons/teacherComingSoon.svg";
 import {ReactComponent as newManager} from "../../assets/icons/NewManager.svg";
 import { ReactComponent as ManagerComingSoon } from "../../assets/icons/managerComingSoon.svg";
+import { ReactComponent as NewCoach } from "../../assets/icons/newCoach.svg";
+import { ReactComponent as NewTeacher } from "../../assets/icons/newTeacher.svg";
+import { ReactComponent as NewAdmin } from "../../assets/icons/newAdministrator.svg";
+import { ReactComponent as GrayedAdmin } from "../../assets/icons/newAdminGrayed.svg";
+import { ReactComponent as GrayedTeacher } from "../../assets/icons/newTeacherGrayed.svg";
 import CardContent from "@material-ui/core/CardContent";
 function getModalStyle() {
     return {
@@ -122,6 +127,7 @@ class SignUpModal extends React.Component {
                                     justify="space-around"
                                     style={{ padding: 40 }}
                                 >
+                                    <NewAdmin />
                                     <Card
                                         className={classes.card}
                                         onClick={() => this.handleChangeRole(1)}
@@ -135,7 +141,7 @@ class SignUpModal extends React.Component {
                                                 justify="flex-start"
                                             >
                                                 <Grid item>
-                                                    <CoachSvg
+                                                    <NewCoach
                                                         style={{
                                                             height: "100",
                                                             width: "100"
@@ -172,7 +178,7 @@ class SignUpModal extends React.Component {
                                                             width: "100"
                                                         }}
                                                     /> */}
-                                                    <TeacherComingSoon
+                                                    <GrayedTeacher
                                                          style={{
                                                             height: "100",
                                                             width: "100"
@@ -209,10 +215,10 @@ class SignUpModal extends React.Component {
                                                             width: "100"
                                                         }}
                                                     /> */}
-                                                    <ManagerComingSoon
+                                                    <GrayedAdmin
                                                         style={{
                                                             height: "100",
-                                                            width: "100"
+                                                            width: "auto",
                                                         }}
                                                     />
                                                 </Grid>
