@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import FirebaseContext from '../../../components/Firebase/context';
+import { FirebaseContext } from '../../../components/Firebase/index';
 import AppBar from '../../../components/AppBar';
 import LabeledInfo from '../../../components/MyTeachersComponents/LabeledInfo';
 import TransitionTimeSvg from '../../../assets/icons/TransitionTime.svg';
@@ -85,7 +85,10 @@ const styles = {
     gridTemplateRows: '50% 50%'
   },
   actionButton: {
-    marginLeft: '1em'
+    marginLeft: '1em',
+    '&:hover': {
+      boxShadow: '0 2px 5px 5px rgba(0, 0, 0, 0.2)'
+    }
   },
   magicEightItem: {
     margin: '3% 3% 15% 3%',
@@ -100,7 +103,12 @@ const styles = {
     borderRadius: '10%',
     padding: '0px',
     width:'80%',
-    boxShadow: 'none'
+    boxShadow: 'none',
+    opacity: 0.95,
+    '&:hover': {
+      backgroundColor: '#8B8B8B',
+      opacity: 1
+    }
   },
   img: {
     maxHeight: '100px',
@@ -234,13 +242,49 @@ const styles = {
   }
 };
 
-const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg, ListeningToChildrenSvg, LevelOfInstructionSvg,
-                   MathInstructionSvg, StudentEngagementSvg, SequentialActivitiesSvg, AssocCoopInteractionsSvg];
+const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg,
+                   ListeningToChildrenSvg, LevelOfInstructionSvg,
+                   MathInstructionSvg, StudentEngagementSvg,
+                   SequentialActivitiesSvg, AssocCoopInteractionsSvg];
+
 
 class TeacherDetail extends Component {
 
   constructor (props) {
     super(props);
+    const id = this.props.match.params.teacherid; // Entered URL w/o navigating from 'My Teachers'
+    this.initialState = {
+      teacherUID: id,
+      firstName: "...",
+      lastName: "...",
+      school: "...",
+      email: "...",
+      notes: "...",
+      inputFirstName: "",
+      inputLastName: "",
+      inputSchool: "",
+      inputEmail: "",
+      inputNotes: "",
+      fnErrorText: "",
+      lnErrorText: "",
+      schoolErrorText: "",
+      emailErrorText: "",
+      notesErrorText: "",
+      isEditing: false,
+      isDeleting: false,
+      editAlert: false,
+      alertText: "",
+      recentObs: [
+        null, // transition
+        null, // climate
+        null, // listening
+        null, // level
+        null, // math
+        null, // engagement
+        null, // sequential
+        null  // AC
+      ]
+    };
 
     if (this.props.location.state !== undefined) { // Came from 'My Teachers'
       const { id, firstName, lastName, school, email, notes } = this.props.location.state.teacher;
@@ -264,39 +308,27 @@ class TeacherDetail extends Component {
         isEditing: false,
         isDeleting: false,
         editAlert: false,
-        alertText: ""
+        alertText: "",
+        recentObs: [
+          null, // transition
+          null, // climate
+          null, // listening
+          null, // level
+          null, // math
+          null, // engagement
+          null, // sequential
+          null  // AC
+        ]
       };
     } else {
-      const id = this.props.match.params.teacherid; // Entered URL w/o navigating from 'My Teachers'
-      this.state = {
-        teacherUID: id,
-        firstName: "...",
-        lastName: "...",
-        school: "...",
-        email: "...",
-        notes: "...",
-        inputFirstName: "",
-        inputLastName: "",
-        inputSchool: "",
-        inputEmail: "",
-        inputNotes: "",
-        fnErrorText: "",
-        lnErrorText: "",
-        schoolErrorText: "",
-        emailErrorText: "",
-        notesErrorText: "",
-        isEditing: false,
-        isDeleting: false,
-        editAlert: false,
-        alertText: ""
-      };
-
-      this.componentDidMount = this.componentDidMount.bind(this);
+      this.state = this.initialState;
     }
+
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount () {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.getTeacherInfo(this.state.teacherUID)
       .then( teacherInfo => {
         this.setState({
@@ -311,9 +343,14 @@ class TeacherDetail extends Component {
           inputEmail: teacherInfo.email,
           inputNotes: teacherInfo.notes
         }); // Automatically forces a re-render
+        firebase.getRecentObservations(this.state.teacherUID)
+          .then(recentObs => this.setState({
+            recentObs: recentObs
+          }))
+          .catch(error => console.error("Error occurred getting recent observations: ", error))
       })
       .catch( error => {
-        console.error("Error fetching Teacher's Info:", error);
+        console.error("Error fetching Teacher's Info: ", error);
       });
   };
 
@@ -387,15 +424,22 @@ class TeacherDetail extends Component {
   };
 
   handleEditConfirm = () => {
-    if ( !!this.state.fnErrorText ||
+    if ( // any inputs cause an error
+         !!this.state.fnErrorText ||
          !!this.state.lnErrorText ||
          !!this.state.emailErrorText ||
          !!this.state.schoolErrorText ||
          !!this.state.notesErrorText) {
       return null
-    } else {
-      const { teacherUID, inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes } = this.state;
-      let firebase = this.context;
+    } else { // fields are validated
+      const { teacherUID,
+        inputFirstName,
+        inputLastName,
+        inputSchool,
+        inputEmail,
+        inputNotes
+      } = this.state;
+      const firebase = this.context;
       if (firebase.setTeacherInfo(teacherUID, {
         firstName: inputFirstName,
         lastName: inputLastName,
@@ -440,35 +484,15 @@ class TeacherDetail extends Component {
   };
 
   handleDeleteConfirm = () => {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.removePartner(this.state.teacherUID)
-      .then(() => { this.setState({
-        teacherUID: "",
-        firstName: "Practice",
-        lastName: "Teacher",
-        school: "Elum Entaree School",
-        email: "practice@teacher.edu",
-        notes: "...",
-        inputFirstName: "Practice",
-        inputLastName: "Teacher",
-        inputSchool: "Elum Entaree School",
-        inputEmail: "practice@teacher.edu",
-        inputNotes: "...",
-        fnErrorText: "",
-        lnErrorText: "",
-        schoolErrorText: "",
-        emailErrorText: "",
-        notesErrorText: "",
-        isEditing: false,
-        isDeleting: false,
-        editAlert: false,
-        alertText: ""
-      },
+      .then(() => {
+        this.setState(this.initialState,
         () => this.props.history.replace("/MyTeachers"));})
       .catch(() => this.setState({
         editAlert: true,
-        alertText: "Something went wrong removing this teacher... try refreshing your page or logging" +
-          " out and back in."
+        alertText: "Something went wrong removing this teacher... " +
+          "try refreshing your page or logging out and back in."
       }, () => setTimeout(
         () => this.setState({ editAlert: false }), 3000)));
   };
@@ -489,7 +513,8 @@ class TeacherDetail extends Component {
       lnErrorText,
       schoolErrorText,
       emailErrorText,
-      notesErrorText
+      notesErrorText,
+      recentObs
     } = this.state;
 
     return(
@@ -512,18 +537,21 @@ class TeacherDetail extends Component {
               null  // Prevent deleting and editing the Practice Teacher!
               : (
               <div>
-                <Fab aria-label="Edit" onClick={() => this.setState({isEditing: true})}
-                     className={classes.actionButton} size='small' style={{backgroundColor: '#F9FE49'}}>
+                <Fab aria-label="Edit" name="Edit" size='small'
+                     onClick={() => this.setState({isEditing: true})}
+                     className={classes.actionButton} style={{backgroundColor: '#F9FE49'}}>
                   <EditOutlinedIcon style={{color: '#555555'}} />
                 </Fab>
                 <Fab aria-label="Delete" onClick={() => this.setState({isDeleting: true})}
-                     className={classes.actionButton} size='small' style={{backgroundColor: '#FF3836'}}>
+                     className={classes.actionButton} size='small'
+                     style={{backgroundColor: '#FF3836'}}>
                   <DeleteForeverIcon style={{color: '#C9C9C9'}}/>
                 </Fab>
               </div>
             )}
           </div>
-          <Grid container direction="row" justify="space-between" alignItems="stretch" className={classes.contentContainer}>
+          <Grid container direction="row" justify="space-between" alignItems="stretch"
+                className={classes.contentContainer}>
             <div className={classes.teacherCard}>
               <div style={{display:'flex', flexDirection:'row', minWidth:'45%'}}>
                 <LabeledInfo label="First Name" field={firstName}/>
@@ -535,15 +563,25 @@ class TeacherDetail extends Component {
             </div>
             <ol className={classes.magicEightCard}>
               {sortedSvg.map((item, key) =>
-                <li key={key} className={classes.magicEightItem}>
-                  <Button variant='contained' className={classes.magicEightButton}>
-                    <img src={item} alt="Magic Eight" className={classes.img}/>
-                  </Button>
-                  {/* Logic for getting recent observation/number of goals met*/}
-                  <p>Last Observed:<br />
-                  1-1-2019</p>
-                  <p>Goals Met: 0</p>
-                </li>
+                recentObs !== undefined &&
+                recentObs[key] !== null ?
+                  <li key={key} className={classes.magicEightItem}>
+                    <Button variant='contained' className={classes.magicEightButton}
+                            style={{ border:'1px solid #000000', backgroundColor:'#000000' }}>
+                      <img src={item} alt="Magic Eight" className={classes.img}/>
+                    </Button>
+                    <p>
+                      Last Observed:<br />
+                      {recentObs[key]}
+                    </p>
+                  </li>
+                  :
+                  <li key={key} className={classes.magicEightItem}>
+                    <Button variant='contained' className={classes.magicEightButton}>
+                      <img src={item} alt="Magic Eight" className={classes.img}/>
+                    </Button>
+                    <p>Not Yet<br />Observed<br /><br /></p>
+                  </li>
               )}
             </ol>
           </Grid>
@@ -554,22 +592,31 @@ class TeacherDetail extends Component {
             aria-describedby="prompts a coach to confirm deleting a teacher from My Teachers"
           >
             <DialogTitle id="delete-teacher-title" style={{ textAlign:'center' }}>
-              Are you sure you want to remove <b style={{ textDecoration:'underline', color:'#007DAF' }}>
-              {firstName} {lastName}</b> from My Teachers?
+              Are you sure you want to remove
+              <b style={{ textDecoration:'underline', color:'#2196F3' }}>
+              {firstName} {lastName}
+              </b> from My Teachers?
             </DialogTitle>
             <DialogActions className={classes.deleteModalButtonContainer}>
               <Button onClick={() => this.setState({ isDeleting:false })}
                       className={classes.deleteModalButton} autoFocus
-                      style={{borderColor: '#09A1B3'}}>
-                No,<b style={{color: '#09A1B3', padding:'0 0.3em 0 0.3em'}}>KEEP</b>{firstName} {lastName}
+                      style={{borderColor: '#2196F3'}}>
+                No,
+                <b style={{color: '#2196F3', padding:'0 0.3em 0 0.3em'}}>
+                  KEEP
+                </b>{firstName} {lastName}
               </Button>
               <Button onClick={this.handleDeleteConfirm} className={classes.deleteModalButton}
                       style={{borderColor: '#F1231C'}}>
-                Yes,<b style={{color: '#F1231C', padding:'0 0.3em 0 0.3em'}}>DELETE</b>{firstName} {lastName}
+                Yes,
+                <b style={{color: '#F1231C', padding:'0 0.3em 0 0.3em'}}>
+                  DELETE
+                </b>{firstName} {lastName}
               </Button>
             </DialogActions>
           </Dialog>
-          <Dialog open={isEditing} onClose={this.handleCloseModal} aria-labelledby="edit-teacher-title">
+          <Dialog open={isEditing} onClose={this.handleCloseModal}
+                  aria-labelledby="edit-teacher-title">
             <DialogTitle id="edit-teacher-title">Edit {firstName} {lastName}'s Info</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -643,7 +690,7 @@ class TeacherDetail extends Component {
               <Button onClick={this.handleCloseModal} style={{color:'#F1231C'}}>
                 Cancel
               </Button>
-              <Button onClick={this.handleEditConfirm} style={{color:'#09A1B3'}}>
+              <Button onClick={this.handleEditConfirm} style={{color:'#2196F3'}}>
                 Confirm Edits
               </Button>
             </DialogActions>

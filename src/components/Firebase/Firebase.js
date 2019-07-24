@@ -235,6 +235,9 @@ class Firebase {
       })
   };
 
+  // Removes a partner from the user's 'partners' subcollection
+  // @param:string partnerID -> id of partner to be removed
+  // @return:Promise -> prints to console, no other return object
   removePartner = function(partnerID) {
     if (partnerID === "rJxNhJmzjRZP7xg29Ko6") {
       console.log("You can't delete the Practice Teacher!")
@@ -246,10 +249,68 @@ class Firebase {
         .doc(partnerID)
         .delete()
         .then(() =>
-          console.log("Teacher successfully removed from Partners list!"))
+          console.log("Partner successfully removed from Partners list!"))
         .catch( error => console.error("An error occurred trying to remove the teacher from" +
           " the Partners list: ", error))
     }
+  };
+
+  // Gets most recent observation of each type for a teacher
+  // @param:string partnerID -> iD of teacher
+  // @return:Promise -> onFulfilled:returns Array of dates of most recent observations
+  //                 '-> onRejected: prints error to console
+  // NOTE: Index specified in Firebase console in order to execute Query
+  getRecentObservations = function(partnerID) {
+    const obsRef = this.db.collection('observations')
+      .where('teacher','==',`/user/${partnerID}`)
+      .where('observedBy','==',`/user/${this.auth.currentUser.uid}`);
+    // ONLY 'transition','climate', & 'AC' types specified in dB! The rest are subject to change!
+    return Promise.all([
+      obsRef.where('type','==','transition')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','climate')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','listening')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','level')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','math')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','engagement')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','sequential')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','AC')
+        .orderBy('end','desc')
+        .limit(1)
+        .get()
+    ])
+      .then( snapshots => {
+        const recentObs = new Array(8).fill(null);
+        snapshots.forEach( (snapshot, index) => {
+          snapshot.forEach( doc => { // doc.data() can't be undefined
+            recentObs[index] = doc.data().end.toDate().toLocaleDateString();
+          })
+        });
+        return recentObs
+      })
+      .catch( error => {
+        console.error("Error occurred during Promise.all() resolution: ", error);
+      })
   };
 
   getTeacherFirstName = function() {

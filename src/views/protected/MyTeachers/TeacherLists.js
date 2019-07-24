@@ -11,12 +11,12 @@ import MathInstructionSvg from '../../../assets/icons/MathInstruction.svg';
 import LevelOfInstructionSvg from '../../../assets/icons/LevelofInstruction.svg';
 import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimate.svg';
 import AssocCoopInteractionsSvg from '../../../assets/icons/AssocCoopInteractions.svg';
-import ObserveIcon from '../../../assets/icons/observeIcon.png';
 import ConferencePlan from '../../../assets/icons/ConferencePlan.png';
 import ActionPlan from '../../../assets/icons/ActionPlan.png';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
+import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
 import AddIcon from '@material-ui/icons/Add';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -46,8 +46,13 @@ const styles = theme => ({
     margin: '2% 5% 2% 5%'
   },
   row: {
+    transitionDuration: '0.2s',
     "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.background.default
+    },
+    '&:hover': {
+      backgroundColor: '#555555',
+      color: '#FFFFFF'
     },
     cursor: 'pointer'
   },
@@ -112,13 +117,15 @@ const styles = theme => ({
     textAlign: 'left',
     padding: '0.5em',
     overflow: 'hidden',
-    maxWidth: '7em'
+    maxWidth: '7em',
+    color: 'inherit'
   },
   emailField: {
     textAlign: 'left',
     padding: '0.5em',
     overflow: 'hidden',
-    maxWidth: '18em'
+    maxWidth: '18em',
+    color: 'inherit'
   },
   unlockedIcon: {
     height: '40px',
@@ -202,11 +209,15 @@ const styles = theme => ({
   }
 });
 
-const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg, ListeningToChildrenSvg, LevelOfInstructionSvg,
-  MathInstructionSvg, StudentEngagementSvg, SequentialActivitiesSvg, AssocCoopInteractionsSvg];
+const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg,
+                   ListeningToChildrenSvg, LevelOfInstructionSvg,
+                   MathInstructionSvg, StudentEngagementSvg,
+                   SequentialActivitiesSvg, AssocCoopInteractionsSvg];
 
-const sortedAltText = ["Transition Time", "Classroom Climate", "Listening To Children", "Level Of Instruction",
-  "Math Instruction ", "Student Engagement", "Sequential Activities", "Assoc Coop Interactions"];
+const sortedAltText = ["Transition Time", "Classroom Climate",
+                       "Listening To Children", "Level Of Instruction",
+                       "Math Instruction ", "Student Engagement",
+                       "Sequential Activities", "Assoc Coop Interactions"];
 
 
 class TeacherLists extends Component {
@@ -337,7 +348,7 @@ class TeacherLists extends Component {
          !!this.state.schoolErrorText ||
          !!this.state.notesErrorText) {
       return null
-    } else {
+    } else { // fields are validated
       const {inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes} = this.state;
       let firebase = this.context;
       firebase.addTeacher({
@@ -480,11 +491,13 @@ class TeacherLists extends Component {
                       {
                         teacher.unlocked !== undefined &&
                         teacher.unlocked.indexOf(key+1) !== -1 &&
-                        <img src={ObserveIcon} className={classes.unlockedIcon} alt="Observed" />
+                        <VisibilityOutlinedIcon  className={classes.unlockedIcon} />
                       }
                     </TableCell>
                   )}
-                  <TableCell className={classes.nameField}>{teacher.goals !== undefined && teacher.goals}</TableCell>
+                  <TableCell className={classes.nameField}>
+                    {teacher.goals !== undefined && teacher.goals}
+                  </TableCell>
                 </TableRow>
                 ))}
               </TableBody>
@@ -492,7 +505,7 @@ class TeacherLists extends Component {
           </div>
           <div className={classes.legendContainer} >
             <div className={classes.legendItem} >
-              <img alt="Observed" src={ObserveIcon} className={classes.legendIcon} />
+              <VisibilityOutlinedIcon  className={classes.legendIcon} />
               = Observed
             </div>
             <div className={classes.legendItem} >
@@ -504,7 +517,8 @@ class TeacherLists extends Component {
               = Co-created Action plan
             </div>
           </div>
-          <Dialog open={isAdding} onClose={this.handleCloseModal} aria-labelledby="add-teacher-title">
+          <Dialog open={isAdding} onClose={this.handleCloseModal}
+                  aria-labelledby="add-teacher-title">
             <DialogTitle id="add-teacher-title">Add a New Teacher</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -577,7 +591,7 @@ class TeacherLists extends Component {
               <Button onClick={this.handleCloseModal} style={{color:'#F1231C'}}>
                 Cancel
               </Button>
-              <Button onClick={this.handleAddConfirm} style={{color:'#09A1B3'}}>
+              <Button onClick={this.handleAddConfirm} style={{color:'#2196F3'}}>
                 Add New Teacher
               </Button>
             </DialogActions>
