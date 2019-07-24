@@ -192,7 +192,6 @@ class BurgerMenu extends React.Component {
                     <Collapse in={this.state.coachingOpen} timeout="auto" unMountOnExit>
                         <ListItem
                             button
-                            disabled
                             onClick={() => {
                                 this.setState({ menu: 8 });
                             }}
