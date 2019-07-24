@@ -9,6 +9,7 @@ import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTime from "./views/protected/TransitionViews/TransitionTime";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPassword";
 import HomePage from "./views/protected/HomeViews/Home";
+import MyTeachers from "./views/protected/MyTeachers/TeacherLists"
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -26,7 +27,7 @@ import SequentialActivitiesTrainingHome from "./views/protected/SequentialActivi
 import TransitionTimeTrainingHome from "./views/protected/TransitionViews/TransitionTimeTrainingHome";
 import About from "./views/WelcomeViews/About";
 import Team from "./views/WelcomeViews/Team";
-
+import TeacherDetail from "./views/protected/MyTeachers/TeacherDetail";
 
 const styles = createMuiTheme({
   palette: {
@@ -187,6 +188,17 @@ class App extends Component {
                 auth={this.state.auth}
                 path="/TransitionTimeTrainingHome"
                 component={TransitionTimeTrainingHome}
+            />
+            <PrivateRoute
+              exact
+              auth={this.state.auth}
+              path="/MyTeachers"
+              component={MyTeachers}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path={`/MyTeachers/:teacherid`}
+              component={TeacherDetail}
             />
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                             the type prop into the PrivateRoute function*/}

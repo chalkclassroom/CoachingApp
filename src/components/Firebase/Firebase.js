@@ -9,7 +9,6 @@ const config = {
     messagingSenderId: "353838544707"
 };
 
-
 class Firebase {
     constructor() {
         if (!firebase.apps.length) {
@@ -25,35 +24,42 @@ class Firebase {
         }
     }
 
-    firebaseEmailSignUp = async function (userData, role) {
-        console.log(role);
-        console.log(userData);
-        await this.auth
-            .createUserWithEmailAndPassword(userData.email, userData.password)
-            .then(function (userInfo) {
-                console.log("Create user and sign in Success", userInfo);
-                var data = Object.assign(
-                    {},
-                    {
-                        email: userData.email,
-                        firstName: userData.firstName,
-                        lastName: userData.lastName,
-                        role: role,
-                        id: userInfo.user.uid
-                    }
-                );
-
-                firebase
-                    .firestore()
-                    .collection("users")
-                    .doc(userInfo.user.uid)
-                    .set(data)
-                    .then(function (docRef) {
-                        console.log("Document written with ID: ", docRef.id);
-                    })
-                    .catch(function (error) {
-                        console.error("Error adding document: ", error);
-                    });
+  firebaseEmailSignUp = async function(userData, role) {
+    await this.auth
+      .createUserWithEmailAndPassword(userData.email, userData.password)
+      .then(function(userInfo) {
+        console.log("Create user and sign in Success", userInfo);
+        const data = Object.assign(
+          {},
+          {
+            email: userData.email,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            role: role,
+            id: userInfo.user.uid
+          }
+        );
+        const docRef = firebase.firestore().collection('users').doc(userInfo.user.uid);
+        docRef.set(data)
+          .then( () => {
+            console.log("Document written with ID: ", docRef.id);
+            if (role === 'coach') {
+              docRef.collection('partners')
+                .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher Uid
+                .set({})
+                .then( () => {
+                  console.log("Practice Teacher added to coach!");
+                })
+                .catch( error => {
+                  console.error("Error occurred while assigning practice teacher to coach: ", error);
+                })
+            } else {
+              console.log("User properly added to Firebase!");
+            }
+          })
+          .catch(function(error) {
+            console.error("Error adding coach: ", error);
+          });
 
                 // firebase.database().ref('users/' + role +'/'+ userInfo.user.uid).set(data).then(function(ref) {//use 'child' and 'set' combination to save data in your own generated key
                 //     console.log("Saved");
@@ -104,26 +110,270 @@ class Firebase {
         return this.auth.sendPasswordResetEmail(email);
     };
 
-    getTeacherList = function () {
-        return firebase
-            .firestore()
-            .collection("users")
-            .doc(this.auth.currentUser.uid)
-            .collection("partners")
-            .get()
-            .then(partners => {
-                let teacherList = [];
-                partners.forEach((partner) => {
-                    console.log(partner.id, "=>", partner.data());
-                    teacherList.push(this.getTeacherInfo(partner.id).then((doc => doc.data()))
-                    );
-                })
-                return teacherList;
-            })
-            .catch(function (error) {
-                console.log("Error getting documents: ", error);
-            });
-    };
+  getTeacherList = function() {
+    return this.db
+      .collection("users")
+      .doc(this.auth.currentUser.uid)
+      .collection("partners")
+      .get()
+      .then(partners => {
+        let teacherList = [];
+        partners.forEach(partner => {
+          //console.log(partner.id, "=>", partner.data());
+          teacherList.push(this.getTeacherInfo(partner.id));
+        });
+        return teacherList;
+      })
+      .catch(function(error) {
+        console.error("Error getting partner list: ", error);
+      });
+  };
+
+  getFullTeacherList = function() {
+    return firebase
+      .firestore()
+      .collection("users")
+      .where("role", "==", "teacher")
+      .get()
+      .then(function(querySnapshot) {
+        let teacherList = [];
+        querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+          teacherList.push(doc.data().then((doc => doc.data()))
+          );
+        });
+        console.log(teacherList);
+        return teacherList;
+      })
+      .catch(function(error) {
+        console.error("Error getting documents: ", error);
+      });
+  };
+
+  // Retrieves a teacher's User data
+  // @param:string partnerID -> UID retrieved from a coach's 'partners' list
+  // @return:object teacher's user object with corresponding ID
+  getTeacherInfo = function(partnerID) {
+    return this.db
+      .collection("users")
+      .doc(partnerID)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return doc.data();
+        } else {
+          console.log("Partner's ID is 'undefined' in dB.")
+        }
+      }).catch(error => {
+        console.error("Error occurred when getting document:", error);
+      })
+  };
+
+  // Pushes edits to a teacher's User data
+  // @param:string partnerID -> UID retrieved from a coach's 'partners' list
+  // @param:object edits -> object containing edited information
+  // @return:boolean -> true on success, false o/w
+  setTeacherInfo = function(partnerID, edits) {
+    if (partnerID === "rJxNhJmzjRZP7xg29Ko6") {
+      console.log("You can't edit the Practice Teacher!")
+    } else {
+      const { firstName, lastName, school, email, notes } = edits;
+      return this.db
+        .collection("users")
+        .doc(partnerID)
+        .set({
+          firstName: firstName,
+          lastName: lastName,
+          school: school,
+          email: email,
+          notes: notes
+        }, { merge: true })
+        .then(() => true )
+        .catch(error => {
+          console.error("Error occurred when writing document:", error);
+          return false;
+        })
+    }
+  };
+
+  // Adds a teacher to the dB AND to the coach's 'partners' list
+  // @param:object teacherInfo -> object containing teacher's information
+  // @return:string -> id on success, empty string "" o/w
+  addTeacher = function(teacherInfo) {
+    const { firstName, lastName, school, email, notes } = teacherInfo;
+    console.log(firstName, lastName, school);
+    let newTeacherRef = this.db.collection("users").doc(); // auto-generated iD
+    return newTeacherRef.set({
+      firstName: firstName,
+      lastName: lastName,
+      school: school,
+      email: email,
+      notes: notes,
+      role: "teacher",
+      id: newTeacherRef.id
+    })
+      .then( () => {
+        const id = newTeacherRef.id; // get new iD
+        return this.db
+          .collection("users")
+          .doc(this.auth.currentUser.uid)
+          .collection("partners")
+          .doc(id)
+          .set({})
+          .then(() => id)
+          .catch(error => {
+            console.error("Error occurred when adding teacher to coach's partner list: ", error);
+            return "";
+          })
+      })
+      .catch( error => {
+        console.error("Error occurred when adding teacher to dB: ", error);
+        return "";
+      })
+  };
+
+  // Removes a partner from the user's 'partners' subcollection
+  // @param:string partnerID -> id of partner to be removed
+  // @return:Promise -> prints to console, no other return object
+  removePartner = function(partnerID) {
+    if (partnerID === "rJxNhJmzjRZP7xg29Ko6") {
+      console.log("You can't delete the Practice Teacher!")
+    } else {
+      return this.db
+        .collection("users")
+        .doc(this.auth.currentUser.uid)
+        .collection("partners")
+        .doc(partnerID)
+        .delete()
+        .then(() =>
+          console.log("Partner successfully removed from Partners list!"))
+        .catch( error => console.error("An error occurred trying to remove the teacher from" +
+          " the Partners list: ", error))
+    }
+  };
+
+  // Gets most recent observation of each type for a teacher
+  // @param:string partnerID -> iD of teacher
+  // @return:Promise -> onFulfilled:returns Array of dates of most recent observations
+  //                 '-> onRejected: prints error to console
+  // NOTE: Index specified in Firebase console in order to execute Query
+  getRecentObservations = function(partnerID) {
+    const obsRef = this.db.collection('observations')
+      .where('teacher','==',`/user/${partnerID}`)
+      .where('observedBy','==',`/user/${this.auth.currentUser.uid}`);
+    // ONLY 'transition','climate', & 'AC' types specified in dB! The rest are subject to change!
+    return Promise.all([
+      obsRef.where('type','==','transition')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','climate')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','listening')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','level')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','math')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','engagement')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','sequential')
+        .orderBy('end','desc')
+        .limit(1)
+        .get(),
+      obsRef.where('type','==','AC')
+        .orderBy('end','desc')
+        .limit(1)
+        .get()
+    ])
+      .then( snapshots => {
+        const recentObs = new Array(8).fill(null);
+        snapshots.forEach( (snapshot, index) => {
+          snapshot.forEach( doc => { // doc.data() can't be undefined
+            recentObs[index] = doc.data().end.toDate().toLocaleDateString();
+          })
+        });
+        return recentObs
+      })
+      .catch( error => {
+        console.error("Error occurred during Promise.all() resolution: ", error);
+      })
+  };
+
+  getTeacherFirstName = function() {
+    return firebase
+      .firestore()
+      .collection("users")
+      .doc(this.auth.currentUser.uid)
+      .get()
+      .then(function(doc) {
+        // Document was found in the cache. If no cached document exists,
+        // an error will be returned to the 'catch' block below.
+        console.log("Cached document data:", doc.data());
+        return doc.data().firstName;
+      }).catch(function(error) {
+        console.error("Error getting cached document:", error);
+      });
+  };
+
+  getTeacherLastName = function() {
+    return firebase
+      .firestore()
+      .collection("users")
+      .doc(this.auth.currentUser.uid)
+      .get()
+      .then(function(doc) {
+        // Document was found in the cache. If no cached document exists,
+        // an error will be returned to the 'catch' block below.
+        console.log("Cached document data:", doc.data());
+        return doc.data().lastName;
+      }).catch(function(error) {
+        console.error("Error getting cached document:", error);
+      });
+  };
+
+  getTeacherEmail = function() {
+    return firebase
+      .firestore()
+      .collection("users")
+      .doc(this.auth.currentUser.uid)
+      .get()
+      .then(function(doc) {
+        // Document was found in the cache. If no cached document exists,
+        // an error will be returned to the 'catch' block below.
+        console.log("Cached document data:", doc.data());
+        return doc.data().email;
+      }).catch(function(error) {
+        console.error("Error getting cached document:", error);
+      });
+  };
+
+  getTeacherSchool = function() {
+    return firebase
+      .firestore()
+      .collection("schools")
+      .doc(this.auth.currentUser.uid)
+      .get()
+      .then(function(doc) {
+        // Document was found in the cache. If no cached document exists,
+        // an error will be returned to the 'catch' block below.
+        console.log("Cached document data:", doc.data());
+        return doc.data().name;
+      }).catch(function(error) {
+        console.error("Error getting cached document:", error);
+      });
+  };
 
     getTeacherInfo = async (partnerId) => {
         return await firebase.firestore().collection("users").doc(partnerId).get();
