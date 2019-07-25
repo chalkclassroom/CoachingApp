@@ -99,9 +99,9 @@ const styles = {
   magicEightButton: {
     marginBottom: '15%',
     backgroundColor: '#FFFFFF',
-    border: '0px none #FFFFFF',
+    border: '0 none #FFFFFF',
     borderRadius: '10%',
-    padding: '0px',
+    padding: 0,
     width:'80%',
     boxShadow: 'none',
     opacity: 0.95,
@@ -247,12 +247,11 @@ const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg,
                    MathInstructionSvg, StudentEngagementSvg,
                    SequentialActivitiesSvg, AssocCoopInteractionsSvg];
 
-
 class TeacherDetail extends Component {
 
   constructor (props) {
     super(props);
-    const id = this.props.match.params.teacherid; // Entered URL w/o navigating from 'My Teachers'
+    const id = this.props.match.params.teacherid;
     this.initialState = {
       teacherUID: id,
       firstName: "...",
@@ -286,7 +285,9 @@ class TeacherDetail extends Component {
       ]
     };
 
-    if (this.props.location.state !== undefined) { // Came from 'My Teachers'
+    if (this.props.location.state === undefined) { // Entered URL w/o navigating from 'My Teachers'
+      this.state = this.initialState;
+    } else { // Came from 'My Teachers'
       const { id, firstName, lastName, school, email, notes } = this.props.location.state.teacher;
       this.state = {
         teacherUID: id,
@@ -320,8 +321,6 @@ class TeacherDetail extends Component {
           null  // AC
         ]
       };
-    } else {
-      this.state = this.initialState;
     }
 
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -538,14 +537,14 @@ class TeacherDetail extends Component {
               : (
               <div>
                 <Fab aria-label="Edit" name="Edit" size='small'
-                     onClick={() => this.setState({isEditing: true})}
-                     className={classes.actionButton} style={{backgroundColor: '#F9FE49'}}>
-                  <EditOutlinedIcon style={{color: '#555555'}} />
+                     onClick={() => this.setState({ isEditing:true })}
+                     className={classes.actionButton} style={{ backgroundColor:'#F9FE49' }}>
+                  <EditOutlinedIcon style={{ color:'#555555' }} />
                 </Fab>
-                <Fab aria-label="Delete" onClick={() => this.setState({isDeleting: true})}
+                <Fab aria-label="Delete" onClick={() => this.setState({ isDeleting:true })}
                      className={classes.actionButton} size='small'
-                     style={{backgroundColor: '#FF3836'}}>
-                  <DeleteForeverIcon style={{color: '#C9C9C9'}}/>
+                     style={{ backgroundColor:'#FF3836' }}>
+                  <DeleteForeverIcon style={{ color:'#C9C9C9' }}/>
                 </Fab>
               </div>
             )}
@@ -553,7 +552,7 @@ class TeacherDetail extends Component {
           <Grid container direction="row" justify="space-between" alignItems="stretch"
                 className={classes.contentContainer}>
             <div className={classes.teacherCard}>
-              <div style={{display:'flex', flexDirection:'row', minWidth:'45%'}}>
+              <div style={{ display:'flex', flexDirection:'row', minWidth:'45%' }}>
                 <LabeledInfo label="First Name" field={firstName}/>
                 <LabeledInfo label="Last Name" field={lastName}/>
               </div>
@@ -562,7 +561,7 @@ class TeacherDetail extends Component {
               <LabeledInfo label="Notes" field={notes}/>
             </div>
             <ol className={classes.magicEightCard}>
-              {sortedSvg.map((item, key) =>
+              {sortedSvg.map( (item, key) =>
                 recentObs !== undefined &&
                 recentObs[key] !== null ?
                   <li key={key} className={classes.magicEightItem}>
@@ -600,16 +599,16 @@ class TeacherDetail extends Component {
             <DialogActions className={classes.deleteModalButtonContainer}>
               <Button onClick={() => this.setState({ isDeleting:false })}
                       className={classes.deleteModalButton} autoFocus
-                      style={{borderColor: '#2196F3'}}>
+                      style={{ borderColor:'#2196F3' }}>
                 No,
-                <b style={{color: '#2196F3', padding:'0 0.3em 0 0.3em'}}>
+                <b style={{ color:'#2196F3', padding:'0 0.3em 0 0.3em' }}>
                   KEEP
                 </b>{firstName} {lastName}
               </Button>
               <Button onClick={this.handleDeleteConfirm} className={classes.deleteModalButton}
-                      style={{borderColor: '#F1231C'}}>
+                      style={{ borderColor:'#F1231C' }}>
                 Yes,
-                <b style={{color: '#F1231C', padding:'0 0.3em 0 0.3em'}}>
+                <b style={{ color:'#F1231C', padding:'0 0.3em 0 0.3em' }}>
                   DELETE
                 </b>{firstName} {lastName}
               </Button>
@@ -632,7 +631,7 @@ class TeacherDetail extends Component {
                 label="First Name"
                 type="text"
                 helperText={fnErrorText}
-                error={!!fnErrorText}
+                error={!!fnErrorText}   // false when empty "", true o/w
                 fullWidth
               />
               <TextField
@@ -687,10 +686,10 @@ class TeacherDetail extends Component {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={this.handleCloseModal} style={{color:'#F1231C'}}>
+              <Button onClick={this.handleCloseModal} style={{ color:'#F1231C' }}>
                 Cancel
               </Button>
-              <Button onClick={this.handleEditConfirm} style={{color:'#2196F3'}}>
+              <Button onClick={this.handleEditConfirm} style={{ color:'#2196F3' }}>
                 Confirm Edits
               </Button>
             </DialogActions>

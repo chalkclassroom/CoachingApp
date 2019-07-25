@@ -377,8 +377,8 @@ class TeacherLists extends Component {
               this.handleAddAlert(false);
             })
         })
-        .catch(e => {
-          console.log("Error occurred adding teacher to dB: ", e);
+        .catch( e => {
+          console.error("Error occurred adding teacher to dB: ", e);
           this.handleCloseModal();
           this.handleAddAlert(false);
         });
@@ -469,7 +469,7 @@ class TeacherLists extends Component {
                   </TableCell>
                   {sortedSvg.map((item, key) =>
                     <TableCell className={classes.magicEightCell}
-                               style={{position:'sticky', top:0, backgroundColor:'#FFFFFF'}}>
+                               style={{ position:'sticky', top:0, backgroundColor:'#FFFFFF' }}>
                       <img src={item} alt={sortedAltText[key]}
                            className={classes.magicEightIcon}/>
                     </TableCell>
@@ -480,9 +480,9 @@ class TeacherLists extends Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {this.state.searched.map((teacher, index) => (
+                {this.state.searched.map( (teacher, index) => (
                 <TableRow className={classes.row} key={index}
-                          onClick={() => this.selectTeacher(teacher)}>
+                          onClick={this.selectTeacher(teacher)}>
                   <TableCell className={classes.nameField}>{teacher.lastName}</TableCell>
                   <TableCell className={classes.nameField}>{teacher.firstName}</TableCell>
                   <TableCell className={classes.emailField}>{teacher.email}</TableCell>

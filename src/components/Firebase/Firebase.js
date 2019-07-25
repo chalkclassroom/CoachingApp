@@ -153,7 +153,8 @@ class Firebase {
 
   // Retrieves a teacher's User data
   // @param:string partnerID -> UID retrieved from a coach's 'partners' list
-  // @return:object teacher's user object with corresponding ID
+  // @return:Promise -> onFulfilled: returns Object of teacherInfo
+  //                '-> onRejected: prints error to console
   getTeacherInfo = function(partnerID) {
     return this.db
       .collection("users")
@@ -165,7 +166,8 @@ class Firebase {
         } else {
           console.log("Partner's ID is 'undefined' in dB.")
         }
-      }).catch(error => {
+      })
+      .catch(error => {
         console.error("Error occurred when getting document:", error);
       })
   };
@@ -173,7 +175,8 @@ class Firebase {
   // Pushes edits to a teacher's User data
   // @param:string partnerID -> UID retrieved from a coach's 'partners' list
   // @param:object edits -> object containing edited information
-  // @return:boolean -> true on success, false o/w
+  // @return:Promise -> onFulfilled: returns true
+  //                '-> onRejected: returns false
   setTeacherInfo = function(partnerID, edits) {
     if (partnerID === "rJxNhJmzjRZP7xg29Ko6") {
       console.log("You can't edit the Practice Teacher!")
@@ -199,7 +202,8 @@ class Firebase {
 
   // Adds a teacher to the dB AND to the coach's 'partners' list
   // @param:object teacherInfo -> object containing teacher's information
-  // @return:string -> id on success, empty string "" o/w
+  // @return:Promise -> onFulfilled: returns id string of new teacher
+  //                '-> onRejected: returns ""
   addTeacher = function(teacherInfo) {
     const { firstName, lastName, school, email, notes } = teacherInfo;
     console.log(firstName, lastName, school);
@@ -255,8 +259,8 @@ class Firebase {
 
   // Gets most recent observation of each type for a teacher
   // @param:string partnerID -> iD of teacher
-  // @return:Promise -> onFulfilled:returns Array of dates of most recent observations
-  //                 '-> onRejected: prints error to console
+  // @return:Promise -> onFulfilled: returns Array of dates of most recent observations
+  //                '-> onRejected: prints error to console
   // NOTE: Index specified in Firebase console in order to execute Query
   getRecentObservations = function(partnerID) {
     const obsRef = this.db.collection('observations')
@@ -309,70 +313,6 @@ class Firebase {
       .catch( error => {
         console.error("Error occurred during Promise.all() resolution: ", error);
       })
-  };
-
-  getTeacherFirstName = function() {
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(this.auth.currentUser.uid)
-      .get()
-      .then(function(doc) {
-        // Document was found in the cache. If no cached document exists,
-        // an error will be returned to the 'catch' block below.
-        console.log("Cached document data:", doc.data());
-        return doc.data().firstName;
-      }).catch(function(error) {
-        console.error("Error getting cached document:", error);
-      });
-  };
-
-  getTeacherLastName = function() {
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(this.auth.currentUser.uid)
-      .get()
-      .then(function(doc) {
-        // Document was found in the cache. If no cached document exists,
-        // an error will be returned to the 'catch' block below.
-        console.log("Cached document data:", doc.data());
-        return doc.data().lastName;
-      }).catch(function(error) {
-        console.error("Error getting cached document:", error);
-      });
-  };
-
-  getTeacherEmail = function() {
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(this.auth.currentUser.uid)
-      .get()
-      .then(function(doc) {
-        // Document was found in the cache. If no cached document exists,
-        // an error will be returned to the 'catch' block below.
-        console.log("Cached document data:", doc.data());
-        return doc.data().email;
-      }).catch(function(error) {
-        console.error("Error getting cached document:", error);
-      });
-  };
-
-  getTeacherSchool = function() {
-    return firebase
-      .firestore()
-      .collection("schools")
-      .doc(this.auth.currentUser.uid)
-      .get()
-      .then(function(doc) {
-        // Document was found in the cache. If no cached document exists,
-        // an error will be returned to the 'catch' block below.
-        console.log("Cached document data:", doc.data());
-        return doc.data().name;
-      }).catch(function(error) {
-        console.error("Error getting cached document:", error);
-      });
   };
 
   getCoachList = function () {
