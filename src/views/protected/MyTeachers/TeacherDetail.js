@@ -487,7 +487,13 @@ class TeacherDetail extends Component {
     firebase.removePartner(this.state.teacherUID)
       .then(() => {
         this.setState(this.initialState,
-        () => this.props.history.replace("/MyTeachers"));})
+        () => {
+          if (this.props.location.state !== undefined) { // came from MyTeachers
+            this.props.history.goBack();
+          } else {
+            this.props.history.replace("/MyTeachers")
+          }
+        });})
       .catch(() => this.setState({
         editAlert: true,
         alertText: "Something went wrong removing this teacher... " +
@@ -523,7 +529,13 @@ class TeacherDetail extends Component {
         </FirebaseContext.Consumer>
         <div className={classes.container}>
           <Button variant="contained" size="medium" className={classes.button}
-                  onClick={() => this.props.history.replace("/MyTeachers")}>
+                  onClick={() => {
+                    if (this.props.location.state !== undefined) { // came from MyTeachers
+                      this.props.history.goBack();
+                    } else {
+                      this.props.history.replace("/MyTeachers")
+                    }
+                  }}>
             <ChevronLeftRoundedIcon />
             <b>My Teachers</b>
           </Button>
@@ -576,7 +588,8 @@ class TeacherDetail extends Component {
                   </li>
                   :
                   <li key={key} className={classes.magicEightItem}>
-                    <Button variant='contained' className={classes.magicEightButton}>
+                    <Button disabled variant='contained' className={classes.magicEightButton}
+                            style={{ backgroundColor:'#FFFFFF', opacity:0.8 }}>
                       <img src={item} alt="Magic Eight" className={classes.img}/>
                     </Button>
                     <p>Not Yet<br />Observed<br /><br /></p>

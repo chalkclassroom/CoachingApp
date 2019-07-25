@@ -482,7 +482,7 @@ class TeacherLists extends Component {
               <TableBody>
                 {this.state.searched.map( (teacher, index) => (
                 <TableRow className={classes.row} key={index}
-                          onClick={this.selectTeacher(teacher)}>
+                          onClick={() => this.selectTeacher(teacher)}>
                   <TableCell className={classes.nameField}>{teacher.lastName}</TableCell>
                   <TableCell className={classes.nameField}>{teacher.firstName}</TableCell>
                   <TableCell className={classes.emailField}>{teacher.email}</TableCell>
