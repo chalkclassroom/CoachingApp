@@ -29,8 +29,8 @@ import TextField from '@material-ui/core/TextField';
 const styles = {
   root: {
     flexGrow: 1,
-    width: '100%',
-    maxHeight: '100%'
+    width: '100vw',
+    maxHeight: '100vh'
   },
   container: {
     //border: '2px solid #000000',

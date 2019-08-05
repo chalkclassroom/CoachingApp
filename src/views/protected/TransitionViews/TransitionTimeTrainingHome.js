@@ -1,37 +1,55 @@
-import React from "react";
+import React, {Component} from "react";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
+<<<<<<< HEAD
+=======
+import FilledInput from "@material-ui/core/FilledInput/index";
+import InputLabel from "@material-ui/core/InputLabel/index";
+import FormControl from "@material-ui/core/FormControl/index";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import Select from "@material-ui/core/Select/index";
+import {ReactComponent as GenerateReportSVG} from "../../../assets/icons/generateReport.svg";
+>>>>>>> Starts knowledge check implementation for Transitions.
 import TransitionTimeIcon from "../../../assets/icons/TransitionTime.svg";
-import { withStyles } from "@material-ui/core/styles/index";
+import {withStyles} from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
+<<<<<<< HEAD
 import { ImmortalDB } from "immortal-db";
 import 'chartjs-plugin-datalabels';
 import TrainingVideo
     from "../../../components/Shared/TrainingVideo";
 import ChildTeacherBehaviorTrendsSlider
     from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+=======
+import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
+import 'chartjs-plugin-datalabels';
+import TrainingVideo from "../../../components/Shared/TrainingVideo";
+import ChildTeacherBehaviorDetailsSlider
+  from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
+import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+>>>>>>> Starts knowledge check implementation for Transitions.
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
-
-
 
 const styles = {
   root: {
     flexGrow: 1,
-    height: "100vh",
-    flexDirection: "column"
+    height: '100vh',
+    flexDirection: 'column',
+    border: '1px solid #000000',
+    overflow: 'hidden',
+    marginBottom: '0',
+    paddingBottom: '0'
   },
   main: {
     flex: 1,
-    height: "90%",
-    marginTop: "10vh"
-  },
-  grow: {
-    flexGrow: 1
+    height: '90%',
+    marginTop: '0',
+    border: '1px solid #2BFF00'
   },
   menuButton: {
     marginLeft: -12,
@@ -43,7 +61,8 @@ const styles = {
   },
   buttonsList: {
     position: "relative",
-    top: "3vh"
+    top: "3vh",
+    border: '1px solid #00FFEB'
   },
   title: {
     position: "relative",
@@ -189,11 +208,7 @@ class TransitionTimeTrainingHome extends React.Component {
                     size="large"
                     color={"primary"}
                     fullWidth={true}
-                    variant={
-                      this.state.view === ViewEnum.CONCEPTS
-                        ? "contained"
-                        : "outlined"
-                    }
+                    variant={this.state.view === ViewEnum.CONCEPTS ? "contained" : "outlined"}
                     className={classes.viewButtons}
                     onClick={this.conceptsClick}
                   >
@@ -205,11 +220,7 @@ class TransitionTimeTrainingHome extends React.Component {
                     size="large"
                     color={"primary"}
                     fullWidth={true}
-                    variant={
-                      this.state.view === ViewEnum.EXAMPLE
-                        ? "contained"
-                        : "outlined"
-                    }
+                    variant={this.state.view === ViewEnum.EXAMPLE ? "contained" : "outlined"}
                     className={classes.viewButtons}
                     onClick={this.exampleClick}
                   >
@@ -221,11 +232,7 @@ class TransitionTimeTrainingHome extends React.Component {
                     size="large"
                     color={"primary"}
                     fullWidth={true}
-                    variant={
-                      this.state.view === ViewEnum.DEMONSTRATION
-                        ? "contained"
-                        : "outlined"
-                    }
+                    variant={this.state.view === ViewEnum.DEMONSTRATION ? "contained" : "outlined"}
                     className={classes.viewButtons}
                     onClick={this.demonstrationClick}
                   >
@@ -237,11 +244,7 @@ class TransitionTimeTrainingHome extends React.Component {
                     size="large"
                     color={"primary"}
                     fullWidth={true}
-                    variant={
-                      this.state.view === ViewEnum.TRYIT
-                        ? "contained"
-                        : "outlined"
-                    }
+                    variant={this.state.view === ViewEnum.TRYIT ? "contained" : "outlined"}
                     className={classes.viewButtons}
                     onClick={this.tryItClick}
                   >
@@ -251,13 +254,9 @@ class TransitionTimeTrainingHome extends React.Component {
                 <ListItem>
                   <Button
                     size="large"
-                    color= {"primary"}
+                    color={"primary"}
                     fullWidth={true}
-                    variant={
-                      this.state.view === ViewEnum.KNOWLEDGECHECK
-                        ? "contained"
-                        : "outlined"
-                    }
+                    variant={this.state.view === ViewEnum.KNOWLEDGECHECK ? "contained" : "outlined"}
                     className={classes.viewButtons}
                     onClick={this.knowledgeCheckClick}
                   >
@@ -266,7 +265,8 @@ class TransitionTimeTrainingHome extends React.Component {
                 </ListItem>
               </List>
             </Grid>
-            <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
+            <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}
+                  style={{border: '1px solid #F400FF'}}>
               <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
                 Training: Transition Time Tool
               </Typography>
@@ -287,13 +287,15 @@ class TransitionTimeTrainingHome extends React.Component {
                     <div className={classes.resultsContent}>
                       <ChildTeacherBehaviorTrendsSlider/>
                     </div>
-                  ) : this.state.view === ViewEnum.TRYIT ? (
-                    null
-                  ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
+                  ) : this.state.view === ViewEnum.TRYIT ?
                     <div className={classes.resultsContent}>
-                      <TrainingQuestionnaire section={1}/>
+                      TRY IT
                     </div>
-                  ) :  null}
+                    : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
+                      <div className={classes.resultsContent}>
+                        <TrainingQuestionnaire section={'transition'}/>
+                      </div> // replace this null with next steps content
+                    ) : null}
                 </div>
               </Grid>
             </Grid>

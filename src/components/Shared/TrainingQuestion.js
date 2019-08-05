@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles/index';
 import Radio from '@material-ui/core/Radio/index';
@@ -9,77 +9,47 @@ import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
   root: {
-    display: 'flex',
+    border: '1px solid #FF0046',
+    // display: 'flex',
+    // flexGrow: 1,
   },
   formControl: {
-    margin: theme.spacing.unit * 3,
+    // margin: theme.spacing.unit * 3,
   },
   group: {
-    margin: `${theme.spacing.unit}px 0`,
+    // margin: `${theme.spacing.unit}px 0`,
   },
 });
 
-class TrainingQuestion extends React.Component {
 
-  constructor(props){
-    super(props);
-    this.state = {
-      selected: this.props.selected,
-      question:this.props.question,
-      options:this.props.options,
-      answer:this.props.answer
-    };
-  }
-
-  componentWillReceiveProps(nextProps){
-    const {question, answer, options,selected} = nextProps;
-    console.log(this.props);
-
-    this.setState({
-      answer,
-      question,
-      options,
-      selected
-    })
-  }
+class TrainingQuestion extends Component {
 
   handleChange = event => {
-    this.setState({ selected: event.target.value })
-    console.log(event.target.value, this.state.answer)
-    if (event.target.value == this.state.answer) {
-      console.log("Correct Answer")
-      this.props.incrementCorrectResponsesHandler();
-    } else {
-      console.log("Wrong Answer")
-    }
+    console.log(event.target.value);
+    this.props.setSelection(Number(event.target.value));
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, question, options, selected, feedback } = this.props;
 
     return (
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
-          <Typography component="h5" variant={"h5"}>{this.state.question}</Typography>
+          <p>{question}</p>
           <RadioGroup
-            aria-label="Gender"
-            name="gender1"
+            aria-label="Multiple Choice Question"
+            name="knowledge-check-question"
             className={classes.group}
-            value={this.state.selected}
+            value={"" + selected}
             onChange={this.handleChange}
           >
-            {this.state.options.map((option, index) => {
-              console.log(option, index, this.state.selected, this.state.selected == index)
-              return (
-                <FormControlLabel
-                  key={index}
-                  value={index}
-                  control={<Radio checked={this.state.selected == index}/>}
-                  label={option}
-                />
-              );
-            })}
+            {Array.from(options.keys()).map( (option, index) =>
+              <FormControlLabel checked={selected === index} value={"" + index}
+                                label={option} key={index} control={<Radio />}
+              />
+            )}
           </RadioGroup>
+          <FormHelperText>{feedback}</FormHelperText>
         </FormControl>
       </div>
     );
@@ -88,7 +58,7 @@ class TrainingQuestion extends React.Component {
 
 TrainingQuestion.propTypes = {
   classes: PropTypes.object.isRequired,
-  incrementCorrectResponsesHandler: PropTypes.func.isRequired,
+  setSelection: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(TrainingQuestion);

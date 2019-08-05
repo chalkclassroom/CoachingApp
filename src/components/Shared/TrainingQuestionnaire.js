@@ -1,198 +1,180 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles/index';
-import Stepper from '@material-ui/core/Stepper/index';
-import Step from '@material-ui/core/Step/index';
-import StepLabel from '@material-ui/core/StepLabel/index';
-import Button from '@material-ui/core/Button/index';
-import Typography from '@material-ui/core/Typography/index';
-import TrainingQuestion from "./TrainingQuestion";
-import FirebaseContext from "../Firebase/context";
-import MenuItem from "@material-ui/core/MenuItem";
-import moment from "../../views/protected/ClassroomClimateViews/ClassroomClimateResults";
-import TextField from "@material-ui/core/TextField";
+import TrainingQuestion from './TrainingQuestion';
+import FirebaseContext from '../Firebase/context';
+import questionBank from './QuestionBank';
+import { withStyles } from '@material-ui/core/styles';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Button from '@material-ui/core/Button';
+
 
 const styles = theme => ({
-    root: {
-        width: '90%',
-    },
-    button: {
-        marginRight: theme.spacing.unit,
-    },
-    instructions: {
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
-    },
+  root: {
+    border: '1px solid #0400FF',
+    // width: '90%',
+  },
+  button: {
+    // marginRight: theme.spacing.unit,
+  },
+  instructions: {
+    // marginTop: theme.spacing.unit,
+    // marginBottom: theme.spacing.unit,
+  },
+  stepContentContainer: {
+    border: '1px solid #DEFF00'
+  }
 });
 
-const questionArray = ['transition', 'climate', 'math', 'student', 'level', 'listening', 'sequential', 'ac'];
+class TrainingQuestionnaire extends Component {
 
-class TrainingQuestionnaire extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            activeStep: 0,
-            skipped: new Set(),
-            questions: [],
-            correctResponses:0,
-            passed: 0
-        };
-        this.incrementCorrectResponsesHandler = this.incrementCorrectResponsesHandler.bind(this)
-
-    }
-
-    incrementCorrectResponsesHandler() {
-        this.setState((prevState, props) => ({
-            correctResponses: prevState.correctResponses + 1
-        }));
-    }
-
-    getSteps() {
-        if (this.state.questions === undefined || this.state.questions.length == 0) {
-            return []
-        }
-        else {
-            let stringsArray=[];
-            for(var i = 0; i < this.state.questions.length; i++){
-                stringsArray.push('Q: ' + (i + 1));
-            }
-            return stringsArray;
-        }
-    }
-
-    getStepContent(step) {
-        if (this.state.questions === undefined || this.state.questions.length == 0) {
-            return <div> Loading ... </div>
-        }
-        else {
-            console.log('step', step, this.state.questions);
-            console.log("<div><TrainingQuestion options=" + this.state.questions[step].options + "/></div>")
-            return <TrainingQuestion selected={-1} incrementCorrectResponsesHandler={this.incrementCorrectResponsesHandler} question={this.state.questions[step].question} answer={this.state.questions[step].answer} options={this.state.questions[step].options}/>;
-        }
-    }
-
-    handleNext = () => {
-        const { activeStep } = this.state;
-        let { skipped } = this.state;
-        if (this.isStepSkipped(activeStep)) {
-            skipped = new Set(skipped.values());
-            skipped.delete(activeStep);
-        }
-        this.setState({
-            activeStep: activeStep + 1,
-            skipped,
-        });
+  constructor(props) {  // section -> one of ('transition','climate','ac',etc...)
+    super(props);
+    this.state = {
+      questions: [],
+      batch: [],
+      currentQuestion: 0,
+      numCorrect: 0,
+      selectedOption: -1,
+      feedback: ""
     };
 
-    handleBack = () => {
-        this.setState(state => ({
-            activeStep: state.activeStep - 1,
-        }));
-    };
+    this.componentDidMount = this.componentDidMount.bind(this);
+  }
 
-    handleReset = () => {
-        this.setState({
-            activeStep: 0,
-        });
-    };
+  componentDidMount() {
+    const questions = questionBank[this.props.section];
+    this.setState({
+      questions: questions,
+      batch: questions.slice(0,5)
+    }, () => console.log(questions));
+  }
 
-    isStepSkipped(step) {
-        return this.state.skipped.has(step);
+  setSelection = selection => {
+    console.log(typeof(selection));
+    this.setState({
+      selectedOption: selection
+    }, () => console.log(selection))
+  };
+
+  getStepLabels = () => {
+    const { batch } = this.state;
+    const stepLabels = [];
+    if (batch !== undefined && batch.length !== 0) {
+      for (var i in batch) {
+        stepLabels.push("Q:" + (Number(i) + 1));
+      }
     }
+    return stepLabels;
+  };
 
-
-    componentDidMount() {
-        let firebase = this.context;
-        firebase.handleFetchQuestions(questionArray[this.props.section-1]).then((questions)=>{
-            console.log(questions)
-            this.setState({
-                questions: questions
-            });
-        });
+  getStepContent = step => {
+    const { batch, selectedOption, feedback } = this.state;
+    if (batch === undefined || batch.length === 0) {
+      return <div> Loading ... </div>
+    } else {
+      const { text, options } = batch[step];
+      return <TrainingQuestion selected={selectedOption} setSelection={this.setSelection}
+                               question={text} options={options} feedback={feedback}/>
     }
+  };
 
-    unlockBasedOnGrade(){
-        console.log(this.state.correctResponses, this.state.questions.length)
-       if(this.state.correctResponses / this.state.questions.length >= 0.8){
-           console.log("Passed");
-           let firebase = this.context;
-           firebase.handleUnlockSection(this.props.section);
-       }else{
-           console.log("Failed Try Again")
-       }
+  handleSubmit = () => {
+    const { batch, currentQuestion, selectedOption, numCorrect } = this.state;
+    const { options } = batch[currentQuestion];
+    if (options.get(Array.from(options.keys())[selectedOption])) { // correct answer
+      // Show proper feedback, setTimeOut, make next button available
+      this.setState({
+        feedback: "Correct!"
+      }, () => setTimeout(
+        () => this.setState({
+          currentQuestion: currentQuestion + 1,
+          feedback:"",
+          selectedOption: -1,
+          numCorrect: numCorrect + 1,
+        }),
+        1000
+      ))
+    } else {
+      this.setState({
+        feedback: "Oops, sorry!"
+      }, () => setTimeout(
+        () => this.setState({
+          currentQuestion: currentQuestion + 1,
+          feedback: "",
+          selectedOption: -1,
+        }),
+        1000
+      )); // Show proper feedback, setTimeOut, make next button available
     }
+  };
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        if(this.state.correctResponses + 1 === nextState.correctResponses){
-            return false;
-        }else{
-            return true;
-        }
+  handleReset = () => {
+    this.setState({
+      currentQuestion: 0,
+      numCorrect: 0,
+      selectedOption: -1
+    });
+  };
+
+  unlockBasedOnGrade() {
+    console.log(this.state.numCorrect, this.state.batch.length);
+    if (this.state.numCorrect / this.state.batch.length >= 0.8) {
+      console.log("Passed");
+      // let firebase = this.context;
+      // firebase.handleUnlockSection(this.props.section);
+    } else {
+      console.log("Failed Try Again")
     }
+  }
 
-    render() {
-        const { classes } = this.props;
-        const steps = this.getSteps();
-        const { activeStep,questions } = this.state;
-        if(activeStep === questions.length && questions !== 0){
-                console.log("calling unlock firebase");
-                this.unlockBasedOnGrade();
-        }
-
-        return (
-            <div className={classes.root}>
-                <Stepper activeStep={activeStep}>
-                    {steps.map((label, index) => {
-                        const props = {};
-                        const labelProps = {};
-                        return (
-                            <Step key={label} {...props}>
-                                <StepLabel {...labelProps}>{label}</StepLabel>
-                            </Step>
-                        );
-                    })}
-                </Stepper>
-                <div>
-                    {activeStep === steps.length ? (
-                        <div>
-                            <Typography className={classes.instructions}>
-                                Completed Training
-                            </Typography>
-                        </div>
-                    ) : (
-                        <div>
-                            {console.log("active", activeStep)}
-                            {this.getStepContent(activeStep)}
-                            <div>
-                                <Button
-                                    disabled={activeStep === 0}
-                                    onClick={this.handleBack}
-                                    className={classes.button}
-                                >
-                                    Back
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={this.handleNext}
-                                    className={classes.button}
-                                >
-                                    {activeStep === this.state.questions.length - 1 ? 'Finish' : 'Next'}
-                                </Button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-        );
+  render() {
+    const { classes } = this.props;
+    const stepLabels = this.getStepLabels();
+    const { batch, currentQuestion, selectedOption } = this.state;
+    if (currentQuestion === batch.length && batch !== 0) {
+      console.log("calling unlock firebase");
+      //this.unlockBasedOnGrade();
     }
+    return (
+      <div className={classes.root}>
+        <Stepper activeStep={currentQuestion}>
+          {stepLabels.map((label, index) => {
+            return (
+              <Step key={index} >
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
+        {currentQuestion === batch.length ? (
+          <p className={classes.instructions}>
+            Completed Training
+          </p>
+        ) : (
+          <div className={classes.stepContentContainer}>
+            {this.getStepContent(currentQuestion)}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.handleSubmit}
+              className={classes.button}
+              disabled={selectedOption === -1}
+            >
+              {currentQuestion === batch.length - 1 ? 'Finish' : 'Next'}
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  }
 }
 
 TrainingQuestionnaire.propTypes = {
-    classes: PropTypes.object,
+  classes: PropTypes.object,
+  section: PropTypes.string.isRequired
 };
-
 
 TrainingQuestionnaire.contextType = FirebaseContext;
 export default withStyles(styles)(TrainingQuestionnaire);

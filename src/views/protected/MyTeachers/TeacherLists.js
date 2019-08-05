@@ -34,8 +34,9 @@ const styles = theme => ({
   root: {
     //border: '1px solid #000000',
     flexGrow: 1,
-    width: '100%',
+    width: '100vw',
     minHeight: '768px',
+    maxHeight: '100vh',
     margin: 0,
     padding: 0
   },
