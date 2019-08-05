@@ -16,9 +16,9 @@ class Firebase {
             this.auth = firebase.auth();
             this.db = firebase.firestore();
             this.db.settings({timestampsInSnapshots: true});
-            this.db.enablePersistence({experimentalTabSynchronization:true}).then(() => {
-              console.log("Woohoo! Multi-Tab Persistence!");
-            }).catch((err=>{console.log("Offline Not Working")}));
+            // this.db.enablePersistence({experimentalTabSynchronization:true}).then(() => {
+            //   console.log("Woohoo! Multi-Tab Persistence!");
+            // }).catch((err=>{console.log("Offline Not Working")}));
 
             this.functions = firebase.functions();
         }
