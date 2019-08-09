@@ -10,7 +10,7 @@ import { ReactComponent as CalendarSvg } from "../../../assets/icons/calendar.sv
 import { ReactComponent as ObserveSvg } from "../../../assets/icons/observe.svg";
 import { ReactComponent as ResultSvg } from "../../../assets/icons/results.svg";
 import { ReactComponent as MessageSvg } from "../../../assets/icons/messages.svg";
-import ObserveModal from "./ObserveModal";
+import TeacherModal from "./TeacherModal";
 import FirebaseContext from "../../../components/Firebase/context";
 
 const styles = {
@@ -35,17 +35,17 @@ const styles = {
 
 class Welcome extends React.Component {
     state = {
-        observeModal: false,
+        teacherModal: false,
         type: "",
         coachName: ""
     };
 
-    showObserveModal = (type) => {
-        this.setState({ observeModal: true, type: type});
+    showTeacherModal = (type) => {
+        this.setState({ teacherModal: true, type: type});
     };
 
     handleClose = event => {
-        this.setState({ observeModal: false,
+        this.setState({ teacherModal: false,
                             type: ""});
     };
 
@@ -112,7 +112,7 @@ class Welcome extends React.Component {
                         </Card>
                         <Card
                             className={classes.card}
-                            onClick={() => this.showObserveModal("Observe")}
+                            onClick={() => this.showTeacherModal("Observe")}
                         >
                             <CardContent>
                                 <Grid
@@ -145,7 +145,7 @@ class Welcome extends React.Component {
                         justify="space-around"
                         style={{ padding: 40 }}
                     >
-                        <Card className={classes.card} onClick={() => this.showObserveModal("Results")}>
+                        <Card className={classes.card} onClick={() => this.showTeacherModal("Results")}>
                             
                             <CardContent>
                                 <Grid
@@ -196,10 +196,10 @@ class Welcome extends React.Component {
                         </Card>
                     </Grid>
                 </Grid>
-                {this.state.observeModal ? (
+                {this.state.teacherModal ? (
                     <FirebaseContext.Consumer>
                         {firebase => (
-                            <ObserveModal
+                            <TeacherModal
                                 handleClose={this.handleClose}
                                 firebase={firebase}
                                 type={this.state.type}

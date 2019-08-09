@@ -36,6 +36,15 @@ const styles = {
     },
     grow: {
         flexGrow: 1
+    },
+    goButton: {
+        backgroundColor: "#2196F3",
+        marginLeft: "75%",
+        transform: "scale(1.1)",
+        display: "flex",
+        marginBottom: "5px",
+        color: "white",
+        marginTop: "4vh"
     }
 };
 
@@ -58,7 +67,10 @@ class Magic8Menu extends Component {
             allowed: false,
             numSelected: 0,
             selected: "none",
-            unlocked: [], 
+            unlocked: [1, 8, 7, 2], 
+            page: this.props.history.location.state.type === "Training" ? "Training"
+                : this.props.history.location.state.type === "Observe" ? "Observation"
+                : "Results"
         };
 
         this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this)
@@ -84,8 +96,26 @@ class Magic8Menu extends Component {
         }
     }
 
-    handleObserve = () => {
-        if (this.state.unlocked.includes(MAP[this.state.selected])) {
+    handleGoButton = () => {
+        if (this.state.page === "Training") {
+            this.props.history.push({
+                pathname: `/${this.state.selected}TrainingHome`,
+                state: this.props.location.state
+            })
+        } else if (this.state.unlocked.includes(MAP[this.state.selected])) {
+            if (this.state.page === "Observation") {
+                this.props.history.push({
+                    pathname: `/${this.state.selected}`,
+                    state: this.props.location.state
+                })
+            } else if (this.state.page === "Results") {
+                this.props.history.push({
+                    pathname: `/${this.state.selected}Results`,
+                    state: this.props.location.state
+                })
+            }
+        }
+        /* if (this.state.unlocked.includes(MAP[this.state.selected])) {
                 if (this.props.history.location.state.type === "Observe") {
                     this.props.history.push({
                         pathname: `/${this.state.selected}`,
@@ -103,7 +133,7 @@ class Magic8Menu extends Component {
                     pathname: `/${this.state.selected}TrainingHome`,
                     state: this.props.location.state
                 })
-            }
+            } */
     };
 
     setUnlockedSectionsState(){
@@ -121,6 +151,7 @@ class Magic8Menu extends Component {
     }
 
     render() {
+        const { classes } = this.props;
         return (
             <div>
                 <FirebaseContext.Consumer>
@@ -131,7 +162,8 @@ class Magic8Menu extends Component {
                         <Typography
                             style={{ fontSize: "2.9em", color: "#000000", marginTop: "5%" }}
                         >
-                            Magic 8™
+                            {/* Magic 8™ */}
+                            {this.state.page}
                         </Typography>
                     </div>
                     <div className="row">
@@ -142,7 +174,7 @@ class Magic8Menu extends Component {
                                 marginTop: "2%",
                                 marginBottom: "2vh"}}
                         >
-                            Select the skill you'd like to focus on:
+                            Select the skill you'd like to {this.state.page === "Training" ? "learn:" : "focus on:"}
                         </Typography>
 
                     </div>
@@ -153,6 +185,7 @@ class Magic8Menu extends Component {
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                             unlocked={this.state.unlocked.includes(1)}
+                            page={this.state.page}
                         />
                         <Magic8Card
                             title="ClassroomClimate"
@@ -160,6 +193,7 @@ class Magic8Menu extends Component {
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                             unlocked={this.state.unlocked.includes(2)}
+                            page={this.state.page}
                         />
                         <Magic8Card
                             title="MathInstruction"
@@ -167,6 +201,7 @@ class Magic8Menu extends Component {
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                             unlocked={this.state.unlocked.includes(3)}
+                            page={this.state.page}
                         />
                         <Magic8Card
                             title="StudentEngagement"
@@ -174,6 +209,7 @@ class Magic8Menu extends Component {
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                             unlocked={this.state.unlocked.includes(4)}
+                            page={this.state.page}
                         />
                     </CardRow>
                     <CardRow>
@@ -183,6 +219,7 @@ class Magic8Menu extends Component {
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                             unlocked={this.state.unlocked.includes(5)}
+                            page={this.state.page}
                         />
                         <Magic8Card
                             title="ListeningToChildren"
@@ -190,6 +227,7 @@ class Magic8Menu extends Component {
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                             unlocked={this.state.unlocked.includes(6)}
+                            page={this.state.page}
                         />
                         <Magic8Card
                             title="SequentialActivities"
@@ -197,6 +235,7 @@ class Magic8Menu extends Component {
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                             unlocked={this.state.unlocked.includes(7)}
+                            page={this.state.page}
                         />
                         <Magic8Card
                             title="AssociativeCooperativeInteractions"
@@ -204,24 +243,22 @@ class Magic8Menu extends Component {
                             onClick={this.onClick}
                             numSelected={this.state.numSelected}
                             unlocked={this.state.unlocked.includes(8)}
+                            page={this.state.page}
                         />
                     </CardRow>
                     <CardRow>
                         <Button
+                            className = {classes.goButton}
+                            disabled = {this.state.page === "Training" ? (this.state.allowed ? false : true) : (this.state.unlocked.includes(MAP[this.state.selected]) && this.state.allowed ? false : true)}
                             style={{
-                                backgroundColor: "#2196F3",
-                                opacity: this.state.allowed ? 1 : 0.5,
-                                marginLeft: "75%",
-                                transform: "scale(1.1)",
-                                display: "flex",
-                                marginBottom: "5px",
-                                color: "white",
-                                marginTop: "4vh"
+                                opacity: this.state.page === "Training" ? (this.state.allowed ? 1 : 0.5) : (this.state.unlocked.includes(MAP[this.state.selected]) && this.state.allowed ? 1: 0.5),
+                                color: "white"
                             }}
-                            onClick={this.handleObserve}
+                            onClick={this.handleGoButton}
                         >
-                        {
-                        this.state.unlocked.includes(MAP[this.state.selected]) ? 'Observe' : 'Start Training' }
+                            {this.state.page === "Training" ? "Start Training"
+                                : this.state.page === "Observation" ? "Observe"
+                                : "View Results"}
                             
                             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
                             <Icon style={{ marginLeft: 5 }}>send</Icon>

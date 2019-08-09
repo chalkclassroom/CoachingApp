@@ -31,8 +31,10 @@ import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
 // import Firebase from "./Firebase";
-import Magic8Menu from "../views/protected/Magic8Menu"
+import Magic8Menu from "../views/protected/Magic8Menu";
+import TeacherModal from "../views/protected/HomeViews/TeacherModal";
 import SvgIcon from '@material-ui/core/SvgIcon';
+import FirebaseContext from "./Firebase/context";
 
 const drawerWidth = 240;
 
@@ -123,7 +125,9 @@ class BurgerMenu extends React.Component {
     state = {
         menu: 0,
         open: this.props.open, 
-        coachingOpen: false
+        coachingOpen: false,
+        teacherModal: false,
+        type: "",
     }
     handleDrawerOpen = () => {
         this.setState({ open: true });
@@ -131,6 +135,17 @@ class BurgerMenu extends React.Component {
 
     handleDrawerClose = () => {
         this.setState({ open: false });
+    };
+
+    showTeacherModal = (type) => {
+        this.setState({ teacherModal: true, type: type});
+    };
+
+    handleTeacherModalClose = event => {
+        this.setState({ 
+            teacherModal: false,
+            type: ""
+        });
     };
 
     handleOpenCoaching = () => {
@@ -144,259 +159,274 @@ class BurgerMenu extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <Drawer
-                variant="temporary"
-                classes={{
-                    paper: classNames(
-                        classes.drawerPaper,
-                        !this.props.open && classes.drawerPaperClose
-                    )
-                }}
-                open={this.props.open}
-            >
-                <div className={classes.toolbarIcon}>
-                    <IconButton
-                        onClick={event => this.props.handleClose(event)}
-                    >
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>
-                    <ListItem
-                        button
-                        onClick={() => {
-                            this.setState({ menu: 0 });
-                        }}
-                    >
-                        <ListItemIcon>
-                            <HomeIcon style={{fill: "#094492"}} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="Home"
-                            onClick={() => this.props.history.push("/Home")}
-                        />
-                    </ListItem>
-                    <ListItem
-                        button
-                        onClick={this.handleOpenCoaching}
-                    >
-                        <ListItemIcon>
-                            <CoachingIcon style={{fill: "#e99c2e"}} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="Coaching"
-                        />
-                            {this.state.coachingOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </ListItem>
-                    <Collapse in={this.state.coachingOpen} timeout="auto" unMountOnExit>
+            <div>
+                <Drawer
+                    variant="temporary"
+                    classes={{
+                        paper: classNames(
+                            classes.drawerPaper,
+                            !this.props.open && classes.drawerPaperClose
+                        )
+                    }}
+                    open={this.props.open}
+                >
+                    <div className={classes.toolbarIcon}>
+                        <IconButton
+                            onClick={event => this.props.handleClose(event)}
+                        >
+                            <ChevronLeftIcon />
+                        </IconButton>
+                    </div>
+                    <Divider />
+                    <List>
                         <ListItem
                             button
+                            onClick={() => {
+                                this.setState({ menu: 0 });
+                            }}
+                        >
+                            <ListItemIcon>
+                                <HomeIcon style={{fill: "#094492"}} />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="Home"
+                                onClick={() => this.props.history.push("/Home")}
+                            />
+                        </ListItem>
+                        <ListItem
+                            button
+                            onClick={this.handleOpenCoaching}
+                        >
+                            <ListItemIcon>
+                                <CoachingIcon style={{fill: "#e99c2e"}} />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="Coaching"
+                            />
+                                {this.state.coachingOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                        </ListItem>
+                        <Collapse in={this.state.coachingOpen} timeout="auto" unMountOnExit>
+                            <ListItem
+                                button
+                                onClick={() => {
+                                    this.setState({ menu: 1 });
+                                }}
+                                className={classes.nested}
+                            >
+                                <ListItemIcon>
+                                    <PeopleIcon style={{fill: "#ffd300"}} />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="My Teachers"
+                                    onClick={() => this.props.history.push("/MyTeachers")}
+                                />
+                            </ListItem>
+                            <ListItem
+                                button
+                                disabled
+                                onClick={() => {
+                                    this.setState({ menu: 2 });
+                                }}
+                                className={classes.nested}
+                            >
+                                <ListItemIcon>
+                                    <CalendarIcon style={{fill: "#094492"}} />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="Calendar"
+                                    onClick={() => this.props.history.push("/Calendar")}
+                                />
+                            </ListItem>
+                            <ListItem
+                                button
+                                disabled
+                                onClick={() => {
+                                    this.setState({ menu: 3 });
+                                }}
+                                className={classes.nested}
+                            >
+                                <ListItemIcon>
+                                    <MessagesIcon style={{fill: "#4fd9b3"}} />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="Messages"
+                                    onClick={() => this.props.history.push("/Messages")}
+                                />
+                            </ListItem>
+                            <ListItem
+                                button
+                                onClick={() => {
+                                    this.setState({ menu: 4 });
+                                }}
+                                className={classes.nested}
+                            >
+                                <ListItemIcon>
+                                    <TutorialIcon style={{fill: "#6f39c4"}} />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="Training"
+                                    onClick={() =>
+                                        this.props.history.push({
+                                            pathname: "/Magic8Menu",
+                                            state: {type: "Training"}
+                                        })
+                                    }
+                                />
+                            </ListItem>
+                            <ListItem
+                                button
+                                onClick={() => {
+                                    this.setState({ menu: 5 });
+                                }}
+                                className={classes.nested}
+                            >
+                                <ListItemIcon>
+                                    <ObserveIcon style={{fill: "#e99c2e"}} />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="Observe"
+                                    onClick={() => this.showTeacherModal("Observe")}
+                                />
+                            </ListItem>
+                            <ListItem
+                                button
+                                onClick={() => {
+                                    this.setState({ menu: 6 });
+                                }}
+                                className={classes.nested}
+                            >
+                                <ListItemIcon>
+                                    <ResultsIcon style={{fill: "#099365"}} />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="Results"
+                                    onClick={() => this.showTeacherModal("Results")}
+                                />
+                            </ListItem>
+                            <ListItem
+                                button
+                                disabled
+                                onClick={() => {
+                                    this.setState({ menu: 7 });
+                                }}
+                                className={classes.nested}
+                            >
+                                <ListItemIcon>
+                                    <ActionPlansIcon style={{fill: "#e55529"}}/>
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="Action Plans"
+                                    onClick={() => this.props.history.push("/ActionPlans")}
+                                />
+                            </ListItem>
+                        </Collapse>
+                        <ListItem
+                            button
+                            disabled
                             onClick={() => {
                                 this.setState({ menu: 8 });
                             }}
-                            className={classes.nested}
                         >
                             <ListItemIcon>
-                                <PeopleIcon style={{fill: "#ffd300"}} />
+                                <ResourcesIcon style={{fill: "#4fd9b3"}} />
                             </ListItemIcon>
                             <ListItemText
-                                primary="My Teachers"
-                                onClick={() => this.props.history.push("/MyTeachers")}
+                                primary="Resources"
+                                onClick={() => this.props.history.push("/Resources")}
                             />
                         </ListItem>
                         <ListItem
                             button
                             disabled
                             onClick={() => {
-                                this.setState({ menu: 4 });
+                                this.setState({ menu: 9 });
                             }}
-                            className={classes.nested}
                         >
                             <ListItemIcon>
-                                <CalendarIcon style={{fill: "#094492"}} />
+                                <Magic8Icon style={{fill: "#6f39c4"}} />
                             </ListItemIcon>
-                            <ListItemText
-                                primary="Calendar"
-                                onClick={() => this.props.history.push("/Calendar")}
+                            <ListItemText primary="Magic 8 Materials" 
+                                        onClick = {() => this.props.history.push("/Messages")}
                             />
                         </ListItem>
                         <ListItem
                             button
                             disabled
                             onClick={() => {
-                                //this.setState({ menu: 4 });
+                                this.setState({ menu: 10 });
                             }}
-                            className={classes.nested}
                         >
                             <ListItemIcon>
-                                <MessagesIcon style={{fill: "#4fd9b3"}} />
+                                <ResearchIcon style={{fill: "#0988EC"}} />
                             </ListItemIcon>
                             <ListItemText
-                                primary="Messages"
-                                onClick={() => this.props.history.push("/Messages")}
+                                primary="Research"
+                                onClick={() => this.props.history.push("/about")}
                             />
                         </ListItem>
                         <ListItem
                             button
                             disabled
                             onClick={() => {
-                                this.setState({ menu: 5 });
+                                this.setState({ menu: 11 });
                             }}
-                            className={classes.nested}
                         >
                             <ListItemIcon>
-                                <TutorialIcon style={{fill: "#6f39c4"}} />
+                                <PersonIcon style={{fill:"#099365"}} />
                             </ListItemIcon>
                             <ListItemText
-                                primary="Training"
-                                onClick={() =>
-                                    this.props.history.push("/Trainings")
-                                }
+                                primary="My Account"
+                                onClick={() => this.props.history.push("/Account")}
                             />
                         </ListItem>
                         <ListItem
                             button
                             disabled
                             onClick={() => {
-                                //this.setState({ menu: 4 });
+                                this.setState({ menu: 12 });
                             }}
-                            className={classes.nested}
                         >
                             <ListItemIcon>
-                                <ObserveIcon style={{fill: "#e99c2e"}} />
+                                <HelpIcon style={{fill:"#e55529"}} />
                             </ListItemIcon>
                             <ListItemText
-                                primary="Observe"
-                                //onClick={() => this.props.history.push("/Messages")}
+                                primary="Help"
+                                onClick={() => this.props.history.push("/help")}
                             />
                         </ListItem>
                         <ListItem
                             button
-                            disabled
                             onClick={() => {
-                                this.setState({ menu: 3 });
+                                this.setState({ menu: 13 });
                             }}
-                            className={classes.nested}
                         >
                             <ListItemIcon>
-                                <ResultsIcon style={{fill: "#099365"}} />
+                                <LogoutIcon  style={{fill:"#ffd300"}}/>
                             </ListItemIcon>
                             <ListItemText
-                                primary="Results"
-                                onClick={() => this.props.history.push("/Results")}
+                                primary="Logout"
+                                onClick={() => {
+                                    this.props.firebase.firebaseSignOut();
+                                    this.props.history.push("/");
+                                }}
                             />
                         </ListItem>
-                        <ListItem
-                            button
-                            disabled
-                            onClick={() => {
-                                //this.setState({ menu: 4 });
-                            }}
-                            className={classes.nested}
-                        >
-                            <ListItemIcon>
-                                <ActionPlansIcon style={{fill: "#e55529"}}/>
-                            </ListItemIcon>
-                            <ListItemText
-                                primary="Action Plans"
-                                onClick={() => this.props.history.push("/ActionPlans")}
+                    </List>
+                </Drawer>
+                {this.state.teacherModal ? (
+                    <FirebaseContext.Consumer>
+                        {firebase => (
+                            <TeacherModal 
+                                handleClose={this.handleTeacherModalClose}
+                                firebase={firebase}
+                                type={this.state.type}
                             />
-                        </ListItem>
-                    </Collapse>
-                    <ListItem
-                        button
-                        disabled
-                        onClick={() => {
-                            this.setState({ menu: 1 });
-                        }}
-                    >
-                        <ListItemIcon>
-                            <ResourcesIcon style={{fill: "#4fd9b3"}} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="Resources"
-                            onClick={() => this.props.history.push("/Resources")}
-                        />
-                    </ListItem>
-                    <ListItem
-                        button
-                        disabled
-                        onClick={() => {
-                            this.setState({ menu: 2 });
-                        }}
-                    >
-                        <ListItemIcon>
-                            <Magic8Icon style={{fill: "#6f39c4"}} />
-                        </ListItemIcon>
-                        <ListItemText primary="Magic 8 Materials" 
-                                      onClick = {() => this.props.history.push("/Messages")}
-                        />
-                    </ListItem>
-                    <ListItem
-                        button
-                        disabled
-                        onClick={() => {
-                            this.setState({ menu: 1 });
-                        }}
-                    >
-                        <ListItemIcon>
-                            <ResearchIcon style={{fill: "#0988EC"}} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="Research"
-                            onClick={() => this.props.history.push("/about")}
-                        />
-                    </ListItem>
-                    <ListItem
-                        button
-                        disabled
-                        onClick={() => {
-                            this.setState({ menu: 1 });
-                        }}
-                    >
-                        <ListItemIcon>
-                            <PersonIcon style={{fill:"#099365"}} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="My Account"
-                            onClick={() => this.props.history.push("/Account")}
-                        />
-                    </ListItem>
-                    <ListItem
-                        button
-                        disabled
-                        onClick={() => {
-                            this.setState({ menu: 7 });
-                        }}
-                    >
-                        <ListItemIcon>
-                            <HelpIcon style={{fill:"#e55529"}} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="Help"
-                            onClick={() => this.props.history.push("/help")}
-                        />
-                    </ListItem>
-                    <ListItem
-                        button
-                        onClick={() => {
-                            this.setState({ menu: 6 });
-                        }}
-                    >
-                        <ListItemIcon>
-                            <LogoutIcon  style={{fill:"#ffd300"}}/>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary="Logout"
-                            onClick={() => {
-                                this.props.firebase.firebaseSignOut();
-                                this.props.history.push("/");
-                            }}
-                        />
-                    </ListItem>
-                </List>
-            </Drawer>
+                        )}
+                    </FirebaseContext.Consumer>
+                ) : (
+                    <div />
+                )}
+            </div>
         );
     }
 }

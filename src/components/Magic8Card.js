@@ -9,7 +9,8 @@ import {
     Typography
 } from "@material-ui/core";
 import styled from "styled-components";
-import lock from "../assets/lock48.png"
+import lock from "../assets/lock48.png";
+import checkmark from "../assets/Checkmark.png";
 
 const styles = {
     title: {
@@ -25,7 +26,17 @@ const styles = {
         transform: "scale(4.2)",
         textAlign: "center",
         marginLeft: "43%"
-    }
+    },
+
+    overlayImage: {
+        color: "white",
+        fontSize: 100,
+        position: "absolute",
+        top: "40%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        textAlign: "center"
+    },
 };
 
 const CardBase = styled.div`
@@ -72,7 +83,7 @@ class Magic8Card extends Component {
     }
 
     render() {
-
+        const { classes } = this.props;
         console.log(this.props.unlocked);
         return (
             <CardBase>
@@ -89,18 +100,23 @@ class Magic8Card extends Component {
                         <BackgroundImage>
                             <img src={this.props.icon} style={{display:"block"}}/>
                         </BackgroundImage>
-                        {this.props.unlocked?
-                            <div/> :
-                            <Overlay>
-                            <img src={lock} style={{color: "white",
-                            fontSize: 100,
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            textAlign: "center"}}/>
-                            </Overlay>
-                        }
+                            {this.props.page === "Training" ? (
+                                this.props.unlocked ? (
+                                    <Overlay>
+                                        <img src={checkmark} className = {classes.overlayImage} style={{width: "100px"}}/>
+                                    </Overlay>
+                                ) : (
+                                    <div/>
+                                )) : (
+                                    this.props.unlocked ? (
+                                        <div/>
+                                    ) : (
+                                        <Overlay>
+                                            <img src={lock} className = {classes.overlayImage}/>
+                                        </Overlay>
+                                    )
+                                )
+                            }
                     </CardActionArea>
                 </Card>
             </CardBase>

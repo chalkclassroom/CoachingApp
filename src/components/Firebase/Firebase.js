@@ -111,6 +111,7 @@ class Firebase {
     };
 
   getTeacherList = function() {
+    console.log("did it even get here");
     return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)

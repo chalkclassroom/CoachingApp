@@ -72,13 +72,13 @@ const styles = theme => ({
     }
 });
 
-class ObserveModal extends React.Component {
+class TeacherModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             open: true,
             value: 0,
-            teachers: []
+            teachers: [{email: 'practice@teacher.edu', firstName: 'Practice', id: 'rJxNhJmzjRZP7xg29Ko6', lastName: "Teacher", notes: "Notes are a useful place to put highlights or reminders!", role:"teacher", school: "Elum Entaree School"}]
         };
 
         this.selectTeacher = this.selectTeacher.bind(this);
@@ -207,11 +207,11 @@ class ObserveModal extends React.Component {
     }
 }
 
-ObserveModal.propTypes = {
+TeacherModal.propTypes = {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired
 };
 
-const ObserveModalWithRouter = withRouter(ObserveModal);
-export default withStyles(styles)(ObserveModalWithRouter);
+const TeacherModalWithRouter = withRouter(TeacherModal);
+export default withStyles(styles)(TeacherModalWithRouter);
