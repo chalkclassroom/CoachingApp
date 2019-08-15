@@ -7,7 +7,7 @@ import ms from "pretty-ms";
 import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import cyan from "@material-ui/core/colors/teal";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import spreadsheetData from "../../../SPREADSHEET_SECRETS";
+//import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import { connect } from "react-redux";
 import { pushOntoTransitionStack } from "../../../state/actions/transition-time";
 import FirebaseContext from "../../../components/Firebase/context";

@@ -58,7 +58,7 @@ class Magic8Menu extends Component {
             allowed: false,
             numSelected: 0,
             selected: "none",
-            unlocked: [], 
+            unlocked: [1, 8, 7, 2], 
         };
 
         this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this)

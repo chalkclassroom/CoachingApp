@@ -150,13 +150,13 @@ class TransitionTime extends React.Component {
                 )}
                 <main style={{ flex: 1 }}>
                     <Grid container spacing={16} alignItems="center">
-                        <Grid item xs={3}>
+                        <Grid item xs={3} style={{border: "5px solid blue"}}>
                             <Grid
                                 container
                                 alignItems={"center"}
                                 justify={"center"}
                                 direction={"column"}
-                                
+                                style={{border: "5px solid black"}}
                             >
                                 <Dashboard 
                                     magic8="Transition Time"

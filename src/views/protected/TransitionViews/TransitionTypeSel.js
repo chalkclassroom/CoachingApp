@@ -78,32 +78,32 @@ const themes = createMuiTheme({
       backgroundColor: lightGreen[300], color: '#000',
       textColor: white, 
       primaryTextColor: white, 
-  },
-  travelingColor: { 
-    backgroundColor: orange[400], color: '#000',
-    textColor: white, 
-    primaryTextColor: white,
-}, 
-childWaitingColor: { 
-  backgroundColor: deepOrange[400], color: '#000',
-  textColor: white,
-  primaryTextColor: white, 
-}, 
-classroomRoutinesColor: { 
-  backgroundColor: blue[300], color: '#000',
-  textColor: white,
-  primaryTextColor: white, 
-}, 
-bmiColor: { 
-  backgroundColor: red['A200'], color: '#000',
-  textColor: white,
-  primaryTextColor: white, 
-}, 
-otherColor: { 
-  backgroundColor: indigo['A200'], color: '#000',
-  textColor: white,
-  primaryTextColor: white, 
-}}, 
+    },
+    travelingColor: { 
+      backgroundColor: orange[400], color: '#000',
+      textColor: white, 
+      primaryTextColor: white,
+    }, 
+    childWaitingColor: { 
+      backgroundColor: deepOrange[400], color: '#000',
+      textColor: white,
+      primaryTextColor: white, 
+    }, 
+    classroomRoutinesColor: { 
+      backgroundColor: blue[300], color: '#000',
+      textColor: white,
+      primaryTextColor: white, 
+    }, 
+    bmiColor: { 
+      backgroundColor: red['A200'], color: '#000',
+      textColor: white,
+      primaryTextColor: white, 
+    }, 
+    otherColor: { 
+      backgroundColor: indigo['A200'], color: '#000',
+      textColor: white,
+      primaryTextColor: white, 
+    }}, 
   overrides: {
     MuiButton: {
       raisedPrimary: {
