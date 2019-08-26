@@ -10,7 +10,7 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import ClassroomClimateIcon from "../../../assets/icons/ClassroomClimate.svg";
 import { ReactComponent as GenerateReportSVG } from "../../../assets/icons/generateReport.svg";
 import { withStyles } from "@material-ui/core/styles";
-//import spreadsheetData from "../../../SPREADSHEET_SECRETS";
+import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -177,7 +177,7 @@ class ClassroomClimateResults extends React.Component {
         this.setState({ dbCounter: this.state.dbCounter + 1 });
     };
 
-    /* handleSpreadsheetAppend = entry => {
+    handleSpreadsheetAppend = entry => {
         let url = new URL(spreadsheetData.scriptLink),
             params = {
                 sheet: "ClassroomClimateTime",
@@ -203,7 +203,7 @@ class ClassroomClimateResults extends React.Component {
         if (this.state.view !== ViewEnum.SUMMARY) {
             this.setState({ view: ViewEnum.SUMMARY });
         }
-    }; */
+    };
 
     detailsClick = () => {
         if (this.state.view !== ViewEnum.DETAILS) {
