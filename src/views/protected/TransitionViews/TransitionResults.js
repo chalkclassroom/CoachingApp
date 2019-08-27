@@ -700,7 +700,7 @@ class TransitionResults extends React.Component {
                           </MenuItem>})}
                       </TextField>
                     </Grid>
-                    <Grid item style={{marginTop: "15px"}}>
+                    <Grid item style={{marginTop: "2vh"}}>
                       <Button
                         size="large"
                         
@@ -715,7 +715,7 @@ class TransitionResults extends React.Component {
                         Summary
                       </Button>
                     </Grid>
-                    <Grid item style={{marginTop: "15px"}}>
+                    <Grid item style={{marginTop: "2vh"}}>
                       <Button
                         size="large"
                         color={"#094492"}
@@ -730,7 +730,7 @@ class TransitionResults extends React.Component {
                         List Detail
                       </Button>
                     </Grid>
-                    <Grid item style={{marginTop: "15px"}}>
+                    <Grid item style={{marginTop: "2vh"}}>
                       <Button
                         size="large"
                         color={"#094492"}
@@ -745,7 +745,7 @@ class TransitionResults extends React.Component {
                         Trends
                       </Button>
                     </Grid>
-                    <Grid item style={{marginTop: "15px"}}>
+                    <Grid item style={{marginTop: "2vh"}}>
                       <Button
                         size="large"
                         color={"#094492"}
@@ -760,7 +760,7 @@ class TransitionResults extends React.Component {
                         Coach Prep
                       </Button>
                     </Grid>
-                    <Grid item style={{marginTop: "15px"}}>
+                    <Grid item style={{marginTop: "2vh"}}>
                       <Button
                         size="large"
                         color={"primary"}
@@ -775,7 +775,7 @@ class TransitionResults extends React.Component {
                         Action Plan
                       </Button>
                     </Grid>
-                    <Grid item style={{marginTop: "50px", marginBottom: "10px"}}>
+                    <Grid item style={{marginTop: "7vh", marginBottom: "2vh"}}>
                       <Button
                         size="large"
                         color={"primary"}
