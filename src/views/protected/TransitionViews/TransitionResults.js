@@ -294,6 +294,8 @@ class TransitionResults extends React.Component {
     tabValue: 0,
     openPanel: null,
     addedToPrep: [],
+    selectedQuestions: [{type: "Traveling Outside Classroom: ", questions: [TravelingQuestions[0].text, TravelingQuestions[2].text]},
+      {type: "Behavior Management Disruption: ", questions: [BehaviorQuestions[3].text]}],
   };
 
   componentDidMount() {
@@ -964,9 +966,9 @@ class TransitionResults extends React.Component {
                     </div>
                   ) : this.state.view === ViewEnum.COACH_PREP ? (
                     <Grid>
-                      <Card style={{width: "100%", height: "30vh"}}>
+                      <Card style={{width: "100%", height: "30vh", overflow: "auto"}}>
                         <CardContent>
-                          <Typography>
+                          <Typography variant="h5">
                             Data Reflection
                           </Typography>
                           <TextField
@@ -979,11 +981,34 @@ class TransitionResults extends React.Component {
                             fullWidth
                             multiline
                           />
+                          {this.state.selectedQuestions.map((item, index) => (
+                            <div>
+                              <Typography
+                                key={index}
+                                variant="h7"
+                                style={{textDecoration: "underline"}}
+                              >
+                                {item.type}
+                              </Typography>
+                              <ol style={{marginTop: ".5vh", marginBottom: "1vh"}}>
+                                {item.questions.map((question, i) => (
+                                  <li>
+                                    <Typography
+                                      key={i}
+                                      variant="subtitle2"
+                                    >
+                                      {question}
+                                    </Typography>
+                                  </li>
+                                ))}
+                              </ol>
+                            </div>
+                          ))}
                         </CardContent>
                       </Card>
                       <Card style={{width: "100%", height: "20vh"}}>
                         <CardContent>
-                          <Typography>
+                          <Typography variant="h5">
                             Strengths-Based Feedback
                           </Typography>
                           <TextField
@@ -995,7 +1020,7 @@ class TransitionResults extends React.Component {
                       </Card>
                       <Card style={{width: "100%", height: "20vh"}}>
                         <CardContent>
-                          <Typography>
+                          <Typography variant="h5">
                             Notes
                           </Typography>
                         </CardContent>
