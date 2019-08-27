@@ -1,5 +1,6 @@
-//props: array of information for data driven coaching questions
+//props: questions array of objects with name, title, and text for data driven coaching questions
 import React from "react";
+import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -71,5 +72,13 @@ class DataQuestions extends React.Component {
         );
     }
 }
+
+DataQuestions.propTypes = {
+    questions: PropTypes.arrayOf(PropTypes.object).isRequired,
+    openPanel: PropTypes.string.isRequired,
+    handlePanelChange: PropTypes.func.isRequired,
+    addedToPrep: PropTypes.array.isRequired,
+    handleAddToPlan: PropTypes.func.isRequired
+};
 
 export default withStyles(styles)(DataQuestions);
