@@ -11,11 +11,6 @@ import ClassroomRoutines from "../../../assets/icons/classroomRoutines.svg";
 import bmi from "../../../assets/icons/BehaviorManagementDisruption.svg"; 
 import { red } from '@material-ui/core/es/colors';
 import other from "../../../assets/icons/other.svg"; 
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 
 const styles = theme => ({
   button: {
@@ -23,7 +18,6 @@ const styles = theme => ({
     width: 130, 
     height: 130, 
     textAlign: 'center',
-    // boxShadow: "5px 5px #d3d3d3"
   },
   label: {
     flexDirection: 'column ', 
@@ -122,100 +116,27 @@ class TransitionTypeSel extends React.Component {
     super(props);
 
     this.state = {
-      lineSelected: false,
-      travelingSelected: false,
-      waitingSelected: false,
-      routinesSelected: false,
-      behaviorSelected: false,
-      otherSelected: false,
+      selected: null,
     };
   }
 
   componentDidUpdate = (prevProps) => {
     if (!prevProps.transitionEnded && this.props.transitionEnded) {
       this.setState({
-        lineSelected: false,
-        travelingSelected: false,
-        waitingSelected: false,
-        routinesSelected: false,
-        behaviorSelected: false,
-        otherSelected: false
+        selected: null,
       });
     }
   };
 
-  handleLineButton = type => {
+  handleButtonChange = (type) => {
     this.props.handleTransitionType(type);
     this.setState({
-      lineSelected: true,
-      travelingSelected: false,
-      waitingSelected: false,
-      routinesSelected: false,
-      behaviorSelected: false,
-      otherSelected: false
+      selected: type
     });
-  };
-
-  handleTravelingButton = type => {
-    this.props.handleTransitionType(type);
-    this.setState({
-      lineSelected: false,
-      travelingSelected: true,
-      waitingSelected: false,
-      routinesSelected: false,
-      behaviorSelected: false,
-      otherSelected: false
-    });
-  };
-
-  handleWaitingButton = type => {
-    this.props.handleTransitionType(type);
-    this.setState({
-      lineSelected: false,
-      travelingSelected: false,
-      waitingSelected: true,
-      routinesSelected: false,
-      behaviorSelected: false,
-      otherSelected: false
-    });
-  };
-
-  handleRoutinesButton = type => {
-    this.props.handleTransitionType(type);
-    this.setState({
-      lineSelected: false,
-      travelingSelected: false,
-      waitingSelected: false,
-      routinesSelected: true,
-      behaviorSelected: false,
-      otherSelected: false
-    });
-  };
-
-  handleBehaviorButton = type => {
-    this.props.handleTransitionType(type);
-    this.setState({
-      lineSelected: false,
-      travelingSelected: false,
-      waitingSelected: false,
-      routinesSelected: false,
-      behaviorSelected: true,
-      otherSelected: false
-    });
-  };
-
-  handleOtherButton = type => {
-    this.props.handleTransitionType(type);
-    this.setState({
-      lineSelected: false,
-      travelingSelected: false,
-      waitingSelected: false,
-      routinesSelected: false,
-      behaviorSelected: false,
-      otherSelected: true
-    });
-    this.props.handleNotes(true);
-  };
+    if (type==="other") {
+      this.props.handleNotes(true);
+    }
+  }
 
 
   render() {
@@ -223,125 +144,125 @@ class TransitionTypeSel extends React.Component {
 
     return (
       <div>
-        {/* {this.props.transitionEnded ? <div> {this.componentWillUnmount} </div> : <div/>}
-        {console.log(this.props.transitionEnded)} */}
         <Grid container alignItems="flex-start" direction={"row"}>
           <Grid item xs={6}
             align="center"
             alignItems="center"
             justify="center"
-            direction="column">
-              <Grid item>
-                <Button onClick={() => this.handleLineButton("waiting")}
-                      /* Use classes property to inject custom styles */
-                          classes={{root: classes.button, label: classes.label}}
-                          variant="raised"
-                          style={this.state.lineSelected ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}>
-                    <img alt="Waiting in line" src={WaitinginLine} height='100' width='100'/>
-
-                </Button>
-              </Grid>
-              <Grid item>
-                Waiting in line/
-                <br/>
-                lining up
-              </Grid>
-              <br>
-              </br>
-              <Grid item>
-                <Button onClick={()=>this.handleTravelingButton("traveling")}
-                      
-                      classes={{root: classes.button, label: classes.label}}
-                     variant="raised"
-                     style={this.state.travelingSelected ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}>
-                   <img alt="Walking" src={Walking} height='100' width='100'/>
-                </Button>
-              </Grid>
-              <Grid item>
-                Traveling outside 
-                <br />
-                the classroom
-              </Grid>
-              <br>
-              </br>
-              <Grid item>
-                <Button onClick={()=>this.handleWaitingButton("child waiting")}
-                      
-                      classes={{root: classes.button, label: classes.label}}
-                      variant="raised"
-                      style={this.state.waitingSelected ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}>
-                    <img alt="Child waiting" src={ChildWaiting} height='100' width='100'/>
-                </Button>
-              </Grid>
-              <Grid item>
-                Children waiting on teacher/materials
-              </Grid>
+            direction="column"
+          >
+            <Grid item>
+              <Button 
+                onClick={() => this.handleButtonChange("waiting")}
+                classes={{root: classes.button, label: classes.label}}
+                variant="raised"
+                style={this.state.selected==="waiting" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
+              >
+                <img alt="Waiting in line" src={WaitinginLine} height='100' width='100'/>
+              </Button>
+            </Grid>
+            <Grid item>
+              Waiting in line/
+              <br/>
+              lining up
+            </Grid>
+            <br>
+            </br>
+            <Grid item>
+              <Button 
+                onClick={() => this.handleButtonChange("traveling")} 
+                classes={{root: classes.button, label: classes.label}}
+                variant="raised"
+                style={this.state.selected==="traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
+              >
+                <img alt="Walking" src={Walking} height='100' width='100'/>
+              </Button>
+            </Grid>
+            <Grid item>
+              Traveling outside 
+              <br />
+              the classroom
+            </Grid>
+            <br>
+            </br>
+            <Grid item>
+              <Button
+                onClick={() => this.handleButtonChange("child waiting")}
+                classes={{root: classes.button, label: classes.label}}
+                variant="raised"
+                style={this.state.selected==="child waiting" ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}
+              >
+                <img alt="Child waiting" src={ChildWaiting} height='100' width='100'/>
+              </Button>
+            </Grid>
+            <Grid item>
+              Children waiting on teacher/materials
+            </Grid>
           </Grid>
-          <Grid item xs={6} align="center"
+          <Grid item xs={6}
+            align="center"
             alignItems="center"
             justify="center"
-            direction="column">
-              <Grid item>
-                <Button onClick={()=>this.handleRoutinesButton("classroom routines")}
-                     
-                     classes={{root: classes.button, label: classes.label}}
-                     variant="raised"
-                     style={this.state.routinesSelected ? raisedThemes.palette.classroomRoutinesColor : themes.palette.classroomRoutinesColor}>
-                   <img alt="classroom routines" src={ClassroomRoutines} height='100' width='100'/>
-                </Button>
-              </Grid>
-              <Grid item>
-                Classroom routines
-              </Grid>
-              <br>
-              </br>
-              <br>
-              </br>
-              <Grid item>
-                <Button onClick={()=>this.handleBehaviorButton("behavior management disruption")}
-                      
-                      classes={{root: classes.button, label: classes.label}}
-                      variant="raised"
-                      style={this.state.behaviorSelected ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}>
-                    <img alt="Behavior Management Disruption" src={bmi} height='100' width='100'/>
-                </Button>
-              </Grid>
-              <Grid item>
-                Behavior management 
-                <br />
-                disruption
-              </Grid>
-              <br>
-              </br>
-              <Grid item>
-                <Button onClick={()=>this.handleOtherButton("other")}
-                      
-                      classes={{root: classes.button, label: classes.label}}
-                      variant="raised"
-                      style={this.state.otherSelected ? raisedThemes.palette.otherColor : themes.palette.otherColor}>
-                    <img alt="other" src={other} height='100' width='100'/>
-                </Button>
-              </Grid>
-              <Grid item>
-                Other
-              </Grid>
-              <br>
-              </br>
+            direction="column"
+          >
+            <Grid item>
+              <Button
+                onClick={() => this.handleButtonChange("classroom routines")}
+                classes={{root: classes.button, label: classes.label}}
+                variant="raised"
+                style={this.state.selected==="classroom routines" ? raisedThemes.palette.classroomRoutinesColor : themes.palette.classroomRoutinesColor}
+              >
+                <img alt="classroom routines" src={ClassroomRoutines} height='100' width='100'/>
+              </Button>
             </Grid>
+            <Grid item>
+              Classroom routines
+            </Grid>
+            <br>
+            </br>
+            <br>
+            </br>
+            <Grid item>
+              <Button 
+                onClick={() => this.handleButtonChange("behavior management disruption")}
+                classes={{root: classes.button, label: classes.label}}
+                variant="raised"
+                style={this.state.selected==="behavior management disruption" ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}
+              >
+                <img alt="Behavior Management Disruption" src={bmi} height='100' width='100'/>
+              </Button>
+            </Grid>
+            <Grid item>
+              Behavior management 
+              <br />
+              disruption
+            </Grid>
+            <br>
+            </br>
+            <Grid item>
+              <Button
+                onClick={() => this.handleButtonChange("other")}
+                classes={{root: classes.button, label: classes.label}}
+                variant="raised"
+                style={this.state.selected==="other" ? raisedThemes.palette.otherColor : themes.palette.otherColor}
+              >
+                <img alt="other" src={other} height='100' width='100'/>
+              </Button>
+            </Grid>
+            <Grid item>
+              Other
+            </Grid>
+            <br>
+            </br>
+          </Grid>
         </Grid>
       </div>
- 
     );
-
-
   }
-
 }
 
 TransitionTypeSel.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
-// export default withStyles(styles)(IconLabelButtons);
 
 export default withStyles(styles)(TransitionTypeSel)
