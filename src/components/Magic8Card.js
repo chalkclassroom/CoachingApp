@@ -100,7 +100,7 @@ class Magic8Card extends Component {
               {this.props.page === "Training" ? (
                 this.props.unlocked ? (
                   <Overlay>
-                    <img src={checkmark} className = {classes.overlayImage} style={{width: "5vw"}}/>
+                    <img src={checkmark} className = {classes.overlayImage} style={{width: "100px"}}/>
                   </Overlay>
                 ) : (
                   <div/>
