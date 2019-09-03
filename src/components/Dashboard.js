@@ -235,7 +235,7 @@ class Dashboard extends React.Component {
               {this.props.infoDisplay}
             </Grid>
             <Grid
-              item
+              container
               className={classes.gridTopMargin}
               direction="row"
               spacing={16}

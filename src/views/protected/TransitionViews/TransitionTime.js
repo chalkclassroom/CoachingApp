@@ -167,7 +167,7 @@ class TransitionTime extends React.Component {
                                 />
                             </Grid>
                         </Grid>
-                        <Grid item xs={4} justify="center">
+                        <Grid item xs={4}>
                             <Grid
                                 container
                                 alignItems={"center"}
