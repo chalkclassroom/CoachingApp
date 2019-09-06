@@ -24,7 +24,7 @@ import EmptyToneRating from "../../../components/ClassroomClimateComponent/Empty
     and then allow for 2 full minutes in between ratings.
  */
 
-const RATING_INTERVAL = 5000;
+const RATING_INTERVAL = 130000;
 
 const styles = ({
   root: {
