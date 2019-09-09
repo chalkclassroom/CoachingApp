@@ -80,7 +80,7 @@ class SignUpModal extends React.Component {
                     Sign Up
                   </Typography>
                 </Grid>
-                <Grid item xs={1} alignItems="flex-end">
+                <Grid item xs={1}>
                   <IconButton style={{ padding: 10 }}>
                     <Tooltip title={"Close"} placement={"right"}>
                       <CloseIcon
