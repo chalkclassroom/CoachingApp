@@ -132,8 +132,8 @@ class TransitionTimeTrainingHome extends React.Component {
   handleDBinsert = async entry => {
     // Once we integrate users, the user + some index will be the key for the DB.
     await ImmortalDB.set(
-        JSON.stringify(this.state.dbCounter),
-        JSON.stringify(entry)
+      JSON.stringify(this.state.dbCounter),
+      JSON.stringify(entry)
     );
 
     this.setState({ dbCounter: this.state.dbCounter + 1 });
@@ -141,31 +141,31 @@ class TransitionTimeTrainingHome extends React.Component {
 
   conceptsClick = () => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
-        this.setState({ view: ViewEnum.CONCEPTS });
+      this.setState({ view: ViewEnum.CONCEPTS });
     }
   };
 
   exampleClick = () => {
     if (this.state.view !== ViewEnum.EXAMPLE) {
-        this.setState({ view: ViewEnum.EXAMPLE });
+      this.setState({ view: ViewEnum.EXAMPLE });
     }
   };
 
   demonstrationClick = () => {
     if (this.state.view !== ViewEnum.DEMONSTRATION) {
-        this.setState({ view: ViewEnum.DEMONSTRATION });
+      this.setState({ view: ViewEnum.DEMONSTRATION });
     }
   };
 
   tryItClick = () => {
     if (this.state.view !== ViewEnum.TRYIT) {
-        this.setState({ view: ViewEnum.TRYIT });
+      this.setState({ view: ViewEnum.TRYIT });
     }
   };
 
   knowledgeCheckClick = () => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
-        this.setState({ view: ViewEnum.KNOWLEDGECHECK });
+      this.setState({ view: ViewEnum.KNOWLEDGECHECK });
     }
   };
 
