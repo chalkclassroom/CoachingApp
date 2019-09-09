@@ -12,9 +12,9 @@ import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
 import 'chartjs-plugin-datalabels';
 //import TrainingVideo
-    //from "../../../components/Shared/TrainingVideo";
+  //from "../../../components/Shared/TrainingVideo";
 import ChildTeacherBehaviorTrendsSlider
-    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+  from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 
 
