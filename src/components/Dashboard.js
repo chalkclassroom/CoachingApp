@@ -65,7 +65,6 @@ const styles = {
     height: "100px"
   },
   infoDisplayGrid: {
-    marginTop:"5px",
     height: "41vh",
     width:"90%",
     marginLeft:"5px",
@@ -190,10 +189,8 @@ class Dashboard extends React.Component {
             {(() => {switch (magic8) {
               case "Transition Time":
                 return <TransitionTimeHelp />;
-                break;
               case "Classroom Climate":
                 return <ClassroomClimateHelp />;
-                break;
               default:
                 return <div />;
               }
