@@ -115,7 +115,7 @@ class SignUpModal extends React.Component {
                           justify="flex-start"
                         >
                           <Grid item>
-                            <img src={Coach} className={classes.photoIcon} />
+                            <img src={Coach} alt="Coach" className={classes.photoIcon} />
                           </Grid>
                           <Grid item>
                             <Typography
@@ -139,7 +139,7 @@ class SignUpModal extends React.Component {
                             justify="flex-start"
                         >
                           <Grid item>
-                            <img src={GrayedTeacher} className={classes.photoIcon} />
+                            <img src={GrayedTeacher} alt="Teacher" className={classes.photoIcon} />
                           </Grid>
                           <Grid item>
                             <Typography
@@ -163,7 +163,7 @@ class SignUpModal extends React.Component {
                             justify="flex-start"
                         >
                           <Grid item>
-                            <img src={GrayedAdmin} className={classes.photoIcon} />
+                            <img src={GrayedAdmin} alt="Administrator" className={classes.photoIcon} />
                           </Grid>
                           <Grid item>
                             <Typography
