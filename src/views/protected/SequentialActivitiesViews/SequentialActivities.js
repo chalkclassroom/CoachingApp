@@ -26,7 +26,6 @@ const styles = {
 class SequentialActivities extends React.Component {
   state = {
     auth: true,
-    //anchorEl: null,
     help: false,
     ratingIsOpen: false,
     ratings: [],
