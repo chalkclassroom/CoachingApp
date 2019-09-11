@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
-import { Bar, Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 const styles = {
-  //idk how this works
+
 };
 
 
@@ -14,10 +14,10 @@ const styles = {
  */
 const climateTrendOptions = {
   title: {
-      display: true,
-      text: 'Classroom Climate Trends',
-      fontSize: 20,
-      fontStyle: 'bold'
+    display: true,
+    text: 'Classroom Climate Trends',
+    fontSize: 20,
+    fontStyle: 'bold'
   },
   scales: {
     yAxes: [{
