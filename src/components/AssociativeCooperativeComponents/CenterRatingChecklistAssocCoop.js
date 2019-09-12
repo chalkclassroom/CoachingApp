@@ -7,14 +7,12 @@ import DialogContentText from "@material-ui/core/DialogContentText/DialogContent
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
-import Line from "rc-progress/es/Line";
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import PropTypes from "prop-types";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import ms from "pretty-ms";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
