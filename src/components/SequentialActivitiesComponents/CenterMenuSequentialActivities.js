@@ -44,7 +44,6 @@ const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
   return (
     <Button
       variant="contained"
-      color="primary"
       style={{
         minHeight: 150,
         maxHeight: 150,
@@ -52,7 +51,8 @@ const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
         maxWidth: 150,
         whiteSpace: "normal",
         wordWrap: "break-word",
-        backgroundColor: `hsl(247, 92%, ${hsl}%`
+        backgroundColor: `hsl(49.6, 100%, ${hsl}%`,
+        color: "#000000"
       }}
       onClick={onClick}
     >
