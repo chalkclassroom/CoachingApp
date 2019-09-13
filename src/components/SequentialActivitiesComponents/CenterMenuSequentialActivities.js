@@ -15,13 +15,11 @@ import {
   addNewCenter,
   incrementCenterCount
 } from "../../state/actions/sequential-activities";
-import FirebaseContext from "../Firebase/context";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import PropTypes from "prop-types";
-import Notes from "../Notes";
 import CenterRatingChecklistSeqAct from "./CenterRatingChecklistSeqAct";
 import Dashboard from "../Dashboard";
 import TotalVisitCount from "../TotalVisitCount";
@@ -313,8 +311,8 @@ class CenterMenuSequentialActivities extends React.Component {
       case CENTER_MENU:
         return (
           <div>
-            <Grid justify="center" alignItems="stretch" direction="row">
-              <Grid justify="flex-start" alignItems="center" direction="row">
+            <Grid container justify="center" alignItems="stretch" direction="row">
+              <Grid container justify="flex-start" alignItems="center" direction="row">
                 <Grid container spacing={0} direction="row" alignItems="center">
                   <NewCenterDialog
                     open={this.state.addDialog}
@@ -327,49 +325,49 @@ class CenterMenuSequentialActivities extends React.Component {
                       alignItems={"center"}
                       justify={"center"}
                       direction={"column"}
-                      >
-                        <div style={{margin:20}} />
-                        <Dashboard
-                          magic8="Sequential Activities"
-                          color="#ffd300"
-                          infoDisplay= {<TotalVisitCount count={this.state.totalVisitCount} />}
-                          infoPlacement= "flex-start"
-                          completeObservation={true}
-                        />
+                    >
+                      <div style={{margin:20}} />
+                      <Dashboard
+                        magic8="Sequential Activities"
+                        color="#ffd300"
+                        infoDisplay= {<TotalVisitCount count={this.state.totalVisitCount} />}
+                        infoPlacement= "flex-start"
+                        completeObservation={true}
+                      />
                     </Grid>
                   </Grid>
                   <Grid container xs={9}>
-                  {this.props.centers.map((center, index) => (
+                    {this.props.centers.map((center, index) => (
+                      <Grid
+                        item
+                        xs={4}
+                        style={{ textAlign: "center", padding: "10px" }}
+                      >
+                        <VisitCenterButton
+                          centerName={center.name}
+                          visitCount={center.count}
+                          onClick={() => this.handleCenterVisit(center.name)}
+                        />
+                      </Grid>
+                    ))}
                     <Grid
                       item
                       xs={4}
                       style={{ textAlign: "center", padding: "10px" }}
                     >
-                      <VisitCenterButton
-                        centerName={center.name}
-                        visitCount={center.count}
-                        onClick={() => this.handleCenterVisit(center.name)}
-                      />
-                    </Grid>
-                  ))}
-                  <Grid
-                    item
-                    xs={4}
-                    style={{ textAlign: "center", padding: "10px" }}
-                  >
-                    <Button
-                      variant="contained"
-                      style={{
-                        minHeight: 150,
-                        maxHeight: 150,
-                        minWidth: 150,
-                        maxWidth: 150,
-                        backgroundColor: grey[400]
-                      }}
-                      onClick={this.handleClickOpen}
-                    >
-                      Add Center <br /> <br /> +
-                    </Button>
+                      <Button
+                        variant="contained"
+                        style={{
+                          minHeight: 150,
+                          maxHeight: 150,
+                          minWidth: 150,
+                          maxWidth: 150,
+                          backgroundColor: grey[400]
+                        }}
+                        onClick={this.handleClickOpen}
+                      >
+                        Add Center <br /> <br /> +
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>
