@@ -51,7 +51,7 @@ const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
         maxWidth: 150,
         whiteSpace: "normal",
         wordWrap: "break-word",
-        backgroundColor: `hsl(247, 92%, ${hsl}%`
+        backgroundColor: `hsl(263, 55%, ${hsl}%`
       }}
       onClick={onClick}
     >
