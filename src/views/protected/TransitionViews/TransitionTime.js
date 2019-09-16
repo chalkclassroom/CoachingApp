@@ -1,15 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
-import InfoIcon from "@material-ui/icons/Help";
-import EditIcon from "@material-ui/icons/Edit";
 import { withStyles } from "@material-ui/core/styles";
 import TransitionTimeHelp from "./TransitionTimeHelp";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
-import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
@@ -17,207 +13,188 @@ import { connect } from "react-redux";
 import { resetTransitionTime } from "../../../state/actions/transition-time";
 import Recs from "./TransitionTimeRecs";
 import TransitionTypeSel from "./TransitionTypeSel";
-import TransitionTypeSel1 from "./TransitionTypeSel1";
 import Dashboard from "../../../components/Dashboard";
 
 
 
 const styles = {
-    root: {
-        flexGrow: 1,
-        display: "flex",
-        minHeight: "100vh",
-        flexDirection: "column"
-    },
-    grow: {
-        flexGrow: 1
-    },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20
-    }
+  root: {
+    flexGrow: 1,
+    display: "flex",
+    minHeight: "100vh",
+    flexDirection: "column"
+  },
+  grow: {
+    flexGrow: 1
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20
+  }
 };
 
 class TransitionTime extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            auth: true,
-            anchorEl: null,
-            help: false,
-            notes: false,
-            recs: true,
-            transitionType: null, 
-            open: false,
-            transitionEnded: false,
-        };
+    this.state = {
+      auth: true,
+      anchorEl: null,
+      help: false,
+      notes: false,
+      recs: true,
+      transitionType: null, 
+      open: false,
+      transitionEnded: false,
+    };
 
+    this.handleTransitionType = this.handleTransitionType.bind(this)
+  }
 
-        this.handleTransitionType = this.handleTransitionType.bind(this)
+  handleTransitionType = type => {
+    if (this.state.transitionEnded) {
+      this.setState({transitionEnded: false});
     }
+    this.setState({transitionType: type});
+  };
 
-    handleTransitionType = type => {
-        console.log(this.state.transitionType);
-        if (this.state.transitionEnded) {
-            this.setState({transitionEnded: false});
-        }
-        this.setState({transitionType: type});
-        console.log(type);
-        console.log(this.state.transitionType);
-    };
-
-    handleRecsModal = open => {
-        if (open) {
-            this.setState({ recs: true });
-        } else {
-            this.setState({ recs: false });
-        }
-    };
-
-    handleEndTransition = () => {
-        this.setState({transitionEnded: true});
-        this.setState({transitionType: null});
+  handleRecsModal = open => {
+    if (open) {
+      this.setState({ recs: true });
+    } else {
+      this.setState({ recs: false });
     }
+  };
 
-    handleChange = event => {
-        this.setState({ auth: event.target.checked });
-    };
+  handleEndTransition = () => {
+    this.setState({transitionEnded: true});
+    this.setState({transitionType: null});
+  }
 
-    handleMenu = event => {
-        this.setState({ anchorEl: event.currentTarget });
-    };
+  handleChange = event => {
+    this.setState({ auth: event.target.checked });
+  };
 
-    handleClose = () => {
-        this.setState({ anchorEl: null });
-    };
+  handleMenu = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
 
-    handleHelpModal = () => {
-        this.setState({ help: true });
-    };
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
 
-    handleNotes = open => {
-        if (open) {
-            this.setState({ notes: true });
-        } else {
-            this.setState({ notes: false });
-        }
-    };
+  handleHelpModal = () => {
+    this.setState({ help: true });
+  };
 
-    handleClickAwayHelp = () => {
-        this.setState({ help: false });
-    };
+  handleNotes = open => {
+    if (open) {
+      this.setState({ notes: true });
+    } else {
+      this.setState({ notes: false });
+    }
+  };
 
-    render() {
-        const { classes } = this.props;
-        const { anchorEl } = this.state;
-        const open = Boolean(anchorEl);
+  handleClickAwayHelp = () => {
+    this.setState({ help: false });
+  };
 
-        return (
-            <div className={classes.root}>
+  render() {
+    const { classes } = this.props;
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
+
+    return (
+      <div className={classes.root}>
+        <FirebaseContext.Consumer>
+          {firebase => <AppBar firebase={firebase} />}
+        </FirebaseContext.Consumer>
+        {this.state.help ? (
+          <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
+            <TransitionTimeHelp />
+          </ClickAwayListener>
+        ) : this.state.notes ? (
+          <FirebaseContext.Consumer>
+            {firebase => (
+              <Notes
+                open={true}
+                onClose={this.handleNotes}
+                color="#094492"
+                text="Transition Time Notes"
+                firebase={firebase}
+              />
+            )}
+          </FirebaseContext.Consumer>
+        ) : this.state.recs ? (
+          <FirebaseContext.Consumer>
+            {firebase => (
+              <Recs
+                open={true}
+                onClose={this.handleRecsModal}
+                firebase={firebase}
+              />
+            )}
+          </FirebaseContext.Consumer>
+        ) : (
+          <div />
+        )}
+        <main style={{ flex: 1 }}>
+          <Grid container spacing={16} alignItems="center">
+            <Grid item xs={3}>
+              <Grid
+                container
+                alignItems={"center"}
+                justify={"center"}
+                direction={"column"}
+              >
+                <Dashboard 
+                    magic8="Transition Time"
+                    color="#094492"
+                    infoDisplay= {<TransitionLog />}
+                    infoPlacement = "center"
+                    completeObservation={true}
+                />
+              </Grid>
+            </Grid>
+            <Grid item xs={4} justify="center">
+              <Grid
+                  container
+                  alignItems={"center"}
+                  justify={"center"}
+                  direction={"column"}
+              >
+                <TransitionTypeSel 
+                  handleTransitionType = {this.handleTransitionType}
+                  handleNotes = {this.handleNotes}
+                  transitionType={this.state.transitionType}
+                  transitionEnded={this.state.transitionEnded}
+                />
+              </Grid>
+            </Grid> 
+            <Grid item xs={5}>
+              <Grid
+                container
+                alignItems={"center"}
+                justify={"center"}
+                direction={"column"}
+              >
                 <FirebaseContext.Consumer>
-                    {firebase => <AppBar firebase={firebase} />}
+                  {firebase => (
+                    <TransitionTimer
+                      teacherId={this.props.location.state.teacher.id}
+                      firebase={firebase}
+                      typeSelected={this.state.transitionType === null ? false : true}
+                      handleEndTransition={this.handleEndTransition}
+                  />
+                  )}
                 </FirebaseContext.Consumer>
-                {this.state.help ? (
-                    <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
-                        {" "}
-                        <TransitionTimeHelp />
-                    </ClickAwayListener>
-                ) : this.state.notes ? (
-                    <FirebaseContext.Consumer>
-                        {firebase => (
-                            <Notes
-                                open={true}
-                                onClose={this.handleNotes}
-                                color="#094492"
-                                text="Transition Time Notes"
-                                firebase={firebase}
-                            />
-                        )}
-                    </FirebaseContext.Consumer>
-                ) : this.state.recs ? (
-                  <FirebaseContext.Consumer>
-                      {firebase => (
-                        <Recs
-                          open={true}
-                          onClose={this.handleRecsModal}
-                          firebase={firebase}
-                        />
-                      )}
-                  </FirebaseContext.Consumer>
-                ) : (
-                  <div />
-                )}
-                <main style={{ flex: 1 }}>
-                    <Grid container spacing={16} alignItems="center">
-                        <Grid item xs={3}>
-                            <Grid
-                                container
-                                alignItems={"center"}
-                                justify={"center"}
-                                direction={"column"}
-                                
-                            >
-                                <Dashboard 
-                                    magic8="Transition Time"
-                                    color="#094492"
-                                    infoDisplay= {<TransitionLog />}
-                                    infoPlacement = "center"
-                                    completeObservation={true}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={4} justify="center">
-                            <Grid
-                                container
-                                alignItems={"center"}
-                                justify={"center"}
-                                direction={"column"}
-                            >
-                                
-                                <TransitionTypeSel 
-                                    handleTransitionType = {this.handleTransitionType}
-                                    handleNotes = {this.handleNotes}
-                                    transitionType={this.state.transitionType}
-                                    transitionEnded={this.state.transitionEnded}
-                                />
-                            </Grid>
-                        </Grid> 
-                        {/* <Grid item xs={2}>
-                            <Grid
-                                container
-                                alignItems={"center"}
-                                justify={"center"}
-                                direction={"column"}
-                            >
-                                <div style={{ margin: 20 }} />
-                                <TransitionTypeSel1/>
-                            </Grid>
-                        </Grid> */}
-                        <Grid item xs={5}>
-                            <Grid
-                                container
-                                alignItems={"center"}
-                                justify={"center"}
-                                direction={"column"}
-                            >
-                                <FirebaseContext.Consumer>
-                                    {firebase => (
-                                        <TransitionTimer
-                                            teacherId={this.props.location.state.teacher.id}
-                                            firebase={firebase}
-                                            typeSelected={this.state.transitionType === null ? false : true}
-                                            handleEndTransition={this.handleEndTransition}
-                                        />
-                                    )}
-                                </FirebaseContext.Consumer>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </main>
-            </div>
-        );
-    }
+              </Grid>
+            </Grid>
+          </Grid>
+        </main>
+      </div>
+    );
+  }
 }
 
 TransitionTime.propTypes = {

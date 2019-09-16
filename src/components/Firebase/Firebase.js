@@ -597,7 +597,7 @@ class Firebase {
   };
 
   fetchSessionDates = async (teacherId, sessionType) => {
-      var getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
+      var getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDatesTransition');
 
       return getTransitionSessionDatesFirebaseFunction({
           teacherId: teacherId,
@@ -613,7 +613,7 @@ class Firebase {
   };
 
   fetchTransitionSummary = async sessionId => {
-      var getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable('funcTransitionOfSession');
+      var getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable('funcTransitionSessionSummary');
 
       return getTransitionTypeCountFirebaseFunction({sessionId: sessionId}).then(function (result) {
           // Read result of the Cloud Function.
@@ -625,7 +625,7 @@ class Firebase {
   };
 
   fetchTransitionLog = async sessionId => {
-      var getTransitionsFirebaseFunction = this.functions.httpsCallable('funcTransitionLog');
+      var getTransitionsFirebaseFunction = this.functions.httpsCallable('funcTransitionLogNew');
 
       return getTransitionsFirebaseFunction({sessionId: sessionId}).then(function (result) {
           // Read result of the Cloud Function.

@@ -95,7 +95,7 @@ class RatingModal extends React.Component {
           </Typography>
           <div style={{ height: 20 }} />
           <Grid container direction={"row"} justify={"space-between"}>
-            <Grid item xs={2.4}
+            <Grid item
               align="center"
               alignItems="center"
               justify="center"
@@ -120,7 +120,7 @@ class RatingModal extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item xs={2.4}
+            <Grid item
               align="center"
               alignItems="center"
               justify="center"
@@ -147,7 +147,7 @@ class RatingModal extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item xs={2.4}
+            <Grid item
               align="center"
               alignItems="center"
               justify="center"
@@ -172,7 +172,7 @@ class RatingModal extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item xs={2.4}
+            <Grid item
               align="center"
               alignItems="center"
               justify="center"
@@ -201,7 +201,7 @@ class RatingModal extends React.Component {
                 (smiling, nodding)
               </Typography>
             </Grid>
-            <Grid item xs={2.4}
+            <Grid item
               align="center"
               alignItems="center"
               justify="center"
