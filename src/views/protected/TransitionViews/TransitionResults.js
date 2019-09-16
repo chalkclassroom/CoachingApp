@@ -339,9 +339,8 @@ class TransitionResults extends React.Component {
     trendsTotalColor: "#0988EC",
     trendsInsideColor: "#E99C2E",
     trendsOutsideColor: "#E55529",
-    insideTime: null,
-    outsideTime: null,
     totalTime: null,
+    transitionTime: null,
     sessionTotal: null,
     learningActivityTime: null,
     tabValue: 0,
@@ -690,18 +689,25 @@ class TransitionResults extends React.Component {
 
       //firebase.fetchTransitionSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].inside));
 
-      // firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
+      firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
       //     this.setState({
       //       insideTime: summary[0].inside,
       //       outsideTime: summary[0].outside,
       //       totalTime: summary[0].total,
       //       sessionTotal: summary[0].sessionTotal,
       //       learningActivityTime: summary[0].sessionTotal - summary[0].total
-
+        console.log("the start date is ", summary[0].startDate.value);
+        console.log("the total transition time is ", summary[0].total);
+        console.log("the session total is ", summary[0].sessionTotal);
+        this.setState({
+          transitionTime: summary[0].total,
+          sessionTotal: summary[0].sessionTotal,
+          learningActivityTime: summary[0].sessionTotal - summary[0].total
+        })
 
       // })});
     });
-  };
+  })};
 
   render() {
     const { classes } = this.props;
@@ -850,8 +856,7 @@ class TransitionResults extends React.Component {
                         Total Transition Time: {this.state.totalTime}
                       </Typography>
                       <TransitionTimePie
-                        insideTime={this.state.insideTime}
-                        outsideTime={this.state.outsideTime}
+                        transitionTime={this.state.transitionTime}
                         learningActivityTime={this.state.learningActivityTime}
                         style={{overflow:"hidden"}}
                       />

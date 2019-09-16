@@ -26,19 +26,16 @@ class TransitionTimePie extends React.Component {
         console.log("total session time: " + this.props.sessionTotal)
         let transitionData = {
             labels: [
-                'Inside Transition',
-                'Outside Transition',
+                'Transition Time',
                 'Learning Activity (No Transition)'
             ],
             datasets: [{
-                data: [this.props.insideTime, this.props.outsideTime, this.props.learningActivityTime],
+                data: [this.props.transitionTime, this.props.learningActivityTime],
                 backgroundColor: [
-                    '#E99C2E',
                     '#E55529',
                     '#0988EC'
                 ],
                 hoverBackgroundColor: [
-                    '#E99C2E',
                     '#E55529',
                     '#0988EC'
                 ]
