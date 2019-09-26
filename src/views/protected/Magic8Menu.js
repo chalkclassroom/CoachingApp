@@ -80,7 +80,7 @@ class Magic8Menu extends Component {
       allowed: false,
       numSelected: 0,
       selected: "none",
-      unlocked: [1, 8, 7, 2], 
+      unlocked: [], 
       page: this.props.history.location.state.type === "Training" ? "Training"
         : this.props.history.location.state.type === "Observe" ? "Observation"
         : "Results"

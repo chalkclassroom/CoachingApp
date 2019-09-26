@@ -53,7 +53,7 @@ class TeacherModal extends React.Component {
     this.state = {
       open: true,
       value: 0,
-      teachers: [{email: 'practice@teacher.edu', firstName: 'Practice', id: 'rJxNhJmzjRZP7xg29Ko6', lastName: "Teacher", notes: "Notes are a useful place to put highlights or reminders!", role:"teacher", school: "Elum Entaree School"}]
+      teachers: []
     };
 
     this.selectTeacher = this.selectTeacher.bind(this);
