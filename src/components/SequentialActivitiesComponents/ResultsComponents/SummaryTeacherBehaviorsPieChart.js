@@ -4,47 +4,47 @@ import { withStyles } from "@material-ui/core";
 import { Pie } from "react-chartjs-2";
 
 const styles = {
-    //idk how this works
+
 };
 
 /**
  * specifies data sets (and formatting) for child behaviors pie chart
  */
 const teacherBehaviorsData = {
-    labels: [
-        'No Support',
-        'Teacher Support'
+  labels: [
+    'No Support',
+    'Teacher Support'
+  ],
+  datasets: [{
+    data: [40, 60],
+    backgroundColor: [
+      '#E99C2E',
+      '#0988EC',
     ],
-    datasets: [{
-        data: [40, 60],
-        backgroundColor: [
-            '#E99C2E',
-            '#0988EC',
-        ],
-        hoverBackgroundColor: [
-            '#E99C2E',
-            '#0988EC',
-        ]
-    }]
+    hoverBackgroundColor: [
+      '#E99C2E',
+      '#0988EC',
+    ]
+  }]
 };
 
 class SummaryTeacherBehaviorsPieChart extends React.Component {
-    render() {
-        const { classes } = this.props;
+  render() {
+    const { classes } = this.props;
 
-        return (
-            <Pie
-                data={teacherBehaviorsData}
-                width="650"
-                height="400"
-            />
-        );
-    }
+    return (
+      <Pie
+        data={teacherBehaviorsData}
+        width="650"
+        height="400"
+      />
+    );
+  }
 }
 
  SummaryTeacherBehaviorsPieChart.propTypes = {
-    classes: PropTypes.object.isRequired,
-    data: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  data: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(SummaryTeacherBehaviorsPieChart);

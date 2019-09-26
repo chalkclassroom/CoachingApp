@@ -1,13 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import IconButton from "@material-ui/core/IconButton";
-import Modal from "@material-ui/core/Modal";
-import Grid from "@material-ui/core/Grid";
-import InfoIcon from "@material-ui/icons/Help";
-import EditIcon from "@material-ui/icons/Edit";
 import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import YesNoDialog from "../../../components/Shared/YesNoDialog";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/context";
 import { connect } from "react-redux";
@@ -32,7 +26,6 @@ const styles = {
 class SequentialActivities extends React.Component {
   state = {
     auth: true,
-    anchorEl: null,
     help: false,
     ratingIsOpen: false,
     ratings: [],
@@ -69,8 +62,6 @@ class SequentialActivities extends React.Component {
   };
 
   render() {
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
 
     return (
       <div className={this.props.classes.root}>

@@ -28,6 +28,50 @@ const styles = theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
     borderRadius: 8
+  },
+  disapprovalTitle: {
+    backgroundColor: "#E14B24",
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+    width: "25%"
+  },
+  disapprovalExample: {
+    backgroundColor: "#F9D8CE",
+    padding: "1%"
+  },
+  redirectionTitle: {
+    backgroundColor: "#E69129",
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+    width: "25%"
+  },
+  redirectionExample: {
+    backgroundColor: "#FAE8CF",
+    padding: "1%"
+  },
+  generalTitle: {
+    backgroundColor: "#46D3AA",
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+    width: "25%"
+  },
+  generalExample: {
+    backgroundColor: "#D7F6EE",
+    padding: "1%"
+  },
+  specificTitle: {
+    backgroundColor: "#0C3C87",
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+    width: "25%"
+  },
+  specificExample: {
+    backgroundColor: "#B3D1FA",
+    padding: "1%"
   }
 });
 
@@ -63,120 +107,88 @@ class ClassroomClimateHelp extends React.Component {
               <Typography variant="h6" gutterBottom>
                 Hints + Reminders: Classifying Behavior Responses
               </Typography>
-              <Table>
+              <Table padding="checkbox">
                 <TableHead>
                   <TableRow>
-                    <TableCell
-                      style={{
-                        backgroundColor: "#E14B24",
-                        color: "white",
-                        fontSize: 18,
-                        textAlign: "center",
-                        maxWidth: "25%"
-                      }}
-                    >
+                    <TableCell className={classes.disapprovalTitle}>
                       DISAPPROVAL
                     </TableCell>
-                    <TableCell
-                      style={{
-                        backgroundColor: "#E69129",
-                        color: "white",
-                        fontSize: 18,
-                        textAlign: "center",
-                        maxWidth: "25%"
-                      }}
-                    >
+                    <TableCell className={classes.redirectionTitle}>
                       REDIRECTION
                     </TableCell>
-                    <TableCell
-                      style={{
-                        backgroundColor: "#46D3AA",
-                        color: "white",
-                        fontSize: 18,
-                        textAlign: "center",
-                        maxWidth: "25%"
-                      }}
-                    >
+                    <TableCell className={classes.generalTitle}>
                       GENERAL PRAISE
                     </TableCell>
-                    <TableCell
-                      style={{
-                        backgroundColor: "#0C3C87",
-                        color: "white",
-                        fontSize: 18,
-                        textAlign: "center",
-                        maxWidth: "25%"
-                      }}
-                    >
+                    <TableCell className={classes.specificTitle}>
                       SPECIFIC PRAISE
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell style={{ backgroundColor: "#F9D8CE" }}>
+                    <TableCell className={classes.disapprovalExample}>
                       <strong>
                         Teacher discourages behavior without providing an
                         alternative
                       </strong>
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#FAE8CF" }}>
+                    <TableCell className={classes.redirectionExample}>
                       <strong>
                         Teacher suggests an alternative to the child's current
                         behavior
                       </strong>
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#D7F6EE" }}>
+                    <TableCell className={classes.generalExample}>
                       <strong>
                         Teacher gives a general comment of approval
                       </strong>
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#B3D1FA" }}>
+                    <TableCell className={classes.specificExample}>
                       <strong>
                         Teacher gives a positive comment on a specific behavior
                       </strong>
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{ backgroundColor: "#F9D8CE" }}>
+                    <TableCell className={classes.disapprovalExample}>
                       "Stop it."
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#FAE8CF" }}>
+                    <TableCell className={classes.redirectionExample}>
                       "Are you making a good choice?"
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#D7F6EE" }}>
+                    <TableCell className={classes.generalExample}>
                       "Kiss your brain!"
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#B3D1FA" }}>
+                    <TableCell className={classes.specificExample}>
                       "I like the way you're using your finger to count the
                       cubes."
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{ backgroundColor: "#F9D8CE" }}>
+                    <TableCell className={classes.disapprovalExample}>
                       "I said stay in your seat."
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#FAE8CF" }}>
+                    <TableCell className={classes.redirectionExample}>
                       "Do you want to sit on a letter or a number?"
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#D7F6EE" }}>
+                    <TableCell className={classes.generalExample}>
                       "Good job!"
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#B3D1FA" }}>
+                    <TableCell className={classes.specificExample}>
                       "Wow, that puzzle was tricky but you stuck with it!"
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell style={{ backgroundColor: "#F9D8CE" }}>
+                    <TableCell className={classes.disapprovalExample}>
                       Time out
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#FAE8CF" }}>
+                    <TableCell className={classes.redirectionExample}>
                       "Do you need some quiet time to calm down?"
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#D7F6EE" }}>
+                    <TableCell className={classes.generalExample}>
                       Nodding, thumbs up, high five
                     </TableCell>
-                    <TableCell style={{ backgroundColor: "#B3D1FA" }}>
+                    <TableCell className={classes.specificExample}>
                       "Thank you for being Super Friends by sharing the trains!"
                     </TableCell>
                   </TableRow>

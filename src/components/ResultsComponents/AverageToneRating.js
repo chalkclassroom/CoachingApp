@@ -18,67 +18,67 @@ const styles = ({
 });
 
 class averageToneRating extends React.Component {
-    constructor(props){
-      super(props);
-    }
+  constructor(props){
+    super(props);
+  }
 
-    handlePushFire = entry => {
+  handlePushFire = entry => {
 
-    };
+  };
 
 
 
   CustomUI = (props) => {
     return(
-    <div>
-    <Grid
-        container
-        direction={"row"}
-        justify={"space-between"}
-    >
-        <Grid item>
+      <div>
+        <Grid
+          container
+          direction={"row"}
+          justify={"space-between"}
+        >
+          <Grid item>
             <img
-                alt="extreme negative face"
-                src={exNegativeFace}
-                width="70vw"
+              alt="extreme negative face"
+              src={exNegativeFace}
+              width="70vw"
             />
-        </Grid>
-        <Grid item>
+          </Grid>
+          <Grid item>
             <img
-                alt="negative face"
-                src={negativeFace}
-                width="70vw"
+              alt="negative face"
+              src={negativeFace}
+              width="70vw"
             />
-        </Grid>
-        <Grid item>
+          </Grid>
+          <Grid item>
             <img
-                alt="flat face"
-                src={flatFace}
-                width="70vw"
+              alt="flat face"
+              src={flatFace}
+              width="70vw"
             />
-        </Grid>
-        <Grid item>
+          </Grid>
+          <Grid item>
             <img
-                alt="pleasant face"
-                src={pleasantFace}
-                width="70vw"
+              alt="pleasant face"
+              src={pleasantFace}
+              width="70vw"
             />
-        </Grid>
-        <Grid item>
+          </Grid>
+          <Grid item>
             <img
-                alt="vibrant face"
-                src={vibrantFace}
-                width="70vw"
+              alt="vibrant face"
+              src={vibrantFace}
+              width="70vw"
             />
+          </Grid>
         </Grid>
-    </Grid>
-    <div style={{marginTop: "5%"}}>
-    <LinearProgress
-        variant="determinate"
-        value={this.props.averageToneRating *20}
-        style={{ height: 10, width: "75vh"}}>
-      </LinearProgress>
-      </div>
+        <div style={{marginTop: "5%"}}>
+          <LinearProgress
+            variant="determinate"
+            value={this.props.averageToneRating *20}
+            style={{ height: 10, width: "75vh"}}>
+          </LinearProgress>
+        </div>
       </div>
     )
   };
@@ -89,8 +89,8 @@ class averageToneRating extends React.Component {
       <>
         {this.CustomUI(this.props)}
       </>
-        );
-    }
+    );
+  }
 }
 
 averageToneRating.propTypes = {

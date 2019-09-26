@@ -7,14 +7,12 @@ import DialogContentText from "@material-ui/core/DialogContentText/DialogContent
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
-import Line from "rc-progress/es/Line";
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import PropTypes from "prop-types";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import ms from "pretty-ms";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import { toggleSequentialMaterials } from "../../state/actions/sequential-activities";
@@ -41,7 +39,6 @@ const TeacherChildEnum = {
 };
 
 const RATING_INTERVAL = 60000;
-const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
 class CenterRatingChecklistSeqAct extends React.Component {
   state = {
@@ -135,8 +132,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
 
   childDisabled = () => {
     return (
-        this.state.people === TeacherChildEnum.CHILD_1 ||
-        this.state.people === undefined
+      this.state.people === TeacherChildEnum.CHILD_1 ||
+      this.state.people === undefined
     );
   };
 
@@ -233,7 +230,6 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 justify={"center"}
                 direction={"column"}
               >
-                {/* <div style={{ margin: 20 }} /> */}
                 <Dashboard
                   magic8="Sequential Activities"
                   color="#ffd300"
@@ -244,309 +240,291 @@ class CenterRatingChecklistSeqAct extends React.Component {
               </Grid>
             </Grid>
             <Grid item xs={9}>
-            <Grid>
-            <div style={{ margin: 10 }} />
-              <Button size={"small"} onClick={this.handleBackButton}>
-                <KeyboardArrowLeft />
-                Back
-              </Button>
-            </Grid>
-            <Grid container alignItems="center" direction="column" xs={12}>
-              <Typography variant="h4" gutterBottom>
-                {this.props.currentCenter[0].toUpperCase() +
-                  this.props.currentCenter.substr(1)}
-              </Typography>
-              <div style={{ height: 20 }} />
-              <Typography
-                variant={"subtitle2"}
-                gutterBottom
-              >
-                Please select the number of children and teachers at the center:
-              </Typography>
-              <Grid
-                container
-                direction={"row"}
-                justify={"space-around"}
-                xs={12}
-              >
-                <Grid item>
-                  <Button
-                    onClick={this.handleChild1Click}
-                    size="small"
-                    variant={
-                      this.state.people === TeacherChildEnum.CHILD_1
-                        ? "contained"
-                        : "outlined"
-                    }
-                  >
-                    1 child
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    onClick={this.handleChild2Click}
-                    size="small"
-                    variant={
-                      this.state.people === TeacherChildEnum.CHILD_2
-                        ? "contained"
-                        : "outlined"
-                    }
-                  >
-                    2+ children without teacher
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    onClick={this.handleChild1TeacherClick}
-                    size="small"
-                    variant={
-                      this.state.people === TeacherChildEnum.CHILD_1_TEACHER
-                        ? "contained"
-                        : "outlined"
-                    }
-                  >
-                    1 child with teacher
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    onClick={this.handleChild2TeacherClick}
-                    size="small"
-                    variant={
-                      this.state.people === TeacherChildEnum.CHILD_2_TEACHER
-                        ? "contained"
-                        : "outlined"
-                    }
-                  >
-                    2+ children with teacher
-                  </Button>
-                </Grid>
+              <Grid>
+                <div style={{ margin: 10 }} />
+                <Button size={"small"} onClick={this.handleBackButton}>
+                  <KeyboardArrowLeft />
+                  Back
+                </Button>
               </Grid>
-              <div style={{ height: 20 }} />
-              <Grid container direction={"row"} spacing={16} xs={12}>
-                <Grid item xs={6}>
-                  <Card>
-                    <Typography variant="h6" align={"center"}>
-                      Child Behaviors
-                    </Typography>
-                    <List>
-                      <ListItem
-                        onClick={this.handleToggle(1)}
-                        disabled={this.childDisabled()}
-                      >
-                        <Checkbox
-                          checked={
-                            !this.childDisabled() &&
-                            this.state.checked.indexOf(1) !== -1
-                          }
+              <Grid container alignItems="center" direction="column" xs={12}>
+                <Typography variant="h4" gutterBottom>
+                  {this.props.currentCenter[0].toUpperCase() +
+                    this.props.currentCenter.substr(1)}
+                </Typography>
+                <div style={{ height: 20 }} />
+                <Typography
+                  variant={"subtitle2"}
+                  gutterBottom
+                >
+                  Please select the number of children and teachers at the center:
+                </Typography>
+                <Grid
+                  container
+                  direction={"row"}
+                  justify={"space-around"}
+                  xs={12}
+                >
+                  <Grid item>
+                    <Button
+                      onClick={this.handleChild1Click}
+                      size="small"
+                      variant={
+                        this.state.people === TeacherChildEnum.CHILD_1
+                          ? "contained"
+                          : "outlined"
+                      }
+                    >
+                      1 child
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={this.handleChild2Click}
+                      size="small"
+                      variant={
+                        this.state.people === TeacherChildEnum.CHILD_2
+                          ? "contained"
+                          : "outlined"
+                      }
+                    >
+                      2+ children without teacher
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={this.handleChild1TeacherClick}
+                      size="small"
+                      variant={
+                        this.state.people === TeacherChildEnum.CHILD_1_TEACHER
+                          ? "contained"
+                          : "outlined"
+                      }
+                    >
+                      1 child with teacher
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      onClick={this.handleChild2TeacherClick}
+                      size="small"
+                      variant={
+                        this.state.people === TeacherChildEnum.CHILD_2_TEACHER
+                          ? "contained"
+                          : "outlined"
+                      }
+                    >
+                      2+ children with teacher
+                    </Button>
+                  </Grid>
+                </Grid>
+                <div style={{ height: 20 }} />
+                <Grid container direction={"row"} spacing={16} xs={12}>
+                  <Grid item xs={6}>
+                    <Card>
+                      <Typography variant="h6" align={"center"}>
+                        Child Behaviors
+                      </Typography>
+                      <List>
+                        <ListItem
+                          onClick={this.handleToggle(1)}
                           disabled={this.childDisabled()}
-                        />
-                        <ListItemText>
-                          Using <b>regular</b> objects in a
-                          <b>step-by-step, predictable way</b>
-                        </ListItemText>
-                      </ListItem>
-                      <ListItem
-                        onClick={this.handleToggle(2)}
-                        disabled={this.childDisabled()}
-                      >
-                        <Checkbox
-                          checked={
-                            !this.childDisabled() &&
-                            this.state.checked.indexOf(2) !== -1
-                          }
+                        >
+                          <Checkbox
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.checked.indexOf(1) !== -1
+                            }
+                            disabled={this.childDisabled()}
+                          />
+                          <ListItemText>
+                            Using <b>regular</b> objects in a {" "}
+                            <b>step-by-step, predictable way</b>
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleToggle(2)}
                           disabled={this.childDisabled()}
-                        />
-                        <ListItemText>
-                          <b>Writing</b> names or meaningful messages
-                        </ListItemText>
-                      </ListItem>
-                      <ListItem
-                        onClick={this.handleToggle(3)}
-                        disabled={this.childDisabled()}
-                      >
-                        <Checkbox
-                          checked={
-                            !this.childDisabled() &&
-                            this.state.checked.indexOf(3) !== -1
-                          }
+                        >
+                          <Checkbox
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.checked.indexOf(2) !== -1
+                            }
+                            disabled={this.childDisabled()}
+                          />
+                          <ListItemText>
+                            <b>Writing</b> names or meaningful messages
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleToggle(3)}
                           disabled={this.childDisabled()}
-                        />
-                        <ListItemText>
-                          <b>Drawing</b> meaningful images
-                        </ListItemText>
-                      </ListItem>
-                      <ListItem
-                        onClick={this.handleToggle(4)}
-                        disabled={this.childDisabled()}
-                      >
-                        <Checkbox
-                          checked={
-                            !this.childDisabled() &&
-                            this.state.checked.indexOf(4) !== -1
-                          }
+                        >
+                          <Checkbox
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.checked.indexOf(3) !== -1
+                            }
+                            disabled={this.childDisabled()}
+                          />
+                          <ListItemText>
+                            <b>Drawing</b> meaningful images
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleToggle(4)}
                           disabled={this.childDisabled()}
-                        />
-                        <ListItemText>
-                          Using <b>sequential materials</b> in a{" "}
-                          <b>predictable way</b>
-                        </ListItemText>
-                      </ListItem>
-                      <ListItem
-                        onClick={this.handleToggle(5)}
-                        disabled={this.childDisabled()}
-                      >
-                        <Checkbox
-                          checked={
-                            !this.childDisabled() &&
-                            this.state.checked.indexOf(5) !== -1
-                          }
+                        >
+                          <Checkbox
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.checked.indexOf(4) !== -1
+                            }
+                            disabled={this.childDisabled()}
+                          />
+                          <ListItemText>
+                            Using <b>sequential materials</b> in a{" "}
+                            <b>predictable way</b>
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleToggle(5)}
                           disabled={this.childDisabled()}
-                        />
-                        <ListItemText>
-                          Following <b>formal rules of a game</b> and/or taking
-                          turns
-                        </ListItemText>
-                      </ListItem>
-                      <ListItem
-                        onClick={this.handleToggle(6)}
-                        disabled={this.childDisabled()}
-                      >
-                        <Checkbox
-                          checked={
-                            !this.childDisabled() &&
-                            this.state.checked.indexOf(6) !== -1
-                          }
+                        >
+                          <Checkbox
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.checked.indexOf(5) !== -1
+                            }
+                            disabled={this.childDisabled()}
+                          />
+                          <ListItemText>
+                            Following <b>formal rules of a game</b> and/or taking
+                            turns
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleToggle(6)}
                           disabled={this.childDisabled()}
-                        />
-                        <ListItemText>
-                          Speaking or acting according to a{" "}
-                          <b>predetermined scenario</b>
-                        </ListItemText>
-                      </ListItem>
-                      <ListItem
+                        >
+                          <Checkbox
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.checked.indexOf(6) !== -1
+                            }
+                            disabled={this.childDisabled()}
+                          />
+                          <ListItemText>
+                            Speaking or acting according to a{" "}
+                            <b>predetermined scenario</b>
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
                           onClick={this.handleToggle(7)}
                           disabled={this.childDisabled()}
-                      >
-                        <Checkbox
+                        >
+                          <Checkbox
                             checked={
                               !this.childDisabled() &&
                               this.state.checked.indexOf(7) !== -1
                             }
                             disabled={this.childDisabled()}
-                        />
-                        <ListItemText>
-                          None
-                        </ListItemText>
-                      </ListItem>
-                    </List>
-                  </Card>
-                </Grid>
-                <Grid item xs={6}>
-                  <Card>
-                    <Typography variant="h6" align={"center"}>
-                      Teacher Behaviors
-                    </Typography>
-                    <List>
-                      <ListItem
-                        onClick={this.handleToggle(8)}
-                        disabled={this.teacherDisabled()}
-                      >
-                        <Checkbox
-                          checked={
-                            !this.teacherDisabled() &&
-                            this.state.checked.indexOf(8) !== -1
-                          }
+                          />
+                          <ListItemText>
+                            None
+                          </ListItemText>
+                        </ListItem>
+                      </List>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Card>
+                      <Typography variant="h6" align={"center"}>
+                        Teacher Behaviors
+                      </Typography>
+                      <List>
+                        <ListItem
+                          onClick={this.handleToggle(8)}
                           disabled={this.teacherDisabled()}
-                        />
-                        <ListItemText>
-                          <b>Encouraging</b> sequential use of materials
-                        </ListItemText>
-                      </ListItem>
-                      <ListItem
-                        onClick={this.handleToggle(9)}
-                        disabled={this.teacherDisabled()}
-                      >
-                        <Checkbox
-                          checked={
-                            !this.teacherDisabled() &&
-                            this.state.checked.indexOf(9) !== -1
-                          }
+                        >
+                          <Checkbox
+                            checked={
+                              !this.teacherDisabled() &&
+                              this.state.checked.indexOf(8) !== -1
+                            }
+                            disabled={this.teacherDisabled()}
+                          />
+                          <ListItemText>
+                            <b>Encouraging</b> sequential use of materials
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleToggle(9)}
                           disabled={this.teacherDisabled()}
-                        />
-                        <ListItemText>
-                          <b>Demonstrating the steps</b> to an activity
-                        </ListItemText>
-                      </ListItem>
-                      <ListItem
-                        onClick={this.handleToggle(10)}
-                        disabled={this.teacherDisabled()}
-                      >
-                        <Checkbox
-                          checked={
-                            !this.teacherDisabled() &&
-                            this.state.checked.indexOf(10) !== -1
-                          }
+                        >
+                          <Checkbox
+                            checked={
+                              !this.teacherDisabled() &&
+                              this.state.checked.indexOf(9) !== -1
+                            }
+                            disabled={this.teacherDisabled()}
+                          />
+                          <ListItemText>
+                            <b>Demonstrating the steps</b> to an activity
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleToggle(10)}
                           disabled={this.teacherDisabled()}
-                        />
-                        <ListItemText>
-                          Helping children <b>act out a play or book</b> they've
-                          read
-                        </ListItemText>
-                      </ListItem>
-                      <ListItem
+                        >
+                          <Checkbox
+                            checked={
+                              !this.teacherDisabled() &&
+                              this.state.checked.indexOf(10) !== -1
+                            }
+                            disabled={this.teacherDisabled()}
+                          />
+                          <ListItemText>
+                            Helping children <b>act out a play or book</b> they've
+                            read
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
                           onClick={this.handleToggle(11)}
                           disabled={this.teacherDisabled()}
-                      >
-                        <Checkbox
+                        >
+                          <Checkbox
                             checked={
                               !this.teacherDisabled() &&
                               this.state.checked.indexOf(11) !== -1
                             }
                             disabled={this.teacherDisabled()}
-                        />
-                        <ListItemText>
-                          None
-                        </ListItemText>
-                      </ListItem>
-                    </List>
-                  </Card>
+                          />
+                          <ListItemText>
+                            None
+                          </ListItemText>
+                        </ListItem>
+                      </List>
+                    </Card>
+                  </Grid>
                 </Grid>
-                {/* <Grid xs={1}>
-                  <Line
-                    style={{ transform: "rotate(270deg)" }}
-                    percent={`${100 * (this.state.time / RATING_INTERVAL)}`}
-                    strokeWidth="8"
-                    strokeColor={
-                      this.state.time > TEN_PERCENT ? "#009365" : "#E55529"
-                    }
-                  />
-                  <div
-                    style={{
-                      paddingTop: 50,
-                      textAlign: "center"
-                    }}
-                  >
-                    {ms(this.state.time)}
-                  </div>
-                </Grid> */}
-              </Grid>
-              <Grid
-                container
-                alignItems={"center"}
-                justify={"center"}
-                direction={"row"}
-              >
-                <Button
-                  variant="contained"
-                  color={"secondary"}
-                  onClick={this.handleSubmit}
-                  style={{ marginTop: 20 }}
+                <Grid
+                  container
+                  alignItems={"center"}
+                  justify={"center"}
+                  direction={"row"}
                 >
-                  Submit
-                </Button>
+                  <Button
+                    variant="contained"
+                    color={"secondary"}
+                    onClick={this.handleSubmit}
+                    style={{ marginTop: 20 }}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
             </Grid>
           </Grid>
         </main>
