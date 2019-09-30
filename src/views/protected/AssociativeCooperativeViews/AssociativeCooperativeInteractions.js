@@ -6,7 +6,7 @@ import FirebaseContext from "../../../components/Firebase/context";
 import { connect } from "react-redux";
 import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
-import Recs from "./AssociativeCooperativeRecs";
+//import Recs from "./AssociativeCooperativeRecs";
 
 const styles = {
   root: {
@@ -66,7 +66,7 @@ class AssociativeCooperativeInteractions extends React.Component {
             />
           )}
         </FirebaseContext.Consumer>
-        {this.state.recs ? (
+        {/* this.state.recs ? (
           <FirebaseContext.Consumer>
             {firebase => (
               <Recs
@@ -78,7 +78,7 @@ class AssociativeCooperativeInteractions extends React.Component {
           </FirebaseContext.Consumer>
         ) : (
           <div />
-        )}
+        ) */}
         <main style={{ flex: 1 }}>
           <FirebaseContext.Consumer>
             {firebase => 

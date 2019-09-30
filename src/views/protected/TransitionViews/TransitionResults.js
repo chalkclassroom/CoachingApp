@@ -347,8 +347,7 @@ class TransitionResults extends React.Component {
     tabValue: 0,
     openPanel: null,
     addedToPrep: [],
-    selectedQuestions: [{type: "Traveling Outside Classroom: ", questions: [TravelingQuestions[0].text, TravelingQuestions[2].text]},
-      {type: "Behavior Management Disruption: ", questions: [BehaviorQuestions[3].text]}],
+    selectedQuestions: [],
   };
 
   componentDidMount() {

@@ -11,7 +11,7 @@ import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import { connect } from "react-redux";
 import { resetTransitionTime } from "../../../state/actions/transition-time";
-import Recs from "./TransitionTimeRecs";
+//import Recs from "./TransitionTimeRecs";
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 
@@ -125,7 +125,7 @@ class TransitionTime extends React.Component {
               />
             )}
           </FirebaseContext.Consumer>
-        ) : this.state.recs ? (
+        ) /* : this.state.recs ? (
           <FirebaseContext.Consumer>
             {firebase => (
               <Recs
@@ -135,7 +135,7 @@ class TransitionTime extends React.Component {
               />
             )}
           </FirebaseContext.Consumer>
-        ) : (
+        )  */: (
           <div />
         )}
         <main style={{ flex: 1 }}>

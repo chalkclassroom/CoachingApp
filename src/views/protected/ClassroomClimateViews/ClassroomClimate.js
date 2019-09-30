@@ -10,7 +10,7 @@ import FirebaseContext from "../../../components/Firebase/context";
 import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter";
 import { connect } from "react-redux";
 import { appendClimateRating, emptyClimateStack } from "../../../state/actions/classroom-climate";
-import Recs from "./ClassroomClimateRecs";
+//import Recs from "./ClassroomClimateRecs";
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
@@ -114,7 +114,7 @@ class ClassroomClimate extends React.Component {
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
-        {this.state.recs ? (
+        {/* {this.state.recs ? (
           <FirebaseContext.Consumer>
             {firebase => (
               <Recs
@@ -126,7 +126,7 @@ class ClassroomClimate extends React.Component {
           </FirebaseContext.Consumer>
         ) : (
           <div />
-        )}
+        )} */}
         <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
           <RatingModal
             handleRatingConfirmation={this.handleRatingConfirmation}

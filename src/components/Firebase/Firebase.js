@@ -597,7 +597,7 @@ class Firebase {
   };
 
   fetchSessionDates = async (teacherId, sessionType) => {
-      var getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDatesTransition');
+      var getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable('funcSessionDates');
 
       return getTransitionSessionDatesFirebaseFunction({
           teacherId: teacherId,
