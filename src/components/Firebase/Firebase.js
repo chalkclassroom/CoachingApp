@@ -400,7 +400,7 @@ class Firebase {
       const userRef = this.sessionRef.collection("entries").add({
           Checked: mEntry.checked.slice(1),
           PeopleType: mEntry.people,
-          acType: mEntry.type,
+          //acType: mEntry.type,
           Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
   };

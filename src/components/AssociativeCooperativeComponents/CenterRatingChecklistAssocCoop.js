@@ -111,11 +111,11 @@ class CenterRatingChecklistAssocCoop extends React.Component {
       let mEntry = {
         checked: this.state.checked,
         people: this.state.people,
-        acType: this.state.acType
+        //acType: this.state.acType
       };
 // <<<<<<< HEAD
 // =======
-      //this.props.firebase.handlePushAC(mEntry);
+      this.props.firebase.handlePushAC(mEntry);
 // >>>>>>> 7416dfe9eba94b55b62425799cbd308062bc27b4
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();
