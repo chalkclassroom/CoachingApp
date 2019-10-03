@@ -374,7 +374,7 @@ class ClassroomClimateResults extends React.Component {
                                     onChange={this.changeSessionId}
                                     InputLabelProps={{ shrink: true }}>
                                     {this.state.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>
-                                      <em>{moment(date.start.value).format("MMM Do YY hh:mm A")}</em>
+                                      <em>{moment(date.sessionStart.value).format("MMM Do YY hh:mm A")}</em>
                                     </MenuItem>})}
                                   </TextField>
                                 </ListItem>

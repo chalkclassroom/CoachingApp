@@ -110,8 +110,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
   handleToggle = value => () => {
     // Prevents updating state of checkbox when disabled
     if (
-      (value <= 7 && this.childDisabled()) ||
-      (value >= 8 && this.teacherDisabled())
+      (value <= 5 && this.childDisabled()) ||
+      (value >= 6 && this.teacherDisabled())
     ) {
       return;
     }
@@ -132,7 +132,6 @@ class CenterRatingChecklistSeqAct extends React.Component {
 
   childDisabled = () => {
     return (
-      this.state.people === TeacherChildEnum.CHILD_1 ||
       this.state.people === undefined
     );
   };
@@ -151,7 +150,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
 
       const { checked } = this.state;
       const newChecked = [...checked];
-      for (let i = 7; i <= 9; i++) {
+      for (let i = 5; i <= 8; i++) {
         // If there are teacher ratings checked, remove them
         if (checked.indexOf(i) !== -1) {
           let currentIndex = checked.indexOf(i);
@@ -168,7 +167,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
 
       const { checked } = this.state;
       const newChecked = [...checked];
-      for (let i = 7; i <= 9; i++) {
+      for (let i = 5; i <= 8; i++) {
         // If there are teacher ratings checked, remove them
         if (checked.indexOf(i) !== -1) {
           let currentIndex = checked.indexOf(i);
@@ -338,7 +337,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            Using <b>regular</b> objects in a {" "}
+                            Using regular objects or sequential materials in a {" "}
                             <b>step-by-step, predictable way</b>
                           </ListItemText>
                         </ListItem>
@@ -354,7 +353,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            <b>Writing</b> names or meaningful messages
+                            <b>Drawing</b> meaningful images or{" "}
+                            <b>writing</b> names or meaningful messages
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -369,7 +369,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            <b>Drawing</b> meaningful images
+                            Following <b>formal rules of a game</b> and/or taking
+                            turns
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -384,8 +385,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            Using <b>sequential materials</b> in a{" "}
-                            <b>predictable way</b>
+                            Speaking or acting according to a{" "}
+                            <b>predetermined scenario</b>
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -400,11 +401,10 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            Following <b>formal rules of a game</b> and/or taking
-                            turns
+                            None
                           </ListItemText>
                         </ListItem>
-                        <ListItem
+                        {/* <ListItem
                           onClick={this.handleToggle(6)}
                           disabled={this.childDisabled()}
                         >
@@ -434,7 +434,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           <ListItemText>
                             None
                           </ListItemText>
-                        </ListItem>
+                        </ListItem> */}
                       </List>
                     </Card>
                   </Grid>
@@ -444,6 +444,36 @@ class CenterRatingChecklistSeqAct extends React.Component {
                         Teacher Behaviors
                       </Typography>
                       <List>
+                        <ListItem
+                          onClick={this.handleToggle(6)}
+                          disabled={this.teacherDisabled()}
+                        >
+                          <Checkbox
+                            checked={
+                              !this.teacherDisabled() &&
+                              this.state.checked.indexOf(6) !== -1
+                            }
+                            disabled={this.teacherDisabled()}
+                          />
+                          <ListItemText>
+                            <b>Encouraging</b> sequential use of materials
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleToggle(7)}
+                          disabled={this.teacherDisabled()}
+                        >
+                          <Checkbox
+                            checked={
+                              !this.teacherDisabled() &&
+                              this.state.checked.indexOf(7) !== -1
+                            }
+                            disabled={this.teacherDisabled()}
+                          />
+                          <ListItemText>
+                            <b>Demonstrating the steps</b> to an activity
+                          </ListItemText>
+                        </ListItem>
                         <ListItem
                           onClick={this.handleToggle(8)}
                           disabled={this.teacherDisabled()}
@@ -456,7 +486,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.teacherDisabled()}
                           />
                           <ListItemText>
-                            <b>Encouraging</b> sequential use of materials
+                            Helping children <b>act out</b> a dramatic play{" "}
+                            scenario or book
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -471,7 +502,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.teacherDisabled()}
                           />
                           <ListItemText>
-                            <b>Demonstrating the steps</b> to an activity
+                            Supporting children's <b>drawing</b> of an image{" "}
+                            or <b>writing</b> a message
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -482,22 +514,6 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             checked={
                               !this.teacherDisabled() &&
                               this.state.checked.indexOf(10) !== -1
-                            }
-                            disabled={this.teacherDisabled()}
-                          />
-                          <ListItemText>
-                            Helping children <b>act out a play or book</b> they've
-                            read
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleToggle(11)}
-                          disabled={this.teacherDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.teacherDisabled() &&
-                              this.state.checked.indexOf(11) !== -1
                             }
                             disabled={this.teacherDisabled()}
                           />
