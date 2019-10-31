@@ -258,11 +258,13 @@ class TeacherDetail extends Component {
       lastName: "...",
       school: "...",
       email: "...",
+      phone: "...",
       notes: "...",
       inputFirstName: "",
       inputLastName: "",
       inputSchool: "",
       inputEmail: "",
+      inputPhone: "",
       inputNotes: "",
       fnErrorText: "",
       lnErrorText: "",
@@ -288,18 +290,20 @@ class TeacherDetail extends Component {
     if (this.props.location.state === undefined) { // Entered URL w/o navigating from 'My Teachers'
       this.state = this.initialState;
     } else { // Came from 'My Teachers'
-      const { id, firstName, lastName, school, email, notes } = this.props.location.state.teacher;
+      const { id, firstName, lastName, school, email, phone, notes } = this.props.location.state.teacher;
       this.state = {
         teacherUID: id,
         firstName: firstName,
         lastName: lastName,
         school: school,
         email: email,
+        phone: phone,
         notes: notes,
         inputFirstName: firstName,
         inputLastName: lastName,
         inputSchool: school,
         inputEmail: email,
+        inputPhone: phone,
         inputNotes: notes,
         fnErrorText: "",
         lnErrorText: "",
@@ -329,17 +333,19 @@ class TeacherDetail extends Component {
   componentDidMount () {
     const firebase = this.context;
     firebase.getTeacherInfo(this.state.teacherUID)
-      .then( teacherInfo => {
+      .then(teacherInfo => {
         this.setState({
           firstName: teacherInfo.firstName,
           lastName: teacherInfo.lastName,
           school: teacherInfo.school,
           email: teacherInfo.email,
+          phone: teacherInfo.phone,
           notes: teacherInfo.notes,
           inputFirstName: teacherInfo.firstName,
           inputLastName: teacherInfo.lastName,
           inputSchool: teacherInfo.school,
           inputEmail: teacherInfo.email,
+          inputPhone: teacherInfo.phone,
           inputNotes: teacherInfo.notes
         }); // Automatically forces a re-render
         firebase.getRecentObservations(this.state.teacherUID)
@@ -348,23 +354,25 @@ class TeacherDetail extends Component {
           }))
           .catch(error => console.error("Error occurred getting recent observations: ", error))
       })
-      .catch( error => {
+      .catch(error => {
         console.error("Error fetching Teacher's Info: ", error);
       });
   };
 
   handleCloseModal = () => {
-    const { firstName, lastName, school, email, notes } = this.state;
+    const { firstName, lastName, school, email, phone, notes } = this.state;
     this.setState({
       inputFirstName: firstName,
       inputLastName: lastName,
       inputSchool: school,
       inputEmail: email,
+      inputPhone: phone,
       inputNotes: notes,
       fnErrorText: "",
       lnErrorText: "",
       schoolErrorText: "",
       emailErrorText: "",
+      phoneErrorText: "",
       notesErrorText: "",
       isEditing: false,
       isDeleting: false,
@@ -403,6 +411,15 @@ class TeacherDetail extends Component {
           this.setState({ emailErrorText: "" })
         }
         break;
+      case "inputPhone":
+        if (val === "") {
+          this.setState({ phoneErrorText: "" })
+        } else if (! /^\d{3}?-\d{3}-\d{4}$/.test(val)) {
+          this.setState({ phoneErrorText: "Invalid number or format (use ###-###-####)." })
+        } else {
+          this.setState({ phoneErrorText: "" })
+        }
+        break;
       case "inputSchool":
         if (! /^[a-zA-Z ]{2,50}$/.test(val)) {
           this.setState({ schoolErrorText: "Invalid school (max 50 characters)."})
@@ -423,27 +440,45 @@ class TeacherDetail extends Component {
   };
 
   handleEditConfirm = () => {
-    if ( // any inputs cause an error
-         !!this.state.fnErrorText ||
-         !!this.state.lnErrorText ||
-         !!this.state.emailErrorText ||
-         !!this.state.schoolErrorText ||
-         !!this.state.notesErrorText) {
+    const {
+      teacherUID,
+      inputFirstName,
+      inputLastName,
+      inputSchool,
+      inputEmail,
+      inputNotes,
+      inputPhone,
+      fnErrorText,
+      lnErrorText,
+      emailErrorText,
+      schoolErrorText,
+      notesErrorText,
+      phoneErrorText
+    } = this.state;
+    this.validateInputText("inputFirstName", inputFirstName);
+    this.validateInputText("inputLastName", inputLastName);
+    this.validateInputText("inputEmail", inputEmail);
+    this.validateInputText("inputSchool", inputSchool);
+    if ( // any inputs cause an error or required are missing
+      !!fnErrorText ||
+      !!lnErrorText ||
+      !!emailErrorText ||
+      !!schoolErrorText ||
+      !!notesErrorText ||
+      !!phoneErrorText ||
+      !inputFirstName ||
+      !inputLastName ||
+      !inputEmail ||
+      !inputSchool) {
       return null
     } else { // fields are validated
-      const { teacherUID,
-        inputFirstName,
-        inputLastName,
-        inputSchool,
-        inputEmail,
-        inputNotes
-      } = this.state;
       const firebase = this.context;
       if (firebase.setTeacherInfo(teacherUID, {
         firstName: inputFirstName,
         lastName: inputLastName,
         school: inputSchool,
         email: inputEmail,
+        phone: inputPhone,
         notes: inputNotes }))
       { // Edit successfully written
         this.setState({
@@ -451,6 +486,7 @@ class TeacherDetail extends Component {
           lastName: inputLastName,
           school: inputSchool,
           email: inputEmail,
+          phone: inputPhone,
           notes: inputNotes,
           isEditing: false,
           fnErrorText: "",
@@ -509,6 +545,7 @@ class TeacherDetail extends Component {
       lastName,
       school,
       email,
+      phone,
       notes,
       isEditing,
       isDeleting,
@@ -518,6 +555,7 @@ class TeacherDetail extends Component {
       lnErrorText,
       schoolErrorText,
       emailErrorText,
+      phoneErrorText,
       notesErrorText,
       recentObs
     } = this.state;
@@ -569,7 +607,8 @@ class TeacherDetail extends Component {
                 <LabeledInfo label="Last Name" field={lastName}/>
               </div>
               <LabeledInfo label="School" field={school}/>
-              <LabeledInfo label="Email" field={email}/>
+              <LabeledInfo label="Email" field={email} />
+              <LabeledInfo label="Phone" field={phone} />
               <LabeledInfo label="Notes" field={notes}/>
             </div>
             <ol className={classes.magicEightCard}>
@@ -681,6 +720,19 @@ class TeacherDetail extends Component {
                 type="email"
                 helperText={emailErrorText}
                 error={!!emailErrorText}
+                fullWidth
+              />
+              <TextField
+                autoFocus
+                defaultValue={phone}
+                onChange={this.handleEditText}
+                margin="dense"
+                id="phone"
+                name="inputPhone"
+                label="Phone"
+                type="text"
+                helperText={phoneErrorText}
+                error={!!phoneErrorText}   // false when empty "", true o/w
                 fullWidth
               />
               <TextField

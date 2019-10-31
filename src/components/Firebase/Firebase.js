@@ -141,6 +141,7 @@ class Firebase {
         lastName,
         school,
         email,
+        phone,
         notes,
       } = edits;
       return this.db
@@ -151,6 +152,7 @@ class Firebase {
           lastName: lastName,
           school: school,
           email: email,
+          phone: phone,
           notes: notes
         }, { merge: true })
         .catch(error => 
@@ -164,7 +166,7 @@ class Firebase {
   // @return:Promise -> onFulfilled: returns id string of new teacher
   //                '-> onRejected: returns ""
   addTeacher = async function(teacherInfo) {
-    const { firstName, lastName, school, email, notes } = teacherInfo;
+    const { firstName, lastName, school, email, notes, phone } = teacherInfo;
     const newTeacherRef = this.db.collection("users").doc(); // auto-generated iD
     return newTeacherRef.set({
       firstName: firstName,
@@ -173,7 +175,8 @@ class Firebase {
       email: email,
       notes: notes,
       role: "teacher",
-      id: newTeacherRef.id
+      id: newTeacherRef.id,
+      phone: phone
     })
       .then(() => {
         const id = newTeacherRef.id; // get new iD
@@ -303,7 +306,7 @@ class Firebase {
       .collection("users")
       .where("role", "==", "admin")
       .get()
-      .then( snapshot => {
+      .then(snapshot => {
         let teacherList = [];
         snapshot.forEach( doc => 
           teacherList.push(doc.data())

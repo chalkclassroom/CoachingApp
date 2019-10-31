@@ -209,14 +209,14 @@ const styles = theme => ({
   }
 });
 
-const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg,
-                   ListeningToChildrenSvg, LevelOfInstructionSvg,
-                   MathInstructionSvg, StudentEngagementSvg,
+const sortedSvg = [TransitionTimeSvg,       ClassroomClimateSvg,
+                   ListeningToChildrenSvg,  LevelOfInstructionSvg,
+                   MathInstructionSvg,      StudentEngagementSvg,
                    SequentialActivitiesSvg, AssocCoopInteractionsSvg];
 
-const sortedAltText = ["Transition Time", "Classroom Climate",
+const sortedAltText = ["Transition Time",       "Classroom Climate",
                        "Listening To Children", "Level Of Instruction",
-                       "Math Instruction ", "Student Engagement",
+                       "Math Instruction ",     "Student Engagement",
                        "Sequential Activities", "Assoc Coop Interactions"];
 
 
@@ -232,11 +232,13 @@ class TeacherLists extends Component {
       inputLastName: "",
       inputSchool: "",
       inputEmail: "",
+      inputPhone: "",
       inputNotes: "",
       fnErrorText: "",
       lnErrorText: "",
       schoolErrorText: "",
       emailErrorText: "",
+      phoneErrorText: "",
       notesErrorText: "",
       addAlert: false,
       alertText: ""
@@ -246,27 +248,25 @@ class TeacherLists extends Component {
   }
 
   componentDidMount() {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.getTeacherList()
-      .then( teachers => {
-        teachers.forEach( teacher => {
-          teacher.then( data => {
+      .then(teachers => 
+        teachers.forEach(teacher => 
+          teacher.then(data => 
             this.setState(prevState => {
               return {
                 teachers: prevState.teachers.concat(data),
                 searched: prevState.teachers.concat(data)
               }
             })
-          });
-        });
-      })
-      .catch( e => {
-        console.error("Error occurred fetching teacher list: ", e)
-      })
-  };
+          )
+        )
+      )
+      .catch(error => console.error("Error occurred fetching teacher list: ", error))
+  }
 
-  onChangeText = e => {
-    const text = e.target.value.toLowerCase();
+  onChangeText = event => {
+    const text = event.target.value.toLowerCase();
     if (text === "") {
       this.setState(prevState => {
         return { searched: prevState.teachers } // original teacher list
@@ -281,7 +281,7 @@ class TeacherLists extends Component {
           )}
       })
     }
-  };
+  }
 
   selectTeacher = teacherInfo => {
     this.props.history.push({
@@ -290,47 +290,56 @@ class TeacherLists extends Component {
     });
   };
 
-  handleAddText = e => {
-    const type = e.target.name;
-    const val = e.target.value;
+  handleAddText = event => {
+    const type = event.target.name;
+    const val = event.target.value;
     this.setState({
       [type]: val
-    }, () => this.validateInputText(type, val));
-  };
+    }, () => this.validateInputText(type, val))
+  }
 
   validateInputText = (type, val) => {
     switch(type) {
       case "inputFirstName":
         if (! /^[a-zA-Z ]{2,30}$/.test(val)) {
-          this.setState({ fnErrorText: "Invalid first name."})
+          this.setState({ fnErrorText: "Invalid first name." })
         } else {
           this.setState({ fnErrorText: "" })
         }
         break;
       case "inputLastName":
         if (! /^[a-zA-Z ]{2,30}$/.test(val)) {
-          this.setState({ lnErrorText: "Invalid last name."})
+          this.setState({ lnErrorText: "Invalid last name." })
         } else {
           this.setState({ lnErrorText: "" })
         }
         break;
       case "inputEmail":
         if (! /^\S+@\S+$/.test(val)) {
-          this.setState({ emailErrorText: "Invalid email address."})
+          this.setState({ emailErrorText: "Invalid email address." })
         } else {
           this.setState({ emailErrorText: "" })
         }
         break;
       case "inputSchool":
         if (! /^[a-zA-Z ]{2,100}$/.test(val)) {
-          this.setState({ schoolErrorText: "Invalid school (max 100 characters)."})
+          this.setState({ schoolErrorText: "Invalid school (max 100 characters)." })
         } else {
           this.setState({ schoolErrorText: "" })
         }
         break;
+      case "inputPhone":
+        if (val === "") {
+          this.setState({ phoneErrorText: "" })
+        } else if (! /^\d{3}?-\d{3}-\d{4}$/.test(val)) {
+          this.setState({ phoneErrorText: "Invalid number or format (use ###-###-####)." })
+        } else {
+          this.setState({ phoneErrorText: "" })
+        }
+        break;
       case "inputNotes":
         if (val.length > 250) {
-          this.setState({ notesErrorText: "Max 250 characters."})
+          this.setState({ notesErrorText: "Max 250 characters." })
         } else {
           this.setState({ notesErrorText: "" })
         }
@@ -341,26 +350,49 @@ class TeacherLists extends Component {
   };
 
   handleAddConfirm = () => {
-    if ( // any inputs cause an error
-         !!this.state.fnErrorText ||
-         !!this.state.lnErrorText ||
-         !!this.state.emailErrorText ||
-         !!this.state.schoolErrorText ||
-         !!this.state.notesErrorText) {
+    const {
+      inputFirstName,
+      inputLastName,
+      inputSchool,
+      inputEmail,
+      inputNotes,
+      inputPhone,
+      fnErrorText,
+      lnErrorText,
+      emailErrorText,
+      schoolErrorText,
+      notesErrorText,
+      phoneErrorText
+    } = this.state;
+    this.validateInputText("inputFirstName", inputFirstName);
+    this.validateInputText("inputLastName", inputLastName);
+    this.validateInputText("inputEmail", inputEmail);
+    this.validateInputText("inputSchool", inputSchool);
+    if ( // any inputs cause an error or required are missing
+      !!fnErrorText ||
+      !!lnErrorText ||
+      !!emailErrorText ||
+      !!schoolErrorText ||
+      !!notesErrorText ||
+      !!phoneErrorText ||
+      !inputFirstName ||
+      !inputLastName ||
+      !inputEmail ||
+      !inputSchool) {
       return null
     } else { // fields are validated
-      const {inputFirstName, inputLastName, inputSchool, inputEmail, inputNotes} = this.state;
-      let firebase = this.context;
+      const firebase = this.context;
       firebase.addTeacher({
         firstName: inputFirstName,
         lastName: inputLastName,
         school: inputSchool,
         email: inputEmail,
-        notes: inputNotes
+        notes: inputNotes,
+        phone: inputPhone
       })
-        .then( id => {
+        .then(id => 
           firebase.getTeacherInfo(id)
-            .then( teacherInfo => {
+            .then(teacherInfo => 
               this.setState(prevState => {
                 return {
                   teachers: prevState.teachers.concat(teacherInfo),
@@ -370,20 +402,20 @@ class TeacherLists extends Component {
                 this.handleCloseModal();
                 this.handleAddAlert(true);
               })
-            })
-            .catch( e => {
-              console.error("Error occurred fetching new teacher's info: ", e);
+            )
+            .catch(error => {
+              console.error("Error occurred fetching new teacher's info: ", error);
               this.handleCloseModal();
               this.handleAddAlert(false);
             })
-        })
-        .catch( e => {
-          console.error("Error occurred adding teacher to dB: ", e);
+        )
+        .catch(error => {
+          console.error("Error occurred adding teacher to dB: ", error);
           this.handleCloseModal();
           this.handleAddAlert(false);
-        });
+        })
     }
-  };
+  }
 
   handleAddAlert = successful => {
     if (successful) {
@@ -391,13 +423,15 @@ class TeacherLists extends Component {
         addAlert: true,
         alertText: "Teacher successfully added!"
       }, () => setTimeout(
-        () => this.setState({ addAlert: false, alertText: ""}), 1500))
+        () => this.setState({ addAlert: false, alertText: "" }),
+        1500))
     } else {
       this.setState({
         addAlert: true,
         alertText: "Something went wrong... try refreshing your page or logging out and back in."
       }, () => setTimeout(
-        () => this.setState( { addAlert: false, alertText: "" }), 3000))
+        () => this.setState({ addAlert: false, alertText: "" }),
+        3000))
     }
   };
 
@@ -407,6 +441,7 @@ class TeacherLists extends Component {
       inputLastName: "",
       inputSchool: "",
       inputEmail: "",
+      inputPhone: "",
       inputNotes: "",
       fnErrorText: "",
       lnErrorText: "",
@@ -415,8 +450,8 @@ class TeacherLists extends Component {
       notesErrorText: "",
       isAdding: false,
       alertText: ""
-    });
-  };
+    })
+  }
 
   render() {
     const { classes } = this.props;
@@ -428,6 +463,7 @@ class TeacherLists extends Component {
       lnErrorText,
       emailErrorText,
       schoolErrorText,
+      phoneErrorText,
       notesErrorText
     } = this.state;
 
@@ -480,13 +516,13 @@ class TeacherLists extends Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {this.state.searched.map( (teacher, index) => (
+                {this.state.searched.map((teacher, index) => (
                 <TableRow className={classes.row} key={index}
                           onClick={() => this.selectTeacher(teacher)}>
                   <TableCell className={classes.nameField}>{teacher.lastName}</TableCell>
                   <TableCell className={classes.nameField}>{teacher.firstName}</TableCell>
                   <TableCell className={classes.emailField}>{teacher.email}</TableCell>
-                  {[...Array(8).keys()].map( key =>
+                  {[...Array(8).keys()].map(key =>
                     <TableCell className={classes.magicEightCell}>
                       {
                         teacher.unlocked !== undefined &&
@@ -576,14 +612,26 @@ class TeacherLists extends Component {
               <TextField
                 onChange={this.handleAddText}
                 margin="dense"
+                id="phone"
+                name="inputPhone"
+                label="Phone"
+                placeholder="###-###-####"
+                helperText={phoneErrorText}
+                error={!!phoneErrorText}
+                type="tel"
+                fullWidth
+              />
+              <TextField
+                onChange={this.handleAddText}
+                margin="dense"
                 id="notes"
                 name="inputNotes"
                 label="Notes"
                 helperText={notesErrorText}
                 error={!!notesErrorText}
                 multiline
-                rows={10}
-                rowsMax={10}
+                rows={8}
+                rowsMax={8}
                 fullWidth
               />
             </DialogContent>
