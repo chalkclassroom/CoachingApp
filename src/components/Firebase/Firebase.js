@@ -624,6 +624,17 @@ class Firebase {
 
   };
 
+  fetchTransitionTypeSummary = async sessionId => {
+    var getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable('funcTransitionTypeSummary');
+
+    return getTransitionTypeCountFirebaseFunction({sessionId: sessionId}).then(function (result) {
+        // Read result of the Cloud Function.
+        var sanitizedMessage = result.data[0];
+        console.log(sanitizedMessage);
+        return sanitizedMessage;
+    });
+  };
+
   fetchTransitionLog = async sessionId => {
       var getTransitionsFirebaseFunction = this.functions.httpsCallable('funcTransitionLogNew');
 
@@ -637,7 +648,7 @@ class Firebase {
   };
 
   fetchTransitionTrend = async teacherId => {
-      var getTransitionTrendFirebaseFunction = this.functions.httpsCallable('funcTransitionTrend');
+      var getTransitionTrendFirebaseFunction = this.functions.httpsCallable('funcTransitionTrendNew');
 
       return getTransitionTrendFirebaseFunction({teacherId: teacherId}).then(function (result) {
           // Read result of the Cloud Function.

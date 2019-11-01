@@ -77,6 +77,9 @@ const transitionTrendOptions = {
     mode: 'nearest',
     intersect: true,
   },
+  legend: {
+    display: true
+  },
   scales: {
     xAxes: [
       {

@@ -21,6 +21,7 @@ import NotesListDetailTable from "../../../components/ResultsComponents/NotesLis
 import DataQuestions from "../../../components/ResultsComponents/DataQuestions";
 import 'chartjs-plugin-datalabels';
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
+import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import moment from 'moment';
 import ChildWaiting from "../../../assets/icons/ChildWaiting.svg"; 
@@ -132,6 +133,15 @@ const styles = {
     marginTop: "2vh"
   }
 };
+
+const TransitionTypeColors = {
+  lineColor: lightGreen[300],
+  travelingColor: orange[400],
+  waitingColor: deepOrange[400],
+  routinesColor: blue[300],
+  behaviorManagementColor: red['A200'],
+  otherColor: indigo['A200'],
+}
 
 const raisedThemes = createMuiTheme({
   palette: {
@@ -333,13 +343,21 @@ class TransitionResults extends React.Component {
     sessionDates: [],
     notes: [],
     log: [],
+    sessionLine: null,
+    sessionTraveling: null,
+    sessionWaiting: null,
+    sessionRoutines: null,
+    sessionBehaviorManagement: null,
+    sessionOther: null,
     trendsDates: [],
-    trendsInside:  [],
-    trendsOutside: [],
+    trendsLine:  [],
+    trendsTraveling: [],
+    trendsWaiting:  [],
+    trendsRoutines: [],
+    trendsBehaviorManagement:  [],
+    trendsOther: [],
     trendsTotal:  [],
     trendsTotalColor: "#0988EC",
-    trendsInsideColor: "#E99C2E",
-    trendsOutsideColor: "#E55529",
     totalTime: null,
     transitionTime: null,
     sessionTotal: null,
@@ -403,53 +421,38 @@ class TransitionResults extends React.Component {
     this.setState({ dbCounter: this.state.dbCounter + 1 });
   };
 
-  // handleSpreadsheetAppend = entry => {
-  //   let url = new URL(spreadsheetData.scriptLink),
-  //     params = {
-  //       sheet: "TransitionTime",
-  //       del: "false",
-  //       TrnStart: entry.start,
-  //       TrnEnd: entry.end,
-  //       TrnDur: entry.duration,
-  //       TrnType: entry.type,
-  //       TeacherID: this.props.location.state.key.id
-  //     };
-  //   Object.keys(params).forEach(key =>
-  //     url.searchParams.append(key, params[key])
-  //   );
-  //   fetch(url, {
-  //     method: "POST",
-  //     credentials: "include",
-  //     mode: "no-cors",
-  //     headers: {
-  //       "content-type": "application/json"
-  //     }
-  //   })
-  //     .then(response => console.log("Success"))
-  //     .catch(error => console.error("Error:", error));
-  // };
-
-
   handleTrendsFetch = (teacherId) => {
     let firebase = this.context;
     let dateArray = [];
-    let insideArray = [];
-    let outsideArray =[];
+    let lineArray = [];
+    let travelingArray = [];
+    let waitingArray = [];
+    let routinesArray = [];
+    let behaviorManagementArray = [];
+    let otherArray = [];
     let totalArray = [];
     let formattedTime;
     firebase.fetchTransitionTrend(teacherId).then(dataSet => {
         dataSet.map( data => {
           formattedTime = this.handleTrendsFormatTime(data.total);
           dateArray.push([moment(data.startDate.value).format("MMM Do"), formattedTime]);
-          insideArray.push(Math.floor(data.inside / data.sessionTotal * 100));
-          outsideArray.push(Math.floor(data.outside / data.sessionTotal * 100));
+          lineArray.push(Math.floor(data.line / data.sessionTotal * 100));
+          travelingArray.push(Math.floor(data.traveling / data.sessionTotal * 100));
+          waitingArray.push(Math.floor(data.waiting / data.sessionTotal * 100));
+          routinesArray.push(Math.floor(data.routines / data.sessionTotal * 100));
+          behaviorManagementArray.push(Math.floor(data.behaviorManagement / data.sessionTotal * 100));
+          otherArray.push(Math.floor(data.other / data.sessionTotal * 100));
           totalArray.push(Math.floor(data.total / data.sessionTotal * 100));
         });
 
         this.setState({
           trendsDates: dateArray,
-          trendsInside: insideArray,
-          trendsOutside: outsideArray,
+          trendsLine: lineArray,
+          trendsTraveling: travelingArray,
+          trendsWaiting: waitingArray,
+          trendsRoutines: routinesArray,
+          trendsBehaviorManagement: behaviorManagementArray,
+          trendsOther: otherArray,
           trendsTotal: totalArray
         });
     });
@@ -492,20 +495,52 @@ class TransitionResults extends React.Component {
           data: this.state.trendsTotal,
         },
         {
-          label: 'INSIDE',
-          backgroundColor: this.state.trendsInsideColor,
-          borderColor: this.state.trendsInsideColor,
+          label: 'WAITING IN LINE',
+          backgroundColor: TransitionTypeColors.lineColor,
+          borderColor: TransitionTypeColors.lineColor,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsInside,
+          data: this.state.trendsLine,
         },
         {
-          label: 'OUTSIDE',
-          backgroundColor: this.state.trendsOutsideColor,
-          borderColor: this.state.trendsOutsideColor,
+          label: 'TRAVELING',
+          backgroundColor: TransitionTypeColors.travelingColor,
+          borderColor: TransitionTypeColors.travelingColor,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsOutside,
+          data: this.state.trendsTraveling,
+        },
+        {
+          label: 'CHILD WAITING',
+          backgroundColor: TransitionTypeColors.waitingColor,
+          borderColor: TransitionTypeColors.waitingColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsWaiting,
+        },
+        {
+          label: 'ROUTINES',
+          backgroundColor: TransitionTypeColors.routinesColor,
+          borderColor: TransitionTypeColors.routinesColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsRoutines,
+        },
+        {
+          label: 'BEHAVIOR MANAGEMENT',
+          backgroundColor: TransitionTypeColors.behaviorManagementColor,
+          borderColor: TransitionTypeColors.behaviorManagementColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsBehaviorManagement,
+        },
+        {
+          label: 'OTHER',
+          backgroundColor: TransitionTypeColors.otherColor,
+          borderColor: TransitionTypeColors.otherColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsOther,
         }
       ]
     }
@@ -559,9 +594,9 @@ class TransitionResults extends React.Component {
     }
   };
 
-  listClick = () => {
-    if (this.state.view !== ViewEnum.LIST) {
-      this.setState({ view: ViewEnum.LIST });
+  detailsClick = () => {
+    if (this.state.view !== ViewEnum.DETAILS) {
+      this.setState({ view: ViewEnum.DETAILS });
     }
   };
 
@@ -679,23 +714,48 @@ class TransitionResults extends React.Component {
     }
   }
 
+  handleTransitionTypeFetching = (sessionId) => {
+    this.setState({
+      sessionId: sessionId,
+      sessionLine: null,
+      sessionTraveling: null,
+      sessionWaiting: null,
+      sessionRoutines: null,
+      sessionBehaviorManagement: null,
+      sessionOther: null,
+    }, () => {
+      let firebase = this.context;
+      firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
+        console.log(type[0]);
+        this.setState({
+          transitionTime: type[0].total
+        }, () => {
+          console.log(this.state.transitionTime);
+          this.setState({
+            sessionLine: Math.round(((type[0].line/this.state.transitionTime)*100)),
+            sessionTraveling: Math.round(((type[0].traveling/this.state.transitionTime)*100)),
+            sessionWaiting: Math.round(((type[0].waiting/this.state.transitionTime)*100)),
+            sessionRoutines: Math.round(((type[0].routines/this.state.transitionTime)*100)),
+            sessionBehaviorManagement: Math.round(((type[0].behaviorManagement/this.state.transitionTime)*100)),
+            sessionOther: Math.round(((type[0].other/this.state.transitionTime)*100)),
+          });
+        });
+      });
+    });
+  }
+
   changeSessionId = (event) => {
     this.setState({
       sessionId: event.target.value,
     }, () => {
-      this.handleNotesFetching(this.state.sessionId);
-      this.handleListDetailFetching(this.state.sessionId);
+      //this.handleNotesFetching(this.state.sessionId);
+      //this.handleListDetailFetching(this.state.sessionId);
+      //this.handleTransitionTypeFetching(this.state.sessionId);
       let firebase = this.context;
 
       //firebase.fetchTransitionSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].inside));
 
       firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
-      //     this.setState({
-      //       insideTime: summary[0].inside,
-      //       outsideTime: summary[0].outside,
-      //       totalTime: summary[0].total,
-      //       sessionTotal: summary[0].sessionTotal,
-      //       learningActivityTime: summary[0].sessionTotal - summary[0].total
         console.log("the start date is ", summary[0].startDate.value);
         console.log("the total transition time is ", summary[0].total);
         console.log("the session total is ", summary[0].sessionTotal);
@@ -706,7 +766,18 @@ class TransitionResults extends React.Component {
         })
 
       // })});
-    });
+      });
+      firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
+        this.setState({
+          sessionLine: Math.round(((type[0].line/type[0].total)*100)),
+          sessionTraveling: Math.round(((type[0].traveling/type[0].total)*100)),
+          sessionWaiting: Math.round(((type[0].waiting/type[0].total)*100)),
+          sessionRoutines: Math.round(((type[0].routines/type[0].total)*100)),
+          sessionBehaviorManagement: Math.round(((type[0].behaviorManagement/type[0].total)*100)),
+          sessionOther: Math.round(((type[0].other/type[0].total)*100)),
+          transitionTime: type[0].total
+        })
+      });
   })};
 
   render() {
@@ -762,14 +833,14 @@ class TransitionResults extends React.Component {
                         size="large"
                         color={"#094492"}
                         variant={
-                          this.state.view === ViewEnum.LIST
+                          this.state.view === ViewEnum.DETAILS
                             ? "contained"
                             : "outlined"
                         }
-                        className={this.state.view === ViewEnum.LIST ? classes.viewButtonsSelected : classes.viewButtons}
-                        onClick={this.listClick}
+                        className={this.state.view === ViewEnum.DETAILS ? classes.viewButtonsSelected : classes.viewButtons}
+                        onClick={this.detailsClick}
                       >
-                        List Detail
+                        Details
                       </Button>
                     </Grid>
                     <Grid item className={classes.resultsButtons}>
@@ -848,26 +919,43 @@ class TransitionResults extends React.Component {
                   <Tab label="Data-Driven Coaching" onClick={this.handleCoaching}/>
                 </Tabs>
               </TabBar>
-              <SwipeableViews index={this.state.tabValue} className={classes.swipeableView}>
+              <SwipeableViews index={this.state.tabValue} className={classes.swipeableView} style={{alignItems: "center", justifyItems: "center", justifyContent: "center"}}>
                 <div>
                   {this.state.view === ViewEnum.SUMMARY ? (
-                    <div className={classes.resultsContent}>
+                    this.state.sessionId ? (
+                      <div className={classes.resultsContent}>
+                        <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+                          Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.floor((((this.state.transitionTime/1000)/60) % 1) * 60) }s
+                        </Typography>
+                        <TransitionTimePie
+                          transitionTime={this.state.transitionTime}
+                          learningActivityTime={this.state.learningActivityTime}
+                          style={{overflow:"hidden"}}
+                        />
+                      </div>
+                    ) : (
                       <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
-                        Total Transition Time: {this.state.totalTime}
+                        Please choose a date from the dropdown menu.
                       </Typography>
-                      <TransitionTimePie
-                        transitionTime={this.state.transitionTime}
-                        learningActivityTime={this.state.learningActivityTime}
-                        style={{overflow:"hidden"}}
-                      />
-                    </div>
-                  ) : this.state.view === ViewEnum.LIST ? (
-                    <div className={classes.resultsContent}>
-                      <ListDetailTableTransitionResults
+                    )
+                  ) : this.state.view === ViewEnum.DETAILS ? (
+                    <Grid className={classes.resultsContent} alignItems = "center" style={{alignItems: "center"}}>
+                      {/* <ListDetailTableTransitionResults
                         data={this.state.log}
                         style={{overflow:"hidden"}}
-                      />
-                    </div>
+                      /> */}
+                      <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+                          Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.floor((((this.state.transitionTime/1000)/60) % 1) * 60) }s
+                        </Typography>
+                      <TransitionBarChart 
+                        line={this.state.sessionLine}
+                        traveling={this.state.sessionTraveling}
+                        waiting={this.state.sessionWaiting}
+                        routines={this.state.sessionRoutines}
+                        behaviorManagement={this.state.sessionBehaviorManagement}
+                        other={this.state.sessionOther}
+                        style={{alignItems: "center"}} />
+                    </Grid>
                   ) : this.state.view === ViewEnum.TRENDS ? (
                     <div className={classes.resultsContent}
                     >
@@ -889,7 +977,7 @@ class TransitionResults extends React.Component {
                   ) : null}
                 </div>
                 <div>
-                  {this.state.view === ViewEnum.LIST ? (
+                  {this.state.view === ViewEnum.DETAILS ? (
                     <div>
                       <Grid container direction="column">
                         <Grid container direction="row" justify="center" alignItems="center">
