@@ -266,8 +266,10 @@ class TransitionTimeTrainingHome extends React.Component {
               </List>
             </Grid>
             <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}
-                  style={{border: '1px solid #F400FF'}}>
-              <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
+                  // style={{border: '1px solid #F400FF'}}>
+              >
+              <Typography variant={"h5"} alignItems={"center"} justify={"center"}
+                          style={{ margin: '1em' }}>
                 Training: Transition Time Tool
               </Typography>
               <Grid item xs={12}>
