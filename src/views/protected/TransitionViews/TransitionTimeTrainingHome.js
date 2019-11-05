@@ -4,35 +4,25 @@ import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
-<<<<<<< HEAD
-=======
 import FilledInput from "@material-ui/core/FilledInput/index";
 import InputLabel from "@material-ui/core/InputLabel/index";
 import FormControl from "@material-ui/core/FormControl/index";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select/index";
 import {ReactComponent as GenerateReportSVG} from "../../../assets/icons/generateReport.svg";
->>>>>>> Starts knowledge check implementation for Transitions.
 import TransitionTimeIcon from "../../../assets/icons/TransitionTime.svg";
 import {withStyles} from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
-<<<<<<< HEAD
 import { ImmortalDB } from "immortal-db";
 import 'chartjs-plugin-datalabels';
 import TrainingVideo
     from "../../../components/Shared/TrainingVideo";
 import ChildTeacherBehaviorTrendsSlider
     from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
-=======
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import 'chartjs-plugin-datalabels';
-import TrainingVideo from "../../../components/Shared/TrainingVideo";
-import ChildTeacherBehaviorDetailsSlider
-  from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
-import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
->>>>>>> Starts knowledge check implementation for Transitions.
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 
 const styles = {
@@ -100,108 +90,86 @@ const ViewEnum = {
   KNOWLEDGECHECK: 5
 };
 
-class TransitionTimeTrainingHome extends React.Component {
+// dummy data for transition list detail table, when we read in from DB we can use custom id
+let id = 0;
+
+function createTransitionData(startTime, duration, notes) {
+  id += 1;
+  return {id, startTime, duration, notes};
+}
+
+function createNotesData(time, notes) {
+  id += 1;
+  return {id, time, notes};
+}
+
+const transitionData = [
+  createTransitionData("08:32", "2m 3s", "Breakfast to am meeting"),
+  createTransitionData("08:44", "5m 10s", "Line up for bathroom"),
+  createTransitionData("09:01", "1m 7s", "T finding book"),
+  createTransitionData("09:37", "1m 56s", "Rotating rooms"),
+  createTransitionData("09:56", "3m 2s", "Cleanup after centers")
+];
+
+const transitionNotes = [
+  createNotesData("08:32", "Kiss your brain"),
+  createNotesData("08:44", "Great super friend"),
+  createNotesData("09:01", "Lots of good jobs"),
+  createNotesData("09:37", "BD frown"),
+  createNotesData("09:56", "Close down center conflict")
+];
+
+class TransitionTimeTrainingHome extends Component {
   constructor(props) {
     super(props);
-    this.handleAppend = this.handleAppend.bind(this);
+    this.state = {
+      view: ViewEnum.CONCEPTS
+    };
   }
-
-  state = {
-    auth: true,
-    anchorEl: null,
-    help: false,
-    type: null,
-    hex: "#FFFFFF",
-    entries: [],
-    dbCounter: 0, // @Hack @Temporary !!!
-    view: ViewEnum.CONCEPTS
-  };
-
-  handleAppend(entry) {
-    let newEntries = this.state.entries;
-    entry.type = this.state.type;
-    newEntries.push(entry);
-    this.setState({ entries: newEntries });
-
-    this.handleSpreadsheetAppend(entry);
-
-    this.handleDBinsert(entry);
-  }
-
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
-
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-
-  handleClickAway = () => {
-    this.setState({ help: false });
-  };
-
-  handleDBinsert = async entry => {
-    // Once we integrate users, the user + some index will be the key for the DB.
-    await ImmortalDB.set(
-      JSON.stringify(this.state.dbCounter),
-      JSON.stringify(entry)
-    );
-
-    this.setState({ dbCounter: this.state.dbCounter + 1 });
-  };
 
   conceptsClick = () => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
-      this.setState({ view: ViewEnum.CONCEPTS });
+      this.setState({view: ViewEnum.CONCEPTS});
     }
   };
 
   exampleClick = () => {
     if (this.state.view !== ViewEnum.EXAMPLE) {
-      this.setState({ view: ViewEnum.EXAMPLE });
+      this.setState({view: ViewEnum.EXAMPLE});
     }
   };
 
   demonstrationClick = () => {
     if (this.state.view !== ViewEnum.DEMONSTRATION) {
-      this.setState({ view: ViewEnum.DEMONSTRATION });
+      this.setState({view: ViewEnum.DEMONSTRATION});
     }
   };
 
   tryItClick = () => {
     if (this.state.view !== ViewEnum.TRYIT) {
-      this.setState({ view: ViewEnum.TRYIT });
+      this.setState({view: ViewEnum.TRYIT});
     }
   };
 
   knowledgeCheckClick = () => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
-      this.setState({ view: ViewEnum.KNOWLEDGECHECK });
+      this.setState({view: ViewEnum.KNOWLEDGECHECK});
     }
   };
 
   render() {
-    const { classes } = this.props;
-
+    const {classes} = this.props;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {firebase => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
-        <main>
+        <div className={classes.main}>
           <Grid container spacing={0} justify="center" direction={"row"} alignItems={"center"}>
             <Grid container item xs={3}>
               <List className={classes.buttonsList}>
-                <ListItem style={{display:'flex', justifyContent:'center'}}>
-                  <img src={TransitionTimeIcon} width={'100vw'}/>
+                <ListItem style={{display: 'flex', justifyContent: 'center'}}>
+                  <img src={TransitionTimeIcon} width={'100px'} alt=""/>
                 </ListItem>
                 <ListItem>
                   <Button
@@ -266,10 +234,8 @@ class TransitionTimeTrainingHome extends React.Component {
               </List>
             </Grid>
             <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}
-                  // style={{border: '1px solid #F400FF'}}>
-              >
-              <Typography variant={"h5"} alignItems={"center"} justify={"center"}
-                          style={{ margin: '1em' }}>
+                  style={{border: '1px solid #F400FF'}}>
+              <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
                 Training: Transition Time Tool
               </Typography>
               <Grid item xs={12}>
@@ -277,13 +243,11 @@ class TransitionTimeTrainingHome extends React.Component {
                   {this.state.view === ViewEnum.CONCEPTS ? (
                     <div className={classes.resultsContent}>
                       <TrainingVideo
-                        videoUrl = {'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com'+
-                        '/o/TT%20Concepts%205-31-19.mp4?alt=media&token=0f968fb5-047a-4fb9-90ec-7149b40a3e9c'}
-                      />
+                        videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT%20Concepts%205-31-19.mp4?alt=media&token=0f968fb5-047a-4fb9-90ec-7149b40a3e9c'}/>
                     </div>
                   ) : this.state.view === ViewEnum.EXAMPLE ? (
                     <div className={classes.resultsContent}>
-                      <TrainingVideo/>
+                      EXAMPLE
                     </div>
                   ) : this.state.view === ViewEnum.DEMONSTRATION ? (
                     <div className={classes.resultsContent}>
@@ -302,7 +266,7 @@ class TransitionTimeTrainingHome extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-        </main>
+        </div>
       </div>
     );
   }
