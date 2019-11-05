@@ -37,7 +37,8 @@ class TrainingQuestionnaire extends Component {
       currentQuestion: 0,
       numCorrect: 0,
       selectedOption: -1,
-      feedback: ""
+      feedback: "",
+      recentlySubmitted: false
     };
 
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -56,7 +57,7 @@ class TrainingQuestionnaire extends Component {
     this.setState({
       selectedOption: selection
     }, () => console.log(selection))
-  };
+  }
 
   getStepLabels = () => {
     const { batch } = this.state;
@@ -67,7 +68,7 @@ class TrainingQuestionnaire extends Component {
       }
     }
     return stepLabels;
-  };
+  }
 
   getStepContent = step => {
     const { batch, selectedOption, feedback } = this.state;
@@ -78,7 +79,7 @@ class TrainingQuestionnaire extends Component {
       return <TrainingQuestion selected={selectedOption} setSelection={this.setSelection}
                                question={text} options={options} feedback={feedback}/>
     }
-  };
+  }
 
   handleSubmit = () => {
     const { batch, currentQuestion, selectedOption, numCorrect } = this.state;
@@ -86,7 +87,8 @@ class TrainingQuestionnaire extends Component {
     if (options.get(Array.from(options.keys())[selectedOption])) { // correct answer
       // Show proper feedback, setTimeOut, make next button available
       this.setState({
-        feedback: "Correct!"
+        recentlySubmitted: true,
+        feedback: "Correct!" + currentQuestion,
       }, () => setTimeout(
         () => this.setState({
           currentQuestion: currentQuestion + 1,
@@ -108,7 +110,7 @@ class TrainingQuestionnaire extends Component {
         1000
       )); // Show proper feedback, setTimeOut, make next button available
     }
-  };
+  }
 
   handleReset = () => {
     this.setState({
@@ -116,7 +118,7 @@ class TrainingQuestionnaire extends Component {
       numCorrect: 0,
       selectedOption: -1
     });
-  };
+  }
 
   unlockBasedOnGrade() {
     console.log(this.state.numCorrect, this.state.batch.length);
@@ -140,17 +142,15 @@ class TrainingQuestionnaire extends Component {
     return (
       <div className={classes.root}>
         <Stepper activeStep={currentQuestion}>
-          {stepLabels.map((label, index) => {
-            return (
-              <Step key={index} >
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            );
-          })}
+          {stepLabels.map((label, index) => 
+            <Step key={index} >
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          )}
         </Stepper>
         {currentQuestion === batch.length ? (
           <p className={classes.instructions}>
-            Completed Training
+            Training Completed! You may now observe teachers using the Transition Time Tool.
           </p>
         ) : (
           <div className={classes.stepContentContainer}>
@@ -162,7 +162,7 @@ class TrainingQuestionnaire extends Component {
               className={classes.button}
               disabled={selectedOption === -1}
             >
-              {currentQuestion === batch.length - 1 ? 'Finish' : 'Next'}
+              {currentQuestion === batch.length - 1 ? 'Finish' : 'Submit'}
             </Button>
           </div>
         )}

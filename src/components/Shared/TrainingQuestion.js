@@ -5,7 +5,7 @@ import Radio from '@material-ui/core/Radio/index';
 import RadioGroup from '@material-ui/core/RadioGroup/index';
 import FormControlLabel from '@material-ui/core/FormControlLabel/index';
 import FormControl from '@material-ui/core/FormControl/index';
-import Typography from "@material-ui/core/Typography";
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = theme => ({
   root: {
