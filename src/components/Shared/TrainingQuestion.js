@@ -31,7 +31,7 @@ class TrainingQuestion extends Component {
 
   render() {
     const { classes, question, options, selected, feedback } = this.props;
-
+    console.log(question, feedback);
     return (
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
