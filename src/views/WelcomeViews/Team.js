@@ -9,98 +9,14 @@ import Typography from "@material-ui/core/Typography/Typography";
 import ProjectAdvisor from '../../components/ProjectAdvisor';
 import TeamMemberCard from '../../components/TeamMemberCard';
 import TeamMemberExpansion from "../../components/TeamMemberExpansion";
-
-const CC = {
-  'name': 'Caroline Christopher, Ph.D.',
-  'initials': 'CC',
-  'role': 'Principal Investigator',
-  'description': 'Dr. Christopher is the Principal Investigator on the project. In 2018, she received a grant from the National Science Foundation (DRK-12-1813008) to develop a web-based coaching tool that guides coaches to collect objective observation data and then links those data with coaching practices. She is currently a Research Assistant Professor at Vanderbilt University.'
-};
-
-const DM = {
-  'name': 'Deanna Meador, M.A.',
-  'initials': 'DM',
-  'role': '???',
-  'description': 'Ms. Meador is the Associate Director of Vanderbilt University’s ' +  
-  'Center for Innovation, the Wond’ry, and serves as a content developer and liaison between the education ' + 
-  'research team and the Wond’ry interns. Her prior background working with the Peabody Research Office, ' +
-  'in-depth knowledge of their data collection measures and methods, as well as technical development and ' + 
-  'user interface skills makes for a valuable addition to the project team.'
-};
-
-const KN = {
-  'name': 'Katherine Newman, Ph.D.',
-  'initials': 'KN',
-  'role': 'Research Coordinator',
-  'description': 'Dr. Newman is the Research Coordinator on this project.  She comes to us with both a researcher and a coaching lens as she received her doctorate in Teaching and Learning from Vanderbilt University and has worked as an instructional coach for Metro Nashville Public Schools.  She was previously one of our coaching partners and has classroom experience as a kindergarten and fifth grade teacher.'
-};
-
-const CS = {
-  'name': 'Clare Speer',
-  'initials': 'CS',
-  'role': 'Software Developer',
-  'description': 'Ms. Speer is a Software Developer on this project.  She ' + 
-  'contributes significantly to both the research team and to the engineering team with her background ' + 
-  'in statistics and programming.  This combination of skills allows her to understand the language ' +
-  'of both groups and provides continuity over the course of the project in terms of the programming ' +
-  'required to implement the coaching tool’s functionality.'
-};
-
-const DF = {
-  'name': 'Dale Farran, Ph.D.',
-  'role': 'Former Project Affiliate, Early Childhood Content Expert',
-  'job': 'Professor of Teaching and Learning',
-  'affiliation': 'Vanderbilt University'
-};
-
-const MF = {
-  'name': 'Mary Fuhs, Ph.D.',
-  'role': 'Director of CQ-REF Pilot Study',
-  'job': 'Assistant Professor of Psychology',
-  'affiliation': 'University of Dayton'
-};
-
-const PM = {
-  'name': 'Percival Matthews, Ph.D.',
-  'role': 'CQ-REF Advisory Board Member',
-  'job': 'Assistant Professor of Educational Psychology',
-  'affiliation': 'University of Wisconsin'
-};
-
-const LM = {
-  'name': 'Laura Moore, M.P.P.',
-  'role': 'CQ-REF Advisory Board Member',
-  'job': 'Deputy Policy Director for Opportunity Insights',
-  'affiliation': 'Harvard University'
-};
-
-const SJW = {
-  'name': 'Sandra Jo Wilson, Ph.D.',
-  'role': 'CQ-REF Pilot Study Independent Evaluator',
-  'job': 'Principal Associate, Social and Economic Policy',
-  'affiliation': 'Abt Associates'
-};
-
-const LW = {
-  'name': 'Lisa Wiltshire, M.S.',
-  'role': 'CQ-REF Advisory Board Member',
-  'job': 'Policy Director',
-  'affiliation': 'Tennesseans for Quality Early Education'
-};
-
-const JW = {
-  'name': 'Jules White',
-  'role': 'Director of CQ-REF Pilot Study',
-  'job': 'Assistant Professor of Psychology',
-  'affiliation': 'University of Dayton'
-};
-
-const DS = {
-  'name': 'Doug Schmidt',
-  'role': 'Director of CQ-REF Pilot Study',
-  'job': 'Assistant Professor of Psychology',
-  'affiliation': 'University of Dayton'
-};
+import PreschoolPromiseLogo from "../../assets/icons/PreschoolPromiseLogo_NoTagLine.jpg";
+import UnitedWayLogo from "../../assets/icons/UnitedWayLogo.jpg";
+import UDaytonLogo from "../../assets/icons/UDaytonLogo.jpg";
+import VanderbiltPeabodyLogo from "../../assets/icons/VanderbiltPeabodyLogo.png";
+import WondryLogo from "../../assets/icons/TheWondry.png";
+import VanderbiltEngineeringLogo from "../../assets/icons/engineering.png";
+import AbtLogo from "../../assets/icons/AbtLogo.png";
+import * as Constants from '../../constants';
 
 
 const styles = {
@@ -109,80 +25,11 @@ const styles = {
         backgroundColor:'#ffffff',
         height: '100vh'
     },
-    grow: {
-        flexGrow: 1,
-    },
-    card: {
-      width: '70vw',
-      height: '40vh',
-      padding: 50
-    },
-    groupPhoto: {
-      height: 0,
-      paddingTop: '50%'
-    },
     titleText: {
-      padding: 20,
+      paddingTop: 20,
       color: 'black',
       textAlign: 'center',
     },
-    groupImage: {
-      marginTop: 50,
-      borderRadius: '15px 15px 15px 15px',
-      width: '70%',
-      boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-      //border: '5px solid black',
-      //borderCollapse: 'separate',
-      //overflow: 'hidden',
-      //perspective: '1px'
-    },
-    individualImage: {
-      width: '30%',
-      borderRadius: '15px',
-    },
-    overlay: {
-      background: 'rgb(0, 0, 0, 0.5)',
-      color: '#292525',
-      width: '100%'
-    },
-    positionText: {
-      textAlign: 'center',
-      paddingTop: 15,
-      paddingBottom: 15
-    },
-    descriptionText: {
-      paddingLeft: 40,
-      paddingRight: 40,
-      paddingTop: 10,
-      paddingBottom: 10,
-      textAlign: 'justify'
-    },
-    descriptionTextNew: {
-      textAlign: 'justify',
-      paddingBottom: 20
-    },
-    descriptionNameText: {
-      textAlign: 'left',
-      paddingTop: 20
-    },
-    descriptionPositionText: {
-      textAlign: 'left',
-      paddingBottom: 6
-    },
-    descriptionText2: {
-      paddingLeft: 40,
-      paddingRight: 150,
-      paddingTop: 10,
-      paddingBottom: 10,
-      textAlign: 'justify'
-    },
-    imageBox: {
-      width: '60%',
-      //boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-      textAlign: 'center',
-      borderRadius: '15px',
-      //'0 15px 25px 0 rgba(9, 68, 146, 0.2), 0 15px 25px 0 rgba(9, 68, 146, 0.19)'
-    }
 };
 
 class Team extends React.Component {
@@ -265,14 +112,14 @@ class Team extends React.Component {
                 <Grid item xs={1} />
                 <Grid item xs={5}>
                   <TeamMemberCard
-                    person={CC}
+                    person={Constants.CC}
                     open={this.state.open==='CC'}
                     handleClick={this.openCC}
                   />
                 </Grid>
                 <Grid item xs={5}>
                   <TeamMemberCard
-                    person={DM}
+                    person={Constants.DM}
                     open={this.state.open==='DM'}
                     handleClick={this.openDM}
                   />
@@ -281,11 +128,11 @@ class Team extends React.Component {
               </Grid>
               {this.state.open==='CC' ? (
                 <TeamMemberExpansion
-                  person={CC}
+                  person={Constants.CC}
                 />
               ) : this.state.open==='DM' ? (
                 <TeamMemberExpansion
-                  person={DM}
+                  person={Constants.DM}
                 />
               ) : (
                 null
@@ -294,14 +141,14 @@ class Team extends React.Component {
                 <Grid item xs={1} />
                 <Grid item xs={5}>
                   <TeamMemberCard
-                    person={KN}
+                    person={Constants.KN}
                     open={this.state.open==='KN'}
                     handleClick={this.openKN}
                   />
                 </Grid>
                 <Grid item xs={5}>
                   <TeamMemberCard
-                    person={CS}
+                    person={Constants.CS}
                     open={this.state.open==='CS'}
                     handleClick={this.openCS}
                   />
@@ -310,52 +157,120 @@ class Team extends React.Component {
               </Grid>
               {this.state.open==='KN' ? (
                 <TeamMemberExpansion
-                  person={KN}
+                  person={Constants.KN}
                 />
               ) : this.state.open==='CS' ? (
                 <TeamMemberExpansion
-                  person={CS}
+                  person={Constants.CS}
                 />
               ) : (
                 null
               )}
             </Grid>
+            <div style={{padding: 40}} />
+            <Grid item>
+              <Grid container direction="row" justify="center" alignItems="center">
+                <div style={{width: '100%', backgroundColor: '#cdd9e9', paddingTop: 5}}>
+                  <Grid item style={{paddingBottom: 20}}>
+                    <Typography variant="h3" className={classes.titleText}>
+                      Advisors
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Grid container direction="column" justify="center" alignItems="center">
+                      <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
+                        <Grid item xs={6}>
+                          <ProjectAdvisor person={Constants.DF} />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <ProjectAdvisor person={Constants.MF} />
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
+                        <Grid item xs={6}>
+                          <ProjectAdvisor person={Constants.PM} />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <ProjectAdvisor person={Constants.LM} />
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
+                        <Grid item xs={6}>
+                          <ProjectAdvisor person={Constants.DS} />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <ProjectAdvisor person={Constants.JW} />
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
+                        <Grid item xs={6}>
+                          <ProjectAdvisor person={Constants.SJW} />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <ProjectAdvisor person={Constants.LW} />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </div>
+              </Grid>
+            </Grid>
+            <div style={{padding: 20}} />
             <Grid item>
               <Typography variant="h3" className={classes.titleText}>
-                Advisors
+                Partners
               </Typography>
             </Grid>
             <Grid item>
-              <Grid container direction="column" justify="center" alignItems="center">
-                <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
-                  <Grid item xs={1} />
-                  <Grid item xs={5}>
-                    <ProjectAdvisor person={DF} />
+              <Grid container direction="row" justify="center" alignItems="center">
+                <Grid item xs={4} style={{padding: 20}}>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <img src={UDaytonLogo} alt="University of Dayton" style={{maxWidth: 250}}/>
                   </Grid>
-                  <Grid item xs={5}>
-                    <ProjectAdvisor person={MF} />
-                  </Grid>
-                  <Grid item xs={1} />
                 </Grid>
-                <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
-                  <Grid item xs={1} />
-                  <Grid item xs={5}>
-                    <ProjectAdvisor person={PM} />
+                <Grid item xs={4} style={{padding: 20}}>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <img src={PreschoolPromiseLogo} alt="Preschool Promise" style={{maxWidth: 250}}/>
                   </Grid>
-                  <Grid item xs={5}>
-                    <ProjectAdvisor person={LM} />
-                  </Grid>
-                  <Grid item xs={1} />
                 </Grid>
-                <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
-                  <Grid item xs={1} />
-                  <Grid item xs={5}>
-                    <ProjectAdvisor person={SJW} />
+                <Grid item xs={4} style={{padding: 20}}>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <img src={UnitedWayLogo} alt="United Way" style={{maxWidth: 250}}/>
                   </Grid>
-                  <Grid item xs={5}>
-                    <ProjectAdvisor person={LW} />
+                </Grid>
+              </Grid>
+              <Grid container direction="row" justify="center" alignItems="center">
+                <Grid item xs={4} style={{padding: 20}}>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <img src={VanderbiltEngineeringLogo} alt="Vanderbilt School of Engineering" style={{maxWidth: 250}}/>
                   </Grid>
-                  <Grid item xs={1} />
+                </Grid>
+                <Grid item xs={4} style={{padding: 20}}>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <img src={WondryLogo} alt="The Wond'ry" style={{maxWidth: 250}}/>
+                  </Grid>
+                </Grid>
+                <Grid item xs={4} style={{padding: 20}}>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <img src={VanderbiltPeabodyLogo} alt="Peabody College" style={{maxWidth: 250}}/>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid container direction="row" justify="center" alignItems="center">
+                <Grid item xs={4} style={{padding: 20}}>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <img src={AbtLogo} alt="Abt Associates" style={{maxWidth: 250}}/>
+                  </Grid>
+                </Grid>
+                <Grid item xs={4} style={{padding: 20}}>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    {/* insert MNPS logo here */}
+                  </Grid>
+                </Grid>
+                <Grid item xs={4} style={{padding: 20}}>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    {/* insert TSU logo here */}
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

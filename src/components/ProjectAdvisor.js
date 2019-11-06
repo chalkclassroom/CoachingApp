@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 
@@ -9,9 +10,9 @@ class ProjectAdvisor extends React.Component {
 
   render() {
     return(
-      <Grid container direction="column" justify="center" alignItems="center" style={{paddingLeft: 10}}>
+      <Grid container direction="column" justify="center" alignItems="center">
         <Grid item>
-          <Typography>
+          <Typography variant="subtitle1">
             <strong>{this.props.person.name}</strong>
           </Typography>
         </Grid>
@@ -35,4 +36,7 @@ class ProjectAdvisor extends React.Component {
   }
 }
 
+ProjectAdvisor.propTypes = {
+  person: PropTypes.object.isRequired,
+};
 export default ProjectAdvisor;
