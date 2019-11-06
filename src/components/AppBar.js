@@ -11,6 +11,7 @@ import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from '@material-ui/core/styles';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Link } from "react-router-dom";
+import * as Constants from '../constants';
 
 
 const styles = {
@@ -42,7 +43,7 @@ const styles = {
 const theme = createMuiTheme ({
   palette: {
     primary: {
-      main: '#A1C4FD'
+      main: Constants.TransitionColor
     },
     secondary: {
       main: '#FFFFFF'
@@ -135,7 +136,7 @@ class CommonAppBar extends React.Component{
                   className={classes.menuText}
                   onClick = {() => this.props.history.push("/")}
                 >
-                  Classroom Quality - REF
+                  <strong>CHALK</strong>
                 </Typography>
                 <div color="inherit" className={classes.grow}/>
                 <Router>

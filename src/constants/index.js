@@ -14,7 +14,12 @@ export const CC = {
   'name': 'Caroline Christopher, Ph.D.',
   'initials': 'CC',
   'role': 'Principal Investigator',
-  'description': 'Dr. Christopher is the Principal Investigator on the project.  In 2018, she received a 4-year grant from the National Science Foundation (DRK-12-1813008) to develop a web-based coaching tool that guides instructional leaders to collect objective observation data and then links those data with coaching practices.  Her current and previous research experience has included working collaboratively with community partners to implement data-driven change in classroom practices to promote high-quality early education programs. She is currently a Research Assistant Professor at Vanderbilt University.',
+  'description': 'Dr. Christopher is the Principal Investigator on the project. ' + 
+  'In 2018, she received a 4-year grant from the National Science Foundation (DRK-12-1813008) to develop ' +
+  'a web-based coaching tool that guides instructional leaders to collect objective observation data and ' +
+  'then links those data with coaching practices.  Her current and previous research experience has included ' +
+  'working collaboratively with community partners to implement data-driven change in classroom practices to ' +
+  'promote high-quality early education programs. She is currently a Research Assistant Professor at Vanderbilt University.',
   'link' : 'https://peabody.vanderbilt.edu/bio/caroline-christopher',
   'email' : 'caroline.h.christopher@vanderbilt.edu'
 };
@@ -33,7 +38,12 @@ export const KN = {
   'name': 'Katherine Newman, Ph.D.',
   'initials': 'KN',
   'role': 'Research Coordinator',
-  'description': 'Dr. Newman is the Research Coordinator on this project.  She comes to us with both a researcher and a coaching lens as she received her doctorate in Teaching and Learning from Vanderbilt University and has worked as an instructional coach for Metro Nashville Public Schools.  She was previously one of our coaching partners and has classroom experience as a kindergarten and fifth grade teacher.'
+  'description': 'Dr. Newman is the Research Coordinator on this project.  She comes to us with both a ' +
+  'researcher and a coaching lens as she received her doctorate in Teaching and Learning from Vanderbilt ' +
+  'University and has worked as an instructional coach for Metro Nashville Public Schools.  She was previously ' +
+  'one of our coaching partners and has classroom experience as a kindergarten and fifth grade teacher, which ' +
+  'gives her the ability to understand the perspectives of the end users for this tool. At the same time, she ' +
+  'has a rich understanding of empirical research that informs the development of the tool.'
 };
 export const CS = {
   'name': 'Clare Speer',
