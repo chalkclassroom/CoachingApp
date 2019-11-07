@@ -22,6 +22,7 @@ import DataQuestions from "../../../components/ResultsComponents/DataQuestions";
 import 'chartjs-plugin-datalabels';
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
 import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
+import TransitionBarChart2 from "../../../components/ResultsComponents/TransitionBarChart2";
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import moment from 'moment';
 import ChildWaiting from "../../../assets/icons/ChildWaiting.svg"; 
@@ -947,14 +948,23 @@ class TransitionResults extends React.Component {
                       <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
                           Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.floor((((this.state.transitionTime/1000)/60) % 1) * 60) }s
                         </Typography>
-                      <TransitionBarChart 
+                      {/* <TransitionBarChart 
                         line={this.state.sessionLine}
                         traveling={this.state.sessionTraveling}
                         waiting={this.state.sessionWaiting}
                         routines={this.state.sessionRoutines}
                         behaviorManagement={this.state.sessionBehaviorManagement}
                         other={this.state.sessionOther}
-                        style={{alignItems: "center"}} />
+                        style={{alignItems: "center"}} /> */}
+                        <TransitionBarChart2
+                          line={this.state.sessionLine}
+                          traveling={this.state.sessionTraveling}
+                          waiting={this.state.sessionWaiting}
+                          routines={this.state.sessionRoutines}
+                          behaviorManagement={this.state.sessionBehaviorManagement}
+                          other={this.state.sessionOther}
+                          style={{alignItems: "center"}}
+                        />
                     </Grid>
                   ) : this.state.view === ViewEnum.TRENDS ? (
                     <div className={classes.resultsContent}
