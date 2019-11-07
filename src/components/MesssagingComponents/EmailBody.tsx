@@ -1,23 +1,12 @@
 // Shows the rendered HTML output depending on what the used chose from the ChooseIntent component.
 // Allows editing of the contents to customise the outgoing email.
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 
-type EmailBodyProps = {
-    intent: string;
-}
-
-export class EmailBody extends React.Component<EmailBodyProps, {}> {
-    render() {
-        return (
-            <div>
-                {this.renderBody()}
-            </div>
-        );
-    }
-    renderBody = () => {
-        const intent = this.props.intent;
+const EmailBody: React.FC<{ intent: string }> = (props) => {
+    const renderBody = () => {
+        const intent = props.intent;
         if (intent === "") {
             return <h1>Choose intent</h1>;
         } else if (intent === "custom") {
@@ -32,4 +21,16 @@ export class EmailBody extends React.Component<EmailBodyProps, {}> {
             return <h2>WTF</h2>;
         }
     }
+    
+    return (
+        <Paper>
+            {renderBody()}
+        </Paper>
+    );
 }
+
+EmailBody.propTypes = {
+    intent: PropTypes.string.isRequired
+}
+
+export default EmailBody;

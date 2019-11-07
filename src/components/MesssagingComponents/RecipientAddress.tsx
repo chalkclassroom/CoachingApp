@@ -3,20 +3,20 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
-export default class RecipentAddress extends React.Component<{}, {}> {
-  render() {
-    return (
-        <form noValidate autoComplete="off">
-        <div>
-            <TextField
-                id="outlined-basic"
-                label="Outlined"
-                margin="normal"
-                variant="outlined"
-                style={{width: "100%"}}
-            />
-        </div>
-        </form>
-    );
-  }
+const RecipentAddress: React.FC<{}> = () => {
+  return (
+    <form noValidate autoComplete="off">
+      <div>
+        <TextField
+          id="outlined-basic"
+          label="Outlined"
+          margin="normal"
+          variant="outlined"
+          style={{width: "100%"}}
+        />
+      </div>
+    </form>
+  );
 }
+
+export default TextField;
