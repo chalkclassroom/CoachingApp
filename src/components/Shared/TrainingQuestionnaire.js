@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import TrainingQuestion from './TrainingQuestion';
 import FirebaseContext from '../Firebase/context';
 import questionBank from './QuestionBank';
+import TrainingQuestion from './TrainingQuestion';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -16,34 +16,25 @@ import DialogActions from '@material-ui/core/DialogActions';
 
 const styles = theme => ({
   root: {
-    border: '1px solid #0400FF',
+    // border: '1px solid #0400FF',
     display: 'flex',
     flexDirection: 'column'
     // width: '90%',
   },
   button: {
-    marginLeft: '1em'
-  },
-  instructions: {
-    // marginTop: theme.spacing.unit,
-    // marginBottom: theme.spacing.unit,
+    margin: '1em'
   },
   stepContentContainer: {
-    border: '1px solid #DEFF00'
+    // border: '1px solid #DEFF00'
   },
   buttonContainer: {
 
   },
   nextButton: {
     justifySelf: 'flex-end'
-  },
-  correctFeedback: {
-
-  },
-  incorrectFeedback: {
-
   }
 });
+
 
 class TrainingQuestionnaire extends Component {
 
@@ -52,7 +43,7 @@ class TrainingQuestionnaire extends Component {
     this.state = {
       questions: [],
       batch: [],
-      curBatch: -1,
+      currentBatch: -1,
       currentQuestion: 0,
       numCorrect: 0,
       selectedOption: -1,
@@ -74,16 +65,11 @@ class TrainingQuestionnaire extends Component {
     this.setState({
       questions: questions,
       batch: questions.slice(0, this.BATCH_LENGTH),
-      curBatch: 0
+      currentBatch: 0
     });
   }
 
-  setSelection = selection => {
-    console.log(typeof(selection));
-    this.setState({
-      selectedOption: selection
-    }, () => console.log(selection))
-  }
+  setSelection = selection => this.setState({ selectedOption: selection })
 
   getStepLabels = () => {
     const { batch } = this.state;
@@ -97,32 +83,34 @@ class TrainingQuestionnaire extends Component {
   }
 
   getStepContent = step => {
-    const { batch, selectedOption, feedback } = this.state;
+    const { batch, selectedOption, feedback, recentlyCorrect } = this.state;
     if (batch === undefined || batch.length === 0) {
-      return <div> Loading ... </div>
+      return <div> Loading... </div>
     } else {
       const { text, options } = batch[step];
       return <TrainingQuestion selected={selectedOption} setSelection={this.setSelection}
-                               question={text} options={options} feedback={feedback}/>
+        question={text} options={options} feedback={feedback} recentlyCorrect={recentlyCorrect}/>
     }
   }
 
-  isFinished = () => this.state.currentQuestion === this.BATCH_LENGTH
+  getSubmitButton = () => {
+    return <Button
+      variant="contained"
+      color="primary"
+      onClick={this.handleSubmit}
+      className={this.props.classes.button}
+      disabled={this.state.selectedOption === -1}
+    >
+      Submit
+    </Button>
+  }
 
   getButtons = () => {
-    const { currentQuestion, selectedOption, recentlySubmitted, answeredBatch } = this.state;
+    const { currentQuestion, recentlySubmitted, answeredBatch } = this.state;
     const { classes } = this.props;
     if (recentlySubmitted && currentQuestion < this.BATCH_LENGTH - 1) {
-      return <div style={{ display: 'inline' }} >
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={this.handleSubmit}
-          className={classes.button}
-          disabled={selectedOption === -1}
-        >
-          {this.isFinished() ? 'Finish' : 'Submit'}
-        </Button>
+    return <div>
+        {this.getSubmitButton()}
         <Button
           variant="contained"
           color="primary"
@@ -135,15 +123,7 @@ class TrainingQuestionnaire extends Component {
     } else {
       if (answeredBatch) {
         return <div>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.handleSubmit}
-            className={classes.button}
-            disabled={selectedOption === -1}
-          >
-            {this.isFinished() ? 'Finish' : 'Submit'}
-          </Button>
+          {this.getSubmitButton()}
           <Button
             variant="contained"
             color="primary"
@@ -154,21 +134,13 @@ class TrainingQuestionnaire extends Component {
           </Button>
         </div>
       } else {
-        return <Button
-            variant="contained"
-            color="primary"
-            onClick={this.handleSubmit}
-            className={classes.button}
-            disabled={selectedOption === -1}
-          >
-            {this.isFinished() ? 'Finish' : 'Submit'}
-          </Button >
+        return this.getSubmitButton()
       }
     }
   }
 
   handleSubmit = () => {
-    const { batch, currentQuestion, selectedOption, numCorrect } = this.state;
+    const { batch, currentQuestion, selectedOption } = this.state;
     const { options, feedback } = batch[currentQuestion];
     if (options.get(Array.from(options.keys())[selectedOption])) { // correct answer
       this.setState({
@@ -208,18 +180,18 @@ class TrainingQuestionnaire extends Component {
         feedback: "",
         recentlySubmitted: false
       })
-    } 
+    }
   }
 
   handleFinish = () => {
-    const { numCorrect, curBatch } = this.state;
+    const { numCorrect, currentBatch } = this.state;
     if (numCorrect / this.BATCH_LENGTH >= 0.8) { // passed
       this.setState({
         modalOpen: true,
         passed: true
       })
     } else { // failed
-      if (curBatch === 1) { // 2nd attempt
+      if (currentBatch === 1) { // 2nd attempt
         this.setState({
           modalOpen: true,
           failed: true
@@ -250,8 +222,12 @@ class TrainingQuestionnaire extends Component {
 
   getModalAction = () => {
     if (this.state.passed || this.state.failed) {
-      return null
-    } else {
+      return <DialogActions>
+        <Button onClick={() => this.setState({ modalOpen: false })}>
+          OK
+        </Button>
+      </DialogActions>
+    }  else {
       return <DialogActions>
         <Button onClick={this.loadNextBatch}>
             OK
@@ -261,56 +237,28 @@ class TrainingQuestionnaire extends Component {
   }
 
   loadNextBatch = () => {
-    const { questions, curBatch } = this.state;
+    const { questions, currentBatch } = this.state;
     this.setState({
       batch: questions.slice(5, 5 + this.BATCH_LENGTH),
-      curBatch: curBatch + 1,
+      currentBatch: currentBatch + 1,
       currentQuestion: 0,
       numCorrect: 0,
       selectedOption: -1,
       feedback: "",
       recentlySubmitted: false,
       recentlyCorrect: false,
-      answeredBatch: false
-    }, () => this.setState({
+      answeredBatch: false,
       modalOpen: false
-    }));
-  }
-
-  handleReset = () => {
-    this.setState({
-      currentQuestion: 0,
-      numCorrect: 0,
-      selectedOption: -1
     });
-  }
-
-  unlockBasedOnGrade() {
-    console.log(this.state.numCorrect, this.BATCH_LENGTH);
-    if (this.state.numCorrect / this.BATCH_LENGTH >= 0.8) {
-      console.log("Passed");
-      // let firebase = this.context;
-      // firebase.handleUnlockSection(this.props.section);
-    } else {
-      console.log("Failed Try Again")
-    }
   }
 
   render() {
     const { classes } = this.props;
-    const {
-      batch,
-      currentQuestion,
-      selectedOption,
-      modalOpen,
-      passed,
-      failed
-    } = this.state;
-    const stepLabels = this.getStepLabels();
+    const { currentQuestion, modalOpen } = this.state;
     return (
       <div className={classes.root}>
         <Stepper activeStep={currentQuestion}>
-          {stepLabels.map((label, index) => 
+          {this.getStepLabels().map((label, index) => 
             <Step key={index} >
               <StepLabel>{label}</StepLabel>
             </Step>
@@ -330,7 +278,7 @@ class TrainingQuestionnaire extends Component {
           {this.getModalAction()}
         </Dialog>
       </div>
-    );
+    )
   }
 }
 

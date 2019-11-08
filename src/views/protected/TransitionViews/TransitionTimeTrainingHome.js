@@ -15,7 +15,6 @@ import {withStyles} from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/context";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
-import { ImmortalDB } from "immortal-db";
 import 'chartjs-plugin-datalabels';
 import TrainingVideo
     from "../../../components/Shared/TrainingVideo";
@@ -30,7 +29,7 @@ const styles = {
     flexGrow: 1,
     height: '100vh',
     flexDirection: 'column',
-    border: '1px solid #000000',
+    // border: '1px solid #000000',
     overflow: 'hidden',
     marginBottom: '0',
     paddingBottom: '0'
@@ -39,7 +38,7 @@ const styles = {
     flex: 1,
     height: '90%',
     marginTop: '0',
-    border: '1px solid #2BFF00'
+    // border: '1px solid #2BFF00'
   },
   menuButton: {
     marginLeft: -12,
@@ -52,7 +51,7 @@ const styles = {
   buttonsList: {
     position: "relative",
     top: "3vh",
-    border: '1px solid #00FFEB'
+    // border: '1px solid #00FFEB'
   },
   title: {
     position: "relative",
@@ -91,33 +90,33 @@ const ViewEnum = {
 };
 
 // dummy data for transition list detail table, when we read in from DB we can use custom id
-let id = 0;
+// let id = 0;
 
-function createTransitionData(startTime, duration, notes) {
-  id += 1;
-  return {id, startTime, duration, notes};
-}
+// function createTransitionData(startTime, duration, notes) {
+//   id += 1;
+//   return {id, startTime, duration, notes};
+// }
 
-function createNotesData(time, notes) {
-  id += 1;
-  return {id, time, notes};
-}
+// function createNotesData(time, notes) {
+//   id += 1;
+//   return {id, time, notes};
+// }
 
-const transitionData = [
-  createTransitionData("08:32", "2m 3s", "Breakfast to am meeting"),
-  createTransitionData("08:44", "5m 10s", "Line up for bathroom"),
-  createTransitionData("09:01", "1m 7s", "T finding book"),
-  createTransitionData("09:37", "1m 56s", "Rotating rooms"),
-  createTransitionData("09:56", "3m 2s", "Cleanup after centers")
-];
+// const transitionData = [
+//   createTransitionData("08:32", "2m 3s", "Breakfast to am meeting"),
+//   createTransitionData("08:44", "5m 10s", "Line up for bathroom"),
+//   createTransitionData("09:01", "1m 7s", "T finding book"),
+//   createTransitionData("09:37", "1m 56s", "Rotating rooms"),
+//   createTransitionData("09:56", "3m 2s", "Cleanup after centers")
+// ];
 
-const transitionNotes = [
-  createNotesData("08:32", "Kiss your brain"),
-  createNotesData("08:44", "Great super friend"),
-  createNotesData("09:01", "Lots of good jobs"),
-  createNotesData("09:37", "BD frown"),
-  createNotesData("09:56", "Close down center conflict")
-];
+// const transitionNotes = [
+//   createNotesData("08:32", "Kiss your brain"),
+//   createNotesData("08:44", "Great super friend"),
+//   createNotesData("09:01", "Lots of good jobs"),
+//   createNotesData("09:37", "BD frown"),
+//   createNotesData("09:56", "Close down center conflict")
+// ];
 
 class TransitionTimeTrainingHome extends Component {
   constructor(props) {
@@ -234,7 +233,8 @@ class TransitionTimeTrainingHome extends Component {
               </List>
             </Grid>
             <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}
-                  style={{border: '1px solid #F400FF'}}>
+                  //style={{border: '1px solid #F400FF'}}>
+              >
               <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
                 Training: Transition Time Tool
               </Typography>

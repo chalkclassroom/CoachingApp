@@ -9,7 +9,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = theme => ({
   root: {
-    border: '1px solid #FF0046',
+    //border: '1px solid #FF0046',
     // display: 'flex',
     // flexGrow: 1,
   },
@@ -19,6 +19,16 @@ const styles = theme => ({
   group: {
     // margin: `${theme.spacing.unit}px 0`,
   },
+  correctFeedback: {
+    color: '#28B10C',
+    lineSpacing: '0.4em',
+    fontSize: '1em'
+  },
+  incorrectFeedback: {
+    color: '#B1150C',
+    lineSpacing: '0.4em',
+    fontSize: '1em'
+  }
 });
 
 
@@ -27,7 +37,19 @@ class TrainingQuestion extends Component {
   handleChange = event => {
     console.log(event.target.value);
     this.props.setSelection(Number(event.target.value));
-  };
+  }
+
+  getFeedback = () => {
+    if (!!this.props.feedback) {
+      if (this.props.recentlyCorrect) {
+        return <FormHelperText className={this.props.classes.correctFeedback}>{this.props.feedback}</FormHelperText> 
+      } else {
+        return <FormHelperText className={this.props.classes.incorrectFeedback}>{this.props.feedback}</FormHelperText>
+      }
+    } else {
+      return null
+    }
+  }
 
   render() {
     const { classes, question, options, selected, feedback } = this.props;
@@ -45,11 +67,13 @@ class TrainingQuestion extends Component {
           >
             {Array.from(options.keys()).map( (option, index) =>
               <FormControlLabel checked={selected === index} value={"" + index}
-                                label={option} key={index} control={<Radio />}
+                label={option} key={index} control={<Radio />}
+                disabled={feedback !== ""}
               />
             )}
           </RadioGroup>
-          <FormHelperText>{feedback}</FormHelperText>
+
+          {this.getFeedback()}
         </FormControl>
       </div>
     );
