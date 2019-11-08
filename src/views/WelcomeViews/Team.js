@@ -20,16 +20,16 @@ import * as Constants from '../../constants';
 
 
 const styles = {
-    root: {
-        flexGrow: 1,
-        backgroundColor:'#ffffff',
-        height: '100vh'
-    },
-    titleText: {
-      paddingTop: 20,
-      color: 'black',
-      textAlign: 'center',
-    },
+  root: {
+    flexGrow: 1,
+    backgroundColor:'#ffffff',
+    height: '100vh'
+  },
+  titleText: {
+    paddingTop: 20,
+    color: 'black',
+    textAlign: 'center',
+  },
 };
 
 class Team extends React.Component {
