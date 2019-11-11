@@ -43,7 +43,7 @@ const styles = {
 const theme = createMuiTheme ({
   palette: {
     primary: {
-      main: Constants.ClimateColor
+      main: '#459aeb'
     },
     secondary: {
       main: '#FFFFFF'

@@ -170,7 +170,7 @@ class Team extends React.Component {
             <div style={{padding: 40}} />
             <Grid item>
               <Grid container direction="row" justify="center" alignItems="center">
-                <div style={{width: '100%', backgroundColor: '#cde7fb', paddingTop: 5, paddingBottom: 15}}>
+                <div style={{width: '100%', backgroundColor: '#d9eafb', paddingTop: 5, paddingBottom: 15}}>
                   <Grid item style={{paddingBottom: 20}}>
                     <Typography variant="h3" className={classes.titleText}>
                       Advisors
