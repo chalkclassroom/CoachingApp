@@ -32,6 +32,7 @@ import bmi from "../../../assets/icons/BehaviorManagementDisruption.svg";
 import { lightGreen, white, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
 import { red } from '@material-ui/core/es/colors';
 import CardContent from '@material-ui/core/CardContent';
+import ResultsDashboard from '../../../components/ResultsDashboard';
 
 const styles = {
   root: {
@@ -795,7 +796,21 @@ class TransitionResults extends React.Component {
                 justify="center"
                 direction="column"
               >
-                <Card className={classes.dashboardCard}>
+                <ResultsDashboard
+                  magic8="Transition Time"
+                  view={this.state.view}
+                  summaryClick={this.summaryClick}
+                  detailsClick={this.detailsClick}
+                  trendsClick={this.trendsClick}
+                  coachPrepClick={this.coachPrepClick}
+                  actionPlanClick={this.actionPlanClick}
+                  notesClick={this.notesClick}
+                  viewEnum={ViewEnum}
+                  sessionId={this.state.sessionId}
+                  changeSessionId={this.changeSessionId}
+                  sessionDates={this.state.sessionDates}
+                />
+                {/* <Card className={classes.dashboardCard}>
                   <Grid container flexGrow={1} spacing={0} direction="column" justify="center" alignItems="center">
                     <Grid item style={{marginTop:"10px", marginBottom:"5px"}}>
                       <img src={TransitionTimeIcon} alt="Transition Time Icon" width="100vw" height="100vh"/>
@@ -904,7 +919,7 @@ class TransitionResults extends React.Component {
                       </Button>
                     </Grid>
                   </Grid>
-                </Card>
+                </Card> */}
               </Grid>
             </Grid>
             <Grid container xs={8} justify="center" direction="column" alignItems="center">
@@ -925,7 +940,7 @@ class TransitionResults extends React.Component {
                     this.state.sessionId ? (
                       <div className={classes.resultsContent}>
                         <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
-                          Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.floor((((this.state.transitionTime/1000)/60) % 1) * 60) }s
+                          Total Session Time: {Math.floor(((this.state.transitionTime+this.state.learningActivityTime)/1000)/60)}m {Math.floor(((((this.state.transitionTime+this.state.learningActivityTime)/1000)/60) % 1) * 60) }s
                         </Typography>
                         <TransitionTimePie
                           transitionTime={this.state.transitionTime}
