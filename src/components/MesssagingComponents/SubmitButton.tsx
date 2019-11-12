@@ -2,7 +2,7 @@
 import React from 'react';
 import { Fab } from '@material-ui/core';
 
-const SubmitButton: React.FC<{}> = () => {
+const SubmitButton: React.FC<{ sendMail: () => void}> = () => {
     return(
         <Fab variant="extended" aria-label="like">
             Submit

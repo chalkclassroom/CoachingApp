@@ -1,42 +1,31 @@
 // View where Messaging Components are composed to make the final view
-import React from 'react';
+import React, { useState } from 'react';
 import ChooseIntent from '../../../components/MesssagingComponents/ChooseIntent';
 import EmailBody from '../../../components/MesssagingComponents/EmailBody';
 import RecipientAddress from '../../../components/MesssagingComponents/RecipientAddress';
 import SubmitButton from '../../../components/MesssagingComponents/SubmitButton';
 
-type MessagingViewState = {
-    intent: string;
-}
-
-
 type MessagingViewProps = {
     
 }
 
-export default class MessagingView extends React.Component<MessagingViewProps, MessagingViewState> {
-    state: MessagingViewState = {
-        intent: ""
-    }
+const DEFAULT: string = 'Thank you';
 
-    selectIntent = (newIntent) => {
-        this.setState({
-            intent: newIntent
-        })
-    }
+const MessagingView: React.FC<MessagingViewProps> = () => {
+    const [intent, setIntent] = useState(DEFAULT);
+    
+    const sendMail = () => {}
 
-    sendMail = () => {
-
-    }
-
-    render() {
-        return (
-            <div>
-                <ChooseIntent onClick={this.selectIntent}/>
-                <EmailBody intent={this.state.intent}/>
-                <RecipientAddress />
-                <SubmitButton onClick={this.sendMail}/>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <ChooseIntent changeIntent={setIntent}/>
+            <RecipientAddress />
+            {/* FIXME get the value of text from EmailBody */}
+            <EmailBody chosenIntent={intent}/>
+            {/* TODO Discuss if SubmitButton is better as a component by itself or part of this */}
+            <SubmitButton sendMail={sendMail}/>
+        </div>
+    );
 }
+
+export default MessagingView;
