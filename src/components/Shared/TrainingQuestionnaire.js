@@ -53,7 +53,7 @@ class TrainingQuestionnaire extends Component {
       answeredBatch: false,
       modalOpen: false,
       passed: false,
-      failed: false
+      // failed: false
     };
 
     this.BATCH_LENGTH = 5;
@@ -194,7 +194,7 @@ class TrainingQuestionnaire extends Component {
       if (currentBatch === 1) { // 2nd attempt
         this.setState({
           modalOpen: true,
-          failed: true
+          // failed: true
         })
       } else { // 1st attempt
         this.setState({
@@ -209,11 +209,13 @@ class TrainingQuestionnaire extends Component {
       return <DialogContentText>
         Congrats! You've passed the knowledge check! Here's where we need to put a call to firebase to unlock your Magic8 (firebase.handleUnlockSection())
       </DialogContentText>
-    } else if (this.state.failed) {
-      return <DialogContentText>
-        They failed both batches of questions... Where do we send them from here?
-      </DialogContentText>
-    } else {
+    }
+    // else if (this.state.failed) {
+    //   return <DialogContentText>
+    //     They failed both batches of questions... Where do we send them from here?
+    //   </DialogContentText>
+    // }
+    else {
       return <DialogContentText>
         Uh oh! You didn't score high enough, we must ask you some more questions...
       </DialogContentText>
@@ -221,7 +223,7 @@ class TrainingQuestionnaire extends Component {
   }
 
   getModalAction = () => {
-    if (this.state.passed || this.state.failed) {
+    if (this.state.passed ) { //|| this.state.failed) {
       return <DialogActions>
         <Button onClick={() => this.setState({ modalOpen: false })}>
           OK
@@ -238,8 +240,9 @@ class TrainingQuestionnaire extends Component {
 
   loadNextBatch = () => {
     const { questions, currentBatch } = this.state;
+    const batchToLoad = ((currentBatch + 1) % 2) * 5;
     this.setState({
-      batch: questions.slice(5, 5 + this.BATCH_LENGTH),
+      batch: questions.slice(batchToLoad, batchToLoad + this.BATCH_LENGTH),
       currentBatch: currentBatch + 1,
       currentQuestion: 0,
       numCorrect: 0,
