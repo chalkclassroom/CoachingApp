@@ -140,9 +140,19 @@ class TrainingQuestionnaire extends Component {
   }
 
   handleSubmit = () => {
+    const firebase = this.context;
     const { batch, currentQuestion, selectedOption } = this.state;
     const { options, feedback } = batch[currentQuestion];
-    if (options.get(Array.from(options.keys())[selectedOption])) { // correct answer
+    const isCorrect = options.get(Array.from(options.keys())[selectedOption]);
+    firebase.pushKnowledgeCheck({
+      type: this.props.section,
+      questionIndex: currentQuestion,
+      answerIndex: selectedOption,
+      isCorrect: isCorrect
+    })
+      .catch(error => console.error("Was unable to record knowledge check in dB: ", error))
+    
+    if (isCorrect) { // correct answer
       this.setState({
         feedback: "Correct! " + feedback,
         selectedOption: -1,
@@ -162,6 +172,7 @@ class TrainingQuestionnaire extends Component {
         answeredBatch: true
       })
     }
+    // Make call to firebase function to record the answer in dB
   }
 
   handleNext = () => {

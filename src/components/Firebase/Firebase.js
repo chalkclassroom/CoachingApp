@@ -316,6 +316,26 @@ class Firebase {
       .catch(error => console.error("Error getting documents: ", error))
   }
 
+  pushKnowledgeCheck = async function(entry) {
+    const {
+      type,
+      questionIndex,
+      answerIndex,
+      isCorrect
+    } = entry;
+    return this.db
+      .collection("knowledgeChecks")
+      .add({
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        answeredBy: this.auth.currentUser.uid,
+        type: type,
+        questionIndex: questionIndex,
+        answerIndex: answerIndex,
+        isCorrect: isCorrect
+      })
+    .catch(error => console.error("Error occurred recording knowlegde check answer: ", error))
+  }
+
   handleSession = async function(mEntry) {
     this.sessionRef = this.db.collection("observations").doc();
     this.sessionRef
