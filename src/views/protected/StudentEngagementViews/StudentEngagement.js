@@ -175,14 +175,6 @@ class StudentEngagement extends React.Component {
                   justify={"center"}
                   direction={"column"}
                 >
-                  <FirebaseContext.Consumer>
-                    {firebase =>
-                      <BehaviorCounter
-                        teacherId={this.props.location.state.teacher.id}
-                        firebase={firebase}
-                      />
-                    }
-                  </FirebaseContext.Consumer>
                 </Grid>
               </Grid>
             </Grid>
