@@ -7,6 +7,7 @@ import Magic8Menu from "./views/protected/Magic8Menu";
 import TransitionResults from "./views/protected/TransitionViews/TransitionResults";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTime from "./views/protected/TransitionViews/TransitionTime";
+import StudentEngagement from "./views/protected/StudentEngagementViews/StudentEngagement";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPassword";
 import HomePage from "./views/protected/HomeViews/Home";
 import MyTeachers from "./views/protected/MyTeachers/TeacherLists"
@@ -148,6 +149,11 @@ class App extends Component {
               auth={this.state.auth}
               path="/ClassroomClimate"
               component={ClassroomClimate}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/StudentEngagement"
+              component={StudentEngagement}
             />
             <PrivateRoute
               auth={this.state.auth}

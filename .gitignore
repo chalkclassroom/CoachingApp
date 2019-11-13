@@ -26,3 +26,6 @@ yarn-error.log*
 src/SPREADSHEET_SECRETS.js
 .firebase/
 
+serviceAccount.json
+cypress/config.json
+cypress.env.json
