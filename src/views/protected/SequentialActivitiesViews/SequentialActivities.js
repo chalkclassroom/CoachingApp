@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
-import FirebaseContext from "../../../components/Firebase/context";
+import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
 import Notes from "../../../components/Notes";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";

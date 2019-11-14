@@ -1,6 +1,6 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import FirebaseContext from "../../components/Firebase/context";
+import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import Grid from "@material-ui/core/Grid";
 import { Pie } from "react-chartjs-2";
 

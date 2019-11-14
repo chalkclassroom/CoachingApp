@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withRouter } from 'react-router-dom';
 import AppBar from '../../components/AppBar';
-import FirebaseContext from "../../components/Firebase/context";
+import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from '@material-ui/core/styles';
 import Helmet from 'react-helmet';
 import PlaceholderIcon from "../../assets/icons/KeanuReeves.jpg"

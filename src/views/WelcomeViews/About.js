@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withRouter } from 'react-router-dom';
 import AppBar from '../../components/AppBar';
-import FirebaseContext from "../../components/Firebase/context";
+import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from '@material-ui/core/styles';
 import InfiniteCarousel from 'react-leaf-carousel';
 import resource1 from "../../assets/icons/pdfSlide1.png"

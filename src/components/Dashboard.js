@@ -28,7 +28,7 @@ import ListeningLookFors from "../assets/icons/LookForsListening.svg"
 import SequentialLookFors from "../assets/icons/LookForsSequential.svg"
 import AssocCoopLookFors from "../assets/icons/LookForsAssocCoop.svg"
 import Notes from "./Notes";
-import FirebaseContext from "./Firebase/context";
+import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from '@material-ui/core/es';
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";

@@ -9,7 +9,7 @@ import cyan from "@material-ui/core/colors/teal";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { pushOntoTransitionStack } from "../../../state/actions/transition-time";
-import FirebaseContext from "../../../components/Firebase/context";
+import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 
 const theme = createMuiTheme({
   palette: {

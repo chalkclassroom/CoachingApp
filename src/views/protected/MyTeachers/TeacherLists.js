@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import FirebaseContext from '../../../components/Firebase/context';
+import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import TransitionTimeSvg from '../../../assets/icons/TransitionTime.svg';
 import StudentEngagementSvg from '../../../assets/icons/StudentEngagement.svg';

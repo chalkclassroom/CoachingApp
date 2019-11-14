@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import WelcomePage from "./views/WelcomeViews/Welcome";
+import WelcomePage from "./views/WelcomeViews/WelcomePage";
 import ClassroomClimate from "./views/protected/ClassroomClimateViews/ClassroomClimate";
 import ClassroomClimateResults from "./views/protected/ClassroomClimateViews/ClassroomClimateResults";
 import Magic8Menu from "./views/protected/Magic8Menu";
@@ -8,7 +8,7 @@ import TransitionResults from "./views/protected/TransitionViews/TransitionResul
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTime from "./views/protected/TransitionViews/TransitionTime";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPassword";
-import HomePage from "./views/protected/HomeViews/Home";
+import HomePage from "./views/protected/HomeViews/HomePage";
 import MyTeachers from "./views/protected/MyTeachers/TeacherLists"
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
@@ -28,6 +28,7 @@ import TransitionTimeTrainingHome from "./views/protected/TransitionViews/Transi
 import About from "./views/WelcomeViews/About";
 import Team from "./views/WelcomeViews/Team";
 import TeacherDetail from "./views/protected/MyTeachers/TeacherDetail";
+
 
 const styles = createMuiTheme({
   palette: {
@@ -231,5 +232,5 @@ class App extends Component {
     );
   }
 }
-
 export default withStyles(styles)(App);
+

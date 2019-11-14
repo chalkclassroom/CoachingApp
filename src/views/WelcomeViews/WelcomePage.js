@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '../../components/AppBar';
-import WelcomeCarousel from './WelcomeCarousel';
-import FirebaseContext from "../../components/Firebase/context";
+import Landing from './Landing';
+import FirebaseContext from "../../components/Firebase/FirebaseContext";
 
 const styles = {
   root: {
@@ -16,7 +16,7 @@ const styles = {
   }
 };
 
-class Welcome extends React.Component {
+class WelcomePage extends React.Component {
   render() {
     const {classes} = this.props;
     return ( 
@@ -24,14 +24,14 @@ class Welcome extends React.Component {
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
-        <WelcomeCarousel/> 
+        <Landing/>
       </div>
     );
   }
 }
 
-Welcome.propTypes = {
+WelcomePage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Welcome);
+export default withStyles(styles)(WelcomePage);

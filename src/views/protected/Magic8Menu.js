@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Magic8Card from "../../components/Magic8Card.js";
 import { Button, Typography } from "@material-ui/core";
 import styled from "styled-components";
-import FirebaseContext from "../../components/Firebase/context";
+import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import AppBar from "../../components/AppBar";
 import { withStyles } from "@material-ui/core/styles";
 import AssociativeCooperativeIcon from "../../assets/icons/AssocCoopInteractions.svg";

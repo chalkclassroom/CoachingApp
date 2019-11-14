@@ -12,7 +12,7 @@ import TabBar from '@material-ui/core/AppBar';
 import TransitionTimeIcon from "../../../assets/icons/TransitionTime.svg";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
 //import spreadsheetData from "../../../SPREADSHEET_SECRETS";
-import FirebaseContext from "../../../components/Firebase/context";
+import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";

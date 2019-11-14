@@ -6,7 +6,7 @@ import TransitionTimeHelp from "./TransitionTimeHelp";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
-import FirebaseContext from "../../../components/Firebase/context";
+import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import { connect } from "react-redux";

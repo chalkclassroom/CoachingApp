@@ -30,7 +30,7 @@ import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
 import TeacherModal from "../views/protected/HomeViews/TeacherModal";
-import FirebaseContext from "./Firebase/context";
+import FirebaseContext from "./Firebase/FirebaseContext";
 
 const drawerWidth = 240;
 

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Pie } from "react-chartjs-2";
-import FirebaseContext from "../../components/Firebase/context";
+import FirebaseContext from "../../components/Firebase/FirebaseContext";
 
 const styles = {
   //idk how this works

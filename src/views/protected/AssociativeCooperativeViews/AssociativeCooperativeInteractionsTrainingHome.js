@@ -6,7 +6,7 @@ import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
 import AssocCoopIcon from "../../../assets/icons/AssocCoopInteractions.svg";
 import { withStyles } from "@material-ui/core/styles/index";
-import FirebaseContext from "../../../components/Firebase/context";
+import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";

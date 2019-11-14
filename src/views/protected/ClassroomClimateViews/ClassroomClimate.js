@@ -6,7 +6,7 @@ import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
 import RatingModal from "../../../components/ClassroomClimateComponent/RatingModal";
-import FirebaseContext from "../../../components/Firebase/context";
+import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter";
 import { connect } from "react-redux";
 import { appendClimateRating, emptyClimateStack } from "../../../state/actions/classroom-climate";

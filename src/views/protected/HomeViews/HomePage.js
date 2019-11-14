@@ -11,7 +11,7 @@ import { ReactComponent as ObserveSvg } from "../../../assets/icons/observe.svg"
 import { ReactComponent as ResultSvg } from "../../../assets/icons/results.svg";
 import { ReactComponent as MessageSvg } from "../../../assets/icons/messages.svg";
 import TeacherModal from "./TeacherModal";
-import FirebaseContext from "../../../components/Firebase/context";
+import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 
 const styles = {
   root: {
@@ -40,7 +40,7 @@ const styles = {
   }
 };
 
-class Welcome extends React.Component {
+class HomePage extends React.Component {
   state = {
     teacherModal: false,
     type: "",
@@ -202,9 +202,9 @@ class Welcome extends React.Component {
   }
 }
 
-Welcome.propTypes = {
+HomePage.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-Welcome.contextType = FirebaseContext;
-export default withStyles(styles)(Welcome);
+HomePage.contextType = FirebaseContext;
+export default withStyles(styles)(HomePage);

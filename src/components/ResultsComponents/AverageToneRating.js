@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { popOffClimateStack, pushOntoClimateStack } from "../../state/actions/classroom-climate";
-import FirebaseContext from "../../components/Firebase/context";
+import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { VictoryPie } from "victory-pie";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
