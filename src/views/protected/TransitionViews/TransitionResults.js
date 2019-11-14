@@ -340,7 +340,7 @@ class TransitionResults extends React.Component {
     dbCounter: 0, // @Hack @Temporary !!!
     view: ViewEnum.SUMMARY,
     categoryView: null,
-    sessionId: null,
+    sessionId: "",
     sessionDates: [],
     notes: [],
     log: [],
@@ -360,9 +360,9 @@ class TransitionResults extends React.Component {
     trendsTotal:  [],
     trendsTotalColor: "#0988EC",
     totalTime: null,
-    transitionTime: null,
+    transitionTime: 0,
     sessionTotal: null,
-    learningActivityTime: null,
+    learningActivityTime: 0,
     tabValue: 0,
     openPanel: null,
     addedToPrep: [],
@@ -460,7 +460,7 @@ class TransitionResults extends React.Component {
   };
 
   handleTrendsFormatTime = (totalTime) => {
-    let seconds = Math.floor(totalTime / 1000 % 60);
+    let seconds = Math.round(totalTime / 1000 % 60);
     let minutes =  Math.floor(totalTime / 1000 / 60 % 60);
     let hours = Math.floor(totalTime / 1000 / 3600 % 60);
     let secondsString = "";
@@ -567,7 +567,7 @@ class TransitionResults extends React.Component {
     );
   };
 
-  handleListDetailFetching = (sessionId) => {
+  /* handleListDetailFetching = (sessionId) => {
     let firebase = this.context;
     firebase.fetchTransitionLog(sessionId).then(
       logArr => {
@@ -587,7 +587,7 @@ class TransitionResults extends React.Component {
         });
     }
   );
-  };
+  }; */
 
   summaryClick = () => {
     if (this.state.view !== ViewEnum.SUMMARY) {
@@ -715,7 +715,7 @@ class TransitionResults extends React.Component {
     }
   }
 
-  handleTransitionTypeFetching = (sessionId) => {
+  /* handleTransitionTypeFetching = (sessionId) => {
     this.setState({
       sessionId: sessionId,
       sessionLine: null,
@@ -744,12 +744,12 @@ class TransitionResults extends React.Component {
       });
     });
   }
-
+ */
   changeSessionId = (event) => {
     this.setState({
       sessionId: event.target.value,
     }, () => {
-      //this.handleNotesFetching(this.state.sessionId);
+      this.handleNotesFetching(this.state.sessionId);
       //this.handleListDetailFetching(this.state.sessionId);
       //this.handleTransitionTypeFetching(this.state.sessionId);
       let firebase = this.context;
@@ -760,6 +760,7 @@ class TransitionResults extends React.Component {
         console.log("the start date is ", summary[0].startDate.value);
         console.log("the total transition time is ", summary[0].total);
         console.log("the session total is ", summary[0].sessionTotal);
+        console.log("the learning activity time is ", summary[0].sessionTotal - summary[0].total);
         this.setState({
           transitionTime: summary[0].total,
           sessionTotal: summary[0].sessionTotal,
@@ -940,7 +941,7 @@ class TransitionResults extends React.Component {
                     this.state.sessionId ? (
                       <div className={classes.resultsContent}>
                         <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
-                          Total Session Time: {Math.floor(((this.state.transitionTime+this.state.learningActivityTime)/1000)/60)}m {Math.floor(((((this.state.transitionTime+this.state.learningActivityTime)/1000)/60) % 1) * 60) }s
+                          Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
                         </Typography>
                         <TransitionTimePie
                           transitionTime={this.state.transitionTime}
@@ -954,13 +955,13 @@ class TransitionResults extends React.Component {
                       </Typography>
                     )
                   ) : this.state.view === ViewEnum.DETAILS ? (
-                    <Grid className={classes.resultsContent} alignItems = "center" style={{alignItems: "center"}}>
+                    <Grid className={classes.resultsContent} style={{alignItems: "center"}}>
                       {/* <ListDetailTableTransitionResults
                         data={this.state.log}
                         style={{overflow:"hidden"}}
                       /> */}
                       <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
-                        Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.floor((((this.state.transitionTime/1000)/60) % 1) * 60) }s
+                        Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
                       </Typography>
                       <TransitionBarChart
                         line={this.state.sessionLine}
@@ -979,6 +980,16 @@ class TransitionResults extends React.Component {
                         data={this.handleTrendsFormatData}
                         style={{overflow:"hidden"}}
                       />
+                      {/* <TransitionTrendsGraph
+                        trendsTotal={this.state.trendsTotal}
+                        trendsLine={this.state.trendsLine}
+                        trendsTraveling={this.state.trendsTraveling}
+                        trendsWaiting={this.state.trendsWaiting}
+                        trendsRoutines={this.state.trendsRoutines}
+                        trendsBehaviorManagement={this.state.trendsBehaviorManagement}
+                        trendsOther={this.state.trendsOther}
+                        trendsDates
+                      /> */}
                     </div>
                   ) : this.state.view === ViewEnum.NOTES ? (
                     <div className={classes.resultsContent}

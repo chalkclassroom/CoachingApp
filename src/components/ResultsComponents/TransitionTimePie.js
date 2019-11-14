@@ -81,14 +81,14 @@ class TransitionTimePie extends React.Component {
               formatter: function(value) {
                 return (
                   Math.floor((value/1000)/60) + "m "
-                  + Math.floor((((value/1000)/60) % 1) * 60) + "s"
+                  + Math.round((((value/1000)/60) % 1) * 60) + "s"
                 );
               }
             }
           }
         }}
-        width="650"
-        height="400"
+        width={650}
+        height={400}
       />
     );
   }
@@ -96,7 +96,9 @@ class TransitionTimePie extends React.Component {
 
 TransitionTimePie.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  //data: PropTypes.object.isRequired
+  transitionTime: PropTypes.number.isRequired,
+  learningActivityTime: PropTypes.number.isRequired
 };
 
 TransitionTimePie.contextType = FirebaseContext;

@@ -35,7 +35,15 @@ import IncompleteObservation from "./IncompleteObservation.js";
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from 'moment';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#094492'
+    }
+  }
+});
 
 const styles = {
   card: {
@@ -199,7 +207,6 @@ class ResultsDashboard extends React.Component {
         <Card className={classes.card}>
           <Grid
             container
-            flexGrow={1}
             padding={12}
             spacing={0}
             direction="column"
@@ -218,157 +225,114 @@ class ResultsDashboard extends React.Component {
                 value={this.props.sessionId}
                 onChange={this.props.changeSessionId}
                 InputLabelProps={{ shrink: true }}>
-                {this.props.sessionDates.map(date=> {return <MenuItem id={date.id} value={date.id}>
+                {this.props.sessionDates.map((date, index)=> {return <MenuItem key={index} id={date.id} value={date.id}>
                   <em>{moment(date.sessionStart.value).format("MMM Do YY hh:mm A")}</em>
                   </MenuItem>})}
               </TextField>
             </Grid>
 
             <Grid item className={classes.resultsButtons}>
-              <Button
-                size="large"
-                color={"#094492"}
-                variant={
-                  this.props.view === this.props.viewEnum.SUMMARY
-                    ? "contained"
-                    : "outlined"
-                }
-                className={this.props.view === this.props.viewEnum.SUMMARY ? classes.viewButtonsSelected : classes.viewButtons}
-                onClick={this.props.summaryClick}
-              >
-                Summary
-              </Button>
+              <MuiThemeProvider theme={theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.SUMMARY
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.SUMMARY ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.summaryClick}
+                >
+                  Summary
+                </Button>
+              </MuiThemeProvider>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <Button
-                size="large"
-                color={"#094492"}
-                variant={
-                  this.props.view === this.props.viewEnum.DETAILS
-                    ? "contained"
-                    : "outlined"
-                }
-                className={this.props.view === this.props.viewEnum.DETAILS ? classes.viewButtonsSelected : classes.viewButtons}
-                onClick={this.props.detailsClick}
-              >
-                Details
-              </Button>
+              <MuiThemeProvider theme={theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.DETAILS
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.DETAILS ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.detailsClick}
+                >
+                  Details
+                </Button>
+              </MuiThemeProvider>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <Button
-                size="large"
-                color={"#094492"}
-                variant={
-                  this.props.view === this.props.viewEnum.TRENDS
-                    ? "contained"
-                    : "outlined"
-                }
-                className={this.props.view === this.props.viewEnum.TRENDS ? classes.viewButtonsSelected : classes.viewButtons}
-                onClick={this.props.trendsClick}
-              >
-                Trends
-              </Button>
+              <MuiThemeProvider theme={theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.TRENDS
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.TRENDS ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.trendsClick}
+                >
+                  Trends
+                </Button>
+              </MuiThemeProvider>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <Button
-                size="large"
-                color={"#094492"}
-                variant={
-                  this.props.view === this.props.viewEnum.COACH_PREP
-                    ? "contained"
-                    : "outlined"
-                }
-                className={this.props.view === this.props.viewEnum.COACH_PREP ? classes.viewButtonsSelected : classes.viewButtons}
-                onClick={this.props.coachPrepClick}
-              >
-                Coach Prep
-              </Button>
+              <MuiThemeProvider theme={theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.COACH_PREP
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.COACH_PREP ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.coachPrepClick}
+                >
+                  Coach Prep
+                </Button>
+              </MuiThemeProvider>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <Button
-                size="large"
-                color={"#094492"}
-                variant={
-                  this.props.view === this.props.viewEnum.ACTION_PLAN
-                    ? "contained"
-                    : "outlined"
-                }
-                className={this.props.view === this.props.viewEnum.ACTION_PLAN ? classes.viewButtonsSelected : classes.viewButtons}
-                onClick={this.props.actionPlanClick}
-              >
-                Action Plan
-              </Button>
+              <MuiThemeProvider theme={theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.ACTION_PLAN
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.ACTION_PLAN ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.actionPlanClick}
+                >
+                  Action Plan
+                </Button>
+              </MuiThemeProvider>
             </Grid>
             <Grid item style={{marginTop: "7vh", marginBottom: "2vh"}}>
-              <Button
-                size="large"
-                color={"#094492"}
-                variant={
-                  this.props.view === this.props.viewEnum.NOTES
-                    ? "contained"
-                    : "outlined"
-                }
-                className={this.props.view === this.props.viewEnum.NOTES ? classes.viewButtonsSelected : classes.viewButtons}
-                onClick={this.props.notesClick}
-              >
-                Notes
-              </Button>
-            </Grid>
-            {/* <Grid item className={classes.infoDisplayGrid} style={{alignItems: this.props.infoPlacement}}>
-              {this.props.infoDisplay}
-            </Grid>
-            <Grid
-              container
-              className={classes.gridTopMargin}
-              direction="row"
-              spacing={16}
-              alignItems="center"
-              alignContent="center"
-              justify="center"
-            >
-              <Button className="lookFor" onClick={this.handleHelpModal}>
-                <img src={this.state.lookForsIcon} alt="Look-Fors" className={classes.helpIcon}/>
-              </Button>
-              <Button className="notes" onClick={this.handleNotes}>
-                <img src={this.state.notesIcon} alt="Notes" className={classes.helpIcon}/>
-              </Button>
-            </Grid>
-            <Grid item className={classes.gridTopMargin}>
-              Start Time: {this.state.time}
-            </Grid>
-            {this.props.completeObservation ? (
-              <Grid item className={classes.completeGrid}>
-                <FirebaseContext.Consumer>
-                  {firebase => (
-                    <YesNoDialog
-                      buttonText={<b>COMPLETE OBSERVATION</b>}
-                      buttonVariant={"outlined"}
-                      buttonColor={this.props.color}
-                      buttonStyle={{ margin: 10 }}
-                      dialogTitle={"Are you sure you want to complete this observation?"}
-                      shouldOpen={true}
-                      onAccept={() => {
-                        magic8 === "Classroom Climate" ? this.props.emptyClimateStack()
-                        : magic8 === "Transition Time" ? this.props.resetTransitionTime()
-                        : magic8 === "Sequential Activities" ? this.props.deleteAllCenters()
-                        : this.props.deleteAllCenters();
-                        this.props.history.push({
-                          pathname: "/Home",
-                          state: this.props.history.state
-                        });
-                        firebase.endSession();
-                      }}
-                    />
-                  )}
-                </FirebaseContext.Consumer>
-              </Grid> 
-            ) : (
-              <Grid item className={classes.completeGrid}>
-                <Button variant="outlined" onClick={this.handleIncomplete} className={classes.completeButton}>
-                  <b>COMPLETE OBSERVATION</b>
+              <MuiThemeProvider theme={theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.NOTES
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.NOTES ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.notesClick}
+                >
+                  Notes
                 </Button>
-              </Grid>
-            )} */}
+              </MuiThemeProvider>
+            </Grid>
           </Grid>
         </Card>
       </div>

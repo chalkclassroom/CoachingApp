@@ -15,7 +15,7 @@ const styles = {
     marginRight: "10%"
   },
   tableHeader: {
-    backgroundColor: "#2196f3",
+    backgroundColor: "#094492",
     color: "white",
     fontSize: 14
   },
