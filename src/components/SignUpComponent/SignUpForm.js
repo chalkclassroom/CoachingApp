@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import {withRouter} from "react-router-dom";
+import { connect } from 'react-redux';
 
 const styles = theme => ({
   main: {
@@ -258,5 +259,4 @@ SignUpForm.propTypes = {
   mRole: PropTypes.string.isRequired,
 };
 
-const SignUpFormWithRouter = withRouter(SignUpForm);
-export default withStyles(styles)(SignUpFormWithRouter);
+export default withRouter(connect()(withStyles(styles)(SignUpForm)));

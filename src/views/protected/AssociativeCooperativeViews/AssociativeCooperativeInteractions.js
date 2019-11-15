@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import CenterMenu from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
+import CenterMenuAssocCoop from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
 //import Recs from "./AssociativeCooperativeRecs";
 
@@ -82,7 +82,7 @@ class AssociativeCooperativeInteractions extends React.Component {
         <main style={{ flex: 1 }}>
           <FirebaseContext.Consumer>
             {firebase => 
-              <CenterMenu
+              <CenterMenuAssocCoop
                 teacherId={this.props.location.state.teacher.id}
                 firebase={firebase}
                 onStatusChange={this.handleCompleteButton}

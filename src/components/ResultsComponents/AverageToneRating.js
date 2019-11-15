@@ -17,7 +17,7 @@ const styles = ({
 
 });
 
-class averageToneRating extends React.Component {
+class AverageToneRating extends React.Component {
   constructor(props){
     super(props);
   }
@@ -93,8 +93,8 @@ class averageToneRating extends React.Component {
   }
 }
 
-averageToneRating.propTypes = {
+AverageToneRating.propTypes = {
 
 };
-averageToneRating.contextType = FirebaseContext;
-export default withStyles(styles)(averageToneRating);
+AverageToneRating.contextType = FirebaseContext;
+export default withStyles(styles)(AverageToneRating);

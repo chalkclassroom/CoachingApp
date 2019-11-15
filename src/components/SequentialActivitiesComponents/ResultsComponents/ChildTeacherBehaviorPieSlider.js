@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import Slider from "react-slick";
-import ChildBehaviorsPie from "./SummaryChildBehaviorsPieChart";
-import TeacherBehaviorsPie from "./SummaryTeacherBehaviorsPieChart";
+import SummaryChildBehaviorsPieChart from "./SummaryChildBehaviorsPieChart";
+import SummaryTeacherBehaviorsPieChart from "./SummaryTeacherBehaviorsPieChart";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 
@@ -28,7 +28,7 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
             <Typography align={"center"}>
               Child Behaviors
             </Typography>
-            <ChildBehaviorsPie/>
+            <SummaryChildBehaviorsPieChart/>
           </Grid>
         </div>
         <div>
@@ -36,7 +36,7 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
             <Typography align={"center"}>
               Teacher Behaviors
             </Typography>
-            <TeacherBehaviorsPie/>
+            <SummaryTeacherBehaviorsPieChart/>
           </Grid>
         </div>
       </Slider>

@@ -296,5 +296,4 @@ Dashboard.propTypes = {
   infoDisplay: PropTypes.object.isRequired,
 };
 
-const DashboardWithRouter = withRouter(connect(null, {resetTransitionTime, emptyClimateStack, deleteAllCenters})(Dashboard));
-export default withStyles(styles)(DashboardWithRouter);
+export default withRouter(connect()(withStyles(styles)(Dashboard)));

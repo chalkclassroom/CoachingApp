@@ -7,7 +7,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
 import Notes from "../../../components/Notes";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
-import CenterMenu from "../../../components/SequentialActivitiesComponents/CenterMenuSequentialActivities";
+import CenterMenuSequentialActivities from "../../../components/SequentialActivitiesComponents/CenterMenuSequentialActivities";
 import { deleteAllCenters } from "../../../state/actions/sequential-activities";
 
 const styles = {
@@ -96,7 +96,7 @@ class SequentialActivities extends React.Component {
         <main style={{ flex: 1 }}>
           <FirebaseContext.Consumer>
             {firebase => (
-              <CenterMenu
+              <CenterMenuSequentialActivities
                 firebase={firebase}
                 onStatusChange={this.handleCompleteButton}
               />

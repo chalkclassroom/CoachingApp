@@ -31,6 +31,7 @@ import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
 import TeacherModal from "../views/protected/HomeViews/TeacherModal";
 import FirebaseContext from "./Firebase/FirebaseContext";
+import { connect } from 'react-redux';
 
 const drawerWidth = 240;
 
@@ -426,5 +427,4 @@ BurgerMenu.propTypes = {
   open: PropTypes.bool.isRequired
 };
 
-const BurgerMenuWithRouter = withRouter(BurgerMenu);
-export default withStyles(styles)(BurgerMenuWithRouter);
+export default withRouter(connect()(withStyles(styles)(BurgerMenu)));

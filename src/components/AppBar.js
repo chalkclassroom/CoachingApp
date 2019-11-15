@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles, AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
+import { withStyles, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
+import { AppBar as NavBar } from '@material-ui/core'
 import Logo from '../logo.svg'
 import {withRouter} from 'react-router-dom'
+import { connect } from 'react-redux';
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu"
@@ -51,7 +53,7 @@ const theme = createMuiTheme ({
   shadows: ["none"],
 })
 
-class CommonAppBar extends React.Component{
+class AppBar extends React.Component{
 
   constructor(props) {
     super(props);
@@ -106,7 +108,7 @@ class CommonAppBar extends React.Component{
       <MuiThemeProvider theme = {theme}>
         <div className={classes.root}>
           {this.state.auth ? (
-            <AppBar position="static" color={"primary"}>
+            <NavBar position="static" color={"primary"}>
               <Toolbar>
                 <IconButton
                   color="inherit"
@@ -180,9 +182,9 @@ class CommonAppBar extends React.Component{
                 </Router> 
               </Toolbar>
               <BurgerMenu open={this.state.open} handleClose={this.handleMenu} firebase={this.props.firebase}/>
-            </AppBar>
+            </NavBar>
           ) : ( 
-            <AppBar position="static" color={"primary"}>
+            <NavBar position="static" color={"primary"}>
               <Toolbar>
                 <IconButton
                   color="inherit"
@@ -249,7 +251,7 @@ class CommonAppBar extends React.Component{
               {this.state.signupModal ? (
                 <SignUpModal handleClose={this.handleClose} firebase = {this.props.firebase}/>
               ) : <div/> }
-            </AppBar>
+            </NavBar>
           )}
         </div>
       </MuiThemeProvider>
@@ -257,10 +259,9 @@ class CommonAppBar extends React.Component{
   }
 }
 
-CommonAppBar.propTypes = {
+AppBar.propTypes = {
   classes: PropTypes.object.isRequired,
   firebase: PropTypes.object.isRequired,
 };
 
-const AppBarWithRouter = withRouter(CommonAppBar);
-export default withStyles(styles)(AppBarWithRouter);
+export default withRouter(connect()(withStyles(styles)(AppBar)));
