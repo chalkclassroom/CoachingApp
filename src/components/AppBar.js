@@ -130,13 +130,13 @@ class CommonAppBar extends React.Component{
                 >
                   <img src={Logo} height={'36'} alt={""}/>
                 </IconButton>
-                <Typography
+                {/* <Typography
                   variant="h6"
                   className={classes.menuText}
                   onClick = {() => this.props.history.push("/")}
                 >
                   Classroom Quality - REF
-                </Typography>
+                </Typography> */}
                 <div color="inherit" className={classes.grow}/>
                 <Router>
                   <div>
