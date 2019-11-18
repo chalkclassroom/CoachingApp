@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import "./App.css";
 import WelcomePage from "./views/WelcomeViews/WelcomePage";
-import ClassroomClimate from "./views/protected/ClassroomClimateViews/ClassroomClimate";
-import ClassroomClimateResults from "./views/protected/ClassroomClimateViews/ClassroomClimateResults";
-import Magic8Menu from "./views/protected/Magic8Menu";
-import TransitionResults from "./views/protected/TransitionViews/TransitionResults";
+import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage";
+import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage";
+import Magic8MenuPage from "./views/protected/Magic8MenuPage";
+import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
-import TransitionTime from "./views/protected/TransitionViews/TransitionTime";
-import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPassword";
+import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage";
+import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
 import HomePage from "./views/protected/HomeViews/HomePage";
-import MyTeachers from "./views/protected/MyTeachers/TeacherLists"
+import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage"
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -17,17 +17,17 @@ import {
   MuiThemeProvider,
   withStyles
 } from "@material-ui/core/styles";
-import AssociativeCooperativeInteractions from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractions";
-import AssociativeCooperativeInteractionsResults from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResults";
-import SequentialActivities from "./views/protected/SequentialActivitiesViews/SequentialActivities";
-import SequentialActivitiesResults from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResults";
-import AssociativeCooperativeInteractionsTrainingHome from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingHome";
-import ClassroomClimateTrainingHome from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingHome";
-import SequentialActivitiesTrainingHome from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingHome";
-import TransitionTimeTrainingHome from "./views/protected/TransitionViews/TransitionTimeTrainingHome";
-import About from "./views/WelcomeViews/About";
-import Team from "./views/WelcomeViews/Team";
-import TeacherDetail from "./views/protected/MyTeachers/TeacherDetail";
+import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage";
+import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage";
+import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage";
+import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage";
+import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage";
+import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
+import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage";
+import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage";
+import AboutPage from "./views/WelcomeViews/AboutPage";
+import TeamPage from "./views/WelcomeViews/TeamPage";
+import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 
 
 const styles = createMuiTheme({
@@ -134,72 +134,72 @@ class App extends Component {
             <PrivateRoute
             auth={this.state.auth || !this.state.auth}
             path="/about"
-            component={About}
+            component={AboutPage}
               />
             <PrivateRoute
             auth={this.state.auth || !this.state.auth}
             path = "/team"
-            component = {Team}/>
+            component = {TeamPage}/>
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTime"
-              component={TransitionTime}
+              component={TransitionTimePage}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ClassroomClimate"
-              component={ClassroomClimate}
+              component={ClassroomClimatePage}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractions"
-              component={AssociativeCooperativeInteractions}
+              component={AssociativeCooperativeInteractionsPage}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsResults"
-              component={AssociativeCooperativeInteractionsResults}
+              component={AssociativeCooperativeInteractionsResultsPage}
               />
             <PrivateRoute
             auth={this.state.auth}
             path="/SequentialActivities"
-            component={SequentialActivities}
+            component={SequentialActivitiesPage}
             />
             <PrivateRoute
             auth={this.state.auth}
             path="/SequentialActivitiesResults"
-            component={SequentialActivitiesResults}
+            component={SequentialActivitiesResultsPage}
             />
             <PrivateRoute
                 auth={this.state.auth}
-                path="/AssociativeCooperativeInteractionsTrainingHome"
-                component={AssociativeCooperativeInteractionsTrainingHome}
+                path="/AssociativeCooperativeInteractionsTraining"
+                component={AssociativeCooperativeInteractionsTrainingPage}
             />
             <PrivateRoute
                 auth={this.state.auth}
-                path="/ClassroomClimateTrainingHome"
-                component={ClassroomClimateTrainingHome}
+                path="/ClassroomClimateTraining"
+                component={ClassroomClimateTrainingPage}
             />
             <PrivateRoute
                 auth={this.state.auth}
-                path="/SequentialActivitiesTrainingHome"
-                component={SequentialActivitiesTrainingHome}
+                path="/SequentialActivitiesTraining"
+                component={SequentialActivitiesTrainingPage}
             />
             <PrivateRoute
                 auth={this.state.auth}
-                path="/TransitionTimeTrainingHome"
-                component={TransitionTimeTrainingHome}
+                path="/TransitionTimeTraining"
+                component={TransitionTimeTrainingPage}
             />
             <PrivateRoute
               exact
               auth={this.state.auth}
               path="/MyTeachers"
-              component={MyTeachers}
+              component={TeacherListPage}
             />
             <PrivateRoute
               auth={this.state.auth}
               path={`/MyTeachers/:teacherid`}
-              component={TeacherDetail}
+              component={TeacherDetailPage}
             />
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                             the type prop into the PrivateRoute function*/}
@@ -207,7 +207,7 @@ class App extends Component {
               path="/Magic8Menu"
               render={props =>
                 this.state.auth === true ? (
-                  <Magic8Menu {...props} type={props.location.state.type === "Results" ? "Results" : "Observe"} />
+                  <Magic8MenuPage {...props} type={props.location.state.type === "Results" ? "Results" : "Observe"} />
                 ) : (
                   <Redirect
                     to={{ pathname: "/", state: { from: props.location } }}
@@ -218,12 +218,12 @@ class App extends Component {
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTimeResults"
-              component={TransitionResults}
+              component={TransitionResultsPage}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ClassroomClimateResults"
-              component={ClassroomClimateResults}
+              component={ClassroomClimateResultsPage}
             />
             <Route render={() => <h3>No Match</h3>} />
           </Switch>

@@ -10,6 +10,8 @@ import resource2 from "../../assets/icons/research2.png"
 import resource3 from "../../assets/icons/resource3.png"
 import resource4 from "../../assets/icons/resource4.png"
 import resource5 from "../../assets/icons/resource5.png"
+import { connect } from 'react-redux';
+
 const styles = {
     root: {
         flexGrow: 1,
@@ -21,7 +23,7 @@ const styles = {
     }
 };
 
-class About extends React.Component {
+class AboutPage extends React.Component {
     headerGraphic = props => {
         return (
             <svg viewBox = "-200 -100 1800 1000"{...props}>
@@ -1049,9 +1051,11 @@ class About extends React.Component {
         );
     }
 }
-About.propTypes = {
+AboutPage.propTypes = {
     classes: PropTypes.object.isRequired
   };
 
-const AboutwRouter = withRouter(About)
-export default withStyles(styles)(AboutwRouter);
+//const AboutwRouter = withRouter(About)
+//export default withStyles(styles)(AboutwRouter);
+
+export default withRouter(connect()(withStyles(styles)(AboutPage)));

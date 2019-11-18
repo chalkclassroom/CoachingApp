@@ -247,7 +247,7 @@ const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg,
                    MathInstructionSvg, StudentEngagementSvg,
                    SequentialActivitiesSvg, AssocCoopInteractionsSvg];
 
-class TeacherDetail extends Component {
+class TeacherDetailPage extends Component {
 
   constructor (props) {
     super(props);
@@ -773,9 +773,9 @@ class TeacherDetail extends Component {
   }
 }
 
-TeacherDetail.propTypes = {
+TeacherDetailPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-TeacherDetail.contextType = FirebaseContext;
-export default withStyles(styles)(withRouter(TeacherDetail));
+TeacherDetailPage.contextType = FirebaseContext;
+export default withStyles(styles)(withRouter(TeacherDetailPage));

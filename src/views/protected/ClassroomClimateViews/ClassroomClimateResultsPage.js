@@ -83,7 +83,7 @@ const ViewEnum = {
     NEXT_STEPS: 5
 };
 
-class ClassroomClimateResults extends React.Component {
+class ClassroomClimateResultsPage extends React.Component {
     constructor(props) {
         super(props);
         this.handleAppend = this.handleAppend.bind(this);
@@ -570,8 +570,8 @@ class ClassroomClimateResults extends React.Component {
     }
 }
 
-ClassroomClimateResults.propTypes = {
+ClassroomClimateResultsPage.propTypes = {
     classes: PropTypes.object.isRequired
 };
-ClassroomClimateResults.contextType = FirebaseContext;
-export default withStyles(styles)(ClassroomClimateResults);
+ClassroomClimateResultsPage.contextType = FirebaseContext;
+export default withStyles(styles)(ClassroomClimateResultsPage);

@@ -6,7 +6,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
 import CenterMenuAssocCoop from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
-//import Recs from "./AssociativeCooperativeRecs";
+//import AssociativeCooperativeRecs from "./AssociativeCooperativeRecs";
 
 const styles = {
   root: {
@@ -21,7 +21,7 @@ const styles = {
   }
 };
 
-class AssociativeCooperativeInteractions extends React.Component {
+class AssociativeCooperativeInteractionsPage extends React.Component {
   state = {
     auth: true,
     ratingIsOpen: false,
@@ -95,11 +95,11 @@ class AssociativeCooperativeInteractions extends React.Component {
   }
 }
 
-AssociativeCooperativeInteractions.propTypes = {
+AssociativeCooperativeInteractionsPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
 export default connect(
   null,
   { deleteAllCenters }
-)(withStyles(styles)(AssociativeCooperativeInteractions));
+)(withStyles(styles)(AssociativeCooperativeInteractionsPage));

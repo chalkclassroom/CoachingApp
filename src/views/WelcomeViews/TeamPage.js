@@ -6,6 +6,7 @@ import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from '@material-ui/core/styles';
 import Helmet from 'react-helmet';
 import PlaceholderIcon from "../../assets/icons/KeanuReeves.jpg"
+import { connect } from 'react-redux';
 
 const styles = {
     root: {
@@ -18,7 +19,7 @@ const styles = {
     }
 };
 
-class Team extends React.Component {
+class TeamPage extends React.Component {
 
     teamCards = props => {
       return(
@@ -995,10 +996,11 @@ class Team extends React.Component {
         );
     }
 }
-Team.propTypes = {
+TeamPage.propTypes = {
     classes: PropTypes.object.isRequired
   };
 
-const TeamwRouter = withRouter(Team)
-export default withStyles(styles)(TeamwRouter);
+//const TeamwRouter = withRouter(Team)
+//export default withStyles(styles)(TeamwRouter);
 
+export default withRouter(connect()(withStyles(styles)(TeamPage)));

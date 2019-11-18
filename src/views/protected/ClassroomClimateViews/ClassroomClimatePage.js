@@ -10,7 +10,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter";
 import { connect } from "react-redux";
 import { appendClimateRating, emptyClimateStack } from "../../../state/actions/classroom-climate";
-//import Recs from "./ClassroomClimateRecs";
+//import ClassroomClimateRecs from "./ClassroomClimateRecs";
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
@@ -39,7 +39,7 @@ const styles = ({
   }
 });
 
-class ClassroomClimate extends React.Component {
+class ClassroomClimatePage extends React.Component {
   state = {
     auth: true,
     time: RATING_INTERVAL,
@@ -193,13 +193,13 @@ class ClassroomClimate extends React.Component {
   }
 }
 
-ClassroomClimate.propTypes = {
+ClassroomClimatePage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-ClassroomClimate.contextType = FirebaseContext;
+ClassroomClimatePage.contextType = FirebaseContext;
 
 export default connect(
   null,
   { appendClimateRating, emptyClimateStack }
-)(withStyles(styles)(ClassroomClimate));
+)(withStyles(styles)(ClassroomClimatePage));

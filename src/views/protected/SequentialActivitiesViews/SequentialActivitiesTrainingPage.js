@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
-import AssocCoopIcon from "../../../assets/icons/AssocCoopInteractions.svg";
+import SequentialIcon from "../../../assets/icons/SequentialActivities.svg";
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
@@ -81,7 +81,7 @@ const ViewEnum = {
   KNOWLEDGECHECK: 5
 };
 
-class AssociativeCooperativeInteractionsTrainingHome extends React.Component {
+class SequentialActivitiesTrainingPage extends React.Component {
   constructor(props) {
     super(props);
     this.handleAppend = this.handleAppend.bind(this);
@@ -181,7 +181,7 @@ class AssociativeCooperativeInteractionsTrainingHome extends React.Component {
             <Grid container item xs={3}>
               <List className={classes.buttonsList}>
                 <ListItem style={{display:'flex', justifyContent:'center'}}>
-                  <img src={AssocCoopIcon} width={'100vw'}/>
+                  <img src={SequentialIcon} width={'100vw'}/>
                 </ListItem>
                 <ListItem>
                   <Button
@@ -238,8 +238,8 @@ class AssociativeCooperativeInteractionsTrainingHome extends React.Component {
                     fullWidth={true}
                     variant={
                       this.state.view === ViewEnum.TRYIT
-                        ? "contained"
-                        : "outlined"
+                          ? "contained"
+                          : "outlined"
                     }
                     className={classes.viewButtons}
                     onClick={this.tryItClick}
@@ -267,7 +267,7 @@ class AssociativeCooperativeInteractionsTrainingHome extends React.Component {
             </Grid>
             <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
               <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
-                Training: Associative & Cooperative Tool
+                Training: Sequential Activities Tool
               </Typography>
               <Grid item xs={12}>
                 <div>
@@ -287,7 +287,7 @@ class AssociativeCooperativeInteractionsTrainingHome extends React.Component {
                     null
                   ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
                     <div className={classes.resultsContent}>
-                      <TrainingQuestionnaire section={8}/>
+                      <TrainingQuestionnaire section={7}/>
                     </div> // replace this null with next steps content
                   ) :  null}
                 </div>
@@ -300,8 +300,8 @@ class AssociativeCooperativeInteractionsTrainingHome extends React.Component {
   }
 }
 
-AssociativeCooperativeInteractionsTrainingHome.propTypes = {
+SequentialActivitiesTrainingPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(AssociativeCooperativeInteractionsTrainingHome);
+export default withStyles(styles)(SequentialActivitiesTrainingPage);

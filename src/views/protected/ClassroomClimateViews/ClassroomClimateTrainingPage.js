@@ -4,15 +4,14 @@ import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
-import TransitionTimeIcon from "../../../assets/icons/TransitionTime.svg";
+import ClassroomClimateIcon from "../../../assets/icons/ClassroomClimate.svg";
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
 import 'chartjs-plugin-datalabels';
-import TrainingVideo
-    from "../../../components/Shared/TrainingVideo";
+import TrainingVideo from "../../../components/Shared/TrainingVideo";
 import ChildTeacherBehaviorTrendsSlider
     from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
@@ -81,7 +80,7 @@ const ViewEnum = {
   KNOWLEDGECHECK: 5
 };
 
-class TransitionTimeTrainingHome extends React.Component {
+class ClassroomClimateTrainingPage extends React.Component {
   constructor(props) {
     super(props);
     this.handleAppend = this.handleAppend.bind(this);
@@ -178,11 +177,17 @@ class TransitionTimeTrainingHome extends React.Component {
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
-          <Grid container spacing={0} justify="center" direction={"row"} alignItems={"center"}>
-            <Grid container item xs={3}>
+          <Grid
+            container
+            spacing={0}
+            justify="center"
+            direction={"row"}
+            alignItems={"center"}
+          >
+            <Grid item xs={3}>
               <List className={classes.buttonsList}>
                 <ListItem style={{display:'flex', justifyContent:'center'}}>
-                  <img src={TransitionTimeIcon} width={'100vw'}/>
+                  <img src={ClassroomClimateIcon} width={'100vw'}/>
                 </ListItem>
                 <ListItem>
                   <Button
@@ -266,35 +271,39 @@ class TransitionTimeTrainingHome extends React.Component {
                 </ListItem>
               </List>
             </Grid>
-            <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
-              <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
-                Training: Transition Time Tool
-              </Typography>
-              <Grid item xs={12}>
-                <div>
-                  {this.state.view === ViewEnum.CONCEPTS ? (
-                    <div className={classes.resultsContent}>
-                      <TrainingVideo
-                        videoUrl = {'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com'+
-                        '/o/TT%20Concepts%205-31-19.mp4?alt=media&token=0f968fb5-047a-4fb9-90ec-7149b40a3e9c'}
-                      />
-                    </div>
-                  ) : this.state.view === ViewEnum.EXAMPLE ? (
-                    <div className={classes.resultsContent}>
-                      <TrainingVideo/>
-                    </div>
-                  ) : this.state.view === ViewEnum.DEMONSTRATION ? (
-                    <div className={classes.resultsContent}>
-                      <ChildTeacherBehaviorTrendsSlider/>
-                    </div>
-                  ) : this.state.view === ViewEnum.TRYIT ? (
-                    null
-                  ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
-                    <div className={classes.resultsContent}>
-                      <TrainingQuestionnaire section={1}/>
-                    </div>
-                  ) :  null}
-                </div>
+            <Grid item xs={8}>
+              <Grid
+                container
+                justify="center"
+                direction={"row"}
+                alignItems={"center"}
+              >
+                <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
+                  Training: Classroom Climate Tool
+                </Typography>
+                <Grid item xs={12}>
+                  <div>
+                    {this.state.view === ViewEnum.CONCEPTS ? (
+                      <div className={classes.resultsContent}>
+                        <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/CC%20Concepts%207-17-19.mp4?alt=media&token=2375a7d2-3c6e-4eec-a9c0-a29214db9cdf'}/>
+                      </div>
+                    ) : this.state.view === ViewEnum.EXAMPLE ? (
+                      <div className={classes.resultsContent}>
+                        <TrainingVideo/>
+                      </div>
+                    ) : this.state.view === ViewEnum.DEMONSTRATION ? (
+                      <div className={classes.resultsContent}>
+                        <ChildTeacherBehaviorTrendsSlider/>
+                      </div>
+                    ) : this.state.view === ViewEnum.TRYIT ? (
+                      null
+                    ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
+                      <div className={classes.resultsContent}>
+                        <TrainingQuestionnaire section={2}/>
+                      </div>
+                    ) :  null}
+                  </div>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -304,8 +313,8 @@ class TransitionTimeTrainingHome extends React.Component {
   }
 }
 
-TransitionTimeTrainingHome.propTypes = {
+ClassroomClimateTrainingPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(TransitionTimeTrainingHome);
+export default withStyles(styles)(ClassroomClimateTrainingPage);

@@ -312,7 +312,7 @@ const BehaviorQuestions = [
   "tricky transition, what would it be?"},
 ]
 
-class TransitionResults extends React.Component {
+class TransitionResultsPage extends React.Component {
   constructor(props) {
     super(props);
     this.handleAppend = this.handleAppend.bind(this);
@@ -1109,9 +1109,9 @@ class TransitionResults extends React.Component {
   }
 }
 
-TransitionResults.propTypes = {
+TransitionResultsPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-TransitionResults.contextType = FirebaseContext;
-export default withStyles(styles)(TransitionResults);
+TransitionResultsPage.contextType = FirebaseContext;
+export default withStyles(styles)(TransitionResultsPage);

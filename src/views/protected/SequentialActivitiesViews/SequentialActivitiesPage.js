@@ -23,7 +23,7 @@ const styles = {
   }
 };
 
-class SequentialActivities extends React.Component {
+class SequentialActivitiesPage extends React.Component {
   state = {
     auth: true,
     help: false,
@@ -108,11 +108,11 @@ class SequentialActivities extends React.Component {
   }
 }
 
-SequentialActivities.propTypes = {
+SequentialActivitiesPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
 export default connect(
   null,
   { deleteAllCenters }
-)(withStyles(styles)(SequentialActivities));
+)(withStyles(styles)(SequentialActivitiesPage));

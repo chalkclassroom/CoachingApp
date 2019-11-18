@@ -220,7 +220,7 @@ const sortedAltText = ["Transition Time",       "Classroom Climate",
                        "Sequential Activities", "Assoc Coop Interactions"];
 
 
-class TeacherLists extends Component {
+class TeacherListPage extends Component {
 
   constructor(props) {
     super(props);
@@ -658,9 +658,9 @@ class TeacherLists extends Component {
   }
 }
 
-TeacherLists.propTypes = {
+TeacherListPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-TeacherLists.contextType = FirebaseContext;
-export default withStyles(styles)(withRouter(TeacherLists));
+TeacherListPage.contextType = FirebaseContext;
+export default withStyles(styles)(withRouter(TeacherListPage));

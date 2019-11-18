@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '../../components/AppBar';
-import Landing from './Landing';
+import LandingPage from './LandingPage';
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 
 const styles = {
@@ -24,7 +24,7 @@ class WelcomePage extends React.Component {
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
-        <Landing/>
+        <LandingPage />
       </div>
     );
   }

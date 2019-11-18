@@ -16,7 +16,7 @@ const styles = {
   }
 };
 
-class Welcome extends React.Component {
+class ForgotPasswordPage extends React.Component {
   render() {
     const {classes} = this.props;
     return (
@@ -34,8 +34,8 @@ class Welcome extends React.Component {
   }
 }
 
-Welcome.propTypes = {
+ForgotPasswordPage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Welcome);
+export default withStyles(styles)(ForgotPasswordPage);

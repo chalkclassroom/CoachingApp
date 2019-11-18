@@ -11,7 +11,7 @@ import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import { connect } from "react-redux";
 import { resetTransitionTime } from "../../../state/actions/transition-time";
-//import Recs from "./TransitionTimeRecs";
+//import TransitionTimeRecs from "./TransitionTimeRecs";
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 
@@ -33,7 +33,7 @@ const styles = {
   }
 };
 
-class TransitionTime extends React.Component {
+class TransitionTimePage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -197,11 +197,11 @@ class TransitionTime extends React.Component {
   }
 }
 
-TransitionTime.propTypes = {
+TransitionTimePage.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
 export default connect(
     null,
     { resetTransitionTime }
-)(withStyles(styles)(TransitionTime));
+)(withStyles(styles)(TransitionTimePage));

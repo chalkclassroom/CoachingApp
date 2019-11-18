@@ -14,6 +14,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import TeacherSvg from "../../../assets/icons/teacher.svg";
 import { withRouter } from "react-router-dom";
+import { connect } from 'react-redux';
 
 function getModalStyle() {
   return {
@@ -178,5 +179,4 @@ TeacherModal.propTypes = {
   type: PropTypes.string.isRequired
 };
 
-const TeacherModalWithRouter = withRouter(TeacherModal);
-export default withStyles(styles)(TeacherModalWithRouter);
+export default withRouter(connect()(withStyles(styles)(TeacherModal)));

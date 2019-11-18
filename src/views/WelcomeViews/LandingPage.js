@@ -53,7 +53,7 @@ const styles = {
   }
 };
 
-class Landing extends React.Component {
+class LandingPage extends React.Component {
 　topCard = props => {
   return (
     <svg viewBox="0 0 1470 845" {...props}>
@@ -1008,8 +1008,8 @@ class Landing extends React.Component {
      
     )}
     }
-Landing.propTypes = {
+LandingPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Landing);
+export default withStyles(styles)(LandingPage);

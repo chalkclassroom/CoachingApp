@@ -72,7 +72,7 @@ const MAP = {
   "AssociativeCooperativeInteractions": 8
 };
 
-class Magic8Menu extends Component {
+class Magic8MenuPage extends Component {
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
@@ -112,7 +112,7 @@ class Magic8Menu extends Component {
   handleGoButton = () => {
     if (this.state.page === "Training") {
       this.props.history.push({
-        pathname: `/${this.state.selected}TrainingHome`,
+        pathname: `/${this.state.selected}Training`,
         state: this.props.location.state
       })
     } else if (this.state.unlocked.includes(MAP[this.state.selected])) {
@@ -256,10 +256,10 @@ class Magic8Menu extends Component {
   }
 }
 
-Magic8Menu.propTypes = {
+Magic8MenuPage.propTypes = {
   classes: PropTypes.object.isRequired,
   type: PropTypes.string.isRequired
 };
 
-Magic8Menu.contextType = FirebaseContext;
-export default withStyles(styles)(Magic8Menu);
+Magic8MenuPage.contextType = FirebaseContext;
+export default withStyles(styles)(Magic8MenuPage);
