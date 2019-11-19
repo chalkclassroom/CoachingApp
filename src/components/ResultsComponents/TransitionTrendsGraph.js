@@ -89,7 +89,10 @@ const transitionTrendOptions = {
     intersect: true,
   },
   legend: {
-    display: true
+    display: true,
+    labels: {
+      fontColor: 'black'
+    }
   },
   scales: {
     xAxes: [
@@ -98,7 +101,9 @@ const transitionTrendOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date & Total Time in Transition",
-          fontStyle: "bold"
+          //fontStyle: "bold",
+          fontSize: 18,
+          fontColor: 'black'
         }
       }
     ],
@@ -114,8 +119,10 @@ const transitionTrendOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: "Percentage of Total Time Spent in Transition",
-          fontStyle: "bold"
+          labelString: "Percentage of Time Spent in Transition",
+          //fontStyle: "bold",
+          fontSize: 18,
+          fontColor: 'black'
         }
       }
     ]
@@ -123,7 +130,7 @@ const transitionTrendOptions = {
   plugins: {
     datalabels: {
       display: 'auto',
-      color: 'gray',
+      color: 'black',
       align: 'top',
       formatter: function(value, context) {
         return value + '%';

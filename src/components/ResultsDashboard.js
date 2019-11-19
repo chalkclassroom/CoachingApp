@@ -10,28 +10,6 @@ import InstructionIcon from "../assets/icons/LevelofInstruction.svg"
 import ListeningIcon from "../assets/icons/ListeningtoChildren.svg"
 import SequentialIcon from "../assets/icons/SequentialActivities.svg"
 import AssocCoopIcon from "../assets/icons/AssocCoopInteractions.svg"
-import TransitionTimeNotes from "../assets/icons/NotesTT.svg"
-import ClassroomClimateNotes from "../assets/icons/NotesCC.svg"
-import MathNotes from "../assets/icons/NotesMath.svg"
-import EngagementNotes from "../assets/icons/NotesEngagement.svg"
-import InstructionNotes from "../assets/icons/NotesInstruction.svg"
-import ListeningNotes from "../assets/icons/NotesListening.svg"
-import SequentialNotes from "../assets/icons/NotesSequential.svg"
-import AssocCoopNotes from "../assets/icons/NotesAssocCoop.svg"
-import TransitionTimeLookFors from "../assets/icons/LookForsTT.svg"
-import ClassroomClimateLookFors from "../assets/icons/LookForsCC.svg"
-import MathLookFors from "../assets/icons/LookForsMath.svg"
-import EngagementLookFors from "../assets/icons/LookForsEngagement.svg"
-import InstructionLookFors from "../assets/icons/LookForsInstruction.svg"
-import ListeningLookFors from "../assets/icons/LookForsListening.svg"
-import SequentialLookFors from "../assets/icons/LookForsSequential.svg"
-import AssocCoopLookFors from "../assets/icons/LookForsAssocCoop.svg"
-import Notes from "./Notes";
-import FirebaseContext from "./Firebase/context";
-import { ClickAwayListener } from '@material-ui/core/es';
-import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
-import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
-import IncompleteObservation from "./IncompleteObservation.js";
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from 'moment';
@@ -53,7 +31,6 @@ const styles = {
     height: "100%",
     boxShadow: "5px",
     width: "100%",
-    marginRight: "5%",
     flexDirection: "column",
     alignItems: "center",
     justify: "space-evenly",
@@ -118,90 +95,40 @@ const styles = {
   },
 };
 
+
+
 class ResultsDashboard extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      notes: false,
-      help: false,
       auth: true,
-      time: new Date().toLocaleString("en-US", {
-        hour: "numeric",
-        minute: "numeric",
-        hour12: true
-      }),
-      submitFunc: null,
-      alignFormat: "center",
-      incomplete: false, 
       icon: null,
-      lookForsIcon: null,
-      notesIcon: null
     }
   }
 
   componentDidMount = () => {
-    this.props.magic8 === "Transition Time" ? this.setState({
-      icon: TransitionTimeIcon,
-      lookForsIcon: TransitionTimeLookFors,
-      notesIcon: TransitionTimeNotes})
-    : this.props.magic8 === "Classroom Climate" ? this.setState({
-      icon: ClassroomClimateIcon,
-      lookForsIcon: ClassroomClimateLookFors,
-      notesIcon: ClassroomClimateNotes})
-    : this.props.magic8 === "Math" ? this.setState({
-      icon: MathIcon,
-      lookForsIcon: MathLookFors,
-      notesIcon: MathNotes})
-    : this.props.magic8 === "Level of Engagement" ? this.setState({
-      icon: EngagementIcon,
-      lookForsIcon: EngagementLookFors,
-      notesIcon: EngagementNotes})
-    : this.props.magic8 === "Level of Instruction" ? this.setState({
-      icon: InstructionIcon,
-      lookForsIcon: InstructionLookFors,
-      notesIcon: InstructionNotes})
-    : this.props.magic8 === "Listening to Children" ? this.setState({
-      icon: ListeningIcon,
-      lookForsIcon: ListeningLookFors,
-      notesIcon: ListeningNotes})
-    : this.props.magic8 === "Sequential Activities" ? this.setState({
-      icon: SequentialIcon,
-      lookForsIcon: SequentialLookFors,
-      notesIcon: SequentialNotes})
-    : this.setState({
-      icon: AssocCoopIcon,
-      lookForsIcon: AssocCoopLookFors,
-      notesIcon: AssocCoopNotes})
-  };
-
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-
-  handleClickAwayHelp = () => {
-    this.setState({ help: false });
-  };
-
-  handleNotes = open => {
-    if (open) {
-      this.setState({ notes: true });
+    if (this.props.magic8 === "Transition Time") {
+      this.setState({ icon: TransitionTimeIcon });
+    } else if (this.props.magic8 === "Classroom Climate") {
+      this.setState({ icon: ClassroomClimateIcon })
+    } else if (this.props.magic8 === "Math") {
+      this.setState({ icon: MathIcon })
+    } else if (this.props.magic8 === "Level of Engagement") {
+      this.setState({ icon: EngagementIcon })
+    } else if (this.props.magic8 === "Level of Instruction") {
+      this.setState({ icon: InstructionIcon })
+    } else if (this.props.magic8 === "Listening to Children") {
+      this.setState({ icon: ListeningIcon })
+    } else if (this.props.magic8 === "Sequential Activities") {
+      this.setState({ icon: SequentialIcon })
     } else {
-      this.setState({ notes: false });
+      this.setState({ icon: AssocCoopIcon })
     }
   };
 
-  handleIncomplete = () => {
-    this.setState({ incomplete: true });
-  };
-
-  handleClickAwayIncomplete = () => {
-    this.setState({ incomplete: false });
-  }
-
   render(){
     const { classes } = this.props;
-    const magic8 = this.props.magic8;
     return(
       <div>
         <Card className={classes.card}>
@@ -224,9 +151,11 @@ class ResultsDashboard extends React.Component {
                 label="Date"
                 value={this.props.sessionId}
                 onChange={this.props.changeSessionId}
-                InputLabelProps={{ shrink: true }}>
-                {this.props.sessionDates.map((date, index)=> {return <MenuItem key={index} id={date.id} value={date.id}>
-                  <em>{moment(date.sessionStart.value).format("MMM Do YY hh:mm A")}</em>
+                InputLabelProps={{ shrink: true }}
+              >
+                {this.props.sessionDates.map((date, index)=> 
+                  {return <MenuItem key={index} id={date.id} value={date.id}>
+                    <em>{moment(date.sessionStart.value).format("MMM Do YY")}</em>
                   </MenuItem>})}
               </TextField>
             </Grid>
@@ -237,14 +166,14 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.SUMMARY
+                    this.props.view === this.props.viewEnum.DATA
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.SUMMARY ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.summaryClick}
+                  className={this.props.view === this.props.viewEnum.DATA ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.dataClick}
                 >
-                  Summary
+                  Data
                 </Button>
               </MuiThemeProvider>
             </Grid>
@@ -254,31 +183,14 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.DETAILS
+                    this.props.view === this.props.viewEnum.QUESTIONS
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.DETAILS ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.detailsClick}
+                  className={this.props.view === this.props.viewEnum.QUESTIONS ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.questionsClick}
                 >
-                  Details
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item className={classes.resultsButtons}>
-              <MuiThemeProvider theme={theme}>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant={
-                    this.props.view === this.props.viewEnum.TRENDS
-                      ? "contained"
-                      : "outlined"
-                  }
-                  className={this.props.view === this.props.viewEnum.TRENDS ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.trendsClick}
-                >
-                  Trends
+                  Questions
                 </Button>
               </MuiThemeProvider>
             </Grid>
@@ -341,10 +253,16 @@ class ResultsDashboard extends React.Component {
 }
 
 ResultsDashboard.propTypes = {
-  //magic8: PropTypes.string.isRequired,
-  //color: PropTypes.string.isRequired,
-  //infoDisplay: PropTypes.object.isRequired,
+  magic8: PropTypes.string.isRequired,
+  dataClick: PropTypes.func.isRequired,
+  questionsClick: PropTypes.func.isRequired,
+  coachPrepClick: PropTypes.func.isRequired,
+  actionPlanClick: PropTypes.func.isRequired,
+  notesClick: PropTypes.func.isRequired,
+  changeSessionId: PropTypes.func.isRequired,
+  sessionId: PropTypes.string.isRequired,
+  sessionDates: PropTypes.array.isRequired,
+  viewEnum: PropTypes.object.isRequired
 };
 
-//const DashboardWithRouter = withRouter(connect(null, {resetTransitionTime, emptyClimateStack, deleteAllCenters})(Dashboard));
 export default withStyles(styles)(ResultsDashboard);

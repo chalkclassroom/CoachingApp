@@ -47,7 +47,7 @@ class TransitionBarChart extends React.Component {
                 scaleLabel: {
                   display: true,
                   labelString: "Percentage of Time in Each Transition Type",
-                  fontSize: 22,
+                  fontSize: 18,
                   fontColor: "#000000",
                 },
                 afterFit: function(scale) {
@@ -63,7 +63,7 @@ class TransitionBarChart extends React.Component {
                 scaleLabel: {
                   display: true,
                   labelString: "Transition Types",
-                  fontSize: 22,
+                  fontSize: 18,
                   fontColor: "#000000"
                 },
                 afterFit: function(scale) {
@@ -97,6 +97,8 @@ class TransitionBarChart extends React.Component {
             }
           }
         }}
+        width={650}
+        height={400}
       />
     );
   }
