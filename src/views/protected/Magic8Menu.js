@@ -115,7 +115,7 @@ class Magic8Menu extends Component {
         pathname: `/${this.state.selected}TrainingHome`,
         state: this.props.location.state
       })
-    } //else if (this.state.unlocked.includes(MAP[this.state.selected])) {
+    } else if (this.state.unlocked.includes(MAP[this.state.selected])) {
       if (this.state.page === "Observation") {
         this.props.history.push({
           pathname: `/${this.state.selected}`,
@@ -126,7 +126,7 @@ class Magic8Menu extends Component {
           pathname: `/${this.state.selected}Results`,
           state: this.props.location.state
         })
-     // }
+     }
     }
   };
 
@@ -232,8 +232,8 @@ class Magic8Menu extends Component {
           <CardRow>
             <Button
               className = {classes.goButton}
-              // disabled = {this.state.page === "Training" ? (this.state.allowed ? false : true)
-              //   : (this.state.unlocked.includes(MAP[this.state.selected]) && this.state.allowed ? false : true)}
+              disabled = {this.state.page === "Training" ? (this.state.allowed ? false : true)
+                : (this.state.unlocked.includes(MAP[this.state.selected]) && this.state.allowed ? false : true)}
               style={{
                 opacity: this.state.page === "Training" ? (this.state.allowed ? 1 : 0.5)
                 : (this.state.unlocked.includes(MAP[this.state.selected]) && this.state.allowed ? 1: 0.5),
