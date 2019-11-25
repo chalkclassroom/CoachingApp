@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles, AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import Logo from '../logo.svg'
 import {withRouter} from 'react-router-dom'
 import LoginModal from "./LoginComponent/LoginModal";
@@ -36,13 +37,28 @@ const styles = {
   },
   menuText: {
     color:'#FFFFFF'
+  },
+  chalkText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    lineHeight: '110%',
+    letterSpacing: '0.12em',
+    textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'
+  },
+  coachingText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'normal',
+    lineHeight: '110%',
+    letterSpacing: '0.05em'
   }
 };
 
 const theme = createMuiTheme ({
   palette: {
     primary: {
-      main: '#A1C4FD'
+      main: '#459aeb'
     },
     secondary: {
       main: '#FFFFFF'
@@ -130,13 +146,25 @@ class CommonAppBar extends React.Component{
                 >
                   <img src={Logo} height={'36'} alt={""}/>
                 </IconButton>
-                <Typography
-                  variant="h6"
-                  className={classes.menuText}
-                  onClick = {() => this.props.history.push("/")}
-                >
-                  Classroom Quality - REF
-                </Typography>
+                <Grid direction="column" justify="center" alignItems="flex-start">
+                  <Grid item>
+                    <Typography
+                      variant="h6"
+                      className={classes.chalkText}
+                      onClick = {() => this.props.history.push("/")}
+                    >
+                      CHALK
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography 
+                      variant="h6"
+                      className={classes.coachingText}
+                    >
+                      COACHING
+                    </Typography>
+                  </Grid>
+                </Grid>
                 <div color="inherit" className={classes.grow}/>
                 <Router>
                   <div>

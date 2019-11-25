@@ -11,6 +11,33 @@ import slide2 from "../../assets/slides/slide2.png";
 import slide3 from "../../assets/slides/slide3.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
+import Grid from '@material-ui/core/Grid/Grid';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Logo from '../../logo.svg';
+import PieChartSvg from '../../assets/icons/PieChartSvg.svg';
+import HighFiveSvg from '../../assets/icons/HighFiveSvg.svg';
+import BookSvg from '../../assets/icons/BookSvg.svg';
+import FeedbackSvg from '../../assets/icons/FeedbackSvg.svg';
+import MedalSvg from '../../assets/icons/MedalSvg.svg';
+import LightbulbSvg from '../../assets/icons/LightbulbSvg.svg';
+import BoxSvg from '../../assets/icons/BoxSvg.svg';
+import SchoolSvg from '../../assets/icons/SchoolSvg.svg';
+import ProblemSvg from '../../assets/icons/ProblemSvg.svg';
+import LightbulbImpactSvg from '../../assets/icons/LightbulbImpactSvg.svg';
+import PilotProgramSvg from '../../assets/icons/PilotProgramSvg.svg';
+import EventsSvg from '../../assets/icons/EventsSvg.svg';
+import SearchEngineSvg from '../../assets/icons/SearchEngineSvg.svg';
+//import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography/Typography';
+import HowEmpowers from '../../components/HowEmpowers.js';
+import TextField from '@material-ui/core/TextField';
+import Input from '@material-ui/core/Input';
+import Fab from '@material-ui/core/Fab';
+import iPadSvg from '../../assets/icons/iPadSvg.svg';
+import CoachWithAppSvg from '../../assets/icons/CoachWithAppSvg.svg';
+import BlueMaskSvg from '../../assets/icons/BlueMaskSvg.svg';
+import CoachWithAppJpg from '../../assets/icons/CoachWithAppJpg.JPG';
 
 const styles = {
   paper: {
@@ -50,10 +77,557 @@ const styles = {
     top: "2px",
     maxWidth: "100vw",
     maxHeight: "calc(100vh - 82px)"
+  },
+  chalkTitle: {
+    fontFamily: 'Arial',
+    fontSize: 50,
+    color: 'white',
+    lineHeight: '130%',
+    letterSpacing: '0.05em',
+    textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'
+  },
+  tagline: {
+    fontFamily: 'Arial',
+    fontSize: 24,
+    color: 'white',
+    textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'
+  },
+  blueMask: {
+    position: 'absolute',
+    bottom: 0,
+    background: 'linear-gradient(to right, rgba(69, 154, 235, 0.3), rgba(69, 154, 235, 0.3))',
+    width: '100%',
   }
 };
 
+const inputProps = {
+  disableUnderline: true
+}
+
 class Homepage extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    const { classes } = this.props;
+    return(
+      <Grid container direction="column" justify="center" alignContent="center">
+        <Grid container direction="row" justify="center" alignContent="center">
+          <img src={CoachWithAppJpg} alt="Coach and Teacher" width="100%" style={{filter: 'blur(5px)', position: 'relative', background: 'linear-gradient(to right, rgba(69, 154, 235, 0.3), rgba(69, 154, 235, 0.3))'}}/>
+          <div className={classes.blueMask} />
+          {/* <img src={CoachWithAppSvg} alt="Coach and Teacher" width="100%" style={{ position: 'relative'}}/> */}
+          {/* <Grid item xs={12} className={classes.blueMask} style={{position: 'absolute', width: '100vw', height: '90vh'}} /> */}
+          <Grid item xs={10} style={{position: 'absolute', paddingTop: '10vh'}}>
+            <Grid container direction="row" justify="flex-start" alignItems="center">
+              <Grid xs={6} style={{paddingTop: '5vh'}}>
+                <Typography className={classes.chalkTitle}>
+                  <strong>C</strong>oaching to
+                </Typography>
+                <Typography className={classes.chalkTitle}>
+                  <strong>H</strong>elp
+                </Typography>
+                <Typography className={classes.chalkTitle}>
+                  <strong>A</strong>ctivate
+                </Typography>
+                <Typography className={classes.chalkTitle}>
+                  <strong>L</strong>earning for
+                </Typography>
+                <Typography className={classes.chalkTitle}>
+                  <strong>K</strong>ids
+                </Typography>
+                <Typography className={classes.tagline} style={{paddingTop: '10vh'}}>
+                  Empowering coaches and teachers
+                </Typography>
+                <Typography className={classes.tagline}>
+                  to use meaningful data
+                </Typography>
+                <Typography className={classes.tagline}>
+                  to benefit young children
+                </Typography>
+              </Grid>
+              <Grid xs={6}>
+                <Grid container direction="column" justify="center" alignItems="center" style={{}}>
+                  <Grid item style={{}} alignItems="center" alignContent="center">
+                    <img src={iPadSvg} alt="tablet" width='100%'/>
+                  </Grid>
+                  <Grid item style={{paddingTop: '4vh'}}>
+                    <Fab variant="extended" style={{color: '#459aeb', backgroundColor: '#ffffff', fontSize: 16}}> 
+                      <strong>SEE DEMO</strong>
+                    </Fab>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        {/* <Grid container direction="row" justify="center" alignContent="center">
+          <div style={{backgroundImage: `url(${CoachWithAppSvg}), url(${BlueMaskSvg})`, width: '100%'}}>
+            <Grid item xs={2} />
+            <Grid item xs={4}>
+              <Grid container direction="column" justify="center" alignItems="center">
+                <Grid item>
+                  <Typography style={{fontFamily: 'Arial', paddingTop: 40, fontSize: 50, color: 'white', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                    <strong>C oaching to</strong>
+                  </Typography>
+                  <Typography style={{fontFamily: 'Arial', fontSize: 50, color: 'white', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                    <strong>H elp</strong>
+                  </Typography>
+                  <Typography style={{fontFamily: 'Arial', fontSize: 50, color: 'white', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                    <strong>A ctivate</strong>
+                  </Typography>
+                  <Typography style={{fontFamily: 'Arial', fontSize: 50, color: 'white', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                    <strong>L earning for</strong>
+                  </Typography>
+                  <Typography style={{fontFamily: 'Arial', fontSize: 50, color: 'white', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                    <strong>K ids</strong>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography style={{fontFamily: 'Arial', color: 'white', fontSize: 24, paddingLeft: 40, paddingTop: 30}}>
+                    Empowering coaches and teachers to use meaningful data to benefit young children
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
+        </Grid> */}
+        <Grid container direction="column" justify="center" alignContent="center" style={{backgroundColor: '#dbebfb'}}>
+          <Grid item>
+            <Typography style={{fontFamily: 'Avenir', color: '#459aeb', fontSize: 42, textAlign: 'center'}}>
+              Why <strong>CHALK?</strong>
+            </Typography>
+          </Grid>
+          <Grid item style={{padding: 10}}>
+            <Grid container direction="row" justify="center" alignContent="center">
+              <Grid item xs={4}>
+                <Grid container direction="row" justify="flex-end" alignContent="center">
+                  <Grid container direction="column" justify="center" alignContent="center">
+                    <Grid item>
+                      <img alt="School" src={SchoolSvg} />
+                    </Grid>
+                    <Grid item>
+                      <Typography style={{fontFamily: 'Avenir', color: '#094492', fontSize: 20, textAlign: 'center'}}>
+                        <strong>IMPACT</strong>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={8}>
+                <Grid container direction="row" justify="flex-start" alignContent="center">
+                  <Typography style={{fontFamily: 'Avenir', color: '#2f4b65'}}>
+                    Research shows that high-quality pre-k education supports
+                    children's early cognitive development and future achievement.
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item style={{padding: 10}}>
+            <Grid container direction="row" justify="center" alignContent="center">
+              <Grid item xs={4}>
+                <Grid container direction="row" justify="flex-end" alignContent="center">
+                  <Grid container direction="column" justify="center" alignContent="center">
+                    <Grid item>
+                      <img alt="Problem" src={ProblemSvg} />
+                    </Grid>
+                    <Grid item>
+                      <Typography style={{fontFamily: 'Avenir', color: '#094492', fontSize: 20, textAlign: 'center'}}>
+                        <strong>PROBLEM</strong>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={8}>
+                <Grid container direction="row" justify="flex-start" alignItems="center">
+                  <Typography style={{fontFamily: 'Avenir', color: '#2f4b65', paddingRight: 50}}>
+                    However, current tools to observe and track classroom 
+                    practices over time are difficult to use and time-consuming.
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item style={{padding: 10}}>
+            <Grid container direction="row" justify="center" alignContent="center">
+              <Grid item xs={4}>
+                <Grid container direction="row" justify="flex-end" alignContent="center">
+                  <Grid container direction="column" justify="center" alignContent="center">
+                    <Grid item>
+                      <img alt="Lightbulb" src={LightbulbImpactSvg} />
+                    </Grid>
+                    <Grid item>
+                      <Typography style={{fontFamily: 'Avenir', color: '#094492', fontSize: 20, textAlign: 'center'}}>
+                        <strong>MISSION</strong>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={8}>
+                <Grid container direction="row" justify="flex-start" alignContent="center">
+                  <Typography style={{fontFamily: 'Avenir', color: '#2f4b65', fontSize: 16, paddingRight: 50}}>
+                    CHALK's mission is to advance pre-k quality with an easy-to-use 
+                    tool for coaches and teachers that:
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container direction="row" justify="center" alignContent="center" style={{backgroundColor: '#459aeb'}}>
+          <Grid item xs={4} style={{padding: 30}}>
+            <Grid container justify="center" alignContent="center">
+              <Card style={{paddingTop: 10, width: '80%', height: '40vh', borderRadius: '10px'}}>
+                <CardContent>
+                  <Grid container direction="column">
+                    <Grid container direction="row">
+                      <Grid item xs={3}>
+                        {/* <Avatar alt="Owl" src={Logo} /> */}
+                        <img alt="Owl" src={Logo} style={{width: '80%', height: '90%'}}/>
+                      </Grid>
+                      <Grid item xs={9}>
+                        <Typography style={{color: '#2f4b65', fontSize: 20, fontFamily: 'Avenir'}}>
+                          Key Classroom Practices
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container direction="row" style={{paddingTop: 20}}>
+                      <Grid item>
+                        <Typography style={{color: '#5e7b97'}}>
+                          Our tool focuses on key classroom practices that predict
+                          children's gains across multiple academic and self-regulation
+                          domains.
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+          <Grid item xs={4} style={{padding: 30}}>
+            <Grid container justify="center" alignContent="center">
+              <Card style={{padding: 10, width: '80%', height: '40vh', borderRadius: '10px'}}>
+                <CardContent>
+                  <Grid container direction="column">
+                    <Grid container direction="row">
+                      <Grid item xs={3}>
+                        {/* <Avatar alt="Owl" src={Logo} /> */}
+                        <img alt="Search" src={SearchEngineSvg} style={{width: '80%', height: '90%'}}/>
+                      </Grid>
+                      <Grid item xs={9}>
+                        <Typography style={{color: '#2f4b65', fontSize: 20, fontFamily: 'Avenir'}}>
+                          Observation Tools
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container direction="row" style={{paddingTop: 20}}>
+                      <Grid item>
+                        <Typography style={{color: '#5e7b97'}}>
+                          CHALK provides targeted observation tools that allow 
+                          instructional coaches to easily track key classroom 
+                          practices on their digital devices in real-time.
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+          <Grid item xs={4} style={{padding: 30}}>
+            <Grid container justify="center" alignContent="center">
+              <Card style={{padding: 10, width: '80%', height: '40vh', borderRadius: '10px'}}>
+                <CardContent>
+                  <Grid container direction="column">
+                    <Grid container direction="row">
+                      <Grid item xs={3}>
+                        {/* <Avatar alt="Owl" src={Logo} /> */}
+                        <img alt="Pie Chart" src={PieChartSvg} style={{width: '80%', height: '90%'}}/>
+                      </Grid>
+                      <Grid item xs={9}>
+                        <Typography style={{color: '#2f4b65', fontSize: 20, fontFamily: 'Avenir'}}>
+                          Visualized Data
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid container direction="row" style={{paddingTop: 20}}>
+                      <Grid item>
+                        <Typography style={{color: '#5e7b97'}}>
+                          Our tool instantly transforms observation data into 
+                          user-friendly visualizations for coaches and teachers 
+                          to engage in data-driven coaching conversations for 
+                          professional growth.
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container direction="column" justify="center" alignContent="center">
+          <Grid item style={{padding: 20}}>
+            <Typography style={{fontFamily: 'Avenir', fontSize: 42, color:'#233342', textAlign: 'center'}}>
+              How CHALK empowers coaches and teachers
+            </Typography>
+          </Grid>
+          <Grid item style={{paddingTop: 20}}>
+            <Grid container direction="row">
+              <Grid item xs={6}>
+                <HowEmpowers
+                  icon={HighFiveSvg}
+                  iconAlt="High Five"
+                  title="Empowering Teachers and Coaches"
+                  text="Our tool encourages coaches and teachers to work together
+                  in setting data-driven goals to improve specifc classroom
+                  practices that benefit children."
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <HowEmpowers
+                  icon={BookSvg}
+                  iconAlt="Book"
+                  title="Grounded in Rigorous Research"
+                  text="Users are guided to observe targeted instructional practices that
+                  have predicted academic and self-regulation gains for children
+                  across hundreds of observations in early childhood classrooms."
+                />
+                {/* <Grid container direction="column">
+                  <Grid item>
+                    <Grid container direction="row">
+                      <Grid item xs={2} />
+                      <Grid item xs={2}>
+                        <img alt="Book" src={BookIconSvg} width="80%" />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography style={{fontFamily: 'Avenir', fontSize: 20, fontColor: '#2f4b65'}}>
+                          Grounded in Rigorous Research
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2} />
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <Grid container direction="row">
+                      <Grid item xs={2} />
+                      <Grid item xs={2} />
+                      <Grid item xs={6}>
+                        <Typography style={{fontFamily: 'Avenir', fontSize: 16, fontColor: '#2f4b65'}}>
+                          Users are guided to observe targeted instructional practices that
+                          have predicted academic and self-regulation gains for children
+                          across hundreds of observations in early childhood classrooms.
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2} />
+                    </Grid>
+                  </Grid>
+                </Grid> */}
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item style={{paddingTop: 20}}>
+            <Grid container direction="row">
+              <Grid item xs={6}>
+                <HowEmpowers
+                  icon={FeedbackSvg}
+                  iconAlt="Feedback"
+                  title="Individualized and Timely Feedback"
+                  text="Data collected from classroom observations are
+                    instantly transformed into simple visualizations and 
+                    guidance for next steps."
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <HowEmpowers
+                  icon={MedalSvg}
+                  iconAlt="Medal"
+                  title="Target Key Classroom Practices"
+                  text="Our tool focuses on characteristics of the classroom 
+                    environment that have a direct, meaningful impact on 
+                    children's learning."
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item style={{paddingTop: 20, paddingBottom: 20}}>
+            <Grid container direction="row">
+              <Grid item xs={6}>
+                <HowEmpowers
+                  icon={LightbulbSvg}
+                  iconAlt="Lightbulb"
+                  title="Emphasis on Teacher Learning"
+                  text="Teacher reflection and goal-setting in collaboration
+                    with responsive coaches builds a culture of learning
+                    and self efficacy."
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <HowEmpowers
+                  icon={BoxSvg}
+                  iconAlt="Box"
+                  title="Works Across Any Curriculum"
+                  text="We focus on classroom practices that are 
+                    important across curricula so teachers and coaches 
+                    can apply this tool to any curriculum they use."
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container direction="column" justify="center" alignContent="center" style={{backgroundColor: '#dbebfb'}}>
+          <Grid item>
+            <Typography style={{fontFamily: 'Avenir', color: '#459aeb', fontSize: 42, paddingLeft: '10%', paddingTop: 20}}>
+              <strong>GET INVOLVED</strong>
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container direction="row">
+              <Grid item xs={6}>
+                <HowEmpowers
+                  icon={PilotProgramSvg}
+                  iconAlt="Participation"
+                  title="Participate in our pilot program!"
+                  text="If you are interested in piloting our tool,
+                    we would love your feedback so we can make CHALK
+                    the best it can be!"
+                  button="Fill out form"
+                />
+                {/* <Grid container direction="column">
+                  <Grid item>
+                    <Grid container direction="row">
+                      <Grid item xs={2} />
+                      <Grid item xs={2}>
+                        <img alt="Book" src={BookIconSvg} width="80%" />
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography style={{fontFamily: 'Avenir', fontSize: 20, fontColor: '#2f4b65'}}>
+                          Grounded in Rigorous Research
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2} />
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <Grid container direction="row">
+                      <Grid item xs={2} />
+                      <Grid item xs={2} />
+                      <Grid item xs={6}>
+                        <Typography style={{fontFamily: 'Avenir', fontSize: 16, fontColor: '#2f4b65'}}>
+                          Users are guided to observe targeted instructional practices that
+                          have predicted academic and self-regulation gains for children
+                          across hundreds of observations in early childhood classrooms.
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2} />
+                    </Grid>
+                  </Grid>
+                </Grid> */}
+              </Grid>
+              <Grid item xs={6}>
+                <HowEmpowers
+                  icon={EventsSvg}
+                  iconAlt="People"
+                  title="Join us at our upcoming events!"
+                  text="We give frequent presentations and demonstrations
+                    of CHALK. See a list of these events here!"
+                  button="View our events"
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Grid container direction="row" justify="flex-start" alignItems="center">
+              <Grid item xs={2} />
+              <Grid item xs={4}>
+                <Typography style={{fontFamily: 'Avenir', color: '#2f4b65', fontSize: 20, paddingTop: 30}}>
+                  Stay informed with our mailing list!
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Grid container direction="row" justify="flex-start" alignItems="center">
+                <TextField label="Enter your email here" margin="normal" InputProps={inputProps} style={{backgroundColor: 'white', borderRadius: 10, textAlign: 'center', width: '100%'}}/>
+                </Grid>
+              </Grid>
+              <Grid item xs={3}>
+              <Grid container direction="row" justify="flex-start" alignItems="center">
+                <Fab variant="extended" style={{color: '#ffffff', backgroundColor: '#459aeb', fontSize: 14}}>
+                  <strong>Join mailing list</strong>
+                </Fab>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Homepage2 extends React.Component {
 　topCard = props => {
   return (
     <svg viewBox="0 0 1470 845" {...props}>
