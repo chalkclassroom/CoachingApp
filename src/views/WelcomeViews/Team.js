@@ -16,6 +16,7 @@ import VanderbiltPeabodyLogo from "../../assets/icons/VanderbiltPeabodyLogo.png"
 import WondryLogo from "../../assets/icons/TheWondry.png";
 import VanderbiltEngineeringLogo from "../../assets/icons/engineering.png";
 import AbtLogo from "../../assets/icons/AbtLogo.png";
+import MNPSLogo from "../../assets/icons/MNPSLogo.jpg";
 import * as Constants from '../../constants';
 
 
@@ -280,7 +281,7 @@ class Team extends React.Component {
                   </Grid>
                   <Grid item xs={4} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      {/* insert MNPS logo here */}
+                      <img src={MNPSLogo} alt="Metro Nashville Public Schools" style={{maxWidth: 250}}/>
                     </Grid>
                   </Grid>
                   <Grid item xs={4} style={{padding: 20}}>
@@ -467,21 +468,25 @@ class Team extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={3} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      {/* insert MNPS logo here */}
-                    </Grid>
-                  </Grid>
                   <Grid item xs={6} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
                       <img src={AbtLogo} alt="Abt Associates" style={{maxWidth: 200}}/>
                     </Grid>
                   </Grid>
-                  <Grid item xs={3} style={{padding: 20}}>
+                  <Grid item xs={6} style={{padding: 20}}>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <img src={MNPSLogo} alt="Metro Nashville Public Schools" style={{maxWidth: 200}}/>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <Grid item xs={3} style={{padding: 20}} />
+                  <Grid item xs={6} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
                       {/* insert TSU logo here */}
                     </Grid>
                   </Grid>
+                  <Grid item xs={3} style={{padding: 20}} />
                 </Grid>
               </Grid>
             </Grid>
