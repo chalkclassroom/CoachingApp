@@ -11,9 +11,11 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import TeacherSvg from "../../../assets/icons/teacher.svg";
+//import Avatar from "@material-ui/core/Avatar";
+//import TeacherSvg from "../../../assets/icons/teacher.svg";
 import { withRouter } from "react-router-dom";
+import StarsIcon from '@material-ui/icons/Stars';
+import * as Constants from '../../../constants';
 
 function getModalStyle() {
   return {
@@ -135,16 +137,17 @@ class TeacherModal extends React.Component {
                 {this.state.teachers.map((teacher, index) => (
                   <ListItem
                       key={index}
-                      alignItems="flex-start"
+                      alignItems="center"
                       onClick={() =>
                           this.selectTeacher(teacher)
                       }
                   >
                     <ListItemAvatar>
-                      <Avatar
+                      {/* <Avatar
                         alt="Teacher Profile Pic"
                         src={TeacherSvg}
-                      />
+                      /> */}
+                      <StarsIcon style={{color: Constants.SequentialColor }}/>
                     </ListItemAvatar>
                     <ListItemText
                       primary={teacher.firstName +" "+ teacher.lastName}
