@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from "@material-ui/core/Typography/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import CC from "../assets/icons/CHC.jpg";
-import DM from "../assets/icons/DM.jpg";
-import KN from "../assets/icons/KN.jpg";
-import CS from "../assets/icons/CS.jpg";
+import CC from "../assets/icons/CCImage.jpg";
+import DM from "../assets/icons/DMImage.jpg";
+import KN from "../assets/icons/KNImage.jpg";
+import CS from "../assets/icons/CSImage.jpg";
 
 const styles = {
   imageBox: {

@@ -10,8 +10,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select";
-import { ReactComponent as GenerateReportSVG } from "../../../assets/icons/generateReport.svg";
-import AssocCoopIcon from "../../../assets/icons/AssocCoopInteractions.svg";
+import { ReactComponent as GenerateReport } from "../../../assets/icons/GenerateReportImage.svg";
+import AssocCoopIcon from "../../../assets/icons/AssocCoopIconImage.svg";
 import { withStyles } from "@material-ui/core/styles";
 //import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
@@ -624,7 +624,7 @@ class AssociativeCooperativeInteractionsResults extends React.Component {
                                 </ListItem>
                                 <ListItem>
                                     <IconButton className={classes.generateReport}>
-                                        <GenerateReportSVG
+                                        <GenerateReport
                                             style={{
                                                 height: "10vh",
                                                 width: "10vh"

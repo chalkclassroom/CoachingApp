@@ -7,14 +7,14 @@ import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/context";
 import AppBar from "../../components/AppBar";
 import { withStyles } from "@material-ui/core/styles";
-import AssociativeCooperativeIcon from "../../assets/icons/AssocCoopInteractions.svg";
-import ClassroomClimateIcon from "../../assets/icons/ClassroomClimate.svg";
-import LevelInstructionIcon from "../../assets/icons/LevelofInstruction.svg";
-import ListenToChildrenIcon from "../../assets/icons/ListeningtoChildren.svg";
-import MathInstructionIcon from "../../assets/icons/MathInstruction.svg";
-import SequentialActivitiesIcon from "../../assets/icons/SequentialActivities.svg";
-import StudentEngagementIcon from "../../assets/icons/StudentEngagement.svg";
-import TransitionTimeIcon from "../../assets/icons/TransitionTime.svg";
+import AssocCoopIcon from "../../assets/icons/AssocCoopIconImage.svg";
+import ClassroomClimateIcon from "../../assets/icons/ClassroomClimateIconImage.svg";
+import InstructionIcon from "../../assets/icons/InstructionIconImage.svg";
+import ListeningIcon from "../../assets/icons/ListeningIconImage.svg";
+import MathIcon from "../../assets/icons/MathIconImage.svg";
+import SequentialIcon from "../../assets/icons/SequentialIconImage.svg";
+import EngagementIcon from "../../assets/icons/EngagementIconImage.svg";
+import TransitionTimeIcon from "../../assets/icons/TransitionTimeIconImage.svg";
 import Icon from '@material-ui/core/Icon'
 
 const CardRow = styled.div`
@@ -180,7 +180,7 @@ class Magic8Menu extends Component {
             />
             <Magic8Card
               title="MathInstruction"
-              icon={MathInstructionIcon}
+              icon={MathIcon}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(3)}
@@ -188,7 +188,7 @@ class Magic8Menu extends Component {
             />
             <Magic8Card
               title="StudentEngagement"
-              icon={StudentEngagementIcon}
+              icon={EngagementIcon}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(4)}
@@ -198,7 +198,7 @@ class Magic8Menu extends Component {
           <CardRow>
             <Magic8Card
               title="LevelOfInstruction"
-              icon={LevelInstructionIcon}
+              icon={InstructionIcon}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(5)}
@@ -206,7 +206,7 @@ class Magic8Menu extends Component {
             />
             <Magic8Card
               title="ListeningToChildren"
-              icon={ListenToChildrenIcon}
+              icon={ListeningIcon}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(6)}
@@ -214,7 +214,7 @@ class Magic8Menu extends Component {
             />
             <Magic8Card
               title="SequentialActivities"
-              icon={SequentialActivitiesIcon}
+              icon={SequentialIcon}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(7)}
@@ -222,7 +222,7 @@ class Magic8Menu extends Component {
             />
             <Magic8Card
               title="AssociativeCooperativeInteractions"
-              icon={AssociativeCooperativeIcon}
+              icon={AssocCoopIcon}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(8)}

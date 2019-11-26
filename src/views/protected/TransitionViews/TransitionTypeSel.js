@@ -4,13 +4,13 @@ import Button from '@material-ui/core/Button';
 import { withStyles, createMuiTheme } from '@material-ui/core/styles';
 import { lightGreen, white, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
-import ChildWaiting from "../../../assets/icons/ChildWaiting.svg"; 
-import WaitinginLine from "../../../assets/icons/WaitinginLine.svg"; 
-import Walking from "../../../assets/icons/Walking.svg"; 
-import ClassroomRoutines from "../../../assets/icons/classroomRoutines.svg"; 
-import bmi from "../../../assets/icons/BehaviorManagementDisruption.svg"; 
+import ChildWaiting from "../../../assets/icons/ChildWaitingImage.svg"; 
+import WaitingInLine from "../../../assets/icons/WaitingInLineImage.svg"; 
+import Walking from "../../../assets/icons/WalkingImage.svg"; 
+import ClassroomRoutines from "../../../assets/icons/ClassroomRoutinesImage.svg"; 
+import BMD from "../../../assets/icons/BMDImage.svg"; 
 import { red } from '@material-ui/core/es/colors';
-import other from "../../../assets/icons/other.svg"; 
+import Other from "../../../assets/icons/OtherImage.svg"; 
 
 const styles = theme => ({
   button: {
@@ -158,7 +158,7 @@ class TransitionTypeSel extends React.Component {
                 variant="raised"
                 style={this.state.selected==="waiting" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
               >
-                <img alt="Waiting in line" src={WaitinginLine} height='100' width='100'/>
+                <img alt="Waiting in line" src={WaitingInLine} height='100' width='100'/>
               </Button>
             </Grid>
             <Grid item>
@@ -229,7 +229,7 @@ class TransitionTypeSel extends React.Component {
                 variant="raised"
                 style={this.state.selected==="behavior management disruption" ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}
               >
-                <img alt="Behavior Management Disruption" src={bmi} height='100' width='100'/>
+                <img alt="Behavior Management Disruption" src={BMD} height='100' width='100'/>
               </Button>
             </Grid>
             <Grid item>
@@ -246,7 +246,7 @@ class TransitionTypeSel extends React.Component {
                 variant="raised"
                 style={this.state.selected==="other" ? raisedThemes.palette.otherColor : themes.palette.otherColor}
               >
-                <img alt="other" src={other} height='100' width='100'/>
+                <img alt="other" src={Other} height='100' width='100'/>
               </Button>
             </Grid>
             <Grid item>
