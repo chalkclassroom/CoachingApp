@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
-import AssocCoopIcon from "../../../assets/icons/AssocCoopInteractions.svg";
+import AssocCoopIcon from "../../../assets/icons/AssocCoopIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";

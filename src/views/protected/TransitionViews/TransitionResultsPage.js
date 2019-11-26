@@ -9,7 +9,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import SwipeableViews from 'react-swipeable-views';
 import TabBar from '@material-ui/core/AppBar';
-import TransitionTimeIcon from "../../../assets/icons/TransitionTime.svg";
+import TransitionTimeIcon from "../../../assets/icons/TransitionTimeIconImage.svg";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
 //import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
@@ -23,11 +23,11 @@ import 'chartjs-plugin-datalabels';
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import moment from 'moment';
-import ChildWaiting from "../../../assets/icons/ChildWaiting.svg"; 
-import WaitinginLine from "../../../assets/icons/WaitinginLine.svg"; 
-import Walking from "../../../assets/icons/Walking.svg"; 
-import ClassroomRoutines from "../../../assets/icons/classroomRoutines.svg"; 
-import bmi from "../../../assets/icons/BehaviorManagementDisruption.svg"; 
+import ChildWaiting from "../../../assets/icons/ChildWaitingImage.svg"; 
+import WaitingInLine from "../../../assets/icons/WaitingInLineImage.svg"; 
+import Walking from "../../../assets/icons/WalkingImage.svg"; 
+import ClassroomRoutines from "../../../assets/icons/ClassroomRoutinesImage.svg"; 
+import BMD from "../../../assets/icons/BMDImage.svg"; 
 import { lightGreen, white, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
 import { red } from '@material-ui/core/es/colors';
 import CardContent from '@material-ui/core/CardContent';
@@ -908,7 +908,7 @@ class TransitionResultsPage extends React.Component {
                               style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
                               onClick={this.lineClick}
                             >
-                              <img src={WaitinginLine} className={classes.transitionTypeButton}/>
+                              <img src={WaitingInLine} className={classes.transitionTypeButton}/>
                             </Button>
                           </Grid>
                           <Grid item>
@@ -940,7 +940,7 @@ class TransitionResultsPage extends React.Component {
                               style={this.state.categoryView === "behavior" ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}
                               onClick={this.behaviorClick}
                             >
-                              <img src={bmi} className={classes.transitionTypeButton}/>
+                              <img src={BMD} className={classes.transitionTypeButton}/>
                             </Button>
                           </Grid>
                         </Grid>

@@ -1,14 +1,14 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
-import topIllustration from "../../assets/icons/HomepageIllustration.svg"
+import HomepageIllustration from "../../assets/icons/HomepageIllustrationImage.svg"
 import Helmet from 'react-helmet';
-import childrenWalking from '../../assets/icons/Benefits2.png'
+import ChildrenWalking from '../../assets/icons/ChildrenWalkingImage.png'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import slide1 from "../../assets/slides/slide1.png";
-import slide2 from "../../assets/slides/slide2.png";
-import slide3 from "../../assets/slides/slide3.png";
+import SlideOne from "../../assets/slides/SlideOneImage.png";
+import SlideTwo from "../../assets/slides/SlideTwoImage.png";
+import SlideThree from "../../assets/slides/SlideThreeImage.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 
@@ -171,7 +171,7 @@ class LandingPage extends React.Component {
         width={950}
         height={950}
         transform="translate(560 -80)"
-        xlinkHref={topIllustration}
+        xlinkHref={HomepageIllustration}
       />
     </g>
   </svg>
@@ -563,7 +563,7 @@ class LandingPage extends React.Component {
         width={896}
         height={1031}
         transform="matrix(.3 0 0 .3 667.56 146.91)"
-        xlinkHref={childrenWalking}
+        xlinkHref={ChildrenWalking}
         style={{
           isolation: 'isolate',
         }}
@@ -971,15 +971,15 @@ class LandingPage extends React.Component {
         <div length = {500} width = {500} >
         <Carousel swipeable = {true}>
                 <div>
-                    <img src={slide1} alt  = "sample" />
+                    <img src={SlideOne} alt  = "sample" />
                     <p className="legend">Legend 1</p>
                 </div>
                 <div>
-                    <img src={slide2} alt = "sample" />
+                    <img src={SlideTwo} alt = "sample" />
                     <p className="legend">Legend 2</p>
                 </div>
                 <div>
-                    <img src= {slide3} alt = "sample" />
+                    <img src= {SlideThree} alt = "sample" />
                     <p className="legend">Legend 3</p>
                 </div>
             </Carousel>

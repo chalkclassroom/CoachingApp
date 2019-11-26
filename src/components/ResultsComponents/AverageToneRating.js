@@ -7,11 +7,11 @@ import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { VictoryPie } from "victory-pie";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import exNegativeFace from "../../assets/icons/1-ex-negative-cqref.png";
-import negativeFace from "../../assets/icons/2-negative-cqref.png";
-import flatFace from "../../assets/icons/3-flat-cqref.png";
-import pleasantFace from "../../assets/icons/4-pleasant-cqref.png";
-import vibrantFace from "../../assets/icons/5-vibrant-cqref.png";
+import ExNegativeFace from "../../assets/icons/ExNegativeFaceImage.png";
+import NegativeFace from "../../assets/icons/NegativeFaceImage.png";
+import NeutralFace from "../../assets/icons/NeutralFaceImage.png";
+import PleasantFace from "../../assets/icons/PleasantFaceImage.png";
+import VibrantFace from "../../assets/icons/VibrantFaceImage.png";
 
 const styles = ({
 
@@ -39,35 +39,35 @@ class AverageToneRating extends React.Component {
           <Grid item>
             <img
               alt="extreme negative face"
-              src={exNegativeFace}
+              src={ExNegativeFace}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="negative face"
-              src={negativeFace}
+              src={NegativeFace}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="flat face"
-              src={flatFace}
+              src={NeutralFace}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="pleasant face"
-              src={pleasantFace}
+              src={PleasantFace}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="vibrant face"
-              src={vibrantFace}
+              src={VibrantFace}
               width="70vw"
             />
           </Grid>

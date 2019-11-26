@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
-import { AppBar as NavBar } from '@material-ui/core'
-import Logo from '../logo.svg'
+import { withStyles, AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
+import Logo from '../LogoImage.svg'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux';
 import LoginModal from "./LoginComponent/LoginModal";
