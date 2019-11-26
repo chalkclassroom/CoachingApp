@@ -37,7 +37,8 @@ import VanderbiltPeabodyLogo from '../../assets/icons/VanderbiltPeabodyLogo.png'
 import WondryLogo from '../../assets/icons/WondryLogo.png';
 //import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography/Typography';
-import HowEmpowers from '../../components/HowEmpowers.js';
+import LandingDetail from '../../components/LandingPageComponents/LandingDetail.js';
+import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard.js';
 import TextField from '@material-ui/core/TextField';
 import Input from '@material-ui/core/Input';
 import Fab from '@material-ui/core/Fab';
@@ -45,6 +46,15 @@ import iPadSvg from '../../assets/icons/iPadSvg.svg';
 import CoachWithAppSvg from '../../assets/icons/CoachWithAppSvg.svg';
 import BlueMaskSvg from '../../assets/icons/BlueMaskSvg.svg';
 import CoachWithAppJpg from '../../assets/icons/CoachWithAppJpg.JPG';
+import Step1Svg from '../../assets/icons/Step1Svg.svg';
+import Step2Svg from '../../assets/icons/Step2Svg.svg';
+import Step3Svg from '../../assets/icons/Step3Svg.svg';
+import Step4Svg from '../../assets/icons/Step4Svg.svg';
+import Step5Svg from '../../assets/icons/Step5Svg.svg';
+import CoachingCycleSvg from '../../assets/icons/CoachingCycleSvg.svg';
+import CoachingCycleFullSvg from '../../assets/icons/CoachingCycleFullSvg.svg';
+import CoachLandingSvg from '../../assets/CoachLandingSvg.svg';
+import CoachLandingPng from '../../assets/CoachLandingPng.png';
 
 const styles = {
   paper: {
@@ -129,13 +139,14 @@ class Homepage extends React.Component {
   render() {
     const { classes } = this.props;
     return(
-      <Grid container direction="column" justify="center" alignContent="center">
-        <Grid container direction="row" justify="center" alignContent="center" style={{paddingBottom: 10}}>
-          <img src={CoachWithAppJpg} alt="Coach and Teacher" width="100%" style={{filter: 'blur(5px)', position: 'relative', background: 'linear-gradient(to right, rgba(69, 154, 235, 0.3), rgba(69, 154, 235, 0.3))'}}/>
-          <div className={classes.blueMask} />
+      <Grid container direction="column" justify="center" alignItems="center">
+        <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 10}}>
+          {/* <img src={CoachWithAppJpg} alt="Coach and Teacher" width="100%" style={{filter: 'blur(5px)', position: 'relative', background: 'linear-gradient(to right, rgba(69, 154, 235, 0.3), rgba(69, 154, 235, 0.3))'}}/>
+          <div className={classes.blueMask} /> */}
+          <img src={CoachLandingPng} alt = "Coach and Teacher" width="100%" style={{postion: 'relative'}}/>
           {/* <img src={CoachWithAppSvg} alt="Coach and Teacher" width="100%" style={{ position: 'relative'}}/> */}
           {/* <Grid item xs={12} className={classes.blueMask} style={{position: 'absolute', width: '100vw', height: '90vh'}} /> */}
-          <Grid item xs={10} style={{position: 'absolute', paddingTop: '10vh'}}>
+          <Grid item xs={10} style={{position: 'absolute'}}>
             <Grid container direction="row" justify="flex-start" alignItems="center">
               <Grid xs={6} style={{paddingTop: '5vh'}}>
                 <Typography className={classes.chalkTitle}>
@@ -165,7 +176,7 @@ class Homepage extends React.Component {
               </Grid>
               <Grid xs={6}>
                 <Grid container direction="column" justify="center" alignItems="center" style={{}}>
-                  <Grid item style={{}} alignItems="center" alignContent="center">
+                  <Grid item style={{}} alignItems="center">
                     <img src={iPadSvg} alt="tablet" width='100%'/>
                   </Grid>
                   <Grid item style={{paddingTop: '4vh'}}>
@@ -243,17 +254,17 @@ class Homepage extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="column" justify="center" alignContent="center" style={{backgroundColor: '#dbebfb'}} className={classes.section}>
+        <Grid container direction="column" justify="center" alignItems="center" style={{backgroundColor: '#dbebfb'}} className={classes.section}>
           <Grid item>
             <Typography style={{fontFamily: 'Avenir', color: '#459aeb', fontSize: 42, textAlign: 'center'}}>
               Why <strong>CHALK?</strong>
             </Typography>
           </Grid>
           <Grid item style={{padding: 10}}>
-            <Grid container direction="row" justify="center" alignContent="center">
+            <Grid container direction="row" justify="center" alignItems="center">
               <Grid item xs={4}>
-                <Grid container direction="row" justify="flex-end" alignContent="center">
-                  <Grid container direction="column" justify="center" alignContent="center">
+                <Grid container direction="row" justify="flex-end" alignItems="center">
+                  <Grid container direction="column" justify="center" alignItems="center">
                     <Grid item>
                       <img alt="School" src={SchoolSvg} />
                     </Grid>
@@ -266,7 +277,7 @@ class Homepage extends React.Component {
                 </Grid>
               </Grid>
               <Grid item xs={8}>
-                <Grid container direction="row" justify="flex-start" alignContent="center">
+                <Grid container direction="row" justify="flex-start" alignItems="center">
                   <Typography style={{fontFamily: 'Avenir', color: '#2f4b65'}}>
                     Research shows that high-quality pre-k education supports
                     children's early cognitive development and future achievement.
@@ -276,10 +287,10 @@ class Homepage extends React.Component {
             </Grid>
           </Grid>
           <Grid item style={{padding: 10}}>
-            <Grid container direction="row" justify="center" alignContent="center">
+            <Grid container direction="row" justify="center" alignItems="center">
               <Grid item xs={4}>
-                <Grid container direction="row" justify="flex-end" alignContent="center">
-                  <Grid container direction="column" justify="center" alignContent="center">
+                <Grid container direction="row" justify="flex-end" alignItems="center">
+                  <Grid container direction="column" justify="center" alignItems="center">
                     <Grid item>
                       <img alt="Problem" src={ProblemSvg} />
                     </Grid>
@@ -302,10 +313,10 @@ class Homepage extends React.Component {
             </Grid>
           </Grid>
           <Grid item style={{padding: 10}}>
-            <Grid container direction="row" justify="center" alignContent="center">
+            <Grid container direction="row" justify="center" alignItems="center">
               <Grid item xs={4}>
-                <Grid container direction="row" justify="flex-end" alignContent="center">
-                  <Grid container direction="column" justify="center" alignContent="center">
+                <Grid container direction="row" justify="flex-end" alignItems="center">
+                  <Grid container direction="column" justify="center" alignItems="center">
                     <Grid item>
                       <img alt="Lightbulb" src={LightbulbImpactSvg} />
                     </Grid>
@@ -318,110 +329,73 @@ class Homepage extends React.Component {
                 </Grid>
               </Grid>
               <Grid item xs={8}>
-                <Grid container direction="row" justify="flex-start" alignContent="center">
+                <Grid container direction="row" justify="flex-start" alignItems="center">
                   <Typography style={{fontFamily: 'Avenir', color: '#2f4b65', fontSize: 16, paddingRight: 50}}>
                     CHALK's mission is to advance pre-k quality with an easy-to-use 
                     tool for coaches and teachers that:
+                    <ul>
+                      <li>Focuses classroom observations on effective practices</li>
+                      <li>Links results to coaching strategies</li>
+                      <li>Accelerates professional growth through teacher-reacted action plans around practice improvement</li>
+                    </ul>
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="row" justify="center" alignContent="center" style={{backgroundColor: '#459aeb'}} className={classes.section}>
+        <Grid container direction="row" justify="center" alignItems="stretch" style={{backgroundColor: '#459aeb'}} className={classes.section}>
           <Grid item xs={4} style={{padding: 30}}>
-            <Grid container justify="center" alignContent="center">
-              <Card style={{paddingTop: 10, width: '80%', height: '30vh', borderRadius: '10px'}}>
-                <CardContent>
-                  <Grid container direction="column">
-                    <Grid container direction="row">
-                      <Grid item xs={3}>
-                        {/* <Avatar alt="Owl" src={Logo} /> */}
-                        <img alt="Owl" src={Logo} style={{width: '80%', height: '90%'}}/>
-                      </Grid>
-                      <Grid item xs={9}>
-                        <Typography style={{color: '#2f4b65', fontSize: 20, fontFamily: 'Avenir'}}>
-                          Key Classroom Practices
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid container direction="row" style={{paddingTop: 20}}>
-                      <Grid item>
-                        <Typography style={{color: '#5e7b97'}}>
-                          Our tool focuses on key classroom practices that predict
-                          children's gains across multiple academic and self-regulation
-                          domains.
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+            <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
+              <FeaturesCard
+                icon={Logo}
+                altText="Owl Logo"
+                title="Key Classroom Practices"
+                text= "Our tool focuses on key classroom practices that predict
+                      children's gains across multiple academic and self-regulation
+                      domains."
+              />
             </Grid>
           </Grid>
           <Grid item xs={4} style={{padding: 30}}>
-            <Grid container justify="center" alignContent="center">
-              <Card style={{padding: 10, width: '80%', height: '30vh', borderRadius: '10px'}}>
-                <CardContent>
-                  <Grid container direction="column">
-                    <Grid container direction="row">
-                      <Grid item xs={3}>
-                        {/* <Avatar alt="Owl" src={Logo} /> */}
-                        <img alt="Search" src={SearchEngineSvg} style={{width: '80%', height: '90%'}}/>
-                      </Grid>
-                      <Grid item xs={9}>
-                        <Typography style={{color: '#2f4b65', fontSize: 20, fontFamily: 'Avenir'}}>
-                          Observation Tools
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid container direction="row" style={{paddingTop: 20}}>
-                      <Grid item>
-                        <Typography style={{color: '#5e7b97'}}>
-                          CHALK provides targeted observation tools that allow 
-                          instructional coaches to easily track key classroom 
-                          practices on their digital devices in real-time.
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+            <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
+              <FeaturesCard
+                icon={SearchEngineSvg}
+                altText="Observe"
+                title="Observation Tools"
+                text="CHALK provides targeted observation tools that allow 
+                      instructional coaches to easily track key classroom 
+                      practices on their digital devices in real-time."
+              />
             </Grid>
           </Grid>
           <Grid item xs={4} style={{padding: 30}}>
-            <Grid container justify="center" alignContent="center">
-              <Card style={{padding: 10, width: '80%', height: '30vh', borderRadius: '10px'}}>
-                <CardContent>
-                  <Grid container direction="column">
-                    <Grid container direction="row">
-                      <Grid item xs={3}>
-                        {/* <Avatar alt="Owl" src={Logo} /> */}
-                        <img alt="Pie Chart" src={PieChartSvg} style={{width: '80%', height: '90%'}}/>
-                      </Grid>
-                      <Grid item xs={9}>
-                        <Typography style={{color: '#2f4b65', fontSize: 20, fontFamily: 'Avenir'}}>
-                          Visualized Data
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid container direction="row" style={{paddingTop: 20}}>
-                      <Grid item>
-                        <Typography style={{color: '#5e7b97'}}>
-                          Our tool instantly transforms observation data into 
-                          user-friendly visualizations for coaches and teachers 
-                          to engage in data-driven coaching conversations for 
-                          professional growth.
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+            <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
+              <FeaturesCard
+                icon={PieChartSvg}
+                altText="Pie Chart"
+                title="Visualized Data"
+                text="Our tool instantly transforms observation data into 
+                      user-friendly visualizations for coaches and teachers 
+                      to engage in data-driven coaching conversations for 
+                      professional growth."
+              />
             </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="column" justify="center" alignContent="center">
+        <Grid container direction="column" justify="center" alignItems = "center" className={classes.section} style={{backgroundColor: '#dbebfb'}}>
+          <Grid item style={{padding: 20}}>
+            <Typography style={{fontFamily: 'Avenir', fontSize: 42, color:'#233342', textAlign: 'center'}}>
+              How CHALK Works
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container direction="row" justify="center" alignItems="center">
+              <img src={CoachingCycleFullSvg} alt="Coaching Cycle" width="90%" style={{paddingBottom: 20}}/>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
           <Grid item style={{padding: 20}}>
             <Typography style={{fontFamily: 'Avenir', fontSize: 42, color:'#233342', textAlign: 'center'}}>
               How CHALK empowers coaches and teachers
@@ -430,7 +404,7 @@ class Homepage extends React.Component {
           <Grid item style={{paddingTop: 20}}>
             <Grid container direction="row">
               <Grid item xs={6}>
-                <HowEmpowers
+                <LandingDetail
                   icon={HighFiveSvg}
                   iconAlt="High Five"
                   title="Empowering Teachers and Coaches"
@@ -440,7 +414,7 @@ class Homepage extends React.Component {
                 />
               </Grid>
               <Grid item xs={6}>
-                <HowEmpowers
+                <LandingDetail
                   icon={BookSvg}
                   iconAlt="Book"
                   title="Grounded in Rigorous Research"
@@ -484,7 +458,7 @@ class Homepage extends React.Component {
           <Grid item style={{paddingTop: 20}}>
             <Grid container direction="row">
               <Grid item xs={6}>
-                <HowEmpowers
+                <LandingDetail
                   icon={FeedbackSvg}
                   iconAlt="Feedback"
                   title="Individualized and Timely Feedback"
@@ -494,7 +468,7 @@ class Homepage extends React.Component {
                 />
               </Grid>
               <Grid item xs={6}>
-                <HowEmpowers
+                <LandingDetail
                   icon={MedalSvg}
                   iconAlt="Medal"
                   title="Target Key Classroom Practices"
@@ -508,7 +482,7 @@ class Homepage extends React.Component {
           <Grid item style={{paddingTop: 20, paddingBottom: 20}}>
             <Grid container direction="row">
               <Grid item xs={6}>
-                <HowEmpowers
+                <LandingDetail
                   icon={LightbulbSvg}
                   iconAlt="Lightbulb"
                   title="Emphasis on Teacher Learning"
@@ -518,7 +492,7 @@ class Homepage extends React.Component {
                 />
               </Grid>
               <Grid item xs={6}>
-                <HowEmpowers
+                <LandingDetail
                   icon={BoxSvg}
                   iconAlt="Box"
                   title="Works Across Any Curriculum"
@@ -530,16 +504,18 @@ class Homepage extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="column" justify="center" alignContent="center" style={{backgroundColor: '#dbebfb'}}>
-          <Grid item>
-            <Typography style={{fontFamily: 'Avenir', color: '#459aeb', fontSize: 42, paddingLeft: '10%', paddingTop: 20}}>
-              <strong>GET INVOLVED</strong>
-            </Typography>
+        <Grid container direction="column" justify="center" alignItems="center" style={{backgroundColor: '#dbebfb'}}>
+          <Grid item style={{width: '100%'}}>
+            <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+              <Typography style={{fontFamily: 'Avenir', color: '#233342', fontSize: 42, paddingLeft: '10%', paddingTop: 20}}>
+                <strong>GET INVOLVED</strong>
+              </Typography>
+            </Grid>
           </Grid>
           <Grid item>
             <Grid container direction="row">
               <Grid item xs={6}>
-                <HowEmpowers
+                <LandingDetail
                   icon={PilotProgramSvg}
                   iconAlt="Participation"
                   title="Participate in our pilot program!"
@@ -580,7 +556,7 @@ class Homepage extends React.Component {
                 </Grid> */}
               </Grid>
               <Grid item xs={6}>
-                <HowEmpowers
+                <LandingDetail
                   icon={EventsSvg}
                   iconAlt="People"
                   title="Join us at our upcoming events!"
