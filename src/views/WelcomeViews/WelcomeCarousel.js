@@ -28,6 +28,13 @@ import LightbulbImpactSvg from '../../assets/icons/LightbulbImpactSvg.svg';
 import PilotProgramSvg from '../../assets/icons/PilotProgramSvg.svg';
 import EventsSvg from '../../assets/icons/EventsSvg.svg';
 import SearchEngineSvg from '../../assets/icons/SearchEngineSvg.svg';
+import MNPSLogo from '../../assets/icons/MNPSLogo.jpg';
+import AbtLogo from '../../assets/icons/AbtLogo.png';
+import PreschoolPromiseLogo from '../../assets/icons/PreschoolPromiseLogo.jpg';
+import UDaytonLogo from '../../assets/icons/UDaytonLogo.jpg';
+import UnitedWayLogo from '../../assets/icons/UnitedWayLogo.jpg';
+import VanderbiltPeabodyLogo from '../../assets/icons/VanderbiltPeabodyLogo.png';
+import WondryLogo from '../../assets/icons/WondryLogo.png';
 //import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography/Typography';
 import HowEmpowers from '../../components/HowEmpowers.js';
@@ -97,6 +104,17 @@ const styles = {
     bottom: 0,
     background: 'linear-gradient(to right, rgba(69, 154, 235, 0.3), rgba(69, 154, 235, 0.3))',
     width: '100%',
+  },
+  section: {
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  partnersText: {
+    fontStyle: 'italic',
+    fontSize: 14,
+    color: '#3372ae',
+    fontFamily: 'Arial',
+    paddingLeft: '2em'
   }
 };
 
@@ -112,7 +130,7 @@ class Homepage extends React.Component {
     const { classes } = this.props;
     return(
       <Grid container direction="column" justify="center" alignContent="center">
-        <Grid container direction="row" justify="center" alignContent="center">
+        <Grid container direction="row" justify="center" alignContent="center" style={{paddingBottom: 10}}>
           <img src={CoachWithAppJpg} alt="Coach and Teacher" width="100%" style={{filter: 'blur(5px)', position: 'relative', background: 'linear-gradient(to right, rgba(69, 154, 235, 0.3), rgba(69, 154, 235, 0.3))'}}/>
           <div className={classes.blueMask} />
           {/* <img src={CoachWithAppSvg} alt="Coach and Teacher" width="100%" style={{ position: 'relative'}}/> */}
@@ -191,7 +209,41 @@ class Homepage extends React.Component {
             </Grid>
           </div>
         </Grid> */}
-        <Grid container direction="column" justify="center" alignContent="center" style={{backgroundColor: '#dbebfb'}}>
+        <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
+          <Grid item style={{width: '100%'}}>
+            <Grid container direction="row" justify="flex-start" alignItems="center">
+              <Typography className={classes.partnersText}>
+                Working closely with our partners to better education
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item style={{width: '97%'}}>
+            <Grid container direction="row" justify="space-around" alignItems="center">
+              <Grid item>
+                <img src={MNPSLogo} alt="Metro Nashville Public Schools" style={{maxWidth:125}}/>
+              </Grid>
+              <Grid item>
+                <img src={UnitedWayLogo} alt="United Way" style={{maxWidth:125}} />
+              </Grid>
+              <Grid item>
+                <img src={PreschoolPromiseLogo} alt="Preschool Promise" style={{maxWidth:125}} />
+              </Grid>
+              <Grid item>
+                <img src={AbtLogo} alt="Abt Associates" style={{maxWidth:125}} />
+              </Grid>
+              <Grid item>
+                <img src={WondryLogo} alt="The Wondry" style={{maxWidth:125}} />
+              </Grid>
+              <Grid item>
+                <img src={VanderbiltPeabodyLogo} alt="Vanderbilt Peabody College" style={{maxWidth:125}} />
+              </Grid>
+              <Grid item>
+                <img src={UDaytonLogo} alt="University of Dayton" style={{maxWidth:125}} />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container direction="column" justify="center" alignContent="center" style={{backgroundColor: '#dbebfb'}} className={classes.section}>
           <Grid item>
             <Typography style={{fontFamily: 'Avenir', color: '#459aeb', fontSize: 42, textAlign: 'center'}}>
               Why <strong>CHALK?</strong>
@@ -276,10 +328,10 @@ class Homepage extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="row" justify="center" alignContent="center" style={{backgroundColor: '#459aeb'}}>
+        <Grid container direction="row" justify="center" alignContent="center" style={{backgroundColor: '#459aeb'}} className={classes.section}>
           <Grid item xs={4} style={{padding: 30}}>
             <Grid container justify="center" alignContent="center">
-              <Card style={{paddingTop: 10, width: '80%', height: '40vh', borderRadius: '10px'}}>
+              <Card style={{paddingTop: 10, width: '80%', height: '30vh', borderRadius: '10px'}}>
                 <CardContent>
                   <Grid container direction="column">
                     <Grid container direction="row">
@@ -309,7 +361,7 @@ class Homepage extends React.Component {
           </Grid>
           <Grid item xs={4} style={{padding: 30}}>
             <Grid container justify="center" alignContent="center">
-              <Card style={{padding: 10, width: '80%', height: '40vh', borderRadius: '10px'}}>
+              <Card style={{padding: 10, width: '80%', height: '30vh', borderRadius: '10px'}}>
                 <CardContent>
                   <Grid container direction="column">
                     <Grid container direction="row">
@@ -339,7 +391,7 @@ class Homepage extends React.Component {
           </Grid>
           <Grid item xs={4} style={{padding: 30}}>
             <Grid container justify="center" alignContent="center">
-              <Card style={{padding: 10, width: '80%', height: '40vh', borderRadius: '10px'}}>
+              <Card style={{padding: 10, width: '80%', height: '30vh', borderRadius: '10px'}}>
                 <CardContent>
                   <Grid container direction="column">
                     <Grid container direction="row">
