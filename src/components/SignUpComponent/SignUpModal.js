@@ -12,7 +12,7 @@ import Card from "@material-ui/core/Card";
 import CoachImage from "../../assets/icons/newCoachImage.svg";
 //import NewTeacherImage from "../../assets/icons/NewTeacherImage.svg";
 //import AdministratorImage from "../../assets/icons/AdministratorImage.svg";
-import GrayedAdminImage from "../../assets/icons/GrayedAdminImage.svg";
+//import GrayedAdministratorImage from "../../asset/icons/GrayedAdministratorImage.svg"; // This was causing error in webpack
 import GrayedTeacherImage from "../../assets/icons/GrayedTeacherImage.svg";
 import CardContent from "@material-ui/core/CardContent";
 
@@ -163,7 +163,7 @@ class SignUpModal extends React.Component {
                             justify="flex-start"
                         >
                           <Grid item>
-                            <img src={GrayedAdminImage} alt="Administrator" className={classes.photoIcon} />
+                            <img src={GrayedTeacherImage} alt="Administrator" className={classes.photoIcon} />
                           </Grid>
                           <Grid item>
                             <Typography

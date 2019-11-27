@@ -243,9 +243,9 @@ const styles = {
 };
 
 const sortedSvg = [TransitionTimeIconImage, ClassroomClimateIconImage,
-                   ListeningIconImage, InstructionIconImage,
-                   MathIconImage, EngagementIconImage,
-                   SequentialIconImage, AssocCoopIconImage;
+  ListeningIconImage, InstructionIconImage,
+  MathIconImage, EngagementIconImage,
+  SequentialIconImage, AssocCoopIconImage];
 
 class TeacherDetailPage extends Component {
 
