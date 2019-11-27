@@ -6,10 +6,10 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import { ReactComponent as Calendar } from "../../../assets/icons/CalendarImage.svg";
-import { ReactComponent as Observe } from "../../../assets/icons/ObserveImage.svg";
-import { ReactComponent as Results } from "../../../assets/icons/ResultsImage.svg";
-import { ReactComponent as Messages } from "../../../assets/icons/MessagesImage.svg";
+import CalendarImage from "../../../assets/icons/CalendarImage.svg";
+import ObserveImage from "../../../assets/icons/ObserveImage.svg";
+import ResultsImage from "../../../assets/icons/ResultsImage.svg";
+import MessagesImage from "../../../assets/icons/MessagesImage.svg";
 import TeacherModal from "./TeacherModal";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 
