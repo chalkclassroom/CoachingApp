@@ -17,7 +17,6 @@ class Firebase {
       firebase.initializeApp(config);
       this.auth = firebase.auth();
       this.db = firebase.firestore();
-      this.db.settings({ timestampsInSnapshots: true });
       this.db.enablePersistence({ experimentalTabSynchronization: true })
         .then(() => console.log("Woohoo! Multi-Tab Persistence!"))
         .catch(error => console.error("Offline Not Working: ", error))
@@ -46,7 +45,7 @@ class Firebase {
                 .doc('rJxNhJmzjRZP7xg29Ko6') // Practice Teacher UID
                 .set({})
                 .then(() => console.log("Practice Teacher added to coach!"))
-                .catch(error => 
+                .catch(error =>
                   console.error("Error occurred while assigning practice teacher to coach: ",
                   error))
             } else console.log("User properly added to Firebase!")
@@ -84,7 +83,7 @@ class Firebase {
       .get()
       .then(partners => {
         let teacherList = [];
-        partners.forEach(partner => 
+        partners.forEach(partner =>
           teacherList.push(this.getTeacherInfo(partner.id))
         );
         return teacherList;
@@ -100,7 +99,7 @@ class Firebase {
       .get()
       .then(snapshot => {
         let teacherList = [];
-        snapshot.forEach(doc => 
+        snapshot.forEach(doc =>
           teacherList.push(doc.data().then((doc => doc.data())))
         );
         return teacherList;
@@ -155,7 +154,7 @@ class Firebase {
           phone: phone,
           notes: notes
         }, { merge: true })
-        .catch(error => 
+        .catch(error =>
           console.error("Error occurred when writing document:", error)
         )
     }
@@ -265,14 +264,14 @@ class Firebase {
     ])
       .then(snapshots => {
         const recentObs = new Array(8).fill(null);
-        snapshots.forEach((snapshot, index) => 
+        snapshots.forEach((snapshot, index) =>
           snapshot.forEach(doc =>
             recentObs[index] = doc.data().end.toDate().toLocaleDateString()
           )
         );
         return recentObs
       })
-      .catch(error => 
+      .catch(error =>
         console.error("Error occurred during Promise.all() resolution: ", error)
       )
   }
@@ -284,7 +283,7 @@ class Firebase {
       .get()
       .then(snapshot => {
         let coachList = [];
-        snapshot.forEach(doc => 
+        snapshot.forEach(doc =>
           coachList.push(doc.data())
         );
         return coachList;
@@ -308,7 +307,7 @@ class Firebase {
       .get()
       .then(snapshot => {
         let teacherList = [];
-        snapshot.forEach( doc => 
+        snapshot.forEach( doc =>
           teacherList.push(doc.data())
         );
         return teacherList;
@@ -426,7 +425,7 @@ class Firebase {
       .get()
       .then(snapshot => {
         let notesArr = [];
-        snapshot.forEach(doc => 
+        snapshot.forEach(doc =>
           notesArr.push({
             id: doc.id,
             content: doc.data().Note,
@@ -467,7 +466,7 @@ class Firebase {
       .get()
       .then(querySnapshot => {
         let notesArr = [];
-        querySnapshot.forEach( doc => 
+        querySnapshot.forEach( doc =>
           notesArr.push({id: doc.id, content: doc.data().Note, timestamp: doc.data().Timestamp})
         );
         return notesArr;
@@ -491,7 +490,7 @@ class Firebase {
   fetchAvgToneRating = async function(sessionId) {
     const getAvgToneRatingFirebaseFunction = this.functions.httpsCallable('funcAvgToneRating');
     return getAvgToneRatingFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
       // Read result of the Cloud Function.
       // const sanitizedMessage = result.data[0];
       // console.log(sanitizedMessage);
@@ -504,9 +503,9 @@ class Firebase {
 
   fetchBehaviourTypeCount = async function(sessionId) {
     const getBehaviourTypeCountFirebaseFunction = this.functions.httpsCallable    ('funcBehaviourTypeCount');
-  
+
     return getBehaviourTypeCountFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -519,7 +518,7 @@ class Firebase {
   fetchBehaviourTrend = async function(teacherId) {
     const getBehaviourTrendFirebaseFunction = this.functions.httpsCallable('funcBehaviourTrend');
     return getBehaviourTrendFirebaseFunction({ teacherId: teacherId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -536,7 +535,7 @@ class Firebase {
       teacherId: teacherId,
       type: sessionType
     })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -550,7 +549,7 @@ class Firebase {
     const getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable('funcTransitionOfSession');
 
     return getTransitionTypeCountFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
       // Read result of the Cloud Function.
       // var sanitizedMessage = result.data[0];
       // console.log(sanitizedMessage);
@@ -563,7 +562,7 @@ class Firebase {
   fetchTransitionLog = async function(sessionId) {
     const getTransitionsFirebaseFunction = this.functions.httpsCallable('funcTransitionLog');
     return getTransitionsFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -576,7 +575,7 @@ class Firebase {
   fetchTransitionTrend = async function(teacherId) {
     const getTransitionTrendFirebaseFunction = this.functions.httpsCallable('funcTransitionTrend');
     return getTransitionTrendFirebaseFunction({ teacherId: teacherId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -589,7 +588,7 @@ class Firebase {
   fetchACDetails = async function(sessionId) {
     const getACDetailsFirebaseFunction = this.functions.httpsCallable('funcACDetails');
     return getACDetailsFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -602,7 +601,7 @@ class Firebase {
   fetchSeqDetails = async function(sessionId) {
     const getSeqDetailsFirebaseFunction = this.functions.httpsCallable('funcSeqDetails');
     return getSeqDetailsFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -615,7 +614,7 @@ class Firebase {
   fetchChildACSummary = async function (sessionId) {
     const getChildACSummaryFirebaseFunction = this.functions.httpsCallable('funcChildACSummary');
     return getChildACSummaryFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -628,7 +627,7 @@ class Firebase {
   fetchChildSeqSummary = async function(sessionId) {
     const getChildSeqSummaryFirebaseFunction = this.functions.httpsCallable('funcChildSeqSummary');
     return getChildSeqSummaryFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -641,7 +640,7 @@ class Firebase {
   fetchTeacherACSummary = async function(sessionId) {
     const getTeacherACSummaryFirebaseFunction = this.functions.httpsCallable('funcTeacherACSummary');
     return getTeacherACSummaryFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -654,7 +653,7 @@ class Firebase {
   fetchTeacherSeqSummary = async function(sessionId) {
     const getTeacherSeqSummaryFirebaseFunction = this.functions.httpsCallable('funcTeacherSeqSummary');
     return getTeacherSeqSummaryFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -669,7 +668,7 @@ class Firebase {
   fetchChildACTrend = async function(teacherId) {
     const getChildACTrendFirebaseFunction = this.functions.httpsCallable('funcChildACTrend');
     return getChildACTrendFirebaseFunction({ teacherId: teacherId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -682,7 +681,7 @@ class Firebase {
   fetchChildSeqTrend = async function(teacherId) {
     const getChildSeqTrendFirebaseFunction = this.functions.httpsCallable('funcChildSeqTrend');
     return getChildSeqTrendFirebaseFunction({ teacherId: teacherId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -695,7 +694,7 @@ class Firebase {
   fetchTeacherACTrend = async function(sessionId) {
     const getTeacherACTrendFirebaseFunction = this.functions.httpsCallable('funcTeacherACTrend');
     return getTeacherACTrendFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);
@@ -708,7 +707,7 @@ class Firebase {
   fetchTeacherSeqTrend = async function(sessionId) {
     const getTeacherSeqTrendFirebaseFunction = this.functions.httpsCallable('funcTeacherSeqTrend');
     return getTeacherSeqTrendFirebaseFunction({ sessionId: sessionId })
-      .then(result => 
+      .then(result =>
         // Read result of the Cloud Function.
         // var sanitizedMessage = result.data[0];
         // console.log(sanitizedMessage);

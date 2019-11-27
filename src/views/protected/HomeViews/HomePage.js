@@ -104,7 +104,7 @@ class HomePage extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <Calendar className={classes.image}/>
+                    <CalendarImage className={classes.image}/>
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
@@ -126,7 +126,7 @@ class HomePage extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <Observe className={classes.image}/>
+                    <ObserveImage className={classes.image}/>
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
@@ -153,7 +153,7 @@ class HomePage extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <Results className={classes.image}/>
+                    <ResultsImage className={classes.image}/>
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
@@ -172,7 +172,7 @@ class HomePage extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <Messages className={classes.image}/>
+                    <MessagesImage className={classes.image}/>
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">

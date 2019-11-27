@@ -35,7 +35,7 @@ module.exports = ({ mode } = { mode: "production" }) => {
                         loader: 'svg-inline-loader'
                     },
                     {
-                        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+                        test: /\.(png|jpe?g|gif|eot|ttf|woff|woff2)$/i,
                         loader: 'url-loader',
                         options: {
                           limit: 8192,
@@ -56,7 +56,7 @@ module.exports = ({ mode } = { mode: "production" }) => {
                         ]
                      },
                      {
-                        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
                         use: [
                           {
                             loader: 'file-loader',
