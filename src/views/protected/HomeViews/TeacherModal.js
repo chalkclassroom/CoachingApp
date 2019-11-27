@@ -12,7 +12,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
-import TeacherSvg from "../../../assets/icons/teacher.svg";
+import TeacherImage from "../../../assets/icons/TeacherImage.svg";
 import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
@@ -144,7 +144,7 @@ class TeacherModal extends React.Component {
                     <ListItemAvatar>
                       <Avatar
                         alt="Teacher Profile Pic"
-                        src={TeacherSvg}
+                        src={TeacherImage}
                       />
                     </ListItemAvatar>
                     <ListItemText

@@ -4,13 +4,13 @@ import Button from '@material-ui/core/Button';
 import { withStyles, createMuiTheme } from '@material-ui/core/styles';
 import { lightGreen, white, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
-import ChildWaiting from "../../../assets/icons/ChildWaiting.svg"; 
-import WaitinginLine from "../../../assets/icons/WaitinginLine.svg"; 
-import Walking from "../../../assets/icons/Walking.svg"; 
-import ClassroomRoutines from "../../../assets/icons/classroomRoutines.svg"; 
-import bmi from "../../../assets/icons/BehaviorManagementDisruption.svg"; 
+import ChildWaitingImage from "../../../assets/icons/ChildWaitingImage.svg"; 
+import WaitingInLineImage from "../../../assets/icons/WaitingInLineImage.svg"; 
+import WalkingImage from "../../../assets/icons/WalkingImage.svg"; 
+import ClassroomRoutinesImage from "../../../assets/icons/ClassroomRoutinesImage.svg"; 
+import BMDImage from "../../../assets/icons/BMDImage.svg"; 
 import { red } from '@material-ui/core/es/colors';
-import other from "../../../assets/icons/other.svg"; 
+import OtherImage from "../../../assets/icons/OtherImage.svg"; 
 
 const styles = theme => ({
   button: {
@@ -158,7 +158,7 @@ class TransitionTypeSel extends React.Component {
                 variant="raised"
                 style={this.state.selected==="waiting" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
               >
-                <img alt="Waiting in line" src={WaitinginLine} height='100' width='100'/>
+                <img alt="Waiting in line" src={WaitingInLineImage} height='100' width='100'/>
               </Button>
             </Grid>
             <Grid item>
@@ -175,7 +175,7 @@ class TransitionTypeSel extends React.Component {
                 variant="raised"
                 style={this.state.selected==="traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
               >
-                <img alt="Walking" src={Walking} height='100' width='100'/>
+                <img alt="Walking" src={WalkingImage} height='100' width='100'/>
               </Button>
             </Grid>
             <Grid item>
@@ -192,7 +192,7 @@ class TransitionTypeSel extends React.Component {
                 variant="raised"
                 style={this.state.selected==="child waiting" ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}
               >
-                <img alt="Child waiting" src={ChildWaiting} height='100' width='100'/>
+                <img alt="Child waiting" src={ChildWaitingImage} height='100' width='100'/>
               </Button>
             </Grid>
             <Grid item>
@@ -212,7 +212,7 @@ class TransitionTypeSel extends React.Component {
                 variant="raised"
                 style={this.state.selected==="classroom routines" ? raisedThemes.palette.classroomRoutinesColor : themes.palette.classroomRoutinesColor}
               >
-                <img alt="classroom routines" src={ClassroomRoutines} height='100' width='100'/>
+                <img alt="classroom routines" src={ClassroomRoutinesImage} height='100' width='100'/>
               </Button>
             </Grid>
             <Grid item>
@@ -229,7 +229,7 @@ class TransitionTypeSel extends React.Component {
                 variant="raised"
                 style={this.state.selected==="behavior management disruption" ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}
               >
-                <img alt="Behavior Management Disruption" src={bmi} height='100' width='100'/>
+                <img alt="Behavior Management Disruption" src={BMDImage} height='100' width='100'/>
               </Button>
             </Grid>
             <Grid item>
@@ -246,7 +246,7 @@ class TransitionTypeSel extends React.Component {
                 variant="raised"
                 style={this.state.selected==="other" ? raisedThemes.palette.otherColor : themes.palette.otherColor}
               >
-                <img alt="other" src={other} height='100' width='100'/>
+                <img alt="other" src={OtherImage} height='100' width='100'/>
               </Button>
             </Grid>
             <Grid item>

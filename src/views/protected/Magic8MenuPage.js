@@ -7,14 +7,14 @@ import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import AppBar from "../../components/AppBar";
 import { withStyles } from "@material-ui/core/styles";
-import AssociativeCooperativeIcon from "../../assets/icons/AssocCoopInteractions.svg";
-import ClassroomClimateIcon from "../../assets/icons/ClassroomClimate.svg";
-import LevelInstructionIcon from "../../assets/icons/LevelofInstruction.svg";
-import ListenToChildrenIcon from "../../assets/icons/ListeningtoChildren.svg";
-import MathInstructionIcon from "../../assets/icons/MathInstruction.svg";
-import SequentialActivitiesIcon from "../../assets/icons/SequentialActivities.svg";
-import StudentEngagementIcon from "../../assets/icons/StudentEngagement.svg";
-import TransitionTimeIcon from "../../assets/icons/TransitionTime.svg";
+import AssocCoopIconImage from "../../assets/icons/AssocCoopIconImage.svg";
+import ClassroomClimateIconImage from "../../assets/icons/ClassroomClimateIconImage.svg";
+import InstructionIconImage from "../../assets/icons/InstructionIconImage.svg";
+import ListeningIconImage from "../../assets/icons/ListeningIconImage.svg";
+import MathIconImage from "../../assets/icons/MathIconImage.svg";
+import SequentialIconImage from "../../assets/icons/SequentialIconImage.svg";
+import EngagementIconImage from "../../assets/icons/EngagementIconImage.svg";
+import TransitionTimeIconImage from "../../assets/icons/TransitionTimeIconImage.svg";
 import Icon from '@material-ui/core/Icon'
 
 const CardRow = styled.div`
@@ -164,7 +164,7 @@ class Magic8MenuPage extends Component {
           <CardRow>
             <Magic8Card
               title="TransitionTime"
-              icon={TransitionTimeIcon}
+              icon={TransitionTimeIconImage}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(1)}
@@ -172,7 +172,7 @@ class Magic8MenuPage extends Component {
             />
             <Magic8Card
               title="ClassroomClimate"
-              icon={ClassroomClimateIcon}
+              icon={ClassroomClimateIconImage}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(2)}
@@ -180,7 +180,7 @@ class Magic8MenuPage extends Component {
             />
             <Magic8Card
               title="MathInstruction"
-              icon={MathInstructionIcon}
+              icon={MathIconImage}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(3)}
@@ -188,7 +188,7 @@ class Magic8MenuPage extends Component {
             />
             <Magic8Card
               title="StudentEngagement"
-              icon={StudentEngagementIcon}
+              icon={EngagementIconImage}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(4)}
@@ -198,7 +198,7 @@ class Magic8MenuPage extends Component {
           <CardRow>
             <Magic8Card
               title="LevelOfInstruction"
-              icon={LevelInstructionIcon}
+              icon={InstructionIconImage}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(5)}
@@ -206,7 +206,7 @@ class Magic8MenuPage extends Component {
             />
             <Magic8Card
               title="ListeningToChildren"
-              icon={ListenToChildrenIcon}
+              icon={ListeningIconImage}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(6)}
@@ -214,7 +214,7 @@ class Magic8MenuPage extends Component {
             />
             <Magic8Card
               title="SequentialActivities"
-              icon={SequentialActivitiesIcon}
+              icon={SequentialIconImage}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(7)}
@@ -222,7 +222,7 @@ class Magic8MenuPage extends Component {
             />
             <Magic8Card
               title="AssociativeCooperativeInteractions"
-              icon={AssociativeCooperativeIcon}
+              icon={AssocCoopIconImage}
               onClick={this.onClick}
               numSelected={this.state.numSelected}
               unlocked={this.state.unlocked.includes(8)}

@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
-import SequentialIcon from "../../../assets/icons/SequentialActivities.svg";
+import SequentialIconImage from "../../../assets/icons/SequentialIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
@@ -181,7 +181,7 @@ class SequentialActivitiesTrainingPage extends React.Component {
             <Grid container item xs={3}>
               <List className={classes.buttonsList}>
                 <ListItem style={{display:'flex', justifyContent:'center'}}>
-                  <img src={SequentialIcon} width={'100vw'}/>
+                  <img src={SequentialIconImage} width={'100vw'}/>
                 </ListItem>
                 <ListItem>
                   <Button

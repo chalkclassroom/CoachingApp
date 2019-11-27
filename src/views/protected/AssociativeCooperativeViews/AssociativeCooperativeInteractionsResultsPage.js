@@ -10,8 +10,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select";
-import { ReactComponent as GenerateReportSVG } from "../../../assets/icons/generateReport.svg";
-import AssocCoopIcon from "../../../assets/icons/AssocCoopInteractions.svg";
+import GenerateReportImage from "../../../assets/icons/GenerateReportImage.svg";
+import AssocCoopIconImage from "../../../assets/icons/AssocCoopIconImage.svg";
 import { withStyles } from "@material-ui/core/styles";
 //import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
@@ -532,7 +532,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
                         <Grid container item xs={3}>
                             <List className={classes.buttonsList}>
                                 <ListItem>
-                                    <img src={AssocCoopIcon} style={{width:"15vw", height:"10vh", position:"center"}} />
+                                    <img src={AssocCoopIconImage} style={{width:"15vw", height:"10vh", position:"center"}} />
                                 </ListItem>
                                 <ListItem>
                                     <TextField
@@ -624,7 +624,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
                                 </ListItem>
                                 <ListItem>
                                     <IconButton className={classes.generateReport}>
-                                        <GenerateReportSVG
+                                        <GenerateReportImage
                                             style={{
                                                 height: "10vh",
                                                 width: "10vh"

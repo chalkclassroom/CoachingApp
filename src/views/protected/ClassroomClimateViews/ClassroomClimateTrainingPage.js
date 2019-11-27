@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
-import ClassroomClimateIcon from "../../../assets/icons/ClassroomClimate.svg";
+import ClassroomClimateIconImage from "../../../assets/icons/ClassroomClimateIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
@@ -187,7 +187,7 @@ class ClassroomClimateTrainingPage extends React.Component {
             <Grid item xs={3}>
               <List className={classes.buttonsList}>
                 <ListItem style={{display:'flex', justifyContent:'center'}}>
-                  <img src={ClassroomClimateIcon} width={'100vw'}/>
+                  <img src={ClassroomClimateIconImage} width={'100vw'}/>
                 </ListItem>
                 <ListItem>
                   <Button

@@ -9,11 +9,11 @@ import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 import Card from "@material-ui/core/Card";
-import Coach from "../../assets/icons/newCoach.svg";
-//import Teacher from "../../assets/icons/newTeacher.svg";
-//import Admin from "../../assets/icons/newAdministrator.svg";
-import GrayedAdmin from "../../assets/icons/newAdminGrayed.svg";
-import GrayedTeacher from "../../assets/icons/newTeacherGrayed.svg";
+import CoachImage from "../../assets/icons/newCoachImage.svg";
+//import NewTeacherImage from "../../assets/icons/NewTeacherImage.svg";
+//import AdministratorImage from "../../assets/icons/AdministratorImage.svg";
+import GrayedAdminImage from "../../assets/icons/GrayedAdminImage.svg";
+import GrayedTeacherImage from "../../assets/icons/GrayedTeacherImage.svg";
 import CardContent from "@material-ui/core/CardContent";
 
 function getModalStyle() {
@@ -115,7 +115,7 @@ class SignUpModal extends React.Component {
                           justify="flex-start"
                         >
                           <Grid item>
-                            <img src={Coach} alt="Coach" className={classes.photoIcon} />
+                            <img src={CoachImage} alt="Coach" className={classes.photoIcon} />
                           </Grid>
                           <Grid item>
                             <Typography
@@ -139,7 +139,7 @@ class SignUpModal extends React.Component {
                             justify="flex-start"
                         >
                           <Grid item>
-                            <img src={GrayedTeacher} alt="Teacher" className={classes.photoIcon} />
+                            <img src={GrayedTeacherImage} alt="Teacher" className={classes.photoIcon} />
                           </Grid>
                           <Grid item>
                             <Typography
@@ -163,7 +163,7 @@ class SignUpModal extends React.Component {
                             justify="flex-start"
                         >
                           <Grid item>
-                            <img src={GrayedAdmin} alt="Administrator" className={classes.photoIcon} />
+                            <img src={GrayedAdminImage} alt="Administrator" className={classes.photoIcon} />
                           </Grid>
                           <Grid item>
                             <Typography

@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
-import TransitionTimeSvg from '../../../assets/icons/TransitionTime.svg';
-import StudentEngagementSvg from '../../../assets/icons/StudentEngagement.svg';
-import SequentialActivitiesSvg from '../../../assets/icons/SequentialActivities.svg';
-import ListeningToChildrenSvg from '../../../assets/icons/ListeningtoChildren.svg';
-import MathInstructionSvg from '../../../assets/icons/MathInstruction.svg';
-import LevelOfInstructionSvg from '../../../assets/icons/LevelofInstruction.svg';
-import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimate.svg';
-import AssocCoopInteractionsSvg from '../../../assets/icons/AssocCoopInteractions.svg';
-import ConferencePlan from '../../../assets/icons/ConferencePlan.png';
-import ActionPlan from '../../../assets/icons/ActionPlan.png';
+import TransitionTimeIconImage from '../../../assets/icons/TransitionTimeIconImage.svg';
+import EngagementIconImage from '../../../assets/icons/EngagementIconImage.svg';
+import SequentialIconImage from '../../../assets/icons/SequentialIconImage.svg';
+import ListeningIconImage from '../../../assets/icons/ListeningIconImage.svg';
+import MathIconImage from '../../../assets/icons/MathIconImage.svg';
+import InstructionIconImage from '../../../assets/icons/InstructionIconImage.svg';
+import ClassroomClimateIconImage from '../../../assets/icons/ClassroomClimateIconImage.svg';
+import AssocCoopIconImage from '../../../assets/icons/AssocCoopIconImage.svg';
+import ConferencePlanImage from '../../../assets/icons/ConferencePlanImage.png';
+import ActionPlanImage from '../../../assets/icons/ActionPlanImage.png';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
@@ -209,10 +209,10 @@ const styles = theme => ({
   }
 });
 
-const sortedSvg = [TransitionTimeSvg,       ClassroomClimateSvg,
-                   ListeningToChildrenSvg,  LevelOfInstructionSvg,
-                   MathInstructionSvg,      StudentEngagementSvg,
-                   SequentialActivitiesSvg, AssocCoopInteractionsSvg];
+const sortedSvg = [TransitionTimeIconImage,       ClassroomClimateIconImage,
+                   ListeningIconImage,  InstructionIconImage,
+                   MathIconImage,      EngagementIconImage,
+                   SequentialIconImage, AssocCoopIconImage];
 
 const sortedAltText = ["Transition Time",       "Classroom Climate",
                        "Listening To Children", "Level Of Instruction",
@@ -545,11 +545,11 @@ class TeacherListPage extends Component {
               = Observed
             </div>
             <div className={classes.legendItem} >
-              <img alt="Conference Prep" src={ConferencePlan} className={classes.legendIcon} />
+              <img alt="Conference Prep" src={ConferencePlanImage} className={classes.legendIcon} />
               = Conference Prep
             </div>
             <div className={classes.legendItem} >
-              <img alt="Co-created Action Plan" src={ActionPlan} className={classes.legendIcon} />
+              <img alt="Co-created Action Plan" src={ActionPlanImage} className={classes.legendIcon} />
               = Co-created Action plan
             </div>
           </div>

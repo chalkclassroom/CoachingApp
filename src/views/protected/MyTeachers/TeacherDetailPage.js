@@ -4,14 +4,14 @@ import { withRouter } from 'react-router-dom';
 import { FirebaseContext } from '../../../components/Firebase/index';
 import AppBar from '../../../components/AppBar';
 import LabeledInfo from '../../../components/MyTeachersComponents/LabeledInfo';
-import TransitionTimeSvg from '../../../assets/icons/TransitionTime.svg';
-import StudentEngagementSvg from '../../../assets/icons/StudentEngagement.svg';
-import SequentialActivitiesSvg from '../../../assets/icons/SequentialActivities.svg';
-import ListeningToChildrenSvg from '../../../assets/icons/ListeningtoChildren.svg';
-import MathInstructionSvg from '../../../assets/icons/MathInstruction.svg';
-import LevelOfInstructionSvg from '../../../assets/icons/LevelofInstruction.svg';
-import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimate.svg';
-import AssocCoopInteractionsSvg from '../../../assets/icons/AssocCoopInteractions.svg';
+import TransitionTimeIconImage from '../../../assets/icons/TransitionTimeIconImage.svg';
+import EngagementIconImage from '../../../assets/icons/EngagementIconImage.svg';
+import SequentialIconImage from '../../../assets/icons/SequentialIconImage.svg';
+import ListeningIconImage from '../../../assets/icons/ListeningIconImage.svg';
+import MathIconImage from '../../../assets/icons/MathIconImage.svg';
+import InstructionIconImage from '../../../assets/icons/InstructionIconImage.svg';
+import ClassroomClimateIconImage from '../../../assets/icons/ClassroomClimateIconImage.svg';
+import AssocCoopIconImage from '../../../assets/icons/AssocCoopIconImage.svg';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
@@ -242,10 +242,10 @@ const styles = {
   }
 };
 
-const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg,
-                   ListeningToChildrenSvg, LevelOfInstructionSvg,
-                   MathInstructionSvg, StudentEngagementSvg,
-                   SequentialActivitiesSvg, AssocCoopInteractionsSvg];
+const sortedSvg = [TransitionTimeIconImage, ClassroomClimateIconImage,
+                   ListeningIconImage, InstructionIconImage,
+                   MathIconImage, EngagementIconImage,
+                   SequentialIconImage, AssocCoopIconImage;
 
 class TeacherDetailPage extends Component {
 
