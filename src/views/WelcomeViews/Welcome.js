@@ -24,7 +24,9 @@ class Welcome extends React.Component {
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
-        <WelcomeCarousel/> 
+        <FirebaseContext.Consumer>
+          {firebase => <WelcomeCarousel firebase={firebase}/> }
+        </FirebaseContext.Consumer>
       </div>
     );
   }

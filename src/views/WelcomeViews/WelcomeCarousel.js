@@ -58,6 +58,8 @@ import CoachingCycleSvg from '../../assets/icons/CoachingCycleSvg.svg';
 import CoachingCycleFullSvg from '../../assets/icons/CoachingCycleFullSvg.svg';
 import CoachLandingSvg from '../../assets/CoachLandingSvg.svg';
 import CoachLandingPng from '../../assets/CoachLandingPng.png';
+import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.js';
+import { ClickAwayListener } from '@material-ui/core/es';
 
 const styles = {
   paper: {
@@ -141,7 +143,77 @@ const styles = {
 class Homepage extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      events: false,
+      pilotForm: false,
+      demo: false,
+      email: "",
+      emailAdded: false,
+      errors: false,
+      emailError: '',
+    }
   }
+
+  handleEventsButton = () => {
+    this.setState({ events: true });
+  };
+
+  handleClickAwayEvents = () => {
+    this.setState({ events: false });
+  }
+
+  handleSubmit = (event) =>{
+    this.validateEmail();
+    if (!this.state.errors){
+      this.props.firebase.emailListSignUp({
+        email: this.state.email,
+      })
+      .then(function(isSuccess) {
+        if(isSuccess){
+          this.setState({ emailAdded: true });
+        }
+      });
+    }
+  };
+
+  validateState = (name, value) => {
+    switch (name) {
+      case 'email':
+        if (value.length === 0) {
+          this.setState({
+            'emailError': 'Cannot be empty or contain numbers',
+          });
+        } else if (!this.validateEmail(value)) {
+          this.setState({
+            'emailError': 'Not a valid email address',
+            'errors': true,
+          });
+        } else {
+          this.setState({
+            'emailError': '',
+            'errors': false,
+          });
+        }
+        break;
+      default:
+        this.validateState('email', this.state.email);
+        break;
+    }
+  };
+
+  validateEmail = (email) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
+    this.validateState(name, event.target.value);
+  };
+
   render() {
     const { classes } = this.props;
     return(
@@ -150,6 +222,13 @@ class Homepage extends React.Component {
           <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
         </head>
         <body>
+          {this.state.events ? (
+            <ClickAwayListener onClickAway={this.handleClickAwayEvents}>
+              <UpcomingEventsModal />
+            </ClickAwayListener> 
+          ) : (
+            <div />
+          )}
           <Grid container direction="column" justify="center" alignItems="center">
             <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 10}}>
               <img src={CoachLandingPng} alt = "Coach and Teacher" width="100%" style={{postion: 'relative'}}/>
@@ -244,7 +323,7 @@ class Homepage extends React.Component {
                     icon={Logo}
                     altText="Owl Logo"
                     title="Key Classroom Practices"
-                    text= "Our tool focuses on key classroom practices that predict
+                    text="Our tool focuses on key classroom practices that predict
                           children's gains across multiple academic and self-regulation
                           domains."
                   />
@@ -355,7 +434,7 @@ class Homepage extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid container direction="column" justify="center" alignItems="center" style={{backgroundColor: '#dbebfb'}}>
+            <Grid container direction="column" justify="center" alignItems="center" style={{backgroundColor: '#dbebfb'}} className={classes.section}>
               <Grid item style={{width: '100%'}}>
                 <Grid container direction="row" justify="flex-start" alignItems="flex-start" style={{paddingBottom: '1em'}}>
                   <Grid item xs={2} />
@@ -381,6 +460,7 @@ class Homepage extends React.Component {
                       text2="We give frequent presentations and demonstrations
                         of CHALK. See a list of these events here!"
                       button2="View our events"
+                      onClick2={this.handleEventsButton}
                     />
                   </Grid>
                 </Grid>
@@ -395,12 +475,20 @@ class Homepage extends React.Component {
                   </Grid>
                   <Grid item xs={4}>
                     <Grid container direction="row" justify="flex-end" alignItems="center">
-                    <TextField label="Enter your email here" margin="normal" InputLabelProps={{style: {color: '#dbdbdb', fontSize: 20, marginLeft: '0.5em'}}} InputProps={{classes: {input: classes.input}, disableUnderline: true}} style={{backgroundColor: 'white', borderRadius: 10, textAlign: 'center', width: '90%', fontFamily: 'Arimo'}}/>
+                    <TextField
+                      label="Enter your email here"
+                      margin="normal"
+                      value={this.state.email}
+                      onChange={this.handleChange('email')}
+                      helperText={this.state.emailError}
+                      InputLabelProps={{style: {color: '#dbdbdb', fontSize: 20, marginLeft: '0.5em'}}}
+                      InputProps={{classes: {input: classes.input}, disableUnderline: true}}
+                      style={{backgroundColor: 'white', borderRadius: 10, textAlign: 'center', width: '90%', fontFamily: 'Arimo'}}/>
                     </Grid>
                   </Grid>
                   <Grid item xs={3}>
                   <Grid container direction="row" justify="center" alignItems="center">
-                    <Fab variant="extended" style={{color: '#ffffff', backgroundColor: '#459aeb', fontSize: 14, fontFamily: 'Arimo', letterSpacing: '0.03em'}}>
+                    <Fab variant="extended" onClick={this.handleSubmit} style={{color: '#ffffff', backgroundColor: '#459aeb', fontSize: 14, fontFamily: 'Arimo', letterSpacing: '0.03em'}}>
                       <strong>Join mailing list</strong>
                     </Fab>
                     </Grid>
@@ -408,7 +496,7 @@ class Homepage extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
+            <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em'}} className={classes.section}>
               <Grid item style={{width: '100%'}}>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
                   <Typography className={classes.partnersText}>

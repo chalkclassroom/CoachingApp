@@ -84,7 +84,7 @@ class LandingDetail extends React.Component {
               </Grid>
               <Grid item xs={1} />
               <Grid item xs={4}>
-                <Fab variant="extended" className={classes.button}>
+                <Fab variant="extended" onClick={this.props.onClick2} className={classes.button}>
                   <strong>{this.props.button2}</strong>
                 </Fab>
               </Grid>

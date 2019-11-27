@@ -375,6 +375,13 @@ class Firebase {
 
   sessionRef;
 
+  emailListSignUp = async email => {
+    this.sessionRef = this.db.collection("emailList").doc();
+    this.sessionRef.set({
+      email: email
+    });
+  };
+
   handleSession = async mEntry => {
       this.sessionRef = this.db.collection("observations").doc();
       this.sessionRef.set({
