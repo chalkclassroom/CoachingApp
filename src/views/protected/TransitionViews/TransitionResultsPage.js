@@ -9,7 +9,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import SwipeableViews from 'react-swipeable-views';
 import TabBar from '@material-ui/core/AppBar';
-import TransitionTimeIcon from "../../../assets/icons/TransitionTimeIconImage.svg";
+import TransitionTimeIconImage from "../../../assets/icons/TransitionTimeIconImage.svg";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
 //import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
@@ -23,11 +23,11 @@ import 'chartjs-plugin-datalabels';
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import moment from 'moment';
-import ChildWaiting from "../../../assets/icons/ChildWaitingImage.svg"; 
-import WaitingInLine from "../../../assets/icons/WaitingInLineImage.svg"; 
-import Walking from "../../../assets/icons/WalkingImage.svg"; 
-import ClassroomRoutines from "../../../assets/icons/ClassroomRoutinesImage.svg"; 
-import BMD from "../../../assets/icons/BMDImage.svg"; 
+import ChildWaitingImage from "../../../assets/icons/ChildWaitingImage.svg"; 
+import WaitingInLineImage from "../../../assets/icons/WaitingInLineImage.svg"; 
+import WalkingImage from "../../../assets/icons/WalkingImage.svg"; 
+import ClassroomRoutinesImage from "../../../assets/icons/ClassroomRoutinesImage.svg"; 
+import BMDImage from "../../../assets/icons/BMDImage.svg"; 
 import { lightGreen, white, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
 import { red } from '@material-ui/core/es/colors';
 import CardContent from '@material-ui/core/CardContent';
@@ -727,7 +727,7 @@ class TransitionResultsPage extends React.Component {
                 <Card className={classes.dashboardCard}>
                   <Grid container flexGrow={1} spacing={0} direction="column" justify="center" alignItems="center">
                     <Grid item style={{marginTop:"10px", marginBottom:"5px"}}>
-                      <img src={TransitionTimeIcon} alt="Transition Time Icon" width="100vw" height="100vh"/>
+                      <img src={TransitionTimeIconImage} alt="Transition Time Icon" width="100vw" height="100vh"/>
                     </Grid>
                     <Grid item className={classes.resultsButtons}>
                       <TextField
@@ -908,7 +908,7 @@ class TransitionResultsPage extends React.Component {
                               style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
                               onClick={this.lineClick}
                             >
-                              <img src={WaitingInLine} className={classes.transitionTypeButton}/>
+                              <img src={WaitingInLineImage} className={classes.transitionTypeButton}/>
                             </Button>
                           </Grid>
                           <Grid item>
@@ -916,7 +916,7 @@ class TransitionResultsPage extends React.Component {
                             style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
                             onClick={this.travelingClick}
                           >
-                              <img src={Walking} className={classes.transitionTypeButton}/>
+                              <img src={WalkingImage} className={classes.transitionTypeButton}/>
                             </Button>
                           </Grid>
                           <Grid item>
@@ -924,7 +924,7 @@ class TransitionResultsPage extends React.Component {
                               style={this.state.categoryView === "childrenWaiting" ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}
                               onClick={this.childrenWaitingClick}
                             >
-                              <img src={ChildWaiting} className={classes.transitionTypeButton}/>
+                              <img src={ChildWaitingImage} className={classes.transitionTypeButton}/>
                             </Button>
                           </Grid>
                           <Grid item>
@@ -932,7 +932,7 @@ class TransitionResultsPage extends React.Component {
                               style={this.state.categoryView === "routines" ? raisedThemes.palette.classroomRoutinesColor : themes.palette.classroomRoutinesColor}
                               onClick={this.routinesClick}
                             >
-                              <img src={ClassroomRoutines} className={classes.transitionTypeButton}/>
+                              <img src={ClassroomRoutinesImage} className={classes.transitionTypeButton}/>
                             </Button>
                           </Grid>
                           <Grid item>
@@ -940,7 +940,7 @@ class TransitionResultsPage extends React.Component {
                               style={this.state.categoryView === "behavior" ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}
                               onClick={this.behaviorClick}
                             >
-                              <img src={BMD} className={classes.transitionTypeButton}/>
+                              <img src={BMDImage} className={classes.transitionTypeButton}/>
                             </Button>
                           </Grid>
                         </Grid>

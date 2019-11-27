@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Card, CardActionArea } from "@material-ui/core";
 import styled from "styled-components";
-import Lock from "../assets/LockImage.png";
-import Checkmark from "../assets/CheckmarkImage.png";
+import LockImage from "../assets/LockImage.png";
+import CheckmarkImage from "../assets/CheckmarkImage.png";
 
 const styles = {
   title: {
@@ -100,7 +100,7 @@ class Magic8Card extends Component {
               {this.props.page === "Training" ? (
                 this.props.unlocked ? (
                   <Overlay>
-                    <img src={Checkmark} className = {classes.overlayImage} style={{width: "100px"}}/>
+                    <img src={CheckmarkImage} className = {classes.overlayImage} style={{width: "100px"}}/>
                   </Overlay>
                 ) : (
                   <div/>
@@ -109,7 +109,7 @@ class Magic8Card extends Component {
                     <div/>
                   ) : (
                     <Overlay>
-                      <img src={Lock} className = {classes.overlayImage}/>
+                      <img src={LockImage} className = {classes.overlayImage}/>
                     </Overlay>
                   )
                 )

@@ -5,11 +5,11 @@ import AppBar from '../../components/AppBar';
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from '@material-ui/core/styles';
 import InfiniteCarousel from 'react-leaf-carousel';
-import ResourceOne from "../../assets/icons/ResourceOneImage.png"
-import ResourceTwo from "../../assets/icons/ResourceTwoImage.png"
-import ResourceThree from "../../assets/icons/ResourceThreeImage.png"
-import ResourceFour from "../../assets/icons/ResourceFourImage.png"
-import ResourceFive from "../../assets/icons/ResourceFiveImage.png"
+import ResourceOneImage from "../../assets/icons/ResourceOneImage.png"
+import ResourceTwoImage from "../../assets/icons/ResourceTwoImage.png"
+import ResourceThreeImage from "../../assets/icons/ResourceThreeImage.png"
+import ResourceFourImage from "../../assets/icons/ResourceFourImage.png"
+import ResourceFiveImage from "../../assets/icons/ResourceFiveImage.png"
 import { connect } from 'react-redux';
 
 const styles = {
@@ -1003,31 +1003,31 @@ class AboutPage extends React.Component {
             <div>
               <img
                 alt=''
-                src={ResourceOne}
+                src={ResourceOneImage}
               />
             </div>
             <div>
               <img
                 alt=''
-                src={ResourceTwo}
+                src={ResourceTwoImage}
               />
             </div>
             <div>
               <img
                 alt=''
-                src={ResourceThree}
+                src={ResourceThreeImage}
               />
             </div>
             <div>
               <img
                 alt=''
-                src={ResourceFour}
+                src={ResourceFourImage}
               />
             </div>
             <div>
               <img
                 alt=''
-                src={ResourceFive}
+                src={ResourceFiveImage}
               />
             </div>
           </InfiniteCarousel>)

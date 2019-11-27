@@ -4,14 +4,14 @@ import { withRouter } from 'react-router-dom';
 import { FirebaseContext } from '../../../components/Firebase/index';
 import AppBar from '../../../components/AppBar';
 import LabeledInfo from '../../../components/MyTeachersComponents/LabeledInfo';
-import TransitionTimeIcon from '../../../assets/icons/TransitionTimeIconImage.svg';
-import EngagementIcon from '../../../assets/icons/EngagementIconImage.svg';
-import SequentialIcon from '../../../assets/icons/SequentialIconImage.svg';
-import ListeningIcon from '../../../assets/icons/ListeningIconImage.svg';
-import MathIcon from '../../../assets/icons/MathIconImage.svg';
-import InstructionIcon from '../../../assets/icons/InstructionIconImage.svg';
-import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimateIconImage.svg';
-import AssocCoopIcon from '../../../assets/icons/AssocCoopIconImage.svg';
+import TransitionTimeIconImage from '../../../assets/icons/TransitionTimeIconImage.svg';
+import EngagementIconImage from '../../../assets/icons/EngagementIconImage.svg';
+import SequentialIconImage from '../../../assets/icons/SequentialIconImage.svg';
+import ListeningIconImage from '../../../assets/icons/ListeningIconImage.svg';
+import MathIconImage from '../../../assets/icons/MathIconImage.svg';
+import InstructionIconImage from '../../../assets/icons/InstructionIconImage.svg';
+import ClassroomClimateIconImage from '../../../assets/icons/ClassroomClimateIconImage.svg';
+import AssocCoopIconImage from '../../../assets/icons/AssocCoopIconImage.svg';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
@@ -242,10 +242,10 @@ const styles = {
   }
 };
 
-const sortedSvg = [TransitionTimeIcon, ClassroomClimateSvg,
-                   ListeningIcon, InstructionIcon,
-                   MathIcon, EngagementIcon,
-                   SequentialIcon, AssocCoopIcon];
+const sortedSvg = [TransitionTimeIconImage, ClassroomClimateIconImage,
+                   ListeningIconImage, InstructionIconImage,
+                   MathIconImage, EngagementIconImage,
+                   SequentialIconImage, AssocCoopIconImage];
 
 class TeacherDetailPage extends Component {
 

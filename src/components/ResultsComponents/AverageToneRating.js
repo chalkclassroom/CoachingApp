@@ -7,11 +7,11 @@ import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { VictoryPie } from "victory-pie";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import ExNegativeFace from "../../assets/icons/ExNegativeFaceImage.png";
-import NegativeFace from "../../assets/icons/NegativeFaceImage.png";
-import NeutralFace from "../../assets/icons/NeutralFaceImage.png";
-import PleasantFace from "../../assets/icons/PleasantFaceImage.png";
-import VibrantFace from "../../assets/icons/VibrantFaceImage.png";
+import ExNegativeFaceImage from "../../assets/icons/ExNegativeFaceImage.png";
+import NegativeFaceImage from "../../assets/icons/NegativeFaceImage.png";
+import NeutralFaceImage from "../../assets/icons/NeutralFaceImage.png";
+import PleasantFaceImage from "../../assets/icons/PleasantFaceImage.png";
+import VibrantFaceImage from "../../assets/icons/VibrantFaceImage.png";
 
 const styles = ({
 
@@ -39,35 +39,35 @@ class AverageToneRating extends React.Component {
           <Grid item>
             <img
               alt="extreme negative face"
-              src={ExNegativeFace}
+              src={ExNegativeFaceImage}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="negative face"
-              src={NegativeFace}
+              src={NegativeFaceImage}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="flat face"
-              src={NeutralFace}
+              src={NeutralFaceImage}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="pleasant face"
-              src={PleasantFace}
+              src={PleasantFaceImage}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="vibrant face"
-              src={VibrantFace}
+              src={VibrantFaceImage}
               width="70vw"
             />
           </Grid>

@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
-import AssocCoopIcon from "../../../assets/icons/AssocCoopIconImage.svg";
+import AssocCoopIconImage from "../../../assets/icons/AssocCoopIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
@@ -181,7 +181,7 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component {
             <Grid container item xs={3}>
               <List className={classes.buttonsList}>
                 <ListItem style={{display:'flex', justifyContent:'center'}}>
-                  <img src={AssocCoopIcon} width={'100vw'}/>
+                  <img src={AssocCoopIconImage} width={'100vw'}/>
                 </ListItem>
                 <ListItem>
                   <Button

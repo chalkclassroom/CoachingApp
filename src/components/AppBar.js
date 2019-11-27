@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
 import { AppBar as NavBar } from '@material-ui/core';
-import Logo from '../LogoImage.svg'
+import LogoImage from '../LogoImage.svg'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux';
 import LoginModal from "./LoginComponent/LoginModal";
@@ -130,7 +130,7 @@ class AppBar extends React.Component{
                     classes.logoButton
                   )}
                 >
-                  <img src={Logo} height={'36'} alt={""}/>
+                  <img src={LogoImage} height={'36'} alt={""}/>
                 </IconButton>
                 <Typography
                   variant="h6"
@@ -195,7 +195,7 @@ class AppBar extends React.Component{
                     classes.logoButton
                   )}
                 >
-                  <img src={Logo} height={'36'} alt={""}/>
+                  <img src={LogoImage} height={'36'} alt={""}/>
                 </IconButton>
                 <Typography variant="h6" className={classes.menuText}>
                   Classroom Quality - REF

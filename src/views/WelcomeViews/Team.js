@@ -9,14 +9,14 @@ import Typography from "@material-ui/core/Typography/Typography";
 import ProjectAdvisor from '../../components/ProjectAdvisor';
 import TeamMemberCard from '../../components/TeamMemberCard';
 import TeamMemberExpansion from "../../components/TeamMemberExpansion";
-import PreschoolPromiseLogo from "../../assets/icons/PreschoolPromiseLogoImage.jpg";
-import UnitedWayLogo from "../../assets/icons/UnitedWayLogoImage.jpg";
-import UDaytonLogo from "../../assets/icons/UDaytonLogoImage.jpg";
-import VanderbiltPeabodyLogo from "../../assets/icons/VanderbiltPeabodyLogoImage.png";
-import WondryLogo from "../../assets/icons/WondryLogoImage.png";
-import VanderbiltEngineeringLogo from "../../assets/icons/VanderbiltEngineeringLogoImage.png";
-import AbtLogo from "../../assets/icons/AbtLogoImage.png";
-import MNPSLogo from "../../assets/icons/MNPSLogoImage.jpg";
+import PreschoolPromiseLogoImage from "../../assets/icons/PreschoolPromiseLogoImage.jpg";
+import UnitedWayLogoImage from "../../assets/icons/UnitedWayLogoImage.jpg";
+import UDaytonLogoImage from "../../assets/icons/UDaytonLogoImage.jpg";
+import VanderbiltPeabodyLogoImage from "../../assets/icons/VanderbiltPeabodyLogoImage.png";
+import WondryLogoImage from "../../assets/icons/WondryLogoImage.png";
+import VanderbiltEngineeringLogoImage from "../../assets/icons/VanderbiltEngineeringLogoImage.png";
+import AbtLogoImage from "../../assets/icons/AbtLogoImage.png";
+import MNPSLogoImage from "../../assets/icons/MNPSLogoImage.jpg";
 import * as Constants from '../../constants';
 
 
@@ -242,46 +242,46 @@ class Team extends React.Component {
                 <Grid container direction="row" justify="center" alignItems="center">
                   <Grid item xs={4} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={UDaytonLogo} alt="University of Dayton" style={{maxWidth: 250}}/>
+                      <img src={UDaytonLogoImage} alt="University of Dayton" style={{maxWidth: 250}}/>
                     </Grid>
                   </Grid>
                   <Grid item xs={4} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={PreschoolPromiseLogo} alt="Preschool Promise" style={{maxWidth: 250}}/>
+                      <img src={PreschoolPromiseLogoImage} alt="Preschool Promise" style={{maxWidth: 250}}/>
                     </Grid>
                   </Grid>
                   <Grid item xs={4} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={UnitedWayLogo} alt="United Way" style={{maxWidth: 250}}/>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={VanderbiltEngineeringLogo} alt="Vanderbilt School of Engineering" style={{maxWidth: 250}}/>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={WondryLogo} alt="The Wond'ry" style={{maxWidth: 250}}/>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={VanderbiltPeabodyLogo} alt="Peabody College" style={{maxWidth: 250}}/>
+                      <img src={UnitedWayLogoImage} alt="United Way" style={{maxWidth: 250}}/>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid container direction="row" justify="center" alignItems="center">
                   <Grid item xs={4} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={AbtLogo} alt="Abt Associates" style={{maxWidth: 250}}/>
+                      <img src={VanderbiltEngineeringLogoImage} alt="Vanderbilt School of Engineering" style={{maxWidth: 250}}/>
                     </Grid>
                   </Grid>
                   <Grid item xs={4} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={MNPSLogo} alt="Metro Nashville Public Schools" style={{maxWidth: 250}}/>
+                      <img src={WondryLogoImage} alt="The Wond'ry" style={{maxWidth: 250}}/>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={4} style={{padding: 20}}>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <img src={VanderbiltPeabodyLogoImage} alt="Peabody College" style={{maxWidth: 250}}/>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <Grid item xs={4} style={{padding: 20}}>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <img src={AbtLogoImage} alt="Abt Associates" style={{maxWidth: 250}}/>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={4} style={{padding: 20}}>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <img src={MNPSLogoImage} alt="Metro Nashville Public Schools" style={{maxWidth: 250}}/>
                     </Grid>
                   </Grid>
                   <Grid item xs={4} style={{padding: 20}}>
@@ -434,48 +434,48 @@ class Team extends React.Component {
                 <Grid container direction="row" justify="center" alignItems="center">
                   <Grid item xs={6} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={UDaytonLogo} alt="University of Dayton" style={{maxWidth: 200}}/>
+                      <img src={UDaytonLogoImage} alt="University of Dayton" style={{maxWidth: 200}}/>
                     </Grid>
                   </Grid>
                   <Grid item xs={6} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={PreschoolPromiseLogo} alt="Preschool Promise" style={{maxWidth: 200}}/>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={UnitedWayLogo} alt="United Way" style={{maxWidth: 200}}/>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={VanderbiltEngineeringLogo} alt="Vanderbilt School of Engineering" style={{maxWidth: 200}}/>
+                      <img src={PreschoolPromiseLogoImage} alt="Preschool Promise" style={{maxWidth: 200}}/>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid container direction="row" justify="center" alignItems="center">
                   <Grid item xs={6} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={WondryLogo} alt="The Wond'ry" style={{maxWidth: 200}}/>
+                      <img src={UnitedWayLogoImage} alt="United Way" style={{maxWidth: 200}}/>
                     </Grid>
                   </Grid>
                   <Grid item xs={6} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={VanderbiltPeabodyLogo} alt="Peabody College" style={{maxWidth: 200}}/>
+                      <img src={VanderbiltEngineeringLogoImage} alt="Vanderbilt School of Engineering" style={{maxWidth: 200}}/>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid container direction="row" justify="center" alignItems="center">
                   <Grid item xs={6} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={AbtLogo} alt="Abt Associates" style={{maxWidth: 200}}/>
+                      <img src={WondryLogoImage} alt="The Wond'ry" style={{maxWidth: 200}}/>
                     </Grid>
                   </Grid>
                   <Grid item xs={6} style={{padding: 20}}>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={MNPSLogo} alt="Metro Nashville Public Schools" style={{maxWidth: 200}}/>
+                      <img src={VanderbiltPeabodyLogoImage} alt="Peabody College" style={{maxWidth: 200}}/>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <Grid item xs={6} style={{padding: 20}}>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <img src={AbtLogoImage} alt="Abt Associates" style={{maxWidth: 200}}/>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={6} style={{padding: 20}}>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <img src={MNPSLogoImage} alt="Metro Nashville Public Schools" style={{maxWidth: 200}}/>
                     </Grid>
                   </Grid>
                 </Grid>

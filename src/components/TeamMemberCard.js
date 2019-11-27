@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from "@material-ui/core/Typography/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import CC from "../assets/icons/CCImage.jpg";
-import DM from "../assets/icons/DMImage.jpg";
-import KN from "../assets/icons/KNImage.jpg";
-import CS from "../assets/icons/CSImage.jpg";
+import CCImage from "../assets/icons/CCImage.jpg";
+import DMImage from "../assets/icons/DMImage.jpg";
+import KNImage from "../assets/icons/KNImage.jpg";
+import CSImage from "../assets/icons/CSImage.jpg";
 
 const styles = {
   imageBox: {
@@ -30,10 +30,10 @@ class TeamMemberCard extends React.Component {
   }
 
   componentDidMount = () => {
-    this.props.person.initials==='CC' ? this.setState({ image: CC })
-      : this.props.person.initials==='DM' ? this.setState({ image: DM })
-      : this.props.person.initials==='KN' ? this.setState({ image: KN })
-      : this.setState({ image: CS })
+    this.props.person.initials==='CC' ? this.setState({ image: CCImage })
+      : this.props.person.initials==='DM' ? this.setState({ image: DMImage })
+      : this.props.person.initials==='KN' ? this.setState({ image: KNImage })
+      : this.setState({ image: CSImage })
   };
 
   render() {

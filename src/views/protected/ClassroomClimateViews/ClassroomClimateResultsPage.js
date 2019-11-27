@@ -7,8 +7,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import TextField from '@material-ui/core/TextField';
 import IconButton from "@material-ui/core/IconButton/IconButton";
-import ClassroomClimateIcon from "../../../assets/icons/ClassroomClimateIconImage.svg";
-import { ReactComponent as GenerateReport } from "../../../assets/icons/GenerateReportImage.svg";
+import ClassroomClimateIconImage from "../../../assets/icons/ClassroomClimateIconImage.svg";
+import { ReactComponent as GenerateReportImage } from "../../../assets/icons/GenerateReportImage.svg";
 import { withStyles } from "@material-ui/core/styles";
 //import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
@@ -363,7 +363,7 @@ class ClassroomClimateResultsPage extends React.Component {
                         <Grid container item xs={3}>
                             <List className={classes.buttonsList}>
                             <ListItem>
-                              <img src={ClassroomClimateIcon} style={{width:"15vw", height:"10vh", position:"center"}} />
+                              <img src={ClassroomClimateIconImage} style={{width:"15vw", height:"10vh", position:"center"}} />
                             </ListItem>
                                 <ListItem>
                                   <TextField
@@ -458,7 +458,7 @@ class ClassroomClimateResultsPage extends React.Component {
                                     <IconButton
                                         className={classes.generateReport}
                                     >
-                                        <GenerateReport
+                                        <GenerateReportImage
                                             style={{
                                                 height: "88px",
                                                 width: "88px"

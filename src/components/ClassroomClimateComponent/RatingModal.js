@@ -5,11 +5,11 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import YesNoDialog from "../../components/Shared/YesNoDialog";
-import ExNegativeFace from "../../assets/icons/ExNegativeFaceImage.png";
-import NegativeFace from "../../assets/icons/NegativeFaceImage.png";
-import NeutralFace from "../../assets/icons/NeutralFaceImage.png";
-import PleasantFace from "../../assets/icons/PleasantFaceImage.png";
-import VibrantFace from "../../assets/icons/VibrantFaceImage.png";
+import ExNegativeFaceImage from "../../assets/icons/ExNegativeFaceImage.png";
+import NegativeFaceImage from "../../assets/icons/NegativeFaceImage.png";
+import NeutralFaceImage from "../../assets/icons/NeutralFaceImage.png";
+import PleasantFaceImage from "../../assets/icons/PleasantFaceImage.png";
+import VibrantFaceImage from "../../assets/icons/VibrantFaceImage.png";
 
 function getModalStyle() {
   return {
@@ -110,7 +110,7 @@ class RatingModal extends React.Component {
                   <Typography variant="h2" align={"center"}>
                     1
                   </Typography>
-                  {/* <img alt="angry face" src={angryFace} width="100vw" /> */}
+                  {/* <img alt="angry face" src={ExNegativeFaceImage} width="100vw" /> */}
                 </Button>
                 <Typography variant={"h6"} align={"center"}>
                   Anger
@@ -137,7 +137,7 @@ class RatingModal extends React.Component {
                   <Typography variant="h2" align={"center"}>
                     2
                   </Typography>
-                  {/* <img alt="irritated face" src={NegativeFace} width="100vw" /> */}
+                  {/* <img alt="irritated face" src={NegativeFaceImage} width="100vw" /> */}
                 </Button>
                 <Typography variant={"h6"} align={"center"}>
                   Irritation
@@ -162,7 +162,7 @@ class RatingModal extends React.Component {
                   <Typography variant="h2" align={"center"}>
                     3
                   </Typography>
-                  {/* <img alt="neutral face" src={NeutralFace} width="100vw" /> */}
+                  {/* <img alt="neutral face" src={NeutralFaceImage} width="100vw" /> */}
                 </Button>
                 <Typography variant={"h6"} align={"center"}>
                   Neutral
@@ -190,7 +190,7 @@ class RatingModal extends React.Component {
                 </Typography>
                 {/* <img
                   alt="positive interest face"
-                  src={PleasantFace}
+                  src={PleasantFaceImage}
                   width="100vw"
                 /> */}
               </Button>
@@ -217,7 +217,7 @@ class RatingModal extends React.Component {
                 <Typography variant="h2" align={"center"}>
                   5
                 </Typography>
-                {/* <img alt="excited face" src={VibrantFace} width="100vw" /> */}
+                {/* <img alt="excited face" src={VibrantFaceImage} width="100vw" /> */}
               </Button>
               <Typography variant={"h6"} align={"center"}>
                 Excitement

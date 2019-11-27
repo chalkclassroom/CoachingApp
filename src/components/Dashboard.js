@@ -3,30 +3,30 @@ import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import { Button, Card, Grid } from '@material-ui/core';
 import {withRouter} from 'react-router-dom';
-import TransitionTimeIcon from "../assets/icons/TransitionTimeIconImage.svg"
-import ClassroomClimateIcon from "../assets/icons/ClassroomClimateIconImage.svg"
-import MathIcon from "../assets/icons/MathIconImage.svg"
-import EngagementIcon from "../assets/icons/EngagementIconImage.svg"
-import InstructionIcon from "../assets/icons/InstructionIconImage.svg"
-import ListeningIcon from "../assets/icons/ListeningIconImage.svg"
-import SequentialIcon from "../assets/icons/SequentialIconImage.svg"
-import AssocCoopIcon from "../assets/icons/AssocCoopIconImage.svg"
-import TransitionNotes from "../assets/icons/TransitionNotesImage.svg"
-import ClassroomClimateNotes from "../assets/icons/ClassroomClimateNotesImage.svg"
-import MathNotes from "../assets/icons/MathNotesImage.svg"
-import EngagementNotes from "../assets/icons/EngagementNotesImage.svg"
-import InstructionNotes from "../assets/icons/InstructionNotesImage.svg"
-import ListeningNotes from "../assets/icons/ListeningNotesImage.svg"
-import SequentialNotes from "../assets/icons/SequentialNotesImage.svg"
-import AssocCoopNotes from "../assets/icons/AssocCoopNotesImage.svg"
-import TransitionTimeLookFors from "../assets/icons/TransitionTimeLookForsImage.svg"
-import ClassroomClimateLookFors from "../assets/icons/ClassroomClimateLookForsImage.svg"
-import MathLookFors from "../assets/icons/MathLookForsImage.svg"
-import EngagementLookFors from "../assets/icons/EngagementLookForsImage.svg"
-import InstructionLookFors from "../assets/icons/InstructionLookForsImage.svg"
-import ListeningLookFors from "../assets/icons/ListeningLookForsImage.svg"
-import SequentialLookFors from "../assets/icons/SequentialLookForsImage.svg"
-import AssocCoopLookFors from "../assets/icons/AssocCoopLookForsImage.svg"
+import TransitionTimeIconImage from "../assets/icons/TransitionTimeIconImage.svg"
+import ClassroomClimateIconImage from "../assets/icons/ClassroomClimateIconImage.svg"
+import MathIconImage from "../assets/icons/MathIconImage.svg"
+import EngagementIconImage from "../assets/icons/EngagementIconImage.svg"
+import InstructionIconImage from "../assets/icons/InstructionIconImage.svg"
+import ListeningIconImage from "../assets/icons/ListeningIconImage.svg"
+import SequentialIconImage from "../assets/icons/SequentialIconImage.svg"
+import AssocCoopIconImage from "../assets/icons/AssocCoopIconImage.svg"
+import TransitionNotesImage from "../assets/icons/TransitionNotesImage.svg"
+import ClassroomClimateNotesImage from "../assets/icons/ClassroomClimateNotesImage.svg"
+import MathNotesImage from "../assets/icons/MathNotesImage.svg"
+import EngagementNotesImage from "../assets/icons/EngagementNotesImage.svg"
+import InstructionNotesImage from "../assets/icons/InstructionNotesImage.svg"
+import ListeningNotesImage from "../assets/icons/ListeningNotesImage.svg"
+import SequentialNotesImage from "../assets/icons/SequentialNotesImage.svg"
+import AssocCoopNotesImage from "../assets/icons/AssocCoopNotesImage.svg"
+import TransitionTimeLookForsImage from "../assets/icons/TransitionTimeLookForsImage.svg"
+import ClassroomClimateLookForsImage from "../assets/icons/ClassroomClimateLookForsImage.svg"
+import MathLookForsImage from "../assets/icons/MathLookForsImage.svg"
+import EngagementLookForsImage from "../assets/icons/EngagementLookForsImage.svg"
+import InstructionLookForsImage from "../assets/icons/InstructionLookForsImage.svg"
+import ListeningLookForsImage from "../assets/icons/ListeningLookForsImage.svg"
+import SequentialLookForsImage from "../assets/icons/SequentialLookForsImage.svg"
+import AssocCoopLookForsImage from "../assets/icons/AssocCoopLookForsImage.svg"
 import Notes from "./Notes";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from '@material-ui/core/es';
@@ -122,37 +122,37 @@ class Dashboard extends React.Component {
 
   componentDidMount = () => {
     this.props.magic8 === "Transition Time" ? this.setState({
-      icon: TransitionTimeIcon,
-      lookForsIcon: TransitionTimeLookFors,
-      notesIcon: TransitionNotes})
+      icon: TransitionTimeIconImage,
+      lookForsIcon: TransitionTimeLookForsImage,
+      notesIcon: TransitionNotesImage})
     : this.props.magic8 === "Classroom Climate" ? this.setState({
-      icon: ClassroomClimateIcon,
-      lookForsIcon: ClassroomClimateLookFors,
-      notesIcon: ClassroomClimateNotes})
+      icon: ClassroomClimateIconImage,
+      lookForsIcon: ClassroomClimateLookForsImage,
+      notesIcon: ClassroomClimateNotesImage})
     : this.props.magic8 === "Math" ? this.setState({
-      icon: MathIcon,
-      lookForsIcon: MathLookFors,
-      notesIcon: MathNotes})
+      icon: MathIconImage,
+      lookForsIcon: MathLookForsImage,
+      notesIcon: MathNotesImage})
     : this.props.magic8 === "Level of Engagement" ? this.setState({
-      icon: EngagementIcon,
-      lookForsIcon: EngagementLookFors,
-      notesIcon: EngagementNotes})
+      icon: EngagementIconImage,
+      lookForsIcon: EngagementLookForsImage,
+      notesIcon: EngagementNotesImage})
     : this.props.magic8 === "Level of Instruction" ? this.setState({
-      icon: InstructionIcon,
-      lookForsIcon: InstructionLookFors,
-      notesIcon: InstructionNotes})
+      icon: InstructionIconImage,
+      lookForsIcon: InstructionLookForsImage,
+      notesIcon: InstructionNotesImage})
     : this.props.magic8 === "Listening to Children" ? this.setState({
-      icon: ListeningIcon,
-      lookForsIcon: ListeningLookFors,
-      notesIcon: ListeningNotes})
+      icon: ListeningIconImage,
+      lookForsIcon: ListeningLookForsImage,
+      notesIcon: ListeningNotesImage})
     : this.props.magic8 === "Sequential Activities" ? this.setState({
-      icon: SequentialIcon,
-      lookForsIcon: SequentialLookFors,
-      notesIcon: SequentialNotes})
+      icon: SequentialIconImage,
+      lookForsIcon: SequentialLookForsImage,
+      notesIcon: SequentialNotesImage})
     : this.setState({
-      icon: AssocCoopIcon,
-      lookForsIcon: AssocCoopLookFors,
-      notesIcon: AssocCoopNotes})
+      icon: AssocCoopIconImage,
+      lookForsIcon: AssocCoopLookForsImage,
+      notesIcon: AssocCoopNotesImage})
   };
 
   handleHelpModal = () => {
