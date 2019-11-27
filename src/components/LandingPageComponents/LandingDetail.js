@@ -16,7 +16,9 @@ const styles = {
   button: {
     color: '#ffffff',
     backgroundColor: '#459aeb',
-    fontSize: 14
+    fontSize: 14,
+    fontFamily: 'Arimo',
+    letterSpacing: '0.03em'
   }
 };
 
@@ -29,46 +31,66 @@ class LandingDetail extends React.Component {
     return(
       <Grid container direction="column">
         <Grid item>
-          <Grid container direction="row">
-            <Grid item xs={2} />
-            <Grid item xs={2}>
-              <Grid container direction="row" justify="flex-end" alignContent="center">
-                <img alt={this.props.iconAlt} src={this.props.icon} width="50%" style={{paddingRight: 10}}/>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={1} />
+            <Grid item xs={1}>
+              <Grid container direction="row" justify="flex-end" alignItems="flex-start" style={{height: '100%'}}>
+                <img alt={this.props.iconAlt1} src={this.props.icon1} height={100} width={100} style={{paddingRight: 10}}/>
               </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <Typography style={{fontFamily: 'Avenir', fontSize: 20, color: '#2f4b65'}}>
-                {this.props.title}
+            <Grid item xs={4}>
+              <Typography style={{fontSize: 22, color: '#2f4b65', paddingRight: '20%', fontFamily: 'Arimo'}}>
+                {this.props.title1}
               </Typography>
             </Grid>
-            <Grid item xs={2} />
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Grid container direction="row">
-            <Grid item xs={2} />
-            <Grid item xs={2} />
-            <Grid item xs={6}>
-              <Typography style={{fontFamily: 'Avenir', fontSize: 16, color: '#2f4b65'}}>
-                {this.props.text}
+            <Grid item xs={1}>
+              <Grid container direction="row" justify="flex-end" alignContent="center" style={{height: '100%'}}>
+                <img alt={this.props.iconAlt2} src={this.props.icon2} height={100} width={100} style={{paddingRight: 10}}/>
+              </Grid>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography style={{fontSize: 22, color: '#2f4b65', paddingRight: '20%', fontFamily: 'Arimo'}}>
+                {this.props.title2}
               </Typography>
             </Grid>
-            <Grid item xs={2} />
+            <Grid item xs={1} />
           </Grid>
         </Grid>
-        {this.props.button ? (
-          <Grid item style={{paddingTop: 10, paddingBottom: 10}}>
-          <Grid container direction="row">
+        <Grid item style={{paddingTop: '1em'}}>
+          <Grid container direction="row" justify="flex-start" alignItems="flex-start">
             <Grid item xs={2} />
-            <Grid item xs={2} />
-            <Grid item xs={6}>
-              <Fab variant="extended" className={classes.button}>
-                <strong>{this.props.button}</strong>
-              </Fab>
+            <Grid item xs={4}>
+              <Typography style={{fontSize: 18, color: '#2f4b65', paddingRight: '20%', fontFamily: 'Arimo'}}>
+                {this.props.text1}
+              </Typography>
             </Grid>
-            <Grid item xs={2} />
+            <Grid item xs={1} />
+            <Grid item xs={4}>
+              <Typography style={{fontSize: 18, color: '#2f4b65', paddingRight: '20%', fontFamily: 'Arimo'}}>
+                {this.props.text2}
+              </Typography>
+            </Grid>
+            <Grid item xs={1} />
           </Grid>
         </Grid>
+        {this.props.button1 || this.props.button2 ? (
+          <Grid item style={{paddingTop: '1em'}}>
+            <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+              <Grid item xs={2} />
+              <Grid item xs={4}>
+                <Fab variant="extended" className={classes.button}>
+                  <strong>{this.props.button1}</strong>
+                </Fab>
+              </Grid>
+              <Grid item xs={1} />
+              <Grid item xs={4}>
+                <Fab variant="extended" className={classes.button}>
+                  <strong>{this.props.button2}</strong>
+                </Fab>
+              </Grid>
+              <Grid item xs={1} />
+            </Grid>
+          </Grid>
         ) : (
           null
         )}

@@ -29,22 +29,23 @@ class FeaturesCard extends React.Component {
   render() {
     const { classes } = this.props;
     return(
-      <Card style={{paddingTop: 2, width: '90%', height: '100%', borderRadius: '10px'}}>
+      <Card style={{paddingTop: 2, width: '95%', height: '100%', borderRadius: '10px'}}>
         <CardContent>
           <Grid container direction="column">
             <Grid container direction="row" justify="center" alignItems="center" style={{height: '4em'}}>
               <Grid item xs={3}>
-                <img alt={this.props.altText} src={this.props.icon} style={{width: '80%', height: '90%'}}/>
+                <img alt={this.props.altText} src={this.props.icon} style={{width: '70%', height: '80%'}}/>
               </Grid>
               <Grid item xs={9}>
-                <Typography style={{color: '#2f4b65', fontSize: 20, fontFamily: 'Avenir'}}>
+                <Typography style={{color: '#2f4b65', fontSize: 22, fontFamily: 'Arimo'}}>
                   {this.props.title}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container direction="row" style={{paddingTop: 20}}>
-              <Grid item>
-                <Typography style={{color: '#5e7b97'}}>
+              <Grid item xs={3} />
+              <Grid item xs={9}>
+                <Typography style={{color: '#5e7b97', fontSize: 18, fontFamily: 'Arimo'}}>
                   {this.props.text}
                 </Typography>
               </Grid>

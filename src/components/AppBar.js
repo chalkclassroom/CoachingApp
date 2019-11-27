@@ -22,6 +22,8 @@ const styles = {
     flexGrow: 1,
   },
   menuButton: {
+    fontFamily: 'Arimo',
+    fontSize: 16,
     marginLeft: -12,
     marginRight: 20,
     "&:hover" : {
@@ -36,10 +38,11 @@ const styles = {
     margin:10
   },
   menuText: {
-    color:'#FFFFFF'
+    color:'#FFFFFF',
   },
   chalkText: {
     color: 'white',
+    fontFamily: 'Arimo',
     fontSize: 20,
     fontWeight: 'bold',
     lineHeight: '110%',
@@ -48,6 +51,7 @@ const styles = {
   },
   coachingText: {
     color: 'white',
+    fontFamily: 'Arimo',
     fontSize: 14,
     fontWeight: 'normal',
     lineHeight: '110%',
