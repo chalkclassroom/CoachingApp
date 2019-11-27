@@ -5,7 +5,7 @@ import AppBar from '../../components/AppBar';
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from '@material-ui/core/styles';
 import Helmet from 'react-helmet';
-import PlaceholderIcon from "../../assets/icons/KeanuReeves.jpg"
+import KeanuReeves from "../../assets/icons/KeanuReevesImage.jpg"
 import { connect } from 'react-redux';
 
 const styles = {
@@ -32,7 +32,7 @@ class TeamPage extends React.Component {
           height="100%"
           viewBox="0 0 220 292"
         >
-          <image width={220} height={292} xlinkHref={PlaceholderIcon} />
+          <image width={220} height={292} xlinkHref={KeanuReeves} />
         </pattern>
       </defs>
       <g data-name="Our Team" transform="translate(90 -56.693)">

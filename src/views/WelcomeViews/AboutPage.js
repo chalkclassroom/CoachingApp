@@ -5,21 +5,13 @@ import AppBar from '../../components/AppBar';
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from '@material-ui/core/styles';
 import InfiniteCarousel from 'react-leaf-carousel';
-<<<<<<< HEAD:src/views/WelcomeViews/AboutPage.js
-import resource1 from "../../assets/icons/pdfSlide1.png"
-import resource2 from "../../assets/icons/research2.png"
-import resource3 from "../../assets/icons/resource3.png"
-import resource4 from "../../assets/icons/resource4.png"
-import resource5 from "../../assets/icons/resource5.png"
-import { connect } from 'react-redux';
-
-=======
 import ResourceOne from "../../assets/icons/ResourceOneImage.png"
 import ResourceTwo from "../../assets/icons/ResourceTwoImage.png"
 import ResourceThree from "../../assets/icons/ResourceThreeImage.png"
 import ResourceFour from "../../assets/icons/ResourceFourImage.png"
 import ResourceFive from "../../assets/icons/ResourceFiveImage.png"
->>>>>>> b2e13b8b... Renames asset occurences and file names:src/views/WelcomeViews/About.js
+import { connect } from 'react-redux';
+
 const styles = {
     root: {
         flexGrow: 1,
