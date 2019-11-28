@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Card, CardActionArea } from "@material-ui/core";
 import styled from "styled-components";
-import LockImage from "../assets/LockImage.png";
-import CheckmarkImage from "../assets/CheckmarkImage.png";
+import LockImage from "../assets/images/LockImage.png";
+import CheckmarkImage from "../assets/images/CheckmarkImage.png";
 
 const styles = {
   title: {
@@ -37,7 +37,7 @@ const styles = {
   },
   cardAction: {
     height: "160px",
-    width: "160px" 
+    width: "160px"
   }
 };
 

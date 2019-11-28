@@ -3,30 +3,30 @@ import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import { Button, Card, Grid } from '@material-ui/core';
 import {withRouter} from 'react-router-dom';
-import TransitionTimeIconImage from "../assets/icons/TransitionTimeIconImage.svg"
-import ClassroomClimateIconImage from "../assets/icons/ClassroomClimateIconImage.svg"
-import MathIconImage from "../assets/icons/MathIconImage.svg"
-import EngagementIconImage from "../assets/icons/EngagementIconImage.svg"
-import InstructionIconImage from "../assets/icons/InstructionIconImage.svg"
-import ListeningIconImage from "../assets/icons/ListeningIconImage.svg"
-import SequentialIconImage from "../assets/icons/SequentialIconImage.svg"
-import AssocCoopIconImage from "../assets/icons/AssocCoopIconImage.svg"
-import TransitionNotesImage from "../assets/icons/TransitionNotesImage.svg"
-import ClassroomClimateNotesImage from "../assets/icons/ClassroomClimateNotesImage.svg"
-import MathNotesImage from "../assets/icons/MathNotesImage.svg"
-import EngagementNotesImage from "../assets/icons/EngagementNotesImage.svg"
-import InstructionNotesImage from "../assets/icons/InstructionNotesImage.svg"
-import ListeningNotesImage from "../assets/icons/ListeningNotesImage.svg"
-import SequentialNotesImage from "../assets/icons/SequentialNotesImage.svg"
-import AssocCoopNotesImage from "../assets/icons/AssocCoopNotesImage.svg"
-import TransitionTimeLookForsImage from "../assets/icons/TransitionTimeLookForsImage.svg"
-import ClassroomClimateLookForsImage from "../assets/icons/ClassroomClimateLookForsImage.svg"
-import MathLookForsImage from "../assets/icons/MathLookForsImage.svg"
-import EngagementLookForsImage from "../assets/icons/EngagementLookForsImage.svg"
-import InstructionLookForsImage from "../assets/icons/InstructionLookForsImage.svg"
-import ListeningLookForsImage from "../assets/icons/ListeningLookForsImage.svg"
-import SequentialLookForsImage from "../assets/icons/SequentialLookForsImage.svg"
-import AssocCoopLookForsImage from "../assets/icons/AssocCoopLookForsImage.svg"
+import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg"
+import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg"
+import MathIconImage from "../assets/images/MathIconImage.svg"
+import EngagementIconImage from "../assets/images/EngagementIconImage.svg"
+import InstructionIconImage from "../assets/images/InstructionIconImage.svg"
+import ListeningIconImage from "../assets/images/ListeningIconImage.svg"
+import SequentialIconImage from "../assets/images/SequentialIconImage.svg"
+import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg"
+import TransitionNotesImage from "../assets/images/TransitionNotesImage.svg"
+import ClassroomClimateNotesImage from "../assets/images/ClassroomClimateNotesImage.svg"
+import MathNotesImage from "../assets/images/MathNotesImage.svg"
+import EngagementNotesImage from "../assets/images/EngagementNotesImage.svg"
+import InstructionNotesImage from "../assets/images/InstructionNotesImage.svg"
+import ListeningNotesImage from "../assets/images/ListeningNotesImage.svg"
+import SequentialNotesImage from "../assets/images/SequentialNotesImage.svg"
+import AssocCoopNotesImage from "../assets/images/AssocCoopNotesImage.svg"
+import TransitionTimeLookForsImage from "../assets/images/TransitionTimeLookForsImage.svg"
+import ClassroomClimateLookForsImage from "../assets/images/ClassroomClimateLookForsImage.svg"
+import MathLookForsImage from "../assets/images/MathLookForsImage.svg"
+import EngagementLookForsImage from "../assets/images/EngagementLookForsImage.svg"
+import InstructionLookForsImage from "../assets/images/InstructionLookForsImage.svg"
+import ListeningLookForsImage from "../assets/images/ListeningLookForsImage.svg"
+import SequentialLookForsImage from "../assets/images/SequentialLookForsImage.svg"
+import AssocCoopLookForsImage from "../assets/images/AssocCoopLookForsImage.svg"
 import Notes from "./Notes";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from '@material-ui/core/es';
@@ -113,7 +113,7 @@ class Dashboard extends React.Component {
       }),
       submitFunc: null,
       alignFormat: "center",
-      incomplete: false, 
+      incomplete: false,
       icon: null,
       lookForsIcon: null,
       notesIcon: null
@@ -211,7 +211,7 @@ class Dashboard extends React.Component {
         ) : this.state.incomplete ? (
           <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
             <IncompleteObservation />
-          </ClickAwayListener>                    
+          </ClickAwayListener>
         ) : (
           <div />
         )}
@@ -275,7 +275,7 @@ class Dashboard extends React.Component {
                     />
                   )}
                 </FirebaseContext.Consumer>
-              </Grid> 
+              </Grid>
             ) : (
               <Grid item className={classes.completeGrid}>
                 <Button variant="outlined" onClick={this.handleIncomplete} className={classes.completeButton}>

@@ -7,11 +7,11 @@ import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { VictoryPie } from "victory-pie";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import ExNegativeFaceImage from "../../assets/icons/ExNegativeFaceImage.png";
-import NegativeFaceImage from "../../assets/icons/NegativeFaceImage.png";
-import NeutralFaceImage from "../../assets/icons/NeutralFaceImage.png";
-import PleasantFaceImage from "../../assets/icons/PleasantFaceImage.png";
-import VibrantFaceImage from "../../assets/icons/VibrantFaceImage.png";
+import ExNegativeFaceImage from "../../assets/images/ExNegativeFaceImage.png";
+import NegativeFaceImage from "../../assets/images/NegativeFaceImage.png";
+import NeutralFaceImage from "../../assets/images/NeutralFaceImage.png";
+import PleasantFaceImage from "../../assets/images/PleasantFaceImage.png";
+import VibrantFaceImage from "../../assets/images/VibrantFaceImage.png";
 
 const styles = ({
 

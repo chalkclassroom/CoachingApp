@@ -9,11 +9,11 @@ import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 import Card from "@material-ui/core/Card";
-import CoachImage from "../../assets/icons/CoachImage.svg";
-//import NewTeacherImage from "../../assets/icons/NewTeacherImage.svg";
-//import NewAdministratorImage from "../../assets/icons/NewAdministratorImage.svg";
-import GrayedAdminImage from "../../assets/icons/GrayedAdminImage.svg";
-import GrayedTeacherImage from "../../assets/icons/GrayedTeacherImage.svg";
+import CoachImage from "../../assets/images/CoachImage.svg";
+//import NewTeacherImage from "../../assets/images/NewTeacherImage.svg";
+//import NewAdministratorImage from "../../assets/images/NewAdministratorImage.svg";
+import GrayedAdminImage from "../../assets/images/GrayedAdminImage.svg";
+import GrayedTeacherImage from "../../assets/images/GrayedTeacherImage.svg";
 import CardContent from "@material-ui/core/CardContent";
 
 function getModalStyle() {

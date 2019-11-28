@@ -6,9 +6,9 @@ import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import CountdownImage from "../../../assets/icons/CountdownImage.png";
-import SchoolImage from "../../../assets/icons/SchoolImage.png";
-import TimeImage from "../../../assets/icons/TimeImage.png";
+import CountdownImage from "../../../assets/images/CountdownImage.png";
+import SchoolImage from "../../../assets/images/SchoolImage.png";
+import TimeImage from "../../../assets/images/TimeImage.png";
 
 function getModalStyle() {
   return {

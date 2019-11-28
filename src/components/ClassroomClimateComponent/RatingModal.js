@@ -5,11 +5,11 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import YesNoDialog from "../../components/Shared/YesNoDialog";
-import ExNegativeFaceImage from "../../assets/icons/ExNegativeFaceImage.png";
-import NegativeFaceImage from "../../assets/icons/NegativeFaceImage.png";
-import NeutralFaceImage from "../../assets/icons/NeutralFaceImage.png";
-import PleasantFaceImage from "../../assets/icons/PleasantFaceImage.png";
-import VibrantFaceImage from "../../assets/icons/VibrantFaceImage.png";
+import ExNegativeFaceImage from "../../assets/images/ExNegativeFaceImage.png";
+import NegativeFaceImage from "../../assets/images/NegativeFaceImage.png";
+import NeutralFaceImage from "../../assets/images/NeutralFaceImage.png";
+import PleasantFaceImage from "../../assets/images/PleasantFaceImage.png";
+import VibrantFaceImage from "../../assets/images/VibrantFaceImage.png";
 
 function getModalStyle() {
   return {

@@ -10,7 +10,6 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter";
 import { connect } from "react-redux";
 import { appendClimateRating, emptyClimateStack } from "../../../state/actions/classroom-climate";
-//import ClassroomClimateRecs from "./ClassroomClimateRecs";
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
@@ -146,7 +145,7 @@ class ClassroomClimatePage extends React.Component {
             direction={"column"}
             style={{ margin: 10}}
           >
-            <Grid 
+            <Grid
               container
               alignItems={"center"}
               justify={"center"}
@@ -159,7 +158,7 @@ class ClassroomClimatePage extends React.Component {
                   justify={"center"}
                   direction={"column"}
                 >
-                  <Dashboard 
+                  <Dashboard
                     magic8="Classroom Climate"
                     color="#0988ec"
                     infoDisplay= {<Countdown color="#0988ec" timerTime={RATING_INTERVAL}/>}

@@ -5,7 +5,7 @@ import AppBar from '../../components/AppBar';
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from '@material-ui/core/styles';
 import Helmet from 'react-helmet';
-import KeanuReevesImage from "../../assets/icons/KeanuReevesImage.jpg"
+import KeanuReevesImage from "../../assets/images/KeanuReevesImage.jpg"
 import { connect } from 'react-redux';
 
 const styles = {
@@ -976,15 +976,15 @@ class TeamPage extends React.Component {
 
     render() {
         const {classes} = this.props;
-        return ( 
+        return (
             <div>
             <Helmet>
             <style>{'body { background-color: #A1C4FD;}'}</style>
-          </Helmet>  
+          </Helmet>
             <div className={classes.root}>
               <Helmet>
                 <style>{'body { background-color: #A1C4FD;}'}</style>
-              </Helmet>  
+              </Helmet>
                         <FirebaseContext.Consumer>
                             {
                                 firebase => <AppBar firebase={firebase}/>

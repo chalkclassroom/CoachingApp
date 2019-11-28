@@ -1,14 +1,14 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
-import HomepageIllustrationImage from "../../assets/icons/HomepageIllustrationImage.svg"
+import HomepageIllustrationImage from "../../assets/images/HomepageIllustrationImage.svg"
 import Helmet from 'react-helmet';
-import ChildrenWalkingImage from '../../assets/icons/ChildrenWalkingImage.png'
+import ChildrenWalkingImage from '../../assets/images/ChildrenWalkingImage.png'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import SlideOneImage from "../../assets/slides/SlideOneImage.png";
-import SlideTwoImage from "../../assets/slides/SlideTwoImage.png";
-import SlideThreeImage from "../../assets/slides/SlideThreeImage.png";
+import SlideOneImage from "../../assets/images/SlideOneImage.png";
+import SlideTwoImage from "../../assets/images/SlideTwoImage.png";
+import SlideThreeImage from "../../assets/images/SlideThreeImage.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 
@@ -1002,10 +1002,10 @@ class LandingPage extends React.Component {
       {this.benefits(this.props)}
       <Helmet>
       <style>{'body { background-color: #86B1F8;}'}</style>
-      </Helmet>  
+      </Helmet>
       </div>
       </>
-     
+
     )}
     }
 LandingPage.propTypes = {

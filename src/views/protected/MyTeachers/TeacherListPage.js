@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
-import TransitionTimeIconImage from '../../../assets/icons/TransitionTimeIconImage.svg';
-import EngagementIconImage from '../../../assets/icons/EngagementIconImage.svg';
-import SequentialIconImage from '../../../assets/icons/SequentialIconImage.svg';
-import ListeningIconImage from '../../../assets/icons/ListeningIconImage.svg';
-import MathIconImage from '../../../assets/icons/MathIconImage.svg';
-import InstructionIconImage from '../../../assets/icons/InstructionIconImage.svg';
-import ClassroomClimateIconImage from '../../../assets/icons/ClassroomClimateIconImage.svg';
-import AssocCoopIconImage from '../../../assets/icons/AssocCoopIconImage.svg';
-import ConferencePlanImage from '../../../assets/icons/ConferencePlanImage.png';
-import ActionPlanImage from '../../../assets/icons/ActionPlanImage.png';
+import TransitionTimeIconImage from '../../../assets/images/TransitionTimeIconImage.svg';
+import EngagementIconImage from '../../../assets/images/EngagementIconImage.svg';
+import SequentialIconImage from '../../../assets/images/SequentialIconImage.svg';
+import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg';
+import MathIconImage from '../../../assets/images/MathIconImage.svg';
+import InstructionIconImage from '../../../assets/images/InstructionIconImage.svg';
+import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg';
+import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
+import ConferencePlanImage from '../../../assets/images/ConferencePlanImage.png';
+import ActionPlanImage from '../../../assets/images/ActionPlanImage.png';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
@@ -250,9 +250,9 @@ class TeacherListPage extends Component {
   componentDidMount() {
     const firebase = this.context;
     firebase.getTeacherList()
-      .then(teachers => 
-        teachers.forEach(teacher => 
-          teacher.then(data => 
+      .then(teachers =>
+        teachers.forEach(teacher =>
+          teacher.then(data =>
             this.setState(prevState => {
               return {
                 teachers: prevState.teachers.concat(data),
@@ -390,9 +390,9 @@ class TeacherListPage extends Component {
         notes: inputNotes,
         phone: inputPhone
       })
-        .then(id => 
+        .then(id =>
           firebase.getTeacherInfo(id)
-            .then(teacherInfo => 
+            .then(teacherInfo =>
               this.setState(prevState => {
                 return {
                   teachers: prevState.teachers.concat(teacherInfo),

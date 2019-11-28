@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
 import { AppBar as NavBar } from '@material-ui/core';
-import LogoImage from '../LogoImage.svg'
+import LogoImage from '../assets/images/LogoImage.svg'
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux';
 import LoginModal from "./LoginComponent/LoginModal";
@@ -49,7 +49,7 @@ const theme = createMuiTheme ({
     secondary: {
       main: '#FFFFFF'
     }
-  }, 
+  },
   shadows: ["none"],
 })
 
@@ -179,11 +179,11 @@ class AppBar extends React.Component{
                       </Button>
                     </Link>
                   </div>
-                </Router> 
+                </Router>
               </Toolbar>
               <BurgerMenu open={this.state.open} handleClose={this.handleMenu} firebase={this.props.firebase}/>
             </NavBar>
-          ) : ( 
+          ) : (
             <NavBar position="static" color={"primary"}>
               <Toolbar>
                 <IconButton
@@ -242,8 +242,8 @@ class AppBar extends React.Component{
                         About
                       </Button>
                     </Link>
-                  </div>   
-                </Router>        
+                  </div>
+                </Router>
               </Toolbar>
               {this.state.loginModal ? (
                 <LoginModal handleClose={this.handleClose} firebase = {this.props.firebase}/>

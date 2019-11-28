@@ -5,8 +5,7 @@ const webpackMerge = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const modeConfiguration = env => require(`./build-utils/webpack.${env}`)(env);
 
-
-module.exports = ({ mode } = { mode: "production" }) => {
+module.exports = ({ mode } = { mode: "development" }) => {
     console.log(`mode is: ${mode}`);
 
     return webpackMerge(
@@ -20,25 +19,30 @@ module.exports = ({ mode } = { mode: "production" }) => {
             },
             module: {
                 rules: [
-                 {
-                    test: /\.jpe?g|png|gif$/,
-                    exclude: /node_modules/,
-                    loader: ["url-loader", "file-loader"]
-                },
                     {
                         test: /\.(js|jsx)$/,
                         exclude: /node_modules/,
-                        loader: "babel-loader"
+                        loader: "babel-loader",
                     },
                     {
                         test: /\.svg$/,
-                        loader: 'svg-inline-loader'
+                        use: [
+                            {
+                                loader: 'svg-url-loader',
+                                options: {
+                                    limit: 100000,
+                                    name: '/assets/images/[name].[ext]',
+                                    encoding: 'base64'
+                                },
+                            },
+                        ],
                     },
                     {
-                        test: /\.(png|jpe?g|gif|eot|ttf|woff|woff2)$/i,
+                        test:/\.(png|jpg|gif)$/,
                         loader: 'url-loader',
                         options: {
-                          limit: 8192,
+                          limit: 100000,
+                            name: '/assets/images/[name].[ext]',
                         },
                     },
                     {
@@ -62,7 +66,7 @@ module.exports = ({ mode } = { mode: "production" }) => {
                             loader: 'file-loader',
                             options: {
                               name: '[name].[ext]',
-                              outputPath: 'fonts/'
+                              outputPath: "/assets/fonts"
                             }
                           }
                         ]

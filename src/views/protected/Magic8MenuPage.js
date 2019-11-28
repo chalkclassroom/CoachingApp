@@ -7,14 +7,14 @@ import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import AppBar from "../../components/AppBar";
 import { withStyles } from "@material-ui/core/styles";
-import AssocCoopIconImage from "../../assets/icons/AssocCoopIconImage.svg";
-import ClassroomClimateIconImage from "../../assets/icons/ClassroomClimateIconImage.svg";
-import InstructionIconImage from "../../assets/icons/InstructionIconImage.svg";
-import ListeningIconImage from "../../assets/icons/ListeningIconImage.svg";
-import MathIconImage from "../../assets/icons/MathIconImage.svg";
-import SequentialIconImage from "../../assets/icons/SequentialIconImage.svg";
-import EngagementIconImage from "../../assets/icons/EngagementIconImage.svg";
-import TransitionTimeIconImage from "../../assets/icons/TransitionTimeIconImage.svg";
+import AssocCoopIconImage from "../../assets/images/AssocCoopIconImage.svg";
+import ClassroomClimateIconImage from "../../assets/images/ClassroomClimateIconImage.svg";
+import InstructionIconImage from "../../assets/images/InstructionIconImage.svg";
+import ListeningIconImage from "../../assets/images/ListeningIconImage.svg";
+import MathIconImage from "../../assets/images/MathIconImage.svg";
+import SequentialIconImage from "../../assets/images/SequentialIconImage.svg";
+import EngagementIconImage from "../../assets/images/EngagementIconImage.svg";
+import TransitionTimeIconImage from "../../assets/images/TransitionTimeIconImage.svg";
 import Icon from '@material-ui/core/Icon'
 
 const CardRow = styled.div`
@@ -80,7 +80,7 @@ class Magic8MenuPage extends Component {
       allowed: false,
       numSelected: 0,
       selected: "none",
-      unlocked: [], 
+      unlocked: [],
       page: this.props.history.location.state.type === "Training" ? "Training"
         : this.props.history.location.state.type === "Observe" ? "Observation"
         : "Results"

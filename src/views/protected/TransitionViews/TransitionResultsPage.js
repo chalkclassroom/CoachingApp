@@ -9,7 +9,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import SwipeableViews from 'react-swipeable-views';
 import TabBar from '@material-ui/core/AppBar';
-import TransitionTimeIconImage from "../../../assets/icons/TransitionTimeIconImage.svg";
+import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
 //import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
@@ -23,11 +23,11 @@ import 'chartjs-plugin-datalabels';
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import moment from 'moment';
-import ChildWaitingImage from "../../../assets/icons/ChildWaitingImage.svg"; 
-import WaitingInLineImage from "../../../assets/icons/WaitingInLineImage.svg"; 
-import WalkingImage from "../../../assets/icons/WalkingImage.svg"; 
-import ClassroomRoutinesImage from "../../../assets/icons/ClassroomRoutinesImage.svg"; 
-import BMDImage from "../../../assets/icons/BMDImage.svg"; 
+import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
+import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";
+import WalkingImage from "../../../assets/images/WalkingImage.svg";
+import ClassroomRoutinesImage from "../../../assets/images/ClassroomRoutinesImage.svg";
+import BMDImage from "../../../assets/images/BMDImage.svg";
 import { lightGreen, white, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
 import { red } from '@material-ui/core/es/colors';
 import CardContent from '@material-ui/core/CardContent';
@@ -108,7 +108,7 @@ const styles = {
   },
   buttonText: {
     fontSize: "12px",
-    textAlign: "center" 
+    textAlign: "center"
   },
   transitionTypeButton: {
     width: '70px',
@@ -143,32 +143,32 @@ const raisedThemes = createMuiTheme({
     },
     travelingColor: {
       backgroundColor: orange[400], color: '#000',
-      textColor: white, 
+      textColor: white,
       primaryTextColor: white,
       boxShadow: "4px 4px #a9a9a9"
     },
-    childWaitingColor: { 
+    childWaitingColor: {
       backgroundColor: deepOrange[400], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
+      primaryTextColor: white,
       boxShadow: "4px 4px #a9a9a9"
-    }, 
-    classroomRoutinesColor: { 
+    },
+    classroomRoutinesColor: {
       backgroundColor: blue[300], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
+      primaryTextColor: white,
       boxShadow: "4px 4px #a9a9a9"
-    }, 
-    bmiColor: { 
+    },
+    bmiColor: {
       backgroundColor: red['A200'], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
+      primaryTextColor: white,
       boxShadow: "4px 4px #a9a9a9"
-    }, 
-    otherColor: { 
+    },
+    otherColor: {
       backgroundColor: indigo['A200'], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
+      primaryTextColor: white,
       boxShadow: "4px 4px #a9a9a9"
     }
   }
@@ -176,45 +176,45 @@ const raisedThemes = createMuiTheme({
 
 const themes = createMuiTheme({
   palette: {
-    waitingColor: { 
+    waitingColor: {
       backgroundColor: lightGreen[300], color: '#000',
-      textColor: white, 
-      primaryTextColor: white, 
-    },
-    travelingColor: { 
-      backgroundColor: orange[400], color: '#000',
-      textColor: white, 
+      textColor: white,
       primaryTextColor: white,
-    }, 
-    childWaitingColor: { 
+    },
+    travelingColor: {
+      backgroundColor: orange[400], color: '#000',
+      textColor: white,
+      primaryTextColor: white,
+    },
+    childWaitingColor: {
       backgroundColor: deepOrange[400], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
-    }, 
-    classroomRoutinesColor: { 
+      primaryTextColor: white,
+    },
+    classroomRoutinesColor: {
       backgroundColor: blue[300], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
-    }, 
-    bmiColor: { 
+      primaryTextColor: white,
+    },
+    bmiColor: {
       backgroundColor: red['A200'], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
-    }, 
-    otherColor: { 
+      primaryTextColor: white,
+    },
+    otherColor: {
       backgroundColor: indigo['A200'], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
-    }}, 
+      primaryTextColor: white,
+    }},
   overrides: {
     MuiButton: {
       raisedPrimary: {
         color: 'white',
       },
-      textColor: white, 
-      primaryTextColor: white, 
+      textColor: white,
+      primaryTextColor: white,
     },
-  }, 
+  },
 })
 
 const ViewEnum = {
@@ -258,9 +258,9 @@ const TravelingQuestions = [
 ]
 
 const WaitingQuestions = [
-  {name: "TransitionPanel3A", title: "Preparation of Materials", text: "Talk about the best time of the " + 
+  {name: "TransitionPanel3A", title: "Preparation of Materials", text: "Talk about the best time of the " +
   "day that you've found for gathering materials for lessons and activities. Are there challenging times as well?"},
-  {name: "TransitionPanel3B", title: "Teacher Teamwork", text: "How do you and your teaching assistant help each " + 
+  {name: "TransitionPanel3B", title: "Teacher Teamwork", text: "How do you and your teaching assistant help each " +
   "other with lesson prep and organization? What systems seem to work best in your experience? If you could try " +
   "something new or change one of your routines around getting ready for a lesson, what would it be?"},
   {name: "TransitionPanel3C", title: "Child Engagement", text: "Talk about the times of the day that you feel the " +
@@ -719,7 +719,7 @@ class TransitionResultsPage extends React.Component {
         <main style={{overflow: "hidden", flex: 1}}>
           <Grid container spacing={16} justify="center" direction="row" alignItems="center">
             <Grid item xs={3}>
-              <Grid container 
+              <Grid container
                 alignItems="center"
                 justify="center"
                 direction="column"
@@ -745,7 +745,7 @@ class TransitionResultsPage extends React.Component {
                     <Grid item className={classes.resultsButtons}>
                       <Button
                         size="large"
-                        
+
                         variant={
                           this.state.view === ViewEnum.SUMMARY
                             ? "contained"
@@ -838,13 +838,13 @@ class TransitionResultsPage extends React.Component {
             </Grid>
             <Grid container xs={8} justify="center" direction="column" alignItems="center">
               <TabBar position="static" color="default" className={classes.tabBar}>
-                <Tabs 
+                <Tabs
                   value={this.state.tabValue}
                   indicatorColor="primary"
                   textColor="primary"
                   variant="fullWidth"
                 >
-                  <Tab label="Results" onClick={this.handleResults}/>                      
+                  <Tab label="Results" onClick={this.handleResults}/>
                   <Tab label="Data-Driven Coaching" onClick={this.handleCoaching}/>
                 </Tabs>
               </TabBar>
@@ -904,7 +904,7 @@ class TransitionResultsPage extends React.Component {
                         </Grid>
                         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
                           <Grid item>
-                            <Button 
+                            <Button
                               style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
                               onClick={this.lineClick}
                             >
@@ -1034,8 +1034,8 @@ class TransitionResultsPage extends React.Component {
                             Data Reflection
                           </Typography>
                           <TextField
-                            placeholder="Choose questions from the Data-Driven Coaching tab of the Details section." 
-                            fullWidth 
+                            placeholder="Choose questions from the Data-Driven Coaching tab of the Details section."
+                            fullWidth
                             disabled
                           />
                           <TextField

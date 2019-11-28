@@ -12,7 +12,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
-import TeacherImage from "../../../assets/icons/TeacherImage.svg";
+import TeacherImage from "../../../assets/images/TeacherImage.svg";
 import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 

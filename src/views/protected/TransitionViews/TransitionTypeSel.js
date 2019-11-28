@@ -4,23 +4,23 @@ import Button from '@material-ui/core/Button';
 import { withStyles, createMuiTheme } from '@material-ui/core/styles';
 import { lightGreen, white, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
-import ChildWaitingImage from "../../../assets/icons/ChildWaitingImage.svg"; 
-import WaitingInLineImage from "../../../assets/icons/WaitingInLineImage.svg"; 
-import WalkingImage from "../../../assets/icons/WalkingImage.svg"; 
-import ClassroomRoutinesImage from "../../../assets/icons/ClassroomRoutinesImage.svg"; 
-import BMDImage from "../../../assets/icons/BMDImage.svg"; 
-import OtherImage from "../../../assets/icons/OtherImage.svg"; 
+import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
+import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";
+import WalkingImage from "../../../assets/images/WalkingImage.svg";
+import ClassroomRoutinesImage from "../../../assets/images/ClassroomRoutinesImage.svg";
+import BMDImage from "../../../assets/images/BMDImage.svg";
+import OtherImage from "../../../assets/images/OtherImage.svg";
 import { red } from '@material-ui/core/es/colors';
 
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
-    width: 130, 
-    height: 130, 
+    width: 130,
+    height: 130,
     textAlign: 'center',
   },
   label: {
-    flexDirection: 'column ', 
+    flexDirection: 'column ',
     textAlign: 'center'
   },
 });
@@ -35,32 +35,32 @@ const raisedThemes = createMuiTheme({
     },
     travelingColor: {
       backgroundColor: orange[400], color: '#000',
-      textColor: white, 
+      textColor: white,
       primaryTextColor: white,
       boxShadow: "8px 8px #a9a9a9"
     },
-    childWaitingColor: { 
+    childWaitingColor: {
       backgroundColor: deepOrange[400], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
+      primaryTextColor: white,
       boxShadow: "8px 8px #a9a9a9"
-    }, 
-    classroomRoutinesColor: { 
+    },
+    classroomRoutinesColor: {
       backgroundColor: blue[300], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
+      primaryTextColor: white,
       boxShadow: "8px 8px #a9a9a9"
-    }, 
-    bmiColor: { 
+    },
+    bmiColor: {
       backgroundColor: red['A200'], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
+      primaryTextColor: white,
       boxShadow: "8px 8px #a9a9a9"
-    }, 
-    otherColor: { 
+    },
+    otherColor: {
       backgroundColor: indigo['A200'], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
+      primaryTextColor: white,
       boxShadow: "8px 8px #a9a9a9"
     }
   }
@@ -68,45 +68,45 @@ const raisedThemes = createMuiTheme({
 
 const themes = createMuiTheme({
   palette: {
-    waitingColor: { 
+    waitingColor: {
       backgroundColor: lightGreen[300], color: '#000',
-      textColor: white, 
-      primaryTextColor: white, 
-    },
-    travelingColor: { 
-      backgroundColor: orange[400], color: '#000',
-      textColor: white, 
+      textColor: white,
       primaryTextColor: white,
-    }, 
-    childWaitingColor: { 
+    },
+    travelingColor: {
+      backgroundColor: orange[400], color: '#000',
+      textColor: white,
+      primaryTextColor: white,
+    },
+    childWaitingColor: {
       backgroundColor: deepOrange[400], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
-    }, 
-    classroomRoutinesColor: { 
+      primaryTextColor: white,
+    },
+    classroomRoutinesColor: {
       backgroundColor: blue[300], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
-    }, 
-    bmiColor: { 
+      primaryTextColor: white,
+    },
+    bmiColor: {
       backgroundColor: red['A200'], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
-    }, 
-    otherColor: { 
+      primaryTextColor: white,
+    },
+    otherColor: {
       backgroundColor: indigo['A200'], color: '#000',
       textColor: white,
-      primaryTextColor: white, 
-    }}, 
+      primaryTextColor: white,
+    }},
   overrides: {
     MuiButton: {
       raisedPrimary: {
         color: 'white',
       },
-      textColor: white, 
-      primaryTextColor: white, 
+      textColor: white,
+      primaryTextColor: white,
     },
-  }, 
+  },
 })
 
 
@@ -152,7 +152,7 @@ class TransitionTypeSel extends React.Component {
             direction="column"
           >
             <Grid item>
-              <Button 
+              <Button
                 onClick={() => this.handleButtonChange("waiting")}
                 classes={{root: classes.button, label: classes.label}}
                 variant="raised"
@@ -169,8 +169,8 @@ class TransitionTypeSel extends React.Component {
             <br>
             </br>
             <Grid item>
-              <Button 
-                onClick={() => this.handleButtonChange("traveling")} 
+              <Button
+                onClick={() => this.handleButtonChange("traveling")}
                 classes={{root: classes.button, label: classes.label}}
                 variant="raised"
                 style={this.state.selected==="traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
@@ -179,7 +179,7 @@ class TransitionTypeSel extends React.Component {
               </Button>
             </Grid>
             <Grid item>
-              Traveling outside 
+              Traveling outside
               <br />
               the classroom
             </Grid>
@@ -223,7 +223,7 @@ class TransitionTypeSel extends React.Component {
             <br>
             </br>
             <Grid item>
-              <Button 
+              <Button
                 onClick={() => this.handleButtonChange("behavior management disruption")}
                 classes={{root: classes.button, label: classes.label}}
                 variant="raised"
@@ -233,7 +233,7 @@ class TransitionTypeSel extends React.Component {
               </Button>
             </Grid>
             <Grid item>
-              Behavior management 
+              Behavior management
               <br />
               disruption
             </Grid>

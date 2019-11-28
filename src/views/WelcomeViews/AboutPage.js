@@ -5,11 +5,11 @@ import AppBar from '../../components/AppBar';
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from '@material-ui/core/styles';
 import InfiniteCarousel from 'react-leaf-carousel';
-import ResourceOneImage from "../../assets/icons/ResourceOneImage.png"
-import ResourceTwoImage from "../../assets/icons/ResourceTwoImage.png"
-import ResourceThreeImage from "../../assets/icons/ResourceThreeImage.png"
-import ResourceFourImage from "../../assets/icons/ResourceFourImage.png"
-import ResourceFiveImage from "../../assets/icons/ResourceFiveImage.png"
+import ResourceOneImage from "../../assets/images/ResourceOneImage.png"
+import ResourceTwoImage from "../../assets/images/ResourceTwoImage.png"
+import ResourceThreeImage from "../../assets/images/ResourceThreeImage.png"
+import ResourceFourImage from "../../assets/images/ResourceFourImage.png"
+import ResourceFiveImage from "../../assets/images/ResourceFiveImage.png"
 import { connect } from 'react-redux';
 
 const styles = {
@@ -732,7 +732,7 @@ class AboutPage extends React.Component {
     </g>
   </svg>
         )
-    }   
+    }
 
     measuringComponent = props => {
         return (
@@ -1034,7 +1034,7 @@ class AboutPage extends React.Component {
     }
     render() {
         const {classes} = this.props;
-        return ( 
+        return (
             <div className={classes.root}>
                         <FirebaseContext.Consumer>
                             {

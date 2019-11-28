@@ -9,14 +9,14 @@ import Typography from "@material-ui/core/Typography/Typography";
 import ProjectAdvisor from '../../components/ProjectAdvisor';
 import TeamMemberCard from '../../components/TeamMemberCard';
 import TeamMemberExpansion from "../../components/TeamMemberExpansion";
-import PreschoolPromiseLogoImage from "../../assets/icons/PreschoolPromiseLogoImage.jpg";
-import UnitedWayLogoImage from "../../assets/icons/UnitedWayLogoImage.jpg";
-import UDaytonLogoImage from "../../assets/icons/UDaytonLogoImage.jpg";
-import VanderbiltPeabodyLogoImage from "../../assets/icons/VanderbiltPeabodyLogoImage.png";
-import WondryLogoImage from "../../assets/icons/WondryLogoImage.png";
-import VanderbiltEngineeringLogoImage from "../../assets/icons/VanderbiltEngineeringLogoImage.png";
-import AbtLogoImage from "../../assets/icons/AbtLogoImage.png";
-import MNPSLogoImage from "../../assets/icons/MNPSLogoImage.jpg";
+import PreschoolPromiseLogoImage from "../../assets/images/PreschoolPromiseLogoImage.jpg";
+import UnitedWayLogoImage from "../../assets/images/UnitedWayLogoImage.jpg";
+import UDaytonLogoImage from "../../assets/images/UDaytonLogoImage.jpg";
+import VanderbiltPeabodyLogoImage from "../../assets/images/VanderbiltPeabodyLogoImage.png";
+import WondryLogoImage from "../../assets/images/WondryLogoImage.png";
+import VanderbiltEngineeringLogoImage from "../../assets/images/VanderbiltEngineeringLogoImage.png";
+import AbtLogoImage from "../../assets/images/AbtLogoImage.png";
+import MNPSLogoImage from "../../assets/images/MNPSLogoImage.jpg";
 import * as Constants from '../../constants';
 
 
@@ -106,7 +106,7 @@ class Team extends React.Component {
 
   render() {
     const {classes} = this.props;
-    return ( 
+    return (
       <div>
         <div className={classes.root}>
           <FirebaseContext.Consumer>
