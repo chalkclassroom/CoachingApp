@@ -20,8 +20,8 @@ class BehaviorCounterResults extends React.Component {
   CustomUI = (props) => {
     if (!this.props.percentage) {
       return (
-        <div class="behavior">
-          <div class='disapprovals' style={{display: 'inline-block', marginTop:"15%", marginRight:'17%'}}>
+        <div className="behavior">
+          <div className='disapprovals' style={{display: 'inline-block', marginTop:"15%", marginRight:'17%'}}>
             <div style={{width: '23vw', height: '8vh', fontSize: '1.75em', color: '#e17055', textAlign:'center'}}>
               TOTAL BEHAVIOR DISAPPROVALS
             </div>
@@ -35,7 +35,7 @@ class BehaviorCounterResults extends React.Component {
               {this.props.redirectionsBehaviorCount} REDIRECTION
             </div>
           </div>
-          <div class='approvals' style={{display: 'inline-block'}}>
+          <div className='approvals' style={{display: 'inline-block'}}>
             <div style={{width: '23vw', height: '8vh', fontSize: '1.75em', color: '#009365', display:'inline-block', textAlign:'center'}}>
               TOTAL BEHAVIOR APPROVALS
             </div>
@@ -87,8 +87,8 @@ class BehaviorCounterResults extends React.Component {
             />
           </Grid>
           <Grid item>
-            <div class="behavior" style={{marginRight:"10%", marginLeft:"5%"}}>
-              <div class='disapprovals' style={{display: 'inline-block', marginRight:"10%", marginLeft:'5%'}}>
+            <div className="behavior" style={{marginRight:"10%", marginLeft:"5%"}}>
+              <div className='disapprovals' style={{display: 'inline-block', marginRight:"10%", marginLeft:'5%'}}>
                 <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color: "#E55529", textAlign:'center'}} >
                   BEHAVIOR DISAPPROVALS
                 </div>
@@ -117,7 +117,7 @@ class BehaviorCounterResults extends React.Component {
                   }%)
                 </div>
               </div>
-              <div class='approvals' style={{display: 'inline-block'}}>
+              <div className='approvals' style={{display: 'inline-block'}}>
                 <div style={{width: '20vw', height: '6vh', fontSize: '1.25em', color:  '#009365', display:'inline-block', textAlign:'center'}}>
                   BEHAVIOR APPROVALS
                 </div>
