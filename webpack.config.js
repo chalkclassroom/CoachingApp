@@ -41,7 +41,7 @@ module.exports = ({ mode } = { mode: "development" }) => {
                         test:/\.(png|jpg|gif)$/,
                         loader: 'url-loader',
                         options: {
-                          limit: 100000,
+                          limit: 8192,
                             name: '/assets/images/[name].[ext]',
                         },
                     },
