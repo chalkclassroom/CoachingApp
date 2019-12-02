@@ -19,6 +19,18 @@ const styles = {
     fontSize: 14,
     fontFamily: 'Arimo',
     letterSpacing: '0.03em'
+  },
+  titleText: {
+    fontSize: 22,
+    color: '#2f4b65',
+    paddingRight: '20%',
+    fontFamily: 'Arimo'
+  },
+  bodyText: {
+    fontSize: 18,
+    color: '#2f4b65',
+    paddingRight: '20%',
+    fontFamily: 'Arimo'
   }
 };
 
@@ -39,7 +51,7 @@ class LandingDetail extends React.Component {
               </Grid>
             </Grid>
             <Grid item xs={4}>
-              <Typography style={{fontSize: 22, color: '#2f4b65', paddingRight: '20%', fontFamily: 'Arimo'}}>
+              <Typography className={classes.titleText}>
                 {this.props.title1}
               </Typography>
             </Grid>
@@ -49,7 +61,7 @@ class LandingDetail extends React.Component {
               </Grid>
             </Grid>
             <Grid item xs={4}>
-              <Typography style={{fontSize: 22, color: '#2f4b65', paddingRight: '20%', fontFamily: 'Arimo'}}>
+              <Typography className={classes.titleText}>
                 {this.props.title2}
               </Typography>
             </Grid>
@@ -60,13 +72,13 @@ class LandingDetail extends React.Component {
           <Grid container direction="row" justify="flex-start" alignItems="flex-start">
             <Grid item xs={2} />
             <Grid item xs={4}>
-              <Typography style={{fontSize: 18, color: '#2f4b65', paddingRight: '20%', fontFamily: 'Arimo'}}>
+              <Typography className={classes.bodyText}>
                 {this.props.text1}
               </Typography>
             </Grid>
             <Grid item xs={1} />
             <Grid item xs={4}>
-              <Typography style={{fontSize: 18, color: '#2f4b65', paddingRight: '20%', fontFamily: 'Arimo'}}>
+              <Typography className={classes.bodyText}>
                 {this.props.text2}
               </Typography>
             </Grid>

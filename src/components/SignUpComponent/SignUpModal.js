@@ -14,6 +14,7 @@ import Coach from "../../assets/icons/newCoach.svg";
 //import Admin from "../../assets/icons/newAdministrator.svg";
 import GrayedAdmin from "../../assets/icons/newAdminGrayed.svg";
 import GrayedTeacher from "../../assets/icons/newTeacherGrayed.svg";
+import GrayedCoach from "../../assets/icons/GrayedCoach.svg";
 import CardContent from "@material-ui/core/CardContent";
 
 function getModalStyle() {
@@ -105,7 +106,7 @@ class SignUpModal extends React.Component {
                     style={{ padding: 40 }}
                   >
                     <Card
-                      onClick={() => this.handleChangeRole(1)}
+                      //onClick={() => this.handleChangeRole(1)}
                     >
                       <CardContent>
                         <Grid
@@ -115,7 +116,7 @@ class SignUpModal extends React.Component {
                           justify="flex-start"
                         >
                           <Grid item>
-                            <img src={Coach} alt="Coach" className={classes.photoIcon} />
+                            <img src={GrayedCoach} alt="Coach" className={classes.photoIcon} />
                           </Grid>
                           <Grid item>
                             <Typography

@@ -60,50 +60,13 @@ import CoachLandingSvg from '../../assets/CoachLandingSvg.svg';
 import CoachLandingPng from '../../assets/CoachLandingPng.png';
 import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.js';
 import PilotModal from '../../components/LandingPageComponents/PilotModal.js';
+import DemoModal from '../../components/LandingPageComponents/DemoModal.js';
 import { ClickAwayListener } from '@material-ui/core/es';
 
 const styles = {
-  paper: {
-    background: 'blue'
-  },
-  gridList: {
-    flexWrap: 'nowrap',
-    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: 'translateZ(0)',
-  },
-  root: {
-    flexGrow: 1,
-    display: "flex",
-    minHeight: "calc(100%-100px)",
-    flexDirection: "column",
-    justifyContent: "center"
-  },
-  card: {
-    width: "100%"
-  },
-  cardMedia: {
-    paddingTop: "56.25%",
-    height: "100%"
-  },
-  cardContent: {
-    flexGrow: 1
-  },
-  slide: {
-    width: "100%",
-    height: "calc(100vh - 80px)",
-    display: "flex !important",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  slideImg: {
-    position: "relative",
-    top: "2px",
-    maxWidth: "100vw",
-    maxHeight: "calc(100vh - 82px)"
-  },
   chalkTitle: {
     fontFamily: 'Arimo',
-    fontSize: 50,
+    fontSize: 'calc(16px + (100 - 16) * ((100vw - 300px) / (1600 - 300)))',
     color: 'white',
     lineHeight: '130%',
     letterSpacing: '0.07em',
@@ -111,7 +74,7 @@ const styles = {
   },
   tagline: {
     fontFamily: 'Arimo',
-    fontSize: 24,
+    fontSize: 'calc(12px + (36 - 12) * ((100vw - 300px) / (1600 - 300)))',
     color: 'white',
     textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'
   },
@@ -138,6 +101,47 @@ const styles = {
     fontSize: 20,
     marginLeft: '0.5em'
   },
+  demoButton: {
+    color: '#459aeb',
+    backgroundColor: '#ffffff',
+    fontSize: 16,
+    fontFamily: 'Arimo',
+    fontStyle: 'bold'
+  },
+  sectionTitle: {
+    fontFamily: 'Arimo',
+    color: '#2F4B65',
+    fontSize: 42,
+    textAlign: 'center'
+  },
+  getInvolvedTitle: {
+    color: '#2F4B65',
+    fontSize: 42,
+    paddingTop: 20,
+    width: '100%',
+    fontFamily: 'Arimo'
+  },
+  mailingListText: {
+    color: '#2f4b65',
+    fontSize: 22,
+    paddingTop: 30,
+    fontFamily: 'Arimo',
+    fontWeight: 'bold', 
+  },
+  textField: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    textAlign: 'center',
+    width: '90%',
+    fontFamily: 'Arimo'
+  },
+  mailingListButton: {
+    color: '#ffffff',
+    backgroundColor: '#459aeb',
+    fontSize: 14,
+    fontFamily: 'Arimo',
+    letterSpacing: '0.03em'
+  }
 };
 
 
@@ -151,7 +155,7 @@ class Homepage extends React.Component {
       demo: false,
       email: "",
       emailAdded: false,
-      errors: false,
+      errors: true,
       emailError: '',
     }
   }
@@ -165,12 +169,20 @@ class Homepage extends React.Component {
     console.log("handle pilot button executed");
   };
 
+  handleDemoButton = () => {
+    this.setState({ demo: true });
+  };
+
   handleClickAwayEvents = () => {
     this.setState({ events: false });
   }
 
   handleClose = () => {
-    this.setState({ pilotModal: false });
+    this.setState({ 
+      pilotModal: false,
+      demo: false,
+      events: false
+    });
   };
 
   handleSubmit = (event) =>{
@@ -179,10 +191,8 @@ class Homepage extends React.Component {
       this.props.firebase.emailListSignUp({
         email: this.state.email,
       })
-      .then(function(isSuccess) {
-        if(isSuccess){
-          this.setState({ emailAdded: true });
-        }
+      .then(() => {
+        this.setState({ emailAdded: true });
       });
     }
   };
@@ -237,9 +247,9 @@ class Homepage extends React.Component {
               <UpcomingEventsModal />
             </ClickAwayListener> 
           ) : this.state.pilotModal ? (
-            <ClickAwayListener onClickAway={this.handleClickAwayEvents}>
               <PilotModal handleClose={this.handleClose} firebase={this.props.firebase}/>
-            </ClickAwayListener> 
+          ) : this.state.demo ? (
+            <DemoModal handleClose={this.handleClose} />
           ) : (
             <div />
           )}
@@ -248,7 +258,7 @@ class Homepage extends React.Component {
               <img src={CoachLandingPng} alt = "Coach and Teacher" width="100%" style={{postion: 'relative'}}/>
               <Grid item xs={10} style={{position: 'absolute'}}>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
-                  <Grid xs={6} style={{paddingTop: '5vh'}}>
+                  <Grid xs={7} style={{paddingTop: '4vh'}}>
                     <Typography className={classes.chalkTitle}>
                       <strong>C</strong>oaching to
                     </Typography>
@@ -264,7 +274,7 @@ class Homepage extends React.Component {
                     <Typography className={classes.chalkTitle}>
                       <strong>K</strong>ids
                     </Typography>
-                    <Typography className={classes.tagline} style={{paddingTop: '10vh'}}>
+                    <Typography className={classes.tagline} style={{paddingTop: '7vh'}}>
                       Empowering coaches and teachers
                     </Typography>
                     <Typography className={classes.tagline}>
@@ -274,13 +284,13 @@ class Homepage extends React.Component {
                       to benefit young children
                     </Typography>
                   </Grid>
-                  <Grid xs={6}>
+                  <Grid xs={5}>
                     <Grid container direction="column" justify="center" alignItems="center" style={{}}>
-                      <Grid item style={{}} alignItems="center">
+                      <Grid item alignItems="center">
                         <img src={iPadSvg} alt="tablet" width='100%'/>
                       </Grid>
                       <Grid item style={{paddingTop: '4vh'}}>
-                        <Fab variant="extended" style={{color: '#459aeb', backgroundColor: '#ffffff', fontSize: 16, fontFamily: 'Arimo', fontStyle: 'bold'}}> 
+                        <Fab onClick={this.handleDemoButton} variant="extended" className={classes.demoButton}> 
                           <strong>SEE DEMO</strong>
                         </Fab>
                       </Grid>
@@ -291,40 +301,44 @@ class Homepage extends React.Component {
             </Grid>
             <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
               <Grid item>
-                <Typography style={{fontFamily: 'Arimo', color: '#2F4B65', fontSize: 42, textAlign: 'center'}}>
+                <Typography className={classes.sectionTitle}>
                   Why <strong>CHALK?</strong>
                 </Typography>
               </Grid>
-              <Grid item style={{paddingRight: '3em', paddingBottom: '2em', width:"90%"}}>
+              <Grid item style={{paddingRight: '3em', paddingBottom: '3em', paddingTop: '2em', width:"90%"}}>
                 <Impact
                   icon={SchoolSvg}
                   color='#094492'
                   title="IMPACT"
+                  position="center"
                   text="Research shows that high-quality pre-k education supports
                         children's early cognitive development and future achievement."
                 />
               </Grid>
-              <Grid item style={{paddingRight: '3em', paddingBottom: '2em', width:"90%"}}>
+              <Grid item style={{paddingRight: '3em', paddingBottom: '3em', width:"90%"}}>
                 <Impact
                   icon={ProblemOrangeSvg}
                   color='#E55529'
                   title="PROBLEM"
+                  position="center"
                   text="However, current tools to observe and track classroom 
                         practices over time are difficult to use and time-consuming."
                 />
               </Grid>
-              <Grid item style={{paddingRight: '3em', width: '90%'}}>
+              <Grid item style={{paddingRight: '3em', paddingBottom: '1em', width: '90%'}}>
                 <Impact
                   icon={LightbulbYellowImpactSvg}
                   color='#ffd300'
                   title="MISSION"
+                  position="flex-start"
+                  paddingTop='1em'
                   text={<div>
                           CHALK's mission is to advance pre-k quality with an easy-to-use 
                           tool for coaches and teachers that:
                           <ul>
                             <li>Focuses classroom observations on effective practices</li>
                             <li>Links results to coaching strategies</li>
-                            <li>Accelerates professional growth through teacher-created action plans around practice improvement</li>
+                            <li>Accelerates professional growth through teacher-created action plans</li>
                           </ul>
                         </div>}
                 />
@@ -371,7 +385,7 @@ class Homepage extends React.Component {
             </Grid>
             <Grid container direction="column" justify="center" alignItems = "center" className={classes.section} style={{backgroundColor: '#dbebfb'}}>
               <Grid item style={{padding: 20}}>
-                <Typography style={{fontSize: 42, color:'#2F4B65', textAlign: 'center', fontFamily: 'Arimo'}}>
+                <Typography className={classes.sectionTitle}>
                   How <strong>CHALK</strong> Works
                 </Typography>
               </Grid>
@@ -383,7 +397,7 @@ class Homepage extends React.Component {
             </Grid>
             <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
               <Grid item style={{padding: 20}}>
-                <Typography style={{fontSize: 42, color:'#2F4B65', textAlign: 'center', fontFamily: 'Arimo'}}>
+                <Typography className={classes.sectionTitle}>
                   How <strong>CHALK</strong> empowers coaches and teachers
                 </Typography>
               </Grid>
@@ -448,11 +462,18 @@ class Homepage extends React.Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid container direction="column" justify="center" alignItems="center" style={{backgroundColor: '#dbebfb'}} className={classes.section}>
+            <Grid 
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              style={{backgroundColor: '#dbebfb'}}
+              className={classes.section}
+            >
               <Grid item style={{width: '100%'}}>
                 <Grid container direction="row" justify="flex-start" alignItems="flex-start" style={{paddingBottom: '1em'}}>
                   <Grid item xs={2} />
-                  <Grid item xs={10} component={Typography} style={{color: '#2F4B65', fontSize: 42, paddingTop: 20, width: '100%', fontFamily: 'Arimo'}}>
+                  <Grid item xs={10} component={Typography} className={classes.getInvolvedTitle}>
                     <strong>GET INVOLVED</strong>
                   </Grid>
                 </Grid>
@@ -481,34 +502,47 @@ class Homepage extends React.Component {
                 </Grid>
               </Grid>
               <Grid item style={{width: '100%', paddingTop: '2em'}}>
-                <Grid container direction="row" justify="flex-start" alignItems="center">
-                  <Grid item xs={1} />
-                  <Grid item xs={4}>
-                    <Typography style={{color: '#2f4b65', fontSize: 22, paddingTop: 30, fontFamily: 'Arimo', fontWeight: 'bold'}}>
-                      Stay informed with our mailing list!
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Grid container direction="row" justify="flex-end" alignItems="center">
-                    <TextField
-                      label="Enter your email here"
-                      margin="normal"
-                      value={this.state.email}
-                      onChange={this.handleChange('email')}
-                      helperText={this.state.emailError}
-                      InputLabelProps={{style: {color: '#dbdbdb', fontSize: 20, marginLeft: '0.5em'}}}
-                      InputProps={{classes: {input: classes.input}, disableUnderline: true}}
-                      style={{backgroundColor: 'white', borderRadius: 10, textAlign: 'center', width: '90%', fontFamily: 'Arimo'}}/>
+                
+                  {this.state.emailAdded ? (
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <Grid item xs={12}>
+                        <Typography className={classes.mailingListText} style={{textAlign: 'center'}}>
+                          You have been added to our mailing list.
+                        </Typography>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid item xs={3}>
-                  <Grid container direction="row" justify="center" alignItems="center">
-                    <Fab variant="extended" onClick={this.handleSubmit} style={{color: '#ffffff', backgroundColor: '#459aeb', fontSize: 14, fontFamily: 'Arimo', letterSpacing: '0.03em'}}>
-                      <strong>Join mailing list</strong>
-                    </Fab>
+                  ) : (
+                    <Grid container direction="row" justify="flex-start" alignItems="center">
+                      <Grid item xs={1} />
+                      <Grid item xs={4}>
+                        <Typography className={classes.mailingListText}>
+                          Stay informed with our mailing list!
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Grid container direction="row" justify="flex-end" alignItems="center">
+                        <TextField
+                          label="Enter your email here"
+                          margin="normal"
+                          value={this.state.email}
+                          onChange={this.handleChange('email')}
+                          helperText={this.state.emailError}
+                          InputLabelProps={{style: {color: '#dbdbdb', fontSize: 20, marginLeft: '0.5em'}}}
+                          InputProps={{classes: {input: classes.input}, disableUnderline: true}}
+                          className={classes.textField}
+                        />
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={3}>
+                      <Grid container direction="row" justify="center" alignItems="center">
+                        <Fab variant="extended" onClick={this.handleSubmit} className={classes.mailingListButton}>
+                          <strong>Join mailing list</strong>
+                        </Fab>
+                        </Grid>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Grid>
+                  )}
+                
               </Grid>
             </Grid>
             <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em'}} className={classes.section}>
@@ -547,6 +581,21 @@ class Homepage extends React.Component {
             </Grid>
           </Grid>
         </body>
+        <footer>
+          <div hidden>
+            Icons made by 
+              <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">
+                Smashicons
+              </a>
+              <a href="https://www.flaticon.com/authors/vectors-market" title="Vectors Market">Vectors Market</a>
+              <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
+              <a href="https://www.flaticon.com/authors/good-ware" title="Good Ware">Good Ware</a>
+            from 
+              <a href="https://www.flaticon.com/" title="Flaticon">
+                www.flaticon.com
+              </a>
+          </div>
+        </footer>
       </div>
     );
   }

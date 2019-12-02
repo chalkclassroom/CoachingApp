@@ -19,6 +19,16 @@ const styles = {
     color: '#ffffff',
     backgroundColor: '#459aeb',
     fontSize: 14
+  },
+  titleText: {
+    fontSize: 24,
+    textAlign: 'center',
+    fontFamily: 'Arimo'
+  },
+  bodyText: {
+    fontSize: 20,
+    color: '#2f4b65',
+    fontFamily: 'Arimo'
   }
 };
 
@@ -29,28 +39,30 @@ class Impact extends React.Component {
   render() {
     const { classes } = this.props;
     return(
-      <Grid container direction="row" justify="center" alignItems="center">
-        <Grid item xs={4}>
+      <Grid container direction="row" justify="flex-start" alignItems={this.props.position}>
+        <Grid item xs={2} />
+        <Grid item xs={3}>
           <Grid container direction="row" justify="flex-end" alignItems="center">
             <Grid container direction="column" justify="center" alignItems="center">
               <Grid item>
-                <img alt="School" src={this.props.icon} />
+                <img alt="School" src={this.props.icon} style={{paddingTop:this.props.paddingTop}}/>
               </Grid>
               <Grid item>
-                <Typography style={{color: this.props.color, fontSize: 24, textAlign: 'center', fontFamily: 'Arimo'}}>
+                <Typography className={classes.titleText} style={{color: this.props.color}}>
                   <strong>{this.props.title}</strong>
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={5}>
           <Grid container direction="row" justify="flex-start" alignItems="center">
-            <Typography style={{fontSize: 20, color: '#2f4b65', fontFamily: 'Arimo'}}>
+            <Typography className={classes.bodyText}>
               {this.props.text}
             </Typography>
           </Grid>
         </Grid>
+        <Grid item xs={2} />
       </Grid>
     );
   }

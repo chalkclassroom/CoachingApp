@@ -235,7 +235,7 @@ class PilotForm extends React.Component{
                 id="program"
                 name="program"
                 type="program"
-                label="School District or Program"
+                label="School District or Other Affiliation"
                 value={this.state.program}
                 onChange={this.handleChange('program')}
                 margin="normal"

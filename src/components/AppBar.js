@@ -147,6 +147,7 @@ class CommonAppBar extends React.Component{
                     classes.menuButtonHidden,
                     classes.logoButton
                   )}
+                  onClick = {() => this.props.history.push("/")}
                 >
                   <img src={Logo} height={'36'} alt={""}/>
                 </IconButton>
@@ -164,6 +165,7 @@ class CommonAppBar extends React.Component{
                     <Typography 
                       variant="h6"
                       className={classes.coachingText}
+                      onClick = {() => this.props.history.push("/")}
                     >
                       COACHING
                     </Typography>
@@ -196,7 +198,7 @@ class CommonAppBar extends React.Component{
                         Team
                       </Button>
                     </Link>
-                    <Link
+                    {/* <Link
                       to = "/about"
                       className={classes.link}
                     >
@@ -207,7 +209,7 @@ class CommonAppBar extends React.Component{
                       >
                         About
                       </Button>
-                    </Link>
+                    </Link> */}
                   </div>
                 </Router> 
               </Toolbar>
@@ -224,12 +226,30 @@ class CommonAppBar extends React.Component{
                     classes.menuButtonHidden,
                     classes.logoButton
                   )}
+                  onClick = {() => this.props.history.push("/")}
                 >
                   <img src={Logo} height={'36'} alt={""}/>
                 </IconButton>
-                <Typography variant="h6" className={classes.menuText}>
-                  Classroom Quality - REF
-                </Typography>
+                <Grid direction="column" justify="center" alignItems="flex-start">
+                  <Grid item>
+                    <Typography
+                      variant="h6"
+                      className={classes.chalkText}
+                      onClick = {() => this.props.history.push("/")}
+                    >
+                      CHALK
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography 
+                      variant="h6"
+                      className={classes.coachingText}
+                      onClick = {() => this.props.history.push("/")}
+                    >
+                      COACHING
+                    </Typography>
+                  </Grid>
+                </Grid>
                 <div color="inherit" className={classes.grow}/>
                 <Button
                   color="secondary"
@@ -260,7 +280,7 @@ class CommonAppBar extends React.Component{
                         Team
                       </Button>
                     </Link>
-                    <Link
+                    {/* <Link
                       to = "/about"
                       className={classes.link}
                     >
@@ -271,7 +291,7 @@ class CommonAppBar extends React.Component{
                       >
                         About
                       </Button>
-                    </Link>
+                    </Link> */}
                   </div>   
                 </Router>        
               </Toolbar>
