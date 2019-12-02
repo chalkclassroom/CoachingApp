@@ -24,6 +24,26 @@ class Firebase {
         }
     }
 
+  firebasePilotSignUp = async function(userData) {
+    const data = Object.assign(
+      {},
+      {
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        program: userData.program
+      }
+    );
+    const docRef = firebase.firestore().collection('pilotForm').doc();
+    docRef.set(data)
+      .then( () => {
+        console.log("Visitor submitted pilot form");
+      })
+      .catch(function(error) {
+        console.error("Error signing up: ", error);
+      });
+  };
+
   firebaseEmailSignUp = async function(userData, role) {
     await this.auth
       .createUserWithEmailAndPassword(userData.email, userData.password)

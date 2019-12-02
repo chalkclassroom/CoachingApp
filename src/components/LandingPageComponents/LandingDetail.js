@@ -78,7 +78,7 @@ class LandingDetail extends React.Component {
             <Grid container direction="row" justify="flex-start" alignItems="flex-start">
               <Grid item xs={2} />
               <Grid item xs={4}>
-                <Fab variant="extended" className={classes.button}>
+                <Fab variant="extended" onClick={this.props.onClick1} className={classes.button}>
                   <strong>{this.props.button1}</strong>
                 </Fab>
               </Grid>

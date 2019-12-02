@@ -59,6 +59,7 @@ import CoachingCycleFullSvg from '../../assets/icons/CoachingCycleFullSvg.svg';
 import CoachLandingSvg from '../../assets/CoachLandingSvg.svg';
 import CoachLandingPng from '../../assets/CoachLandingPng.png';
 import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.js';
+import PilotModal from '../../components/LandingPageComponents/PilotModal.js';
 import { ClickAwayListener } from '@material-ui/core/es';
 
 const styles = {
@@ -131,7 +132,7 @@ const styles = {
     fontFamily: 'Arimo',
     paddingLeft: '2em'
   },
-  input:{
+  input: {
     disableUnderline: true,
     color: '#233342',
     fontSize: 20,
@@ -146,7 +147,7 @@ class Homepage extends React.Component {
 
     this.state = {
       events: false,
-      pilotForm: false,
+      pilotModal: false,
       demo: false,
       email: "",
       emailAdded: false,
@@ -159,9 +160,18 @@ class Homepage extends React.Component {
     this.setState({ events: true });
   };
 
+  handlePilotButton = () => {
+    this.setState({ pilotModal: true });
+    console.log("handle pilot button executed");
+  };
+
   handleClickAwayEvents = () => {
     this.setState({ events: false });
   }
+
+  handleClose = () => {
+    this.setState({ pilotModal: false });
+  };
 
   handleSubmit = (event) =>{
     this.validateEmail();
@@ -225,6 +235,10 @@ class Homepage extends React.Component {
           {this.state.events ? (
             <ClickAwayListener onClickAway={this.handleClickAwayEvents}>
               <UpcomingEventsModal />
+            </ClickAwayListener> 
+          ) : this.state.pilotModal ? (
+            <ClickAwayListener onClickAway={this.handleClickAwayEvents}>
+              <PilotModal handleClose={this.handleClose} firebase={this.props.firebase}/>
             </ClickAwayListener> 
           ) : (
             <div />
@@ -310,7 +324,7 @@ class Homepage extends React.Component {
                           <ul>
                             <li>Focuses classroom observations on effective practices</li>
                             <li>Links results to coaching strategies</li>
-                            <li>Accelerates professional growth through teacher-reacted action plans around practice improvement</li>
+                            <li>Accelerates professional growth through teacher-created action plans around practice improvement</li>
                           </ul>
                         </div>}
                 />
@@ -454,6 +468,7 @@ class Homepage extends React.Component {
                         we would love your feedback so we can make CHALK
                         the best it can be!"
                       button1="Fill out form"
+                      onClick1={this.handlePilotButton}
                       icon2={EventsSvg}
                       iconAlt2="People"
                       title2="Join us at our upcoming events!"
