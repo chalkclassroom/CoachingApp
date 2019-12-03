@@ -3,10 +3,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Bar } from "react-chartjs-2";
 
-const styles = {
-
-};
-
+const styles = {};
 
 /**
  * formatting for transition trends graph, including title and scales for the axes
@@ -15,20 +12,22 @@ const styles = {
 const climateTrendOptions = {
   title: {
     display: true,
-    text: 'Classroom Climate Trends',
+    text: "Classroom Climate Trends",
     fontSize: 20,
-    fontStyle: 'bold'
+    fontStyle: "bold"
   },
   scales: {
-    yAxes: [{
-      ticks: {
-        beginAtZero: true
+    yAxes: [
+      {
+        ticks: {
+          beginAtZero: true
+        }
       }
-    }]
+    ]
   },
   tooltips: {
     displayColors: true,
-    multiKeyBackground: 'white'
+    multiKeyBackground: "white"
   }
 };
 

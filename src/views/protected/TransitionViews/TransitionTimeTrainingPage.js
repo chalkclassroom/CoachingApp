@@ -10,14 +10,10 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
-import 'chartjs-plugin-datalabels';
-import TrainingVideo
-    from "../../../components/Shared/TrainingVideo";
-import ChildTeacherBehaviorTrendsSlider
-    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+import "chartjs-plugin-datalabels";
+import TrainingVideo from "../../../components/Shared/TrainingVideo";
+import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
-
-
 
 const styles = {
   root: {
@@ -178,11 +174,17 @@ class TransitionTimeTrainingPage extends React.Component {
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
-          <Grid container spacing={0} justify="center" direction={"row"} alignItems={"center"}>
+          <Grid
+            container
+            spacing={0}
+            justify="center"
+            direction={"row"}
+            alignItems={"center"}
+          >
             <Grid container item xs={3}>
               <List className={classes.buttonsList}>
-                <ListItem style={{display:'flex', justifyContent:'center'}}>
-                  <img src={TransitionTimeIconImage} width={'100vw'}/>
+                <ListItem style={{ display: "flex", justifyContent: "center" }}>
+                  <img src={TransitionTimeIconImage} width={"100vw"} />
                 </ListItem>
                 <ListItem>
                   <Button
@@ -251,7 +253,7 @@ class TransitionTimeTrainingPage extends React.Component {
                 <ListItem>
                   <Button
                     size="large"
-                    color= {"primary"}
+                    color={"primary"}
                     fullWidth={true}
                     variant={
                       this.state.view === ViewEnum.KNOWLEDGECHECK
@@ -266,8 +268,19 @@ class TransitionTimeTrainingPage extends React.Component {
                 </ListItem>
               </List>
             </Grid>
-            <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
-              <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
+            <Grid
+              container
+              item
+              xs={8}
+              justify="center"
+              direction={"row"}
+              alignItems={"center"}
+            >
+              <Typography
+                variant={"h5"}
+                alignItems={"center"}
+                justify={"center"}
+              >
                 Training: Transition Time Tool
               </Typography>
               <Grid item xs={12}>
@@ -275,25 +288,26 @@ class TransitionTimeTrainingPage extends React.Component {
                   {this.state.view === ViewEnum.CONCEPTS ? (
                     <div className={classes.resultsContent}>
                       <TrainingVideo
-                        videoUrl = {'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com'+
-                        '/o/TT%20Concepts%205-31-19.mp4?alt=media&token=0f968fb5-047a-4fb9-90ec-7149b40a3e9c'}
+                        videoUrl={
+                          "https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com" +
+                          "/o/TT%20Concepts%205-31-19.mp4?alt=media&token=0f968fb5-047a-4fb9-90ec-7149b40a3e9c"
+                        }
                       />
                     </div>
                   ) : this.state.view === ViewEnum.EXAMPLE ? (
                     <div className={classes.resultsContent}>
-                      <TrainingVideo/>
+                      <TrainingVideo />
                     </div>
                   ) : this.state.view === ViewEnum.DEMONSTRATION ? (
                     <div className={classes.resultsContent}>
-                      <ChildTeacherBehaviorTrendsSlider/>
+                      <ChildTeacherBehaviorTrendsSlider />
                     </div>
-                  ) : this.state.view === ViewEnum.TRYIT ? (
-                    null
-                  ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
+                  ) : this.state.view === ViewEnum.TRYIT ? null : this.state
+                      .view === ViewEnum.KNOWLEDGECHECK ? (
                     <div className={classes.resultsContent}>
-                      <TrainingQuestionnaire section={1}/>
+                      <TrainingQuestionnaire section={1} />
                     </div>
-                  ) :  null}
+                  ) : null}
                 </div>
               </Grid>
             </Grid>

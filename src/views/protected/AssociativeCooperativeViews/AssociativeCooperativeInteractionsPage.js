@@ -28,9 +28,9 @@ class AssociativeCooperativeInteractionsPage extends React.Component {
     ratings: [],
     climateType: false,
     completeEnabled: false,
-    recs: true,
+    recs: true
   };
-  
+
   handleRecsModal = open => {
     if (open) {
       this.setState({ recs: true });
@@ -49,11 +49,10 @@ class AssociativeCooperativeInteractionsPage extends React.Component {
 
   handleRatingConfirmation = rating => {
     this.setState({ ratingIsOpen: false });
-
   };
   handleCompleteButton = enable => {
     this.setState({ completeEnabled: enable });
-  }
+  };
 
   render() {
     return (
@@ -81,13 +80,13 @@ class AssociativeCooperativeInteractionsPage extends React.Component {
         ) */}
         <main style={{ flex: 1 }}>
           <FirebaseContext.Consumer>
-            {firebase => 
+            {firebase => (
               <CenterMenuAssocCoop
                 teacherId={this.props.location.state.teacher.id}
                 firebase={firebase}
                 onStatusChange={this.handleCompleteButton}
               />
-            }
+            )}
           </FirebaseContext.Consumer>
         </main>
       </div>
@@ -99,7 +98,6 @@ AssociativeCooperativeInteractionsPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default connect(
-  null,
-  { deleteAllCenters }
-)(withStyles(styles)(AssociativeCooperativeInteractionsPage));
+export default connect(null, { deleteAllCenters })(
+  withStyles(styles)(AssociativeCooperativeInteractionsPage)
+);

@@ -75,48 +75,132 @@ class AssociativeCooperativeRecs extends React.Component {
             <MuiThemeProvider theme={textTheme}>
               <Grid container spacing={24}>
                 <Grid item xs={12}>
-                  <Grid container alignItems="center" direction="row" justify="center">
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="row"
+                    justify="center"
+                  >
                     <Typography align="center" variant="h5" gutterBottom>
-                      <strong>Recommendations for Observing<br/>Social Learning Interactions:</strong><br/>
+                      <strong>
+                        Recommendations for Observing
+                        <br />
+                        Social Learning Interactions:
+                      </strong>
+                      <br />
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Grid container alignItems="center" direction="column" justify="flex-start">
-                    <img alt="Activity Setting" src={SchoolImage} height={"100"} width={"100"}/>
-                    <Typography align="center" color="primary" variant="subtitle1" gutterBottom>
-                      <strong>ACTIVITY SETTING:</strong><br/>Interest Areas/Centers<br/>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <img
+                      alt="Activity Setting"
+                      src={SchoolImage}
+                      height={"100"}
+                      width={"100"}
+                    />
+                    <Typography
+                      align="center"
+                      color="primary"
+                      variant="subtitle1"
+                      gutterBottom
+                    >
+                      <strong>ACTIVITY SETTING:</strong>
+                      <br />
+                      Interest Areas/Centers
+                      <br />
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Grid container alignItems="center" direction="column" justify="flex-start">
-                    <img alt="Cycle Length" src={CountdownImage} height={"100"} width={"100"} />
-                    <Typography align="center" color="primary" variant="subtitle1" gutterBottom>
-                      <strong>CYCLE LENGTH:</strong><br/>2 - 3 minutes per center<br/>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <img
+                      alt="Cycle Length"
+                      src={CountdownImage}
+                      height={"100"}
+                      width={"100"}
+                    />
+                    <Typography
+                      align="center"
+                      color="primary"
+                      variant="subtitle1"
+                      gutterBottom
+                    >
+                      <strong>CYCLE LENGTH:</strong>
+                      <br />2 - 3 minutes per center
+                      <br />
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Grid container alignItems="center" direction="column" justify="flex-start">
-                    <img alt="Visit Duration" src={TimeImage} height={"100"} width={"100"}/>
-                    <Typography align="center" color="primary" variant="subtitle1" gutterBottom>
-                      <strong>VISIT DURATION:</strong><br/>30 - 45 minutes<br/>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <img
+                      alt="Visit Duration"
+                      src={TimeImage}
+                      height={"100"}
+                      width={"100"}
+                    />
+                    <Typography
+                      align="center"
+                      color="primary"
+                      variant="subtitle1"
+                      gutterBottom
+                    >
+                      <strong>VISIT DURATION:</strong>
+                      <br />
+                      30 - 45 minutes
+                      <br />
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <Grid container alignItems="center" direction="row" justify="center">
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="row"
+                    justify="center"
+                  >
                     <MuiThemeProvider theme={buttonTheme}>
-                      <Button align="center" color="primary" variant="outlined" className={classes.button} onClick={this.handleClose}>
+                      <Button
+                        align="center"
+                        color="primary"
+                        variant="outlined"
+                        className={classes.button}
+                        onClick={this.handleClose}
+                      >
                         <strong>START OBSERVATION</strong>
                       </Button>
                     </MuiThemeProvider>
                   </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                  <Grid container alignItems="center" direction="row" justify="center">
-                    <Typography align="center" color="secondary" variant="subtitle1" gutterBottom>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="row"
+                    justify="center"
+                  >
+                    <Typography
+                      align="center"
+                      color="secondary"
+                      variant="subtitle1"
+                      gutterBottom
+                    >
                       Learn more about CQ-REF recommendations
                     </Typography>
                   </Grid>

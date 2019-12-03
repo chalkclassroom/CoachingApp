@@ -69,7 +69,7 @@ class Magic8Card extends Component {
     super(props);
     this.onClick = this.onClick.bind(this);
     this.state = {
-      selected: false,
+      selected: false
     };
   }
 
@@ -91,29 +91,31 @@ class Magic8Card extends Component {
         <Card
           className={classes.card}
           onClick={this.onClick}
-          style={{opacity: this.state.selected ? 0.5 : 1}}
+          style={{ opacity: this.state.selected ? 0.5 : 1 }}
         >
           <CardActionArea className={classes.cardAction}>
             <BackgroundImage>
-              <img src={this.props.icon} style={{display:"block"}}/>
+              <img src={this.props.icon} style={{ display: "block" }} />
             </BackgroundImage>
-              {this.props.page === "Training" ? (
-                this.props.unlocked ? (
-                  <Overlay>
-                    <img src={CheckmarkImage} className = {classes.overlayImage} style={{width: "100px"}}/>
-                  </Overlay>
-                ) : (
-                  <div/>
-                )) : (
-                  this.props.unlocked ? (
-                    <div/>
-                  ) : (
-                    <Overlay>
-                      <img src={LockImage} className = {classes.overlayImage}/>
-                    </Overlay>
-                  )
-                )
-              }
+            {this.props.page === "Training" ? (
+              this.props.unlocked ? (
+                <Overlay>
+                  <img
+                    src={CheckmarkImage}
+                    className={classes.overlayImage}
+                    style={{ width: "100px" }}
+                  />
+                </Overlay>
+              ) : (
+                <div />
+              )
+            ) : this.props.unlocked ? (
+              <div />
+            ) : (
+              <Overlay>
+                <img src={LockImage} className={classes.overlayImage} />
+              </Overlay>
+            )}
           </CardActionArea>
         </Card>
       </CardBase>
@@ -122,7 +124,7 @@ class Magic8Card extends Component {
 }
 
 Magic8Card.propTypes = {
-    classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(Magic8Card);

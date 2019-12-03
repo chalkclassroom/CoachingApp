@@ -9,7 +9,10 @@ import RatingModal from "../../../components/ClassroomClimateComponent/RatingMod
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import BehaviorCounter from "../../../components/ClassroomClimateComponent/BehaviorCounter";
 import { connect } from "react-redux";
-import { appendClimateRating, emptyClimateStack } from "../../../state/actions/classroom-climate";
+import {
+  appendClimateRating,
+  emptyClimateStack
+} from "../../../state/actions/classroom-climate";
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
@@ -25,7 +28,7 @@ import EmptyToneRating from "../../../components/ClassroomClimateComponent/Empty
 
 const RATING_INTERVAL = 130000;
 
-const styles = ({
+const styles = {
   root: {
     flexGrow: 1,
     backgroundColor: "#ffffff",
@@ -36,7 +39,7 @@ const styles = ({
   grow: {
     flexGrow: 1
   }
-});
+};
 
 class ClassroomClimatePage extends React.Component {
   state = {
@@ -45,7 +48,7 @@ class ClassroomClimatePage extends React.Component {
     ratingIsOpen: false,
     ratings: [],
     recs: true,
-    incompleteRating: false,
+    incompleteRating: false
   };
 
   tick = () => {
@@ -93,11 +96,11 @@ class ClassroomClimatePage extends React.Component {
 
   handleIncomplete = () => {
     this.setState({ incompleteRating: true });
-  }
+  };
 
   handleClickAwayIncomplete = () => {
     this.setState({ incompleteRating: false });
-  }
+  };
 
   componentDidMount() {
     this.timer = setInterval(this.tick, 1000);
@@ -111,7 +114,7 @@ class ClassroomClimatePage extends React.Component {
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase}/>}
+          {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         {/* {this.state.recs ? (
           <FirebaseContext.Consumer>
@@ -143,7 +146,7 @@ class ClassroomClimatePage extends React.Component {
             alignItems={"center"}
             justify={"center"}
             direction={"column"}
-            style={{ margin: 10}}
+            style={{ margin: 10 }}
           >
             <Grid
               container
@@ -161,7 +164,9 @@ class ClassroomClimatePage extends React.Component {
                   <Dashboard
                     magic8="Classroom Climate"
                     color="#0988ec"
-                    infoDisplay= {<Countdown color="#0988ec" timerTime={RATING_INTERVAL}/>}
+                    infoDisplay={
+                      <Countdown color="#0988ec" timerTime={RATING_INTERVAL} />
+                    }
                     infoPlacement="center"
                     completeObservation={true}
                   />
@@ -175,12 +180,12 @@ class ClassroomClimatePage extends React.Component {
                   direction={"column"}
                 >
                   <FirebaseContext.Consumer>
-                    {firebase =>
+                    {firebase => (
                       <BehaviorCounter
                         teacherId={this.props.location.state.teacher.id}
                         firebase={firebase}
                       />
-                    }
+                    )}
                   </FirebaseContext.Consumer>
                 </Grid>
               </Grid>
@@ -198,7 +203,6 @@ ClassroomClimatePage.propTypes = {
 
 ClassroomClimatePage.contextType = FirebaseContext;
 
-export default connect(
-  null,
-  { appendClimateRating, emptyClimateStack }
-)(withStyles(styles)(ClassroomClimatePage));
+export default connect(null, { appendClimateRating, emptyClimateStack })(
+  withStyles(styles)(ClassroomClimatePage)
+);

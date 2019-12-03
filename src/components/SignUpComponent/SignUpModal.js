@@ -35,7 +35,7 @@ const styles = theme => ({
     borderRadius: 8
   },
   photoIcon: {
-    height:"15vh"
+    height: "15vh"
   }
 });
 
@@ -68,7 +68,12 @@ class SignUpModal extends React.Component {
       <div>
         <Modal open={this.state.open}>
           <div style={getModalStyle()} className={classes.paper}>
-            <Grid container direction="column" alignItems="center" justify="center">
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
               <Grid
                 container
                 alignItems="center"
@@ -83,9 +88,7 @@ class SignUpModal extends React.Component {
                 <Grid item xs={1}>
                   <IconButton style={{ padding: 10 }}>
                     <Tooltip title={"Close"} placement={"right"}>
-                      <CloseIcon
-                        onClick={this.props.handleClose}
-                      />
+                      <CloseIcon onClick={this.props.handleClose} />
                     </Tooltip>
                   </IconButton>
                 </Grid>
@@ -104,8 +107,31 @@ class SignUpModal extends React.Component {
                     justify="space-around"
                     style={{ padding: 40 }}
                   >
+                    <Card onClick={() => this.handleChangeRole(1)}>
+                      <CardContent>
+                        <Grid
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
+                        >
+                          <Grid item>
+                            <img
+                              src={CoachImage}
+                              alt="Coach"
+                              className={classes.photoIcon}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" component="h2">
+                              Coach
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
                     <Card
-                      onClick={() => this.handleChangeRole(1)}
+                    // onClick={() => this.handleChangeRole(2)}
                     >
                       <CardContent>
                         <Grid
@@ -115,37 +141,14 @@ class SignUpModal extends React.Component {
                           justify="flex-start"
                         >
                           <Grid item>
-                            <img src={CoachImage} alt="Coach" className={classes.photoIcon} />
+                            <img
+                              src={GrayedTeacherImage}
+                              alt="Teacher"
+                              className={classes.photoIcon}
+                            />
                           </Grid>
                           <Grid item>
-                            <Typography
-                              variant="h5"
-                              component="h2"
-                            >
-                              Coach
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                    <Card
-                      // onClick={() => this.handleChangeRole(2)}
-                    >
-                      <CardContent>
-                        <Grid
-                            container
-                            alignItems="center"
-                            direction="column"
-                            justify="flex-start"
-                        >
-                          <Grid item>
-                            <img src={GrayedTeacherImage} alt="Teacher" className={classes.photoIcon} />
-                          </Grid>
-                          <Grid item>
-                            <Typography
-                              variant="h5"
-                              component="h2"
-                            >
+                            <Typography variant="h5" component="h2">
                               Teacher
                             </Typography>
                           </Grid>
@@ -153,23 +156,24 @@ class SignUpModal extends React.Component {
                       </CardContent>
                     </Card>
                     <Card
-                      // onClick={() => this.handleChangeRole(3)}
+                    // onClick={() => this.handleChangeRole(3)}
                     >
                       <CardContent>
                         <Grid
-                            container
-                            alignItems="center"
-                            direction="column"
-                            justify="flex-start"
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
                         >
                           <Grid item>
-                            <img src={GrayedAdminImage} alt="Administrator" className={classes.photoIcon} />
+                            <img
+                              src={GrayedAdminImage}
+                              alt="Administrator"
+                              className={classes.photoIcon}
+                            />
                           </Grid>
                           <Grid item>
-                            <Typography
-                              variant="h5"
-                              component="h2"
-                            >
+                            <Typography variant="h5" component="h2">
                               Admin
                             </Typography>
                           </Grid>

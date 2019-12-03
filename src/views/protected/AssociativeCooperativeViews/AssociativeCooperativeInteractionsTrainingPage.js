@@ -10,14 +10,11 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
-import 'chartjs-plugin-datalabels';
+import "chartjs-plugin-datalabels";
 //import TrainingVideo
-  //from "../../../components/Shared/TrainingVideo";
-import ChildTeacherBehaviorTrendsSlider
-  from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+//from "../../../components/Shared/TrainingVideo";
+import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
-
-
 
 const styles = {
   root: {
@@ -177,11 +174,17 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component {
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
-          <Grid container spacing={0} justify="center" direction={"row"} alignItems={"center"}>
+          <Grid
+            container
+            spacing={0}
+            justify="center"
+            direction={"row"}
+            alignItems={"center"}
+          >
             <Grid container item xs={3}>
               <List className={classes.buttonsList}>
-                <ListItem style={{display:'flex', justifyContent:'center'}}>
-                  <img src={AssocCoopIconImage} width={'100vw'}/>
+                <ListItem style={{ display: "flex", justifyContent: "center" }}>
+                  <img src={AssocCoopIconImage} width={"100vw"} />
                 </ListItem>
                 <ListItem>
                   <Button
@@ -250,7 +253,7 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component {
                 <ListItem>
                   <Button
                     size="large"
-                    color= {"primary"}
+                    color={"primary"}
                     fullWidth={true}
                     variant={
                       this.state.view === ViewEnum.KNOWLEDGECHECK
@@ -265,8 +268,19 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component {
                 </ListItem>
               </List>
             </Grid>
-            <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
-              <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
+            <Grid
+              container
+              item
+              xs={8}
+              justify="center"
+              direction={"row"}
+              alignItems={"center"}
+            >
+              <Typography
+                variant={"h5"}
+                alignItems={"center"}
+                justify={"center"}
+              >
                 Training: Associative & Cooperative Tool
               </Typography>
               <Grid item xs={12}>
@@ -281,15 +295,14 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component {
                     </div>
                   ) : this.state.view === ViewEnum.DEMONSTRATION ? (
                     <div className={classes.resultsContent}>
-                      <ChildTeacherBehaviorTrendsSlider/>
+                      <ChildTeacherBehaviorTrendsSlider />
                     </div>
-                  ) : this.state.view === ViewEnum.TRYIT ? (
-                    null
-                  ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
+                  ) : this.state.view === ViewEnum.TRYIT ? null : this.state
+                      .view === ViewEnum.KNOWLEDGECHECK ? (
                     <div className={classes.resultsContent}>
-                      <TrainingQuestionnaire section={8}/>
+                      <TrainingQuestionnaire section={8} />
                     </div> // replace this null with next steps content
-                  ) :  null}
+                  ) : null}
                 </div>
               </Grid>
             </Grid>
@@ -304,4 +317,6 @@ AssociativeCooperativeInteractionsTrainingPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(AssociativeCooperativeInteractionsTrainingPage);
+export default withStyles(styles)(
+  AssociativeCooperativeInteractionsTrainingPage
+);

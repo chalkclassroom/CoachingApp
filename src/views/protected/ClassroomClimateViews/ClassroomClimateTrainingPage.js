@@ -10,13 +10,10 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
-import 'chartjs-plugin-datalabels';
+import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo";
-import ChildTeacherBehaviorTrendsSlider
-    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
-
-
 
 const styles = {
   root: {
@@ -186,8 +183,8 @@ class ClassroomClimateTrainingPage extends React.Component {
           >
             <Grid item xs={3}>
               <List className={classes.buttonsList}>
-                <ListItem style={{display:'flex', justifyContent:'center'}}>
-                  <img src={ClassroomClimateIconImage} width={'100vw'}/>
+                <ListItem style={{ display: "flex", justifyContent: "center" }}>
+                  <img src={ClassroomClimateIconImage} width={"100vw"} />
                 </ListItem>
                 <ListItem>
                   <Button
@@ -256,7 +253,7 @@ class ClassroomClimateTrainingPage extends React.Component {
                 <ListItem>
                   <Button
                     size="large"
-                    color= {"primary"}
+                    color={"primary"}
                     fullWidth={true}
                     variant={
                       this.state.view === ViewEnum.KNOWLEDGECHECK
@@ -278,30 +275,37 @@ class ClassroomClimateTrainingPage extends React.Component {
                 direction={"row"}
                 alignItems={"center"}
               >
-                <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
+                <Typography
+                  variant={"h5"}
+                  alignItems={"center"}
+                  justify={"center"}
+                >
                   Training: Classroom Climate Tool
                 </Typography>
                 <Grid item xs={12}>
                   <div>
                     {this.state.view === ViewEnum.CONCEPTS ? (
                       <div className={classes.resultsContent}>
-                        <TrainingVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/CC%20Concepts%207-17-19.mp4?alt=media&token=2375a7d2-3c6e-4eec-a9c0-a29214db9cdf'}/>
+                        <TrainingVideo
+                          videoUrl={
+                            "https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/CC%20Concepts%207-17-19.mp4?alt=media&token=2375a7d2-3c6e-4eec-a9c0-a29214db9cdf"
+                          }
+                        />
                       </div>
                     ) : this.state.view === ViewEnum.EXAMPLE ? (
                       <div className={classes.resultsContent}>
-                        <TrainingVideo/>
+                        <TrainingVideo />
                       </div>
                     ) : this.state.view === ViewEnum.DEMONSTRATION ? (
                       <div className={classes.resultsContent}>
-                        <ChildTeacherBehaviorTrendsSlider/>
+                        <ChildTeacherBehaviorTrendsSlider />
                       </div>
-                    ) : this.state.view === ViewEnum.TRYIT ? (
-                      null
-                    ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
+                    ) : this.state.view === ViewEnum.TRYIT ? null : this.state
+                        .view === ViewEnum.KNOWLEDGECHECK ? (
                       <div className={classes.resultsContent}>
-                        <TrainingQuestionnaire section={2}/>
+                        <TrainingQuestionnaire section={2} />
                       </div>
-                    ) :  null}
+                    ) : null}
                   </div>
                 </Grid>
               </Grid>

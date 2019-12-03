@@ -15,8 +15,6 @@ import { resetTransitionTime } from "../../../state/actions/transition-time";
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 
-
-
 const styles = {
   root: {
     flexGrow: 1,
@@ -43,19 +41,19 @@ class TransitionTimePage extends React.Component {
       help: false,
       notes: false,
       recs: true,
-      transitionType: null, 
+      transitionType: null,
       open: false,
-      transitionEnded: false,
+      transitionEnded: false
     };
 
-    this.handleTransitionType = this.handleTransitionType.bind(this)
+    this.handleTransitionType = this.handleTransitionType.bind(this);
   }
 
   handleTransitionType = type => {
     if (this.state.transitionEnded) {
-      this.setState({transitionEnded: false});
+      this.setState({ transitionEnded: false });
     }
-    this.setState({transitionType: type});
+    this.setState({ transitionType: type });
   };
 
   handleRecsModal = open => {
@@ -67,9 +65,9 @@ class TransitionTimePage extends React.Component {
   };
 
   handleEndTransition = () => {
-    this.setState({transitionEnded: true});
-    this.setState({transitionType: null});
-  }
+    this.setState({ transitionEnded: true });
+    this.setState({ transitionType: null });
+  };
 
   handleChange = event => {
     this.setState({ auth: event.target.checked });
@@ -124,8 +122,7 @@ class TransitionTimePage extends React.Component {
                 firebase={firebase}
               />
             )}
-          </FirebaseContext.Consumer>
-        ) /* : this.state.recs ? (
+          </FirebaseContext.Consumer> /* : this.state.recs ? (
           <FirebaseContext.Consumer>
             {firebase => (
               <Recs
@@ -135,7 +132,8 @@ class TransitionTimePage extends React.Component {
               />
             )}
           </FirebaseContext.Consumer>
-        )  */: (
+        )  */
+        ) : (
           <div />
         )}
         <main style={{ flex: 1 }}>
@@ -147,30 +145,30 @@ class TransitionTimePage extends React.Component {
                 justify={"center"}
                 direction={"column"}
               >
-                <Dashboard 
-                    magic8="Transition Time"
-                    color="#094492"
-                    infoDisplay= {<TransitionLog />}
-                    infoPlacement = "center"
-                    completeObservation={true}
+                <Dashboard
+                  magic8="Transition Time"
+                  color="#094492"
+                  infoDisplay={<TransitionLog />}
+                  infoPlacement="center"
+                  completeObservation={true}
                 />
               </Grid>
             </Grid>
             <Grid item xs={4} justify="center">
               <Grid
-                  container
-                  alignItems={"center"}
-                  justify={"center"}
-                  direction={"column"}
+                container
+                alignItems={"center"}
+                justify={"center"}
+                direction={"column"}
               >
-                <TransitionTypeSel 
-                  handleTransitionType = {this.handleTransitionType}
-                  handleNotes = {this.handleNotes}
+                <TransitionTypeSel
+                  handleTransitionType={this.handleTransitionType}
+                  handleNotes={this.handleNotes}
                   transitionType={this.state.transitionType}
                   transitionEnded={this.state.transitionEnded}
                 />
               </Grid>
-            </Grid> 
+            </Grid>
             <Grid item xs={5}>
               <Grid
                 container
@@ -183,9 +181,11 @@ class TransitionTimePage extends React.Component {
                     <TransitionTimer
                       teacherId={this.props.location.state.teacher.id}
                       firebase={firebase}
-                      typeSelected={this.state.transitionType === null ? false : true}
+                      typeSelected={
+                        this.state.transitionType === null ? false : true
+                      }
                       handleEndTransition={this.handleEndTransition}
-                  />
+                    />
                   )}
                 </FirebaseContext.Consumer>
               </Grid>
@@ -198,10 +198,9 @@ class TransitionTimePage extends React.Component {
 }
 
 TransitionTimePage.propTypes = {
-    classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired
 };
 
-export default connect(
-    null,
-    { resetTransitionTime }
-)(withStyles(styles)(TransitionTimePage));
+export default connect(null, { resetTransitionTime })(
+  withStyles(styles)(TransitionTimePage)
+);

@@ -95,12 +95,13 @@ class RatingModal extends React.Component {
           </Typography>
           <div style={{ height: 20 }} />
           <Grid container direction={"row"} justify={"space-between"}>
-            <Grid item
+            <Grid
+              item
               align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
-              style={{width:"20%"}}
+              style={{ width: "20%" }}
             >
               <Grid item>
                 <Button
@@ -120,12 +121,13 @@ class RatingModal extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item
+            <Grid
+              item
               align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
-              style={{width:"20%"}}
+              style={{ width: "20%" }}
             >
               <Grid item>
                 <Button
@@ -147,17 +149,20 @@ class RatingModal extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item
+            <Grid
+              item
               align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
-              style={{width:"20%"}}
+              style={{ width: "20%" }}
             >
               <Grid item>
                 <Button
                   onClick={this.handleNeutralClick}
-                  variant={this.state.value === "Neutral" ? "contained" : "text"}
+                  variant={
+                    this.state.value === "Neutral" ? "contained" : "text"
+                  }
                 >
                   <Typography variant="h2" align={"center"}>
                     3
@@ -172,17 +177,20 @@ class RatingModal extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item
+            <Grid
+              item
               align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
-              style={{width:"20%"}}
+              style={{ width: "20%" }}
             >
               <Button
                 onClick={this.handlePositiveInterestClick}
                 variant={
-                  this.state.value === "Positive Interest" ? "contained" : "text"
+                  this.state.value === "Positive Interest"
+                    ? "contained"
+                    : "text"
                 }
               >
                 <Typography variant="h2" align={"center"}>
@@ -201,12 +209,13 @@ class RatingModal extends React.Component {
                 (smiling, nodding)
               </Typography>
             </Grid>
-            <Grid item
+            <Grid
+              item
               align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
-              style={{width:"20%"}}
+              style={{ width: "20%" }}
             >
               <Button
                 onClick={this.handleExcitementClick}
@@ -234,11 +243,26 @@ class RatingModal extends React.Component {
             align="center"
             justify={"center"}
             direction={"row"}
-            style={{spacing: 4}}
+            style={{ spacing: 4 }}
           >
             <Grid item xs={3} />
             <Grid item xs={3} justify={"center"}>
-              <Button variant="contained" onClick={this.state.rating===0? this.props.handleIncomplete : this.props.handleRatingConfirmation.bind(this,this.state.rating)} style={{backgroundColor:"#0988ec", fontSize:"15px", width:"170px"}}>
+              <Button
+                variant="contained"
+                onClick={
+                  this.state.rating === 0
+                    ? this.props.handleIncomplete
+                    : this.props.handleRatingConfirmation.bind(
+                        this,
+                        this.state.rating
+                      )
+                }
+                style={{
+                  backgroundColor: "#0988ec",
+                  fontSize: "15px",
+                  width: "170px"
+                }}
+              >
                 Confirm Rating
               </Button>
             </Grid>
@@ -255,7 +279,7 @@ class RatingModal extends React.Component {
                 onAcceptParams={0}
                 shouldOpen={true}
               />
-              </Grid>
+            </Grid>
             <Grid item xs={3} />
           </Grid>
         </Grid>

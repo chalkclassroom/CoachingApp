@@ -47,8 +47,8 @@ class HomePage extends React.Component {
     coachName: ""
   };
 
-  showTeacherModal = (type) => {
-    this.setState({ teacherModal: true, type: type});
+  showTeacherModal = type => {
+    this.setState({ teacherModal: true, type: type });
   };
 
   handleClose = event => {
@@ -58,14 +58,14 @@ class HomePage extends React.Component {
     });
   };
 
-  componentDidMount (){
+  componentDidMount() {
     let firebase = this.context;
-    firebase.getCoachFirstName().then(name=>{
-      this.setState({ coachName: name});
-    })
+    firebase.getCoachFirstName().then(name => {
+      this.setState({ coachName: name });
+    });
     firebase.handleFetchTrainingStatus();
-    firebase.handleFetchQuestions('transition')
-  };
+    firebase.handleFetchQuestions("transition");
+  }
 
   render() {
     const { classes } = this.props;
@@ -81,11 +81,7 @@ class HomePage extends React.Component {
           justify="space-between"
           style={{ padding: 40 }}
         >
-          <Typography
-            component={"h3"}
-            variant={"h3"}
-            align={"center"}
-          >
+          <Typography component={"h3"} variant={"h3"} align={"center"}>
             Welcome, {this.state.coachName}!
           </Typography>
           <Grid
@@ -104,7 +100,7 @@ class HomePage extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <img src={CalendarImage} className={classes.image}/>
+                    <img src={CalendarImage} className={classes.image} />
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
@@ -126,7 +122,7 @@ class HomePage extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <img src={ObserveImage} className={classes.image}/>
+                    <img src={ObserveImage} className={classes.image} />
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
@@ -144,7 +140,10 @@ class HomePage extends React.Component {
             justify="space-around"
             className={classes.buttonGrid}
           >
-            <Card className={classes.card} onClick={() => this.showTeacherModal("Results")}>
+            <Card
+              className={classes.card}
+              onClick={() => this.showTeacherModal("Results")}
+            >
               <CardContent>
                 <Grid
                   container
@@ -153,7 +152,7 @@ class HomePage extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <img src={ResultsImage} className={classes.image}/>
+                    <img src={ResultsImage} className={classes.image} />
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
@@ -172,7 +171,7 @@ class HomePage extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <img src={MessagesImage} className={classes.image}/>
+                    <img src={MessagesImage} className={classes.image} />
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
@@ -203,7 +202,7 @@ class HomePage extends React.Component {
 }
 
 HomePage.propTypes = {
-    classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired
 };
 
 HomePage.contextType = FirebaseContext;

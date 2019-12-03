@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withRouter } from 'react-router-dom';
-import AppBar from '../../components/AppBar';
+import { withRouter } from "react-router-dom";
+import AppBar from "../../components/AppBar";
 import FirebaseContext from "../../components/Firebase/context";
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import ProjectAdvisor from '../../components/ProjectAdvisor';
-import TeamMemberCard from '../../components/TeamMemberCard';
+import ProjectAdvisor from "../../components/ProjectAdvisor";
+import TeamMemberCard from "../../components/TeamMemberCard";
 import TeamMemberExpansion from "../../components/TeamMemberExpansion";
 import PreschoolPromiseLogoImage from "../../assets/images/PreschoolPromiseLogoImage.jpg";
 import UnitedWayLogoImage from "../../assets/images/UnitedWayLogoImage.jpg";
@@ -17,33 +17,32 @@ import WondryLogoImage from "../../assets/images/WondryLogoImage.png";
 import VanderbiltEngineeringLogoImage from "../../assets/images/VanderbiltEngineeringLogoImage.png";
 import AbtLogoImage from "../../assets/images/AbtLogoImage.png";
 import MNPSLogoImage from "../../assets/images/MNPSLogoImage.jpg";
-import * as Constants from '../../constants';
-
+import * as Constants from "../../constants";
 
 const styles = {
   root: {
     flexGrow: 1,
-    backgroundColor:'#ffffff',
-    height: '100vh'
+    backgroundColor: "#ffffff",
+    height: "100vh"
   },
   mobileRoot: {
     flexGrow: 1,
-    backgroundColor:'#ffffff',
-    height: '100vh'
+    backgroundColor: "#ffffff",
+    height: "100vh"
   },
   titleText: {
     paddingTop: 20,
-    color: 'black',
-    textAlign: 'center',
+    color: "black",
+    textAlign: "center"
   },
-  '@media (max-width: 700px)': {
+  "@media (max-width: 700px)": {
     root: {
-      display: 'none'
+      display: "none"
     }
   },
-  '@media (min-width: 701px)': {
+  "@media (min-width: 701px)": {
     mobileRoot: {
-      display: 'none'
+      display: "none"
     }
   }
 };
@@ -53,64 +52,64 @@ class Team extends React.Component {
     super(props);
     this.state = {
       open: null
-    }
+    };
   }
 
   openCC = () => {
-    if (this.state.open === 'CC'){
+    if (this.state.open === "CC") {
       this.setState({
         open: null
-      })
+      });
     } else {
       this.setState({
-        open: 'CC'
-      })
+        open: "CC"
+      });
     }
-  }
+  };
 
   openDM = () => {
-    if (this.state.open === 'DM'){
+    if (this.state.open === "DM") {
       this.setState({
         open: null
-      })
+      });
     } else {
       this.setState({
-        open: 'DM'
-      })
+        open: "DM"
+      });
     }
-  }
+  };
 
   openKN = () => {
-    if (this.state.open === 'KN'){
+    if (this.state.open === "KN") {
       this.setState({
         open: null
-      })
+      });
     } else {
       this.setState({
-        open: 'KN'
-      })
+        open: "KN"
+      });
     }
-  }
+  };
 
   openCS = () => {
-    if (this.state.open === 'CS'){
+    if (this.state.open === "CS") {
       this.setState({
         open: null
-      })
+      });
     } else {
       this.setState({
-        open: 'CS'
-      })
+        open: "CS"
+      });
     }
-  }
+  };
 
   render() {
-    const {classes} = this.props;
+    const { classes } = this.props;
     return (
       <div>
         <div className={classes.root}>
           <FirebaseContext.Consumer>
-            {firebase => <AppBar firebase={firebase}/>}
+            {firebase => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container
@@ -124,78 +123,107 @@ class Team extends React.Component {
               </Typography>
             </Grid>
             <Grid item>
-              <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: 10}}>
-                <Grid container direction="row" justify="center" alignItems="flex-start" style={{paddingTop: 10}}>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                style={{ paddingTop: 10 }}
+              >
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="flex-start"
+                  style={{ paddingTop: 10 }}
+                >
                   <Grid item xs={1} />
                   <Grid item xs={5}>
                     <TeamMemberCard
                       person={Constants.CC}
-                      open={this.state.open==='CC'}
+                      open={this.state.open === "CC"}
                       handleClick={this.openCC}
                     />
                   </Grid>
                   <Grid item xs={5}>
                     <TeamMemberCard
                       person={Constants.DM}
-                      open={this.state.open==='DM'}
+                      open={this.state.open === "DM"}
                       handleClick={this.openDM}
                     />
                   </Grid>
                   <Grid item xs={1} />
                 </Grid>
-                {this.state.open==='CC' ? (
-                  <TeamMemberExpansion
-                    person={Constants.CC}
-                  />
-                ) : this.state.open==='DM' ? (
-                  <TeamMemberExpansion
-                    person={Constants.DM}
-                  />
-                ) : (
-                  null
-                )}
-                <Grid container direction="row" justify="center" alignItems="center" style={{paddingTop: 15}}>
+                {this.state.open === "CC" ? (
+                  <TeamMemberExpansion person={Constants.CC} />
+                ) : this.state.open === "DM" ? (
+                  <TeamMemberExpansion person={Constants.DM} />
+                ) : null}
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                  style={{ paddingTop: 15 }}
+                >
                   <Grid item xs={1} />
                   <Grid item xs={5}>
                     <TeamMemberCard
                       person={Constants.KN}
-                      open={this.state.open==='KN'}
+                      open={this.state.open === "KN"}
                       handleClick={this.openKN}
                     />
                   </Grid>
                   <Grid item xs={5}>
                     <TeamMemberCard
                       person={Constants.CS}
-                      open={this.state.open==='CS'}
+                      open={this.state.open === "CS"}
                       handleClick={this.openCS}
                     />
                   </Grid>
                   <Grid item xs={1} />
                 </Grid>
-                {this.state.open==='KN' ? (
-                  <TeamMemberExpansion
-                    person={Constants.KN}
-                  />
-                ) : this.state.open==='CS' ? (
-                  <TeamMemberExpansion
-                    person={Constants.CS}
-                  />
-                ) : (
-                  null
-                )}
+                {this.state.open === "KN" ? (
+                  <TeamMemberExpansion person={Constants.KN} />
+                ) : this.state.open === "CS" ? (
+                  <TeamMemberExpansion person={Constants.CS} />
+                ) : null}
               </Grid>
-              <div style={{padding: 40}} />
+              <div style={{ padding: 40 }} />
               <Grid item>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <div style={{width: '100%', backgroundColor: '#d9eafb', paddingTop: 5, paddingBottom: 15}}>
-                    <Grid item style={{paddingBottom: 20}}>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      backgroundColor: "#d9eafb",
+                      paddingTop: 5,
+                      paddingBottom: 15
+                    }}
+                  >
+                    <Grid item style={{ paddingBottom: 20 }}>
                       <Typography variant="h3" className={classes.titleText}>
                         Advisors
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Grid container direction="column" justify="center" alignItems="center">
-                        <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
+                      <Grid
+                        container
+                        direction="column"
+                        justify="center"
+                        alignItems="center"
+                      >
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          alignItems="center"
+                          style={{ paddingBottom: 15 }}
+                        >
                           <Grid item xs={6}>
                             <ProjectAdvisor person={Constants.DF} />
                           </Grid>
@@ -203,7 +231,13 @@ class Team extends React.Component {
                             <ProjectAdvisor person={Constants.MF} />
                           </Grid>
                         </Grid>
-                        <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          alignItems="center"
+                          style={{ paddingBottom: 15 }}
+                        >
                           <Grid item xs={6}>
                             <ProjectAdvisor person={Constants.PM} />
                           </Grid>
@@ -211,7 +245,13 @@ class Team extends React.Component {
                             <ProjectAdvisor person={Constants.LM} />
                           </Grid>
                         </Grid>
-                        <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          alignItems="center"
+                          style={{ paddingBottom: 15 }}
+                        >
                           <Grid item xs={6}>
                             <ProjectAdvisor person={Constants.DS} />
                           </Grid>
@@ -219,7 +259,13 @@ class Team extends React.Component {
                             <ProjectAdvisor person={Constants.JW} />
                           </Grid>
                         </Grid>
-                        <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 15}}>
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          alignItems="center"
+                          style={{ paddingBottom: 15 }}
+                        >
                           <Grid item xs={6}>
                             <ProjectAdvisor person={Constants.SJW} />
                           </Grid>
@@ -232,60 +278,152 @@ class Team extends React.Component {
                   </div>
                 </Grid>
               </Grid>
-              <div style={{padding: 20}} />
+              <div style={{ padding: 20 }} />
               <Grid item>
                 <Typography variant="h3" className={classes.titleText}>
                   Partners
                 </Typography>
               </Grid>
               <Grid item>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={UDaytonLogoImage} alt="University of Dayton" style={{maxWidth: 250}}/>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={4} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={UDaytonLogoImage}
+                        alt="University of Dayton"
+                        style={{ maxWidth: 250 }}
+                      />
                     </Grid>
                   </Grid>
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={PreschoolPromiseLogoImage} alt="Preschool Promise" style={{maxWidth: 250}}/>
+                  <Grid item xs={4} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={PreschoolPromiseLogoImage}
+                        alt="Preschool Promise"
+                        style={{ maxWidth: 250 }}
+                      />
                     </Grid>
                   </Grid>
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={UnitedWayLogoImage} alt="United Way" style={{maxWidth: 250}}/>
+                  <Grid item xs={4} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={UnitedWayLogoImage}
+                        alt="United Way"
+                        style={{ maxWidth: 250 }}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={VanderbiltEngineeringLogoImage} alt="Vanderbilt School of Engineering" style={{maxWidth: 250}}/>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={4} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={VanderbiltEngineeringLogoImage}
+                        alt="Vanderbilt School of Engineering"
+                        style={{ maxWidth: 250 }}
+                      />
                     </Grid>
                   </Grid>
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={WondryLogoImage} alt="The Wond'ry" style={{maxWidth: 250}}/>
+                  <Grid item xs={4} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={WondryLogoImage}
+                        alt="The Wond'ry"
+                        style={{ maxWidth: 250 }}
+                      />
                     </Grid>
                   </Grid>
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={VanderbiltPeabodyLogoImage} alt="Peabody College" style={{maxWidth: 250}}/>
+                  <Grid item xs={4} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={VanderbiltPeabodyLogoImage}
+                        alt="Peabody College"
+                        style={{ maxWidth: 250 }}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={AbtLogoImage} alt="Abt Associates" style={{maxWidth: 250}}/>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={4} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={AbtLogoImage}
+                        alt="Abt Associates"
+                        style={{ maxWidth: 250 }}
+                      />
                     </Grid>
                   </Grid>
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={MNPSLogoImage} alt="Metro Nashville Public Schools" style={{maxWidth: 250}}/>
+                  <Grid item xs={4} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={MNPSLogoImage}
+                        alt="Metro Nashville Public Schools"
+                        style={{ maxWidth: 250 }}
+                      />
                     </Grid>
                   </Grid>
-                  <Grid item xs={4} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
+                  <Grid item xs={4} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
                       {/* insert TSU logo here */}
                     </Grid>
                   </Grid>
@@ -296,7 +434,7 @@ class Team extends React.Component {
         </div>
         <div className={classes.mobileRoot}>
           <FirebaseContext.Consumer>
-            {firebase => <AppBar firebase={firebase}/>}
+            {firebase => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container
@@ -310,113 +448,144 @@ class Team extends React.Component {
               </Typography>
             </Grid>
             <Grid item>
-              <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: 10}}>
-                <Grid container direction="row" justify="center" alignItems="flex-start" style={{paddingTop: 10}}>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                style={{ paddingTop: 10 }}
+              >
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="flex-start"
+                  style={{ paddingTop: 10 }}
+                >
                   <Grid item xs={1} />
                   <Grid item xs={10}>
                     <TeamMemberCard
                       person={Constants.CC}
-                      open={this.state.open==='CC'}
+                      open={this.state.open === "CC"}
                       handleClick={this.openCC}
                     />
                   </Grid>
                   <Grid item xs={1} />
                 </Grid>
-                {this.state.open==='CC' ? (
-                  <TeamMemberExpansion
-                    person={Constants.CC}
-                  />
-                ) : (
-                  null
-                )}
-                <Grid container direction="row" justify="center" alignItems="flex-start" style={{paddingTop: 20}}>
+                {this.state.open === "CC" ? (
+                  <TeamMemberExpansion person={Constants.CC} />
+                ) : null}
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="flex-start"
+                  style={{ paddingTop: 20 }}
+                >
                   <Grid item xs={1} />
                   <Grid item xs={10}>
                     <TeamMemberCard
                       person={Constants.DM}
-                      open={this.state.open==='DM'}
+                      open={this.state.open === "DM"}
                       handleClick={this.openDM}
                     />
                   </Grid>
                   <Grid item xs={1} />
                 </Grid>
-                {this.state.open==='DM' ? (
-                  <TeamMemberExpansion
-                    person={Constants.DM}
-                  />
-                ) : (
-                  null
-                )}
-                <Grid container direction="row" justify="center" alignItems="flex-start" style={{paddingTop: 20}}>
+                {this.state.open === "DM" ? (
+                  <TeamMemberExpansion person={Constants.DM} />
+                ) : null}
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="flex-start"
+                  style={{ paddingTop: 20 }}
+                >
                   <Grid item xs={1} />
                   <Grid item xs={10}>
                     <TeamMemberCard
                       person={Constants.KN}
-                      open={this.state.open==='KN'}
+                      open={this.state.open === "KN"}
                       handleClick={this.openKN}
                     />
                   </Grid>
                   <Grid item xs={1} />
                 </Grid>
-                {this.state.open==='KN' ? (
-                  <TeamMemberExpansion
-                    person={Constants.KN}
-                  />
-                ) : (
-                  null
-                )}
-                <Grid container direction="row" justify="center" alignItems="flex-start" style={{paddingTop: 20}}>
+                {this.state.open === "KN" ? (
+                  <TeamMemberExpansion person={Constants.KN} />
+                ) : null}
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="flex-start"
+                  style={{ paddingTop: 20 }}
+                >
                   <Grid item xs={1} />
                   <Grid item xs={10}>
                     <TeamMemberCard
                       person={Constants.CS}
-                      open={this.state.open==='CS'}
+                      open={this.state.open === "CS"}
                       handleClick={this.openCS}
                     />
                   </Grid>
                   <Grid item xs={1} />
                 </Grid>
-                {this.state.open==='CS' ? (
-                  <TeamMemberExpansion
-                    person={Constants.CS}
-                  />
-                ) : (
-                  null
-                )}
+                {this.state.open === "CS" ? (
+                  <TeamMemberExpansion person={Constants.CS} />
+                ) : null}
               </Grid>
-              <div style={{padding: 40}} />
+              <div style={{ padding: 40 }} />
               <Grid item>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <div style={{width: '100%', backgroundColor: '#d9eafb', paddingTop: 5, paddingBottom: 15}}>
-                    <Grid item style={{paddingBottom: 20}}>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      backgroundColor: "#d9eafb",
+                      paddingTop: 5,
+                      paddingBottom: 15
+                    }}
+                  >
+                    <Grid item style={{ paddingBottom: 20 }}>
                       <Typography variant="h3" className={classes.titleText}>
                         Advisors
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Grid container direction="column" justify="center" alignItems="center">
-                        <Grid item style={{padding: 15}}>
+                      <Grid
+                        container
+                        direction="column"
+                        justify="center"
+                        alignItems="center"
+                      >
+                        <Grid item style={{ padding: 15 }}>
                           <ProjectAdvisor person={Constants.DF} />
                         </Grid>
-                        <Grid item style={{padding: 15}}>
+                        <Grid item style={{ padding: 15 }}>
                           <ProjectAdvisor person={Constants.MF} />
                         </Grid>
-                        <Grid item style={{padding: 15}}>
+                        <Grid item style={{ padding: 15 }}>
                           <ProjectAdvisor person={Constants.PM} />
                         </Grid>
-                        <Grid item style={{padding: 15}}>
+                        <Grid item style={{ padding: 15 }}>
                           <ProjectAdvisor person={Constants.LM} />
                         </Grid>
-                        <Grid item style={{padding: 15}}>
+                        <Grid item style={{ padding: 15 }}>
                           <ProjectAdvisor person={Constants.DS} />
                         </Grid>
-                        <Grid item style={{padding: 15}}>
+                        <Grid item style={{ padding: 15 }}>
                           <ProjectAdvisor person={Constants.JW} />
                         </Grid>
-                        <Grid item style={{padding: 15}}>
+                        <Grid item style={{ padding: 15 }}>
                           <ProjectAdvisor person={Constants.SJW} />
                         </Grid>
-                        <Grid item style={{padding: 15}}>
+                        <Grid item style={{ padding: 15 }}>
                           <ProjectAdvisor person={Constants.LW} />
                         </Grid>
                       </Grid>
@@ -424,69 +593,171 @@ class Team extends React.Component {
                   </div>
                 </Grid>
               </Grid>
-              <div style={{padding: 20}} />
+              <div style={{ padding: 20 }} />
               <Grid item>
                 <Typography variant="h3" className={classes.titleText}>
                   Partners
                 </Typography>
               </Grid>
               <Grid item>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={UDaytonLogoImage} alt="University of Dayton" style={{maxWidth: 200}}/>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={6} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={UDaytonLogoImage}
+                        alt="University of Dayton"
+                        style={{ maxWidth: 200 }}
+                      />
                     </Grid>
                   </Grid>
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={PreschoolPromiseLogoImage} alt="Preschool Promise" style={{maxWidth: 200}}/>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={UnitedWayLogoImage} alt="United Way" style={{maxWidth: 200}}/>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={VanderbiltEngineeringLogoImage} alt="Vanderbilt School of Engineering" style={{maxWidth: 200}}/>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={WondryLogoImage} alt="The Wond'ry" style={{maxWidth: 200}}/>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={VanderbiltPeabodyLogoImage} alt="Peabody College" style={{maxWidth: 200}}/>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={AbtLogoImage} alt="Abt Associates" style={{maxWidth: 200}}/>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <img src={MNPSLogoImage} alt="Metro Nashville Public Schools" style={{maxWidth: 200}}/>
+                  <Grid item xs={6} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={PreschoolPromiseLogoImage}
+                        alt="Preschool Promise"
+                        style={{ maxWidth: 200 }}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={3} style={{padding: 20}} />
-                  <Grid item xs={6} style={{padding: 20}}>
-                    <Grid container direction="row" justify="center" alignItems="center">
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={6} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={UnitedWayLogoImage}
+                        alt="United Way"
+                        style={{ maxWidth: 200 }}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={6} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={VanderbiltEngineeringLogoImage}
+                        alt="Vanderbilt School of Engineering"
+                        style={{ maxWidth: 200 }}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={6} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={WondryLogoImage}
+                        alt="The Wond'ry"
+                        style={{ maxWidth: 200 }}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={6} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={VanderbiltPeabodyLogoImage}
+                        alt="Peabody College"
+                        style={{ maxWidth: 200 }}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={6} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={AbtLogoImage}
+                        alt="Abt Associates"
+                        style={{ maxWidth: 200 }}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={6} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={MNPSLogoImage}
+                        alt="Metro Nashville Public Schools"
+                        style={{ maxWidth: 200 }}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={3} style={{ padding: 20 }} />
+                  <Grid item xs={6} style={{ padding: 20 }}>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
                       {/* insert TSU logo here */}
                     </Grid>
                   </Grid>
-                  <Grid item xs={3} style={{padding: 20}} />
+                  <Grid item xs={3} style={{ padding: 20 }} />
                 </Grid>
               </Grid>
             </Grid>
@@ -498,9 +769,8 @@ class Team extends React.Component {
 }
 
 Team.propTypes = {
-    classes: PropTypes.object.isRequired
-  };
+  classes: PropTypes.object.isRequired
+};
 
-const TeamRouter = withRouter(Team)
+const TeamRouter = withRouter(Team);
 export default withStyles(styles)(TeamRouter);
-

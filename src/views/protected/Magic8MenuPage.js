@@ -15,7 +15,7 @@ import MathIconImage from "../../assets/images/MathIconImage.svg";
 import SequentialIconImage from "../../assets/images/SequentialIconImage.svg";
 import EngagementIconImage from "../../assets/images/EngagementIconImage.svg";
 import TransitionTimeIconImage from "../../assets/images/TransitionTimeIconImage.svg";
-import Icon from '@material-ui/core/Icon'
+import Icon from "@material-ui/core/Icon";
 
 const CardRow = styled.div`
   position: relative;
@@ -61,15 +61,15 @@ const styles = {
 };
 
 const MAP = {
-  "None": 0,
-  "TransitionTime": 1,
-  "ClassroomClimate": 2,
-  "MathInstruction": 3,
-  "StudentEngagement": 4,
-  "LevelOfInstruction": 5,
-  "ListeningToChildren": 6,
-  "SequentialActivities": 7,
-  "AssociativeCooperativeInteractions": 8
+  None: 0,
+  TransitionTime: 1,
+  ClassroomClimate: 2,
+  MathInstruction: 3,
+  StudentEngagement: 4,
+  LevelOfInstruction: 5,
+  ListeningToChildren: 6,
+  SequentialActivities: 7,
+  AssociativeCooperativeInteractions: 8
 };
 
 class Magic8MenuPage extends Component {
@@ -81,15 +81,16 @@ class Magic8MenuPage extends Component {
       numSelected: 0,
       selected: "none",
       unlocked: [],
-      page: this.props.history.location.state.type === "Training" ? "Training"
-        : this.props.history.location.state.type === "Observe" ? "Observation"
-        : "Results"
+      page:
+        this.props.history.location.state.type === "Training"
+          ? "Training"
+          : this.props.history.location.state.type === "Observe"
+          ? "Observation"
+          : "Results"
     };
 
-    this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this)
+    this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this);
   }
-
-
 
   onClick(selected, title) {
     if (selected && this.state.numSelected > 0) {
@@ -114,25 +115,25 @@ class Magic8MenuPage extends Component {
       this.props.history.push({
         pathname: `/${this.state.selected}Training`,
         state: this.props.location.state
-      })
+      });
     } else if (this.state.unlocked.includes(MAP[this.state.selected])) {
       if (this.state.page === "Observation") {
         this.props.history.push({
           pathname: `/${this.state.selected}`,
           state: this.props.location.state
-        })
+        });
       } else if (this.state.page === "Results") {
         this.props.history.push({
           pathname: `/${this.state.selected}Results`,
           state: this.props.location.state
-        })
+        });
       }
     }
   };
 
-  setUnlockedSectionsState(){
+  setUnlockedSectionsState() {
     let firebase = this.context;
-    firebase.getUnlockedSections().then((unlocked)=>{
+    firebase.getUnlockedSections().then(unlocked => {
       this.setState({
         unlocked: unlocked
       });
@@ -158,7 +159,8 @@ class Magic8MenuPage extends Component {
           </div>
           <div>
             <Typography className={classes.instructionText}>
-              Select the skill you'd like to {this.state.page === "Training" ? "learn:" : "focus on:"}
+              Select the skill you'd like to{" "}
+              {this.state.page === "Training" ? "learn:" : "focus on:"}
             </Typography>
           </div>
           <CardRow>
@@ -231,23 +233,41 @@ class Magic8MenuPage extends Component {
           </CardRow>
           <CardRow>
             <Button
-              className = {classes.goButton}
-              disabled = {this.state.page === "Training" ? (this.state.allowed ? false : true)
-                : (this.state.unlocked.includes(MAP[this.state.selected]) && this.state.allowed ? false : true)}
+              className={classes.goButton}
+              disabled={
+                this.state.page === "Training"
+                  ? this.state.allowed
+                    ? false
+                    : true
+                  : this.state.unlocked.includes(MAP[this.state.selected]) &&
+                    this.state.allowed
+                  ? false
+                  : true
+              }
               style={{
-                opacity: this.state.page === "Training" ? (this.state.allowed ? 1 : 0.5)
-                : (this.state.unlocked.includes(MAP[this.state.selected]) && this.state.allowed ? 1: 0.5),
+                opacity:
+                  this.state.page === "Training"
+                    ? this.state.allowed
+                      ? 1
+                      : 0.5
+                    : this.state.unlocked.includes(MAP[this.state.selected]) &&
+                      this.state.allowed
+                    ? 1
+                    : 0.5,
                 color: "white"
               }}
               onClick={this.handleGoButton}
             >
-              {this.state.page === "Training" ? "Start Training"
-                : this.state.page === "Observation" ? "Observe"
+              {this.state.page === "Training"
+                ? "Start Training"
+                : this.state.page === "Observation"
+                ? "Observe"
                 : "View Results"}
-              <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-              <Icon style={{ marginLeft: 5 }}>
-                send
-              </Icon>
+              <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/icon?family=Material+Icons"
+              />
+              <Icon style={{ marginLeft: 5 }}>send</Icon>
             </Button>
           </CardRow>
         </div>

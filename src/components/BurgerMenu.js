@@ -31,95 +31,95 @@ import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
 import TeacherModal from "../views/protected/HomeViews/TeacherModal";
 import FirebaseContext from "./Firebase/FirebaseContext";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
 const drawerWidth = 240;
 
 const styles = theme => ({
-root: {
-  display: "flex"
-},
-toolbarIcon: {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: "0 8px",
-  ...theme.mixins.toolbar
-},
-appBar: {
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen
-  })
-},
-appBarShift: {
-  marginLeft: drawerWidth,
-  width: `calc(100% - ${drawerWidth}px)`,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen
-  })
-},
-menuButton: {
-  marginLeft: 12,
-  marginRight: 36
-},
-menuButtonHidden: {
-  display: "none"
-},
-title: {
-  flexGrow: 1
-},
-leftTitle: {
-  padding: "1em"
-},
-drawerPaper: {
-  position: "relative",
-  whiteSpace: "nowrap",
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen
-  })
-},
-drawerPaperClose: {
-  overflowX: "hidden",
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen
-  }),
-  width: theme.spacing.unit * 7,
-  [theme.breakpoints.up("sm")]: {
-    width: theme.spacing.unit * 9
+  root: {
+    display: "flex"
+  },
+  toolbarIcon: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 8px",
+    ...theme.mixins.toolbar
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  menuButton: {
+    marginLeft: 12,
+    marginRight: 36
+  },
+  menuButtonHidden: {
+    display: "none"
+  },
+  title: {
+    flexGrow: 1
+  },
+  leftTitle: {
+    padding: "1em"
+  },
+  drawerPaper: {
+    position: "relative",
+    whiteSpace: "nowrap",
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  drawerPaperClose: {
+    overflowX: "hidden",
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    width: theme.spacing.unit * 7,
+    [theme.breakpoints.up("sm")]: {
+      width: theme.spacing.unit * 9
+    }
+  },
+  appBarSpacer: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing.unit * 3,
+    height: "100vh",
+    overflow: "auto"
+  },
+  chartContainer: {
+    marginLeft: -22
+  },
+  tableContainer: {
+    height: 320
+  },
+  nested: {
+    paddingLeft: 75
   }
-},
-appBarSpacer: theme.mixins.toolbar,
-content: {
-  flexGrow: 1,
-  padding: theme.spacing.unit * 3,
-  height: "100vh",
-  overflow: "auto"
-},
-chartContainer: {
-  marginLeft: -22
-},
-tableContainer: {
-  height: 320
-},
-nested: {
-  paddingLeft: 75
-}
 });
 
 class BurgerMenu extends React.Component {
   state = {
     menu: 0,
-    open: this.props.open, 
+    open: this.props.open,
     coachingOpen: false,
     teacherModal: false,
-    type: "",
-  }
+    type: ""
+  };
   handleDrawerOpen = () => {
     this.setState({ open: true });
   };
@@ -128,12 +128,12 @@ class BurgerMenu extends React.Component {
     this.setState({ open: false });
   };
 
-  showTeacherModal = (type) => {
-    this.setState({ teacherModal: true, type: type});
+  showTeacherModal = type => {
+    this.setState({ teacherModal: true, type: type });
   };
 
   handleTeacherModalClose = event => {
-    this.setState({ 
+    this.setState({
       teacherModal: false,
       type: ""
     });
@@ -141,11 +141,11 @@ class BurgerMenu extends React.Component {
 
   handleOpenCoaching = () => {
     if (this.state.coachingOpen) {
-      this.setState({coachingOpen: false});
+      this.setState({ coachingOpen: false });
     } else {
-      this.setState({coachingOpen: true});
+      this.setState({ coachingOpen: true });
     }
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -173,26 +173,25 @@ class BurgerMenu extends React.Component {
               onClick={() => {
                 this.setState({ menu: 0 });
               }}
-          >
+            >
               <ListItemIcon>
-                <HomeIcon style={{fill: "#094492"}} />
+                <HomeIcon style={{ fill: "#094492" }} />
               </ListItemIcon>
               <ListItemText
                 primary="Home"
                 onClick={() => this.props.history.push("/Home")}
               />
             </ListItem>
-            <ListItem
-              button
-              onClick={this.handleOpenCoaching}
-            >
+            <ListItem button onClick={this.handleOpenCoaching}>
               <ListItemIcon>
-                <CoachingIcon style={{fill: "#e99c2e"}} />
+                <CoachingIcon style={{ fill: "#e99c2e" }} />
               </ListItemIcon>
-              <ListItemText
-                primary="Coaching"
-              />
-              {this.state.coachingOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              <ListItemText primary="Coaching" />
+              {this.state.coachingOpen ? (
+                <ExpandLessIcon />
+              ) : (
+                <ExpandMoreIcon />
+              )}
             </ListItem>
             <Collapse in={this.state.coachingOpen} timeout="auto" unMountOnExit>
               <ListItem
@@ -203,7 +202,7 @@ class BurgerMenu extends React.Component {
                 className={classes.nested}
               >
                 <ListItemIcon>
-                  <PeopleIcon style={{fill: "#ffd300"}} />
+                  <PeopleIcon style={{ fill: "#ffd300" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="My Teachers"
@@ -219,7 +218,7 @@ class BurgerMenu extends React.Component {
                 className={classes.nested}
               >
                 <ListItemIcon>
-                  <CalendarIcon style={{fill: "#094492"}} />
+                  <CalendarIcon style={{ fill: "#094492" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Calendar"
@@ -235,7 +234,7 @@ class BurgerMenu extends React.Component {
                 className={classes.nested}
               >
                 <ListItemIcon>
-                  <MessagesIcon style={{fill: "#4fd9b3"}} />
+                  <MessagesIcon style={{ fill: "#4fd9b3" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Messages"
@@ -245,19 +244,19 @@ class BurgerMenu extends React.Component {
               <ListItem
                 button
                 onClick={() => {
-                    this.setState({ menu: 4 });
+                  this.setState({ menu: 4 });
                 }}
                 className={classes.nested}
               >
                 <ListItemIcon>
-                  <TutorialIcon style={{fill: "#6f39c4"}} />
+                  <TutorialIcon style={{ fill: "#6f39c4" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Training"
                   onClick={() =>
                     this.props.history.push({
                       pathname: "/Magic8Menu",
-                      state: {type: "Training"}
+                      state: { type: "Training" }
                     })
                   }
                 />
@@ -270,7 +269,7 @@ class BurgerMenu extends React.Component {
                 className={classes.nested}
               >
                 <ListItemIcon>
-                  <ObserveIcon style={{fill: "#e99c2e"}} />
+                  <ObserveIcon style={{ fill: "#e99c2e" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Observe"
@@ -280,12 +279,12 @@ class BurgerMenu extends React.Component {
               <ListItem
                 button
                 onClick={() => {
-                    this.setState({ menu: 6 });
+                  this.setState({ menu: 6 });
                 }}
                 className={classes.nested}
               >
                 <ListItemIcon>
-                  <ResultsIcon style={{fill: "#099365"}} />
+                  <ResultsIcon style={{ fill: "#099365" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Results"
@@ -301,7 +300,7 @@ class BurgerMenu extends React.Component {
                 className={classes.nested}
               >
                 <ListItemIcon>
-                  <ActionPlansIcon style={{fill: "#e55529"}}/>
+                  <ActionPlansIcon style={{ fill: "#e55529" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary="Action Plans"
@@ -317,7 +316,7 @@ class BurgerMenu extends React.Component {
               }}
             >
               <ListItemIcon>
-                <ResourcesIcon style={{fill: "#4fd9b3"}} />
+                <ResourcesIcon style={{ fill: "#4fd9b3" }} />
               </ListItemIcon>
               <ListItemText
                 primary="Resources"
@@ -328,15 +327,15 @@ class BurgerMenu extends React.Component {
               button
               disabled
               onClick={() => {
-                  this.setState({ menu: 9 });
+                this.setState({ menu: 9 });
               }}
             >
               <ListItemIcon>
-                <Magic8Icon style={{fill: "#6f39c4"}} />
+                <Magic8Icon style={{ fill: "#6f39c4" }} />
               </ListItemIcon>
-              <ListItemText 
-                primary="Magic 8 Materials" 
-                onClick = {() => this.props.history.push("/Messages")}
+              <ListItemText
+                primary="Magic 8 Materials"
+                onClick={() => this.props.history.push("/Messages")}
               />
             </ListItem>
             <ListItem
@@ -347,7 +346,7 @@ class BurgerMenu extends React.Component {
               }}
             >
               <ListItemIcon>
-                <ResearchIcon style={{fill: "#0988EC"}} />
+                <ResearchIcon style={{ fill: "#0988EC" }} />
               </ListItemIcon>
               <ListItemText
                 primary="Research"
@@ -362,7 +361,7 @@ class BurgerMenu extends React.Component {
               }}
             >
               <ListItemIcon>
-                <PersonIcon style={{fill:"#099365"}} />
+                <PersonIcon style={{ fill: "#099365" }} />
               </ListItemIcon>
               <ListItemText
                 primary="My Account"
@@ -377,7 +376,7 @@ class BurgerMenu extends React.Component {
               }}
             >
               <ListItemIcon>
-                <HelpIcon style={{fill:"#e55529"}} />
+                <HelpIcon style={{ fill: "#e55529" }} />
               </ListItemIcon>
               <ListItemText
                 primary="Help"
@@ -391,7 +390,7 @@ class BurgerMenu extends React.Component {
               }}
             >
               <ListItemIcon>
-                <LogoutIcon  style={{fill:"#ffd300"}}/>
+                <LogoutIcon style={{ fill: "#ffd300" }} />
               </ListItemIcon>
               <ListItemText
                 primary="Logout"
@@ -406,7 +405,7 @@ class BurgerMenu extends React.Component {
         {this.state.teacherModal ? (
           <FirebaseContext.Consumer>
             {firebase => (
-              <TeacherModal 
+              <TeacherModal
                 handleClose={this.handleTeacherModalClose}
                 firebase={firebase}
                 type={this.state.type}

@@ -3,45 +3,39 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Line } from "react-chartjs-2";
 
-const styles = {
-
-};
+const styles = {};
 
 /**
  * specifies data sets (and formatting) for the child behaviors details horizontal bar
  * @type {{datasets: *[], labels: string[][]}}
  */
 const childBehaviorsData = {
-  labels: [
-    'August 19, 2018',
-    'September 30, 2018',
-    'October 22, 2018'
-  ],
+  labels: ["August 19, 2018", "September 30, 2018", "October 22, 2018"],
   datasets: [
     {
-      label:"No Opportunity",
-      backgroundColor: '#F44336',
-      borderColor: '#F44336',
+      label: "No Opportunity",
+      backgroundColor: "#F44336",
+      borderColor: "#F44336",
       fill: false,
       lineTension: 0,
       data: [32, 27, 29]
     },
     {
       label: "No Assoc./Coop. Interaction",
-      backgroundColor: '#E99C2E',
-      borderColor: '#E99C2E',
+      backgroundColor: "#E99C2E",
+      borderColor: "#E99C2E",
       fill: false,
       lineTension: 0,
       data: [12, 14, 19]
     },
     {
       label: "Associative and/or Cooperative",
-      backgroundColor: '#6F39C4',
-      borderColor: '#6F39C4',
+      backgroundColor: "#6F39C4",
+      borderColor: "#6F39C4",
       fill: false,
       lineTension: 0,
       data: [14, 20, 29]
-    },
+    }
   ]
 };
 
@@ -60,12 +54,12 @@ const ChildBehaviorTrendsOptions = {
   //     fontStyle: 'bold'
   // },
   tooltips: {
-    mode: 'index',
+    mode: "index",
     intersect: false
   },
   hover: {
-    mode: 'nearest',
-    intersect: true,
+    mode: "nearest",
+    intersect: true
   },
   scales: {
     xAxes: [
@@ -98,11 +92,11 @@ const ChildBehaviorTrendsOptions = {
   },
   plugins: {
     datalabels: {
-      display: 'auto',
-      color: 'gray',
-      align: 'top',
+      display: "auto",
+      color: "gray",
+      align: "top",
       formatter: function(value, context) {
-        return value + '%';
+        return value + "%";
       }
     }
   }

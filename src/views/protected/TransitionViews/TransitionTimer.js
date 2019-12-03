@@ -95,12 +95,10 @@ class TransitionTimer extends React.Component {
       <MuiThemeProvider theme={theme}>
         <div style={{ width: 400 }}>
           <CircularProgressbar
-            fill = "#19468D"
+            fill="#19468D"
             background
             percentage={this.state.percentage}
-            text={
-              this.state.time === 0 ? "0:00" : ms(this.state.time)
-            }
+            text={this.state.time === 0 ? "0:00" : ms(this.state.time)}
             initialAnimation={false}
             styles={{
               path: { stroke: "#19468D" },
@@ -149,7 +147,6 @@ const mapStateToProps = state => {
   };
 };
 TransitionTimer.contextType = FirebaseContext;
-export default connect(
-  mapStateToProps,
-  { pushOntoTransitionStack }
-)(TransitionTimer);
+export default connect(mapStateToProps, { pushOntoTransitionStack })(
+  TransitionTimer
+);

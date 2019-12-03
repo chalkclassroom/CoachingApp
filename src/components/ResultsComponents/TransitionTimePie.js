@@ -8,46 +8,30 @@ const styles = {
   //idk how this works
 };
 
-
 class TransitionTimePie extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
   }
 
-  state = {
+  state = {};
 
-  };
-
-
-
-
-    render() {
-        const { classes } = this.props;
-        console.log("inside time: ", this.state.inside);
-        console.log("total session time: " + this.props.sessionTotal)
-        let transitionData = {
-            labels: [
-                'Transition Time',
-                'Learning Activity (No Transition)'
-            ],
-            datasets: [{
-                data: [this.props.transitionTime, this.props.learningActivityTime],
-                backgroundColor: [
-                    '#E55529',
-                    '#0988EC'
-                ],
-                hoverBackgroundColor: [
-                    '#E55529',
-                    '#0988EC'
-                ]
-            }]
-
-
+  render() {
+    const { classes } = this.props;
+    console.log("inside time: ", this.state.inside);
+    console.log("total session time: " + this.props.sessionTotal);
+    let transitionData = {
+      labels: ["Transition Time", "Learning Activity (No Transition)"],
+      datasets: [
+        {
+          data: [this.props.transitionTime, this.props.learningActivityTime],
+          backgroundColor: ["#E55529", "#0988EC"],
+          hoverBackgroundColor: ["#E55529", "#0988EC"]
+        }
+      ]
     };
 
-
     return (
-      <Pie 
+      <Pie
         data={transitionData}
         options={{
           tooltips: {
@@ -57,8 +41,10 @@ class TransitionTimePie extends React.Component {
                 var meta = dataset._meta[Object.keys(dataset._meta)[0]];
                 var total = meta.total;
                 var currentValue = dataset.data[tooltipItem.index];
-                var percentage = parseFloat((currentValue/total*100).toFixed(1));
-                return currentValue + ' (' + percentage + '%)';
+                var percentage = parseFloat(
+                  ((currentValue / total) * 100).toFixed(1)
+                );
+                return currentValue + " (" + percentage + "%)";
               },
               title: function(tooltipItem, data) {
                 return data.labels[tooltipItem[0].index];

@@ -62,7 +62,6 @@ class SequentialActivitiesPage extends React.Component {
   };
 
   render() {
-
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
@@ -112,7 +111,6 @@ SequentialActivitiesPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default connect(
-  null,
-  { deleteAllCenters }
-)(withStyles(styles)(SequentialActivitiesPage));
+export default connect(null, { deleteAllCenters })(
+  withStyles(styles)(SequentialActivitiesPage)
+);

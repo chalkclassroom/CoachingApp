@@ -9,7 +9,7 @@ import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
 import HomePage from "./views/protected/HomeViews/HomePage";
-import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage"
+import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -28,7 +28,6 @@ import TransitionTimeTrainingPage from "./views/protected/TransitionViews/Transi
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
-
 
 const styles = createMuiTheme({
   palette: {
@@ -132,14 +131,15 @@ class App extends Component {
               component={HomePage}
             />
             <PrivateRoute
-            auth={this.state.auth || !this.state.auth}
-            path="/about"
-            component={AboutPage}
-              />
+              auth={this.state.auth || !this.state.auth}
+              path="/about"
+              component={AboutPage}
+            />
             <PrivateRoute
-            auth={this.state.auth || !this.state.auth}
-            path = "/team"
-            component = {TeamPage}/>
+              auth={this.state.auth || !this.state.auth}
+              path="/team"
+              component={TeamPage}
+            />
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTime"
@@ -159,36 +159,36 @@ class App extends Component {
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsResults"
               component={AssociativeCooperativeInteractionsResultsPage}
-              />
-            <PrivateRoute
-            auth={this.state.auth}
-            path="/SequentialActivities"
-            component={SequentialActivitiesPage}
             />
             <PrivateRoute
-            auth={this.state.auth}
-            path="/SequentialActivitiesResults"
-            component={SequentialActivitiesResultsPage}
+              auth={this.state.auth}
+              path="/SequentialActivities"
+              component={SequentialActivitiesPage}
             />
             <PrivateRoute
-                auth={this.state.auth}
-                path="/AssociativeCooperativeInteractionsTraining"
-                component={AssociativeCooperativeInteractionsTrainingPage}
+              auth={this.state.auth}
+              path="/SequentialActivitiesResults"
+              component={SequentialActivitiesResultsPage}
             />
             <PrivateRoute
-                auth={this.state.auth}
-                path="/ClassroomClimateTraining"
-                component={ClassroomClimateTrainingPage}
+              auth={this.state.auth}
+              path="/AssociativeCooperativeInteractionsTraining"
+              component={AssociativeCooperativeInteractionsTrainingPage}
             />
             <PrivateRoute
-                auth={this.state.auth}
-                path="/SequentialActivitiesTraining"
-                component={SequentialActivitiesTrainingPage}
+              auth={this.state.auth}
+              path="/ClassroomClimateTraining"
+              component={ClassroomClimateTrainingPage}
             />
             <PrivateRoute
-                auth={this.state.auth}
-                path="/TransitionTimeTraining"
-                component={TransitionTimeTrainingPage}
+              auth={this.state.auth}
+              path="/SequentialActivitiesTraining"
+              component={SequentialActivitiesTrainingPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/TransitionTimeTraining"
+              component={TransitionTimeTrainingPage}
             />
             <PrivateRoute
               exact
@@ -207,7 +207,14 @@ class App extends Component {
               path="/Magic8Menu"
               render={props =>
                 this.state.auth === true ? (
-                  <Magic8MenuPage {...props} type={props.location.state.type === "Results" ? "Results" : "Observe"} />
+                  <Magic8MenuPage
+                    {...props}
+                    type={
+                      props.location.state.type === "Results"
+                        ? "Results"
+                        : "Observe"
+                    }
+                  />
                 ) : (
                   <Redirect
                     to={{ pathname: "/", state: { from: props.location } }}
@@ -233,4 +240,3 @@ class App extends Component {
   }
 }
 export default withStyles(styles)(App);
-

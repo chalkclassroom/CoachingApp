@@ -7,9 +7,7 @@ import SummaryTeacherBehaviorsPieChart from "./SummaryTeacherBehaviorsPieChart";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 
-const styles = {
-};
-
+const styles = {};
 
 class ChildTeacherBehaviorPieSlider extends React.Component {
   render() {
@@ -25,18 +23,14 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>
-              Child Behaviors
-            </Typography>
-            <SummaryChildBehaviorsPieChart/>
+            <Typography align={"center"}>Child Behaviors</Typography>
+            <SummaryChildBehaviorsPieChart />
           </Grid>
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>
-              Teacher Behaviors
-            </Typography>
-            <SummaryTeacherBehaviorsPieChart/>
+            <Typography align={"center"}>Teacher Behaviors</Typography>
+            <SummaryTeacherBehaviorsPieChart />
           </Grid>
         </div>
       </Slider>
