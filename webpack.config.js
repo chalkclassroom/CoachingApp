@@ -31,7 +31,7 @@ module.exports = ({ mode } = { mode: "production" }) => {
                                 loader: 'svg-url-loader',
                                 options: {
                                     limit: 100000,
-                                    name: '/assets/images/[name].[ext]',
+                                    name: '[path][name].[ext]',
                                     encoding: 'base64'
                                 },
                             },
@@ -42,7 +42,7 @@ module.exports = ({ mode } = { mode: "production" }) => {
                         loader: 'url-loader',
                         options: {
                           limit: 8192,
-                            name: '/assets/images/[name].[ext]',
+                            name: '[path][name].[ext]',
                         },
                     },
                     {
@@ -65,8 +65,7 @@ module.exports = ({ mode } = { mode: "production" }) => {
                           {
                             loader: 'file-loader',
                             options: {
-                              name: '[name].[ext]',
-                              outputPath: "/assets/fonts"
+                              name: '[path][name].[ext]',
                             }
                           }
                         ]
