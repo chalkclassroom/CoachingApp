@@ -478,7 +478,7 @@ class SequentialActivitiesResultsPage extends React.Component {
                 </ListItem>
                 <ListItem>
                   <IconButton className={classes.generateReport}>
-                    <GenerateReportImage
+                    <img src={GenerateReportImage}
                       style={{
                         height: "10vh",
                         width: "10vh"
