@@ -61,12 +61,14 @@
     "test": "npx cypress run",
     "recordtest": "npx cypress run --record --key 9e732f46-e3ae-4325-b1fc-20239bffd5b9",
     "copy": "cpr build public -o",
-    "deploy": "npm run prod && npm run copy && firebase deploy",
     "webpack": "webpack",
     "webpack-dev-server": "webpack-dev-server",
     "livedev": "webpack-dev-server --mode=development",
     "dev": "webpack --mode=development",
-    "prod": "webpack --mode=production"
+    "prod": "webpack --mode=production",
+    "deploy": "firebase target:apply hosting cqrefpwa cqrefpwa && npm run prod && npm run copy && firebase deploy --only hosting:cqrefpwa",
+    "devdeploy": "firebase target:apply hosting devcqref devcqref && npm run dev && npm run copy && firebase deploy --only hosting:devcqref",
+    "stagingdeploy": "firebase target:apply hosting stagingcqref stagingcqref && npm run prod && npm run copy && firebase deploy --only hosting:stagingcqref"
   },
   "eslintConfig": {
     "extends": "react-app"

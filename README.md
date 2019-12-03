@@ -32,10 +32,6 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
-### `npm run deploy`
-1. Make sure you are logged in via firebase-tools cli into CQREF Account
-2. run deploy in the command prompt.
-
 ### `npm run cypress`
 Launches the test runner in the interactive watch mode.<br>
 
@@ -44,6 +40,18 @@ Launches the test runner locally in CLI.<br>
 
 ### `npm run recordtest`
 Launches the test runner in the Cypress Cloud Dashboar<br>
+
+### `npm run devdeploy` Deploy to Dev Environment
+1. Make sure you are logged in via firebase-tools cli into CQREF Account
+2. run devdeploy in the command prompt.
+
+### `npm run stagingdeploy` Deploy to Staging Environment
+1. Make sure you are logged in via firebase-tools cli into CQREF Account
+2. run stagingdeploy in the command prompt.
+
+### `npm run deploy` Deploy to Production
+1. Make sure you are logged in via firebase-tools cli into CQREF Account
+2. run deploy in the command prompt.
 
 ## Learn More
 
