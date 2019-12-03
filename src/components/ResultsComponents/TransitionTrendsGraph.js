@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Line } from "react-chartjs-2";
 
-const styles = {
-
-};
+const styles = {};
 
 /**
  * specifies data sets (and formatting) for transition trends graph
@@ -43,7 +41,7 @@ const transitionTrendData = {
       fill: false,
       lineTension: 0,
       data: [5, 20, 8, 0, 8]
-    },
+    }
     // {
     //   label: "WAIT",
     //   backgroundColor: "rgb(54, 162, 235)",
@@ -70,12 +68,12 @@ const transitionTrendOptions = {
   //     fontStyle: 'bold'
   // },
   tooltips: {
-    mode: 'index',
+    mode: "index",
     intersect: false
   },
   hover: {
-    mode: 'nearest',
-    intersect: true,
+    mode: "nearest",
+    intersect: true
   },
   scales: {
     xAxes: [
@@ -108,11 +106,11 @@ const transitionTrendOptions = {
   },
   plugins: {
     datalabels: {
-      display: 'auto',
-      color: 'gray',
-      align: 'top',
+      display: "auto",
+      color: "gray",
+      align: "top",
       formatter: function(value, context) {
-        return value + '%';
+        return value + "%";
       }
     }
   }

@@ -11,9 +11,10 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-//import Avatar from "@material-ui/core/Avatar";
-//import TeacherSvg from "../../../assets/icons/teacher.svg";
+import Avatar from "@material-ui/core/Avatar";
+import TeacherImage from "../../../assets/images/TeacherImage.svg";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import StarsIcon from '@material-ui/icons/Stars';
 import * as Constants from '../../../constants';
 
@@ -80,23 +81,23 @@ class TeacherModal extends React.Component {
   componentDidMount() {
     this.props.firebase.getTeacherList().then(teacherPromiseList => {
       let teacherList = [];
-      teacherPromiseList.forEach(tpromise=>{
-        tpromise.then(data=>{
+      teacherPromiseList.forEach(tpromise => {
+        tpromise.then(data => {
           teacherList.push(data);
           this.setState((previousState, currentProps) => {
             return {
               teachers: previousState.teachers.concat(data)
-            }
-          })
+            };
+          });
         });
-      })
+      });
     });
   }
 
   selectTeacher(teacherInfo) {
     this.props.history.push({
       pathname: "/Magic8Menu",
-      state: {teacher: teacherInfo, type: this.props.type}
+      state: { teacher: teacherInfo, type: this.props.type }
     });
   }
 
@@ -119,21 +120,23 @@ class TeacherModal extends React.Component {
               </Typography>
               <IconButton style={{ padding: 10 }}>
                 <Tooltip title={"Close"} placement={"right"}>
-                  <CloseIcon
-                    onClick={this.props.handleClose}
-                  />
+                  <CloseIcon onClick={this.props.handleClose} />
                 </Tooltip>
               </IconButton>
             </Grid>
             <Grid
-                xs={12}
-                container
-                alignItems="center"
-                direction="column"
-                justify="flex-start"
+              xs={12}
+              container
+              alignItems="center"
+              direction="column"
+              justify="flex-start"
             >
               <List className={classes.list}>
-                {this.state.teachers.length===0?<>Fetching... Make sure you have Teachers Paired.</>:<></>}
+                {this.state.teachers.length === 0 ? (
+                  <>Fetching... Make sure you have Teachers Paired.</>
+                ) : (
+                  <></>
+                )}
                 {this.state.teachers.map((teacher, index) => (
                   <ListItem
                       key={index}
@@ -150,7 +153,7 @@ class TeacherModal extends React.Component {
                       <StarsIcon style={{color: Constants.SequentialColor }}/>
                     </ListItemAvatar>
                     <ListItemText
-                      primary={teacher.firstName +" "+ teacher.lastName}
+                      primary={teacher.firstName + " " + teacher.lastName}
                       secondary={
                         <React.Fragment>
                           <Typography
@@ -181,5 +184,4 @@ TeacherModal.propTypes = {
   type: PropTypes.string.isRequired
 };
 
-const TeacherModalWithRouter = withRouter(TeacherModal);
-export default withStyles(styles)(TeacherModalWithRouter);
+export default withRouter(connect()(withStyles(styles)(TeacherModal)));

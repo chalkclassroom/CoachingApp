@@ -2,14 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import Slider from "react-slick";
-import ChildBehaviorsPie from "./SummaryChildBehaviorsPieChart";
-import TeacherBehaviorsPie from "./SummaryTeacherBehaviorsPieChart";
+import SummaryChildBehaviorsPieChart from "./SummaryChildBehaviorsPieChart";
+import SummaryTeacherBehaviorsPieChart from "./SummaryTeacherBehaviorsPieChart";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 
-const styles = {
-};
-
+const styles = {};
 
 class ChildTeacherBehaviorPieSlider extends React.Component {
   render() {
@@ -25,18 +23,14 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>
-              Child Behaviors
-            </Typography>
-            <ChildBehaviorsPie/>
+            <Typography align={"center"}>Child Behaviors</Typography>
+            <SummaryChildBehaviorsPieChart />
           </Grid>
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>
-              Teacher Behaviors
-            </Typography>
-            <TeacherBehaviorsPie/>
+            <Typography align={"center"}>Teacher Behaviors</Typography>
+            <SummaryTeacherBehaviorsPieChart />
           </Grid>
         </div>
       </Slider>

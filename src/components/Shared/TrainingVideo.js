@@ -1,17 +1,16 @@
 import React from "react";
-import { DefaultPlayer as Video } from 'react-html5video/dist';
-import 'react-html5video/dist/styles.css';
+import { DefaultPlayer as Video } from "react-html5video/dist";
+import "react-html5video/dist/styles.css";
 import PropTypes from "prop-types";
 
 class TrainingVideo extends React.Component {
-
   render() {
     return (
-      <Video 
+      <Video
         autoPlay
         loop
         muted
-        controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
+        controls={["PlayPause", "Seek", "Time", "Volume", "Fullscreen"]}
         poster="http://sourceposter.jpg"
         onCanPlayThrough={() => {
           // Do stuff

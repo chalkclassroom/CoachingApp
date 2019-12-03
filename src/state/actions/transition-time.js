@@ -13,6 +13,5 @@ export const pushOntoTransitionStack = entry => ({
 });
 
 export const resetTransitionTime = () => ({
-    type: RESET_TRANSITION_TIME
+  type: RESET_TRANSITION_TIME
 });
-     

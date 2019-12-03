@@ -2,13 +2,16 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { popOffClimateStack, pushOntoClimateStack } from "../../state/actions/classroom-climate";
+import {
+  popOffClimateStack,
+  pushOntoClimateStack
+} from "../../state/actions/classroom-climate";
 
-const styles = ({
+const styles = {
   root: {
     flexGrow: 1
   }
-});
+};
 
 class BehaviorCounter extends React.Component {
   constructor(props) {
@@ -16,7 +19,7 @@ class BehaviorCounter extends React.Component {
     let mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: 'climate'
+      type: "climate"
     };
     this.props.firebase.handleSession(mEntry);
   }
@@ -25,17 +28,16 @@ class BehaviorCounter extends React.Component {
     let mEntry = {
       BehaviorResponse: entry,
       // Type: this.props.climateType
-      Type: 'climate'
+      Type: "climate"
     };
     this.props.firebase.handlePushClimate(mEntry);
     this.props.pushOntoClimateStack(mEntry);
   };
 
-
   handleUndo = () => {
     if (this.props.climateStackSize > 0) {
       this.props.popOffClimateStack();
-    //<<<<<<< Updated upstream
+      //<<<<<<< Updated upstream
       let mEntry = {
         BehaviorResponse: "UNDO",
         Type: "UNDO"
@@ -44,13 +46,12 @@ class BehaviorCounter extends React.Component {
     }
   };
 
-
   CustomUI2 = props => {
     return (
       //<<<<<<< Updated upstream
       <svg width={595.172} height={555.055} {...props}>
         <defs>
-          <style>{'.prefix__cls-1{fill:#6465bb}'}</style>
+          <style>{".prefix__cls-1{fill:#6465bb}"}</style>
           <linearGradient
             id="prefix__linear-gradient"
             x1={0.42}
@@ -156,16 +157,18 @@ class BehaviorCounter extends React.Component {
           data-name="Selection Circles"
           transform="translate(24.117 20.35)"
         >
-          <g 
+          <g
             id="prefix__Group_4"
             data-name="Group 4"
             transform="translate(68 72)"
-            style={{
-              // stroke:
-              //     this.props.climateType === "instruction"
-              //         ? "#6465BB"
-              //         : "#4FD9B3"
-            }}
+            style={
+              {
+                // stroke:
+                //     this.props.climateType === "instruction"
+                //         ? "#6465BB"
+                //         : "#4FD9B3"
+              }
+            }
           >
             <path
               id="prefix__Combined_Shape"
@@ -182,7 +185,7 @@ class BehaviorCounter extends React.Component {
           </g>
           <text
             id="ClimateStack"
-            data-name={'ClimateStackSize'}
+            data-name={"ClimateStackSize"}
             transform="translate(271.841 274.519)"
             fontFamily="Helvetica-Bold,Helvetica"
             fontWeight={700}
@@ -203,8 +206,8 @@ class BehaviorCounter extends React.Component {
             id="prefix__Specific_Approval"
             data-name="Specific Approval"
             transform="translate(185 445.275)"
-            data-name="Group 1" onClick={() =>
-            this.handlePushFire("specificapproval")}
+            data-name="Group 1"
+            onClick={() => this.handlePushFire("specificapproval")}
           >
             <g
               transform="translate(-209.12 -465.63)"
@@ -230,20 +233,18 @@ class BehaviorCounter extends React.Component {
               fontWeight={700}
             >
               <tspan x={-41.128} y={0}>
-                {'Specific '}
+                {"Specific "}
               </tspan>
               <tspan x={-46.118} y={19}>
-                {'Approval'}
+                {"Approval"}
               </tspan>
             </text>
           </g>
-          <g 
+          <g
             id="prefix__Redirection"
             transform="translate(-9.117 -9.35)"
             data-name="Group 1"
-            onClick={() =>
-              this.handlePushFire("redirection")
-            }
+            onClick={() => this.handlePushFire("redirection")}
           >
             <g
               transform="translate(-15 -11)"
@@ -269,7 +270,7 @@ class BehaviorCounter extends React.Component {
               fontWeight={700}
             >
               <tspan x={0} y={15}>
-                {'Redirection'}
+                {"Redirection"}
               </tspan>
             </text>
           </g>
@@ -277,9 +278,7 @@ class BehaviorCounter extends React.Component {
             id="prefix__Non-Specific_Approval"
             data-name="Non-Specific Approval"
             transform="translate(9.883 359.705)"
-            onClick={() =>
-              this.handlePushFire("nonspecificapproval")
-            }
+            onClick={() => this.handlePushFire("nonspecificapproval")}
           >
             <g
               transform="translate(-34 -380.06)"
@@ -303,10 +302,10 @@ class BehaviorCounter extends React.Component {
               fontWeight={700}
             >
               <tspan x={18.28} y={15}>
-                {'Non-Specific'}
+                {"Non-Specific"}
               </tspan>
               <tspan x={36.058} y={36}>
-                {'Approval'}
+                {"Approval"}
               </tspan>
             </text>
           </g>
@@ -315,9 +314,7 @@ class BehaviorCounter extends React.Component {
             data-name="Disapproval"
             transform="translate(487 -123.198)"
             data-name="Group 1"
-            onClick={() =>
-              this.handlePushFire("disapproval")
-            }
+            onClick={() => this.handlePushFire("disapproval")}
           >
             <g
               transform="translate(-511.12 102.85)"
@@ -342,16 +339,14 @@ class BehaviorCounter extends React.Component {
               fontWeight={700}
             >
               <tspan x={14.446} y={15}>
-                {'Disapproval'}
+                {"Disapproval"}
               </tspan>
             </text>
           </g>
           <g
             id="prefix__undo-arrow-in-a-black-circle"
             transform="translate(246.5 296.275)"
-            onClick={() =>
-              this.handleUndo()
-            }
+            onClick={() => this.handleUndo()}
           >
             <svg width={50} height={50} {...props}>
               <path
@@ -396,22 +391,18 @@ class BehaviorCounter extends React.Component {
             //         }}
           >
             <tspan x={-22.039} y={0}>
-              {'Total '}
+              {"Total "}
             </tspan>
             <tspan x={-45.351} y={17}>
-              {'Responses'}
+              {"Responses"}
             </tspan>
           </text>
         </g>
       </svg>
-    )
+    );
   };
   render() {
-    return (
-      <>
-        {this.CustomUI2(this.props)}
-      </>
-    );
+    return <>{this.CustomUI2(this.props)}</>;
   }
 }
 
@@ -429,8 +420,7 @@ const mapStateToProps = state => {
 };
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    { pushOntoClimateStack, popOffClimateStack }
-  )(BehaviorCounter)
+  connect(mapStateToProps, { pushOntoClimateStack, popOffClimateStack })(
+    BehaviorCounter
+  )
 );

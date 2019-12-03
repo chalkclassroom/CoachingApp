@@ -295,7 +295,7 @@ class CenterMenuSequentialActivities extends React.Component {
   finishCenterVisit = centerName => {
     if (centerName !== undefined) {
       this.props.incrementCenterCount(centerName);
-      this.setState({totalVisitCount: this.state.totalVisitCount + 1})
+      this.setState({ totalVisitCount: this.state.totalVisitCount + 1 });
     }
   };
 
@@ -311,8 +311,18 @@ class CenterMenuSequentialActivities extends React.Component {
       case CENTER_MENU:
         return (
           <div>
-            <Grid container justify="center" alignItems="stretch" direction="row">
-              <Grid container justify="flex-start" alignItems="center" direction="row">
+            <Grid
+              container
+              justify="center"
+              alignItems="stretch"
+              direction="row"
+            >
+              <Grid
+                container
+                justify="flex-start"
+                alignItems="center"
+                direction="row"
+              >
                 <Grid container spacing={0} direction="row" alignItems="center">
                   <NewCenterDialog
                     open={this.state.addDialog}
@@ -320,18 +330,20 @@ class CenterMenuSequentialActivities extends React.Component {
                     handleSubmit={this.handleAddCenter}
                   />
                   <Grid container xs={3}>
-                    <Grid 
+                    <Grid
                       container
                       alignItems={"center"}
                       justify={"center"}
                       direction={"column"}
                     >
-                      <div style={{margin:20}} />
+                      <div style={{ margin: 20 }} />
                       <Dashboard
                         magic8="Sequential Activities"
                         color="#ffd300"
-                        infoDisplay= {<TotalVisitCount count={this.state.totalVisitCount} />}
-                        infoPlacement= "flex-start"
+                        infoDisplay={
+                          <TotalVisitCount count={this.state.totalVisitCount} />
+                        }
+                        infoPlacement="flex-start"
                         completeObservation={true}
                       />
                     </Grid>
@@ -401,8 +413,7 @@ CenterMenuSequentialActivities.propTypes = {
 };
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    { addNewCenter, incrementCenterCount }
-  )(CenterMenuSequentialActivities)
+  connect(mapStateToProps, { addNewCenter, incrementCenterCount })(
+    CenterMenuSequentialActivities
+  )
 );

@@ -33,21 +33,11 @@ class ListDetailTableTransitionResults extends React.Component {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell
-                className={classes.tableHeader}
-              >
-                Start Time
-              </TableCell>
-              <TableCell
-                className={classes.tableHeader}
-                align="right"
-              >
+              <TableCell className={classes.tableHeader}>Start Time</TableCell>
+              <TableCell className={classes.tableHeader} align="right">
                 Duration
               </TableCell>
-              <TableCell
-                className={classes.tableHeader}
-                align="right"
-              >
+              <TableCell className={classes.tableHeader} align="right">
                 Type
               </TableCell>
             </TableRow>
@@ -58,19 +48,13 @@ class ListDetailTableTransitionResults extends React.Component {
                 <TableCell component="th" scope="row">
                   {row.startTime}
                 </TableCell>
-                <TableCell align="right">
-                  {row.duration}
-                </TableCell>
+                <TableCell align="right">{row.duration}</TableCell>
                 {row.type === "INSIDE" ? (
-                  <TableCell
-                    className={classes.tableBody}
-                  >
+                  <TableCell className={classes.tableBody}>
                     {row.type}
                   </TableCell>
                 ) : row.type === "OUTSIDE" ? (
-                  <TableCell
-                    className={classes.tableBody}
-                  >
+                  <TableCell className={classes.tableBody}>
                     {row.type}
                   </TableCell>
                 ) : null}
