@@ -36,11 +36,17 @@ Your app is ready to be deployed!
 1. Make sure you are logged in via firebase-tools cli into CQREF Account
 2. run deploy in the command prompt.
 
-### `npm test`
+### `npm run cypress`
 Launches the test runner in the interactive watch mode.<br>
-Pending to integrate with cypress.
+
+### `npm run test`
+Launches the test runner locally in CLI.<br>
+
+### `npm run recordtest`
+Launches the test runner in the Cypress Cloud Dashboar<br>
 
 ## Learn More
 
 You can learn more about webpack at [Webpack](https://webpack.js.org/).
 To learn React, check out the [React documentation](https://reactjs.org/).
+To learn Cypress, check out the [Cypress documentation](https://www.cypress.io/).
