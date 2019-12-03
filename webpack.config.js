@@ -3,14 +3,14 @@
 const path = require("path");
 const webpackMerge = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const modeConfiguration = env => require(`./build-utils/webpack.${env}`)(env);
+const modeConfiguration = mode => require(`./build-utils/webpack.${mode}`)(mode);
 
-module.exports = ({ mode } = { mode: "production" }) => {
-    console.log(`mode is: ${mode}`);
+module.exports = (env, argv) => {
+    console.log(`mode is: ${argv.mode}`);
 
     return webpackMerge(
         {
-            mode,
+            mode: argv.mode,
             entry: "./src/index.js",
             output: {
                 publicPath: "/",
@@ -78,6 +78,6 @@ module.exports = ({ mode } = { mode: "production" }) => {
                 }),
             ]
         },
-        modeConfiguration(mode)
+        modeConfiguration(argv.mode)
     );
 };
