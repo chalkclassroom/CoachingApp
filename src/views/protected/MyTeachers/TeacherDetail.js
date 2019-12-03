@@ -4,14 +4,14 @@ import { withRouter } from 'react-router-dom';
 import { FirebaseContext } from '../../../components/Firebase/index';
 import AppBar from '../../../components/AppBar';
 import LabeledInfo from '../../../components/MyTeachersComponents/LabeledInfo';
-import TransitionTimeIcon from '../../../assets/icons/TransitionTimeIconImage.svg';
-import EngagementIcon from '../../../assets/icons/EngagementIconImage.svg';
-import SequentialIcon from '../../../assets/icons/SequentialIconImage.svg';
-import ListeningIcon from '../../../assets/icons/ListeningIconImage.svg';
-import MathIcon from '../../../assets/icons/MathIconImage.svg';
-import InstructionIcon from '../../../assets/icons/InstructionIconImage.svg';
-import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimateIconImage.svg';
-import AssocCoopIcon from '../../../assets/icons/AssocCoopIconImage.svg';
+import TransitionTimeSvg from '../../../assets/icons/TransitionTime.svg';
+import StudentEngagementSvg from '../../../assets/icons/StudentEngagement.svg';
+import SequentialActivitiesSvg from '../../../assets/icons/SequentialActivities.svg';
+import ListeningToChildrenSvg from '../../../assets/icons/ListeningtoChildren.svg';
+import MathInstructionSvg from '../../../assets/icons/MathInstruction.svg';
+import LevelOfInstructionSvg from '../../../assets/icons/LevelofInstruction.svg';
+import ClassroomClimateSvg from '../../../assets/icons/ClassroomClimate.svg';
+import AssocCoopInteractionsSvg from '../../../assets/icons/AssocCoopInteractions.svg';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
@@ -242,10 +242,10 @@ const styles = {
   }
 };
 
-const sortedSvg = [TransitionTimeIcon, ClassroomClimateSvg,
-                   ListeningIcon, InstructionIcon,
-                   MathIcon, EngagementIcon,
-                   SequentialIcon, AssocCoopIcon];
+const sortedSvg = [TransitionTimeSvg, ClassroomClimateSvg,
+                   ListeningToChildrenSvg, LevelOfInstructionSvg,
+                   MathInstructionSvg, StudentEngagementSvg,
+                   SequentialActivitiesSvg, AssocCoopInteractionsSvg];
 
 class TeacherDetail extends Component {
 

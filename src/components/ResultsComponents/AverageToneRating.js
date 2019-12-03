@@ -7,11 +7,11 @@ import FirebaseContext from "../../components/Firebase/context";
 import { VictoryPie } from "victory-pie";
 import Grid from "@material-ui/core/Grid";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import ExNegativeFace from "../../assets/icons/ExNegativeFaceImage.png";
-import NegativeFace from "../../assets/icons/NegativeFaceImage.png";
-import NeutralFace from "../../assets/icons/NeutralFaceImage.png";
-import PleasantFace from "../../assets/icons/PleasantFaceImage.png";
-import VibrantFace from "../../assets/icons/VibrantFaceImage.png";
+import exNegativeFace from "../../assets/icons/1-ex-negative-cqref.png";
+import negativeFace from "../../assets/icons/2-negative-cqref.png";
+import flatFace from "../../assets/icons/3-flat-cqref.png";
+import pleasantFace from "../../assets/icons/4-pleasant-cqref.png";
+import vibrantFace from "../../assets/icons/5-vibrant-cqref.png";
 
 const styles = ({
 
@@ -39,35 +39,35 @@ class averageToneRating extends React.Component {
           <Grid item>
             <img
               alt="extreme negative face"
-              src={ExNegativeFace}
+              src={exNegativeFace}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="negative face"
-              src={NegativeFace}
+              src={negativeFace}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="flat face"
-              src={NeutralFace}
+              src={flatFace}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="pleasant face"
-              src={PleasantFace}
+              src={pleasantFace}
               width="70vw"
             />
           </Grid>
           <Grid item>
             <img
               alt="vibrant face"
-              src={VibrantFace}
+              src={vibrantFace}
               width="70vw"
             />
           </Grid>

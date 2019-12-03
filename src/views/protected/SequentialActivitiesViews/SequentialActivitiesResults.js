@@ -10,8 +10,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Select from "@material-ui/core/Select";
-import { ReactComponent as GenerateReport } from "../../../assets/icons/GenerateReportImage.svg";
-import SequentialIcon from "../../../assets/icons/SequentialIconImage.svg";
+import { ReactComponent as GenerateReportSVG } from "../../../assets/icons/generateReport.svg";
+import SequentialActivitiesIcon from "../../../assets/icons/SequentialActivities.svg";
 import { withStyles } from "@material-ui/core/styles";
 //import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/context";
@@ -358,7 +358,7 @@ class SequentialActivitiesResults extends React.Component {
                         <Grid container item xs={3}>
                             <List className={classes.buttonsList}>
                                 <ListItem>
-                                    <img src={SequentialIcon} style={{width:"15vw", height:"10vh", position:"center"}} />
+                                    <img src={SequentialActivitiesIcon} style={{width:"15vw", height:"10vh", position:"center"}} />
                                 </ListItem>
                                 <ListItem>
                                     <TextField
@@ -450,7 +450,7 @@ class SequentialActivitiesResults extends React.Component {
                                 </ListItem>
                                 <ListItem>
                                     <IconButton className={classes.generateReport}>
-                                        <GenerateReport
+                                        <GenerateReportSVG
                                             style={{
                                                 height: "10vh",
                                                 width: "10vh"

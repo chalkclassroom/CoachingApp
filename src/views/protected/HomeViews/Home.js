@@ -6,10 +6,10 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import { ReactComponent as Calendar } from "../../../assets/icons/CalendarImage.svg";
-import { ReactComponent as Observe } from "../../../assets/icons/ObserveImage.svg";
-import { ReactComponent as Results } from "../../../assets/icons/ResultsImage.svg";
-import { ReactComponent as Messages } from "../../../assets/icons/MessagesImage.svg";
+import { ReactComponent as CalendarSvg } from "../../../assets/icons/calendar.svg";
+import { ReactComponent as ObserveSvg } from "../../../assets/icons/observe.svg";
+import { ReactComponent as ResultSvg } from "../../../assets/icons/results.svg";
+import { ReactComponent as MessageSvg } from "../../../assets/icons/messages.svg";
 import TeacherModal from "./TeacherModal";
 import FirebaseContext from "../../../components/Firebase/context";
 
@@ -104,7 +104,7 @@ class Welcome extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <Calendar className={classes.image}/>
+                    <CalendarSvg className={classes.image}/>
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
@@ -126,7 +126,7 @@ class Welcome extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <Observe className={classes.image}/>
+                    <ObserveSvg className={classes.image}/>
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
@@ -153,7 +153,7 @@ class Welcome extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <Results className={classes.image}/>
+                    <ResultSvg className={classes.image}/>
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
@@ -172,7 +172,7 @@ class Welcome extends React.Component {
                   justify="flex-start"
                 >
                   <Grid item>
-                    <Messages className={classes.image}/>
+                    <MessageSvg className={classes.image}/>
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">

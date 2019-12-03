@@ -5,11 +5,11 @@ import AppBar from '../../components/AppBar';
 import FirebaseContext from "../../components/Firebase/context";
 import { withStyles } from '@material-ui/core/styles';
 import InfiniteCarousel from 'react-leaf-carousel';
-import ResourceOne from "../../assets/icons/ResourceOneImage.png"
-import ResourceTwo from "../../assets/icons/ResourceTwoImage.png"
-import ResourceThree from "../../assets/icons/ResourceThreeImage.png"
-import ResourceFour from "../../assets/icons/ResourceFourImage.png"
-import ResourceFive from "../../assets/icons/ResourceFiveImage.png"
+import resource1 from "../../assets/icons/pdfSlide1.png"
+import resource2 from "../../assets/icons/research2.png"
+import resource3 from "../../assets/icons/resource3.png"
+import resource4 from "../../assets/icons/resource4.png"
+import resource5 from "../../assets/icons/resource5.png"
 const styles = {
     root: {
         flexGrow: 1,
@@ -1001,31 +1001,31 @@ class About extends React.Component {
             <div>
               <img
                 alt=''
-                src={ResourceOne}
+                src={resource1}
               />
             </div>
             <div>
               <img
                 alt=''
-                src={ResourceTwo}
+                src={resource2}
               />
             </div>
             <div>
               <img
                 alt=''
-                src={ResourceThree}
+                src={resource3}
               />
             </div>
             <div>
               <img
                 alt=''
-                src={ResourceFour}
+                src={resource4}
               />
             </div>
             <div>
               <img
                 alt=''
-                src={ResourceFive}
+                src={resource5}
               />
             </div>
           </InfiniteCarousel>)

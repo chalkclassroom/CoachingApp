@@ -3,30 +3,30 @@ import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import { Button, Card, Grid } from '@material-ui/core';
 import {withRouter} from 'react-router-dom';
-import TransitionTimeIcon from "../assets/icons/TransitionTimeIconImage.svg"
-import ClassroomClimateIcon from "../assets/icons/ClassroomClimateIconImage.svg"
-import MathIcon from "../assets/icons/MathIconImage.svg"
-import EngagementIcon from "../assets/icons/EngagementIconImage.svg"
-import InstructionIcon from "../assets/icons/InstructionIconImage.svg"
-import ListeningIcon from "../assets/icons/ListeningIconImage.svg"
-import SequentialIcon from "../assets/icons/SequentialIconImage.svg"
-import AssocCoopIcon from "../assets/icons/AssocCoopIconImage.svg"
-import TransitionNotes from "../assets/icons/TransitionNotesImage.svg"
-import ClassroomClimateNotes from "../assets/icons/ClassroomClimateNotesImage.svg"
-import MathNotes from "../assets/icons/MathNotesImage.svg"
-import EngagementNotes from "../assets/icons/EngagementNotesImage.svg"
-import InstructionNotes from "../assets/icons/InstructionNotesImage.svg"
-import ListeningNotes from "../assets/icons/ListeningNotesImage.svg"
-import SequentialNotes from "../assets/icons/SequentialNotesImage.svg"
-import AssocCoopNotes from "../assets/icons/AssocCoopNotesImage.svg"
-import TransitionTimeLookFors from "../assets/icons/TransitionTimeLookForsImage.svg"
-import ClassroomClimateLookFors from "../assets/icons/ClassroomClimateLookForsImage.svg"
-import MathLookFors from "../assets/icons/MathLookForsImage.svg"
-import EngagementLookFors from "../assets/icons/EngagementLookForsImage.svg"
-import InstructionLookFors from "../assets/icons/InstructionLookForsImage.svg"
-import ListeningLookFors from "../assets/icons/ListeningLookForsImage.svg"
-import SequentialLookFors from "../assets/icons/SequentialLookForsImage.svg"
-import AssocCoopLookFors from "../assets/icons/AssocCoopLookForsImage.svg"
+import TransitionTimeIcon from "../assets/icons/TransitionTime.svg"
+import ClassroomClimateIcon from "../assets/icons/ClassroomClimate.svg"
+import MathIcon from "../assets/icons/MathInstruction.svg"
+import EngagementIcon from "../assets/icons/StudentEngagement.svg"
+import InstructionIcon from "../assets/icons/LevelofInstruction.svg"
+import ListeningIcon from "../assets/icons/ListeningtoChildren.svg"
+import SequentialIcon from "../assets/icons/SequentialActivities.svg"
+import AssocCoopIcon from "../assets/icons/AssocCoopInteractions.svg"
+import TransitionTimeNotes from "../assets/icons/NotesTT.svg"
+import ClassroomClimateNotes from "../assets/icons/NotesCC.svg"
+import MathNotes from "../assets/icons/NotesMath.svg"
+import EngagementNotes from "../assets/icons/NotesEngagement.svg"
+import InstructionNotes from "../assets/icons/NotesInstruction.svg"
+import ListeningNotes from "../assets/icons/NotesListening.svg"
+import SequentialNotes from "../assets/icons/NotesSequential.svg"
+import AssocCoopNotes from "../assets/icons/NotesAssocCoop.svg"
+import TransitionTimeLookFors from "../assets/icons/LookForsTT.svg"
+import ClassroomClimateLookFors from "../assets/icons/LookForsCC.svg"
+import MathLookFors from "../assets/icons/LookForsMath.svg"
+import EngagementLookFors from "../assets/icons/LookForsEngagement.svg"
+import InstructionLookFors from "../assets/icons/LookForsInstruction.svg"
+import ListeningLookFors from "../assets/icons/LookForsListening.svg"
+import SequentialLookFors from "../assets/icons/LookForsSequential.svg"
+import AssocCoopLookFors from "../assets/icons/LookForsAssocCoop.svg"
 import Notes from "./Notes";
 import FirebaseContext from "./Firebase/context";
 import { ClickAwayListener } from '@material-ui/core/es';
@@ -124,7 +124,7 @@ class Dashboard extends React.Component {
     this.props.magic8 === "Transition Time" ? this.setState({
       icon: TransitionTimeIcon,
       lookForsIcon: TransitionTimeLookFors,
-      notesIcon: TransitionNotes})
+      notesIcon: TransitionTimeNotes})
     : this.props.magic8 === "Classroom Climate" ? this.setState({
       icon: ClassroomClimateIcon,
       lookForsIcon: ClassroomClimateLookFors,

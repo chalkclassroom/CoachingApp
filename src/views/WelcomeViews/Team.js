@@ -9,14 +9,14 @@ import Typography from "@material-ui/core/Typography/Typography";
 import ProjectAdvisor from '../../components/ProjectAdvisor';
 import TeamMemberCard from '../../components/TeamMemberCard';
 import TeamMemberExpansion from "../../components/TeamMemberExpansion";
-import PreschoolPromiseLogo from "../../assets/icons/PreschoolPromiseLogoImage.jpg";
-import UnitedWayLogo from "../../assets/icons/UnitedWayLogoImage.jpg";
-import UDaytonLogo from "../../assets/icons/UDaytonLogoImage.jpg";
-import VanderbiltPeabodyLogo from "../../assets/icons/VanderbiltPeabodyLogoImage.png";
-import WondryLogo from "../../assets/icons/WondryLogoImage.png";
-import VanderbiltEngineeringLogo from "../../assets/icons/VanderbiltEngineeringLogoImage.png";
-import AbtLogo from "../../assets/icons/AbtLogoImage.png";
-import MNPSLogo from "../../assets/icons/MNPSLogoImage.jpg";
+import PreschoolPromiseLogo from "../../assets/icons/PreschoolPromiseLogo.jpg";
+import UnitedWayLogo from "../../assets/icons/UnitedWayLogo.jpg";
+import UDaytonLogo from "../../assets/icons/UDaytonLogo.jpg";
+import VanderbiltPeabodyLogo from "../../assets/icons/VanderbiltPeabodyLogo.png";
+import WondryLogo from "../../assets/icons/WondryLogo.png";
+import VanderbiltEngineeringLogo from "../../assets/icons/VanderbiltEngineeringLogo.png";
+import AbtLogo from "../../assets/icons/AbtLogo.png";
+import MNPSLogo from "../../assets/icons/MNPSLogo.jpg";
 import * as Constants from '../../constants';
 
 
