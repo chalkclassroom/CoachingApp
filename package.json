@@ -63,7 +63,7 @@
     "deploy": "npm run prod && npm run copy && firebase deploy",
     "webpack": "webpack",
     "webpack-dev-server": "webpack-dev-server",
-    "devWatch": "webpack-dev-server --mode=development",
+    "livedev": "webpack-dev-server --mode=development",
     "dev": "webpack --mode=development",
     "prod": "webpack --mode=production"
   },
