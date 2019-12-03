@@ -34,8 +34,9 @@ The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
 ### `npm run deploy`
+> **WARNING**: You must remove any script tags in public/index.html before deploying. remove any `<script type="text/javascript" src="/production.js"></script>`
 1. Make sure you are logged in via firebase-tools cli into CQREF Account
-2. run in the command prompt.
+2. run deploy in the command prompt.
 
 ### `npm test`
 Launches the test runner in the interactive watch mode.<br>
