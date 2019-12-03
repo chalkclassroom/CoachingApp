@@ -3,13 +3,12 @@
 ### 1. Create new branch for each new feature you work on
     a. Checkout Master branch with "git checkout master"
     b. Create new branch from master with "git checkout -b <new-branch>"
-  
-### 2. Merge Branch back into Master
-    a. Checkout Master branch with "git checkout master"
-    b. Pull your branch with "git merge <your-branch>
-    c. Resolve any merge conflicts
-    d. Commit the merge with "git commit -m "Your message about your commit"
-    e. Push to master with "git push origin master"
+    c. Add changes
+    d. Commit `git commit -m "message"`
+    e. Push `git push`
+    
+### 2. Creating Pull Requests
+To learn, check out the [How to Create Pull Requests](https://help.github.com/en/desktop/contributing-to-projects/creating-a-pull-request).
 
 ## Available Scripts
 
