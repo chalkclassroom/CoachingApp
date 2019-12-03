@@ -15,6 +15,8 @@ import Avatar from "@material-ui/core/Avatar";
 import TeacherImage from "../../../assets/images/TeacherImage.svg";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import StarsIcon from '@material-ui/icons/Stars';
+import * as Constants from '../../../constants';
 
 function getModalStyle() {
   return {
@@ -137,12 +139,18 @@ class TeacherModal extends React.Component {
                 )}
                 {this.state.teachers.map((teacher, index) => (
                   <ListItem
-                    key={index}
-                    alignItems="flex-start"
-                    onClick={() => this.selectTeacher(teacher)}
+                      key={index}
+                      alignItems="center"
+                      onClick={() =>
+                          this.selectTeacher(teacher)
+                      }
                   >
                     <ListItemAvatar>
-                      <Avatar alt="Teacher Profile Pic" src={TeacherImage} />
+                      {/* <Avatar
+                        alt="Teacher Profile Pic"
+                        src={TeacherSvg}
+                      /> */}
+                      <StarsIcon style={{color: Constants.SequentialColor }}/>
                     </ListItemAvatar>
                     <ListItemText
                       primary={teacher.firstName + " " + teacher.lastName}

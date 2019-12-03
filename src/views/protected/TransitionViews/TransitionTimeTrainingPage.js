@@ -268,21 +268,10 @@ class TransitionTimeTrainingPage extends React.Component {
                 </ListItem>
               </List>
             </Grid>
-            <Grid
-              container
-              item
-              xs={8}
-              justify="center"
-              direction={"row"}
-              alignItems={"center"}
-            >
-              <Typography
-                variant={"h5"}
-                alignItems={"center"}
-                justify={"center"}
-              >
+            <Grid container item xs={8} justify="center" direction={"row"} alignItems={"center"}>
+              {/* <Typography variant={"h5"} alignItems={"center"} justify={"center"}>
                 Training: Transition Time Tool
-              </Typography>
+              </Typography> */}
               <Grid item xs={12}>
                 <div>
                   {this.state.view === ViewEnum.CONCEPTS ? (

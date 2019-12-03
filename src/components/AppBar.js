@@ -19,6 +19,7 @@ import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
+import * as Constants from '../constants';
 
 const styles = {
   root: {
@@ -49,7 +50,7 @@ const styles = {
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#A1C4FD"
+      main: '#459aeb'
     },
     secondary: {
       main: "#FFFFFF"
@@ -138,14 +139,14 @@ class AppBar extends React.Component {
                 >
                   <img src={LogoImage} height={"36"} alt={""} />
                 </IconButton>
-                <Typography
+                {/* <Typography
                   variant="h6"
                   className={classes.menuText}
                   onClick={() => this.props.history.push("/")}
                 >
                   Classroom Quality - REF
-                </Typography>
-                <div color="inherit" className={classes.grow} />
+                </Typography> */}
+                <div color="inherit" className={classes.grow}/>
                 <Router>
                   <div>
                     <Link to="/" className={classes.link}>
