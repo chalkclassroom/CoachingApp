@@ -1,0 +1,5 @@
+// tslint.json
+{
+    "extends": ["tslint:recommended", "tslint-react"],
+    "rules": {}
+}

@@ -11,7 +11,7 @@ module.exports = (env, argv) => {
     return webpackMerge(
         {
             mode: argv.mode,
-            entry: "./src/index.js",
+            entry: "./src/index.tsx",
             output: {
                 publicPath: "/",
                 path: path.resolve(__dirname, "build"),
@@ -20,6 +20,15 @@ module.exports = (env, argv) => {
             module: {
                 rules: [
                     {
+                        test: /\.tsx?$/,
+                        loader: 'babel-loader',
+                    },
+                    {
+                        test: /\.js$/,
+                        use: ["source-map-loader"],
+                        enforce:    "pre"
+                    },
+                    {//Should remove this rule after JS Migration to TS is Done.
                         test: /\.(js|jsx)$/,
                         exclude: /node_modules/,
                         loader: "babel-loader",
