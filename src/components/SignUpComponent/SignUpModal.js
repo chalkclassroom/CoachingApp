@@ -14,7 +14,7 @@ import Coach from "../../assets/icons/newCoach.svg";
 //import Admin from "../../assets/icons/newAdministrator.svg";
 import GrayedAdmin from "../../assets/icons/newAdminGrayed.svg";
 import GrayedTeacher from "../../assets/icons/newTeacherGrayed.svg";
-import GrayedCoach from "../../assets/icons/GrayedCoach.svg";
+import GrayedCoachImage from "../../assets/images/GrayedCoachImage.svg";
 import CardContent from "@material-ui/core/CardContent";
 
 function getModalStyle() {
@@ -35,8 +35,31 @@ const styles = theme => ({
     padding: theme.spacing.unit * 4,
     borderRadius: 8
   },
+  root: {
+    backgroundColor: '#ffffff'
+  },
+  mobileRoot: {
+    backgroundColor: '#ffffff'
+  },
   photoIcon: {
     height:"15vh"
+  },
+  "@media (max-width: 700px)": {
+    root: {
+      display: "none"
+    },
+    paper: {
+      height: '80%',
+      width: '75%'
+    },
+    photoIcon: {
+      height: "8vh"
+    }
+  },
+  "@media (min-width: 701px)": {
+    mobileRoot: {
+      display: "none"
+    }
   }
 });
 
@@ -66,7 +89,7 @@ class SignUpModal extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div>
+      <div className={classes.root}>
         <Modal open={this.state.open}>
           <div style={getModalStyle()} className={classes.paper}>
             <Grid container direction="column" alignItems="center" justify="center">
@@ -116,7 +139,7 @@ class SignUpModal extends React.Component {
                           justify="flex-start"
                         >
                           <Grid item>
-                            <img src={GrayedCoach} alt="Coach" className={classes.photoIcon} />
+                            <img src={GrayedCoachImage} alt="Coach" className={classes.photoIcon} />
                           </Grid>
                           <Grid item>
                             <Typography

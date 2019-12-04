@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles, AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import Logo from '../logo.svg'
+import LogoImage from '../assets/images/LogoImage.svg'
 import {withRouter} from 'react-router-dom'
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
@@ -56,7 +56,19 @@ const styles = {
     fontWeight: 'normal',
     lineHeight: '110%',
     letterSpacing: '0.05em'
-  }
+  },
+  "@media (max-width: 700px)": {
+    menuButton: {
+      marginLeft: '-0.7em',
+      marginRight: '0.4em'
+    },
+    chalkText: {
+      fontSize: 16
+    },
+    coachingText: {
+      fontSize: 12
+    }
+  },
 };
 
 const theme = createMuiTheme ({
@@ -149,7 +161,7 @@ class CommonAppBar extends React.Component{
                   )}
                   onClick = {() => this.props.history.push("/")}
                 >
-                  <img src={Logo} height={'36'} alt={""}/>
+                  <img src={LogoImage} height={'36'} alt={""}/>
                 </IconButton>
                 <Grid direction="column" justify="center" alignItems="flex-start">
                   <Grid item>
@@ -228,7 +240,7 @@ class CommonAppBar extends React.Component{
                   )}
                   onClick = {() => this.props.history.push("/")}
                 >
-                  <img src={Logo} height={'36'} alt={""}/>
+                  <img src={LogoImage} height={'36'} alt={""}/>
                 </IconButton>
                 <Grid direction="column" justify="center" alignItems="flex-start">
                   <Grid item>

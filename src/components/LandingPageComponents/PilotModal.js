@@ -36,7 +36,13 @@ const styles = theme => ({
   },
   photoIcon: {
     height:"15vh"
-  }
+  },
+  "@media (max-width: 700px)": {
+    paper: {
+      height: '80%',
+      width: '75%'
+    },
+  },
 });
 
 class PilotModal extends React.Component {

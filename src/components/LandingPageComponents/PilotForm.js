@@ -7,6 +7,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import {withRouter} from "react-router-dom";
 import Typography from '@material-ui/core/Typography/Typography';
 import Grid from "@material-ui/core/Grid";
+import { connect } from 'react-redux';
 
 const styles = theme => ({
   main: {
@@ -267,5 +268,4 @@ PilotForm.propTypes = {
   mRole: PropTypes.string.isRequired,
 };
 
-const PilotFormWithRouter = withRouter(PilotForm);
-export default withStyles(styles)(PilotFormWithRouter);
+export default withRouter(connect()(withStyles(styles)(PilotForm)));

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import WelcomePage from "./views/WelcomeViews/Welcome";
+import WelcomePage from "./views/WelcomeViews/WelcomePage";
 import ClassroomClimate from "./views/protected/ClassroomClimateViews/ClassroomClimate";
 import ClassroomClimateResults from "./views/protected/ClassroomClimateViews/ClassroomClimateResults";
 import Magic8Menu from "./views/protected/Magic8Menu";
