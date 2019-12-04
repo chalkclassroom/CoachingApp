@@ -59,7 +59,7 @@
     "victory-pie": "^31.2.0"
   },
   "scripts": {
-    "lint": "npx eslint src/*",
+    "lint": "npx eslint ./src --ext .js,.jsx,.ts,.tsx",
     "cypress": "npx cypress open",
     "test": "npx cypress run",
     "recordtest": "npx cypress run --record --key 9e732f46-e3ae-4325-b1fc-20239bffd5b9",
