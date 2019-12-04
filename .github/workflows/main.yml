@@ -18,6 +18,6 @@ jobs:
     - name: Install Dependencies
       run: npm install
     - name: Run ESLint
-      uses: stefanoeb/eslint-action@1.0.0
+      run: npm run lint
     - name: Run CLI Tests
       run: npm run test
