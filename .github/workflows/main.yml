@@ -20,4 +20,4 @@ jobs:
     - name: Run ESLint
       uses: stefanoeb/eslint-action@1.0.0
     - name: Run CLI Tests
-      uses: npm run test
+      run: npm run test
