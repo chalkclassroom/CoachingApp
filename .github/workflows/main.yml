@@ -1,7 +1,9 @@
 name: CI
-//Eslinting & CLI Testing pushed branch for now. After review approval. Merge to Develop branch and Deploy in devcqref.web.app After review approval. Merge to Staging branch and Deploy in stagingcqref.web.app. Merge to Master and deploy in production env
 
-on: push
+on:
+  push:
+    branches: 
+      - '*'
 
 jobs:
   build:
