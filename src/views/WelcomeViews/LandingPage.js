@@ -25,10 +25,8 @@ import VanderbiltPeabodyLogoImage from '../../assets/images/VanderbiltPeabodyLog
 import WondryLogoImage from '../../assets/images/WondryLogoImage.png';
 import Typography from '@material-ui/core/Typography/Typography';
 import LandingDetail from '../../components/LandingPageComponents/LandingDetail.js';
-import LandingDetailMobile from '../../components/LandingPageComponents/LandingDetailMobile.js';
 import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard.js';
 import Impact from '../../components/LandingPageComponents/Impact.js';
-import ImpactMobile from '../../components/LandingPageComponents/ImpactMobile.js';
 import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
 import iPadImage from '../../assets/images/iPadImage.svg';
@@ -139,11 +137,9 @@ const styles = {
     },
     chalkTitle: {
       fontSize: 'calc(24px + (50 - 24) * ((100vw - 300px) / (700 - 300)))',
-      //fontSize: 30
     },
     tagline: {
       fontSize: 'calc(14px + (24 - 14) * ((100vw - 300px) / (700 - 300)))',
-      //fontSize: 14
     },
     sectionTitle: {
       fontSize: 32
@@ -180,9 +176,6 @@ const styles = {
     mobileRoot: {
       display: "none"
     },
-    /* root: {
-      display: "none"
-    } */
   },
 };
 
@@ -690,7 +683,7 @@ class LandingPage extends React.Component {
                 </Typography>
               </Grid>
               <Grid item style={{paddingBottom: '3em', paddingTop: '2em', width:"90%"}}>
-                <ImpactMobile
+                <Impact
                   icon={SchoolImage}
                   color='#094492'
                   title="IMPACT"
@@ -700,7 +693,7 @@ class LandingPage extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingBottom: '3em', width:"90%"}}>
-                <ImpactMobile
+                <Impact
                   icon={ProblemOrangeImage}
                   color='#E55529'
                   title="PROBLEM"
@@ -710,7 +703,7 @@ class LandingPage extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingBottom: '1em', width: '90%'}}>
-                <ImpactMobile
+                <Impact
                   icon={LightbulbYellowImpactImage}
                   color='#ffd300'
                   title="MISSION"
@@ -786,7 +779,7 @@ class LandingPage extends React.Component {
                 </Typography>
               </Grid>
               <Grid item style={{paddingTop: '2em'}}>
-                <LandingDetailMobile
+                <LandingDetail
                   icon={HighFiveImage}
                   iconAlt="High Five"
                   title="Empowering Teachers and Coaches"
@@ -796,7 +789,7 @@ class LandingPage extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingTop: '3em'}}>
-                <LandingDetailMobile
+                <LandingDetail
                   icon={BookImage}
                   iconAlt="Book"
                   title="Grounded in Rigorous Research"
@@ -806,7 +799,7 @@ class LandingPage extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingTop: '3em'}}>
-                <LandingDetailMobile
+                <LandingDetail
                   icon={FeedbackImage}
                   iconAlt="Feedback"
                   title="Individualized and Timely Feedback"
@@ -816,7 +809,7 @@ class LandingPage extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingTop: '3em'}}>
-                <LandingDetailMobile
+                <LandingDetail
                   icon={MedalImage}
                   iconAlt="Medal"
                   title="Target Key Classroom Practices"
@@ -826,7 +819,7 @@ class LandingPage extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingTop: '3em'}}>
-                <LandingDetailMobile
+                <LandingDetail
                   icon={LightbulbImage}
                   iconAlt="Lightbulb"
                   title="Emphasis on Teacher Learning"
@@ -836,7 +829,7 @@ class LandingPage extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingTop: '3em', paddingBottom: '2em'}}>
-                <LandingDetailMobile
+                <LandingDetail
                   icon={BoxImage}
                   iconAlt="Box"
                   title="Works Across Any Curriculum"
@@ -862,7 +855,7 @@ class LandingPage extends React.Component {
                 </Grid>
               </Grid>
               <Grid item>
-                <LandingDetailMobile
+                <LandingDetail
                   icon={PilotProgramImage}
                   iconAlt="Participation"
                   title="Participate in our pilot program!"
@@ -874,7 +867,7 @@ class LandingPage extends React.Component {
                 />
               </Grid>
               <Grid item>
-                <LandingDetailMobile
+                <LandingDetail
                   icon={EventsImage}
                   iconAlt="People"
                   title="Join us at our upcoming events!"

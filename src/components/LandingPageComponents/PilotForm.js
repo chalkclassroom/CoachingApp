@@ -171,7 +171,6 @@ class PilotForm extends React.Component{
     return (
       <main className={classes.main}>
         <Paper className={classes.paper}>
-          {/* {this.state.errors ? <Paper> Check your Form Data </Paper>: <div/>} */}
           {this.state.pilotSignUp ? (
             <div>
               <Grid container direction="column" justify="center" alignItems="center">
@@ -242,8 +241,6 @@ class PilotForm extends React.Component{
                 margin="normal"
                 variant="standard"
                 fullWidth
-                //helperText={this.state.passwordError}
-                //error={(this.state.passwordError !== '')}
               />
               <Button
                 fullWidth
