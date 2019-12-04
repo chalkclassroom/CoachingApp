@@ -5,9 +5,7 @@ import { Line } from "react-chartjs-2";
 import { lightGreen, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
 import { red } from '@material-ui/core/es/colors';
 
-const styles = {
-
-};
+const styles = {};
 
 const TransitionTypeColors = {
   lineColor: lightGreen[300],
@@ -54,7 +52,7 @@ const transitionTrendData = {
       fill: false,
       lineTension: 0,
       data: [5, 20, 8, 0, 8]
-    },
+    }
     // {
     //   label: "WAIT",
     //   backgroundColor: "rgb(54, 162, 235)",
@@ -81,12 +79,12 @@ const transitionTrendOptions = {
   //     fontStyle: 'bold'
   // },
   tooltips: {
-    mode: 'index',
+    mode: "index",
     intersect: false
   },
   hover: {
-    mode: 'nearest',
-    intersect: true,
+    mode: "nearest",
+    intersect: true
   },
   legend: {
     display: true,
@@ -133,7 +131,7 @@ const transitionTrendOptions = {
       color: 'black',
       align: 'top',
       formatter: function(value, context) {
-        return value + '%';
+        return value + "%";
       }
     }
   }

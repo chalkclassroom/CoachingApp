@@ -7,9 +7,7 @@ import Typography from "@material-ui/core/Typography/Typography";
 import ChildBehaviorsDetailsHorizontalBar from "./ChildBehaviorsDetailsHorizontalBar";
 import TeacherBehaviorsDetailsHorizontalBar from "./TeacherBehaviorsDetailsHorizontalBar";
 
-const styles = {
-};
-
+const styles = {};
 
 class ChildTeacherBehaviorDetailsSlider extends React.Component {
   render() {
@@ -25,18 +23,14 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>
-              Child Behaviors
-            </Typography>
-            <ChildBehaviorsDetailsHorizontalBar/>
+            <Typography align={"center"}>Child Behaviors</Typography>
+            <ChildBehaviorsDetailsHorizontalBar />
           </Grid>
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>
-              Teacher Behaviors
-            </Typography>
-            <TeacherBehaviorsDetailsHorizontalBar/>
+            <Typography align={"center"}>Teacher Behaviors</Typography>
+            <TeacherBehaviorsDetailsHorizontalBar />
           </Grid>
         </div>
       </Slider>

@@ -69,9 +69,7 @@ class LoginModal extends React.Component {
               </Typography>
               <IconButton style={{ padding: 10 }}>
                 <Tooltip title={"Close"} placement={"right"}>
-                  <CloseIcon
-                    onClick={this.props.handleClose}
-                  />
+                  <CloseIcon onClick={this.props.handleClose} />
                 </Tooltip>
               </IconButton>
             </Grid>

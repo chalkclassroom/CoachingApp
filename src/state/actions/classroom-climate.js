@@ -14,7 +14,7 @@ export const pushOntoClimateStack = entry => ({
   type: PUSH_CLIMATE_STACK,
   entry: {
     timestamp: Date.now(),
-    observation: entry.observation,
+    observation: entry.observation
     // climateType: entry.climateType
   }
 });

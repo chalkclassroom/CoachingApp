@@ -24,53 +24,48 @@ const CounterWithUndo = ({
   climateStackSize,
   popOffClimateStack,
   firebase
-  }) => {
+}) => {
+  let handleDelete = () => {
+    if (climateStackSize > 0) {
+      popOffClimateStack();
+      let mEntry = {
+        BehaviorResponse: "UNDO",
+        Type: "UNDO"
+      };
+      firebase.handlePushClimate(mEntry);
+    }
+  };
 
-    let handleDelete = () => {
-      if (climateStackSize > 0) {
-        popOffClimateStack();
-        let mEntry = {
-          BehaviorResponse: "UNDO",
-          Type: "UNDO"
-        };
-        firebase.handlePushClimate(mEntry);
-      }
-    };
-
-    return (
-      <div>
-        <Paper className={classes.root} elevation={1}>
-          <Typography variant="h5" component="h3">
-            Classroom Climate Log
-          </Typography>
-          <Divider />
-          <div style={{ margin: 10 }} />
-          <Grid
-            container
-            direction={"row"}
-            justify={"center"}
-            alignItems={"center"}
-          >
-            <Chip label={`Total Responses: ${climateStackSize}`} />
-          </Grid>
-          <div style={{ margin: 10 }} />
-          <Grid
-            container
-            direction={"row"}
-            justify={"center"}
-            alignItems={"center"}
-          >
-            <Button
-              onClick={handleDelete}
-              variant="contained"
-              color="default"
-            >
-              Undo
-              <ReplayIcon />
-            </Button>
-          </Grid>
-        </Paper>
-      </div>
+  return (
+    <div>
+      <Paper className={classes.root} elevation={1}>
+        <Typography variant="h5" component="h3">
+          Classroom Climate Log
+        </Typography>
+        <Divider />
+        <div style={{ margin: 10 }} />
+        <Grid
+          container
+          direction={"row"}
+          justify={"center"}
+          alignItems={"center"}
+        >
+          <Chip label={`Total Responses: ${climateStackSize}`} />
+        </Grid>
+        <div style={{ margin: 10 }} />
+        <Grid
+          container
+          direction={"row"}
+          justify={"center"}
+          alignItems={"center"}
+        >
+          <Button onClick={handleDelete} variant="contained" color="default">
+            Undo
+            <ReplayIcon />
+          </Button>
+        </Grid>
+      </Paper>
+    </div>
   );
 };
 
@@ -81,8 +76,5 @@ const mapStateToProps = state => {
 };
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    { popOffClimateStack }
-  )(CounterWithUndo)
+  connect(mapStateToProps, { popOffClimateStack })(CounterWithUndo)
 );

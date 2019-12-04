@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import { Button, Card, Grid } from '@material-ui/core';
-import TransitionTimeIcon from "../assets/icons/TransitionTime.svg"
-import ClassroomClimateIcon from "../assets/icons/ClassroomClimate.svg"
-import MathIcon from "../assets/icons/MathInstruction.svg"
-import EngagementIcon from "../assets/icons/StudentEngagement.svg"
-import InstructionIcon from "../assets/icons/LevelofInstruction.svg"
-import ListeningIcon from "../assets/icons/ListeningtoChildren.svg"
-import SequentialIcon from "../assets/icons/SequentialActivities.svg"
-import AssocCoopIcon from "../assets/icons/AssocCoopInteractions.svg"
+import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg"
+import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg"
+import MathIconImage from "../assets/images/MathIconImage.svg"
+import EngagementIconImage from "../assets/images/EngagementIconImage.svg"
+import InstructionIconImage from "../assets/images/InstructionIconImage.svg"
+import ListeningIconImage from "../assets/images/ListeningIconImage.svg"
+import SequentialIconImage from "../assets/images/SequentialIconImage.svg"
+import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg"
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from 'moment';
@@ -109,21 +109,21 @@ class ResultsDashboard extends React.Component {
 
   componentDidMount = () => {
     if (this.props.magic8 === "Transition Time") {
-      this.setState({ icon: TransitionTimeIcon });
+      this.setState({ icon: TransitionTimeIconImage });
     } else if (this.props.magic8 === "Classroom Climate") {
-      this.setState({ icon: ClassroomClimateIcon })
+      this.setState({ icon: ClassroomClimateIconImage })
     } else if (this.props.magic8 === "Math") {
-      this.setState({ icon: MathIcon })
+      this.setState({ icon: MathIconImage })
     } else if (this.props.magic8 === "Level of Engagement") {
-      this.setState({ icon: EngagementIcon })
+      this.setState({ icon: EngagementIconImage })
     } else if (this.props.magic8 === "Level of Instruction") {
-      this.setState({ icon: InstructionIcon })
+      this.setState({ icon: InstructionIconImage })
     } else if (this.props.magic8 === "Listening to Children") {
-      this.setState({ icon: ListeningIcon })
+      this.setState({ icon: ListeningIconImage })
     } else if (this.props.magic8 === "Sequential Activities") {
-      this.setState({ icon: SequentialIcon })
+      this.setState({ icon: SequentialIconImage })
     } else {
-      this.setState({ icon: AssocCoopIcon })
+      this.setState({ icon: AssocCoopIconImage })
     }
   };
 

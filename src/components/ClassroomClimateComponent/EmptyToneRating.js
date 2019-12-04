@@ -12,7 +12,7 @@ function getModalStyle() {
     transform: `translate(-50%, -50%)`
   };
 }
-  
+
 const styles = theme => ({
   paper: {
     position: "absolute",
@@ -57,8 +57,8 @@ class EmptyToneRating extends React.Component {
                 You have not completed your observation yet.
               </Typography>
               <Typography variant="subtitle2" gutterBottom>
-                Please choose one of the five <strong>tone ratings</strong> 
-                {" "} before pressing <strong>Confirm Rating</strong>.
+                Please choose one of the five <strong>tone ratings</strong>{" "}
+                before pressing <strong>Confirm Rating</strong>.
               </Typography>
             </Grid>
           </div>
@@ -67,5 +67,5 @@ class EmptyToneRating extends React.Component {
     );
   }
 }
-    
+
 export default withStyles(styles)(EmptyToneRating);

@@ -7,10 +7,10 @@ import { withStyles } from "@material-ui/core";
 
 const styles = {
   button: {
-    fontSize:"15px",
-    borderWidth:"2px"
+    fontSize: "15px",
+    borderWidth: "2px"
   }
-}
+};
 
 class YesNoDialog extends React.Component {
   /*
@@ -59,10 +59,10 @@ class YesNoDialog extends React.Component {
           color={this.props.buttonColor}
           aria-label={this.props.buttonAriaLabel}
           style={{
-            color:this.props.buttonColor, 
-            backgroundColor:this.props.backgroundColor,
-            borderColor:this.props.buttonColor,
-            width: this.props.buttonWidth,
+            color: this.props.buttonColor,
+            backgroundColor: this.props.backgroundColor,
+            borderColor: this.props.buttonColor,
+            width: this.props.buttonWidth
           }}
           className={classes.button}
         >
@@ -78,17 +78,10 @@ class YesNoDialog extends React.Component {
             {this.props.dialogTitle}
           </DialogTitle>
           <DialogActions>
-            <Button
-              onClick={this.handleClose}
-              color="primary"
-            >
+            <Button onClick={this.handleClose} color="primary">
               No
             </Button>
-            <Button
-              onClick={this.handleAccept}
-              color="primary"
-              autoFocus
-            >
+            <Button onClick={this.handleAccept} color="primary" autoFocus>
               Yes
             </Button>
           </DialogActions>

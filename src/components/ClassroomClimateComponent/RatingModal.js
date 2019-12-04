@@ -5,11 +5,11 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import YesNoDialog from "../../components/Shared/YesNoDialog";
-import angryFace from "../../assets/icons/1-ex-negative-cqref.png";
-import irritatedFace from "../../assets/icons/2-negative-cqref.png";
-import neutralFace from "../../assets/icons/3-flat-cqref.png";
-import positiveInterestFace from "../../assets/icons/4-pleasant-cqref.png";
-import excitedFace from "../../assets/icons/5-vibrant-cqref.png";
+import ExNegativeFaceImage from "../../assets/images/ExNegativeFaceImage.png";
+import NegativeFaceImage from "../../assets/images/NegativeFaceImage.png";
+import NeutralFaceImage from "../../assets/images/NeutralFaceImage.png";
+import PleasantFaceImage from "../../assets/images/PleasantFaceImage.png";
+import VibrantFaceImage from "../../assets/images/VibrantFaceImage.png";
 
 function getModalStyle() {
   return {
@@ -95,12 +95,13 @@ class RatingModal extends React.Component {
           </Typography>
           <div style={{ height: 20 }} />
           <Grid container direction={"row"} justify={"space-between"}>
-            <Grid item
+            <Grid
+              item
               align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
-              style={{width:"20%"}}
+              style={{ width: "20%" }}
             >
               <Grid item>
                 <Button
@@ -110,7 +111,7 @@ class RatingModal extends React.Component {
                   <Typography variant="h2" align={"center"}>
                     1
                   </Typography>
-                  {/* <img alt="angry face" src={angryFace} width="100vw" /> */}
+                  {/* <img alt="angry face" src={ExNegativeFaceImage} width="100vw" /> */}
                 </Button>
                 <Typography variant={"h6"} align={"center"}>
                   Anger
@@ -120,12 +121,13 @@ class RatingModal extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item
+            <Grid
+              item
               align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
-              style={{width:"20%"}}
+              style={{ width: "20%" }}
             >
               <Grid item>
                 <Button
@@ -137,7 +139,7 @@ class RatingModal extends React.Component {
                   <Typography variant="h2" align={"center"}>
                     2
                   </Typography>
-                  {/* <img alt="irritated face" src={irritatedFace} width="100vw" /> */}
+                  {/* <img alt="irritated face" src={NegativeFaceImage} width="100vw" /> */}
                 </Button>
                 <Typography variant={"h6"} align={"center"}>
                   Irritation
@@ -147,22 +149,25 @@ class RatingModal extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item
+            <Grid
+              item
               align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
-              style={{width:"20%"}}
+              style={{ width: "20%" }}
             >
               <Grid item>
                 <Button
                   onClick={this.handleNeutralClick}
-                  variant={this.state.value === "Neutral" ? "contained" : "text"}
+                  variant={
+                    this.state.value === "Neutral" ? "contained" : "text"
+                  }
                 >
                   <Typography variant="h2" align={"center"}>
                     3
                   </Typography>
-                  {/* <img alt="neutral face" src={neutralFace} width="100vw" /> */}
+                  {/* <img alt="neutral face" src={NeutralFaceImage} width="100vw" /> */}
                 </Button>
                 <Typography variant={"h6"} align={"center"}>
                   Neutral
@@ -172,17 +177,20 @@ class RatingModal extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item
+            <Grid
+              item
               align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
-              style={{width:"20%"}}
+              style={{ width: "20%" }}
             >
               <Button
                 onClick={this.handlePositiveInterestClick}
                 variant={
-                  this.state.value === "Positive Interest" ? "contained" : "text"
+                  this.state.value === "Positive Interest"
+                    ? "contained"
+                    : "text"
                 }
               >
                 <Typography variant="h2" align={"center"}>
@@ -190,7 +198,7 @@ class RatingModal extends React.Component {
                 </Typography>
                 {/* <img
                   alt="positive interest face"
-                  src={positiveInterestFace}
+                  src={PleasantFaceImage}
                   width="100vw"
                 /> */}
               </Button>
@@ -201,12 +209,13 @@ class RatingModal extends React.Component {
                 (smiling, nodding)
               </Typography>
             </Grid>
-            <Grid item
+            <Grid
+              item
               align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
-              style={{width:"20%"}}
+              style={{ width: "20%" }}
             >
               <Button
                 onClick={this.handleExcitementClick}
@@ -217,7 +226,7 @@ class RatingModal extends React.Component {
                 <Typography variant="h2" align={"center"}>
                   5
                 </Typography>
-                {/* <img alt="excited face" src={excitedFace} width="100vw" /> */}
+                {/* <img alt="excited face" src={VibrantFaceImage} width="100vw" /> */}
               </Button>
               <Typography variant={"h6"} align={"center"}>
                 Excitement
@@ -234,11 +243,26 @@ class RatingModal extends React.Component {
             align="center"
             justify={"center"}
             direction={"row"}
-            style={{spacing: 4}}
+            style={{ spacing: 4 }}
           >
             <Grid item xs={3} />
             <Grid item xs={3} justify={"center"}>
-              <Button variant="contained" onClick={this.state.rating===0? this.props.handleIncomplete : this.props.handleRatingConfirmation.bind(this,this.state.rating)} style={{backgroundColor:"#0988ec", fontSize:"15px", width:"170px"}}>
+              <Button
+                variant="contained"
+                onClick={
+                  this.state.rating === 0
+                    ? this.props.handleIncomplete
+                    : this.props.handleRatingConfirmation.bind(
+                        this,
+                        this.state.rating
+                      )
+                }
+                style={{
+                  backgroundColor: "#0988ec",
+                  fontSize: "15px",
+                  width: "170px"
+                }}
+              >
                 Confirm Rating
               </Button>
             </Grid>
@@ -255,7 +279,7 @@ class RatingModal extends React.Component {
                 onAcceptParams={0}
                 shouldOpen={true}
               />
-              </Grid>
+            </Grid>
             <Grid item xs={3} />
           </Grid>
         </Grid>

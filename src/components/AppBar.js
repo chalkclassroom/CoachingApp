@@ -1,41 +1,49 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { withStyles, AppBar, Toolbar, Typography, Button, IconButton} from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import LogoImage from '../assets/images/LogoImage.svg'
-import {withRouter} from 'react-router-dom'
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import {
+  withStyles,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton
+} from "@material-ui/core";
+import { AppBar as NavBar } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import LogoImage from "../assets/images/LogoImage.svg";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
-import MenuIcon from "@material-ui/icons/Menu"
+import MenuIcon from "@material-ui/icons/Menu";
 import BurgerMenu from "./BurgerMenu";
-import { createMuiTheme } from '@material-ui/core/styles';
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from "@material-ui/core/styles";
+import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
-
+import * as Constants from '../constants';
 
 const styles = {
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   grow: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   menuButton: {
     fontFamily: 'Arimo',
     fontSize: 16,
     marginLeft: -12,
     marginRight: 20,
-    "&:hover" : {
+    "&:hover": {
       backgroundColor: "#FFC35C"
-    },
+    }
   },
   link: {
-    textDecoration: 'none'
+    textDecoration: "none"
   },
   logoButton: {
-    backgroundColor: '#FFFFFF',
-    margin:10
+    backgroundColor: "#FFFFFF",
+    margin: 10
   },
   menuText: {
     color:'#FFFFFF',
@@ -71,20 +79,19 @@ const styles = {
   },
 };
 
-const theme = createMuiTheme ({
+const theme = createMuiTheme({
   palette: {
     primary: {
       main: '#459aeb'
     },
     secondary: {
-      main: '#FFFFFF'
+      main: "#FFFFFF"
     }
-  }, 
-  shadows: ["none"],
-})
+  },
+  shadows: ["none"]
+});
 
-class CommonAppBar extends React.Component{
-
+class AppBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -97,8 +104,11 @@ class CommonAppBar extends React.Component{
   }
 
   checkAuth = () => {
-    return !(this.props.firebase.auth.currentUser === undefined || this.props.firebase.auth.currentUser === null);
-  }
+    return !(
+      this.props.firebase.auth.currentUser === undefined ||
+      this.props.firebase.auth.currentUser === null
+    );
+  };
 
   handleMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -112,44 +122,43 @@ class CommonAppBar extends React.Component{
     this.setState({ open: false });
   };
 
-  handleLoginModal= () => {
-    this.setState({ loginModal: true })
+  handleLoginModal = () => {
+    this.setState({ loginModal: true });
   };
 
-  handleSignupModal= () => {
-    this.setState({ signupModal: true })
+  handleSignupModal = () => {
+    this.setState({ signupModal: true });
   };
 
   handleDrawerClickAway = () => {
-    this.setState({ open: false })
+    this.setState({ open: false });
   };
 
   componentDidMount() {
     this.props.firebase.auth.onAuthStateChanged(authUser => {
-      authUser ? this.setState({ auth: true })
-      : this.setState({ auth: false });
+      authUser ? this.setState({ auth: true }) : this.setState({ auth: false });
     });
   }
 
   render() {
-    const {classes} = this.props;
+    const { classes } = this.props;
 
     return (
-      <MuiThemeProvider theme = {theme}>
+      <MuiThemeProvider theme={theme}>
         <div className={classes.root}>
           {this.state.auth ? (
-            <AppBar position="static" color={"primary"}>
+            <NavBar position="static" color={"primary"}>
               <Toolbar>
                 <IconButton
                   color="inherit"
                   aria-label="menu"
                   className={classNames(
                     classes.menuButton,
-                    classes.menuButtonHidden,
+                    classes.menuButtonHidden
                   )}
-                  onClick={(event)=>this.handleMenu(event)}
+                  onClick={event => this.handleMenu(event)}
                 >
-                  <MenuIcon color = "secondary"/>
+                  <MenuIcon color="secondary" />
                 </IconButton>
                 <IconButton
                   color="inherit"
@@ -186,22 +195,16 @@ class CommonAppBar extends React.Component{
                 <div color="inherit" className={classes.grow}/>
                 <Router>
                   <div>
-                    <Link
-                      to = "/"
-                      className={classes.link}
-                    >
+                    <Link to="/" className={classes.link}>
                       <Button
-                        color = "secondary"
-                        className= {classes.menuButton}
-                        onClick = {() => this.props.history.push("/")}
+                        color="secondary"
+                        className={classes.menuButton}
+                        onClick={() => this.props.history.push("/")}
                       >
                         Homepage
                       </Button>
                     </Link>
-                    <Link
-                      to = "/team"
-                      className={classes.link}
-                    >
+                    <Link to="/team" className={classes.link}>
                       <Button
                         color="secondary"
                         className={classes.menuButton}
@@ -210,10 +213,7 @@ class CommonAppBar extends React.Component{
                         Team
                       </Button>
                     </Link>
-                    {/* <Link
-                      to = "/about"
-                      className={classes.link}
-                    >
+                    {/* <Link to="/about" className={classes.link}>
                       <Button
                         color="secondary"
                         className={classes.menuButton}
@@ -223,12 +223,16 @@ class CommonAppBar extends React.Component{
                       </Button>
                     </Link> */}
                   </div>
-                </Router> 
+                </Router>
               </Toolbar>
-              <BurgerMenu open={this.state.open} handleClose={this.handleMenu} firebase={this.props.firebase}/>
-            </AppBar>
-          ) : ( 
-            <AppBar position="static" color={"primary"}>
+              <BurgerMenu
+                open={this.state.open}
+                handleClose={this.handleMenu}
+                firebase={this.props.firebase}
+              />
+            </NavBar>
+          ) : (
+            <NavBar position="static" color={"primary"}>
               <Toolbar>
                 <IconButton
                   color="inherit"
@@ -280,10 +284,7 @@ class CommonAppBar extends React.Component{
                 </Button>
                 <Router>
                   <div>
-                    <Link
-                      to = "/team"
-                      className={classes.link}
-                    >
+                    <Link to="/team" className={classes.link}>
                       <Button
                         color="secondary"
                         className={classes.menuButton}
@@ -292,10 +293,7 @@ class CommonAppBar extends React.Component{
                         Team
                       </Button>
                     </Link>
-                    {/* <Link
-                      to = "/about"
-                      className={classes.link}
-                    >
+                    {/* <Link to = "/about" className={classes.link}>
                       <Button
                         color="secondary"
                         className={classes.menuButton}
@@ -308,12 +306,22 @@ class CommonAppBar extends React.Component{
                 </Router>        
               </Toolbar>
               {this.state.loginModal ? (
-                <LoginModal handleClose={this.handleClose} firebase = {this.props.firebase}/>
-              ) : <div/> }
+                <LoginModal
+                  handleClose={this.handleClose}
+                  firebase={this.props.firebase}
+                />
+              ) : (
+                <div />
+              )}
               {this.state.signupModal ? (
-                <SignUpModal handleClose={this.handleClose} firebase = {this.props.firebase}/>
-              ) : <div/> }
-            </AppBar>
+                <SignUpModal
+                  handleClose={this.handleClose}
+                  firebase={this.props.firebase}
+                />
+              ) : (
+                <div />
+              )}
+            </NavBar>
           )}
         </div>
       </MuiThemeProvider>
@@ -321,10 +329,9 @@ class CommonAppBar extends React.Component{
   }
 }
 
-CommonAppBar.propTypes = {
+AppBar.propTypes = {
   classes: PropTypes.object.isRequired,
-  firebase: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired
 };
 
-const AppBarWithRouter = withRouter(CommonAppBar);
-export default withStyles(styles)(AppBarWithRouter);
+export default withRouter(connect()(withStyles(styles)(AppBar)));

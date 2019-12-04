@@ -131,9 +131,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
   };
 
   childDisabled = () => {
-    return (
-      this.state.people === undefined
-    );
+    return this.state.people === undefined;
   };
 
   teacherDisabled = () => {
@@ -221,7 +219,12 @@ class CenterRatingChecklistSeqAct extends React.Component {
           </DialogContent>
         </Dialog>
         <main>
-          <Grid container alignItems={"center"} direction={"row"} justify={"center"}>
+          <Grid
+            container
+            alignItems={"center"}
+            direction={"row"}
+            justify={"center"}
+          >
             <Grid item xs={3}>
               <Grid
                 container
@@ -232,9 +235,9 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 <Dashboard
                   magic8="Sequential Activities"
                   color="#ffd300"
-                  infoDisplay = {<Countdown color="#ffd300" timerTime={60000} />}
-                  infoPlacement = "center"
-                  completeObservation = {false}
+                  infoDisplay={<Countdown color="#ffd300" timerTime={60000} />}
+                  infoPlacement="center"
+                  completeObservation={false}
                 />
               </Grid>
             </Grid>
@@ -252,11 +255,9 @@ class CenterRatingChecklistSeqAct extends React.Component {
                     this.props.currentCenter.substr(1)}
                 </Typography>
                 <div style={{ height: 20 }} />
-                <Typography
-                  variant={"subtitle2"}
-                  gutterBottom
-                >
-                  Please select the number of children and teachers at the center:
+                <Typography variant={"subtitle2"} gutterBottom>
+                  Please select the number of children and teachers at the
+                  center:
                 </Typography>
                 <Grid
                   container
@@ -337,7 +338,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            Using regular objects or sequential materials in a {" "}
+                            Using regular objects or sequential materials in a{" "}
                             <b>step-by-step, predictable way</b>
                           </ListItemText>
                         </ListItem>
@@ -353,8 +354,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            <b>Drawing</b> meaningful images or{" "}
-                            <b>writing</b> names or meaningful messages
+                            <b>Drawing</b> meaningful images or <b>writing</b>{" "}
+                            names or meaningful messages
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -369,8 +370,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            Following <b>formal rules of a game</b> and/or taking
-                            turns
+                            Following <b>formal rules of a game</b> and/or
+                            taking turns
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -400,9 +401,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
-                            None
-                          </ListItemText>
+                          <ListItemText>None</ListItemText>
                         </ListItem>
                         {/* <ListItem
                           onClick={this.handleToggle(6)}
@@ -502,8 +501,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.teacherDisabled()}
                           />
                           <ListItemText>
-                            Supporting children's <b>drawing</b> of an image{" "}
-                            or <b>writing</b> a message
+                            Supporting children's <b>drawing</b> of an image or{" "}
+                            <b>writing</b> a message
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -517,9 +516,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
-                            None
-                          </ListItemText>
+                          <ListItemText>None</ListItemText>
                         </ListItem>
                       </List>
                     </Card>
@@ -560,8 +557,7 @@ const mapStateToProps = state => {
 };
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    { toggleSequentialMaterials }
-  )(CenterRatingChecklistSeqAct)
+  connect(mapStateToProps, { toggleSequentialMaterials })(
+    CenterRatingChecklistSeqAct
+  )
 );
