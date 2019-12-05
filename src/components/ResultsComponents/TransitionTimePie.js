@@ -50,10 +50,34 @@ class TransitionTimePie extends React.Component {
                 return data.labels[tooltipItem[0].index];
               }
             }
+          },
+          legend: {
+            onClick: null,
+            position: "bottom",
+            labels: {
+              padding: 20,
+              fontColor: "black",
+              fontSize: 14,
+            }
+          },
+          plugins: {
+            datalabels: {
+              display: 'auto',
+              color: 'white',
+              font: {
+                size: 20
+              },
+              formatter: function(value) {
+                return (
+                  Math.floor((value/1000)/60) + "m "
+                  + Math.round((((value/1000)/60) % 1) * 60) + "s"
+                );
+              }
+            }
           }
         }}
-        width="650"
-        height="400"
+        width={650}
+        height={400}
       />
     );
   }
@@ -61,7 +85,9 @@ class TransitionTimePie extends React.Component {
 
 TransitionTimePie.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  //data: PropTypes.object.isRequired
+  transitionTime: PropTypes.number.isRequired,
+  learningActivityTime: PropTypes.number.isRequired
 };
 
 TransitionTimePie.contextType = FirebaseContext;

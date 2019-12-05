@@ -18,6 +18,8 @@ import ClassroomRoutinesImage from "../../../assets/images/ClassroomRoutinesImag
 import BMDImage from "../../../assets/images/BMDImage.svg";
 import OtherImage from "../../../assets/images/OtherImage.svg";
 import { red } from "@material-ui/core/es/colors";
+import { toggleNewTransitionType } from "../../../state/actions/transition-time";
+import { connect } from 'react-redux';
 
 const styles = theme => ({
   button: {
@@ -148,6 +150,7 @@ class TransitionTypeSel extends React.Component {
 
   handleButtonChange = type => {
     this.props.handleTransitionType(type);
+    this.props.toggleNewTransitionType(type);
     this.setState({
       selected: type
     });
@@ -325,4 +328,9 @@ TransitionTypeSel.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(TransitionTypeSel);
+export default withStyles(styles)(
+  connect(
+    null,
+    { toggleNewTransitionType }
+  )(TransitionTypeSel)
+);

@@ -26,6 +26,33 @@ class Firebase {
     }
   }
 
+  firebasePilotSignUp = async function(userData) {
+    const data = Object.assign(
+      {},
+      {
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        program: userData.program
+      }
+    );
+    const docRef = firebase.firestore().collection('pilotForm').doc();
+    docRef.set(data)
+      .then( () => {
+        console.log("Visitor submitted pilot form");
+      })
+      .catch(function(error) {
+        console.error("Error signing up: ", error);
+      });
+  };
+
+  emailListSignUp = async email => {
+    this.sessionRef = this.db.collection("emailList").doc();
+    this.sessionRef.set({
+      email: email
+    });
+  };
+
   firebaseEmailSignUp = async function(userData, role) {
     return this.auth
       .createUserWithEmailAndPassword(userData.email, userData.password)
@@ -620,9 +647,9 @@ class Firebase {
       .then(
         result =>
           // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+          //var sanitizedMessage = result.data[0];
+          //console.log(sanitizedMessage);
+          //return sanitizedMessage;
           result.data[0]
       )
       .catch(error =>
@@ -630,11 +657,29 @@ class Firebase {
       );
   };
 
-  fetchTransitionLog = async function(sessionId) {
-    const getTransitionsFirebaseFunction = this.functions.httpsCallable(
-      "funcTransitionLog"
+  fetchTransitionTypeSummary = async function(sessionId) {
+    const getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable(
+      'funcTransitionTypeSummary'
     );
-    return getTransitionsFirebaseFunction({ sessionId: sessionId })
+    return getTransitionTypeCountFirebaseFunction({ sessionId: sessionId })
+    .then(
+      result =>
+        // Read result of the Cloud Function.
+        //var sanitizedMessage = result.data[0];
+        //console.log(sanitizedMessage);
+        //return sanitizedMessage;
+        result.data[0]
+    )
+    .catch(error =>
+      console.error("Error occurred getting transition type summary: ", error)
+    );
+  };
+
+  fetchTransitionLog = async function(sessionId) {
+      const getTransitionsFirebaseFunction = this.functions.httpsCallable(
+        'funcTransitionLogNew'
+      );
+      return getTransitionsFirebaseFunction({ sessionId: sessionId })
       .then(
         result =>
           // Read result of the Cloud Function.
@@ -649,12 +694,13 @@ class Firebase {
   };
 
   fetchTransitionTrend = async function(teacherId) {
-    const getTransitionTrendFirebaseFunction = this.functions.httpsCallable(
-      "funcTransitionTrend"
-    );
-    return getTransitionTrendFirebaseFunction({ teacherId: teacherId })
-      .then(
-        result =>
+      const getTransitionTrendFirebaseFunction = this.functions.httpsCallable(
+        'funcTransitionTrendNew'
+      );
+      return getTransitionTrendFirebaseFunction({ teacherId: teacherId })
+        .then(
+          result =>
+
           // Read result of the Cloud Function.
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);

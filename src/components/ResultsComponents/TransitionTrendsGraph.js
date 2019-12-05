@@ -2,8 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Line } from "react-chartjs-2";
+import { lightGreen, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
+import { red } from '@material-ui/core/es/colors';
 
 const styles = {};
+
+const TransitionTypeColors = {
+  lineColor: lightGreen[300],
+  travelingColor: orange[400],
+  waitingColor: deepOrange[400],
+  routinesColor: blue[300],
+  behaviorManagementColor: red['A200'],
+  otherColor: indigo['A200'],
+}
 
 /**
  * specifies data sets (and formatting) for transition trends graph
@@ -75,6 +86,12 @@ const transitionTrendOptions = {
     mode: "nearest",
     intersect: true
   },
+  legend: {
+    display: true,
+    labels: {
+      fontColor: 'black'
+    }
+  },
   scales: {
     xAxes: [
       {
@@ -82,7 +99,9 @@ const transitionTrendOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date & Total Time in Transition",
-          fontStyle: "bold"
+          //fontStyle: "bold",
+          fontSize: 18,
+          fontColor: 'black'
         }
       }
     ],
@@ -98,17 +117,19 @@ const transitionTrendOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: "Percentage of Total Time Spent in Transition",
-          fontStyle: "bold"
+          labelString: "Percentage of Time Spent in Transition",
+          //fontStyle: "bold",
+          fontSize: 18,
+          fontColor: 'black'
         }
       }
     ]
   },
   plugins: {
     datalabels: {
-      display: "auto",
-      color: "gray",
-      align: "top",
+      display: 'auto',
+      color: 'black',
+      align: 'top',
       formatter: function(value, context) {
         return value + "%";
       }
@@ -119,13 +140,110 @@ const transitionTrendOptions = {
 class TransitionTrendsGraph extends React.Component {
   render() {
     const { classes } = this.props;
+    /* let trendsData = {
+      labels: [
+        this.props.trendsDates
+      ],
+      datasets: [{
+        labels: [
+          'TOTAL',
+          'WAITING IN LINE',
+          'TRAVELING',
+          'CHILD WAITING',
+          'ROUTINES',
+          'BEHAVIOR MANAGEMENT',
+          'OTHER'
+        ],
+        data: [this.props.trendsTotal, this.props.trendsLine, this.props.trendsTraveling, this.props.trendsWaiting, this.props.trendsRoutines, this.props.trendsBehaviorManagement, this.props.trendsOther],
+        backgroundColor: [
+          '#0988ec',
+          TransitionTypeColors.lineColor,
+          TransitionTypeColors.travelingColor,
+          TransitionTypeColors.waitingColor,
+          TransitionTypeColors.routinesColor,
+          TransitionTypeColors.behaviorManagementColor,
+          TransitionTypeColors.otherColor
+        ],
+        hoverBackgroundColor: [
+          '#0988ec',
+          TransitionTypeColors.lineColor,
+          TransitionTypeColors.travelingColor,
+          TransitionTypeColors.waitingColor,
+          TransitionTypeColors.routinesColor,
+          TransitionTypeColors.behaviorManagementColor,
+          TransitionTypeColors.otherColor
+        ]
+      }]
+    }; */
+
+    /* let trendsData = {
+      labels: this.props.trendsDates,
+      datasets:  [
+        {
+          label: 'TOTAL',
+          backgroundColor: '#0988ec',
+          borderColor: '#0988ec',
+          fill: false,
+          lineTension: 0,
+          data: this.props.trendsTotal,
+        },
+        {
+          label: 'WAITING IN LINE',
+          backgroundColor: TransitionTypeColors.lineColor,
+          borderColor: TransitionTypeColors.lineColor,
+          fill: false,
+          lineTension: 0,
+          data: this.props.trendsLine,
+        },
+        {
+          label: 'TRAVELING',
+          backgroundColor: TransitionTypeColors.travelingColor,
+          borderColor: TransitionTypeColors.travelingColor,
+          fill: false,
+          lineTension: 0,
+          data: this.props.trendsTraveling,
+        },
+        {
+          label: 'CHILD WAITING',
+          backgroundColor: TransitionTypeColors.waitingColor,
+          borderColor: TransitionTypeColors.waitingColor,
+          fill: false,
+          lineTension: 0,
+          data: this.props.trendsWaiting,
+        },
+        {
+          label: 'ROUTINES',
+          backgroundColor: TransitionTypeColors.routinesColor,
+          borderColor: TransitionTypeColors.routinesColor,
+          fill: false,
+          lineTension: 0,
+          data: this.props.trendsRoutines,
+        },
+        {
+          label: 'BEHAVIOR MANAGEMENT',
+          backgroundColor: TransitionTypeColors.behaviorManagementColor,
+          borderColor: TransitionTypeColors.behaviorManagementColor,
+          fill: false,
+          lineTension: 0,
+          data: this.props.trendsBehaviorManagement,
+        },
+        {
+          label: 'OTHER',
+          backgroundColor: TransitionTypeColors.otherColor,
+          borderColor: TransitionTypeColors.otherColor,
+          fill: false,
+          lineTension: 0,
+          data: this.props.trendsOther,
+        }
+      ]
+    }; */
 
     return (
       <Line
         data={this.props.data}
         options={transitionTrendOptions}
-        width="650"
-        height="400"
+        width={650}
+        height={400}
       />
     );
   }
@@ -133,7 +251,7 @@ class TransitionTrendsGraph extends React.Component {
 
 TransitionTrendsGraph.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  //data: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(TransitionTrendsGraph);
