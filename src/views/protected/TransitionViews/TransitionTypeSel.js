@@ -19,6 +19,7 @@ import BMDImage from "../../../assets/images/BMDImage.svg";
 import OtherImage from "../../../assets/images/OtherImage.svg";
 import { red } from "@material-ui/core/es/colors";
 import { toggleNewTransitionType } from "../../../state/actions/transition-time";
+import { connect } from 'react-redux';
 
 const styles = theme => ({
   button: {
