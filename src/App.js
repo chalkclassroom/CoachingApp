@@ -28,6 +28,7 @@ import TransitionTimeTrainingPage from "./views/protected/TransitionViews/Transi
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
+import MessagingView from "./views/protected/MessagingViews/Messaging.tsx";
 
 const styles = createMuiTheme({
   palette: {
@@ -139,6 +140,11 @@ class App extends Component {
               auth={this.state.auth || !this.state.auth}
               path="/team"
               component={TeamPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/Messages"
+              component={MessagingView}
             />
             <PrivateRoute
               auth={this.state.auth}
