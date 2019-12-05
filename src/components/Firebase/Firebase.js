@@ -8,7 +8,8 @@ const config = {
   databaseURL: "https://cqrefpwa.firebaseio.com",
   projectId: "cqrefpwa",
   storageBucket: "cqrefpwa.appspot.com",
-  messagingSenderId: "353838544707"
+  messagingSenderId: "353838544707",
+  measurementId: "G-S797QZ8L3N"
 };
 
 class Firebase {
