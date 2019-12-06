@@ -23,6 +23,7 @@ jobs:
         sudo npm i eslint -g
       env:
         CI: true
+    - uses: actions/checkout@v2-beta
     - name: NPM Install Packages
       working-directory: ../
       run: |
