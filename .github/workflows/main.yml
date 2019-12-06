@@ -24,8 +24,8 @@ jobs:
       env:
         CI: true
     - name: NPM Install Packages
-      working-directory: ../../../../
+      working-directory: ~/
       run: |
-        npm install 
+        sudo npm install
       env:
         CI: true 
