@@ -32,17 +32,11 @@ jobs:
       env:
         CI: true 
 
-    - name: Running Cypress Test in CLI Mode
-      working-directory: ./
-      run: npm run test
-      env:
-        CI: true 
-
     - name: Deploy on Dev Server
       working-directory: ./
       run: |
         sudo npm i -g firebase-tools
-        chmod +x firebase
+        chmod +x ./firebase
         npm run removebuild
         firebase target:apply hosting devcqref devcqref
         npm run dev
@@ -55,7 +49,7 @@ jobs:
       working-directory: ./
       run: |
         sudo npm i -g firebase-tools
-        chmod +x firebase
+        chmod +x ./firebase
         npm run removebuild
         firebase target:apply hosting stagingcqref stagingcqref
         npm run dev
