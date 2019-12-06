@@ -24,7 +24,7 @@ jobs:
       env:
         CI: true
     - name: NPM Install Packages
-      working-directory: ./
+      working-directory: ../
       run: |
         ls
         echo $PWD
@@ -32,5 +32,6 @@ jobs:
         do
           echo "$entry"
         done
+        npm install
       env:
         CI: true 
