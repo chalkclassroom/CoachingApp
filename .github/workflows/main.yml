@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Assign Author
+      uses: technote-space/assign-author@v1.2.4
+      
     - name: Setup Node.js for use with actions
       uses: actions/setup-node@v1.1.0
       
@@ -52,4 +55,7 @@ jobs:
       run: npm run stagingdeploy
       env:
         CI: true 
+    
+    - name: Automatically create review requests based on assignees
+      uses: pullreminders/assignee-to-reviewer-action@v1.0.4
     
