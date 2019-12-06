@@ -16,6 +16,7 @@ jobs:
       with:
         node-version: '10.x'
     - name: Install Dependencies
+      working-directory: ./
       run: |
         npm install
         npm run lint
