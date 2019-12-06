@@ -15,12 +15,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '10.x'
-    - name: Update npm
-      run: npm install npm@latest -g  
     - name: Install Dependencies
-      run: npm install && npm run lint
-    - name: Run ESLint
-      run: npm run lint
-    - name: Run CLI Tests
-      working-directory: ./CoachingApp
-      run: npm run test
+      run: |
+        npm install
+        npm run lint
+        npm run test
