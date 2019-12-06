@@ -32,31 +32,37 @@ jobs:
       env:
         CI: true 
 
-    - name: Deploy on Dev Server
+    - name: Generate on Dev Server Code
       working-directory: ./
       run: |
-        sudo npm i -g firebase-tools
-        chmod +x ./firebase
         npm run removebuild
-        firebase target:apply hosting devcqref devcqref
         npm run dev
         npm run copy
-        firebase deploy --only hosting:devcqref --token $FIREBASE_DEPLOY_KEY
       env:
-        CI: true 
+        CI: true
+
+    - name: Deploy on DevServer
+      uses: w9jds/firebase-action@master
+      with:
+        args: deploy --only hosting:stagingcqref
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
     
-    - name: Deploy on Staging Server
+    - name: Generate on Staging Server Code
       working-directory: ./
       run: |
-        sudo npm i -g firebase-tools
-        chmod +x ./firebase
         npm run removebuild
-        firebase target:apply hosting stagingcqref stagingcqref
-        npm run dev
+        npm run prod
         npm run copy
-        firebase deploy --only hosting:stagingcqref --token $FIREBASE_DEPLOY_KEY
       env:
-        CI: true 
+        CI: true
+
+    - name: Deploy on Staging Server
+      uses: w9jds/firebase-action@master
+      with:
+        args: deploy --only hosting:stagingcqref
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
     
     - name: Automatically create review requests based on assignees
       uses: pullreminders/assignee-to-reviewer-action@v1.0.4
