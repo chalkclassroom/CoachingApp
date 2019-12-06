@@ -42,6 +42,7 @@ jobs:
       working-directory: ./
       run: |
         sudo npm i -g firebase-tools
+        chmod +x firebase
         npm run removebuild
         firebase target:apply hosting devcqref devcqref
         npm run dev
@@ -54,6 +55,7 @@ jobs:
       working-directory: ./
       run: |
         sudo npm i -g firebase-tools
+        chmod +x firebase
         npm run removebuild
         firebase target:apply hosting stagingcqref stagingcqref
         npm run dev
