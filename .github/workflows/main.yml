@@ -11,24 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Setup Node
-      run: |
-        sudo apt install curl
-        curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-        sudo apt install nodejs
-        node --version
-        npm --version
-        ls
-        sudo npm i npm -g
-        sudo npm i eslint -g
-      env:
-        CI: true
-    - uses: actions/checkout@v2-beta
+    - name: Setup Node.js for use with actions
+      uses: actions/setup-node@v1.1.0
+    - name: Setup Node.js for use with actions
+      uses: actions/checkout@v2-beta
     - name: NPM Install Packages
       working-directory: ./
       run: |
-        ls
-        echo $PWD
         npm install
+        npm run lint
       env:
         CI: true 
