@@ -13,12 +13,25 @@ jobs:
     steps:
     - name: Setup Node.js for use with actions
       uses: actions/setup-node@v1.1.0
-    - name: Setup Node.js for use with actions
+      
+    - name: Checkout Source Code
       uses: actions/checkout@v2-beta
+      
     - name: NPM Install Packages
       working-directory: ./
       run: |
         npm install
-        npm run lint
+      env:
+        CI: true 
+
+    - name: Running Linter
+      working-directory: ./
+      run: npm run lint
+      env:
+        CI: true 
+
+   - name: Running Cypress Test in CLI Mode
+      working-directory: ./
+      run: npm run test
       env:
         CI: true 
