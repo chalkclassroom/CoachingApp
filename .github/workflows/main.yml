@@ -16,6 +16,8 @@ jobs:
       with:
         node-version: '8.x'
     - name: npm install, build and test  
+      shell: sh
+      working-directory: ./
       run: |
         ls
         npm i npm -g
