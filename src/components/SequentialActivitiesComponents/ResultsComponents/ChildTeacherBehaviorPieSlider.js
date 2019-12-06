@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import Slider from "react-slick";
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
 import SummaryChildBehaviorsPieChart from "./SummaryChildBehaviorsPieChart";
 import SummaryTeacherBehaviorsPieChart from "./SummaryTeacherBehaviorsPieChart";
 import Grid from "@material-ui/core/Grid/Grid";
