@@ -18,14 +18,10 @@ jobs:
         sudo apt install nodejs
         node --version
         npm --version
-        
-    - name: npm install, build and test  
-      shell: sh
-      working-directory: ./
-      run: |
         ls
         sudo npm i npm -g
         sudo npm i eslint -g
+        ls
         sudo npm install
         sudo npm run lint
         sudo npm run test
