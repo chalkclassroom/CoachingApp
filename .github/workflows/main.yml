@@ -46,13 +46,25 @@ jobs:
 
     - name: Deploy on Dev Server
       working-directory: ./
-      run: npm run devdeploy
+      run: |
+        sudo npm i -g firebase-tools
+        npm run removebuild
+        firebase target:apply hosting devcqref devcqref
+        npm run dev
+        npm run copy
+        firebase deploy --only hosting:devcqref —token $FIREBASE_DEPLOY_KEY
       env:
         CI: true 
     
     - name: Deploy on Staging Server
       working-directory: ./
-      run: npm run stagingdeploy
+      run: |
+        sudo npm i -g firebase-tools
+        npm run removebuild
+        firebase target:apply hosting stagingcqref stagingcqref
+        npm run dev
+        npm run copy
+        firebase deploy --only hosting:stagingcqref —token $FIREBASE_DEPLOY_KEY
       env:
         CI: true 
     
