@@ -17,6 +17,7 @@ jobs:
         node-version: '8.x'
       
     - name: Install Dependencies
+      working-directory: ./
       run: |
         ls
         npm install
