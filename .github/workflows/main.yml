@@ -18,10 +18,11 @@ jobs:
     - name: Update npm
       run: npm install npm@latest -g  
     - name: Install Dependencies
-      working-directory: CoachingApp
+      working-directory: ./CoachingApp
       run: npm install
     - name: Run ESLint
-      working-directory: CoachingApp
+      working-directory: ./CoachingApp
       run: npm run lint
     - name: Run CLI Tests
+      working-directory: ./CoachingApp
       run: npm run test
