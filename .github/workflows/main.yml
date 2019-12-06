@@ -18,7 +18,7 @@ jobs:
     - name: Update npm
       run: npm install npm@latest -g  
     - name: Go to CoachingApp Project Folder
-      run: cd CoachingApp
+      run: cd ./CoachingApp
     - name: Install Dependencies
       run: npm install
     - name: Run ESLint
