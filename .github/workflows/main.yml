@@ -2,7 +2,10 @@ name: CI
 
 on:
   push:
-    branches: 
+    branches:
+      - '**'
+  pull_request:
+    branches:
       - '**'
 
 jobs:
@@ -16,6 +19,8 @@ jobs:
       
     - name: Checkout Source Code
       uses: actions/checkout@v2-beta
+      with:
+        ref: ${{ github.event.after }}
       
     - name: NPM Install Packages
       working-directory: ./
