@@ -32,12 +32,6 @@ jobs:
       env:
         CI: true 
 
-    - name: Running Linter
-      working-directory: ./
-      run: npm run lint
-      env:
-        CI: true 
-
     - name: Running Cypress Test in CLI Mode
       working-directory: ./
       run: npm run test
@@ -52,7 +46,7 @@ jobs:
         firebase target:apply hosting devcqref devcqref
         npm run dev
         npm run copy
-        firebase deploy --only hosting:devcqref —token $FIREBASE_DEPLOY_KEY
+        firebase deploy --only hosting:devcqref --token $FIREBASE_DEPLOY_KEY
       env:
         CI: true 
     
@@ -64,7 +58,7 @@ jobs:
         firebase target:apply hosting stagingcqref stagingcqref
         npm run dev
         npm run copy
-        firebase deploy --only hosting:stagingcqref —token $FIREBASE_DEPLOY_KEY
+        firebase deploy --only hosting:stagingcqref --token $FIREBASE_DEPLOY_KEY
       env:
         CI: true 
     
