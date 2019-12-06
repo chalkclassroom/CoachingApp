@@ -9,14 +9,15 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Setup Node
       uses: actions/setup-node@v1
       with:
-        node-version: '10.x'
+        node-version: '8.x'
+      
     - name: Install Dependencies
-      working-directory: ./
+      working-directory: ../
       run: |
         npm install
         npm run lint
