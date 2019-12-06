@@ -32,6 +32,18 @@ jobs:
       env:
         CI: true 
 
+    - name: Running ESLinter to Find Errors
+      working-directory: ./
+      run: npm run lint
+      env:
+        CI: true
+      
+    - name: Running Cypress Test in CLI Mode
+      working-directory: ./
+      run: npm run test
+      env:
+        CI: true
+
     - name: Generate on Dev Server Code
       working-directory: ./
       run: |
@@ -44,7 +56,7 @@ jobs:
     - name: Deploy on DevServer
       uses: w9jds/firebase-action@master
       with:
-        args: deploy --only hosting:stagingcqref
+        args: deploy --only hosting:devcqref
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
     
