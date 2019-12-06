@@ -28,5 +28,9 @@ jobs:
       run: |
         ls
         echo $PWD
+        for entry in "$PWD"/*
+        do
+          echo "$entry"
+        done
       env:
         CI: true 
