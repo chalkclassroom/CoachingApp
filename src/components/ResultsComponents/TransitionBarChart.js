@@ -17,7 +17,7 @@ class TransitionBarChart extends React.Component {
 
 
   render() {
-    let transitionData = {
+    const transitionData = {
       labels: [
         "Waiting in Line",
         "Traveling",
@@ -51,7 +51,7 @@ class TransitionBarChart extends React.Component {
                   fontColor: "#000000",
                 },
                 afterFit: function(scale) {
-                  scale.height = 100 //creates pading between ticks and scaleLabel
+                  scale.height = 100 // creates pading between ticks and scaleLabel
                 }
               }
             ],

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 function LabeledInfo(props) {
   const styles = {
     container: {
-      //border: '2px solid #FD8328',
+      // border: '2px solid #FD8328',
       flexGrow: 1,
       marginRight: "0em"
     },

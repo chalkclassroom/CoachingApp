@@ -5,7 +5,7 @@ import { Pie } from "react-chartjs-2";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 
 const styles = {
-  //idk how this works
+  // idk how this works
 };
 
 class TransitionTimePie extends React.Component {
@@ -19,7 +19,7 @@ class TransitionTimePie extends React.Component {
     const { classes } = this.props;
     console.log("inside time: ", this.state.inside);
     console.log("total session time: " + this.props.sessionTotal);
-    let transitionData = {
+    const transitionData = {
       labels: ["Transition Time", "Learning Activity (No Transition)"],
       datasets: [
         {
@@ -37,11 +37,11 @@ class TransitionTimePie extends React.Component {
           tooltips: {
             callbacks: {
               label: function(tooltipItem, data) {
-                var dataset = data.datasets[tooltipItem.datasetIndex];
-                var meta = dataset._meta[Object.keys(dataset._meta)[0]];
-                var total = meta.total;
-                var currentValue = dataset.data[tooltipItem.index];
-                var percentage = parseFloat(
+                const dataset = data.datasets[tooltipItem.datasetIndex];
+                const meta = dataset._meta[Object.keys(dataset._meta)[0]];
+                const total = meta.total;
+                const currentValue = dataset.data[tooltipItem.index];
+                const percentage = parseFloat(
                   ((currentValue / total) * 100).toFixed(1)
                 );
                 return currentValue + " (" + percentage + "%)";
@@ -85,7 +85,7 @@ class TransitionTimePie extends React.Component {
 
 TransitionTimePie.propTypes = {
   classes: PropTypes.object.isRequired,
-  //data: PropTypes.object.isRequired
+  // data: PropTypes.object.isRequired
   transitionTime: PropTypes.number.isRequired,
   learningActivityTime: PropTypes.number.isRequired
 };

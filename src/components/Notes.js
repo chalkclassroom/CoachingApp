@@ -44,10 +44,10 @@ class Notes extends React.Component {
 
     this.state = {
       notes: [],
-      //[
+      // [
       // eventually get call to firebase using firebase id for id field
-      //{id: 1, content: "Mr. Williams spent too much time gathering students after recess", timestamp: "12:00 PM"},
-      //],
+      // {id: 1, content: "Mr. Williams spent too much time gathering students after recess", timestamp: "12:00 PM"},
+      // ],
       open: this.props.open,
       newNote: ""
     };
@@ -55,9 +55,9 @@ class Notes extends React.Component {
 
   componentDidMount() {
     this.props.firebase.handleFetchNotes().then(notesArr => {
-      let formattedNotesArr = [];
+      const formattedNotesArr = [];
       notesArr.map(note => {
-        let newTimestamp = new Date(
+        const newTimestamp = new Date(
           note.timestamp.seconds * 1000
         ).toLocaleString("en-US", {
           hour: "numeric",
@@ -75,7 +75,7 @@ class Notes extends React.Component {
         notes: formattedNotesArr,
         open: this.props.open
       });
-      //console.log(this.state);
+      // console.log(this.state);
     });
   }
 
@@ -104,11 +104,11 @@ class Notes extends React.Component {
       });
 
     // update local state for UI
-    let notesArr = [];
+    const notesArr = [];
     this.state.notes.map(note => {
       notesArr.push(note);
     });
-    let newNoteTimestamp = new Date().toLocaleString("en-US", {
+    const newNoteTimestamp = new Date().toLocaleString("en-US", {
       hour: "numeric",
       minute: "numeric",
       hour12: true
@@ -238,7 +238,7 @@ class Notes extends React.Component {
                               alignItems={"center"}
                               justify={"center"}
                             >
-                              {/*<em>{moment(note.timestamp.toDate()).format("MMM Do YY HH:mm A")}</em>*/}
+                              {/* <em>{moment(note.timestamp.toDate()).format("MMM Do YY HH:mm A")}</em>*/}
                               {note.timestamp}
                             </Grid>
                           </Grid>

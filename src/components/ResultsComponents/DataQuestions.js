@@ -1,4 +1,4 @@
-//props: questions array of objects with name, title, and text for data driven coaching questions
+// props: questions array of objects with name, title, and text for data driven coaching questions
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";

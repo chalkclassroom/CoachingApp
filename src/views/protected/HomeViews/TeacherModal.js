@@ -80,7 +80,7 @@ class TeacherModal extends React.Component {
 
   componentDidMount() {
     this.props.firebase.getTeacherList().then(teacherPromiseList => {
-      let teacherList = [];
+      const teacherList = [];
       teacherPromiseList.forEach(tpromise => {
         tpromise.then(data => {
           teacherList.push(data);

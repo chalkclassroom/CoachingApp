@@ -131,7 +131,7 @@ const TeacherBehaviorTrendsOptions = {
 class ChildTeacherBehaviorTrendsSlider extends React.Component {
   render() {
     const { classes } = this.props;
-    var settings = {
+    const settings = {
       dots: true,
       infinite: true,
       speed: 500,

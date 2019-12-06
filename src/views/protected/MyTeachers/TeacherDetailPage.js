@@ -33,7 +33,7 @@ const styles = {
     maxHeight: "100%"
   },
   container: {
-    //border: '2px solid #000000',
+    // border: '2px solid #000000',
     margin: "2% 10% 0 10%",
     display: "flex",
     flexDirection: "column",
@@ -47,7 +47,7 @@ const styles = {
     textTransform: "none"
   },
   teacherHeader: {
-    //border: '2px solid #DC143C',
+    // border: '2px solid #DC143C',
     flexGrow: 1,
     display: "flex",
     justifyContent: "space-between",
@@ -57,14 +57,14 @@ const styles = {
     maxWidth: "50%"
   },
   contentContainer: {
-    //border: '2px solid #F700FF',
+    // border: '2px solid #F700FF',
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%"
   },
   teacherCard: {
-    //border: '2px solid #7FFF00',
+    // border: '2px solid #7FFF00',
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
@@ -75,7 +75,7 @@ const styles = {
     fontSize: "1.5em"
   },
   magicEightCard: {
-    //border: '2px solid #00FFFF',
+    // border: '2px solid #00FFFF',
     padding: "0px",
     width: "50%",
     margin: "0",
@@ -124,14 +124,14 @@ const styles = {
     fontSize: "1em"
   },
 
-  //Minor Breakpoint -> Shrinking desktop window
+  // Minor Breakpoint -> Shrinking desktop window
   "@media only screen and (max-width:1270px)": {
     container: {
       margin: "2% 7% 0 7%"
     }
   },
 
-  //Minor Breakpoint -> Shrinking desktop window
+  // Minor Breakpoint -> Shrinking desktop window
   "@media only screen and (max-width:1145px)": {
     container: {
       margin: "2% 5% 0 5%"
@@ -197,7 +197,7 @@ const styles = {
     }
   },
 
-  //iPad-Mini Portrait
+  // iPad-Mini Portrait
   "@media only screen and (max-width:768px) and (orientation:portrait)": {
     container: {
       margin: "2% 5% 0 5%"

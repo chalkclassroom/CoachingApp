@@ -10,7 +10,7 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import ClassroomClimateIconImage from "../../../assets/images/ClassroomClimateIconImage.svg";
 import GenerateReportImage from "../../../assets/images/GenerateReportImage.svg";
 import { withStyles } from "@material-ui/core/styles";
-//import spreadsheetData from "../../../SPREADSHEET_SECRETS";
+// import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -116,12 +116,12 @@ class ClassroomClimateResultsPage extends React.Component {
   };
 
   componentDidMount() {
-    let teacherId = this.props.location.state.teacher.id;
+    const teacherId = this.props.location.state.teacher.id;
     console.log(this.props.location.state);
     this.handleDateFetching(this.props.location.state.teacher.id);
     console.log(teacherId);
     console.log("handle behavior count results fetching called");
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.fetchBehaviourTypeCount(this.state.sessionId).then(data => {
       console.log(
         this.state.disapprovalBehaviorCount +
@@ -137,12 +137,12 @@ class ClassroomClimateResultsPage extends React.Component {
   }
 
   handleAppend(entry) {
-    let newEntries = this.state.entries;
+    const newEntries = this.state.entries;
     // entry.type = this.state.type;
     newEntries.push(entry);
     this.setState({ entries: newEntries });
 
-    //this.handleSpreadsheetAppend(entry);
+    // this.handleSpreadsheetAppend(entry);
 
     this.handleDBinsert(entry);
   }
@@ -236,7 +236,7 @@ class ClassroomClimateResultsPage extends React.Component {
 
   handleDateFetching = teacherId => {
     console.log("handle date fetching called");
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.fetchSessionDates(teacherId, "climate").then(dates =>
       this.setState({
         sessionDates: dates
@@ -249,12 +249,12 @@ class ClassroomClimateResultsPage extends React.Component {
   };
 
   handleTrendsFetching = teacherId => {
-    let firebase = this.context;
-    let dateArray = [];
-    let posArray = [];
-    let negArray = [];
-    let posBkgColor = [];
-    let negBkgColor = [];
+    const firebase = this.context;
+    const dateArray = [];
+    const posArray = [];
+    const negArray = [];
+    const posBkgColor = [];
+    const negBkgColor = [];
     firebase.fetchBehaviourTrend(teacherId).then(dataSet => {
       dataSet.map(data => {
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
@@ -274,12 +274,12 @@ class ClassroomClimateResultsPage extends React.Component {
   };
 
   handleNotesFetching = sessionId => {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then(notesArr => {
       console.log(notesArr);
-      let formattedNotesArr = [];
+      const formattedNotesArr = [];
       notesArr.map(note => {
-        let newTimestamp = new Date(
+        const newTimestamp = new Date(
           note.timestamp.seconds * 1000
         ).toLocaleString("en-US", {
           hour: "numeric",
@@ -329,7 +329,7 @@ class ClassroomClimateResultsPage extends React.Component {
       },
       () => {
         this.handleNotesFetching(this.state.sessionId);
-        let firebase = this.context;
+        const firebase = this.context;
         firebase.fetchAvgToneRating(this.state.sessionId).then(json =>
           json.map(toneRating => {
             this.setState({
@@ -341,7 +341,7 @@ class ClassroomClimateResultsPage extends React.Component {
         firebase
           .fetchBehaviourTypeCount(this.state.sessionId)
           .then(json => console.log("attempt behavior count: ", json));
-        //.gets json, then map to the state
+        // .gets json, then map to the state
 
         firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json => {
           json.map(behavior => {

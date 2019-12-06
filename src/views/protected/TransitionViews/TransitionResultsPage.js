@@ -11,7 +11,7 @@ import SwipeableViews from "react-swipeable-views";
 import TabBar from "@material-ui/core/AppBar";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
-//import spreadsheetData from "../../../SPREADSHEET_SECRETS";
+// import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -499,14 +499,14 @@ class TransitionResultsPage extends React.Component {
   };
 
   componentDidMount() {
-    let teacherId = this.props.location.state.teacher.id;
+    const teacherId = this.props.location.state.teacher.id;
     this.handleTrendsFetch(teacherId);
 
     this.handleDateFetching(this.props.location.state.teacher.id);
   }
 
   handleAppend(entry) {
-    let newEntries = this.state.entries;
+    const newEntries = this.state.entries;
     entry.type = this.state.type;
     newEntries.push(entry);
     this.setState({ entries: newEntries });
@@ -552,15 +552,15 @@ class TransitionResultsPage extends React.Component {
   };
 
   handleTrendsFetch = teacherId => {
-    let firebase = this.context;
-    let dateArray = [];
-    let lineArray = [];
-    let travelingArray = [];
-    let waitingArray = [];
-    let routinesArray = [];
-    let behaviorManagementArray = [];
-    let otherArray = [];
-    let totalArray = [];
+    const firebase = this.context;
+    const dateArray = [];
+    const lineArray = [];
+    const travelingArray = [];
+    const waitingArray = [];
+    const routinesArray = [];
+    const behaviorManagementArray = [];
+    const otherArray = [];
+    const totalArray = [];
     let formattedTime;
     firebase.fetchTransitionTrend(teacherId).then(dataSet => {
       dataSet.map(data => {
@@ -592,9 +592,9 @@ class TransitionResultsPage extends React.Component {
   };
 
   handleTrendsFormatTime = totalTime => {
-    let seconds = Math.round(totalTime / 1000 % 60);
-    let minutes = Math.floor((totalTime / 1000 / 60) % 60);
-    let hours = Math.floor((totalTime / 1000 / 3600) % 60);
+    const seconds = Math.round(totalTime / 1000 % 60);
+    const minutes = Math.floor((totalTime / 1000 / 60) % 60);
+    const hours = Math.floor((totalTime / 1000 / 3600) % 60);
     let secondsString = "";
     let minutesString = "";
 
@@ -610,7 +610,7 @@ class TransitionResultsPage extends React.Component {
       minutesString = minutes.toString();
     }
 
-    let formattedTime =
+    const formattedTime =
       hours.toString() + ":" + minutesString + ":" + secondsString;
 
     return formattedTime;
@@ -681,11 +681,11 @@ class TransitionResultsPage extends React.Component {
   };
 
   handleNotesFetching = sessionId => {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then(notesArr => {
-      let formattedNotesArr = [];
+      const formattedNotesArr = [];
       notesArr.map(note => {
-        let newTimestamp = new Date(
+        const newTimestamp = new Date(
           note.timestamp.seconds * 1000
         ).toLocaleString("en-US", {
           hour: "numeric",
@@ -780,7 +780,7 @@ class TransitionResultsPage extends React.Component {
   }
 
   handleDateFetching = teacherId => {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.fetchSessionDates(teacherId, "transition").then(dates =>
       this.setState({
         sessionDates: dates
@@ -847,7 +847,7 @@ class TransitionResultsPage extends React.Component {
       sessionId: event.target.value,
     }, () => {
       this.handleNotesFetching(this.state.sessionId);
-      let firebase = this.context;
+      const firebase = this.context;
 
       firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
         console.log("the start date is ", summary[0].startDate.value);

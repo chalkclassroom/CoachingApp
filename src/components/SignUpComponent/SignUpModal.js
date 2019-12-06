@@ -10,8 +10,8 @@ import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 import Card from "@material-ui/core/Card";
 import CoachImage from "../../assets/images/CoachImage.svg";
-//import NewTeacherImage from "../../assets/images/NewTeacherImage.svg";
-//import NewAdministratorImage from "../../assets/images/NewAdministratorImage.svg";
+// import NewTeacherImage from "../../assets/images/NewTeacherImage.svg";
+// import NewAdministratorImage from "../../assets/images/NewAdministratorImage.svg";
 import GrayedAdminImage from "../../assets/images/GrayedAdminImage.svg";
 import GrayedTeacherImage from "../../assets/images/GrayedTeacherImage.svg";
 import GrayedCoachImage from "../../assets/images/GrayedCoachImage.svg";
@@ -132,7 +132,7 @@ class SignUpModal extends React.Component {
                     style={{ padding: 40 }}
                   >
                     <Card
-                      //onClick={() => this.handleChangeRole(1)}
+                      // onClick={() => this.handleChangeRole(1)}
                     >
                       <CardContent>
                         <Grid

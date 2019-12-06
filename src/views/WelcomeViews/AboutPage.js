@@ -1042,7 +1042,7 @@ AboutPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-//const AboutwRouter = withRouter(About)
-//export default withStyles(styles)(AboutwRouter);
+// const AboutwRouter = withRouter(About)
+// export default withStyles(styles)(AboutwRouter);
 
 export default withRouter(connect()(withStyles(styles)(AboutPage)));

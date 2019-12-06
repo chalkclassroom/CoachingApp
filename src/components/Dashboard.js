@@ -118,7 +118,7 @@ class Dashboard extends React.Component {
       lookForsIcon: null,
       notesIcon: null
     };
-    //Assigning for scope
+    // Assigning for scope
     this.resetTransitionTime = resetTransitionTime;
     this.emptyClimateStack = emptyClimateStack;
     this.deleteAllCenters = deleteAllCenters;

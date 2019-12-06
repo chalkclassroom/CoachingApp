@@ -31,7 +31,7 @@ const transitionTrendData = {
   datasets: [
     {
       label: "TOTAL",
-      backgroundColor: "#0988EC", //blue
+      backgroundColor: "#0988EC", // blue
       borderColor: "#0988EC",
       fill: false,
       lineTension: 0,
@@ -39,7 +39,7 @@ const transitionTrendData = {
     },
     {
       label: "INSIDE",
-      backgroundColor: "#E99C2E", //yellow
+      backgroundColor: "#E99C2E", // yellow
       borderColor: "#E99C2E",
       fill: false,
       lineTension: 0,
@@ -47,7 +47,7 @@ const transitionTrendData = {
     },
     {
       label: "OUTSIDE",
-      backgroundColor: "#E55529", //orange
+      backgroundColor: "#E55529", // orange
       borderColor: "#E55529",
       fill: false,
       lineTension: 0,
@@ -99,7 +99,7 @@ const transitionTrendOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date & Total Time in Transition",
-          //fontStyle: "bold",
+          // fontStyle: "bold",
           fontSize: 18,
           fontColor: 'black'
         }
@@ -118,7 +118,7 @@ const transitionTrendOptions = {
         scaleLabel: {
           display: true,
           labelString: "Percentage of Time Spent in Transition",
-          //fontStyle: "bold",
+          // fontStyle: "bold",
           fontSize: 18,
           fontColor: 'black'
         }
@@ -251,7 +251,7 @@ class TransitionTrendsGraph extends React.Component {
 
 TransitionTrendsGraph.propTypes = {
   classes: PropTypes.object.isRequired,
-  //data: PropTypes.object.isRequired
+  // data: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(TransitionTrendsGraph);

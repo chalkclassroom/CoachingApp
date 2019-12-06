@@ -85,12 +85,12 @@ class ClassroomClimatePage extends React.Component {
 
     this.props.appendClimateRating(rating);
 
-    let entry = {
+    const entry = {
       BehaviorResponse: rating,
       Type: "Rat",
       ratingInterval: RATING_INTERVAL
     };
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.handlePushClimate(entry);
   };
 

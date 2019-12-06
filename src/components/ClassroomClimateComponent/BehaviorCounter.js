@@ -16,7 +16,7 @@ const styles = {
 class BehaviorCounter extends React.Component {
   constructor(props) {
     super(props);
-    let mEntry = {
+    const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "climate"
@@ -25,7 +25,7 @@ class BehaviorCounter extends React.Component {
   }
 
   handlePushFire = entry => {
-    let mEntry = {
+    const mEntry = {
       BehaviorResponse: entry,
       // Type: this.props.climateType
       Type: "climate"
@@ -37,8 +37,8 @@ class BehaviorCounter extends React.Component {
   handleUndo = () => {
     if (this.props.climateStackSize > 0) {
       this.props.popOffClimateStack();
-      //<<<<<<< Updated upstream
-      let mEntry = {
+      // <<<<<<< Updated upstream
+      const mEntry = {
         BehaviorResponse: "UNDO",
         Type: "UNDO"
       };
@@ -48,7 +48,7 @@ class BehaviorCounter extends React.Component {
 
   CustomUI2 = props => {
     return (
-      //<<<<<<< Updated upstream
+      // <<<<<<< Updated upstream
       <svg width={595.172} height={555.055} {...props}>
         <defs>
           <style>{".prefix__cls-1{fill:#6465bb}"}</style>

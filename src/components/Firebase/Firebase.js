@@ -120,7 +120,7 @@ class Firebase {
       .collection("partners")
       .get()
       .then(partners => {
-        let teacherList = [];
+        const teacherList = [];
         partners.forEach(partner =>
           teacherList.push(this.getTeacherInfo(partner.id))
         );
@@ -136,7 +136,7 @@ class Firebase {
       .where("role", "==", "teacher")
       .get()
       .then(snapshot => {
-        let teacherList = [];
+        const teacherList = [];
         snapshot.forEach(doc =>
           teacherList.push(doc.data().then(doc => doc.data()))
         );
@@ -340,7 +340,7 @@ class Firebase {
       .where("role", "==", "coach")
       .get()
       .then(snapshot => {
-        let coachList = [];
+        const coachList = [];
         snapshot.forEach(doc => coachList.push(doc.data()));
         return coachList;
       })
@@ -362,7 +362,7 @@ class Firebase {
       .where("role", "==", "admin")
       .get()
       .then(snapshot => {
-        let teacherList = [];
+        const teacherList = [];
         snapshot.forEach(doc => teacherList.push(doc.data()));
         return teacherList;
       })
@@ -490,7 +490,7 @@ class Firebase {
       .collection("notes")
       .get()
       .then(snapshot => {
-        let notesArr = [];
+        const notesArr = [];
         snapshot.forEach(doc =>
           notesArr.push({
             id: doc.id,
@@ -521,7 +521,7 @@ class Firebase {
       .collection("questions")
       .get()
       .then(questions => {
-        let questionList = [];
+        const questionList = [];
         questions.forEach(question => questionList.push(question.data()));
         return questionList;
       })
@@ -534,7 +534,7 @@ class Firebase {
       .collection("notes")
       .get()
       .then(querySnapshot => {
-        let notesArr = [];
+        const notesArr = [];
         querySnapshot.forEach(doc =>
           notesArr.push({
             id: doc.id,
@@ -648,9 +648,9 @@ class Firebase {
       .then(
         result =>
           // Read result of the Cloud Function.
-          //var sanitizedMessage = result.data[0];
-          //console.log(sanitizedMessage);
-          //return sanitizedMessage;
+          // var sanitizedMessage = result.data[0];
+          // console.log(sanitizedMessage);
+          // return sanitizedMessage;
           result.data[0]
       )
       .catch(error =>
@@ -666,9 +666,9 @@ class Firebase {
     .then(
       result =>
         // Read result of the Cloud Function.
-        //var sanitizedMessage = result.data[0];
-        //console.log(sanitizedMessage);
-        //return sanitizedMessage;
+        // var sanitizedMessage = result.data[0];
+        // console.log(sanitizedMessage);
+        // return sanitizedMessage;
         result.data[0]
     )
     .catch(error =>
