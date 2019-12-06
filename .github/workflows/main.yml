@@ -21,9 +21,5 @@ jobs:
         ls
         sudo npm i npm -g
         sudo npm i eslint -g
-        ls
-        sudo npm install
-        sudo npm run lint
-        sudo npm run test
       env:
         CI: true
