@@ -30,7 +30,7 @@ jobs:
       env:
         CI: true 
 
-   - name: Running Cypress Test in CLI Mode
+    - name: Running Cypress Test in CLI Mode
       working-directory: ./
       run: npm run test
       env:
