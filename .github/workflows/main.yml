@@ -23,3 +23,9 @@ jobs:
         sudo npm i eslint -g
       env:
         CI: true
+    - name: NPM Install Packages
+      working-directory: ../
+      run: |
+        npm install 
+      env:
+        CI: true 
