@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches: 
-      - '*'
+      - master
 
 jobs:
   build:
@@ -15,12 +15,11 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '8.x'
-      
-    - name: Install Dependencies
       working-directory: ./
       run: |
         ls
-        npm install
+        npm i npm -g
         npm i eslint -g
+        npm install
         npm run lint
         npm run test
