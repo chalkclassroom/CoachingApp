@@ -26,6 +26,7 @@ jobs:
     - name: NPM Install Packages
       working-directory: ./
       run: |
-        sudo npm install
+        ls
+        echo $PWD
       env:
         CI: true 
