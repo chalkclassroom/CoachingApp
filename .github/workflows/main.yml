@@ -12,9 +12,13 @@ jobs:
     
     steps:
     - name: Setup Node
-      uses: actions/setup-node@v1
-      with:
-        node-version: '8.x'
+      run: |
+        sudo apt install curl
+        curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+        sudo apt install nodejs
+        node --version
+        npm --version
+        
     - name: npm install, build and test  
       shell: sh
       working-directory: ./
