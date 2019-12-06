@@ -25,7 +25,7 @@ jobs:
         CI: true
     - uses: actions/checkout@v2-beta
     - name: NPM Install Packages
-      working-directory: ../
+      working-directory: ./
       run: |
         ls
         echo $PWD
