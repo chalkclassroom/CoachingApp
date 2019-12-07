@@ -60,7 +60,7 @@
   },
   "scripts": {
     "lint": "npx eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "doc": "rimraf out && jsdoc src/* && cpr out docs -o && rimraf out",
+    "doc": "rimraf docs && jsdoc -r  . -d docs -c jsdoc.conf README.md",
     "cypress": "npx cypress open",
     "test": "npx cypress run",
     "copy": "cpr build public -o",
@@ -105,6 +105,7 @@
     "babel-plugin-inline-react-svg": "^1.1.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "clean-jsdoc-theme": "^2.2.7",
     "cpr": "^3.0.1",
     "css-loader": "^3.2.0",
     "cypress": "^3.7.0",
