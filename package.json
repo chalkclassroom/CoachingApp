@@ -70,14 +70,10 @@
     "livedev": "webpack-dev-server --mode=development",
     "dev": "webpack --mode=development",
     "prod": "webpack --mode=production",
+    "deploydocs": "npm run doc && firebase target:apply hosting chalkdocs chalkdocs && firebase deploy --only hosting:chalkdocs",
     "deploy": "npm run removebuild && firebase target:apply hosting cqrefpwa cqrefpwa && npm run prod && npm run copy && firebase deploy --only hosting:cqrefpwa",
     "devdeploy": "npm run removebuild && firebase target:apply hosting devcqref devcqref && npm run dev && npm run copy && firebase deploy --only hosting:devcqref",
     "stagingdeploy": "npm run removebuild && firebase target:apply hosting stagingcqref stagingcqref && npm run prod && npm run copy && firebase deploy --only hosting:stagingcqref"
-  },
-  "husky": {
-      "hooks": {
-        "pre-commit": "npm run doc"
-      }
   },
   "eslintConfig": {
     "extends": "react-app"

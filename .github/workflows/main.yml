@@ -100,5 +100,12 @@ jobs:
     - name: Generate Documentation
       run: npm run doc
 
+    - name: Deploy on Documentation Server
+      uses: w9jds/firebase-action@master
+      with:
+        args: deploy --only hosting:chalkdocs
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
+
     - name: Automatically create review requests based on assignees
       uses: pullreminders/assignee-to-reviewer-action@v1.0.4
