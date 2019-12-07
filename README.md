@@ -1,7 +1,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/cqref/coachingapp/badge/master)](https://www.codefactor.io/repository/github/cqref/coachingapp/overview/master)
 ![Github Actions Status](https://github.com/cqref/CoachingApp/workflows/CI/badge.svg)
 [![DeepScan grade](https://deepscan.io/api/teams/6380/projects/8382/branches/98461/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=6380&pid=8382&bid=98461)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/577d4324c55a4af8bfb4d7c07ecd1420)](https://www.codacy.com/manual/classroomqualityref/CoachingApp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cqref/CoachingApp&amp;utm_campaign=Badge_Grade)
 
 ## New Branch Workflow:
 
