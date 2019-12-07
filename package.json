@@ -76,7 +76,7 @@
   },
   "husky": {
       "hooks": {
-        "pre-push": "npm run doc"
+        "pre-commit": "npm run doc"
       }
   },
   "eslintConfig": {
