@@ -12,32 +12,32 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Assign Author
       uses: technote-space/assign-author@v1.2.4
-      
+
     - name: Setup Node.js for use with actions
       uses: actions/setup-node@v1.1.0
-      
+
     - name: Checkout Source Code
       uses: actions/checkout@v2-beta
       with:
         ref: ${{ github.event.after }}
-      
+
     - name: NPM Install Packages
       working-directory: ./
       run: |
-        npm install
+        npm ci
       env:
-        CI: true 
+        CI: true
 
     - name: Running ESLinter to Find Errors
       working-directory: ./
       run: npm run lint
       env:
         CI: true
-      
+
     - name: Running Cypress Test in CLI Mode
       working-directory: ./
       run: npm run test
@@ -59,7 +59,7 @@ jobs:
         args: deploy --only hosting:devcqref
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
-    
+
     - name: Audit DevServer URL
       uses: jakejarvis/lighthouse-action@master
       with:
@@ -67,9 +67,9 @@ jobs:
     - name: Upload results as an artifact
       uses: actions/upload-artifact@master
       with:
-        name: report
+        name: dev-lighthouse-report
         path: './lighthouse-reports'
-    
+
     - name: Generate on Staging Server Code
       working-directory: ./
       run: |
@@ -78,7 +78,7 @@ jobs:
         npm run copy
       env:
         CI: true
-        
+
     - name: Audit StagingServer URL
       uses: jakejarvis/lighthouse-action@master
       with:
@@ -87,7 +87,7 @@ jobs:
     - name: Upload results as an artifact
       uses: actions/upload-artifact@master
       with:
-        name: report
+        name: staging-lighthouse-report
         path: './lighthouse-reports'
 
     - name: Deploy on Staging Server
@@ -96,7 +96,9 @@ jobs:
         args: deploy --only hosting:stagingcqref
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
-    
+
+    - name: Generate Documentation
+      run: npm run doc
+
     - name: Automatically create review requests based on assignees
       uses: pullreminders/assignee-to-reviewer-action@v1.0.4
-    

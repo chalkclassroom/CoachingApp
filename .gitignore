@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# doc generated temp folder
+/out
+
 # testing
 /coverage
 
