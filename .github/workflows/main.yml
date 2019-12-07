@@ -98,7 +98,11 @@ jobs:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
 
     - name: Generate Documentation
-      run: npm run doc
+      run: |
+        sudo npm i -g rimraf
+        sudo npm i -g jsdoc
+        rimraf docs
+        jsdoc -r  . -d docs -c jsdoc.conf README.md
 
     - name: Deploy on Documentation Server
       uses: w9jds/firebase-action@master
