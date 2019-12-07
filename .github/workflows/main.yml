@@ -98,6 +98,7 @@ jobs:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
 
     - name: Generate Documentation
+      continue-on-error: true
       run: |
         sudo npm i -g rimraf
         sudo npm i -g jsdoc
