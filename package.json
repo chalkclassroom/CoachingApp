@@ -63,7 +63,6 @@
     "doc": "rimraf out && jsdoc src/* && cpr out docs -o && rimraf out",
     "cypress": "npx cypress open",
     "test": "npx cypress run",
-    "recordtest": "npx cypress run --record --key 9e732f46-e3ae-4325-b1fc-20239bffd5b9",
     "copy": "cpr build public -o",
     "removebuild": "rimraf build",
     "webpack": "webpack",
