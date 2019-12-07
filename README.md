@@ -1,5 +1,5 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/cqref/coachingapp/badge/master)](https://www.codefactor.io/repository/github/cqref/coachingapp/overview/master)
-[![Actions Status](https://github.com/{owner}/{repo}/workflows/{workflow_name}/badge.svg)](https://github.com/{owner}/{repo}/actions)
+https://github.com/cqref/CoachingApp/workflows/main/badge.svg
 
 
 ## New Branch Workflow:
