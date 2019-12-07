@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/cqref/coachingapp/badge/master)](https://www.codefactor.io/repository/github/cqref/coachingapp/overview/master)
+
 ## New Branch Workflow:
 
 ### 1. Create new branch for each new feature you work on
