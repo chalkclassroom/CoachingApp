@@ -8,20 +8,20 @@ on:
       - develop
 
 jobs:
-  build:
-
+  pull-request:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Assign Author
-      uses: technote-space/assign-author@v1.2.4
+      - name: Assign Author
+        uses: technote-space/assign-author@v1.2.4
 
-    - name: Create Pull Request on Staging
-      uses: peter-evans/create-pull-request@v1
-      with:
-        token: ${{ secrets.GITHUB_KEY }}
-        commit-message: PR To Merge of Approved Feature Changes from Develop
-        title: Develop to Staging Merge
-        body: This is an auto-generated PR with Merge of Approved Feature Changes from Develop.
-        branch: staging
-        branch-suffix: none
+      - uses: actions/checkout@master
+
+      - name: Create Pull Request onto Staging
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "develop"                     # If blank, default: triggered branch
+          destination_branch: "staging"          # If blank, default: master
+          pr_title: "Pulling ${{ github.ref }} into Staging from Develop"
+          pr_body: ":crown: *An automated PR*"  # Full markdown support, requires pr_title to be set
+          pr_label: "auto-pr"                   # Comma-separated list (no spaces)
+          github_token: ${{ secrets.GITHUB_KEY }}
