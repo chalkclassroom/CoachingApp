@@ -28,12 +28,12 @@ jobs:
         git merge develop
         git push
         
-   - name: Create Pull Request on Staging
-        uses: peter-evans/create-pull-request@v1
-        with:
-          token: ${{ secrets.GITHUB_KEY }}
-          commit-message: Merge of Approved Feature Changes from Develop
-          title: Develop to Staging Merge
-          body: This is an auto-generated PR with Merge of Approved Feature Changes from Develop.
-          branch: staging
-          branch-suffix: none
+    - name: Create Pull Request on Staging
+      uses: peter-evans/create-pull-request@v1
+      with:
+        token: ${{ secrets.GITHUB_KEY }}
+        commit-message: Merge of Approved Feature Changes from Develop
+        title: Develop to Staging Merge
+        body: This is an auto-generated PR with Merge of Approved Feature Changes from Develop.
+        branch: staging
+        branch-suffix: none
