@@ -21,6 +21,8 @@ jobs:
 
     - name: Checkout Source Code
       uses: actions/checkout@v2-beta
+      with:
+        ref: 'develop'
 
     - name: Merge Changes to Staging
       run: |
