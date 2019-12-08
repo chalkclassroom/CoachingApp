@@ -1,4 +1,4 @@
-name: Dev to Staging Merge CI
+name: Develop to Staging Merge CI
 
 on:
   pull_request:
@@ -21,13 +21,13 @@ jobs:
 
     - name: Checkout Source Code
       uses: actions/checkout@v2-beta
-      
+
     - name: Merge Changes to Staging
       run: |
         git checkout staging
         git merge develop
         git push
-        
+
     - name: Create Pull Request on Staging
       uses: peter-evans/create-pull-request@v1
       with:
