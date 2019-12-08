@@ -19,7 +19,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2-beta
         with:
-          ref: refs/heads/develop
+          ref: refs/heads/master
 
       - name: Create Pull Request onto Staging
         uses: repo-sync/pull-request@v2
