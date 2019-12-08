@@ -17,14 +17,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout Source Code
-        uses: actions/checkout@v2-beta
-        with:
-          ref: master
+        uses: actions/checkout@master
 
       - name: Create Pull Request onto Staging
         uses: repo-sync/pull-request@v2
         with:
-          source_branch: "develop"                     # If blank, default: triggered branch
+          source_branch: ""                     # If blank, default: triggered branch
           destination_branch: "staging"          # If blank, default: master
           pr_title: "Pulling ${{ github.ref }} into Staging from Develop"
           pr_body: ":crown: *An automated PR*"  # Full markdown support, requires pr_title to be set
