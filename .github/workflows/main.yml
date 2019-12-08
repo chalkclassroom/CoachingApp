@@ -13,6 +13,8 @@ jobs:
     steps:
     - name: Assign Author
       uses: technote-space/assign-author@v1.2.4
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup Node.js for use with actions
       uses: actions/setup-node@v1.1.0
