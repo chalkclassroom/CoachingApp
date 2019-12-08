@@ -14,8 +14,9 @@ jobs:
       - name: Assign Author
         uses: technote-space/assign-author@v1.2.4
 
-      - uses: actions/checkout@master
-
+      - name: Checkout Source Code
+        uses: actions/checkout@v2-beta
+        
       - name: Create Pull Request onto Staging
         uses: repo-sync/pull-request@v2
         with:
