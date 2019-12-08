@@ -16,7 +16,7 @@ jobs:
 
       - name: Checkout Source Code
         uses: actions/checkout@v2-beta
-        
+
       - name: Create Pull Request onto Staging
         uses: repo-sync/pull-request@v2
         with:
@@ -25,4 +25,4 @@ jobs:
           pr_title: "Pulling ${{ github.ref }} into Staging from Develop"
           pr_body: ":crown: *An automated PR*"  # Full markdown support, requires pr_title to be set
           pr_label: "auto-pr"                   # Comma-separated list (no spaces)
-          github_token: ${{ secrets.GITHUB_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
