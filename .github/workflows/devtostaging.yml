@@ -26,6 +26,7 @@ jobs:
 
     - name: Merge Changes to Staging
       run: |
+        git fetch
         git checkout staging
         git merge develop
         git push
