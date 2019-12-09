@@ -6,6 +6,7 @@ import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
+import LogRocket from 'logrocket';
 
 const styles = theme => ({
   main: {
@@ -97,8 +98,12 @@ class LoginForm extends React.Component {
           { email: this.state.email, password: this.state.password },
           this.props.role
         )
-        .then(() => {
-          this.props.history.push("/Home");
+        .then(userCredential=>{
+            LogRocket.identify(userCredential.user.uid, {
+              name: userCredential.user.displayName,
+              email: userCredential.user.email,
+            });
+            this.props.history.push("/Home");
         });
     }
   };
