@@ -525,7 +525,8 @@ class SequentialActivitiesResultsPage extends React.Component {
 }
 
 SequentialActivitiesResultsPage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(SequentialActivitiesResultsPage);
