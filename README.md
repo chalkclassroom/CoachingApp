@@ -6,8 +6,8 @@
 ## New Branch Workflow:
 
 ### 1. Create new branch for each new feature you work on
-    a. Checkout Master branch with "git checkout master"
-    b. Create new branch from master with "git checkout -b <new-branch>"
+    a. Checkout develop branch with "git checkout develop"
+    b. Create new branch from master with "git checkout -b 'feature/<new-branch-name>'" or 'bug/<new-branch-name>'
     c. Add changes
     d. Commit `git commit -m "message"`
     e. Push `git push`
