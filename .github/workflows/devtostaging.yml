@@ -29,6 +29,7 @@ jobs:
           title: Develop to Staging Merge
           body: This is an auto-generated PR with Merge of Approved Feature Changes from Develop.
           base: staging
+          branch-suffix: none
       - name: Check outputs
         run: |
           echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
