@@ -28,7 +28,7 @@ jobs:
           commit-message: PR To Merge of Approved Feature Changes from Develop
           title: Develop to Staging Merge
           body: This is an auto-generated PR with Merge of Approved Feature Changes from Develop.
-          base: staging
+          base: origin/staging
           branch-suffix: none
       - name: Check outputs
         run: |
