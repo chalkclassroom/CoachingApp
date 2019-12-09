@@ -28,6 +28,11 @@ import TransitionTimeTrainingPage from "./views/protected/TransitionViews/Transi
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
+import LogRocket from 'logrocket';
+import setupLogRocketReact from 'logrocket-react';
+
+LogRocket.init('akprci/cqref');
+setupLogRocketReact(LogRocket);
 
 const styles = createMuiTheme({
   palette: {
