@@ -25,6 +25,7 @@ jobs:
         uses: gha-utilities/init-pull-request@v0.0.2
         with:
           pull_request_token: ${{ secrets.GITHUB_TOKEN }}
+          head: develop
           base: staging
           title: 'Merging Approved Changes from Develop to Staging'
           body: >
