@@ -19,14 +19,13 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v2-beta
         with:
-          ref: ${{ github.event.after }}
+          ref: master
 
-      - name: Create Pull Request onto Staging
-        uses: repo-sync/pull-request@v2
+      - uses: gr2m/create-or-update-pull-request-action@v1.x
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          source_branch: ""                     # If blank, default: triggered branch
-          destination_branch: "staging"          # If blank, default: master
-          pr_title: "Pulling ${{ github.ref }} into Staging from Develop"
-          pr_body: ":crown: *An automated PR*"  # Full markdown support, requires pr_title to be set
-          pr_label: "auto-pr"                   # Comma-separated list (no spaces)
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Pulling ${{ github.ref }} into Staging from Develop"
+          body: ":crown: *An automated PR*"
+          branch: "staging"
+          commit-message: "Bringing in approved changes from develop to staging for UAT"
