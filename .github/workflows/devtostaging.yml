@@ -21,11 +21,15 @@ jobs:
         with:
           ref: master
 
-      - uses: gr2m/create-or-update-pull-request-action@v1.x
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Pull Request onto Staging
+        uses: peter-evans/create-pull-request@v1
         with:
-          title: "Pulling ${{ github.ref }} into Staging from Develop"
-          body: ":crown: *An automated PR*"
-          branch: "staging"
-          commit-message: "Bringing in approved changes from develop to staging for UAT"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: PR To Merge of Approved Feature Changes from Develop
+          title: Develop to Staging Merge
+          body: This is an auto-generated PR with Merge of Approved Feature Changes from Develop.
+          branch: staging
+      - name: Check outputs
+          run: |
+            echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
+            echo "Pull Request Number - ${{ steps.cpr.outputs.pr_number }}"
