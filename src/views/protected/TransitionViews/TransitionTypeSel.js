@@ -325,7 +325,11 @@ class TransitionTypeSel extends React.Component {
 }
 
 TransitionTypeSel.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  transitionEnded: PropTypes.bool.isRequired,
+  handleTransitionType: PropTypes.func.isRequired,
+  toggleNewTransitionType: PropTypes.func.isRequired,
+  handleNotes: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(

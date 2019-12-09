@@ -1,22 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
-import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import SwipeableViews from "react-swipeable-views";
 import TabBar from "@material-ui/core/AppBar";
-import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
-// import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
-import ListDetailTableTransitionResults from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import DataQuestions from "../../../components/ResultsComponents/DataQuestions";
 import "chartjs-plugin-datalabels";
@@ -1004,7 +999,7 @@ class TransitionResultsPage extends React.Component {
                           style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
                           onClick={this.lineClick}
                         >
-                          <img src={WaitinginLine} className={classes.transitionTypeButton}/>
+                          <img src={WaitingInLineImage} className={classes.transitionTypeButton}/>
                         </Button>
                       </Grid>
                       <Grid item>
@@ -1012,7 +1007,7 @@ class TransitionResultsPage extends React.Component {
                           style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
                           onClick={this.travelingClick}
                         >
-                          <img src={Walking} className={classes.transitionTypeButton}/>
+                          <img src={WalkingImage} className={classes.transitionTypeButton}/>
                         </Button>
                       </Grid>
                       <Grid item>
@@ -1020,7 +1015,7 @@ class TransitionResultsPage extends React.Component {
                           style={this.state.categoryView === "childrenWaiting" ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}
                           onClick={this.childrenWaitingClick}
                         >
-                          <img src={ChildWaiting} className={classes.transitionTypeButton}/>
+                          <img src={ChildWaitingImage} className={classes.transitionTypeButton}/>
                         </Button>
                       </Grid>
                       <Grid item>
@@ -1028,7 +1023,7 @@ class TransitionResultsPage extends React.Component {
                           style={this.state.categoryView === "routines" ? raisedThemes.palette.classroomRoutinesColor : themes.palette.classroomRoutinesColor}
                           onClick={this.routinesClick}
                         >
-                          <img src={ClassroomRoutines} className={classes.transitionTypeButton}/>
+                          <img src={ClassroomRoutinesImage} className={classes.transitionTypeButton}/>
                         </Button>
                       </Grid>
                       <Grid item>
@@ -1036,7 +1031,7 @@ class TransitionResultsPage extends React.Component {
                           style={this.state.categoryView === "behavior" ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}
                           onClick={this.behaviorClick}
                         >
-                          <img src={bmi} className={classes.transitionTypeButton}/>
+                          <img src={BMDImage} className={classes.transitionTypeButton}/>
                         </Button>
                       </Grid>
                     </Grid>
@@ -1141,9 +1136,8 @@ class TransitionResultsPage extends React.Component {
                           multiline
                         />
                         {this.state.selectedQuestions.map((item, index) => (
-                          <div>
+                          <div key={index}>
                             <Typography
-                              key={index}
                               variant="h7"
                               style={{textDecoration: "underline"}}
                             >
@@ -1151,9 +1145,8 @@ class TransitionResultsPage extends React.Component {
                             </Typography>
                             <ol style={{marginTop: ".5vh", marginBottom: "1vh"}}>
                               {item.questions.map((question, i) => (
-                                <li>
+                                <li key={i}>
                                   <Typography
-                                    key={i}
                                     variant="subtitle2"
                                   >
                                     {question}
@@ -1198,7 +1191,8 @@ class TransitionResultsPage extends React.Component {
 }
 
 TransitionResultsPage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
 };
 
 TransitionResultsPage.contextType = FirebaseContext;

@@ -46,7 +46,7 @@ class TransitionTimePage extends React.Component {
       transitionEnded: false
     };
 
-    this.handleTransitionType = this.handleTransitionType.bind(this);
+    //this.handleTransitionType = this.handleTransitionType.bind(this);
   }
 
   handleTransitionType = type => {
@@ -99,8 +99,6 @@ class TransitionTimePage extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
 
     return (
       <div className={classes.root}>
@@ -198,7 +196,8 @@ class TransitionTimePage extends React.Component {
 }
 
 TransitionTimePage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 export default connect(null, { resetTransitionTime })(

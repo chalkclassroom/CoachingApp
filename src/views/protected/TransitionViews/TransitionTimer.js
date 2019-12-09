@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import CircularProgressbar from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import Button from "@material-ui/core/Button/Button";
@@ -23,7 +24,7 @@ const theme = createMuiTheme({
 class TransitionTimer extends React.Component {
   constructor(props) {
     super(props);
-    this.onCancel = this.onCancel.bind(this);
+    //this.onCancel = this.onCancel.bind(this);
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
@@ -140,6 +141,15 @@ class TransitionTimer extends React.Component {
     );
   }
 }
+
+TransitionTimer.propTypes = {
+  teacherId: PropTypes.string.isRequired,
+  firebase: PropTypes.object.isRequired,
+  transitionType: PropTypes.string.isRequired,
+  handleEndTransition: PropTypes.func.isRequired,
+  pushOntoTransitionStack: PropTypes.func.isRequired,
+  typeSelected: PropTypes.string.isRequired
+};
 
 const mapStateToProps = state => {
   return {

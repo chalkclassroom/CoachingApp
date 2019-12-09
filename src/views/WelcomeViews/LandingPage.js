@@ -960,7 +960,8 @@ class LandingPage extends React.Component {
 }
 
 LandingPage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(LandingPage);
