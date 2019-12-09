@@ -35,6 +35,7 @@
     "react-d3-components": "^0.9.1",
     "react-dom": "^16.6.1",
     "react-easy-chart": "^1.0.0",
+    "react-ga": "^2.7.0",
     "react-helmet": "^5.2.1",
     "react-horizontal-stacked-bar-chart": "^8.12.9",
     "react-html5video": "^2.5.1",
