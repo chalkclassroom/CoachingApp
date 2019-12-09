@@ -63,6 +63,7 @@
     "victory-pie": "^31.2.0"
   },
   "scripts": {
+    "start": "react-scripts start",
     "lint": "npx eslint ./src --ext .js,.jsx,.ts,.tsx",
     "doc": "rimraf docs && jsdoc -r  . -d docs -c jsdoc.conf README.md",
     "cypress": "npx cypress open",
