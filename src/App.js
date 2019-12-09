@@ -30,6 +30,10 @@ import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('UA-154034655-1');
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 LogRocket.init('akprci/cqref');
 setupLogRocketReact(LogRocket);
