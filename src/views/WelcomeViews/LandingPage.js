@@ -370,7 +370,7 @@ class LandingPage extends React.Component {
                   position="flex-start"
                   paddingTop='1em'
                   text={<div>
-                          CHALK's mission is to advance pre-k quality with an easy-to-use 
+                          CHALK&apos;s mission is to advance pre-k quality with an easy-to-use 
                           tool for coaches and teachers that:
                           <ul>
                             <li>Focuses classroom observations on effective practices</li>
@@ -710,7 +710,7 @@ class LandingPage extends React.Component {
                   position="flex-start"
                   paddingTop='1em'
                   text={<div>
-                          CHALK's mission is to advance pre-k quality with an easy-to-use 
+                          CHALK&apos;s mission is to advance pre-k quality with an easy-to-use 
                           tool for coaches and teachers that:
                           <ul>
                             <li>Focuses classroom observations on effective practices</li>
