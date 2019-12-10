@@ -33,7 +33,7 @@ const climateTrendOptions = {
 
 class ClimateTrendsGraph extends React.Component {
   render() {
-    const { classes } = this.props;
+    //const { classes } = this.props;
 
     return (
       <Bar
@@ -47,7 +47,7 @@ class ClimateTrendsGraph extends React.Component {
 }
 
 ClimateTrendsGraph.propTypes = {
-  classes: PropTypes.object.isRequired,
+  //classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
 };
 

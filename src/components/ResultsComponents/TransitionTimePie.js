@@ -16,7 +16,7 @@ class TransitionTimePie extends React.Component {
   state = {};
 
   render() {
-    const { classes } = this.props;
+    //const { classes } = this.props;
     console.log("inside time: ", this.state.inside);
     console.log("total session time: " + this.props.sessionTotal);
     const transitionData = {
@@ -84,7 +84,7 @@ class TransitionTimePie extends React.Component {
 }
 
 TransitionTimePie.propTypes = {
-  classes: PropTypes.object.isRequired,
+  //classes: PropTypes.object.isRequired,
   // data: PropTypes.object.isRequired
   transitionTime: PropTypes.number.isRequired,
   learningActivityTime: PropTypes.number.isRequired

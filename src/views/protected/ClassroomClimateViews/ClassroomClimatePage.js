@@ -199,7 +199,8 @@ class ClassroomClimatePage extends React.Component {
 
 ClassroomClimatePage.propTypes = {
   classes: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  appendClimateRating: PropTypes.func.isRequired
 };
 
 ClassroomClimatePage.contextType = FirebaseContext;

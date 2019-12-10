@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -10,7 +10,7 @@ const styles = {};
 
 class ChildTeacherBehaviorDetailsSlider extends React.Component {
   render() {
-    const { classes } = this.props;
+    //const { classes } = this.props;
     // var settings = {
     //     dots: true,
     //     infinite: true,
@@ -33,9 +33,9 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component {
   }
 }
 
-ChildTeacherBehaviorDetailsSlider.propTypes = {
+/* ChildTeacherBehaviorDetailsSlider.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
-};
+}; */
 
 export default withStyles(styles)(ChildTeacherBehaviorDetailsSlider);

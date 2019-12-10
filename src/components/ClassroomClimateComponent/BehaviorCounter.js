@@ -206,7 +206,7 @@ class BehaviorCounter extends React.Component {
             id="prefix__Specific_Approval"
             data-name="Specific Approval"
             transform="translate(185 445.275)"
-            data-name="Group 1"
+            //data-name="Group 1"
             onClick={() => this.handlePushFire("specificapproval")}
           >
             <g
@@ -313,7 +313,7 @@ class BehaviorCounter extends React.Component {
             id="prefix__Disapproval_"
             data-name="Disapproval"
             transform="translate(487 -123.198)"
-            data-name="Group 1"
+            //data-name="Group 1"
             onClick={() => this.handlePushFire("disapproval")}
           >
             <g

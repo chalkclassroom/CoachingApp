@@ -9,7 +9,7 @@ const styles = {};
  * specifies data sets (and formatting) for the child behaviors details horizontal bar
  * @type {{datasets: *[], labels: string[][]}}
  */
-const childBehaviorsData = {
+/* const childBehaviorsData = {
   labels: ["August 19, 2018", "September 30, 2018", "October 22, 2018"],
   datasets: [
     {
@@ -37,7 +37,7 @@ const childBehaviorsData = {
       data: [14, 20, 29]
     }
   ]
-};
+}; */
 
 /**
  * formatting for A&C child behavior trends graph, including title and scales for the axes
@@ -104,7 +104,7 @@ const ChildBehaviorTrendsOptions = {
 
 class ChildBehaviorTrendsVerticalBar extends React.Component {
   render() {
-    const { classes } = this.props;
+    //const { classes } = this.props;
 
     return (
       <Line
@@ -118,7 +118,7 @@ class ChildBehaviorTrendsVerticalBar extends React.Component {
 }
 
 ChildBehaviorTrendsVerticalBar.propTypes = {
-  classes: PropTypes.object.isRequired,
+  //classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
 };
 

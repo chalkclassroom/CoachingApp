@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Pie } from "react-chartjs-2";
 
@@ -36,7 +36,7 @@ class ChildBehaviorsPie extends React.Component {
 
   state = {};
   render() {
-    const { classes } = this.props;
+    //const { classes } = this.props;
 
     const childBehaviorsData = {
       labels: [
@@ -83,9 +83,9 @@ class ChildBehaviorsPie extends React.Component {
   }
 }
 
-ChildBehaviorsPie.propTypes = {
+/* ChildBehaviorsPie.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
-};
+}; */
 
 export default withStyles(styles)(ChildBehaviorsPie);

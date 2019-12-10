@@ -20,7 +20,7 @@ import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
-import * as Constants from '../constants';
+//import * as Constants from '../constants';
 
 const styles = {
   root: {

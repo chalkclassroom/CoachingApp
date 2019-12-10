@@ -54,7 +54,7 @@ class YesNoDialog extends React.Component {
       <div>
         <Button
           onClick={this.handleClickOpen}
-          style={this.props.buttonStyle}
+          //style={this.props.buttonStyle}
           variant={this.props.buttonVariant}
           color={this.props.buttonColor}
           aria-label={this.props.buttonAriaLabel}
@@ -62,7 +62,8 @@ class YesNoDialog extends React.Component {
             color: this.props.buttonColor,
             backgroundColor: this.props.backgroundColor,
             borderColor: this.props.buttonColor,
-            width: this.props.buttonWidth
+            width: this.props.buttonWidth,
+            margin: this.props.buttonMargin
           }}
           className={classes.button}
         >

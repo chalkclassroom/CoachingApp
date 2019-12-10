@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Pie } from "react-chartjs-2";
 
@@ -21,15 +21,15 @@ const childBehaviorsData = {
 
 class SummaryChildBehaviorsPieChart extends React.Component {
   render() {
-    const { classes } = this.props;
+    //const { classes } = this.props;
 
     return <Pie data={childBehaviorsData} width="650" height="400" />;
   }
 }
 
-SummaryChildBehaviorsPieChart.propTypes = {
+/* SummaryChildBehaviorsPieChart.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
-};
+}; */
 
 export default withStyles(styles)(SummaryChildBehaviorsPieChart);

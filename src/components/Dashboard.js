@@ -294,7 +294,7 @@ class Dashboard extends React.Component {
                       buttonText={<b>COMPLETE OBSERVATION</b>}
                       buttonVariant={"outlined"}
                       buttonColor={this.props.color}
-                      buttonStyle={{ margin: 10 }}
+                      buttonMargin={10}
                       dialogTitle={
                         "Are you sure you want to complete this observation?"
                       }

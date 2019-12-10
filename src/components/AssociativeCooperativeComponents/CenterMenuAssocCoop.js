@@ -345,6 +345,7 @@ class CenterMenuAssocCoop extends React.Component {
                   <Grid container xs={9}>
                     {this.props.centers.map((center, index) => (
                       <Grid
+                        key={index}
                         item
                         xs={4}
                         style={{ textAlign: "center", padding: "10px" }}

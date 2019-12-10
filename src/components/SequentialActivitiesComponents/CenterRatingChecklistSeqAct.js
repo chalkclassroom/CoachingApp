@@ -97,10 +97,10 @@ class CenterRatingChecklistSeqAct extends React.Component {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
-      const mEntry = {
+      /* const mEntry = {
         checked: this.state.checked,
         people: this.state.people
-      };
+      }; */
 
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();

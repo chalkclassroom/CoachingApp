@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick-theme.css';
@@ -13,7 +13,7 @@ const styles = {};
 
 class ChildTeacherBehaviorDetailsSlider extends React.Component {
   render() {
-    const { classes } = this.props;
+    //const { classes } = this.props;
     const settings = {
       dots: true,
       infinite: true,
@@ -40,9 +40,9 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component {
   }
 }
 
-ChildTeacherBehaviorDetailsSlider.propTypes = {
+/* ChildTeacherBehaviorDetailsSlider.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
-};
+}; */
 
 export default withStyles(styles)(ChildTeacherBehaviorDetailsSlider);

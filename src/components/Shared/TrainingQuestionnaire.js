@@ -8,9 +8,7 @@ import Button from "@material-ui/core/Button/index";
 import Typography from "@material-ui/core/Typography/index";
 import TrainingQuestion from "./TrainingQuestion";
 import FirebaseContext from "../Firebase/FirebaseContext";
-import MenuItem from "@material-ui/core/MenuItem";
 // import moment from "../../views/protected/ClassroomClimateViews/ClassroomClimateResultsPage";
-import TextField from "@material-ui/core/TextField";
 
 const styles = theme => ({
   root: {
