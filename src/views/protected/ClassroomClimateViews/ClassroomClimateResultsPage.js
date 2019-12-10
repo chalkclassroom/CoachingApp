@@ -403,9 +403,9 @@ class ClassroomClimateResultsPage extends React.Component {
                     onChange={this.changeSessionId}
                     InputLabelProps={{ shrink: true }}
                   >
-                    {this.state.sessionDates.map(date => {
+                    {this.state.sessionDates.map((date, index) => {
                       return (
-                        <MenuItem id={date.id} value={date.id}>
+                        <MenuItem key={index} id={date.id} value={date.id}>
                           <em>
                             {moment(date.sessionStart.value).format(
                               "MMM Do YY hh:mm A"
@@ -523,7 +523,7 @@ class ClassroomClimateResultsPage extends React.Component {
                 <div>
                   {this.state.view === ViewEnum.SUMMARY ? (
                     <div className={classes.resultsContent}>
-                      {(this.state.percentage = false)}
+                      {/* {(this.state.percentage = false)} */}
                       <Grid>
                         <FirebaseContext.Consumer>
                           {firebase => (
@@ -559,7 +559,7 @@ class ClassroomClimateResultsPage extends React.Component {
                     </div>
                   ) : this.state.view === ViewEnum.DETAILS ? (
                     <div className={classes.detailsGraph}>
-                      {(this.state.percentage = true)}
+                      {/* {(this.state.percentage = true)} */}
                       <Grid>
                         <FirebaseContext.Consumer>
                           {firebase => (
@@ -605,7 +605,8 @@ class ClassroomClimateResultsPage extends React.Component {
 }
 
 ClassroomClimateResultsPage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
 };
 ClassroomClimateResultsPage.contextType = FirebaseContext;
 export default withStyles(styles)(ClassroomClimateResultsPage);

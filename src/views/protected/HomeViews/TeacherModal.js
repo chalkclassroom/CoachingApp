@@ -11,8 +11,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import TeacherImage from "../../../assets/images/TeacherImage.svg";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import StarsIcon from '@material-ui/icons/Stars';
@@ -181,7 +179,9 @@ class TeacherModal extends React.Component {
 TeacherModal.propTypes = {
   classes: PropTypes.object.isRequired,
   handleClose: PropTypes.object.isRequired,
-  type: PropTypes.string.isRequired
+  type: PropTypes.string.isRequired,
+  firebase: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 export default withRouter(connect()(withStyles(styles)(TeacherModal)));

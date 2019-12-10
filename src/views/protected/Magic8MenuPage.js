@@ -159,7 +159,7 @@ class Magic8MenuPage extends Component {
           </div>
           <div>
             <Typography className={classes.instructionText}>
-              Select the skill you'd like to{" "}
+              Select the skill you&apos;d like to{" "}
               {this.state.page === "Training" ? "learn:" : "focus on:"}
             </Typography>
           </div>
@@ -278,7 +278,8 @@ class Magic8MenuPage extends Component {
 
 Magic8MenuPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  type: PropTypes.string.isRequired
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 Magic8MenuPage.contextType = FirebaseContext;
