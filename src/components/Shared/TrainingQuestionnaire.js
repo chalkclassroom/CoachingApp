@@ -14,26 +14,18 @@ import DialogContentText from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 
 
-const styles = theme => ({
+const styles = {
   root: {
-    // border: '1px solid #0400FF',
     display: 'flex',
     flexDirection: 'column'
-    // width: '90%',
   },
   button: {
     margin: '1em'
   },
-  stepContentContainer: {
-    // border: '1px solid #DEFF00'
-  },
-  buttonContainer: {
-
-  },
   nextButton: {
     justifySelf: 'flex-end'
   }
-});
+};
 
 
 class TrainingQuestionnaire extends Component {
@@ -172,7 +164,6 @@ class TrainingQuestionnaire extends Component {
         answeredBatch: true
       })
     }
-    // Make call to firebase function to record the answer in dB
   }
 
   handleNext = () => {
@@ -201,6 +192,7 @@ class TrainingQuestionnaire extends Component {
         modalOpen: true,
         passed: true
       })
+
     } else { // failed
       if (currentBatch === 1) { // 2nd attempt
         this.setState({

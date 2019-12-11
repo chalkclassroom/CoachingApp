@@ -737,6 +737,10 @@ class Firebase {
       )
       .catch(error => console.error("Error occurred getting teacher sequential trend: ", error))
   }
+
+  addKnowledgeCheckResposne = async function () {
+    
+  }
 }
 
 export default Firebase;
