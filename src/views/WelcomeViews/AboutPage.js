@@ -23,7 +23,6 @@ const styles = {
   }
 };
 
-/** class for the about page */
 class AboutPage extends React.Component {
   headerGraphic = props => {
     return (

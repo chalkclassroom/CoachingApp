@@ -76,7 +76,7 @@ const ViewEnum = {
   KNOWLEDGECHECK: 5
 };
 
-/** class for transition time training page */
+
 class TransitionTimeTrainingPage extends React.Component {
   constructor(props) {
     super(props);

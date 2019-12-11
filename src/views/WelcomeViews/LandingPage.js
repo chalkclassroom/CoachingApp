@@ -179,7 +179,7 @@ const styles = {
   },
 };
 
-/** class for the landing page */
+
 class LandingPage extends React.Component {
   constructor(props) {
     super(props);
