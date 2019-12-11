@@ -37,6 +37,9 @@ const styles = {
   }
 };
 
+/**
+ * formatting for details on landing page
+ */
 class LandingDetail extends React.Component {
   constructor(props){
     super(props);

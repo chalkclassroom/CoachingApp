@@ -28,8 +28,10 @@ const styles = theme => ({
   },
 });
 
+/**
+ * formatting and content for pilot sign up form on landing page
+ */
 class PilotForm extends React.Component{
-
   constructor(props) {
     super(props);
     this.state = {

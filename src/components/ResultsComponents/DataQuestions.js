@@ -27,6 +27,9 @@ const styles = {
   }
 };
 
+/**
+ * formatting for expansion panel of data-driven coaching questions
+ */
 class DataQuestions extends React.Component {
   constructor(props) {
     super(props);

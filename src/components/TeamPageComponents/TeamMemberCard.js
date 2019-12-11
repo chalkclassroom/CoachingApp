@@ -20,6 +20,9 @@ const styles = {
   }
 };
 
+/**
+ * formatting for card for each team member
+ */
 class TeamMemberCard extends React.Component {
   constructor(props) {
     super(props);

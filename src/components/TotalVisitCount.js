@@ -12,6 +12,9 @@ const styles = {
   }
 };
 
+/**
+ * displays count of center visits for centers-based observation tools
+ */
 class TotalVisitCount extends React.Component {
   constructor(props) {
     super(props);

@@ -48,6 +48,7 @@ const styles = {
   }
 };
 
+/** class for the team page */
 class TeamPage extends React.Component {
   constructor(props) {
     super(props);

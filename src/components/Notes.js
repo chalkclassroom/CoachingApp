@@ -25,19 +25,10 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/es/DialogActions/DialogActions";
 import Grid from "@material-ui/core/Grid";
-//import moment from "moment";
 
-// import Firebase, {FirebaseContext} from "./Firebase"
-
-/* function getModalStyle() {
-  return {
-    position: "fixed",
-    top: `35%`,
-    left: `50%`,
-    transform: `translate(-50%, -50%)`
-  };
-}
- */
+/**
+* formatting and functionalty for notes function in observation tools
+*/
 class Notes extends React.Component {
   constructor(props) {
     super(props);

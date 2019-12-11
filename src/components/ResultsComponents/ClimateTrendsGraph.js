@@ -31,6 +31,9 @@ const climateTrendOptions = {
   }
 };
 
+/**
+ * specifies data sets and formatting for climate trends graph
+ */
 class ClimateTrendsGraph extends React.Component {
   render() {
     //const { classes } = this.props;

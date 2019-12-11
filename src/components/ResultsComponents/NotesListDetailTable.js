@@ -21,6 +21,9 @@ const styles = {
   }
 };
 
+/**
+ * formats table display of observation notes on results screens
+ */
 class NotesListDetailTable extends React.Component {
   render() {
     const { classes } = this.props;

@@ -8,6 +8,9 @@ const styles = {
   // idk how this works
 };
 
+/**
+ * specifies data sets and formatting for the transition summary pie graph
+ */
 class TransitionTimePie extends React.Component {
   constructor(props) {
     super(props);

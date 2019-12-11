@@ -24,6 +24,9 @@ const styles = theme => ({
   }
 });
 
+/**
+ * formatting for modal when user presses disabled 'complete observation' button
+ */
 class IncompleteObservation extends React.Component {
   state = {
     open: true

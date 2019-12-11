@@ -64,6 +64,9 @@ const Overlay = styled.div`
   opacity: 0.8,
 `;
 
+/**
+ * formatting and functionality for magic 8 selection buttons
+ */
 class Magic8Card extends Component {
   constructor(props) {
     super(props);

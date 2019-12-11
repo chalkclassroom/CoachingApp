@@ -96,7 +96,9 @@ const styles = {
 };
 
 
-
+/**
+ * formatting and functionality for dashboard on results screens
+ */
 class ResultsDashboard extends React.Component {
   constructor(props) {
     super(props);

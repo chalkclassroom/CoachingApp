@@ -8,7 +8,6 @@ import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconIm
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
-import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
 import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo";
@@ -77,6 +76,7 @@ const ViewEnum = {
   KNOWLEDGECHECK: 5
 };
 
+/** class for transition time training page */
 class TransitionTimeTrainingPage extends React.Component {
   constructor(props) {
     super(props);

@@ -27,6 +27,9 @@ const styles = {
   }
 };
 
+/**
+ * formatting for impact icons and descriptions on landing page
+ */
 class Impact extends React.Component {
   constructor(props){
     super(props);

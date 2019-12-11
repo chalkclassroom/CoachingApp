@@ -17,6 +17,9 @@ const styles = {
   }
 };
 
+/**
+ * specifies functionality and formatting for timer in dashboard
+ */
 class Countdown extends React.Component {
   constructor(props) {
     super(props);

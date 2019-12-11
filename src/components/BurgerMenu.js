@@ -112,6 +112,9 @@ const styles = theme => ({
   }
 });
 
+/**
+ * navigation menu class
+ */
 class BurgerMenu extends React.Component {
   state = {
     menu: 0,

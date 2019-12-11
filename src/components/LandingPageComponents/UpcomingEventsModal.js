@@ -69,6 +69,9 @@ const styles = theme => ({
   }
 });
 
+/**
+ * formatting and content for modal displaying upcoming events on landing page
+ */
 class UpcomingEventsModal extends React.Component {
   state = {
       open: true

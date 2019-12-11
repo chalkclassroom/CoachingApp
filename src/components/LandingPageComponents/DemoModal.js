@@ -31,7 +31,10 @@ const styles = theme => ({
   }
 });
 
-class PilotModal extends React.Component {
+/**
+ * formatting for modal containing demo video on landing page
+ */
+class DemoModal extends React.Component {
   state = {
     open: true,
     role: 0
@@ -80,9 +83,9 @@ class PilotModal extends React.Component {
   }
 }
 
-PilotModal.propTypes = {
+DemoModal.propTypes = {
   classes: PropTypes.object.isRequired,
   handleClose: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(PilotModal);
+export default withStyles(styles)(DemoModal);

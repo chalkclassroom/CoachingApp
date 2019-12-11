@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 
+/**
+ * formatting for project advisor details
+ */
 class ProjectAdvisor extends React.Component {
   constructor(props) {
     super(props);

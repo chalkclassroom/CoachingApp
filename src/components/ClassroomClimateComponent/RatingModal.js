@@ -26,6 +26,9 @@ const styles = theme => ({
   }
 });
 
+/**
+ * formatting and functionality for the classroom climate rating modal
+ */
 class RatingModal extends React.Component {
   state = {
     rating: 0,

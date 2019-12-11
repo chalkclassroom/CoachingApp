@@ -131,6 +131,7 @@ const themes = createMuiTheme({
   }
 });
 
+/** class for transition observation type buttons */
 class TransitionTypeSel extends React.Component {
   constructor(props) {
     super(props);

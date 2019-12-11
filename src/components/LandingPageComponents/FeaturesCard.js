@@ -25,6 +25,9 @@ const styles = {
   }
 };
 
+/**
+ * formatting for features highlighted on landing page
+ */
 class FeaturesCard extends React.Component {
   constructor(props){
     super(props);

@@ -84,6 +84,9 @@ const transitionTrendOptions = {
   }
 };
 
+/**
+ * specifies data sets and formatting for the transition trends graph
+ */
 class TransitionTrendsGraph extends React.Component {
   render() {
     return (

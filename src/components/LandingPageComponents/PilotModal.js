@@ -37,6 +37,9 @@ const styles = theme => ({
   },
 });
 
+/**
+ * formatting for modal containing pilot sign up form on landing page
+ */
 class PilotModal extends React.Component {
   state = {
     open: true,

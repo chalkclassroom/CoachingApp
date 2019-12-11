@@ -24,7 +24,7 @@ const theme = createMuiTheme({
 class TransitionTimer extends React.Component {
   constructor(props) {
     super(props);
-    //this.onCancel = this.onCancel.bind(this);
+    // this.onCancel = this.onCancel.bind(this);
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,

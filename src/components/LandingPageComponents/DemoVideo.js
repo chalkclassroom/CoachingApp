@@ -3,8 +3,10 @@ import { DefaultPlayer as Video } from 'react-html5video/dist';
 import 'react-html5video/dist/styles.css';
 import PropTypes from "prop-types";
 
+/**
+ * specifies controls and default settings for demo video on landing page
+ */
 class DemoVideo extends React.Component {
-
   render() {
     return (
       <Video 

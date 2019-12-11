@@ -29,6 +29,9 @@ const styles = {
   }
 }
 
+/**
+ * formatting for description of team member
+ */
 class TeamMemberExpansion extends React.Component {
   constructor(props) {
     super(props);
