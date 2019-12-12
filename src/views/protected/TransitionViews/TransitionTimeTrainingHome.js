@@ -27,7 +27,8 @@ const styles = theme => ({
     width: '100vw',
     flexDirection: 'column',
     alignItems: 'stretch',
-    overflow: 'hidden',
+    overflowX: 'hidden',
+    overflowY: 'scroll',
     margin: '0',
     padding: '0'
   },
@@ -51,7 +52,8 @@ const styles = theme => ({
     justifyContent: 'center',
     alignItems: 'stretch',
     padding: '0% 4% 3% 4%',
-    overflowY: 'scroll'
+    overflowY: 'scroll',
+    overflowX: 'hidden'
   },
   paper: {
     position: "absolute",
@@ -101,10 +103,12 @@ const styles = theme => ({
   },
 
   // iPad Pro 12.9" Landscape
-  '@media only screen and (max-width:1366px) and (orientation:landscape)': {
+  '@media only screen and (max-width:1366px) and (min-height:800px) and (orientation:landscape)': {
+    root: {
+      fontSize: '1.5em'
+    },
     main: {
-      margin: '8% 2% 2% 2%',
-      fontSize: '1.1em'
+      margin: '8% 2% 2% 2%'
     }
   },
 
@@ -123,9 +127,7 @@ const styles = theme => ({
       flexGrow: 1,
       margin: '5% 0% 2% 0%',
       padding: '8% 2% 3% 2%',
-      flexDirection: 'column',
       justifyContent: 'flex-start',
-      alignItems: 'stretch',
       borderTop: '2px solid #FFA726'
     }
   },
@@ -134,6 +136,40 @@ const styles = theme => ({
   '@media only screen and (max-width:1024px) and (orientation:landscape)': {
     main: {
       margin: '2%'
+    }
+  },
+
+  // Minor Breakpoint - 900px height
+  '@media only screen and (max-width:1024px) and (min-height:900px) and (orientation:portrait)': {
+    root: {
+      fontSize: '1.5em'
+    }
+  },
+
+  // Minor Breakpoint - 920px width
+  '@media only screen and (max-width:920px) and (orientation:landscape)': {
+    main: {
+      height: '100%',
+      margin: '0% 2% 0% 2%',
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    dashboardContainer: {
+      boxShadow: '1px 1px 3px #8C8D91'
+    },
+    trainingContentCard: {
+      flexGrow: 1,
+      margin: '3% 0% 2% 0%',
+      padding: '5% 2% 3% 2%',
+      justifyContent: 'flex-start',
+      borderTop: '2px solid #FFA726'
+    }
+  },
+
+  // Mobile Landscape
+  '@media only screen and (max-width:600px) and (orientation:landscape)': {
+    root: {
+      fontSize: '0.7em'
     }
   }
 });

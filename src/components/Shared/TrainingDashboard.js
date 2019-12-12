@@ -9,7 +9,8 @@ const styles = {
     minWidth: '240px',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    fontSize: '1em'
   },
   iconContainer: {
     display: 'flex',
@@ -37,6 +38,13 @@ const styles = {
     }
   },
 
+  //iPad Pro 10.5" Landscape
+  '@media only screen and (max-width:1112px) and (orientation:landscape)': {
+    container: {
+      fontSize: '0.7em'
+    }
+  },
+
   // iPad Pro 10.5" Portrait
   '@media only screen and (max-width:834px) and (orientation:portrait)': {
     viewButtons: {
@@ -44,10 +52,45 @@ const styles = {
     }
   },
 
+  //iPad-Mini Landscape
+  '@media only screen and (max-width:1024px) and (orientation:landscape)': {
+    container: {
+      fontSize: '0.9em'
+    }
+  },
+
   // iPad-Mini Portrait
   '@media only screen and (max-width:768px) and (orientation:portrait)': {
+    container: {
+      fontSize: '0.6em'
+    },
     viewButtons: {
       maxWidth: '240px'
+    }
+  },
+
+  // Minor Breakpoint - 920px width
+  '@media only screen and (max-width:920px) and (orientation:landscape)': {
+    buttonsListContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center'
+    },
+    iconContainer: {
+      display: 'none'
+    },
+    viewButtons: {
+      maxWidth: '250px'
+    }
+  },
+
+  // Mobile Landscape
+  '@media only screen and (max-width:600px)': {
+    container: {
+      fontSize: '0.8em'
+    },
+    viewButtons: {
+      maxWidth: '180px'
     }
   }
 };
@@ -81,6 +124,7 @@ function TrainingDashboard(props) {
             fullWidth={true}
             variant={view === ViewEnum.CONCEPTS ? "contained" : "outlined"}
             onClick={conceptsClick}
+            style={{ fontSize:'1em' }}
           >
             CONCEPTS
           </Button>
@@ -92,6 +136,7 @@ function TrainingDashboard(props) {
             fullWidth={true}
             variant={view === ViewEnum.DEFINITIONS ? "contained" : "outlined"}
             onClick={definitionsClick}
+            style={{ fontSize:'1em' }}
           >
             DEFINITIONS
           </Button>
@@ -103,6 +148,7 @@ function TrainingDashboard(props) {
             fullWidth={true}
             variant={view === ViewEnum.EXAMPLE ? "contained" : "outlined"}
             onClick={exampleClick}
+            style={{ fontSize:'1em' }}
           >
             EXAMPLE
           </Button>
@@ -114,6 +160,7 @@ function TrainingDashboard(props) {
             fullWidth={true}
             variant={view === ViewEnum.DEMONSTRATION ? "contained" : "outlined"}
             onClick={demonstrationClick}
+            style={{ fontSize:'1em' }}
           >
             DEMONSTRATION
           </Button>
@@ -125,6 +172,7 @@ function TrainingDashboard(props) {
             fullWidth={true}
             variant={view === ViewEnum.TRYIT ? "contained" : "outlined"}
             onClick={tryItClick}
+            style={{ fontSize:'1em' }}
           >
             TRY IT YOURSELF
           </Button>
@@ -136,6 +184,7 @@ function TrainingDashboard(props) {
             fullWidth={true}
             variant={view === ViewEnum.KNOWLEDGECHECK ? "contained" : "outlined"}
             onClick={knowledgeCheckClick}
+            style={{ fontSize:'1em' }}
           >
             KNOWLEDGE CHECK
           </Button>
