@@ -124,7 +124,7 @@ function TrainingDashboard(props) {
             fullWidth={true}
             variant={view === ViewEnum.CONCEPTS ? "contained" : "outlined"}
             onClick={conceptsClick}
-            style={{ fontSize:'1em' }}
+            style={{ fontSize:'1em' }} // necessary to responsively change font sizes w/ media queries
           >
             CONCEPTS
           </Button>
