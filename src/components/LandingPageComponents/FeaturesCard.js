@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -27,11 +28,19 @@ const styles = {
 
 /**
  * formatting for features highlighted on landing page
+ * @class FeaturesCard
  */
 class FeaturesCard extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props){
     super(props);
   }
+  /**
+   * render function 
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return(
@@ -61,6 +70,14 @@ class FeaturesCard extends React.Component {
       </Card>
     );
   }
+}
+
+FeaturesCard.propTypes = {
+  classes: PropTypes.object.isRequired,
+  altText: PropTypes.string.isRequired,
+  icon: PropTypes.element.isRequired,
+  title: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired
 }
 
 export default withStyles(styles)(FeaturesCard);

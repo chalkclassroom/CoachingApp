@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Line } from "rc-progress";
@@ -18,9 +19,13 @@ const styles = {
 };
 
 /**
- * specifies functionality and formatting for timer in dashboard
+ * Timer in dashboard for observation tools
+ * @class Countdown
  */
 class Countdown extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
 
@@ -43,14 +48,20 @@ class Countdown extends React.Component {
     }
   };
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.timer = setInterval(this.tick, 1000);
   }
 
+  /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     clearInterval(this.timer);
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
@@ -82,5 +93,11 @@ class Countdown extends React.Component {
     );
   }
 }
+
+Countdown.propTypes = {
+  timerTime: PropTypes.number.isRequired,
+  classes: PropTypes.object.isRequired,
+  color: PropTypes.string.isRequired
+};
 
 export default withStyles(styles)(Countdown);

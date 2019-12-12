@@ -1,9 +1,14 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
@@ -25,7 +30,8 @@ const styles = theme => ({
 });
 
 /**
- * formatting for modal when user presses disabled 'complete observation' button
+ * Modal when user presses disabled 'complete observation' button
+ * @class IncompleteObservation
  */
 class IncompleteObservation extends React.Component {
   state = {
@@ -40,6 +46,10 @@ class IncompleteObservation extends React.Component {
     this.setState({ open: false });
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -70,5 +80,9 @@ class IncompleteObservation extends React.Component {
     );
   }
 }
+
+IncompleteObservation.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
 export default withStyles(styles)(IncompleteObservation);

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from "@material-ui/core/styles";
@@ -29,11 +30,19 @@ const styles = {
 
 /**
  * formatting for impact icons and descriptions on landing page
+ * @class Impact
  */
 class Impact extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props){
     super(props);
   }
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return(
@@ -94,5 +103,15 @@ class Impact extends React.Component {
     );
   }
 }
+
+Impact.propTypes = {
+  classes: PropTypes.object.isRequired,
+  position: PropTypes.string.isRequired,
+  icon: PropTypes.element.isRequired,
+  paddingTop: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired
+};
 
 export default withStyles(styles)(Impact);

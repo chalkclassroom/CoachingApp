@@ -27,7 +27,14 @@ const styles = theme => ({
   }
 });
 
+/**
+ * Login Form
+ * @class LoginForm
+ */
 class LoginForm extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -39,6 +46,11 @@ class LoginForm extends React.Component {
     };
   }
 
+  /**
+   * @param {string} name
+   * @param {event} event
+   * @return {void}
+   */
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value
@@ -46,6 +58,10 @@ class LoginForm extends React.Component {
     this.validateState(name, event.target.value);
   };
 
+  /**
+   * @param {string} name
+   * @param {value} value
+   */
   validateState = (name, value) => {
     switch (name) {
       case "email":
@@ -85,12 +101,16 @@ class LoginForm extends React.Component {
     }
   };
 
+  /**
+   * @param {string} email
+   * @return {boolean}
+   */
   validateEmail = email => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
-  handleSubmit = event => {
+  handleSubmit = () => {
     this.validateState();
     if (!this.state.errors) {
       this.props.firebase
@@ -108,6 +128,10 @@ class LoginForm extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -161,7 +185,10 @@ class LoginForm extends React.Component {
 }
 
 LoginForm.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired,
+  role: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(withRouter(LoginForm));

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
@@ -41,9 +42,16 @@ const styles = {
  * formatting for details on landing page
  */
 class LandingDetail extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props){
     super(props);
   }
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return(
@@ -161,6 +169,28 @@ class LandingDetail extends React.Component {
       </div>
     );
   }
+}
+
+LandingDetail.propTypes = {
+  classes: PropTypes.object,
+  iconAlt1: PropTypes.string,
+  icon1: PropTypes.element,
+  title1: PropTypes.string,
+  iconAlt2: PropTypes.string,
+  icon2: PropTypes.element,
+  title2: PropTypes.string,
+  text1: PropTypes.string,
+  text2: PropTypes.string,
+  button1: PropTypes.bool,
+  button2: PropTypes.bool,
+  onClick1: PropTypes.func,
+  onClick2: PropTypes.func,
+  iconAlt: PropTypes.string,
+  icon: PropTypes.element,
+  title: PropTypes.string,
+  text: PropTypes.string,
+  button: PropTypes.bool,
+  onClick: PropTypes.func
 }
 
 export default withStyles(styles)(LandingDetail);

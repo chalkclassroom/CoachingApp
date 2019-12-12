@@ -8,6 +8,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
@@ -53,15 +57,10 @@ class PilotModal extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
-
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  handleChangeRole = role => {
-    this.setState({ role: role });
-  };
-
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -91,7 +90,8 @@ class PilotModal extends React.Component {
 
 PilotModal.propTypes = {
   classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired
+  handleClose: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(PilotModal);

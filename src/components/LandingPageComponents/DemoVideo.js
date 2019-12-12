@@ -5,8 +5,13 @@ import PropTypes from "prop-types";
 
 /**
  * specifies controls and default settings for demo video on landing page
+ * @class DemoVideo
  */
 class DemoVideo extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <Video 

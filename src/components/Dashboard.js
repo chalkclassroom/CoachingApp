@@ -98,7 +98,15 @@ const styles = {
   }
 };
 
+/**
+ * Dashboard for Observation Tools
+ * @class Dashboard
+ * @param {boolean} open
+ */
 class Dashboard extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
 
@@ -124,6 +132,7 @@ class Dashboard extends React.Component {
     this.deleteAllCenters = deleteAllCenters;
   }
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount = () => {
     this.props.magic8 === "Transition Time"
       ? this.setState({
@@ -198,6 +207,10 @@ class Dashboard extends React.Component {
     this.setState({ incomplete: false });
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     const magic8 = this.props.magic8;
@@ -306,7 +319,7 @@ class Dashboard extends React.Component {
                           ? this.resetTransitionTime()
                           : magic8 === "Sequential Activities"
                           ? this.deleteAllCenters()
-                          : this.props.deleteAllCenters();
+                          : this.deleteAllCenters();
                         this.props.history.push({
                           pathname: "/Home",
                           state: this.props.history.state
@@ -338,7 +351,11 @@ class Dashboard extends React.Component {
 Dashboard.propTypes = {
   magic8: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
-  infoDisplay: PropTypes.object.isRequired
+  infoDisplay: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  infoPlacement: PropTypes.string.isRequired,
+  completeObservation: PropTypes.bool.isRequired
 };
 
 export default withRouter(connect()(withStyles(styles)(Dashboard)));

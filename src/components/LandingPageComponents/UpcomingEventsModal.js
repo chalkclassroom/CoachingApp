@@ -1,10 +1,15 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
 import ReimagineBadgeImage from "../../assets/images/ReimagineBadgeImage.jpg";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
@@ -70,7 +75,8 @@ const styles = theme => ({
 });
 
 /**
- * formatting and content for modal displaying upcoming events on landing page
+ * Modal displaying upcoming events on landing page
+ * @class UpcomingEventsModal
  */
 class UpcomingEventsModal extends React.Component {
   state = {
@@ -85,6 +91,10 @@ class UpcomingEventsModal extends React.Component {
     this.setState({ open: false });
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -163,6 +173,10 @@ class UpcomingEventsModal extends React.Component {
       </div>
     );
   }
+}
+
+UpcomingEventsModal.propTypes = {
+  classes: PropTypes.object.isRequired
 }
     
 export default withStyles(styles)(UpcomingEventsModal);
