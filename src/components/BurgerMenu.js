@@ -113,7 +113,10 @@ const styles = theme => ({
 });
 
 /**
- * navigation menu class
+ * Navigation Menu
+ * @class BurgerMenu
+ * @param {type} type
+ * 
  */
 class BurgerMenu extends React.Component {
   state = {
@@ -135,7 +138,7 @@ class BurgerMenu extends React.Component {
     this.setState({ teacherModal: true, type: type });
   };
 
-  handleTeacherModalClose = event => {
+  handleTeacherModalClose = () => {
     this.setState({
       teacherModal: false,
       type: ""
@@ -150,6 +153,10 @@ class BurgerMenu extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
@@ -426,7 +433,9 @@ class BurgerMenu extends React.Component {
 BurgerMenu.propTypes = {
   classes: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired
+  open: PropTypes.bool.isRequired,
+  history: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired
 };
 
 export default withRouter(connect()(withStyles(styles)(BurgerMenu)));

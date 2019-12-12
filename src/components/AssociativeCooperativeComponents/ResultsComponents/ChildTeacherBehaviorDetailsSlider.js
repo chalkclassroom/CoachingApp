@@ -1,5 +1,5 @@
 import React from "react";
-//import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -8,9 +8,18 @@ import TeacherBehaviorsDetailsHorizontalBar from "./TeacherBehaviorsDetailsHoriz
 
 const styles = {};
 
+/**
+ * Swipe View for Child and Teacher Associative&Cooperative Bar Charts
+ * @class ChildTeacherBehaviorDetailsSlider
+ * @return {void}
+ */
 class ChildTeacherBehaviorDetailsSlider extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    //const { classes } = this.props;
+    // const { classes } = this.props;
     // var settings = {
     //     dots: true,
     //     infinite: true,

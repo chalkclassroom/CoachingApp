@@ -1,5 +1,5 @@
 import React from "react";
-//import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Pie } from "react-chartjs-2";
 
@@ -29,14 +29,26 @@ const styles = {};
 //     }]
 // };
 
+/**
+ * Pie Chart for Associative&Cooperative Child Behaviors
+ * @class ChildBehaviorsPie
+ * @return {void}
+ */
 class ChildBehaviorsPie extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
   }
 
   state = {};
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    //const { classes } = this.props;
+    // const { classes } = this.props;
 
     const childBehaviorsData = {
       labels: [
@@ -83,9 +95,12 @@ class ChildBehaviorsPie extends React.Component {
   }
 }
 
-/* ChildBehaviorsPie.propTypes = {
-  classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
-}; */
+ChildBehaviorsPie.propTypes = {
+  // classes: PropTypes.object.isRequired,
+  // data: PropTypes.object.isRequired
+  acTime: PropTypes.number.isRequired,
+  noAcTime: PropTypes.number.isRequired,
+  noOppTime: PropTypes.number.isRequired,
+};
 
 export default withStyles(styles)(ChildBehaviorsPie);

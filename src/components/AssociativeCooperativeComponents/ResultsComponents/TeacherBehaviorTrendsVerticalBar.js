@@ -9,7 +9,7 @@ const styles = {};
  * specifies data sets (and formatting) for the child behaviors details horizontal bar
  * @type {{datasets: *[], labels: string[][]}}
  */
-const teacherBehaviorsData = {
+/* const teacherBehaviorsData = {
   labels: ["August 19, 2018", "September 30, 2018", "October 22, 2018"],
   datasets: [
     {
@@ -27,7 +27,7 @@ const teacherBehaviorsData = {
       data: [6, 5, 8]
     }
   ]
-};
+}; */
 
 /**
  * formatting for A&C teacher behavior trends graph, including title and scales for the axes
@@ -85,16 +85,25 @@ const TeacherBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value, context) {
+      formatter: function(value) {
         return value + "%";
       }
     }
   }
 };
 
+/**
+ * Vertical Bar Chart for Associative&Cooperative Teacher Behaviors
+ * @class TeacherBehaviorTrendsVerticalBar
+ * @return {void}
+ */
 class TeacherBehaviorTrendsVerticalBar extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
 
     return (
       <Line
@@ -108,7 +117,7 @@ class TeacherBehaviorTrendsVerticalBar extends React.Component {
 }
 
 TeacherBehaviorTrendsVerticalBar.propTypes = {
-  classes: PropTypes.object.isRequired,
+  // classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
 };
 

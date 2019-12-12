@@ -84,6 +84,12 @@ const commonSecondHalf = commonCenters.slice(
   commonCenters.length
 );
 
+/**
+ * Center Checklist
+ * @class CenterChecklist
+ * @param {value} value
+ * @return {void}
+ */
 class CenterChecklist extends React.Component {
   state = {
     checked: []
@@ -112,6 +118,10 @@ class CenterChecklist extends React.Component {
     this.props.switchToCenterMenu();
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <div>
@@ -196,7 +206,21 @@ class CenterChecklist extends React.Component {
   }
 }
 
+CenterChecklist.propTypes = {
+  addCenter: PropTypes.func.isRequired,
+  switchToCenterMenu: PropTypes.func.isRequired
+};
+
+/**
+ * New Center Dialog
+ * @class NewCenterDialog
+ * @return {void}
+ */
 class NewCenterDialog extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <Dialog
@@ -235,11 +259,25 @@ class NewCenterDialog extends React.Component {
   }
 }
 
+NewCenterDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired
+}
+
 const CENTER_CHECKLIST = 0;
 const CENTER_MENU = 1;
 const RATING_SCREEN = 2;
 
+/**
+ * Center Menu for Associative and Cooperative
+ * @class CenterMenuAssocCoop
+ * @param {string} centerName
+ */
 class CenterMenuAssocCoop extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     const mEntry = {
@@ -298,6 +336,10 @@ class CenterMenuAssocCoop extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     switch (this.state.status) {
       case CENTER_CHECKLIST:
@@ -404,7 +446,12 @@ const mapStateToProps = state => {
 };
 
 CenterMenuAssocCoop.propTypes = {
-  onStatusChange: PropTypes.func.isRequired
+  onStatusChange: PropTypes.func.isRequired,
+  teacherId: PropTypes.string.isRequired,
+  firebase: PropTypes.object.isRequired,
+  addNewCenter: PropTypes.func.isRequired,
+  incrementCenterCount: PropTypes.func.isRequired,
+  centers: PropTypes.array.isRequired
 };
 
 export default withStyles(styles)(

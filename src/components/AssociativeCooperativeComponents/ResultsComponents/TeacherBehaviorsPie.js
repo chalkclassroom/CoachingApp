@@ -26,15 +26,27 @@ const styles = {};
 //     }]
 // };
 
+
+/**
+ * Pie Chart for Associative&Cooperative Teacher Behaviors
+ * @class TeacherBehaviorsPie
+ * @return {void}
+ */
 class TeacherBehaviorsPie extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
   }
 
   state = {};
-
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     // console.log("inside time: ", this.state.inside);
     console.log("total session time: " + this.props.sessionTotal);
     const teacherBehaviorsData = {
@@ -82,8 +94,11 @@ class TeacherBehaviorsPie extends React.Component {
 }
 
 TeacherBehaviorsPie.propTypes = {
-  classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  // classes: PropTypes.object.isRequired,
+  // data: PropTypes.object.isRequired,
+  sessionTotal: PropTypes.number.isRequired,
+  noSupportTime: PropTypes.number.isRequired,
+  supportTime: PropTypes.number.isRequired
 };
 
 export default withStyles(styles)(TeacherBehaviorsPie);

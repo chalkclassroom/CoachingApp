@@ -41,7 +41,7 @@ class TransitionTimePage extends React.Component {
       help: false,
       notes: false,
       recs: true,
-      transitionType: null,
+      transitionType: "",
       open: false,
       transitionEnded: false
     };

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
@@ -11,6 +12,10 @@ import TableRow from "@material-ui/core/TableRow";
 
 // TODO: Fix spacing, make everything more readable and easily modifiable
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
@@ -75,6 +80,10 @@ const styles = theme => ({
   }
 });
 
+/**
+ * Definitions and Reminders for Classroom Climate Observation
+ * @class ClassroomClimateHelp
+ */
 class ClassroomClimateHelp extends React.Component {
   state = {
     open: true
@@ -88,6 +97,10 @@ class ClassroomClimateHelp extends React.Component {
     this.setState({ open: false });
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -134,7 +147,7 @@ class ClassroomClimateHelp extends React.Component {
                     </TableCell>
                     <TableCell className={classes.redirectionExample}>
                       <strong>
-                        Teacher suggests an alternative to the child's current
+                        Teacher suggests an alternative to the child&apos;s current
                         behavior
                       </strong>
                     </TableCell>
@@ -151,31 +164,31 @@ class ClassroomClimateHelp extends React.Component {
                   </TableRow>
                   <TableRow>
                     <TableCell className={classes.disapprovalExample}>
-                      "Stop it."
+                      &quot;Stop it.&quot;
                     </TableCell>
                     <TableCell className={classes.redirectionExample}>
-                      "Are you making a good choice?"
+                      &quot;Are you making a good choice?&quot;
                     </TableCell>
                     <TableCell className={classes.generalExample}>
-                      "Kiss your brain!"
+                      &quot;Kiss your brain!&quot;
                     </TableCell>
                     <TableCell className={classes.specificExample}>
-                      "I like the way you're using your finger to count the
-                      cubes."
+                      &quot;I like the way you&apos;re using your finger to count the
+                      cubes.&quot;
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className={classes.disapprovalExample}>
-                      "I said stay in your seat."
+                      &quot;I said stay in your seat.&quot;
                     </TableCell>
                     <TableCell className={classes.redirectionExample}>
-                      "Do you want to sit on a letter or a number?"
+                      &quot;Do you want to sit on a letter or a number?&quot;
                     </TableCell>
                     <TableCell className={classes.generalExample}>
-                      "Good job!"
+                      &quot;Good job!&quot;
                     </TableCell>
                     <TableCell className={classes.specificExample}>
-                      "Wow, that puzzle was tricky but you stuck with it!"
+                      &quot;Wow, that puzzle was tricky but you stuck with it!&quot;
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -183,13 +196,13 @@ class ClassroomClimateHelp extends React.Component {
                       Time out
                     </TableCell>
                     <TableCell className={classes.redirectionExample}>
-                      "Do you need some quiet time to calm down?"
+                      &quot;Do you need some quiet time to calm down?&quot;
                     </TableCell>
                     <TableCell className={classes.generalExample}>
                       Nodding, thumbs up, high five
                     </TableCell>
                     <TableCell className={classes.specificExample}>
-                      "Thank you for being Super Friends by sharing the trains!"
+                      &quot;Thank you for being Super Friends by sharing the trains!&quot;
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -201,5 +214,9 @@ class ClassroomClimateHelp extends React.Component {
     );
   }
 }
+
+ClassroomClimateHelp.propTypes ={
+  classes: PropTypes.object.isRequired
+};
 
 export default withStyles(styles)(ClassroomClimateHelp);

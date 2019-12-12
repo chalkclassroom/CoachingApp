@@ -148,7 +148,7 @@ TransitionTimer.propTypes = {
   transitionType: PropTypes.string.isRequired,
   handleEndTransition: PropTypes.func.isRequired,
   pushOntoTransitionStack: PropTypes.func.isRequired,
-  typeSelected: PropTypes.string.isRequired
+  typeSelected: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => {

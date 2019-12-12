@@ -95,16 +95,25 @@ const ChildBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value, context) {
+      formatter: function(value) {
         return value + "%";
       }
     }
   }
 };
 
+/**
+ * Vertical Bar Chart for Associative&Cooperative Child Behaviors
+ * @class ChildBehaviorTrendsVerticalBar
+ * @return {void}
+ */
 class ChildBehaviorTrendsVerticalBar extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    //const { classes } = this.props;
+    // const { classes } = this.props;
 
     return (
       <Line
@@ -118,7 +127,7 @@ class ChildBehaviorTrendsVerticalBar extends React.Component {
 }
 
 ChildBehaviorTrendsVerticalBar.propTypes = {
-  //classes: PropTypes.object.isRequired,
+  // classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
 };
 

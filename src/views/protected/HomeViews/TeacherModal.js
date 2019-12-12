@@ -178,7 +178,7 @@ class TeacherModal extends React.Component {
 
 TeacherModal.propTypes = {
   classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired,
+  handleClose: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
   firebase: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired

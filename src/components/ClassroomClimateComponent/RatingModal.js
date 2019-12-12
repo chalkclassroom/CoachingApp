@@ -6,6 +6,10 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import YesNoDialog from "../../components/Shared/YesNoDialog";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
@@ -27,7 +31,8 @@ const styles = theme => ({
 });
 
 /**
- * formatting and functionality for the classroom climate rating modal
+ * Rating Modal for Climate Observation
+ * @class RatingModal
  */
 class RatingModal extends React.Component {
   state = {
@@ -35,7 +40,7 @@ class RatingModal extends React.Component {
     value: "undefined"
   };
 
-  handleAngerClick = event => {
+  handleAngerClick = () => {
     if (this.state.value !== "Anger") {
       this.setState({ value: "Anger" });
       this.setState({ rating: 1 });
@@ -74,6 +79,10 @@ class RatingModal extends React.Component {
         N.B. You must wrap this "modal" component in a modal of your own.
         This is for performance reasons, cf. https://material-ui.com/utils/modal/#performance
      */
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -89,7 +98,7 @@ class RatingModal extends React.Component {
             Teacher Tone Rating
           </Typography>
           <Typography variant="subtitle2" gutterBottom>
-            Please rate the teacher's current tone.
+            Please rate the teacher&apos;s current tone.
           </Typography>
           <div style={{ height: 20 }} />
           <Grid container direction={"row"} justify={"space-between"}>
@@ -287,7 +296,9 @@ class RatingModal extends React.Component {
 }
 
 RatingModal.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  handleIncomplete: PropTypes.func.isRequired,
+  handleRatingConfirmation: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(RatingModal);
