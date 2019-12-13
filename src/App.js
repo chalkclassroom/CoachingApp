@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types';
 import "./App.css";
 import WelcomePage from "./views/WelcomeViews/WelcomePage";
 import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage";
@@ -56,6 +57,10 @@ const styles = createMuiTheme({
   }
 });
 
+/**
+ * 
+ * @return {ReactElement}
+ */
 function PrivateRoute({ component: Component, auth, ...rest }) {
   return (
     <Route
@@ -69,6 +74,12 @@ function PrivateRoute({ component: Component, auth, ...rest }) {
       }
     />
   );
+}
+
+PrivateRoute.propTypes = {
+  component: PropTypes.element.isRequired,
+  auth: PropTypes.bool.isRequired,
+  location: PropTypes.object.isRequired
 }
 /*
 function PublicRoute({ component: Component, auth, ...rest }) {
@@ -86,7 +97,13 @@ function PublicRoute({ component: Component, auth, ...rest }) {
     );
 }
 */
+/**
+ * @class App
+ */
 class App extends Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -95,6 +112,7 @@ class App extends Component {
     };
   }
 
+  /** invoked after component mounts */
   componentDidMount() {
     this.removeListener = this.props.firebase.auth.onAuthStateChanged(user => {
       if (user) {
@@ -111,10 +129,15 @@ class App extends Component {
     });
   }
 
+  /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     this.removeListener();
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return this.state.loading === true ? (
       <h1>Loading</h1>
@@ -248,4 +271,9 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  firebase: PropTypes.object.isRequired
+};
+
 export default withStyles(styles)(App);
