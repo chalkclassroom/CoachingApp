@@ -457,7 +457,7 @@ class TransitionResultsPage extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.handleTypeChange = this.handleTypeChange.bind(this);
+    // this.handleTypeChange = this.handleTypeChange.bind(this);
   }
 
   state = {

@@ -291,7 +291,7 @@ class PilotForm extends React.Component{
 
 PilotForm.propTypes = {
   classes: PropTypes.object.isRequired,
-  mRole: PropTypes.string.isRequired,
+  mRole: PropTypes.string,
   firebase: PropTypes.object.isRequired
 };
 

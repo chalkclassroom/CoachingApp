@@ -179,8 +179,8 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component {
 ChildTeacherBehaviorTrendsSlider.propTypes = {
   // classes: PropTypes.object.isRequired,
   // data: PropTypes.object.isRequired,
-  childData: PropTypes.array.isRequired,
-  teacherData: PropTypes.array.isRequired
+  childData: PropTypes.func.isRequired,
+  teacherData: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ChildTeacherBehaviorTrendsSlider);

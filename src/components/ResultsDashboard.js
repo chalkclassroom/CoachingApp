@@ -274,7 +274,7 @@ ResultsDashboard.propTypes = {
   sessionDates: PropTypes.array.isRequired,
   viewEnum: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  view: PropTypes.object.isRequired
+  view: PropTypes.number.isRequired
 };
 
 export default withStyles(styles)(ResultsDashboard);

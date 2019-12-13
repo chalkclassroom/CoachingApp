@@ -107,11 +107,14 @@ class Impact extends React.Component {
 Impact.propTypes = {
   classes: PropTypes.object.isRequired,
   position: PropTypes.string.isRequired,
-  icon: PropTypes.element.isRequired,
-  paddingTop: PropTypes.number.isRequired,
+  icon: PropTypes.string.isRequired,
+  paddingTop: PropTypes.string,
   color: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired
+  text: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ])
 };
 
 export default withStyles(styles)(Impact);

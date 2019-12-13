@@ -112,12 +112,12 @@ class TransitionBarChart extends React.Component {
 }
 
 TransitionBarChart.propTypes = {
-  line: PropTypes.number.isRequired,
-  traveling: PropTypes.number.isRequired,
-  waiting: PropTypes.number.isRequired,
-  routines: PropTypes.number.isRequired,
-  behaviorManagement: PropTypes.number.isRequired,
-  other: PropTypes.number.isRequired,
+  line: PropTypes.number,
+  traveling: PropTypes.number,
+  waiting: PropTypes.number,
+  routines: PropTypes.number,
+  behaviorManagement: PropTypes.number,
+  other: PropTypes.number,
 }
 
 export default TransitionBarChart;

@@ -174,22 +174,22 @@ class LandingDetail extends React.Component {
 LandingDetail.propTypes = {
   classes: PropTypes.object,
   iconAlt1: PropTypes.string,
-  icon1: PropTypes.element,
+  icon1: PropTypes.string,
   title1: PropTypes.string,
   iconAlt2: PropTypes.string,
-  icon2: PropTypes.element,
+  icon2: PropTypes.string,
   title2: PropTypes.string,
   text1: PropTypes.string,
   text2: PropTypes.string,
-  button1: PropTypes.bool,
-  button2: PropTypes.bool,
+  button1: PropTypes.string,
+  button2: PropTypes.string,
   onClick1: PropTypes.func,
   onClick2: PropTypes.func,
   iconAlt: PropTypes.string,
-  icon: PropTypes.element,
+  icon: PropTypes.string,
   title: PropTypes.string,
   text: PropTypes.string,
-  button: PropTypes.bool,
+  button: PropTypes.string,
   onClick: PropTypes.func
 }
 

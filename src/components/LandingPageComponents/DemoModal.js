@@ -86,7 +86,7 @@ class DemoModal extends React.Component {
 
 DemoModal.propTypes = {
   classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired
+  handleClose: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(DemoModal);

@@ -36,7 +36,7 @@ const TransitionLog = ({ entries, classes }) => {
           }}
         >
           <List
-            className={{
+            style={{
               display: "flex"
             }}
           >

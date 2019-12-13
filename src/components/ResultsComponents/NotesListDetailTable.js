@@ -62,7 +62,7 @@ class NotesListDetailTable extends React.Component {
 
 NotesListDetailTable.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.array.isRequired
 };
 
 export default withStyles(styles)(NotesListDetailTable);

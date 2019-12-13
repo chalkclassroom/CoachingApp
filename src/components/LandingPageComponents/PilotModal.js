@@ -90,7 +90,7 @@ class PilotModal extends React.Component {
 
 PilotModal.propTypes = {
   classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired,
+  handleClose: PropTypes.func.isRequired,
   firebase: PropTypes.object.isRequired
 };
 

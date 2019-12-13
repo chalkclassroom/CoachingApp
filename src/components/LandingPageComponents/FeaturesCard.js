@@ -75,7 +75,7 @@ class FeaturesCard extends React.Component {
 FeaturesCard.propTypes = {
   classes: PropTypes.object.isRequired,
   altText: PropTypes.string.isRequired,
-  icon: PropTypes.element.isRequired,
+  icon: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired
 }

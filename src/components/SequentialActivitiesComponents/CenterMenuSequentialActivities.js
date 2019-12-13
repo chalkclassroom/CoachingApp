@@ -456,7 +456,7 @@ const mapStateToProps = state => {
 
 CenterMenuSequentialActivities.propTypes = {
   onStatusChange: PropTypes.func.isRequired,
-  teacherId: PropTypes.string.isRequired,
+  teacherId: PropTypes.string,
   firebase: PropTypes.object.isRequired,
   addNewCenter: PropTypes.func.isRequired,
   incrementCenterCount: PropTypes.func.isRequired,

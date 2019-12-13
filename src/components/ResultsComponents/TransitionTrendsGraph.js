@@ -106,7 +106,7 @@ class TransitionTrendsGraph extends React.Component {
 }
 
 TransitionTrendsGraph.propTypes = {
-  data: PropTypes.object.isRequired
+  data: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(TransitionTrendsGraph);

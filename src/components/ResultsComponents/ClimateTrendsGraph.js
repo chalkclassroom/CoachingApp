@@ -56,7 +56,7 @@ class ClimateTrendsGraph extends React.Component {
 
 ClimateTrendsGraph.propTypes = {
   // classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ClimateTrendsGraph);

@@ -91,7 +91,7 @@ class DataQuestions extends React.Component {
 DataQuestions.propTypes = {
   classes: PropTypes.object.isRequired,
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  openPanel: PropTypes.string.isRequired,
+  openPanel: PropTypes.string,
   handlePanelChange: PropTypes.func.isRequired,
   addedToPrep: PropTypes.array.isRequired,
   handleAddToPlan: PropTypes.func.isRequired

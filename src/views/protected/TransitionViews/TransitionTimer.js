@@ -160,7 +160,7 @@ class TransitionTimer extends React.Component {
 TransitionTimer.propTypes = {
   teacherId: PropTypes.string.isRequired,
   firebase: PropTypes.object.isRequired,
-  transitionType: PropTypes.string.isRequired,
+  transitionType: PropTypes.string,
   handleEndTransition: PropTypes.func.isRequired,
   pushOntoTransitionStack: PropTypes.func.isRequired,
   typeSelected: PropTypes.bool.isRequired

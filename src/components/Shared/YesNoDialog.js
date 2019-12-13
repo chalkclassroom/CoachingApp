@@ -105,7 +105,10 @@ YesNoDialog.propTypes = {
   shouldOpen: PropTypes.bool,
   onAccept: PropTypes.func,
   classes: PropTypes.object,
-  buttonText: PropTypes.string.isRequired,
+  buttonText: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string
+  ]),
   buttonVariant: PropTypes.string.isRequired,
   buttonColor: PropTypes.string,
   buttonAriaLabel: PropTypes.string,
