@@ -72,7 +72,14 @@ const MAP = {
   AssociativeCooperativeInteractions: 8
 };
 
+/**
+ * magic 8 menu
+ * @class Magic8MenuPage
+ */
 class Magic8MenuPage extends Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
@@ -92,6 +99,10 @@ class Magic8MenuPage extends Component {
     this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this);
   }
 
+  /**
+   * @param {number} selected 
+   * @param {string} title 
+   */
   onClick(selected, title) {
     if (selected && this.state.numSelected > 0) {
       this.setState({
@@ -131,6 +142,9 @@ class Magic8MenuPage extends Component {
     }
   };
 
+  /**
+   * @return {void}
+   */
   setUnlockedSectionsState() {
     const firebase = this.context;
     firebase.getUnlockedSections().then(unlocked => {
@@ -140,10 +154,15 @@ class Magic8MenuPage extends Component {
     });
   }
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.setUnlockedSectionsState();
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (

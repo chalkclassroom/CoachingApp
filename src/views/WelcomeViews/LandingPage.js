@@ -179,8 +179,14 @@ const styles = {
   },
 };
 
-
+/**
+ * landing page
+ * @class LandingPage
+ */
 class LandingPage extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
 
@@ -220,7 +226,7 @@ class LandingPage extends React.Component {
     });
   };
 
-  handleSubmit = (event) =>{
+  handleSubmit = () =>{
     this.validateEmail();
     if (!this.state.errors){
       this.props.firebase.emailListSignUp({
@@ -232,6 +238,11 @@ class LandingPage extends React.Component {
     }
   };
 
+  /**
+   * validates user-entered text
+   * @param {string} name
+   * @param {value} value
+   */
   validateState = (name, value) => {
     switch (name) {
       case 'email':
@@ -257,11 +268,22 @@ class LandingPage extends React.Component {
     }
   };
 
+  /**
+   * validates that user-entered text is a valid email
+   * @param {string} email
+   * @return {boolean}
+   */
   validateEmail = (email) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
+  /**
+   * responds to change in user-entered text
+   * @param {string} name
+   * @param {event} event
+   * @return {void}
+   */
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
@@ -269,6 +291,10 @@ class LandingPage extends React.Component {
     this.validateState(name, event.target.value);
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return(

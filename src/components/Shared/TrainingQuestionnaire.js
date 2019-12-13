@@ -34,7 +34,14 @@ const questionArray = [
   "ac"
 ];
 
+/**
+ * knowledge check questionnaire
+ * @class TrainingQuestionnaire
+ */
 class TrainingQuestionnaire extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -49,12 +56,18 @@ class TrainingQuestionnaire extends React.Component {
     );
   }
 
+  /**
+   * @return {void}
+   */
   incrementCorrectResponsesHandler() {
-    this.setState((prevState, props) => ({
+    this.setState((prevState) => ({
       correctResponses: prevState.correctResponses + 1
     }));
   }
 
+  /**
+   * @return {(string|Array)}
+   */
   getSteps() {
     if (
       this.state.questions === undefined ||
@@ -70,6 +83,10 @@ class TrainingQuestionnaire extends React.Component {
     }
   }
 
+  /**
+   * @param {number} step
+   * @return {ReactElement}
+   */
   getStepContent(step) {
     if (
       this.state.questions === undefined ||
@@ -122,10 +139,15 @@ class TrainingQuestionnaire extends React.Component {
     });
   };
 
+  /**
+   * @param {number} step 
+   * @return {boolean}
+   */
   isStepSkipped(step) {
     return this.state.skipped.has(step);
   }
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const firebase = this.context;
     firebase
@@ -138,6 +160,9 @@ class TrainingQuestionnaire extends React.Component {
       });
   }
 
+  /**
+   * @return {void}
+   */
   unlockBasedOnGrade() {
     console.log(this.state.correctResponses, this.state.questions.length);
     if (this.state.correctResponses / this.state.questions.length >= 0.8) {
@@ -149,7 +174,14 @@ class TrainingQuestionnaire extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
+  /**
+   * invoked before rendering when new props or state are received
+   * @param {nextProps} nextProps 
+   * @param {nextState} nextState 
+   * @param {nextContent} nextContext 
+   * @return {boolean}
+   */
+  shouldComponentUpdate(nextProps, nextState) {
     if (this.state.correctResponses + 1 === nextState.correctResponses) {
       return false;
     } else {
@@ -157,6 +189,10 @@ class TrainingQuestionnaire extends React.Component {
     }
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     const steps = this.getSteps();
@@ -173,7 +209,7 @@ class TrainingQuestionnaire extends React.Component {
             const props = {};
             const labelProps = {};
             return (
-              <Step key={label} {...props}>
+              <Step key={index} {...props}>
                 <StepLabel {...labelProps}>{label}</StepLabel>
               </Step>
             );
@@ -218,7 +254,8 @@ class TrainingQuestionnaire extends React.Component {
 }
 
 TrainingQuestionnaire.propTypes = {
-  classes: PropTypes.object
+  classes: PropTypes.object,
+  section: PropTypes.number.isRequired
 };
 
 TrainingQuestionnaire.contextType = FirebaseContext;

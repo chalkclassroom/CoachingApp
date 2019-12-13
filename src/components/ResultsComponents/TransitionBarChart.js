@@ -1,11 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {HorizontalBar} from 'react-chartjs-2';
 import { lightGreen, orange, deepOrange, blue, indigo, red } from '@material-ui/core/colors';
 
 /**
  * specifies data sets and formatting for the transition details bar graph
+ * @class TransitionBarChart
  */
 class TransitionBarChart extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
 
@@ -14,7 +19,10 @@ class TransitionBarChart extends React.Component {
     }
   }
 
-
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const transitionData = {
       labels: [
@@ -101,6 +109,15 @@ class TransitionBarChart extends React.Component {
       />
     );
   }
+}
+
+TransitionBarChart.propTypes = {
+  line: PropTypes.number.isRequired,
+  traveling: PropTypes.number.isRequired,
+  waiting: PropTypes.number.isRequired,
+  routines: PropTypes.number.isRequired,
+  behaviorManagement: PropTypes.number.isRequired,
+  other: PropTypes.number.isRequired,
 }
 
 export default TransitionBarChart;

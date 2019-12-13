@@ -21,7 +21,14 @@ const theme = createMuiTheme({
   }
 });
 
+/**
+ * transition timer
+ * @class TransitionTimer
+ */
 class TransitionTimer extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     // this.onCancel = this.onCancel.bind(this);
@@ -77,16 +84,24 @@ class TransitionTimer extends React.Component {
     this.props.handleEndTransition();
   };
 
+  /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     clearInterval(this.timer);
   }
 
+  /**
+   * @param {Object} entry
+   */
   handleAppend = entry => {
     this.props.pushOntoTransitionStack(entry);
     const firebase = this.context;
     firebase.handlePushTransition(entry);
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     setTimeout(() => {
       this.setState({ percentage: this.state.isOn ? 100 : 0 });

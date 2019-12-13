@@ -16,8 +16,6 @@ const styles = {
 /**
  * Behavior Type Buttons for Climate Observation
  * @class BehaviorCounter
- * @param {entry} entry
- * 
  */
 class BehaviorCounter extends React.Component {
   /**
@@ -33,6 +31,9 @@ class BehaviorCounter extends React.Component {
     this.props.firebase.handleSession(mEntry);
   }
 
+  /**
+   * @param {string} entry
+   */
   handlePushFire = entry => {
     const mEntry = {
       BehaviorResponse: entry,

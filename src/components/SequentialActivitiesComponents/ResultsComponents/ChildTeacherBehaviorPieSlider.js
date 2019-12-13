@@ -1,5 +1,5 @@
 import React from "react";
-//import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick-theme.css';
@@ -11,9 +11,17 @@ import Typography from "@material-ui/core/Typography/Typography";
 
 const styles = {};
 
+/**
+ * swipe view between child and teacher sequential results
+ * @class ChildTeacherBehaviorPieSlider
+ */
 class ChildTeacherBehaviorPieSlider extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    //const { classes } = this.props;
+    // const { classes } = this.props;
     const settings = {
       dots: true,
       infinite: true,

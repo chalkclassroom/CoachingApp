@@ -11,7 +11,7 @@ import { withStyles, createMuiTheme } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
-import { ImmortalDB } from "immortal-db";
+// import { ImmortalDB } from "immortal-db";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import DataQuestions from "../../../components/ResultsComponents/DataQuestions";
 import "chartjs-plugin-datalabels";
@@ -447,10 +447,16 @@ const BehaviorQuestions = [
   }
 ];
 
+/**
+ * transition results
+ * @class TransitionResultsPage
+ */
 class TransitionResultsPage extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
-    this.handleAppend = this.handleAppend.bind(this);
     this.handleTypeChange = this.handleTypeChange.bind(this);
   }
 
@@ -493,6 +499,7 @@ class TransitionResultsPage extends React.Component {
     selectedQuestions: []
   };
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const teacherId = this.props.location.state.teacher.id;
     this.handleTrendsFetch(teacherId);
@@ -500,52 +507,9 @@ class TransitionResultsPage extends React.Component {
     this.handleDateFetching(this.props.location.state.teacher.id);
   }
 
-  handleAppend(entry) {
-    const newEntries = this.state.entries;
-    entry.type = this.state.type;
-    newEntries.push(entry);
-    this.setState({ entries: newEntries });
-
-    this.handleSpreadsheetAppend(entry);
-
-    this.handleDBinsert(entry);
-  }
-
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
-
-  handleTypeChange(newType) {
-    this.setState({ type: newType });
-    this.changeHex(newType);
-  }
-
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-
-  handleClickAway = () => {
-    this.setState({ help: false });
-  };
-
-  handleDBinsert = async entry => {
-    // Once we integrate users, the user + some index will be the key for the DB.
-    await ImmortalDB.set(
-      JSON.stringify(this.state.dbCounter),
-      JSON.stringify(entry)
-    );
-
-    this.setState({ dbCounter: this.state.dbCounter + 1 });
-  };
-
+  /**
+   * @param {string} teacherId
+   */
   handleTrendsFetch = teacherId => {
     const firebase = this.context;
     const dateArray = [];
@@ -586,6 +550,10 @@ class TransitionResultsPage extends React.Component {
     });
   };
 
+  /**
+   * @param {number} totalTime
+   * @return {number}
+   */
   handleTrendsFormatTime = totalTime => {
     const seconds = Math.round(totalTime / 1000 % 60);
     const minutes = Math.floor((totalTime / 1000 / 60) % 60);
@@ -675,6 +643,9 @@ class TransitionResultsPage extends React.Component {
     };
   };
 
+  /**
+   * @param {string} sessionId
+   */
   handleNotesFetching = sessionId => {
     const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then(notesArr => {
@@ -774,6 +745,9 @@ class TransitionResultsPage extends React.Component {
     }
   }
 
+  /**
+   * @param {string} teacherId
+   */
   handleDateFetching = teacherId => {
     const firebase = this.context;
     firebase.fetchSessionDates(teacherId, "transition").then(dates =>
@@ -781,22 +755,6 @@ class TransitionResultsPage extends React.Component {
         sessionDates: dates
       })
     );
-  };
-
-  handleResults = () => {
-    if (this.state.tabValue === 1) {
-      this.setState({
-        tabValue: 0
-      });
-    }
-  };
-
-  handleCoaching = () => {
-    if (this.state.tabValue === 0) {
-      this.setState({
-        tabValue: 1
-      });
-    }
   };
 
   handleSummary = () => {
@@ -823,6 +781,9 @@ class TransitionResultsPage extends React.Component {
     }
   };
 
+  /**
+   * @param {string} panel
+   */
   handlePanelChange = panel => {
     if (this.state.openPanel === panel) {
       this.setState({ openPanel: null });
@@ -831,12 +792,18 @@ class TransitionResultsPage extends React.Component {
     }
   };
 
+  /**
+   * @param {string} panel
+   */
   handleAddToPlan = panel => {
     if (!this.state.addedToPrep.includes(panel)) {
       this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
     }
   };
 
+  /**
+   * @param {event} event
+   */
   changeSessionId = (event) => {
     this.setState({
       sessionId: event.target.value,
@@ -869,6 +836,10 @@ class TransitionResultsPage extends React.Component {
       });
   })};
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (

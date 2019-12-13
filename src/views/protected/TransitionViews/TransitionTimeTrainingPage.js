@@ -8,7 +8,7 @@ import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconIm
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
-import { ImmortalDB } from "immortal-db";
+// import { ImmortalDB } from "immortal-db";
 import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo";
 import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
@@ -76,11 +76,16 @@ const ViewEnum = {
   KNOWLEDGECHECK: 5
 };
 
-
+/**
+ * transition time training
+ * @class TransitionTimeTrainingPage
+ */
 class TransitionTimeTrainingPage extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
-    this.handleAppend = this.handleAppend.bind(this);
   }
 
   state = {
@@ -92,47 +97,6 @@ class TransitionTimeTrainingPage extends React.Component {
     entries: [],
     dbCounter: 0, // @Hack @Temporary !!!
     view: ViewEnum.CONCEPTS
-  };
-
-  handleAppend(entry) {
-    const newEntries = this.state.entries;
-    entry.type = this.state.type;
-    newEntries.push(entry);
-    this.setState({ entries: newEntries });
-
-    this.handleSpreadsheetAppend(entry);
-
-    this.handleDBinsert(entry);
-  }
-
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
-
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-
-  handleClickAway = () => {
-    this.setState({ help: false });
-  };
-
-  handleDBinsert = async entry => {
-    // Once we integrate users, the user + some index will be the key for the DB.
-    await ImmortalDB.set(
-      JSON.stringify(this.state.dbCounter),
-      JSON.stringify(entry)
-    );
-
-    this.setState({ dbCounter: this.state.dbCounter + 1 });
   };
 
   conceptsClick = () => {
@@ -165,6 +129,10 @@ class TransitionTimeTrainingPage extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 

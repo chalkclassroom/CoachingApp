@@ -10,6 +10,10 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
@@ -68,6 +72,10 @@ const styles = theme => ({
   }
 });
 
+/**
+ * transition time look-fors
+ * @class TransitionTimeHelp
+ */
 class TransitionTimeHelp extends React.Component {
   state = {
     open: true
@@ -81,6 +89,10 @@ class TransitionTimeHelp extends React.Component {
     this.setState({ open: false });
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 

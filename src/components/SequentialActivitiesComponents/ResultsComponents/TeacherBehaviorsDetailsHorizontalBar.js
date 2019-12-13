@@ -1,5 +1,5 @@
 import React from "react";
-//import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { HorizontalBar } from "react-chartjs-2";
 
@@ -26,9 +26,17 @@ const teacherBehaviorsData = {
   ]
 };
 
+/**
+ * horizontal bar chart for sequential teacher behaviors
+ * @class TeacherBehaviorsDetailsHorizontalBar
+ */
 class TeacherBehaviorsDetailsHorizontalBar extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    //const { classes } = this.props;
+    // const { classes } = this.props;
 
     return (
       <HorizontalBar

@@ -5,12 +5,20 @@ import Typography from '@material-ui/core/Typography/Typography';
 
 /**
  * formatting for project advisor details
+ * @class ProjectAdvisor
  */
 class ProjectAdvisor extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return(
       <Grid container direction="column" justify="center" alignItems="center">

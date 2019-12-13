@@ -16,7 +16,15 @@ const styles = {
   }
 };
 
+/**
+ * welcome page
+ * @class WelcomePage
+ */
 class WelcomePage extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const {classes} = this.props;
     return ( 

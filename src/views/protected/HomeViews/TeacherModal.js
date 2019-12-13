@@ -16,6 +16,10 @@ import { connect } from "react-redux";
 import StarsIcon from '@material-ui/icons/Stars';
 import * as Constants from '../../../constants';
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
@@ -48,7 +52,14 @@ const styles = theme => ({
   }
 });
 
+/**
+ * modal to select teacher before observation or results
+ * @class TeacherModal
+ */
 class TeacherModal extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -60,29 +71,18 @@ class TeacherModal extends React.Component {
     this.selectTeacher = this.selectTeacher.bind(this);
   }
 
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
   handleClose = () => {
     this.setState({ open: false });
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  handleChangeIndex = index => {
-    this.setState({ value: index });
-  };
-
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.props.firebase.getTeacherList().then(teacherPromiseList => {
       const teacherList = [];
       teacherPromiseList.forEach(tpromise => {
         tpromise.then(data => {
           teacherList.push(data);
-          this.setState((previousState, currentProps) => {
+          this.setState((previousState) => {
             return {
               teachers: previousState.teachers.concat(data)
             };
@@ -92,6 +92,9 @@ class TeacherModal extends React.Component {
     });
   }
 
+  /**
+   * @param {string} teacherInfo 
+   */
   selectTeacher(teacherInfo) {
     this.props.history.push({
       pathname: "/Magic8Menu",
@@ -99,6 +102,10 @@ class TeacherModal extends React.Component {
     });
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 

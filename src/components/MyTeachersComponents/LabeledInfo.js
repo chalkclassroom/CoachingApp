@@ -1,6 +1,11 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
+/**
+ * 
+ * @param {Props} props 
+ * @return {ReactElement}
+ */
 function LabeledInfo(props) {
   const styles = {
     container: {

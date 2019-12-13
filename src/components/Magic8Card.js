@@ -65,9 +65,13 @@ const Overlay = styled.div`
 `;
 
 /**
- * formatting and functionality for magic 8 selection buttons
+ * magic 8 selection button
+ * @class Magic8Card
  */
 class Magic8Card extends Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
@@ -76,6 +80,7 @@ class Magic8Card extends Component {
     };
   }
 
+  /** @param {event} e */
   onClick(e) {
     e.preventDefault();
     const { onClick, numSelected } = this.props;
@@ -87,6 +92,10 @@ class Magic8Card extends Component {
     }
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
@@ -127,7 +136,13 @@ class Magic8Card extends Component {
 }
 
 Magic8Card.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
+  numSelected: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  page: PropTypes.string.isRequired,
+  unlocked: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(Magic8Card);

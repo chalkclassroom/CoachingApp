@@ -10,16 +10,24 @@ const styles = {
 
 /**
  * specifies data sets and formatting for the transition summary pie graph
+ * @class TransitionTimePie
  */
 class TransitionTimePie extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
   }
 
   state = {};
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    //const { classes } = this.props;
+    // const { classes } = this.props;
     console.log("inside time: ", this.state.inside);
     console.log("total session time: " + this.props.sessionTotal);
     const transitionData = {
@@ -87,10 +95,11 @@ class TransitionTimePie extends React.Component {
 }
 
 TransitionTimePie.propTypes = {
-  //classes: PropTypes.object.isRequired,
+  // classes: PropTypes.object.isRequired,
   // data: PropTypes.object.isRequired
   transitionTime: PropTypes.number.isRequired,
-  learningActivityTime: PropTypes.number.isRequired
+  learningActivityTime: PropTypes.number.isRequired,
+  sessionTotal: PropTypes.number
 };
 
 TransitionTimePie.contextType = FirebaseContext;

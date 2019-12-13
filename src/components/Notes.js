@@ -1,16 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
-//import classNames from "classnames";
+// import classNames from "classnames";
 import {
-  //withStyles,
-  //AppBar,
-  //Toolbar,
-  //Typography,
-  //Button,
+  // withStyles,
+  // AppBar,
+  // Toolbar,
+  // Typography,
+  // Button,
   IconButton
 } from "@material-ui/core";
-//import { withRouter } from "react-router-dom";
-//import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+// import { withRouter } from "react-router-dom";
+// import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Paper from "@material-ui/core/Paper/Paper";
 import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
@@ -28,8 +28,13 @@ import Grid from "@material-ui/core/Grid";
 
 /**
 * formatting and functionalty for notes function in observation tools
+* @class Notes
+* @param {event} event
 */
 class Notes extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
 
@@ -44,6 +49,7 @@ class Notes extends React.Component {
     };
   }
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.props.firebase.handleFetchNotes().then(notesArr => {
       const formattedNotesArr = [];
@@ -79,6 +85,10 @@ class Notes extends React.Component {
     this.props.onClose(false);
   };
 
+  /**
+   * @param {event} event
+   * @return {void}
+   */
   handleChange = event => {
     this.setState({ newNote: event.target.value });
   };
@@ -119,6 +129,10 @@ class Notes extends React.Component {
     event.preventDefault();
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <div>

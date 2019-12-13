@@ -77,7 +77,7 @@ const transitionTrendOptions = {
       display: 'auto',
       color: 'black',
       align: 'top',
-      formatter: function(value, context) {
+      formatter: function(value) {
         return value + "%";
       }
     }
@@ -86,8 +86,13 @@ const transitionTrendOptions = {
 
 /**
  * specifies data sets and formatting for the transition trends graph
+ * @class TransitionTrendsGraph
  */
 class TransitionTrendsGraph extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <Line

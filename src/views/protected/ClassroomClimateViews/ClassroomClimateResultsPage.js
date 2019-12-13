@@ -14,7 +14,7 @@ import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
-import { ImmortalDB } from "immortal-db";
+// import { ImmortalDB } from "immortal-db";
 import moment from "moment";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
 import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
@@ -83,10 +83,17 @@ const ViewEnum = {
   NEXT_STEPS: 5
 };
 
+/**
+ * classroom climate results
+ * @class ClassroomClimateResultsPage
+ */
 class ClassroomClimateResultsPage extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
-    this.handleAppend = this.handleAppend.bind(this);
+    // this.handleAppend = this.handleAppend.bind(this);
     // this.handleTypeChange = this.handleTypeChange.bind(this);
   }
 
@@ -115,6 +122,7 @@ class ClassroomClimateResultsPage extends React.Component {
     notes: []
   };
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const teacherId = this.props.location.state.teacher.id;
     console.log(this.props.location.state);
@@ -122,7 +130,7 @@ class ClassroomClimateResultsPage extends React.Component {
     console.log(teacherId);
     console.log("handle behavior count results fetching called");
     const firebase = this.context;
-    firebase.fetchBehaviourTypeCount(this.state.sessionId).then(data => {
+    firebase.fetchBehaviourTypeCount(this.state.sessionId).then(() => {
       console.log(
         this.state.disapprovalBehaviorCount +
           " " +
@@ -136,7 +144,10 @@ class ClassroomClimateResultsPage extends React.Component {
     this.handleTrendsFetching(teacherId);
   }
 
-  handleAppend(entry) {
+  /**
+   * @param {Object} entry 
+   */
+  /* handleAppend(entry) {
     const newEntries = this.state.entries;
     // entry.type = this.state.type;
     newEntries.push(entry);
@@ -145,14 +156,14 @@ class ClassroomClimateResultsPage extends React.Component {
     // this.handleSpreadsheetAppend(entry);
 
     this.handleDBinsert(entry);
-  }
+  } */
 
   // handleTypeChange(newType) {
   //     this.setState({ type: newType });
   //     this.changeHex(newType);
   // }
 
-  handleChange = event => {
+  /* handleChange = event => {
     this.setState({ auth: event.target.checked });
   };
 
@@ -173,7 +184,6 @@ class ClassroomClimateResultsPage extends React.Component {
   };
 
   handleDBinsert = async entry => {
-    // Once we integrate users, the user + some index will be the key for the DB.
     await ImmortalDB.set(
       JSON.stringify(this.state.dbCounter),
       JSON.stringify(entry)
@@ -181,7 +191,7 @@ class ClassroomClimateResultsPage extends React.Component {
 
     this.setState({ dbCounter: this.state.dbCounter + 1 });
   };
-
+ */
   /* handleSpreadsheetAppend = entry => {
         let url = new URL(spreadsheetData.scriptLink),
             params = {
@@ -234,6 +244,9 @@ class ClassroomClimateResultsPage extends React.Component {
     }
   };
 
+  /**
+   * @param {string} teacherId
+   */
   handleDateFetching = teacherId => {
     console.log("handle date fetching called");
     const firebase = this.context;
@@ -248,6 +261,9 @@ class ClassroomClimateResultsPage extends React.Component {
     firebase.fetchBehaviourTrend(teacherId);
   };
 
+  /**
+   * @param {string} teacherId
+   */
   handleTrendsFetching = teacherId => {
     const firebase = this.context;
     const dateArray = [];
@@ -273,6 +289,9 @@ class ClassroomClimateResultsPage extends React.Component {
     });
   };
 
+  /**
+   * @param {string} sessionId
+   */
   handleNotesFetching = sessionId => {
     const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then(notesArr => {
@@ -317,6 +336,9 @@ class ClassroomClimateResultsPage extends React.Component {
     };
   };
 
+  /**
+   * @param {event} event
+   */
   changeSessionId = event => {
     console.log("sessionId", event.target.value);
     let specificCount = 0;
@@ -366,6 +388,10 @@ class ClassroomClimateResultsPage extends React.Component {
     );
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 

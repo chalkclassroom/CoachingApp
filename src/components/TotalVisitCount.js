@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
@@ -14,12 +15,20 @@ const styles = {
 
 /**
  * displays count of center visits for centers-based observation tools
+ * @class TotalVisitCount
  */
 class TotalVisitCount extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
@@ -48,5 +57,10 @@ class TotalVisitCount extends React.Component {
     );
   }
 }
+
+TotalVisitCount.propTypes = {
+  classes: PropTypes.object.isRequired,
+  count: PropTypes.number.isRequired
+};
 
 export default withStyles(styles)(TotalVisitCount);

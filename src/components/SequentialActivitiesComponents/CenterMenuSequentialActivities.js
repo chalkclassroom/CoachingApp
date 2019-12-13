@@ -85,11 +85,19 @@ const commonSecondHalf = commonCenters.slice(
   commonCenters.length
 );
 
+/**
+ * Center checklist to populate centers observation tool
+ * @class CenterChecklist
+ */
 class CenterChecklist extends React.Component {
   state = {
     checked: []
   };
 
+  /**
+   * @param {value} value
+   * @return {void}
+   */
   handleToggle = value => () => {
     const { checked } = this.state;
     const currentIndex = checked.indexOf(value);
@@ -113,6 +121,10 @@ class CenterChecklist extends React.Component {
     this.props.switchToCenterMenu();
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <div>
@@ -197,7 +209,20 @@ class CenterChecklist extends React.Component {
   }
 }
 
+CenterChecklist.propTypes = {
+  addCenter: PropTypes.func.isRequired,
+  switchToCenterMenu: PropTypes.func.isRequired
+};
+
+/**
+ * adding a center to the observation tool
+ * @class NewCenterDialog
+ */
 class NewCenterDialog extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <Dialog
@@ -236,11 +261,24 @@ class NewCenterDialog extends React.Component {
   }
 }
 
+NewCenterDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired
+}
+
 const CENTER_CHECKLIST = 0;
 const CENTER_MENU = 1;
 const RATING_SCREEN = 2;
 
+/**
+ * center menu for sequential activities observation tool
+ * @class CenterMenuSequentialActivities
+ */
 class CenterMenuSequentialActivities extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     const mEntry = {
@@ -280,6 +318,9 @@ class CenterMenuSequentialActivities extends React.Component {
     this.props.onStatusChange(false);
   };
 
+  /**
+   * @param {string} centerName
+   */
   handleAddCenter = centerName => {
     this.props.addNewCenter(centerName);
     this.handleClose();
@@ -299,6 +340,10 @@ class CenterMenuSequentialActivities extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     switch (this.state.status) {
       case CENTER_CHECKLIST:
@@ -410,7 +455,12 @@ const mapStateToProps = state => {
 };
 
 CenterMenuSequentialActivities.propTypes = {
-  onStatusChange: PropTypes.func.isRequired
+  onStatusChange: PropTypes.func.isRequired,
+  teacherId: PropTypes.string.isRequired,
+  firebase: PropTypes.object.isRequired,
+  addNewCenter: PropTypes.func.isRequired,
+  incrementCenterCount: PropTypes.func.isRequired,
+  centers: PropTypes.array.isRequired
 };
 
 export default withStyles(styles)(

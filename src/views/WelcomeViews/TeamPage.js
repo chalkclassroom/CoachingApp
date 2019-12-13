@@ -48,8 +48,14 @@ const styles = {
   }
 };
 
-/** class for the team page */
+/** 
+ * class for the team page 
+ * @class TeamPage
+*/
 class TeamPage extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -105,6 +111,10 @@ class TeamPage extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (

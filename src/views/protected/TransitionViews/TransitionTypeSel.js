@@ -131,8 +131,14 @@ const themes = createMuiTheme({
   }
 });
 
-
+/**
+ * transition type buttons
+ * @class TransitionTypeSel
+ */
 class TransitionTypeSel extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
 
@@ -140,7 +146,10 @@ class TransitionTypeSel extends React.Component {
       selected: null
     };
   }
-
+  /**
+   * invoked after component updates
+   * @param {prevProps} prevProps
+   */
   componentDidUpdate = prevProps => {
     if (!prevProps.transitionEnded && this.props.transitionEnded) {
       this.setState({
@@ -149,6 +158,9 @@ class TransitionTypeSel extends React.Component {
     }
   };
 
+  /**
+   * @param {string} type
+   */
   handleButtonChange = type => {
     this.props.handleTransitionType(type);
     this.props.toggleNewTransitionType(type);
@@ -160,6 +172,10 @@ class TransitionTypeSel extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 

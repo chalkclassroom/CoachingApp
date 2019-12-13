@@ -23,6 +23,10 @@ const styles = {
   }
 };
 
+/**
+ * sequential activities observation
+ * @class SequentialActivitiesPage
+ */
 class SequentialActivitiesPage extends React.Component {
   state = {
     auth: true,
@@ -33,18 +37,13 @@ class SequentialActivitiesPage extends React.Component {
     completeEnabled: false
   };
 
-  handleRatingModal = () => {
-    this.setState({ ratingIsOpen: true });
-  };
-
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-
   handleClickAway = () => {
     this.setState({ help: false });
   };
 
+  /**
+   * @param {boolean} open
+   */
   handleNotes = open => {
     if (open) {
       this.setState({ notes: true });
@@ -53,14 +52,17 @@ class SequentialActivitiesPage extends React.Component {
     }
   };
 
-  handleRatingConfirmation = rating => {
-    this.setState({ ratingIsOpen: false });
-  };
-
+  /**
+   * @param {boolean} enable
+   */
   handleCompleteButton = enable => {
     this.setState({ completeEnabled: enable });
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <div className={this.props.classes.root}>

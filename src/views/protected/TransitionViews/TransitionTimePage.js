@@ -31,7 +31,14 @@ const styles = {
   }
 };
 
+/**
+ * transition time observation tool
+ * @class TransitionTimePage
+ */
 class TransitionTimePage extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
 
@@ -46,9 +53,12 @@ class TransitionTimePage extends React.Component {
       transitionEnded: false
     };
 
-    //this.handleTransitionType = this.handleTransitionType.bind(this);
+    // this.handleTransitionType = this.handleTransitionType.bind(this);
   }
 
+  /**
+   * @param {string} type
+   */
   handleTransitionType = type => {
     if (this.state.transitionEnded) {
       this.setState({ transitionEnded: false });
@@ -56,6 +66,9 @@ class TransitionTimePage extends React.Component {
     this.setState({ transitionType: type });
   };
 
+  /**
+   * @param {boolean} open
+   */
   handleRecsModal = open => {
     if (open) {
       this.setState({ recs: true });
@@ -69,22 +82,9 @@ class TransitionTimePage extends React.Component {
     this.setState({ transitionType: null });
   };
 
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
-
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-
+  /**
+   * @param {boolean} open
+   */
   handleNotes = open => {
     if (open) {
       this.setState({ notes: true });
@@ -97,6 +97,10 @@ class TransitionTimePage extends React.Component {
     this.setState({ help: false });
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 

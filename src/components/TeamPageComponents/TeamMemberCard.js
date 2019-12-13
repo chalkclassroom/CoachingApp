@@ -22,8 +22,12 @@ const styles = {
 
 /**
  * formatting for card for each team member
+ * @class TeamMemberCard
  */
 class TeamMemberCard extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
 
@@ -32,6 +36,7 @@ class TeamMemberCard extends React.Component {
     };
   }
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount = () => {
     this.props.person.initials === "CC"
       ? this.setState({ image: CCImage })
@@ -42,6 +47,10 @@ class TeamMemberCard extends React.Component {
       : this.setState({ image: CSImage });
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
@@ -75,6 +84,9 @@ class TeamMemberCard extends React.Component {
 }
 
 TeamMemberCard.propTypes = {
-  person: PropTypes.object.isRequired
+  person: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  handleClick: PropTypes.func.isRequired
 };
 export default withStyles(styles)(TeamMemberCard);

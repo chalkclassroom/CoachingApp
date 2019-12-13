@@ -98,8 +98,12 @@ const styles = {
 
 /**
  * formatting and functionality for dashboard on results screens
+ * @class ResultsDashboard
  */
 class ResultsDashboard extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
 
@@ -129,6 +133,10 @@ class ResultsDashboard extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render(){
     const { classes } = this.props;
     return(
@@ -264,7 +272,9 @@ ResultsDashboard.propTypes = {
   changeSessionId: PropTypes.func.isRequired,
   sessionId: PropTypes.string.isRequired,
   sessionDates: PropTypes.array.isRequired,
-  viewEnum: PropTypes.object.isRequired
+  viewEnum: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+  view: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(ResultsDashboard);

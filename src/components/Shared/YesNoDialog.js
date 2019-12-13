@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,6 +13,10 @@ const styles = {
   }
 };
 
+/**
+ * dialog for buttons with yes/no option
+ * @class YesNoDialog
+ */
 class YesNoDialog extends React.Component {
   /*
       REQUIRED PROPS:
@@ -48,13 +53,17 @@ class YesNoDialog extends React.Component {
     this.setState({ open: false });
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
       <div>
         <Button
           onClick={this.handleClickOpen}
-          //style={this.props.buttonStyle}
+          // style={this.props.buttonStyle}
           variant={this.props.buttonVariant}
           color={this.props.buttonColor}
           aria-label={this.props.buttonAriaLabel}
@@ -90,6 +99,21 @@ class YesNoDialog extends React.Component {
       </div>
     );
   }
+}
+
+YesNoDialog.propTypes = {
+  shouldOpen: PropTypes.bool,
+  onAccept: PropTypes.func,
+  classes: PropTypes.object,
+  buttonText: PropTypes.string.isRequired,
+  buttonVariant: PropTypes.string.isRequired,
+  buttonColor: PropTypes.string,
+  buttonAriaLabel: PropTypes.string,
+  backgroundColor: PropTypes.string,
+  buttonWidth: PropTypes.string,
+  buttonMargin: PropTypes.number,
+  dialogTitle: PropTypes.string,
+  onAcceptParams: PropTypes.number
 }
 
 export default withStyles(styles)(YesNoDialog);

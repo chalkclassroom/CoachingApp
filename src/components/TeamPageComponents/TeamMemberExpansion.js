@@ -31,12 +31,20 @@ const styles = {
 
 /**
  * formatting for description of team member
+ * @class TeamMemberExpansion
  */
 class TeamMemberExpansion extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return(
@@ -93,5 +101,7 @@ class TeamMemberExpansion extends React.Component {
 
 TeamMemberExpansion.propTypes = {
   person: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
+
 export default withStyles(styles)(TeamMemberExpansion);
