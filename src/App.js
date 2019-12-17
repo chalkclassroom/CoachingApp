@@ -7,7 +7,7 @@ import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews
 import Magic8MenuPage from "./views/protected/Magic8MenuPage";
 import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
-import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage";
+import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage.tsx";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
 import HomePage from "./views/protected/HomeViews/HomePage";
 import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
