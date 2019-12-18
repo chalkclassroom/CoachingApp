@@ -203,7 +203,6 @@ class TrainingQuestionnaire extends Component {
         this.setState({
           modalOpen: true
         })
-      }
     }
   }
 
