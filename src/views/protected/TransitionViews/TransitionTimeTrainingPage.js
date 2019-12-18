@@ -141,7 +141,7 @@ const ViewEnum = {
   KNOWLEDGECHECK: 6
 };
 
-class TransitionTimeTrainingHome extends Component {
+class TransitionTimeTrainingPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
