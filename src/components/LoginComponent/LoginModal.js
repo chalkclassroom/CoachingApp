@@ -26,7 +26,14 @@ const styles = theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
     borderRadius: 8
-  }
+  },
+  "@media (max-width: 700px)": {
+    paper: {
+      position: 'fixed',
+      height: '60%',
+      width: '75%'
+    },
+  },
 });
 
 class LoginModal extends React.Component {
@@ -69,9 +76,7 @@ class LoginModal extends React.Component {
               </Typography>
               <IconButton style={{ padding: 10 }}>
                 <Tooltip title={"Close"} placement={"right"}>
-                  <CloseIcon
-                    onClick={this.props.handleClose}
-                  />
+                  <CloseIcon onClick={this.props.handleClose} />
                 </Tooltip>
               </IconButton>
             </Grid>

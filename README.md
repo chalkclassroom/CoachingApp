@@ -1,36 +1,35 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/cqref/coachingapp/badge/master)](https://www.codefactor.io/repository/github/cqref/coachingapp/overview/master)
+![Github Actions Status](https://github.com/cqref/CoachingApp/workflows/CI/badge.svg)
+[![DeepScan grade](https://deepscan.io/api/teams/6380/projects/8382/branches/98461/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=6380&pid=8382&bid=98461)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/577d4324c55a4af8bfb4d7c07ecd1420)](https://www.codacy.com/manual/classroomqualityref/CoachingApp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cqref/CoachingApp&amp;utm_campaign=Badge_Grade)
+
 ## New Branch Workflow:
 
 ### 1. Create new branch for each new feature you work on
-    a. Checkout Master branch with "git checkout master"
-    b. Create new branch from master with "git checkout -b <new-branch>"
-  
-### 2. Merge Branch back into Master
-    a. Checkout Master branch with "git checkout master"
-    b. Pull your branch with "git merge <your-branch>
-    c. Resolve any merge conflicts
-    d. Commit the merge with "git commit -m "Your message about your commit"
-    e. Push to master with "git push origin master"
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+    a. Checkout develop branch with "git checkout develop"
+    b. Create new branch from master with "git checkout -b 'feature/<new-branch-name>'" or 'bug/<new-branch-name>'
+    c. Add changes
+    d. Commit `git commit -m "message"`
+    e. Push `git push`
+    
+### 2. Creating Pull Requests
+To learn, check out the [How to Create Pull Requests](https://help.github.com/en/desktop/contributing-to-projects/creating-a-pull-request).
 
 ## Available Scripts
 
+### `First Run for Development?`
+### `RUN`
+    1. npm run install
+    2. npm run prod
+    3. npm run livedev
+
 In the project directory, you can run:
 
-### `npm start`
+### `npm run livedev`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Dev server will run which will watch if any file changes and updates instantly.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
+### `npm run prod`
 
 Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -38,20 +37,32 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `npm run lint`
+Launches the ESlinter to show errors.<br>
 
-### `npm run eject`
+### `npm run cypress`
+Launches the test runner in the interactive watch mode.<br>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### `npm run test`
+Launches the test runner locally in CLI.<br>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### `npm run recordtest`
+Launches the test runner in the Cypress Cloud Dashboar<br>
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### `npm run devdeploy` Deploy to Dev Environment
+1. Make sure you are logged in via firebase-tools cli into CQREF Account
+2. run devdeploy in the command prompt.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### `npm run stagingdeploy` Deploy to Staging Environment
+1. Make sure you are logged in via firebase-tools cli into CQREF Account
+2. run stagingdeploy in the command prompt.
+
+### `npm run deploy` Deploy to Production
+1. Make sure you are logged in via firebase-tools cli into CQREF Account
+2. run deploy in the command prompt.
 
 ## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
+JSDocumentation is Available at [Chalk Docs](https://chalkdocs.web.app).
+You can learn more about webpack at [Webpack](https://webpack.js.org/).
 To learn React, check out the [React documentation](https://reactjs.org/).
+To learn Cypress, check out the [Cypress documentation](https://www.cypress.io/).

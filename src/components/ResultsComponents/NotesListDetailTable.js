@@ -15,10 +15,10 @@ const styles = {
     marginRight: "10%"
   },
   tableHeader: {
-    backgroundColor: "#2196f3",
+    backgroundColor: "#094492",
     color: "white",
     fontSize: 14
-  },
+  }
 };
 
 class NotesListDetailTable extends React.Component {
@@ -30,9 +30,7 @@ class NotesListDetailTable extends React.Component {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell className={classes.tableHeader}>
-                Time
-              </TableCell>
+              <TableCell className={classes.tableHeader}>Time</TableCell>
               <TableCell className={classes.tableHeader} align="right">
                 Notes
               </TableCell>
@@ -44,9 +42,7 @@ class NotesListDetailTable extends React.Component {
                 <TableCell component="th" scope="row">
                   {row.timestamp}
                 </TableCell>
-                <TableCell align="right">
-                  {row.content}
-                </TableCell>
+                <TableCell align="right">{row.content}</TableCell>
               </TableRow>
             ))}
           </TableBody>

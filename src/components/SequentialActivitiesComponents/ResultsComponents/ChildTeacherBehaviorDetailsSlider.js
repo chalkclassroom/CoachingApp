@@ -2,19 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import Slider from "react-slick";
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import ChildBehaviorsDetailsHorizontalBar from "./ChildBehaviorsDetailsHorizontalBar";
 import TeacherBehaviorsDetailsHorizontalBar from "./TeacherBehaviorsDetailsHorizontalBar";
 
-const styles = {
-};
-
+const styles = {};
 
 class ChildTeacherBehaviorDetailsSlider extends React.Component {
   render() {
     const { classes } = this.props;
-    var settings = {
+    const settings = {
       dots: true,
       infinite: true,
       speed: 500,
@@ -25,18 +25,14 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>
-              Child Behaviors
-            </Typography>
-            <ChildBehaviorsDetailsHorizontalBar/>
+            <Typography align={"center"}>Child Behaviors</Typography>
+            <ChildBehaviorsDetailsHorizontalBar />
           </Grid>
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>
-              Teacher Behaviors
-            </Typography>
-            <TeacherBehaviorsDetailsHorizontalBar/>
+            <Typography align={"center"}>Teacher Behaviors</Typography>
+            <TeacherBehaviorsDetailsHorizontalBar />
           </Grid>
         </div>
       </Slider>

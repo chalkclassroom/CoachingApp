@@ -1,5 +1,23 @@
 {
   "projects": {
     "default": "cqrefpwa"
+  },
+  "targets": {
+    "cqrefpwa": {
+      "hosting": {
+        "devcqref": [
+          "devcqref"
+        ],
+        "stagingcqref": [
+          "stagingcqref"
+        ],
+        "cqrefpwa": [
+          "cqrefpwa"
+        ],
+        "chalkdocs": [
+          "chalkdocs"
+        ]
+      }
+    }
   }
 }

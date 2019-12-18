@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
@@ -10,17 +10,18 @@ const styles = {
     justifyContent: "center",
     marginTop: 5
   }
-}
+};
 
-class TotalVisitCount extends React.Component{
+class TotalVisitCount extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
     const { classes } = this.props;
-    return(
-      <Grid container 
+    return (
+      <Grid
+        container
         direction="column"
         justify="flex-end"
         alignItems="center"
@@ -31,12 +32,17 @@ class TotalVisitCount extends React.Component{
           <Typography variant="h5" component="h3">
             Total Visits:
           </Typography>
-          <Typography variant="h4" component="h3" align="center" className={classes.count}>
+          <Typography
+            variant="h4"
+            component="h3"
+            align="center"
+            className={classes.count}
+          >
             {this.props.count}
           </Typography>
         </Grid>
       </Grid>
-    )
+    );
   }
 }
 

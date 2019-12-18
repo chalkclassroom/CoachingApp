@@ -2,12 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import Slider from "react-slick";
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import {Line} from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 
-const styles = {
-};
+const styles = {};
 
 const ChildBehaviorTrendsOptions = {
   showScale: true,
@@ -20,12 +21,12 @@ const ChildBehaviorTrendsOptions = {
   //     fontStyle: 'bold'
   // },
   tooltips: {
-    mode: 'index',
+    mode: "index",
     intersect: false
   },
   hover: {
-    mode: 'nearest',
-    intersect: true,
+    mode: "nearest",
+    intersect: true
   },
   scales: {
     xAxes: [
@@ -58,11 +59,11 @@ const ChildBehaviorTrendsOptions = {
   },
   plugins: {
     datalabels: {
-      display: 'auto',
-      color: 'gray',
-      align: 'top',
+      display: "auto",
+      color: "gray",
+      align: "top",
       formatter: function(value, context) {
-        return value + '%';
+        return value + "%";
       }
     }
   }
@@ -79,12 +80,12 @@ const TeacherBehaviorTrendsOptions = {
   //     fontStyle: 'bold'
   // },
   tooltips: {
-    mode: 'index',
+    mode: "index",
     intersect: false
   },
   hover: {
-    mode: 'nearest',
-    intersect: true,
+    mode: "nearest",
+    intersect: true
   },
   scales: {
     xAxes: [
@@ -117,11 +118,11 @@ const TeacherBehaviorTrendsOptions = {
   },
   plugins: {
     datalabels: {
-      display: 'auto',
-      color: 'gray',
-      align: 'top',
+      display: "auto",
+      color: "gray",
+      align: "top",
       formatter: function(value, context) {
-        return value + '%';
+        return value + "%";
       }
     }
   }
@@ -130,7 +131,7 @@ const TeacherBehaviorTrendsOptions = {
 class ChildTeacherBehaviorTrendsSlider extends React.Component {
   render() {
     const { classes } = this.props;
-    var settings = {
+    const settings = {
       dots: true,
       infinite: true,
       speed: 500,
@@ -141,12 +142,10 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>
-              Child Behaviors
-            </Typography>
+            <Typography align={"center"}>Child Behaviors</Typography>
             <Line
               data={this.props.childData}
-              options = {ChildBehaviorTrendsOptions}
+              options={ChildBehaviorTrendsOptions}
               width="650"
               height="400"
             />
@@ -154,12 +153,10 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component {
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>
-              Teacher Behaviors
-            </Typography>
+            <Typography align={"center"}>Teacher Behaviors</Typography>
             <Line
               data={this.props.teacherData}
-              options = {TeacherBehaviorTrendsOptions}
+              options={TeacherBehaviorTrendsOptions}
               width="650"
               height="400"
             />

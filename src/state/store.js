@@ -7,9 +7,7 @@ const logger = createLogger();
 const middleware = [logger, thunk];
 
 export const store = createStore(
-    rootReducer,
-    {},
-    compose(
-        applyMiddleware(...middleware)
-    )
+  rootReducer,
+  {},
+  compose(applyMiddleware(...middleware))
 );

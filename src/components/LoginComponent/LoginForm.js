@@ -1,99 +1,110 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import withStyles from '@material-ui/core/styles/withStyles';
-import {Link} from 'react-router-dom';
+import React from "react";
+import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import withStyles from "@material-ui/core/styles/withStyles";
+import { Link } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
+import LogRocket from 'logrocket';
 
 const styles = theme => ({
   main: {
-    width: '100%',
+    width: "100%"
   },
   paper: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px`,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px ${theme
+      .spacing.unit * 2}px`
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%" // Fix IE 11 issue.
   },
   submit: {
-    marginTop: theme.spacing.unit * 3,
-  },
+    marginTop: theme.spacing.unit * 3
+  }
 });
 
-class LoginForm extends React.Component{
+class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      emailError: '',
-      password: '',
-      passwordError: '',
+      email: "",
+      emailError: "",
+      password: "",
+      passwordError: "",
       errors: false
     };
   }
 
   handleChange = name => event => {
     this.setState({
-      [name]: event.target.value,
+      [name]: event.target.value
     });
     this.validateState(name, event.target.value);
   };
 
   validateState = (name, value) => {
     switch (name) {
-      case 'email':
-        if(value.length === 0){
+      case "email":
+        if (value.length === 0) {
           this.setState({
-            'emailError': 'Cannot be Empty',
+            emailError: "Cannot be Empty"
           });
-        }else if (!this.validateEmail(value)){
+        } else if (!this.validateEmail(value)) {
           this.setState({
-            'emailError': 'Not a valid email address',
-            'errors': true,
+            emailError: "Not a valid email address",
+            errors: true
           });
         } else {
           this.setState({
-            'emailError': '',
-            'errors': false,
+            emailError: "",
+            errors: false
           });
         }
         break;
-      case 'password':
-        if(value.length < 6){
+      case "password":
+        if (value.length < 6) {
           this.setState({
-            'passwordError': 'Cannot be empty',
-            'errors': true,
+            passwordError: "Cannot be empty",
+            errors: true
           });
         } else {
           this.setState({
-            'passwordError': '',
-            'errors': false,
+            passwordError: "",
+            errors: false
           });
         }
         break;
       default:
-        this.validateState('password', this.state.password);
-        this.validateState('email', this.state.email);
+        this.validateState("password", this.state.password);
+        this.validateState("email", this.state.email);
         break;
     }
   };
 
-  validateEmail = (email) => {
-    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  validateEmail = email => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
-  handleSubmit = (event) =>{
+  handleSubmit = event => {
     this.validateState();
-    if (!this.state.errors){
-      this.props.firebase.firebaseEmailSignIn({email: this.state.email, password: this.state.password}, this.props.role).then( () => {
-        this.props.history.push('/Home');
-      });
+    if (!this.state.errors) {
+      this.props.firebase
+        .firebaseEmailSignIn(
+          { email: this.state.email, password: this.state.password },
+          this.props.role
+        )
+        .then(userCredential=>{
+            LogRocket.identify(userCredential.user.uid, {
+              name: userCredential.user.displayName,
+              email: userCredential.user.email,
+            });
+            this.props.history.push("/Home");
+        });
     }
   };
 
@@ -110,12 +121,12 @@ class LoginForm extends React.Component{
             label="Email"
             autoComplete="email"
             value={this.state.email}
-            onChange={this.handleChange('email')}
+            onChange={this.handleChange("email")}
             margin="normal"
             variant="standard"
             fullWidth
             helperText={this.state.emailError}
-            error={(this.state.emailError !== '')}
+            error={this.state.emailError !== ""}
           />
           <TextField
             required
@@ -124,14 +135,14 @@ class LoginForm extends React.Component{
             type="password"
             label="Password"
             value={this.state.password}
-            onChange={this.handleChange('password')}
+            onChange={this.handleChange("password")}
             margin="normal"
             variant="standard"
             fullWidth
             helperText={this.state.passwordError}
-            error={(this.state.passwordError !== '')}
+            error={this.state.passwordError !== ""}
           />
-          <br/>
+          <br />
           <Link to="/forgot">Forgot your password?</Link>
           <Button
             type="submit"
@@ -150,7 +161,7 @@ class LoginForm extends React.Component{
 }
 
 LoginForm.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(withRouter(LoginForm));

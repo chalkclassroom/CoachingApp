@@ -39,7 +39,7 @@ const styles = theme => ({
 });
 
 const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
-  let hsl = Math.max(82 - 4 * visitCount, 54);
+  const hsl = Math.max(82 - 4 * visitCount, 54);
   return (
     <Button
       variant="contained"
@@ -146,7 +146,7 @@ class CenterChecklist extends React.Component {
                     onClick={this.handleToggle(value)}
                   >
                     <Checkbox
-                      checked={this.state.checked.indexOf(value) !== -1}
+                      checked={this.state.checked.includes(value)}
                       tabIndex={-1}
                       disableRipple
                     />
@@ -170,7 +170,7 @@ class CenterChecklist extends React.Component {
                     onClick={this.handleToggle(value)}
                   >
                     <Checkbox
-                      checked={this.state.checked.indexOf(value) !== -1}
+                      checked={this.state.checked.includes(value)}
                       tabIndex={-1}
                       disableRipple
                     />
@@ -242,7 +242,7 @@ const RATING_SCREEN = 2;
 class CenterMenuAssocCoop extends React.Component {
   constructor(props) {
     super(props);
-    let mEntry = {
+    const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "AC"
@@ -254,9 +254,8 @@ class CenterMenuAssocCoop extends React.Component {
     addDialog: false,
     status: CENTER_CHECKLIST,
     currentCenter: undefined,
-    totalVisitCount: 0,
+    totalVisitCount: 0
   };
-
 
   handleClickOpen = () => {
     this.setState({ addDialog: true });
@@ -295,7 +294,7 @@ class CenterMenuAssocCoop extends React.Component {
   finishCenterVisit = centerName => {
     if (centerName !== undefined) {
       this.props.incrementCenterCount(centerName);
-      this.setState({totalVisitCount: this.state.totalVisitCount + 1})
+      this.setState({ totalVisitCount: this.state.totalVisitCount + 1 });
     }
   };
 
@@ -311,7 +310,12 @@ class CenterMenuAssocCoop extends React.Component {
       case CENTER_MENU:
         return (
           <div>
-            <Grid justify="center" alignItems="stretch" direction="row" style={{margin: 10}}>
+            <Grid
+              justify="center"
+              alignItems="stretch"
+              direction="row"
+              style={{ margin: 10 }}
+            >
               <Grid justify="flex-start" alignItems="center" direction="row">
                 <Grid container spacing={0} direction="row" alignItems="center">
                   <NewCenterDialog
@@ -327,21 +331,23 @@ class CenterMenuAssocCoop extends React.Component {
                       direction={"column"}
                     >
                       {/* <div style={{ margin: 20 }} /> */}
-                      <Dashboard 
+                      <Dashboard
                         magic8="Associative and Cooperative"
                         color="#6f39c4"
-                        infoDisplay= {<TotalVisitCount count={this.state.totalVisitCount} />}
-                        infoPlacement = "flex-start"
+                        infoDisplay={
+                          <TotalVisitCount count={this.state.totalVisitCount} />
+                        }
+                        infoPlacement="flex-start"
                         completeObservation={true}
                       />
                     </Grid>
                   </Grid>
-                  <Grid container xs={9}>         
+                  <Grid container xs={9}>
                     {this.props.centers.map((center, index) => (
                       <Grid
                         item
                         xs={4}
-                        style={{ textAlign: "center", padding: "10px"}}
+                        style={{ textAlign: "center", padding: "10px" }}
                       >
                         <VisitCenterButton
                           centerName={center.name}
@@ -353,7 +359,7 @@ class CenterMenuAssocCoop extends React.Component {
                     <Grid
                       item
                       xs={4}
-                      style={{ textAlign: "center", padding: "10px"}}
+                      style={{ textAlign: "center", padding: "10px" }}
                     >
                       <Button
                         variant="contained"
@@ -369,7 +375,7 @@ class CenterMenuAssocCoop extends React.Component {
                         Add Center <br /> <br /> +
                       </Button>
                     </Grid>
-                  </Grid>    
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
@@ -401,8 +407,7 @@ CenterMenuAssocCoop.propTypes = {
 };
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    { addNewCenter, incrementCenterCount }
-  )(CenterMenuAssocCoop)
+  connect(mapStateToProps, { addNewCenter, incrementCenterCount })(
+    CenterMenuAssocCoop
+  )
 );

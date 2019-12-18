@@ -37,14 +37,14 @@ const TeacherChildEnum = {
 };
 
 const teacherBehaviors = {
-  noSupp: 'no support',
-  support: 'support'
+  noSupp: "no support",
+  support: "support"
 };
 
 const childBehaviors = {
-  noOpp: 'no opportunity',
-  ac: 'ac',
-  noAc: 'no ac'
+  noOpp: "no opportunity",
+  ac: "ac",
+  noAc: "no ac"
 };
 
 const RATING_INTERVAL = 60000;
@@ -60,7 +60,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
     time: RATING_INTERVAL,
     timeUpOpen: false,
     peopleWarning: false,
-    acType: ''
+    acType: ""
   };
 
   tick = () => {
@@ -108,15 +108,15 @@ class CenterRatingChecklistAssocCoop extends React.Component {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
-      let mEntry = {
+      const mEntry = {
         checked: this.state.checked,
-        people: this.state.people,
-        //acType: this.state.acType
+        people: this.state.people
+        // acType: this.state.acType
       };
-// <<<<<<< HEAD
-// =======
+      // <<<<<<< HEAD
+      // =======
       this.props.firebase.handlePushAC(mEntry);
-// >>>>>>> 7416dfe9eba94b55b62425799cbd308062bc27b4
+      // >>>>>>> 7416dfe9eba94b55b62425799cbd308062bc27b4
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();
     }
@@ -147,8 +147,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
 
   childDisabled = () => {
     return (
-        this.state.people === TeacherChildEnum.CHILD_1 ||
-        this.state.people === undefined
+      this.state.people === TeacherChildEnum.CHILD_1 ||
+      this.state.people === undefined
     );
   };
 
@@ -163,15 +163,15 @@ class CenterRatingChecklistAssocCoop extends React.Component {
   handleChild1Click = () => {
     if (this.state.people !== TeacherChildEnum.CHILD_1) {
       this.setState({ people: TeacherChildEnum.CHILD_1 });
-      this.setState({acType: teacherBehaviors.noSupp});
-      this.setState({acType: childBehaviors.noOpp});
+      this.setState({ acType: teacherBehaviors.noSupp });
+      this.setState({ acType: childBehaviors.noOpp });
 
       const { checked } = this.state;
       const newChecked = [...checked];
       for (let i = 5; i <= 8; i++) {
         // If there are teacher ratings checked, remove them
-        if (checked.indexOf(i) !== -1) {
-          let currentIndex = checked.indexOf(i);
+        if (checked.includes(i)) {
+          const currentIndex = checked.indexOf(i);
           newChecked.splice(currentIndex);
         }
       }
@@ -182,15 +182,15 @@ class CenterRatingChecklistAssocCoop extends React.Component {
   handleChild2Click = () => {
     if (this.state.people !== TeacherChildEnum.CHILD_2) {
       this.setState({ people: TeacherChildEnum.CHILD_2 });
-      this.setState({acType: teacherBehaviors.noSupp});
-      this.setState({acType: childBehaviors.ac});
+      this.setState({ acType: teacherBehaviors.noSupp });
+      this.setState({ acType: childBehaviors.ac });
 
       const { checked } = this.state;
       const newChecked = [...checked];
       for (let i = 5; i <= 8; i++) {
         // If there are teacher ratings checked, remove them
-        if (checked.indexOf(i) !== -1) {
-          let currentIndex = checked.indexOf(i);
+        if (checked.includes(i)) {
+          const currentIndex = checked.indexOf(i);
           newChecked.splice(currentIndex);
         }
       }
@@ -201,16 +201,16 @@ class CenterRatingChecklistAssocCoop extends React.Component {
   handleChild1TeacherClick = () => {
     if (this.state.people !== TeacherChildEnum.CHILD_1_TEACHER) {
       this.setState({ people: TeacherChildEnum.CHILD_1_TEACHER });
-      this.setState({acType: teacherBehaviors.support});
-      this.setState({acType: childBehaviors.ac});
+      this.setState({ acType: teacherBehaviors.support });
+      this.setState({ acType: childBehaviors.ac });
     }
   };
 
   handleChild2TeacherClick = () => {
     if (this.state.people !== TeacherChildEnum.CHILD_2_TEACHER) {
       this.setState({ people: TeacherChildEnum.CHILD_2_TEACHER });
-      this.setState({acType: teacherBehaviors.support});
-      this.setState({acType: childBehaviors.ac});
+      this.setState({ acType: teacherBehaviors.support });
+      this.setState({ acType: childBehaviors.ac });
     }
   };
 
@@ -245,7 +245,12 @@ class CenterRatingChecklistAssocCoop extends React.Component {
           </DialogContent>
         </Dialog>
         <main>
-          <Grid container alignItems={"center"} direction={"row"} justify={"center"}>
+          <Grid
+            container
+            alignItems={"center"}
+            direction={"row"}
+            justify={"center"}
+          >
             <Grid item xs={3}>
               <Grid
                 container
@@ -254,10 +259,10 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                 direction={"column"}
               >
                 {/* <div style={{ margin: 20 }} /> */}
-                <Dashboard 
+                <Dashboard
                   magic8="Associative and Cooperative"
                   color="#6f39c4"
-                  infoDisplay= {<Countdown color="#6f39c4" timerTime={60000} />}
+                  infoDisplay={<Countdown color="#6f39c4" timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />
@@ -278,7 +283,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                 </Typography>
                 <div style={{ height: 20 }} />
                 <Typography variant={"subtitle2"} gutterBottom>
-                  Please select the number of children and teachers at the center:
+                  Please select the number of children and teachers at the
+                  center:
                 </Typography>
                 <Grid
                   container
@@ -354,7 +360,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.indexOf(1) !== -1
+                              this.state.checked.includes(1)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -370,7 +376,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.indexOf(2) !== -1
+                              this.state.checked.includes(2)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -387,13 +393,13 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.indexOf(3) !== -1
+                              this.state.checked.includes(3)
                             }
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            Following <b>formal rules of a game</b> and/or taking
-                            turns
+                            Following <b>formal rules of a game</b> and/or
+                            taking turns
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -403,30 +409,29 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.indexOf(4) !== -1
+                              this.state.checked.includes(4)
                             }
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            Talking about or doing an activity together that has a{" "}
-                            <b>predetermined sequence</b> (e.g., acting out restaurant in a dramatic play;
-                            doing pattern blocks together)
+                            Talking about or doing an activity together that has
+                            a <b>predetermined sequence</b> (e.g., acting out
+                            restaurant in a dramatic play; doing pattern blocks
+                            together)
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                            onClick={this.handleToggle(5)}
-                            disabled={this.childDisabled()}
+                          onClick={this.handleToggle(5)}
+                          disabled={this.childDisabled()}
                         >
                           <Checkbox
-                              checked={
-                                !this.childDisabled() &&
-                                this.state.checked.indexOf(5) !== -1
-                              }
-                              disabled={this.childDisabled()}
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.checked.includes(5)
+                            }
+                            disabled={this.childDisabled()}
                           />
-                          <ListItemText>
-                            None
-                          </ListItemText>
+                          <ListItemText>None</ListItemText>
                         </ListItem>
                       </List>
                     </Card>
@@ -444,7 +449,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.indexOf(6) !== -1
+                              this.state.checked.includes(6)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -459,13 +464,14 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.indexOf(7) !== -1
+                              this.state.checked.includes(7)
                             }
                             disabled={this.teacherDisabled()}
                           />
                           <ListItemText>
                             Asking questions to{" "}
-                            <b>extend children’s thinking</b> about their shared activity
+                            <b>extend children’s thinking</b> about their shared
+                            activity
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -475,7 +481,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.indexOf(8) !== -1
+                              this.state.checked.includes(8)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -491,28 +497,27 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.indexOf(9) !== -1
+                              this.state.checked.includes(9)
                             }
                             disabled={this.teacherDisabled()}
                           />
                           <ListItemText>
-                            Helping children find the <b>words to communicate</b>
+                            Helping children find the{" "}
+                            <b>words to communicate</b>
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                            onClick={this.handleToggle(10)}
-                            disabled={this.teacherDisabled()}
+                          onClick={this.handleToggle(10)}
+                          disabled={this.teacherDisabled()}
                         >
                           <Checkbox
-                              checked={
-                                !this.childDisabled() &&
-                                this.state.checked.indexOf(10) !== -1
-                              }
-                              disabled={this.teacherDisabled()}
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.checked.includes(10)
+                            }
+                            disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
-                            None
-                          </ListItemText>
+                          <ListItemText>None</ListItemText>
                         </ListItem>
                       </List>
                     </Card>

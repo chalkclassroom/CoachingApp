@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# doc generated temp folder
+/docs
+
 # testing
 /coverage
 
@@ -25,4 +28,4 @@ yarn-error.log*
 .idea/
 src/SPREADSHEET_SECRETS.js
 .firebase/
-
+public/precache-manifest.*

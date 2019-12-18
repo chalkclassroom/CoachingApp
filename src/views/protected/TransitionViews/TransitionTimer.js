@@ -9,7 +9,7 @@ import cyan from "@material-ui/core/colors/teal";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { pushOntoTransitionStack } from "../../../state/actions/transition-time";
-import FirebaseContext from "../../../components/Firebase/context";
+import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 
 const theme = createMuiTheme({
   palette: {
@@ -24,7 +24,7 @@ class TransitionTimer extends React.Component {
   constructor(props) {
     super(props);
     this.onCancel = this.onCancel.bind(this);
-    let mEntry = {
+    const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "transition"
@@ -44,8 +44,8 @@ class TransitionTimer extends React.Component {
     this.setState(state => {
       if (state.isOn) {
         clearInterval(this.timer);
-        let end = new Date();
-        let entry = {
+        const end = new Date();
+        const entry = {
           start: this.state.start.toISOString(),
           end: end.toISOString(),
           duration: ms(this.state.time),
@@ -56,7 +56,7 @@ class TransitionTimer extends React.Component {
         this.props.handleEndTransition();
       } else {
         const startTime = Date.now() - this.state.time;
-        let mStart = new Date();
+        const mStart = new Date();
         this.setState({ start: mStart });
         this.timer = setInterval(() => {
           this.setState({ time: Math.round(Date.now() - startTime) });
@@ -82,7 +82,7 @@ class TransitionTimer extends React.Component {
 
   handleAppend = entry => {
     this.props.pushOntoTransitionStack(entry);
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.handlePushTransition(entry);
   };
 
@@ -95,12 +95,10 @@ class TransitionTimer extends React.Component {
       <MuiThemeProvider theme={theme}>
         <div style={{ width: 400 }}>
           <CircularProgressbar
-            fill = "#19468D"
+            fill="#19468D"
             background
             percentage={this.state.percentage}
-            text={
-              this.state.time === 0 ? "0:00" : ms(this.state.time)
-            }
+            text={this.state.time === 0 ? "0:00" : ms(this.state.time)}
             initialAnimation={false}
             styles={{
               path: { stroke: "#19468D" },
@@ -149,7 +147,6 @@ const mapStateToProps = state => {
   };
 };
 TransitionTimer.contextType = FirebaseContext;
-export default connect(
-  mapStateToProps,
-  { pushOntoTransitionStack }
-)(TransitionTimer);
+export default connect(mapStateToProps, { pushOntoTransitionStack })(
+  TransitionTimer
+);

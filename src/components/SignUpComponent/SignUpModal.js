@@ -9,11 +9,12 @@ import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 import Card from "@material-ui/core/Card";
-import Coach from "../../assets/icons/newCoach.svg";
-//import Teacher from "../../assets/icons/newTeacher.svg";
-//import Admin from "../../assets/icons/newAdministrator.svg";
-import GrayedAdmin from "../../assets/icons/newAdminGrayed.svg";
-import GrayedTeacher from "../../assets/icons/newTeacherGrayed.svg";
+import CoachImage from "../../assets/images/CoachImage.svg";
+// import NewTeacherImage from "../../assets/images/NewTeacherImage.svg";
+// import NewAdministratorImage from "../../assets/images/NewAdministratorImage.svg";
+import GrayedAdminImage from "../../assets/images/GrayedAdminImage.svg";
+import GrayedTeacherImage from "../../assets/images/GrayedTeacherImage.svg";
+import GrayedCoachImage from "../../assets/images/GrayedCoachImage.svg";
 import CardContent from "@material-ui/core/CardContent";
 
 function getModalStyle() {
@@ -34,8 +35,31 @@ const styles = theme => ({
     padding: theme.spacing.unit * 4,
     borderRadius: 8
   },
+  root: {
+    backgroundColor: '#ffffff'
+  },
+  mobileRoot: {
+    backgroundColor: '#ffffff'
+  },
   photoIcon: {
-    height:"15vh"
+    height: "15vh"
+  },
+  "@media (max-width: 700px)": {
+    root: {
+      display: "none"
+    },
+    paper: {
+      height: '80%',
+      width: '75%'
+    },
+    photoIcon: {
+      height: "8vh"
+    }
+  },
+  "@media (min-width: 701px)": {
+    mobileRoot: {
+      display: "none"
+    }
   }
 });
 
@@ -65,10 +89,15 @@ class SignUpModal extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div>
+      <div className={classes.root}>
         <Modal open={this.state.open}>
           <div style={getModalStyle()} className={classes.paper}>
-            <Grid container direction="column" alignItems="center" justify="center">
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
               <Grid
                 container
                 alignItems="center"
@@ -83,9 +112,7 @@ class SignUpModal extends React.Component {
                 <Grid item xs={1}>
                   <IconButton style={{ padding: 10 }}>
                     <Tooltip title={"Close"} placement={"right"}>
-                      <CloseIcon
-                        onClick={this.props.handleClose}
-                      />
+                      <CloseIcon onClick={this.props.handleClose} />
                     </Tooltip>
                   </IconButton>
                 </Grid>
@@ -105,7 +132,7 @@ class SignUpModal extends React.Component {
                     style={{ padding: 40 }}
                   >
                     <Card
-                      onClick={() => this.handleChangeRole(1)}
+                      // onClick={() => this.handleChangeRole(1)}
                     >
                       <CardContent>
                         <Grid
@@ -115,13 +142,14 @@ class SignUpModal extends React.Component {
                           justify="flex-start"
                         >
                           <Grid item>
-                            <img src={Coach} alt="Coach" className={classes.photoIcon} />
+                            <img 
+                              src={GrayedCoachImage}
+                              alt="Coach"
+                              className={classes.photoIcon}
+                            />
                           </Grid>
                           <Grid item>
-                            <Typography
-                              variant="h5"
-                              component="h2"
-                            >
+                            <Typography variant="h5" component="h2">
                               Coach
                             </Typography>
                           </Grid>
@@ -129,23 +157,24 @@ class SignUpModal extends React.Component {
                       </CardContent>
                     </Card>
                     <Card
-                      // onClick={() => this.handleChangeRole(2)}
+                    // onClick={() => this.handleChangeRole(2)}
                     >
                       <CardContent>
                         <Grid
-                            container
-                            alignItems="center"
-                            direction="column"
-                            justify="flex-start"
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
                         >
                           <Grid item>
-                            <img src={GrayedTeacher} alt="Teacher" className={classes.photoIcon} />
+                            <img
+                              src={GrayedTeacherImage}
+                              alt="Teacher"
+                              className={classes.photoIcon}
+                            />
                           </Grid>
                           <Grid item>
-                            <Typography
-                              variant="h5"
-                              component="h2"
-                            >
+                            <Typography variant="h5" component="h2">
                               Teacher
                             </Typography>
                           </Grid>
@@ -153,23 +182,24 @@ class SignUpModal extends React.Component {
                       </CardContent>
                     </Card>
                     <Card
-                      // onClick={() => this.handleChangeRole(3)}
+                    // onClick={() => this.handleChangeRole(3)}
                     >
                       <CardContent>
                         <Grid
-                            container
-                            alignItems="center"
-                            direction="column"
-                            justify="flex-start"
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
                         >
                           <Grid item>
-                            <img src={GrayedAdmin} alt="Administrator" className={classes.photoIcon} />
+                            <img
+                              src={GrayedAdminImage}
+                              alt="Administrator"
+                              className={classes.photoIcon}
+                            />
                           </Grid>
                           <Grid item>
-                            <Typography
-                              variant="h5"
-                              component="h2"
-                            >
+                            <Typography variant="h5" component="h2">
                               Admin
                             </Typography>
                           </Grid>
