@@ -186,7 +186,7 @@ class TrainingQuestionnaire extends Component {
   }
 
   handleFinish = () => {
-    const { numCorrect, currentBatch } = this.state;
+    const { numCorrect } = this.state;
     if (numCorrect / this.BATCH_LENGTH >= 0.8) { // passed
       this.setState({
         modalOpen: true,
