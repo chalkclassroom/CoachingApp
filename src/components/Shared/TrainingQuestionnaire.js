@@ -194,12 +194,12 @@ class TrainingQuestionnaire extends Component {
       })
 
     } else { // failed
-      if (currentBatch === 1) { // 2nd attempt
-        this.setState({
-          modalOpen: true,
-          // failed: true
-        })
-      } else { // 1st attempt
+      // if (currentBatch === 1) { // 2nd attempt
+        // this.setState({
+          // modalOpen: true,
+          // // failed: true // Change this for different re-try implementations
+        // })
+      // } else { // 1st attempt
         this.setState({
           modalOpen: true
         })
