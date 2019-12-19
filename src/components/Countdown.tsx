@@ -1,11 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Line } from "rc-progress";
 import ms from "pretty-ms";
 
-const styles = {
+const styles: object = {
   line: {
     transform: "rotate(270deg)"
   },
@@ -18,21 +18,37 @@ const styles = {
   }
 };
 
+interface Props {
+  classes: Style,
+  timerTime: number,
+  color: string
+}
+
+interface Style {
+  line: string,
+  lineGrid: string,
+  timeText: string
+}
+
+interface State {
+  time: number,
+  tenPercent: number,
+}
+
 /**
  * Timer in dashboard for observation tools
  * @class Countdown
  */
-class Countdown extends React.Component {
+class Countdown extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
       time: this.props.timerTime,
       tenPercent: 0.1 * this.props.timerTime,
-      color: ""
     };
   }
 
@@ -58,6 +74,12 @@ class Countdown extends React.Component {
     clearInterval(this.timer);
   }
 
+  static propTypes = {
+    timerTime: PropTypes.number.isRequired,
+    classes: PropTypes.object.isRequired,
+    color: PropTypes.string.isRequired
+  }
+
   /**
    * render function
    * @return {ReactElement}
@@ -70,20 +92,19 @@ class Countdown extends React.Component {
         direction="column"
         justify="flex-end"
         alignItems="center"
-        height="28vh"
       >
         <Grid item className={classes.lineGrid}>
           <div style={{ marginTop: "47%" }} />
           <Line
             className={classes.line}
-            percent={`${100 * (this.state.time / this.props.timerTime)}`}
-            strokeWidth="10"
+            percent={100 * (this.state.time / this.props.timerTime)}
+            strokeWidth={10}
             strokeColor={
               this.state.time > this.state.tenPercent
                 ? this.props.color
                 : "#E55529"
             }
-            trailWidth="10"
+            trailWidth={10}
           />
         </Grid>
         <Grid item className={classes.timeText}>
@@ -93,11 +114,5 @@ class Countdown extends React.Component {
     );
   }
 }
-
-Countdown.propTypes = {
-  timerTime: PropTypes.number.isRequired,
-  classes: PropTypes.object.isRequired,
-  color: PropTypes.string.isRequired
-};
 
 export default withStyles(styles)(Countdown);

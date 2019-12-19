@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
@@ -8,29 +8,16 @@ import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconIm
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
-// import { ImmortalDB } from "immortal-db";
 import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo";
 import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     height: "100vh",
     flexDirection: "column"
-  },
-  main: {
-    flex: 1,
-    height: "90%",
-    marginTop: "10vh"
-  },
-  grow: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
   },
   viewButtons: {
     minWidth: 150,
@@ -39,27 +26,6 @@ const styles = {
   buttonsList: {
     position: "relative",
     top: "3vh"
-  },
-  title: {
-    position: "relative",
-    left: "33%",
-    top: "10%"
-  },
-  secondTitle: {
-    position: "relative",
-    left: "40%",
-    top: "10%"
-  },
-  chart: {
-    position: "relative",
-    left: "7%",
-    top: "5%"
-  },
-  generateReport: {
-    position: "relative",
-    right: "10%",
-    top: "76%",
-    left: "10%"
   },
   resultsContent: {
     height: "60vh",
@@ -76,26 +42,34 @@ const ViewEnum = {
   KNOWLEDGECHECK: 5
 };
 
+interface Props {
+  classes: Style
+}
+
+interface Style {
+  root: string,
+  viewButtons: string,
+  buttonsList: string,
+  resultsContent: string
+}
+
+interface State {
+  view: number
+}
+
 /**
  * transition time training
  * @class TransitionTimeTrainingPage
  */
-class TransitionTimeTrainingPage extends React.Component {
+class TransitionTimeTrainingPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
   }
 
   state = {
-    auth: true,
-    anchorEl: null,
-    help: false,
-    type: null,
-    hex: "#FFFFFF",
-    entries: [],
-    dbCounter: 0, // @Hack @Temporary !!!
     view: ViewEnum.CONCEPTS
   };
 
@@ -129,6 +103,10 @@ class TransitionTimeTrainingPage extends React.Component {
     }
   };
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
+
   /**
    * render function
    * @return {ReactElement}
@@ -139,7 +117,7 @@ class TransitionTimeTrainingPage extends React.Component {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {(firebase: object) => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
           <Grid
@@ -274,9 +252,5 @@ class TransitionTimeTrainingPage extends React.Component {
     );
   }
 }
-
-TransitionTimeTrainingPage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(TransitionTimeTrainingPage);

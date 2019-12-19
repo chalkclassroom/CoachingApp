@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../../App.css";
 import PropTypes from "prop-types";
-import Magic8Card from "../../components/Magic8Card.js";
+import Magic8Card from "../../components/Magic8Card.tsx";
 import { Button, Typography } from "@material-ui/core";
 import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
@@ -100,7 +100,7 @@ class Magic8MenuPage extends Component {
   }
 
   /**
-   * @param {number} selected 
+   * @param {string} selected 
    * @param {string} title 
    */
   onClick(selected, title) {

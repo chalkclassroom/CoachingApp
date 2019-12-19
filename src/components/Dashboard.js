@@ -37,7 +37,7 @@ import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
 import { deleteAllCenters } from "../state/actions/associative-cooperative";
 import { connect } from "react-redux";
-import IncompleteObservation from "./IncompleteObservation.js";
+import IncompleteObservation from "./IncompleteObservation.tsx";
 
 const styles = {
   card: {

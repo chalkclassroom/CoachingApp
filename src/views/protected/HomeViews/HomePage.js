@@ -10,7 +10,7 @@ import CalendarImage from "../../../assets/images/CalendarImage.svg";
 import ObserveImage from "../../../assets/images/ObserveImage.svg";
 import ResultsImage from "../../../assets/images/ResultsImage.svg";
 import MessagesImage from "../../../assets/images/MessagesImage.svg";
-import TeacherModal from "./TeacherModal";
+import TeacherModal from "./TeacherModal.tsx";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 
 const styles = {

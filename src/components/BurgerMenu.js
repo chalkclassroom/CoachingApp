@@ -29,7 +29,7 @@ import CalendarIcon from "@material-ui/icons/CalendarToday";
 import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
-import TeacherModal from "../views/protected/HomeViews/TeacherModal";
+import TeacherModal from "../views/protected/HomeViews/TeacherModal.tsx";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import { connect } from "react-redux";
 

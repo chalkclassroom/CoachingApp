@@ -1,38 +1,25 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
-import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
+const SequentialIconImage = require("../../../assets/images/SequentialIconImage.svg");
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
-import { ImmortalDB } from "immortal-db";
 import "chartjs-plugin-datalabels";
 // import TrainingVideo
 // from "../../../components/Shared/TrainingVideo";
 import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     height: "100vh",
     flexDirection: "column"
-  },
-  main: {
-    flex: 1,
-    height: "90%",
-    marginTop: "10vh"
-  },
-  grow: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
   },
   viewButtons: {
     minWidth: 150,
@@ -41,27 +28,6 @@ const styles = {
   buttonsList: {
     position: "relative",
     top: "3vh"
-  },
-  title: {
-    position: "relative",
-    left: "33%",
-    top: "10%"
-  },
-  secondTitle: {
-    position: "relative",
-    left: "40%",
-    top: "10%"
-  },
-  chart: {
-    position: "relative",
-    left: "7%",
-    top: "5%"
-  },
-  generateReport: {
-    position: "relative",
-    right: "10%",
-    top: "76%",
-    left: "10%"
   },
   resultsContent: {
     height: "60vh",
@@ -78,61 +44,35 @@ const ViewEnum = {
   KNOWLEDGECHECK: 5
 };
 
-class SequentialActivitiesTrainingPage extends React.Component {
-  constructor(props) {
+interface Props {
+  classes: Style
+}
+
+interface Style {
+  root: string,
+  viewButtons: string,
+  buttonsList: string,
+  resultsContent: string
+}
+
+interface State {
+  view: number
+}
+
+/**
+ * sequential activities training
+ * @class SequentialActivitiesTrainingPage
+ */
+class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
     super(props);
-    this.handleAppend = this.handleAppend.bind(this);
   }
 
   state = {
-    auth: true,
-    anchorEl: null,
-    help: false,
-    type: null,
-    hex: "#FFFFFF",
-    entries: [],
-    dbCounter: 0, // @Hack @Temporary !!!
     view: ViewEnum.CONCEPTS
-  };
-
-  handleAppend(entry) {
-    const newEntries = this.state.entries;
-    entry.type = this.state.type;
-    newEntries.push(entry);
-    this.setState({ entries: newEntries });
-
-    this.handleSpreadsheetAppend(entry);
-
-    this.handleDBinsert(entry);
-  }
-
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
-
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-
-  handleClickAway = () => {
-    this.setState({ help: false });
-  };
-
-  handleDBinsert = async entry => {
-    // Once we integrate users, the user + some index will be the key for the DB.
-    await ImmortalDB.set(
-      JSON.stringify(this.state.dbCounter),
-      JSON.stringify(entry)
-    );
-    this.setState({ dbCounter: this.state.dbCounter + 1 });
   };
 
   conceptsClick = () => {
@@ -165,13 +105,21 @@ class SequentialActivitiesTrainingPage extends React.Component {
     }
   };
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  };
+
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {(firebase: object) => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
           <Grid
@@ -277,9 +225,7 @@ class SequentialActivitiesTrainingPage extends React.Component {
               alignItems={"center"}
             >
               <Typography
-                variant={"h5"}
-                alignItems={"center"}
-                justify={"center"}
+                variant="h5"
               >
                 Training: Sequential Activities Tool
               </Typography>
@@ -312,9 +258,5 @@ class SequentialActivitiesTrainingPage extends React.Component {
     );
   }
 }
-
-SequentialActivitiesTrainingPage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(SequentialActivitiesTrainingPage);

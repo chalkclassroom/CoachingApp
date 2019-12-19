@@ -1,16 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import Notes from "../../../components/Notes";
 import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
 import CenterMenuSequentialActivities from "../../../components/SequentialActivitiesComponents/CenterMenuSequentialActivities";
 import { deleteAllCenters } from "../../../state/actions/sequential-activities";
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     backgroundColor: "#ffffff",
@@ -23,17 +22,27 @@ const styles = {
   }
 };
 
+interface Props {
+  classes: Style
+}
+
+interface Style {
+  root: string,
+  grow: string
+}
+
+interface State {
+
+}
+
 /**
  * sequential activities observation
  * @class SequentialActivitiesPage
  */
-class SequentialActivitiesPage extends React.Component {
+class SequentialActivitiesPage extends React.Component<Props, State> {
   state = {
     auth: true,
     help: false,
-    ratingIsOpen: false,
-    ratings: [],
-    climateType: false,
     completeEnabled: false
   };
 
@@ -44,7 +53,7 @@ class SequentialActivitiesPage extends React.Component {
   /**
    * @param {boolean} open
    */
-  handleNotes = open => {
+  handleNotes = (open: boolean) => {
     if (open) {
       this.setState({ notes: true });
     } else {
@@ -55,8 +64,12 @@ class SequentialActivitiesPage extends React.Component {
   /**
    * @param {boolean} enable
    */
-  handleCompleteButton = enable => {
+  handleCompleteButton = (enable: boolean) => {
     this.setState({ completeEnabled: enable });
+  };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired
   };
 
   /**
@@ -67,7 +80,7 @@ class SequentialActivitiesPage extends React.Component {
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => (
+          {(firebase: object)=> (
             <AppBar
               firebase={firebase}
               classes={{ root: this.props.classes.grow }}
@@ -79,24 +92,12 @@ class SequentialActivitiesPage extends React.Component {
             {" "}
             <ClassroomClimateHelp />
           </ClickAwayListener>
-        ) : this.state.notes ? (
-          <FirebaseContext.Consumer>
-            {firebase => (
-              <Notes
-                open={true}
-                onClose={this.handleNotes}
-                color="#0988EC"
-                text="Sequential Activities Notes"
-                firebase={firebase}
-              />
-            )}
-          </FirebaseContext.Consumer>
         ) : (
           <div />
         )}
         <main style={{ flex: 1 }}>
           <FirebaseContext.Consumer>
-            {firebase => (
+            {(firebase: object) => (
               <CenterMenuSequentialActivities
                 firebase={firebase}
                 onStatusChange={this.handleCompleteButton}
@@ -108,10 +109,6 @@ class SequentialActivitiesPage extends React.Component {
     );
   }
 }
-
-SequentialActivitiesPage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default connect(null, { deleteAllCenters })(
   withStyles(styles)(SequentialActivitiesPage)

@@ -14,7 +14,7 @@ import {
   emptyClimateStack
 } from "../../../state/actions/classroom-climate";
 import Dashboard from "../../../components/Dashboard";
-import Countdown from "../../../components/Countdown";
+import Countdown from "../../../components/Countdown.tsx";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
 
 /*

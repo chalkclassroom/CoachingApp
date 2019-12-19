@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
-const TransitionTimeHelp = require("./TransitionTimeHelp.tsx");
+import TransitionTimeHelp from "./TransitionTimeHelp";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
@@ -22,18 +22,11 @@ const styles: object = {
     minHeight: "100vh",
     flexDirection: "column"
   },
-  grow: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
-  }
 };
 
 interface Props {
-  classes: any,
-  location: any
+  classes: { root: string },
+  location: { state: { teacher: { id: string }}}
 };
 
 interface State {
@@ -113,7 +106,7 @@ class TransitionTimePage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
+    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
   };
 
   /**

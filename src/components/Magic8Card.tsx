@@ -1,27 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Card, CardActionArea } from "@material-ui/core";
 import styled from "styled-components";
 import LockImage from "../assets/images/LockImage.png";
 import CheckmarkImage from "../assets/images/CheckmarkImage.png";
 
-const styles = {
-  title: {
-    textAlign: "center"
-  },
-
-  titleText: {
-    fontSize: "1.7vw"
-  },
-
-  icon: {
-    position: "relative",
-    transform: "scale(4.2)",
-    textAlign: "center",
-    marginLeft: "43%"
-  },
-
+const styles: object = {
   overlayImage: {
     color: "white",
     fontSize: 100,
@@ -64,15 +49,35 @@ const Overlay = styled.div`
   opacity: 0.8,
 `;
 
+interface Style {
+  overlayImage: string,
+  card: string,
+  cardAction: string
+}
+
+interface Props {
+  classes: Style,
+  onClick(selected: string, title: string): void,
+  numSelected: number,
+  title: string,
+  icon: string,
+  page: string,
+  unlocked: boolean
+}
+
+interface State {
+  selected: boolean
+}
+
 /**
  * magic 8 selection button
  * @class Magic8Card
  */
-class Magic8Card extends Component {
+class Magic8Card extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.onClick = this.onClick.bind(this);
     this.state = {
@@ -90,6 +95,16 @@ class Magic8Card extends Component {
     } else if (numSelected < 1) {
       this.setState({ selected: true });
     }
+  }
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    onClick: PropTypes.func.isRequired,
+    numSelected: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired,
+    page: PropTypes.string.isRequired,
+    unlocked: PropTypes.bool.isRequired
   }
 
   /**
@@ -134,15 +149,5 @@ class Magic8Card extends Component {
     );
   }
 }
-
-Magic8Card.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired,
-  page: PropTypes.string.isRequired,
-  unlocked: PropTypes.bool.isRequired
-};
 
 export default withStyles(styles)(Magic8Card);

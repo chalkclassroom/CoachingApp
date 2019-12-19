@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import Card from "@material-ui/core/Card";
@@ -18,7 +18,7 @@ import "chartjs-plugin-datalabels";
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
 import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
-import moment from "moment";
+import * as moment from "moment";
 import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
 import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";
 import WalkingImage from "../../../assets/images/WalkingImage.svg";
@@ -26,7 +26,6 @@ import ClassroomRoutinesImage from "../../../assets/images/ClassroomRoutinesImag
 import BMDImage from "../../../assets/images/BMDImage.svg";
 import {
   lightGreen,
-  white,
   deepOrange,
   orange,
   blue,
@@ -36,81 +35,16 @@ import { red } from "@material-ui/core/es/colors";
 import CardContent from "@material-ui/core/CardContent";
 import ResultsDashboard from '../../../components/ResultsDashboard';
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     height: "100vh",
     flexDirection: "column"
   },
-  main: {
-    flex: 1,
-    height: "90%",
-    marginTop: "10vh"
-  },
-  grow: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
-  },
-  viewButtons: {
-    minWidth: 150,
-    textAlign: "center",
-    color: "#094492",
-    borderColor: "#094492"
-  },
-  viewButtonsSelected: {
-    minWidth: 150,
-    textAlign: "center",
-    color: "#fff",
-    backgroundColor: "#094492"
-  },
-  buttonsList: {
-    position: "relative",
-    top: "3vh"
-  },
-  title: {
-    position: "relative",
-    left: "33%",
-    top: "10%"
-  },
-  secondTitle: {
-    position: "relative",
-    left: "40%",
-    top: "10%"
-  },
-  chart: {
-    position: "relative",
-    left: "7%",
-    top: "5%"
-  },
-  generateReport: {
-    position: "relative",
-    right: "10%",
-    top: "76%",
-    left: "10%"
-  },
   resultsContent: {
     position: "relative",
     width: '60vw',
     marginTop: '5vh'
-  },
-  dashboardCard: {
-    border: "3px solid #d9d9d9",
-    borderRadius: 10,
-    backgroundColor: "#fff",
-    height: "100%",
-    boxShadow: "5px",
-    width: "90%",
-    marginRight: "5%",
-    marginLeft: "5%",
-    flexDirection: "column",
-    alignItems: "center",
-    justify: "space-evenly",
-    display: "flex",
-    flex: "1",
-    flexWrap: "nowrap"
   },
   buttonText: {
     fontSize: "12px",
@@ -125,17 +59,10 @@ const styles = {
     height: "5%",
     width: "100%"
   },
-  swipeableView: {
-    width: "100%",
-    height: "75vh"
-  },
   coachPrepCard: {
     width: "100%",
     overflow: "auto"
   },
-  resultsButtons: {
-    marginTop: "2vh"
-  }
 };
 
 const TransitionTypeColors = {
@@ -152,43 +79,43 @@ const raisedThemes = createMuiTheme({
     waitingColor: {
       backgroundColor: lightGreen[300],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
     },
     travelingColor: {
       backgroundColor: orange[400],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
     },
     childWaitingColor: {
       backgroundColor: deepOrange[400],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
     },
     classroomRoutinesColor: {
       backgroundColor: blue[300],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
     },
     bmiColor: {
       backgroundColor: red["A200"],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
     },
     otherColor: {
       backgroundColor: indigo["A200"],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
     }
   }
@@ -199,38 +126,38 @@ const themes = createMuiTheme({
     waitingColor: {
       backgroundColor: lightGreen[300],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     travelingColor: {
       backgroundColor: orange[400],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     childWaitingColor: {
       backgroundColor: deepOrange[400],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     classroomRoutinesColor: {
       backgroundColor: blue[300],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     bmiColor: {
       backgroundColor: red["A200"],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     otherColor: {
       backgroundColor: indigo["A200"],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     }
   },
   overrides: {
@@ -238,8 +165,8 @@ const themes = createMuiTheme({
       raisedPrimary: {
         color: "white"
       },
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     }
   }
 });
@@ -447,41 +374,76 @@ const BehaviorQuestions = [
   }
 ];
 
+interface Props {
+  location: { state: { teacher: { id: string }}},
+  classes: Style
+}
+
+interface Style {
+  root: string,
+  resultsContent: string,
+  buttonText: string,
+  transitionTypeButton: string,
+  tabBar: string,
+  coachPrepCard: string
+}
+
+interface State {
+  view: number,
+  categoryView: string,
+  sessionId: string,
+  sessionDates: Array<string>,
+  notes: Array<object>,
+  sessionLine: number,
+  sessionTraveling: number,
+  sessionWaiting: number,
+  sessionRoutines: number,
+  sessionBehaviorManagement: number,
+  sessionOther: number,
+  trendsDates: Array<string>,
+  trendsLine: Array<number>,
+  trendsTraveling: Array<number>,
+  trendsWaiting: Array<number>,
+  trendsRoutines: Array<number>,
+  trendsBehaviorManagement: Array<number>,
+  trendsOther: Array<number>,
+  trendsTotalColor: string,
+  transitionTime: number,
+  sessionTotal: number,
+  learningActivityTime: number,
+  tabValue: number,
+  openPanel: string,
+  addedToPrep: Array<string>,
+  selectedQuestions: Array<string>
+}
+
 /**
  * transition results
  * @class TransitionResultsPage
  */
-class TransitionResultsPage extends React.Component {
+class TransitionResultsPage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     // this.handleTypeChange = this.handleTypeChange.bind(this);
   }
 
   state = {
-    auth: true,
-    anchorEl: null,
-    help: false,
-    type: null,
-    hex: "#FFFFFF",
-    entries: [],
-    dbCounter: 0, // @Hack @Temporary !!!
     view: ViewEnum.DATA,
-    categoryView: null,
+    categoryView: '',
     sessionId: "",
     sessionDates: [],
     notes: [],
-    log: [],
-    sessionLine: null,
-    sessionTraveling: null,
-    sessionWaiting: null,
-    sessionRoutines: null,
-    sessionBehaviorManagement: null,
-    sessionOther: null,
+    sessionLine: 0,
+    sessionTraveling: 0,
+    sessionWaiting: 0,
+    sessionRoutines: 0,
+    sessionBehaviorManagement: 0,
+    sessionOther: 0,
     trendsDates: [],
-    trendsLine:  [],
+    trendsLine: [],
     trendsTraveling: [],
     trendsWaiting:  [],
     trendsRoutines: [],
@@ -489,12 +451,12 @@ class TransitionResultsPage extends React.Component {
     trendsOther: [],
     trendsTotal: [],
     trendsTotalColor: "#0988EC",
-    totalTime: null,
+    // totalTime: null,
     transitionTime: 0,
-    sessionTotal: null,
+    sessionTotal: 0,
     learningActivityTime: 0,
     tabValue: 0,
-    openPanel: null,
+    openPanel: '',
     addedToPrep: [],
     selectedQuestions: []
   };
@@ -510,24 +472,24 @@ class TransitionResultsPage extends React.Component {
   /**
    * @param {string} teacherId
    */
-  handleTrendsFetch = teacherId => {
+  handleTrendsFetch = (teacherId: string) => {
     const firebase = this.context;
-    const dateArray = [];
-    const lineArray = [];
-    const travelingArray = [];
-    const waitingArray = [];
-    const routinesArray = [];
-    const behaviorManagementArray = [];
-    const otherArray = [];
-    const totalArray = [];
+    const dateArray: Array<string> = [];
+    const lineArray: Array<number> = [];
+    const travelingArray: Array<number> = [];
+    const waitingArray: Array<number> = [];
+    const routinesArray: Array<number> = [];
+    const behaviorManagementArray: Array<number> = [];
+    const otherArray: Array<number> = [];
+    const totalArray: Array<number> = [];
     let formattedTime;
     firebase.fetchTransitionTrend(teacherId).then(dataSet => {
-      dataSet.map(data => {
+      dataSet.forEach(data => {
         formattedTime = this.handleTrendsFormatTime(data.total);
-        dateArray.push([
+        dateArray.push(
           moment(data.startDate.value).format("MMM Do"),
           formattedTime
-        ]);
+        );
         lineArray.push(Math.floor(data.line / data.sessionTotal * 100));
         travelingArray.push(Math.floor(data.traveling / data.sessionTotal * 100));
         waitingArray.push(Math.floor(data.waiting / data.sessionTotal * 100));
@@ -554,7 +516,7 @@ class TransitionResultsPage extends React.Component {
    * @param {number} totalTime
    * @return {number}
    */
-  handleTrendsFormatTime = totalTime => {
+  handleTrendsFormatTime = (totalTime: number) => {
     const seconds = Math.round(totalTime / 1000 % 60);
     const minutes = Math.floor((totalTime / 1000 / 60) % 60);
     const hours = Math.floor((totalTime / 1000 / 3600) % 60);
@@ -646,10 +608,10 @@ class TransitionResultsPage extends React.Component {
   /**
    * @param {string} sessionId
    */
-  handleNotesFetching = sessionId => {
+  handleNotesFetching = (sessionId: string) => {
     const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then(notesArr => {
-      const formattedNotesArr = [];
+      const formattedNotesArr: {id: number, content: string, timestamp: any}[] = [];
       notesArr.map(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -748,9 +710,9 @@ class TransitionResultsPage extends React.Component {
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = teacherId => {
+  handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "transition").then(dates =>
+    firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<string>) =>
       this.setState({
         sessionDates: dates
       })
@@ -784,9 +746,9 @@ class TransitionResultsPage extends React.Component {
   /**
    * @param {string} panel
    */
-  handlePanelChange = panel => {
+  handlePanelChange = (panel: string) => {
     if (this.state.openPanel === panel) {
-      this.setState({ openPanel: null });
+      this.setState({ openPanel: '' });
     } else {
       this.setState({ openPanel: panel });
     }
@@ -795,7 +757,7 @@ class TransitionResultsPage extends React.Component {
   /**
    * @param {string} panel
    */
-  handleAddToPlan = panel => {
+  handleAddToPlan = (panel: string) => {
     if (!this.state.addedToPrep.includes(panel)) {
       this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
     }
@@ -836,6 +798,11 @@ class TransitionResultsPage extends React.Component {
       });
   })};
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
+  };
+
   /**
    * render function
    * @return {ReactElement}
@@ -845,7 +812,7 @@ class TransitionResultsPage extends React.Component {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {(firebase: object) => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid container spacing={16} justify="center" direction="row" alignItems="center">
           <Grid item xs={3}>
@@ -1109,13 +1076,13 @@ class TransitionResultsPage extends React.Component {
                         {this.state.selectedQuestions.map((item, index) => (
                           <div key={index}>
                             <Typography
-                              variant="h7"
+                              variant="h6"
                               style={{textDecoration: "underline"}}
                             >
                               {item.type}
                             </Typography>
                             <ol style={{marginTop: ".5vh", marginBottom: "1vh"}}>
-                              {item.questions.map((question, i) => (
+                              {item.questions.map((question: string, i: number) => (
                                 <li key={i}>
                                   <Typography
                                     variant="subtitle2"
@@ -1160,11 +1127,6 @@ class TransitionResultsPage extends React.Component {
     );
   }
 }
-
-TransitionResultsPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired
-};
 
 TransitionResultsPage.contextType = FirebaseContext;
 export default withStyles(styles)(TransitionResultsPage);

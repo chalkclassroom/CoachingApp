@@ -27,7 +27,9 @@ const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    borderRadius: 8
+    borderRadius: 8,
+    backgroundColor: 'white',
+    padding: '1em'
   },
   definitionTitle: {
     backgroundColor: "#094492",
@@ -70,7 +72,19 @@ const styles: object = {
 };
 
 interface Props {
-  classes: any
+  classes: Style
+}
+
+interface Style {
+  paper: string,
+  definitionTitle: string,
+  definitionText: string,
+  buttonTitle: string,
+  lineExamples: string,
+  travelingExamples: string,
+  waitingExamples: string,
+  routinesExamples: string,
+  behaviorExamples: string,
 }
 
 interface State {

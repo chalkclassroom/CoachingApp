@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import { toggleSequentialMaterials } from "../../state/actions/sequential-activities";
 import Dashboard from "../Dashboard";
-import Countdown from "../Countdown";
+import Countdown from "../Countdown.tsx";
 
 const styles = {
   root: {

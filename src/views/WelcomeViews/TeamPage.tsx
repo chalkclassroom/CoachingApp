@@ -1,12 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import AppBar from "../../components/AppBar";
 import FirebaseContext from "../../components/Firebase/FirebaseContext.js";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import ProjectAdvisor from "../../components/TeamPageComponents/ProjectAdvisor";
+import ProjectAdvisor from "../../components/TeamPageComponents/ProjectAdvisor.js";
 import TeamMemberCard from "../../components/TeamPageComponents/TeamMemberCard";
 import TeamMemberExpansion from "../../components/TeamPageComponents/TeamMemberExpansion";
 import PreschoolPromiseLogoImage from "../../assets/images/PreschoolPromiseLogoImage.jpg";
@@ -19,7 +18,7 @@ import AbtLogoImage from "../../assets/images/AbtLogoImage.png";
 import MNPSLogoImage from "../../assets/images/MNPSLogoImage.jpg";
 import * as Constants from "../../constants";
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     backgroundColor: "#ffffff",
@@ -48,15 +47,31 @@ const styles = {
   }
 };
 
+interface Props {
+  classes: Style
+};
+
+interface Style {
+  root: string,
+  mobileRoot: string,
+  titleText: string,
+  '@media (max-width: 700px)': string,
+  '@media (min-width: 701px)': string
+}
+
+interface State {
+  open: string
+};
+
 /** 
  * class for the team page 
  * @class TeamPage
 */
-class TeamPage extends React.Component {
+class TeamPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       open: null
@@ -111,6 +126,10 @@ class TeamPage extends React.Component {
     }
   };
 
+  public static propTypes = {
+    classes: PropTypes.object.isRequired
+  };
+
   /**
    * render function
    * @return {ReactElement}
@@ -125,7 +144,7 @@ class TeamPage extends React.Component {
         </head>
         <body className={classes.root}>
           <FirebaseContext.Consumer>
-            {firebase => <AppBar firebase={firebase} />}
+            {(firebase: object) => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container
@@ -450,7 +469,7 @@ class TeamPage extends React.Component {
         </body>
         <body className={classes.mobileRoot}>
           <FirebaseContext.Consumer>
-            {firebase => <AppBar firebase={firebase} />}
+            {(firebase: object) => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container
@@ -788,4 +807,4 @@ TeamPage.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withRouter(TeamPage));
+export default withStyles(styles)(TeamPage);

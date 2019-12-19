@@ -22,7 +22,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import PropTypes from "prop-types";
 import Dashboard from "../Dashboard";
-import TotalVisitCount from "../TotalVisitCount";
+import TotalVisitCount from "../TotalVisitCount.tsx";
 
 // TODO: X in top right corner, press and hold to remove/edit the center.
 

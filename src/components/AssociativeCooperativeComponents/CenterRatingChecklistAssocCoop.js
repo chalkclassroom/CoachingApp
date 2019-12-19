@@ -15,7 +15,7 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
-import Countdown from "../Countdown";
+import Countdown from "../Countdown.tsx";
 
 const styles = {
   root: {
