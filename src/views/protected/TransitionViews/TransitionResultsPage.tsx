@@ -17,7 +17,7 @@ import DataQuestions from "../../../components/ResultsComponents/DataQuestions";
 import "chartjs-plugin-datalabels";
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
 import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
-import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
+import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph.tsx";
 import * as moment from "moment";
 import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
 import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";

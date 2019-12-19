@@ -1,12 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import { withStyles } from "@material-ui/core/styles";
 
-
-const styles = {
+const styles: object = {
   button: {
     color: '#ffffff',
     backgroundColor: '#459aeb',
@@ -38,16 +37,71 @@ const styles = {
   }
 };
 
+interface Style {
+  root: string,
+  mobileRoot: string,
+  button: string,
+  titleText: string,
+  bodyText: string,
+  '@media (max-width: 700px)': string,
+  '@media (min-width: 701px)': string
+}
+
+interface Props {
+  classes: Style,
+  iconAlt1: string,
+  icon1: string,
+  title1: string,
+  iconAlt2: string,
+  icon2: string,
+  title2: string,
+  text1: string,
+  text2: string,
+  button1: string,
+  button2: string,
+  onClick1(): void,
+  onClick2(): void,
+  iconAlt: string,
+  icon: string,
+  title: string,
+  text: string,
+  button: string,
+  onClick(): void
+}
+
 /**
  * formatting for details on landing page
  */
-class LandingDetail extends React.Component {
+class LandingDetail extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
-  constructor(props){
+  constructor(props: Props){
     super(props);
   }
+
+  static propTypes = {
+    classes: PropTypes.object,
+    iconAlt1: PropTypes.string,
+    icon1: PropTypes.string,
+    title1: PropTypes.string,
+    iconAlt2: PropTypes.string,
+    icon2: PropTypes.string,
+    title2: PropTypes.string,
+    text1: PropTypes.string,
+    text2: PropTypes.string,
+    button1: PropTypes.string,
+    button2: PropTypes.string,
+    onClick1: PropTypes.func,
+    onClick2: PropTypes.func,
+    iconAlt: PropTypes.string,
+    icon: PropTypes.string,
+    title: PropTypes.string,
+    text: PropTypes.string,
+    button: PropTypes.string,
+    onClick: PropTypes.func
+  }
+
   /**
    * render function
    * @return {ReactElement}
@@ -169,28 +223,6 @@ class LandingDetail extends React.Component {
       </div>
     );
   }
-}
-
-LandingDetail.propTypes = {
-  classes: PropTypes.object,
-  iconAlt1: PropTypes.string,
-  icon1: PropTypes.string,
-  title1: PropTypes.string,
-  iconAlt2: PropTypes.string,
-  icon2: PropTypes.string,
-  title2: PropTypes.string,
-  text1: PropTypes.string,
-  text2: PropTypes.string,
-  button1: PropTypes.string,
-  button2: PropTypes.string,
-  onClick1: PropTypes.func,
-  onClick2: PropTypes.func,
-  iconAlt: PropTypes.string,
-  icon: PropTypes.string,
-  title: PropTypes.string,
-  text: PropTypes.string,
-  button: PropTypes.string,
-  onClick: PropTypes.func
 }
 
 export default withStyles(styles)(LandingDetail);

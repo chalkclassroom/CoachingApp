@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Line } from "react-chartjs-2";
 
@@ -58,7 +58,7 @@ const transitionTrendOptions = {
           beginAtZero: true,
           min: 0,
           max: 100,
-          callback: function(value) {
+          callback: function(value: number) {
             return value + "%";
           }
         },
@@ -77,18 +77,25 @@ const transitionTrendOptions = {
       display: 'auto',
       color: 'black',
       align: 'top',
-      formatter: function(value) {
+      formatter: function(value: number) {
         return value + "%";
       }
     }
   }
 };
 
+interface Props {
+  data: object
+}
+
 /**
  * specifies data sets and formatting for the transition trends graph
  * @class TransitionTrendsGraph
  */
-class TransitionTrendsGraph extends React.Component {
+class TransitionTrendsGraph extends React.Component<Props, {}> {
+  static propTypes = {
+    data: PropTypes.func.isRequired
+  }
   /**
    * render function
    * @return {ReactElement}

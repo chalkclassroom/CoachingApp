@@ -1,18 +1,31 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
+
+interface Props {
+  person: { name: string, role: string, job: string, affiliation: string}
+}
 
 /**
  * formatting for project advisor details
  * @class ProjectAdvisor
  */
-class ProjectAdvisor extends React.Component {
+class ProjectAdvisor extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
+  }
+
+  static propTypes = {
+    person: PropTypes.exact({
+      name: PropTypes.string,
+      role: PropTypes.string,
+      job: PropTypes.string,
+      affiliation: PropTypes.string
+    }).isRequired
   }
 
   /**
@@ -47,7 +60,4 @@ class ProjectAdvisor extends React.Component {
   }
 }
 
-ProjectAdvisor.propTypes = {
-  person: PropTypes.object.isRequired,
-};
 export default ProjectAdvisor;

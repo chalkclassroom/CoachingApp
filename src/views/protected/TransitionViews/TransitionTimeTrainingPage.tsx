@@ -9,7 +9,7 @@ import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import "chartjs-plugin-datalabels";
-import TrainingVideo from "../../../components/Shared/TrainingVideo";
+import TrainingVideo from "../../../components/Shared/TrainingVideo.tsx";
 import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 

@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import DemoVideo from './DemoVideo';
+import DemoVideo from './DemoVideo.tsx';
 import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
@@ -18,28 +18,42 @@ function getModalStyle() {
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "60%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   },
   photoIcon: {
     height:"15vh"
   }
-});
+};
+
+interface Style {
+  paper: string,
+  photoIcon: string
+}
+
+interface Props {
+  classes: Style,
+  handleClose(): void
+}
+
+interface State {
+  open: boolean,
+  role: number
+}
 
 /**
  * formatting for modal containing demo video on landing page
  * @class DemoModal
  */
-class DemoModal extends React.Component {
+class DemoModal extends React.Component<Props, State> {
   state = {
     open: true,
     role: 0
@@ -51,6 +65,11 @@ class DemoModal extends React.Component {
 
   handleClose = () => {
     this.setState({ open: false });
+  };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    handleClose: PropTypes.func.isRequired
   };
 
   /**
@@ -83,10 +102,5 @@ class DemoModal extends React.Component {
     );
   }
 }
-
-DemoModal.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.func.isRequired
-};
 
 export default withStyles(styles)(DemoModal);

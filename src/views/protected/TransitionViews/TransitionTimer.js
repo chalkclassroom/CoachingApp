@@ -5,7 +5,7 @@ import "react-circular-progressbar/dist/styles.css";
 import Button from "@material-ui/core/Button/Button";
 import Grid from "@material-ui/core/Grid/Grid";
 import ms from "pretty-ms";
-import YesNoDialog from "../../../components/Shared/YesNoDialog";
+import YesNoDialog from "../../../components/Shared/YesNoDialog.tsx";
 import cyan from "@material-ui/core/colors/teal";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";

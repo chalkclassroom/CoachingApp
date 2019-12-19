@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from 'prop-types';
+import * as React from "react";
+import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
@@ -16,10 +16,10 @@ function getModalStyle() {
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
   
-const styles = theme => ({
+const styles: object = {
   root: {
     backgroundColor: '#ffffff'
   },
@@ -29,9 +29,8 @@ const styles = theme => ({
   paper: {
     position: "absolute",
     width: "67%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   },
   infoText: {
@@ -72,23 +71,38 @@ const styles = theme => ({
       display: "none"
     }
   }
-});
+};
+
+interface Style {
+  root: string,
+  mobileRoot: string,
+  paper: string,
+  infoText: string,
+  detailText: string,
+  titleText: string,
+  "@media (max-width: 700px)": string,
+  '@media (min-width: 701px)': string
+}
+
+interface Props {
+  classes: Style
+}
+
+interface State {
+  open: boolean
+}
 
 /**
  * Modal displaying upcoming events on landing page
  * @class UpcomingEventsModal
  */
-class UpcomingEventsModal extends React.Component {
+class UpcomingEventsModal extends React.Component<Props, State> {
   state = {
-      open: true
+    open: true
   };
 
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
+  static propTypes = {
+    classes: PropTypes.object.isRequired
   };
 
   /**
@@ -175,8 +189,5 @@ class UpcomingEventsModal extends React.Component {
   }
 }
 
-UpcomingEventsModal.propTypes = {
-  classes: PropTypes.object.isRequired
-}
-    
+
 export default withStyles(styles)(UpcomingEventsModal);

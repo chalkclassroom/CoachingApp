@@ -1,13 +1,21 @@
-import React from "react";
+import * as React from "react";
 import { DefaultPlayer as Video } from 'react-html5video/dist';
 import 'react-html5video/dist/styles.css';
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
+
+interface Props {
+  videoUrl: string
+}
 
 /**
  * specifies controls and default settings for demo video on landing page
  * @class DemoVideo
  */
-class DemoVideo extends React.Component {
+class DemoVideo extends React.Component<Props, {}> {
+  
+  static propTypes = {
+    videoUrl: PropTypes.string.isRequired
+  }
   /**
    * render function
    * @return {ReactElement}
@@ -35,9 +43,5 @@ class DemoVideo extends React.Component {
     );
   }
 }
-
-DemoVideo.propTypes = {
-  videoUrl: PropTypes.string.isRequired
-};
 
 export default DemoVideo;

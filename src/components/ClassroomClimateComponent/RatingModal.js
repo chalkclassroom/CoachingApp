@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
-import YesNoDialog from "../../components/Shared/YesNoDialog";
+import YesNoDialog from "../../components/Shared/YesNoDialog.tsx";
 
 /**
  * specifies styling for modal

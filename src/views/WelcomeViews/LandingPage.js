@@ -24,9 +24,9 @@ import UnitedWayLogoImage from '../../assets/images/UnitedWayLogoImage.jpg';
 import VanderbiltPeabodyLogoImage from '../../assets/images/VanderbiltPeabodyLogoImage.png';
 import WondryLogoImage from '../../assets/images/WondryLogoImage.png';
 import Typography from '@material-ui/core/Typography/Typography';
-import LandingDetail from '../../components/LandingPageComponents/LandingDetail.js';
-import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard.js';
-import Impact from '../../components/LandingPageComponents/Impact.js';
+import LandingDetail from '../../components/LandingPageComponents/LandingDetail.tsx';
+import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard.tsx';
+import Impact from '../../components/LandingPageComponents/Impact.tsx';
 import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
 import iPadImage from '../../assets/images/iPadImage.svg';
@@ -35,9 +35,9 @@ import CoachingCycleFullMobileImage from '../../assets/images/CoachingCycleFullM
 import CoachLandingImage from '../../assets/images/CoachLandingImage.jpg';
 import CoachLandingLargeImage from '../../assets/images/CoachLandingLargeImage.jpg';
 import CoachLandingMobileImage from '../../assets/images/CoachLandingMobileImage.jpg';
-import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.js';
+import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.tsx';
 import PilotModal from '../../components/LandingPageComponents/PilotModal.js';
-import DemoModal from '../../components/LandingPageComponents/DemoModal.js';
+import DemoModal from '../../components/LandingPageComponents/DemoModal.tsx';
 import { ClickAwayListener } from '@material-ui/core/es';
 
 const styles = {
