@@ -1,41 +1,27 @@
 // Shows the rendered HTML output depending on what the used chose from the ChooseIntent component.
 // Allows editing of the contents to customise the outgoing email.
-import React, { useRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 
-const EmailBody: React.FC<{ chosenIntent: string }> = (props) => {
-    const textVal = useRef<HTMLParagraphElement>(null);
+type EmailBodyProps = {
+    emailText: JSX.Element, 
+    emailTextRef: React.MutableRefObject<HTMLDivElement>
+}
 
-    // TODO: Replace with appropriate text
-    let text = props.chosenIntent;
-
-    const handleClick = () => {
-        if (textVal && textVal.current){
-            let emailText = textVal.current.textContent;
-            // TODO best approach?
-            text = emailText !== null ? emailText : text;
-            // rn for debugging purposes
-            alert(text);
-        }
-    }
-
-    const renderBody = () => {
-        const intent = props.chosenIntent;
-        return (
-            <p contentEditable={true} ref={textVal} onClick={handleClick}>{text}</p>
-        );
-    }
-    
+const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
     return (
         <Paper>
-            {renderBody()}
+            <div contentEditable={true} ref={props.emailTextRef}>
+                {props.emailText}
+            </div>
         </Paper>
     );
 }
 
 EmailBody.propTypes = {
-    chosenIntent: PropTypes.string.isRequired
+    emailText: PropTypes.element.isRequired,
+    emailTextRef: PropTypes.instanceOf(React.MutableRefObject).isRequired,
 }
 
 export default EmailBody;
