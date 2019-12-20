@@ -21,7 +21,7 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
 
 EmailBody.propTypes = {
     emailText: PropTypes.element.isRequired,
-    textRef: PropTypes.instanceOf(React.MutableRefObject).isRequired,
+    emailTextRef: PropTypes.instanceOf(React.MutableRefObject).isRequired,
 }
 
 export default EmailBody;
