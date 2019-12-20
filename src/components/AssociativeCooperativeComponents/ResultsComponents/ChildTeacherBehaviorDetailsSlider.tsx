@@ -1,12 +1,8 @@
-import React from "react";
-// import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core";
+import * as React from "react";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import ChildBehaviorsDetailsHorizontalBar from "./ChildBehaviorsDetailsHorizontalBar";
-import TeacherBehaviorsDetailsHorizontalBar from "./TeacherBehaviorsDetailsHorizontalBar";
-
-const styles = {};
+import ChildBehaviorsDetailsHorizontalBar from "./ChildBehaviorsDetailsHorizontalBar.tsx";
+import TeacherBehaviorsDetailsHorizontalBar from "./TeacherBehaviorsDetailsHorizontalBar.tsx";
 
 /**
  * Swipe View for Child and Teacher Associative&Cooperative Bar Charts
@@ -42,9 +38,5 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component {
   }
 }
 
-/* ChildTeacherBehaviorDetailsSlider.propTypes = {
-  classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
-}; */
 
-export default withStyles(styles)(ChildTeacherBehaviorDetailsSlider);
+export default ChildTeacherBehaviorDetailsSlider;

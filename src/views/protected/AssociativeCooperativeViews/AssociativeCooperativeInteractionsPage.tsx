@@ -1,14 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
 import CenterMenuAssocCoop from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
-// import AssociativeCooperativeRecs from "./AssociativeCooperativeRecs";
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     backgroundColor: "#ffffff",
@@ -21,47 +20,46 @@ const styles = {
   }
 };
 
-class AssociativeCooperativeInteractionsPage extends React.Component {
+interface Style {
+  root: string,
+  grow: string
+}
+
+interface Props {
+  classes: Style,
+  location: { state: { teacher: { id: string }}}
+}
+
+interface State {
+  auth: boolean,
+  completeEnabled: boolean,
+}
+
+class AssociativeCooperativeInteractionsPage extends React.Component<Props, State> {
   state = {
     auth: true,
-    ratingIsOpen: false,
-    ratings: [],
-    climateType: false,
     completeEnabled: false,
-    recs: true
   };
 
-  handleRecsModal = open => {
-    if (open) {
-      this.setState({ recs: true });
-    } else {
-      this.setState({ recs: false });
-    }
-  };
-
-  handleRatingModal = () => {
-    this.setState({ ratingIsOpen: true });
-  };
-
-  handleClickAway = () => {
-    this.setState({ help: false });
-  };
-
-  handleRatingConfirmation = rating => {
-    this.setState({ ratingIsOpen: false });
-  };
-  handleCompleteButton = enable => {
+  handleCompleteButton = (enable: boolean) => {
     this.setState({ completeEnabled: enable });
   };
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
+  };
+
   render() {
+    const { classes } = this.props;
     return (
-      <div className={this.props.classes.root}>
+      <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => (
+          {(firebase: object) => (
             <AppBar
               firebase={firebase}
-              classes={{ root: this.props.classes.grow }}
+              //classes={{ root: this.props.classes.grow }}
+              className={classes.grow}
             />
           )}
         </FirebaseContext.Consumer>
@@ -80,7 +78,7 @@ class AssociativeCooperativeInteractionsPage extends React.Component {
         ) */}
         <main style={{ flex: 1 }}>
           <FirebaseContext.Consumer>
-            {firebase => (
+            {(firebase: object) => (
               <CenterMenuAssocCoop
                 teacherId={this.props.location.state.teacher.id}
                 firebase={firebase}
@@ -93,10 +91,6 @@ class AssociativeCooperativeInteractionsPage extends React.Component {
     );
   }
 }
-
-AssociativeCooperativeInteractionsPage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default connect(null, { deleteAllCenters })(
   withStyles(styles)(AssociativeCooperativeInteractionsPage)

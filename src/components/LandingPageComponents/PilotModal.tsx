@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import PilotForm from './PilotForm';
+import PilotForm from './PilotForm.tsx';
 import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
@@ -18,16 +18,15 @@ function getModalStyle() {
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "60%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   },
   photoIcon: {
@@ -39,12 +38,29 @@ const styles = theme => ({
       width: '75%'
     },
   },
-});
+};
+
+interface Style {
+  paper: string,
+  photoIcon: string,
+  '@media (max-width: 700px)': string
+}
+
+interface Props {
+  classes: Style,
+  handleClose(): void,
+  firebase: {}
+}
+
+interface State {
+  open: boolean,
+  role: number
+}
 
 /**
  * formatting for modal containing pilot sign up form on landing page
  */
-class PilotModal extends React.Component {
+class PilotModal extends React.Component<Props, State> {
   state = {
     open: true,
     role: 0
@@ -57,6 +73,13 @@ class PilotModal extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    firebase: PropTypes.object.isRequired
+  };
+
   /**
    * render function
    * @return {ReactElement}
@@ -87,11 +110,5 @@ class PilotModal extends React.Component {
     );
   }
 }
-
-PilotModal.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  firebase: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(PilotModal);

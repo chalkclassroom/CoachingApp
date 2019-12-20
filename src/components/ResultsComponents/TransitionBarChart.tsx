@@ -1,22 +1,36 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import {HorizontalBar} from 'react-chartjs-2';
 import { lightGreen, orange, deepOrange, blue, indigo, red } from '@material-ui/core/colors';
+
+interface Props {
+  line: number,
+  traveling: number,
+  waiting: number,
+  routines: number,
+  behaviorManagement: number,
+  other: number
+}
 
 /**
  * specifies data sets and formatting for the transition details bar graph
  * @class TransitionBarChart
  */
-class TransitionBarChart extends React.Component {
+class TransitionBarChart extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
+  }
 
-    this.state = {
-
-    }
+  static propTypes = {
+    line: PropTypes.number.isRequired,
+    traveling: PropTypes.number.isRequired,
+    waiting: PropTypes.number.isRequired,
+    routines: PropTypes.number.isRequired,
+    behaviorManagement: PropTypes.number.isRequired,
+    other: PropTypes.number.isRequired,
   }
 
   /**
@@ -57,7 +71,7 @@ class TransitionBarChart extends React.Component {
                   fontSize: 18,
                   fontColor: "#000000",
                 },
-                afterFit: function(scale) {
+                afterFit: function(scale: { height: number }) {
                   scale.height = 100 // creates pading between ticks and scaleLabel
                 }
               }
@@ -73,7 +87,7 @@ class TransitionBarChart extends React.Component {
                   fontSize: 18,
                   fontColor: "#000000"
                 },
-                afterFit: function(scale) {
+                afterFit: function(scale: { width: number }) {
                   scale.width = 260
                 },
               }
@@ -94,7 +108,7 @@ class TransitionBarChart extends React.Component {
                 size: 14,
                 weight: 'bold'
               },
-              formatter: function(value) {
+              formatter: function(value: number) {
                 if (value > 0) {
                   return value + '%';
                 } else {
@@ -109,15 +123,6 @@ class TransitionBarChart extends React.Component {
       />
     );
   }
-}
-
-TransitionBarChart.propTypes = {
-  line: PropTypes.number,
-  traveling: PropTypes.number,
-  waiting: PropTypes.number,
-  routines: PropTypes.number,
-  behaviorManagement: PropTypes.number,
-  other: PropTypes.number,
 }
 
 export default TransitionBarChart;

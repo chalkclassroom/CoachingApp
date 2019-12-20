@@ -1,6 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
@@ -8,7 +7,6 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import { Line } from "react-chartjs-2";
 
-const styles = {};
 
 const ChildBehaviorTrendsOptions = {
   showScale: true,
@@ -45,7 +43,7 @@ const ChildBehaviorTrendsOptions = {
           beginAtZero: true,
           min: 0,
           max: 100,
-          callback: function(value) {
+          callback: function(value: number) {
             return value + "%";
           }
         },
@@ -62,7 +60,7 @@ const ChildBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value) {
+      formatter: function(value: number) {
         return value + "%";
       }
     }
@@ -104,7 +102,7 @@ const TeacherBehaviorTrendsOptions = {
           beginAtZero: true,
           min: 0,
           max: 100,
-          callback: function(value) {
+          callback: function(value: number) {
             return value + "%";
           }
         },
@@ -121,19 +119,48 @@ const TeacherBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value) {
+      formatter: function(value: number) {
         return value + "%";
       }
     }
   }
 };
 
+interface Props {
+  childData(): {labels: Array<string>,
+    datasets: {
+      label: string,
+      backgroundColor: string,
+      borderColor: string,
+      fill: boolean,
+      lineTension: number,
+      data: Array<number>
+    }
+  },
+  teacherData(): {labels: Array<string>,
+    datasets: {
+      label: string,
+      backgroundColor: string,
+      borderColor: string,
+      fill: boolean,
+      lineTension: number,
+      data: Array<number>
+    }
+  }
+}
+
 /**
  * Swipe View for Child and Teacher Associative&Cooperative Trends Graphs
  * @class ChildTeacherBehaviorTrendsSlider
  * @return {void}
  */
-class ChildTeacherBehaviorTrendsSlider extends React.Component {
+class ChildTeacherBehaviorTrendsSlider extends React.Component<Props, {}> {
+  
+  static propTypes = {
+    childData: PropTypes.func.isRequired,
+    teacherData: PropTypes.func.isRequired
+  };
+
   /**
    * render function
    * @return {ReactElement}
@@ -155,8 +182,8 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component {
             <Line
               data={this.props.childData}
               options={ChildBehaviorTrendsOptions}
-              width="650"
-              height="400"
+              width={650}
+              height={400}
             />
           </Grid>
         </div>
@@ -166,8 +193,8 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component {
             <Line
               data={this.props.teacherData}
               options={TeacherBehaviorTrendsOptions}
-              width="650"
-              height="400"
+              width={650}
+              height={400}
             />
           </Grid>
         </div>
@@ -176,11 +203,4 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component {
   }
 }
 
-ChildTeacherBehaviorTrendsSlider.propTypes = {
-  // classes: PropTypes.object.isRequired,
-  // data: PropTypes.object.isRequired,
-  childData: PropTypes.func.isRequired,
-  teacherData: PropTypes.func.isRequired
-};
-
-export default withStyles(styles)(ChildTeacherBehaviorTrendsSlider);
+export default ChildTeacherBehaviorTrendsSlider;

@@ -16,10 +16,10 @@ import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 // import { ImmortalDB } from "immortal-db";
 import moment from "moment";
-import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.js";
+import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.tsx";
 import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
 import AverageToneRating from "../../../components/ResultsComponents/AverageToneRating.js";
-import ClimateTrendsGraph from "../../../components/ResultsComponents/ClimateTrendsGraph.js";
+import ClimateTrendsGraph from "../../../components/ResultsComponents/ClimateTrendsGraph.tsx";
 
 const styles = {
   root: {

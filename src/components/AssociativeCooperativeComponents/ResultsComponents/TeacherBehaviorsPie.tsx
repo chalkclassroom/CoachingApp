@@ -1,9 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
-
-const styles = {};
 
 /**
  * specifies data sets (and formatting) for child behaviors pie chart
@@ -26,21 +23,29 @@ const styles = {};
 //     }]
 // };
 
+interface Props {
+  noSupportTime: number,
+  supportTime: number
+}
 
 /**
  * Pie Chart for Associative&Cooperative Teacher Behaviors
  * @class TeacherBehaviorsPie
  * @return {void}
  */
-class TeacherBehaviorsPie extends React.Component {
+class TeacherBehaviorsPie extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
   }
 
-  state = {};
+  static propTypes = {
+    noSupportTime: PropTypes.number.isRequired,
+    supportTime: PropTypes.number.isRequired
+  }
+
   /**
    * render function
    * @return {ReactElement}
@@ -48,7 +53,6 @@ class TeacherBehaviorsPie extends React.Component {
   render() {
     // const { classes } = this.props;
     // console.log("inside time: ", this.state.inside);
-    console.log("total session time: " + this.props.sessionTotal);
     const teacherBehaviorsData = {
       labels: [
         "Teacher Support for Assoc./Coop. Interactions",
@@ -70,7 +74,8 @@ class TeacherBehaviorsPie extends React.Component {
         options={{
           tooltips: {
             callbacks: {
-              label: function(tooltipItem, data) {
+              label: function(tooltipItem: { datasetIndex: number, index: number },
+                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const meta = dataset._meta[Object.keys(dataset._meta)[0]];
                 const total = meta.total;
@@ -80,25 +85,17 @@ class TeacherBehaviorsPie extends React.Component {
                 );
                 return currentValue + " (" + percentage + "%)";
               },
-              title: function(tooltipItem, data) {
+              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }) {
                 return data.labels[tooltipItem[0].index];
               }
             }
           }
         }}
-        width="650"
-        height="400"
+        width={650}
+        height={400}
       />
     );
   }
 }
 
-TeacherBehaviorsPie.propTypes = {
-  // classes: PropTypes.object.isRequired,
-  // data: PropTypes.object.isRequired,
-  sessionTotal: PropTypes.number.isRequired,
-  noSupportTime: PropTypes.number.isRequired,
-  supportTime: PropTypes.number.isRequired
-};
-
-export default withStyles(styles)(TeacherBehaviorsPie);
+export default TeacherBehaviorsPie;

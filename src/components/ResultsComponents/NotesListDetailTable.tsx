@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table/Table";
 import TableHead from "@material-ui/core/TableHead/TableHead";
@@ -8,7 +8,7 @@ import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import Paper from "@material-ui/core/Paper/Paper";
 
-const styles = {
+const styles: object = {
   paper: {
     width: "100%",
     overflowX: "auto",
@@ -21,11 +21,27 @@ const styles = {
   }
 };
 
+interface Style {
+  paper: string,
+  tableHeader: string
+}
+
+interface Props {
+  classes: Style,
+  data: Array<{ timestamp: any, content: string }>
+}
+
 /**
  * formats table display of observation notes on results screens
  * @class NotesListDetailTable
  */
-class NotesListDetailTable extends React.Component {
+class NotesListDetailTable extends React.Component<Props, {}> {
+  
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired
+  };
+
   /**
    * render function
    * @return {ReactElement}
@@ -35,7 +51,7 @@ class NotesListDetailTable extends React.Component {
 
     return (
       <Paper className={classes.paper}>
-        <Table className={classes.table}>
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell className={classes.tableHeader}>Time</TableCell>
@@ -45,8 +61,8 @@ class NotesListDetailTable extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.props.data.map(row => (
-              <TableRow className={classes.row} key={row.id}>
+            {this.props.data.map((row, index) => (
+              <TableRow key={index}>
                 <TableCell component="th" scope="row">
                   {row.timestamp}
                 </TableCell>

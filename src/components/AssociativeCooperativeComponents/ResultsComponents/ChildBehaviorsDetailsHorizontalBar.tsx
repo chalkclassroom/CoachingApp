@@ -1,9 +1,6 @@
-import React from "react";
-// import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core";
+import * as React from "react";
 import { HorizontalBar } from "react-chartjs-2";
 
-const styles = {};
 
 /**
  * specifies data sets (and formatting) for the child behaviors details horizontal bar
@@ -38,14 +35,9 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component {
    * @return {ReactElement}
    */
   render() {
-    // const { classes } = this.props;
-    return <HorizontalBar data={childBehaviorsData} width="650" height="400" />;
+    return <HorizontalBar data={childBehaviorsData} width={650} height={400} />;
   }
 }
 
-/* ChildBehaviorsDetailsHorizontalBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
-}; */
 
-export default withStyles(styles)(ChildBehaviorsDetailsHorizontalBar);
+export default ChildBehaviorsDetailsHorizontalBar;
