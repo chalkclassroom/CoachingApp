@@ -26,7 +26,14 @@ const styles = theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
     borderRadius: 8
-  }
+  },
+  "@media (max-width: 700px)": {
+    paper: {
+      position: 'fixed',
+      height: '60%',
+      width: '75%'
+    },
+  },
 });
 
 class LoginModal extends React.Component {

@@ -108,10 +108,10 @@ class CenterRatingChecklistAssocCoop extends React.Component {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
-      let mEntry = {
+      const mEntry = {
         checked: this.state.checked,
         people: this.state.people
-        //acType: this.state.acType
+        // acType: this.state.acType
       };
       // <<<<<<< HEAD
       // =======
@@ -170,8 +170,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
       const newChecked = [...checked];
       for (let i = 5; i <= 8; i++) {
         // If there are teacher ratings checked, remove them
-        if (checked.indexOf(i) !== -1) {
-          let currentIndex = checked.indexOf(i);
+        if (checked.includes(i)) {
+          const currentIndex = checked.indexOf(i);
           newChecked.splice(currentIndex);
         }
       }
@@ -189,8 +189,8 @@ class CenterRatingChecklistAssocCoop extends React.Component {
       const newChecked = [...checked];
       for (let i = 5; i <= 8; i++) {
         // If there are teacher ratings checked, remove them
-        if (checked.indexOf(i) !== -1) {
-          let currentIndex = checked.indexOf(i);
+        if (checked.includes(i)) {
+          const currentIndex = checked.indexOf(i);
           newChecked.splice(currentIndex);
         }
       }
@@ -360,7 +360,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.indexOf(1) !== -1
+                              this.state.checked.includes(1)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -376,7 +376,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.indexOf(2) !== -1
+                              this.state.checked.includes(2)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -393,7 +393,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.indexOf(3) !== -1
+                              this.state.checked.includes(3)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -409,7 +409,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.indexOf(4) !== -1
+                              this.state.checked.includes(4)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -427,7 +427,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.indexOf(5) !== -1
+                              this.state.checked.includes(5)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -449,7 +449,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.indexOf(6) !== -1
+                              this.state.checked.includes(6)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -464,7 +464,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.indexOf(7) !== -1
+                              this.state.checked.includes(7)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -481,7 +481,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.indexOf(8) !== -1
+                              this.state.checked.includes(8)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -497,7 +497,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.indexOf(9) !== -1
+                              this.state.checked.includes(9)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -513,7 +513,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.indexOf(10) !== -1
+                              this.state.checked.includes(10)
                             }
                             disabled={this.teacherDisabled()}
                           />

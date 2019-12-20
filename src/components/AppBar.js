@@ -9,6 +9,7 @@ import {
   IconButton
 } from "@material-ui/core";
 import { AppBar as NavBar } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 import LogoImage from "../assets/images/LogoImage.svg";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
@@ -29,6 +30,8 @@ const styles = {
     flexGrow: 1
   },
   menuButton: {
+    fontFamily: 'Arimo',
+    fontSize: 16,
     marginLeft: -12,
     marginRight: 20,
     "&:hover": {
@@ -43,8 +46,37 @@ const styles = {
     margin: 10
   },
   menuText: {
-    color: "#FFFFFF"
-  }
+    color:'#FFFFFF',
+  },
+  chalkText: {
+    color: 'white',
+    fontFamily: 'Arimo',
+    fontSize: 20,
+    fontWeight: 'bold',
+    lineHeight: '110%',
+    letterSpacing: '0.12em',
+    textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'
+  },
+  coachingText: {
+    color: 'white',
+    fontFamily: 'Arimo',
+    fontSize: 14,
+    fontWeight: 'normal',
+    lineHeight: '110%',
+    letterSpacing: '0.05em'
+  },
+  "@media (max-width: 700px)": {
+    menuButton: {
+      marginLeft: '-0.7em',
+      marginRight: '0.4em'
+    },
+    chalkText: {
+      fontSize: 16
+    },
+    coachingText: {
+      fontSize: 12
+    }
+  },
 };
 
 const theme = createMuiTheme({
@@ -136,16 +168,30 @@ class AppBar extends React.Component {
                     classes.menuButtonHidden,
                     classes.logoButton
                   )}
+                  onClick = {() => this.props.history.push("/")}
                 >
-                  <img src={LogoImage} height={"36"} alt={""} />
+                  <img src={LogoImage} height={'36'} alt={""}/>
                 </IconButton>
-                {/* <Typography
-                  variant="h6"
-                  className={classes.menuText}
-                  onClick={() => this.props.history.push("/")}
-                >
-                  Classroom Quality - REF
-                </Typography> */}
+                <Grid direction="column" justify="center" alignItems="flex-start">
+                  <Grid item>
+                    <Typography
+                      variant="h6"
+                      className={classes.chalkText}
+                      onClick = {() => this.props.history.push("/")}
+                    >
+                      CHALK
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography 
+                      variant="h6"
+                      className={classes.coachingText}
+                      onClick = {() => this.props.history.push("/")}
+                    >
+                      COACHING
+                    </Typography>
+                  </Grid>
+                </Grid>
                 <div color="inherit" className={classes.grow}/>
                 <Router>
                   <div>
@@ -167,7 +213,7 @@ class AppBar extends React.Component {
                         Team
                       </Button>
                     </Link>
-                    <Link to="/about" className={classes.link}>
+                    {/* <Link to="/about" className={classes.link}>
                       <Button
                         color="secondary"
                         className={classes.menuButton}
@@ -175,7 +221,7 @@ class AppBar extends React.Component {
                       >
                         About
                       </Button>
-                    </Link>
+                    </Link> */}
                   </div>
                 </Router>
               </Toolbar>
@@ -196,13 +242,31 @@ class AppBar extends React.Component {
                     classes.menuButtonHidden,
                     classes.logoButton
                   )}
+                  onClick = {() => this.props.history.push("/")}
                 >
-                  <img src={LogoImage} height={"36"} alt={""} />
+                  <img src={LogoImage} height={'36'} alt={""}/>
                 </IconButton>
-                <Typography variant="h6" className={classes.menuText}>
-                  Classroom Quality - REF
-                </Typography>
-                <div color="inherit" className={classes.grow} />
+                <Grid direction="column" justify="center" alignItems="flex-start">
+                  <Grid item>
+                    <Typography
+                      variant="h6"
+                      className={classes.chalkText}
+                      onClick = {() => this.props.history.push("/")}
+                    >
+                      CHALK
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography 
+                      variant="h6"
+                      className={classes.coachingText}
+                      onClick = {() => this.props.history.push("/")}
+                    >
+                      COACHING
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <div color="inherit" className={classes.grow}/>
                 <Button
                   color="secondary"
                   onClick={this.handleLoginModal}
@@ -229,7 +293,7 @@ class AppBar extends React.Component {
                         Team
                       </Button>
                     </Link>
-                    <Link to="/about" className={classes.link}>
+                    {/* <Link to = "/about" className={classes.link}>
                       <Button
                         color="secondary"
                         className={classes.menuButton}
@@ -237,9 +301,9 @@ class AppBar extends React.Component {
                       >
                         About
                       </Button>
-                    </Link>
-                  </div>
-                </Router>
+                    </Link> */}
+                  </div>   
+                </Router>        
               </Toolbar>
               {this.state.loginModal ? (
                 <LoginModal

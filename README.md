@@ -1,8 +1,13 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/cqref/coachingapp/badge/master)](https://www.codefactor.io/repository/github/cqref/coachingapp/overview/master)
+![Github Actions Status](https://github.com/cqref/CoachingApp/workflows/CI/badge.svg)
+[![DeepScan grade](https://deepscan.io/api/teams/6380/projects/8382/branches/98461/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=6380&pid=8382&bid=98461)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/577d4324c55a4af8bfb4d7c07ecd1420)](https://www.codacy.com/manual/classroomqualityref/CoachingApp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cqref/CoachingApp&amp;utm_campaign=Badge_Grade)
+
 ## New Branch Workflow:
 
 ### 1. Create new branch for each new feature you work on
-    a. Checkout Master branch with "git checkout master"
-    b. Create new branch from master with "git checkout -b <new-branch>"
+    a. Checkout develop branch with "git checkout develop"
+    b. Create new branch from master with "git checkout -b 'feature/<new-branch-name>'" or 'bug/<new-branch-name>'
     c. Add changes
     d. Commit `git commit -m "message"`
     e. Push `git push`
@@ -57,7 +62,7 @@ Launches the test runner in the Cypress Cloud Dashboar<br>
 2. run deploy in the command prompt.
 
 ## Learn More
-
+JSDocumentation is Available at [Chalk Docs](https://chalkdocs.web.app).
 You can learn more about webpack at [Webpack](https://webpack.js.org/).
 To learn React, check out the [React documentation](https://reactjs.org/).
 To learn Cypress, check out the [Cypress documentation](https://www.cypress.io/).

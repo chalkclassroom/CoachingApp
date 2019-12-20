@@ -24,7 +24,7 @@ class TransitionTimer extends React.Component {
   constructor(props) {
     super(props);
     this.onCancel = this.onCancel.bind(this);
-    let mEntry = {
+    const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "transition"
@@ -44,8 +44,8 @@ class TransitionTimer extends React.Component {
     this.setState(state => {
       if (state.isOn) {
         clearInterval(this.timer);
-        let end = new Date();
-        let entry = {
+        const end = new Date();
+        const entry = {
           start: this.state.start.toISOString(),
           end: end.toISOString(),
           duration: ms(this.state.time),
@@ -56,7 +56,7 @@ class TransitionTimer extends React.Component {
         this.props.handleEndTransition();
       } else {
         const startTime = Date.now() - this.state.time;
-        let mStart = new Date();
+        const mStart = new Date();
         this.setState({ start: mStart });
         this.timer = setInterval(() => {
           this.setState({ time: Math.round(Date.now() - startTime) });
@@ -82,7 +82,7 @@ class TransitionTimer extends React.Component {
 
   handleAppend = entry => {
     this.props.pushOntoTransitionStack(entry);
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.handlePushTransition(entry);
   };
 

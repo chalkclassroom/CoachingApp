@@ -23,7 +23,7 @@ const styles = theme => ({
   }
 });
 
-let getHexFromType = type => {
+const getHexFromType = type => {
   switch (type) {
     case "inside":
       return COLOR_2;

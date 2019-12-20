@@ -13,7 +13,7 @@ import Select from "@material-ui/core/Select";
 import GenerateReportImage from "../../../assets/images/GenerateReportImage.svg";
 import AssocCoopIconImage from "../../../assets/images/AssocCoopIconImage.svg";
 import { withStyles } from "@material-ui/core/styles";
-//import spreadsheetData from "../../../SPREADSHEET_SECRETS";
+// import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -131,16 +131,16 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
 
   componentDidMount() {
     console.log(this.props.location.state);
-    let teacherId = this.props.location.state.teacher.id;
+    const teacherId = this.props.location.state.teacher.id;
     this.handleChildTrendsFetch(teacherId);
     this.handleTeacherTrendsFetch(teacherId);
 
-    //this.handleChildACTrendFetch(teacherId);
+    // this.handleChildACTrendFetch(teacherId);
     this.handleDateFetching(this.props.location.state.teacher.id);
   }
 
   handleAppend(entry) {
-    let newEntries = this.state.entries;
+    const newEntries = this.state.entries;
     entry.type = this.state.type;
     newEntries.push(entry);
     this.setState({ entries: newEntries });
@@ -243,11 +243,11 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
   // };
 
   handleChildTrendsFetch = teacherId => {
-    let firebase = this.context;
-    let dateArray = [];
-    let noOppArray = [];
-    let noACArray = [];
-    let ACArray = [];
+    const firebase = this.context;
+    const dateArray = [];
+    const noOppArray = [];
+    const noACArray = [];
+    const ACArray = [];
     let formattedTime;
     firebase.fetchChildACTrend(teacherId).then(dataSet => {
       console.log("Trends dataSet", dataSet);
@@ -279,11 +279,11 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
   };
 
   handleTeacherTrendsFetch = teacherId => {
-    let firebase = this.context;
-    let dateArray = [];
-    let noSupportArray = [];
-    let supportArray = [];
-    let ACArray = [];
+    const firebase = this.context;
+    const dateArray = [];
+    const noSupportArray = [];
+    const supportArray = [];
+    const ACArray = [];
     let formattedTime;
     firebase.fetchTeacherACTrend(teacherId).then(dataSet => {
       console.log("Trends dataSet", dataSet);
@@ -315,9 +315,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
   };
 
   handleTrendsFormatTime = totalTime => {
-    let seconds = Math.floor((totalTime / 1000) % 60);
-    let minutes = Math.floor((totalTime / 1000 / 60) % 60);
-    let hours = Math.floor((totalTime / 1000 / 3600) % 60);
+    const seconds = Math.floor((totalTime / 1000) % 60);
+    const minutes = Math.floor((totalTime / 1000 / 60) % 60);
+    const hours = Math.floor((totalTime / 1000 / 3600) % 60);
     let secondsString = "";
     let minutesString = "";
 
@@ -333,7 +333,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
       minutesString = minutes.toString();
     }
 
-    let formattedTime =
+    const formattedTime =
       hours.toString() + ":" + minutesString + ":" + secondsString;
     console.log("formatted time is ", formattedTime);
 
@@ -397,12 +397,12 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
   };
 
   handleNotesFetching = sessionId => {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then(notesArr => {
       console.log(notesArr);
-      let formattedNotesArr = [];
+      const formattedNotesArr = [];
       notesArr.map(note => {
-        let newTimestamp = new Date(
+        const newTimestamp = new Date(
           note.timestamp.seconds * 1000
         ).toLocaleString("en-US", {
           hour: "numeric",
@@ -423,19 +423,19 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
   };
 
   handleListDetailFetching = sessionId => {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.fetchACDetails(sessionId).then(logArr => {
       console.log(logArr);
-      let formattedLogArr = [];
+      const formattedLogArr = [];
       let newId = 0;
       logArr.map(log => {
         newId += 1;
-        let startTime = new moment(log.sessionStart.value);
-        let newStartTime = startTime.format("hh:mm A");
-        let endTime = new moment(log.sessionEnd.value);
+        const startTime = new moment(log.sessionStart.value);
+        const newStartTime = startTime.format("hh:mm A");
+        const endTime = new moment(log.sessionEnd.value);
         console.log(newStartTime);
-        let dur = moment.duration(endTime.diff(startTime));
-        let newDuration = dur.minutes() + "m " + dur.seconds() + "s";
+        const dur = moment.duration(endTime.diff(startTime));
+        const newDuration = dur.minutes() + "m " + dur.seconds() + "s";
         formattedLogArr.push({
           id: newId,
           startTime: newStartTime,
@@ -482,7 +482,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
 
   handleDateFetching = teacherId => {
     console.log("handle date fetching called");
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.fetchSessionDates(teacherId, "ac").then(dates =>
       this.setState({
         sessionDates: dates
@@ -501,7 +501,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
       () => {
         this.handleNotesFetching(this.state.sessionId);
         this.handleListDetailFetching(this.state.sessionId);
-        let firebase = this.context;
+        const firebase = this.context;
 
         firebase
           .fetchChildACSummary(this.state.sessionId)

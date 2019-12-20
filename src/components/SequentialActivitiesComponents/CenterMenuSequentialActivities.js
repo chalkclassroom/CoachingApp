@@ -39,7 +39,7 @@ const styles = theme => ({
 });
 
 const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
-  let hsl = Math.max(82 - 4 * visitCount, 54);
+  const hsl = Math.max(82 - 4 * visitCount, 54);
 
   return (
     <Button
@@ -147,7 +147,7 @@ class CenterChecklist extends React.Component {
                     onClick={this.handleToggle(value)}
                   >
                     <Checkbox
-                      checked={this.state.checked.indexOf(value) !== -1}
+                      checked={this.state.checked.includes(value)}
                       tabIndex={-1}
                       disableRipple
                     />
@@ -171,7 +171,7 @@ class CenterChecklist extends React.Component {
                     onClick={this.handleToggle(value)}
                   >
                     <Checkbox
-                      checked={this.state.checked.indexOf(value) !== -1}
+                      checked={this.state.checked.includes(value)}
                       tabIndex={-1}
                       disableRipple
                     />
@@ -243,7 +243,7 @@ const RATING_SCREEN = 2;
 class CenterMenuSequentialActivities extends React.Component {
   constructor(props) {
     super(props);
-    let mEntry = {
+    const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "AC"

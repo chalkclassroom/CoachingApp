@@ -37,7 +37,7 @@ class TeacherBehaviorsPie extends React.Component {
     const { classes } = this.props;
     // console.log("inside time: ", this.state.inside);
     console.log("total session time: " + this.props.sessionTotal);
-    let teacherBehaviorsData = {
+    const teacherBehaviorsData = {
       labels: [
         "Teacher Support for Assoc./Coop. Interactions",
         "Teacher Present, No Support"
@@ -59,11 +59,11 @@ class TeacherBehaviorsPie extends React.Component {
           tooltips: {
             callbacks: {
               label: function(tooltipItem, data) {
-                var dataset = data.datasets[tooltipItem.datasetIndex];
-                var meta = dataset._meta[Object.keys(dataset._meta)[0]];
-                var total = meta.total;
-                var currentValue = dataset.data[tooltipItem.index];
-                var percentage = parseFloat(
+                const dataset = data.datasets[tooltipItem.datasetIndex];
+                const meta = dataset._meta[Object.keys(dataset._meta)[0]];
+                const total = meta.total;
+                const currentValue = dataset.data[tooltipItem.index];
+                const percentage = parseFloat(
                   ((currentValue / total) * 100).toFixed(1)
                 );
                 return currentValue + " (" + percentage + "%)";

@@ -1,0 +1,73 @@
+name: Prod Release CI to Deploy on Approval of PR
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Assign Author
+        uses: technote-space/assign-author@v1.2.4
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js for use with actions
+        uses: actions/setup-node@v1.1.0
+
+      - name: Checkout Source Code
+        uses: actions/checkout@v2-beta
+        with:
+          ref: ${{ github.event.after }}
+
+      - name: NPM Install Packages
+        working-directory: ./
+        run: |
+          npm ci
+        env:
+          CI: true
+
+      - name: Running ESLinter to Find Errors
+        working-directory: ./
+        run: npm run lint
+        env:
+          CI: true
+
+      - name: Running Cypress Test in CLI Mode
+        working-directory: ./
+        run: npm run test
+        env:
+          CI: true
+
+      - name: Generate on Prod Server Code
+        working-directory: ./
+        run: |
+          npm run removebuild
+          npm run prod
+          npm run copy
+        env:
+          CI: true
+
+      - name: Deploy on Prod Server
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting:cqrefpwa
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_DEPLOY_KEY }}
+
+      - name: Audit ProdServer URL
+        uses: jakejarvis/lighthouse-action@master
+        with:
+          url: 'https://cqref.web.app/'
+
+      - name: Upload results as an artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: prod-lighthouse-report
+          path: './lighthouse-reports'

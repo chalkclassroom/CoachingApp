@@ -12,22 +12,22 @@ class ProjectAdvisor extends React.Component {
     return(
       <Grid container direction="column" justify="center" alignItems="center">
         <Grid item>
-          <Typography variant="subtitle1">
+          <Typography variant="h5" style={{fontFamily: "Arimo", textAlign: "center"}}>
             <strong>{this.props.person.name}</strong>
           </Typography>
         </Grid>
         <Grid item>
-          <Typography>
+          <Typography variant="h6" style={{fontFamily: "Arimo", textAlign: "center"}}>
             {this.props.person.role}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography>
+          <Typography variant="h6" style={{fontFamily: "Arimo", textAlign: "center"}}>
             {this.props.person.job}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography>
+          <Typography variant="h6" style={{fontFamily: "Arimo", textAlign: "center"}}>
             {this.props.person.affiliation}
           </Typography>
         </Grid>

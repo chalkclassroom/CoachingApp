@@ -32,7 +32,7 @@ export default (state = initialState, action) => {
         ]
       };
     case UPDATE_CENTER_COUNT:
-      let newCenters = [...state.sequentialCenters];
+      const newCenters = [...state.sequentialCenters];
       newCenters.some(center => {
         if (center.name === action.centerName.toLowerCase()) {
           ++center.count;
@@ -46,7 +46,7 @@ export default (state = initialState, action) => {
         sequentialCenters: newCenters
       };
     case TOGGLE_SEQUENTIAL_MATERIALS:
-      let new_centers = [...state.sequentialCenters];
+      const new_centers = [...state.sequentialCenters];
       new_centers.some(center => {
         if (center.name === action.centerName.toLowerCase()) {
           center.sequentialMaterialsPresent = !center.sequentialMaterialsPresent;

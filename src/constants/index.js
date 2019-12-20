@@ -1,4 +1,4 @@
-//Colors
+// Colors
 export const TransitionColor = '#094492';
 export const ClimateColor = '#0988ec';
 export const MathColor = '#e55529';
@@ -9,7 +9,7 @@ export const SequentialColor = '#ffd300';
 export const ACColor = '#6f39c4';
 
 
-//Team Members
+// Team Members
 export const CC = {
   'name': 'Caroline Christopher, Ph.D.',
   'initials': 'CC',
@@ -58,7 +58,7 @@ export const CS = {
 
 
 
-//Project Advisors
+// Project Advisors
 export const DF = {
   'name': 'Dale Farran, Ph.D.',
   'role': 'Former Project Affiliate, Early Childhood Content Expert',

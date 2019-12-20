@@ -8,7 +8,8 @@ const config = {
   databaseURL: "https://cqrefpwa.firebaseio.com",
   projectId: "cqrefpwa",
   storageBucket: "cqrefpwa.appspot.com",
-  messagingSenderId: "353838544707"
+  messagingSenderId: "353838544707",
+  measurementId: "G-S797QZ8L3N"
 };
 
 class Firebase {
@@ -25,6 +26,33 @@ class Firebase {
       this.sessionRef = null;
     }
   }
+
+  firebasePilotSignUp = async function(userData) {
+    const data = Object.assign(
+      {},
+      {
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        program: userData.program
+      }
+    );
+    const docRef = firebase.firestore().collection('pilotForm').doc();
+    docRef.set(data)
+      .then( () => {
+        console.log("Visitor submitted pilot form");
+      })
+      .catch(function(error) {
+        console.error("Error signing up: ", error);
+      });
+  };
+
+  emailListSignUp = async email => {
+    this.sessionRef = this.db.collection("emailList").doc();
+    this.sessionRef.set({
+      email: email
+    });
+  };
 
   firebaseEmailSignUp = async function(userData, role) {
     return this.auth
@@ -92,7 +120,7 @@ class Firebase {
       .collection("partners")
       .get()
       .then(partners => {
-        let teacherList = [];
+        const teacherList = [];
         partners.forEach(partner =>
           teacherList.push(this.getTeacherInfo(partner.id))
         );
@@ -108,7 +136,7 @@ class Firebase {
       .where("role", "==", "teacher")
       .get()
       .then(snapshot => {
-        let teacherList = [];
+        const teacherList = [];
         snapshot.forEach(doc =>
           teacherList.push(doc.data().then(doc => doc.data()))
         );
@@ -312,7 +340,7 @@ class Firebase {
       .where("role", "==", "coach")
       .get()
       .then(snapshot => {
-        let coachList = [];
+        const coachList = [];
         snapshot.forEach(doc => coachList.push(doc.data()));
         return coachList;
       })
@@ -334,7 +362,7 @@ class Firebase {
       .where("role", "==", "admin")
       .get()
       .then(snapshot => {
-        let teacherList = [];
+        const teacherList = [];
         snapshot.forEach(doc => teacherList.push(doc.data()));
         return teacherList;
       })
@@ -462,7 +490,7 @@ class Firebase {
       .collection("notes")
       .get()
       .then(snapshot => {
-        let notesArr = [];
+        const notesArr = [];
         snapshot.forEach(doc =>
           notesArr.push({
             id: doc.id,
@@ -493,7 +521,7 @@ class Firebase {
       .collection("questions")
       .get()
       .then(questions => {
-        let questionList = [];
+        const questionList = [];
         questions.forEach(question => questionList.push(question.data()));
         return questionList;
       })
@@ -506,7 +534,7 @@ class Firebase {
       .collection("notes")
       .get()
       .then(querySnapshot => {
-        let notesArr = [];
+        const notesArr = [];
         querySnapshot.forEach(doc =>
           notesArr.push({
             id: doc.id,
@@ -630,11 +658,29 @@ class Firebase {
       );
   };
 
-  fetchTransitionLog = async function(sessionId) {
-    const getTransitionsFirebaseFunction = this.functions.httpsCallable(
-      "funcTransitionLog"
+  fetchTransitionTypeSummary = async function(sessionId) {
+    const getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable(
+      'funcTransitionTypeSummary'
     );
-    return getTransitionsFirebaseFunction({ sessionId: sessionId })
+    return getTransitionTypeCountFirebaseFunction({ sessionId: sessionId })
+    .then(
+      result =>
+        // Read result of the Cloud Function.
+        // var sanitizedMessage = result.data[0];
+        // console.log(sanitizedMessage);
+        // return sanitizedMessage;
+        result.data[0]
+    )
+    .catch(error =>
+      console.error("Error occurred getting transition type summary: ", error)
+    );
+  };
+
+  fetchTransitionLog = async function(sessionId) {
+      const getTransitionsFirebaseFunction = this.functions.httpsCallable(
+        'funcTransitionLogNew'
+      );
+      return getTransitionsFirebaseFunction({ sessionId: sessionId })
       .then(
         result =>
           // Read result of the Cloud Function.
@@ -649,12 +695,13 @@ class Firebase {
   };
 
   fetchTransitionTrend = async function(teacherId) {
-    const getTransitionTrendFirebaseFunction = this.functions.httpsCallable(
-      "funcTransitionTrend"
-    );
-    return getTransitionTrendFirebaseFunction({ teacherId: teacherId })
-      .then(
-        result =>
+      const getTransitionTrendFirebaseFunction = this.functions.httpsCallable(
+        'funcTransitionTrendNew'
+      );
+      return getTransitionTrendFirebaseFunction({ teacherId: teacherId })
+        .then(
+          result =>
+
           // Read result of the Cloud Function.
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);

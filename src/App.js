@@ -29,6 +29,15 @@ import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import MessagingView from "./views/protected/MessagingViews/Messaging.tsx";
+import LogRocket from 'logrocket';
+import setupLogRocketReact from 'logrocket-react';
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('UA-154034655-1');
+ReactGA.pageview(window.location.pathname + window.location.search);
+
+LogRocket.init('akprci/cqref');
+setupLogRocketReact(LogRocket);
 
 const styles = createMuiTheme({
   palette: {

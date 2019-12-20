@@ -95,7 +95,7 @@ class ClassroomClimateTrainingPage extends React.Component {
   };
 
   handleAppend(entry) {
-    let newEntries = this.state.entries;
+    const newEntries = this.state.entries;
     entry.type = this.state.type;
     newEntries.push(entry);
     this.setState({ entries: newEntries });

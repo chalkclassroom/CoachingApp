@@ -5,20 +5,23 @@ import Typography from '@material-ui/core/Typography/Typography';
 import { withStyles } from "@material-ui/core/styles";
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import EmailIcon from '@material-ui/icons/Email';
-import * as Constants from '../constants';
+import * as Constants from '../../constants';
 
 const styles = {
   name: {
     textAlign: 'left',
-    paddingTop: 20
+    paddingTop: 20,
+    fontFamily: "Arimo"
   },
   role: {
     textAlign: 'left',
-    paddingBottom: 10
+    paddingBottom: 10,
+    fontFamily: "Arimo"
   },
   description: {
     textAlign: 'justify',
-    paddingBottom: 20
+    paddingBottom: 20,
+    fontFamily: "Arimo"
   },
   grid: {
     paddingTop: 10,

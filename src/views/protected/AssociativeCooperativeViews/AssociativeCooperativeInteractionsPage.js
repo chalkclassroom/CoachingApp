@@ -6,7 +6,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
 import CenterMenuAssocCoop from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
-//import AssociativeCooperativeRecs from "./AssociativeCooperativeRecs";
+// import AssociativeCooperativeRecs from "./AssociativeCooperativeRecs";
 
 const styles = {
   root: {

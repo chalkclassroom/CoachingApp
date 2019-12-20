@@ -32,7 +32,7 @@ import TextField from "@material-ui/core/TextField";
 
 const styles = theme => ({
   root: {
-    //border: '1px solid #000000',
+    // border: '1px solid #000000',
     flexGrow: 1,
     width: "100%",
     minHeight: "768px",
@@ -40,7 +40,7 @@ const styles = theme => ({
     padding: 0
   },
   container: {
-    //border: '1px solid #FFD800',
+    // border: '1px solid #FFD800',
     display: "flex",
     flexDirection: "column",
     margin: "2% 5% 2% 5%"
@@ -61,7 +61,7 @@ const styles = theme => ({
     fontSize: "2.2em"
   },
   tableContainer: {
-    //border: '1px solid #00FFF6',
+    // border: '1px solid #00FFF6',
     maxWidth: "100%",
     width: "100%",
     overflow: "auto",
@@ -113,7 +113,7 @@ const styles = theme => ({
     maxWidth: "1.8em"
   },
   nameField: {
-    //border: '1px solid #4C00FF'
+    // border: '1px solid #4C00FF'
     textAlign: "left",
     padding: "0.5em",
     overflow: "hidden",
@@ -134,7 +134,7 @@ const styles = theme => ({
     borderRadius: 4
   },
   legendContainer: {
-    //border: '1px solid #FF56FF',
+    // border: '1px solid #FF56FF',
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -144,7 +144,7 @@ const styles = theme => ({
     overflow: "scroll"
   },
   legendItem: {
-    //border: '1px solid #97FF00'
+    // border: '1px solid #97FF00'
     display: "flex",
     alignItems: "center",
     fontSize: "1.3em"
@@ -155,7 +155,7 @@ const styles = theme => ({
     marginRight: "0.2em"
   },
 
-  //Minor Breakpoint -> Shrinking desktop window
+  // Minor Breakpoint -> Shrinking desktop window
   "@media only screen and (max-width:1120px)": {
     emailField: {
       maxWidth: "10em"
@@ -179,7 +179,7 @@ const styles = theme => ({
     }
   },
 
-  //iPad-Mini Portrait
+  // iPad-Mini Portrait
   "@media only screen and (max-width:768px) and (orientation:portrait)": {
     legendContainer: {
       padding: "1em 0 1em 0"

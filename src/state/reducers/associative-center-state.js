@@ -27,7 +27,7 @@ export default (state = initialState, action) => {
         ]
       };
     case UPDATE_CENTER_COUNT:
-      let newCenters = [...state.associativeCenters];
+      const newCenters = [...state.associativeCenters];
       newCenters.some(center => {
         if (center.name === action.centerName.toLowerCase()) {
           ++center.count;

@@ -11,7 +11,7 @@ import SwipeableViews from "react-swipeable-views";
 import TabBar from "@material-ui/core/AppBar";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
-//import spreadsheetData from "../../../SPREADSHEET_SECRETS";
+// import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -21,6 +21,7 @@ import NotesListDetailTable from "../../../components/ResultsComponents/NotesLis
 import DataQuestions from "../../../components/ResultsComponents/DataQuestions";
 import "chartjs-plugin-datalabels";
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
+import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import moment from "moment";
 import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
@@ -38,6 +39,7 @@ import {
 } from "@material-ui/core/colors";
 import { red } from "@material-ui/core/es/colors";
 import CardContent from "@material-ui/core/CardContent";
+import ResultsDashboard from '../../../components/ResultsDashboard';
 
 const styles = {
   root: {
@@ -95,7 +97,9 @@ const styles = {
     left: "10%"
   },
   resultsContent: {
-    position: "relative"
+    position: "relative",
+    width: '60vw',
+    marginTop: '5vh'
   },
   dashboardCard: {
     border: "3px solid #d9d9d9",
@@ -122,10 +126,9 @@ const styles = {
     height: "70px"
   },
   tabBar: {
-    marginTop: "30px",
     marginBottom: "10px",
     height: "5%",
-    width: "80%"
+    width: "100%"
   },
   swipeableView: {
     width: "100%",
@@ -139,6 +142,15 @@ const styles = {
     marginTop: "2vh"
   }
 };
+
+const TransitionTypeColors = {
+  lineColor: lightGreen[300],
+  travelingColor: orange[400],
+  waitingColor: deepOrange[400],
+  routinesColor: blue[300],
+  behaviorManagementColor: red['A200'],
+  otherColor: indigo['A200'],
+}
 
 const raisedThemes = createMuiTheme({
   palette: {
@@ -238,13 +250,11 @@ const themes = createMuiTheme({
 });
 
 const ViewEnum = {
-  SUMMARY: 1,
-  DETAILS: 2,
-  TRENDS: 3,
-  NOTES: 4,
-  NEXT_STEPS: 5,
-  COACH_PREP: 6,
-  ACTION_PLAN: 7
+  DATA: 1,
+  QUESTIONS: 2,
+  COACH_PREP: 3,
+  ACTION_PLAN: 4,
+  NOTES: 5
 };
 
 const LineQuestions = [
@@ -457,23 +467,31 @@ class TransitionResultsPage extends React.Component {
     hex: "#FFFFFF",
     entries: [],
     dbCounter: 0, // @Hack @Temporary !!!
-    view: ViewEnum.SUMMARY,
+    view: ViewEnum.DATA,
     categoryView: null,
-    sessionId: null,
+    sessionId: "",
     sessionDates: [],
     notes: [],
     log: [],
+    sessionLine: null,
+    sessionTraveling: null,
+    sessionWaiting: null,
+    sessionRoutines: null,
+    sessionBehaviorManagement: null,
+    sessionOther: null,
     trendsDates: [],
-    trendsInside: [],
-    trendsOutside: [],
+    trendsLine:  [],
+    trendsTraveling: [],
+    trendsWaiting:  [],
+    trendsRoutines: [],
+    trendsBehaviorManagement:  [],
+    trendsOther: [],
     trendsTotal: [],
     trendsTotalColor: "#0988EC",
-    trendsInsideColor: "#E99C2E",
-    trendsOutsideColor: "#E55529",
     totalTime: null,
-    transitionTime: null,
+    transitionTime: 0,
     sessionTotal: null,
-    learningActivityTime: null,
+    learningActivityTime: 0,
     tabValue: 0,
     openPanel: null,
     addedToPrep: [],
@@ -481,14 +499,14 @@ class TransitionResultsPage extends React.Component {
   };
 
   componentDidMount() {
-    let teacherId = this.props.location.state.teacher.id;
+    const teacherId = this.props.location.state.teacher.id;
     this.handleTrendsFetch(teacherId);
 
     this.handleDateFetching(this.props.location.state.teacher.id);
   }
 
   handleAppend(entry) {
-    let newEntries = this.state.entries;
+    const newEntries = this.state.entries;
     entry.type = this.state.type;
     newEntries.push(entry);
     this.setState({ entries: newEntries });
@@ -533,38 +551,16 @@ class TransitionResultsPage extends React.Component {
     this.setState({ dbCounter: this.state.dbCounter + 1 });
   };
 
-  // handleSpreadsheetAppend = entry => {
-  //   let url = new URL(spreadsheetData.scriptLink),
-  //     params = {
-  //       sheet: "TransitionTime",
-  //       del: "false",
-  //       TrnStart: entry.start,
-  //       TrnEnd: entry.end,
-  //       TrnDur: entry.duration,
-  //       TrnType: entry.type,
-  //       TeacherID: this.props.location.state.key.id
-  //     };
-  //   Object.keys(params).forEach(key =>
-  //     url.searchParams.append(key, params[key])
-  //   );
-  //   fetch(url, {
-  //     method: "POST",
-  //     credentials: "include",
-  //     mode: "no-cors",
-  //     headers: {
-  //       "content-type": "application/json"
-  //     }
-  //   })
-  //     .then(response => console.log("Success"))
-  //     .catch(error => console.error("Error:", error));
-  // };
-
   handleTrendsFetch = teacherId => {
-    let firebase = this.context;
-    let dateArray = [];
-    let insideArray = [];
-    let outsideArray = [];
-    let totalArray = [];
+    const firebase = this.context;
+    const dateArray = [];
+    const lineArray = [];
+    const travelingArray = [];
+    const waitingArray = [];
+    const routinesArray = [];
+    const behaviorManagementArray = [];
+    const otherArray = [];
+    const totalArray = [];
     let formattedTime;
     firebase.fetchTransitionTrend(teacherId).then(dataSet => {
       dataSet.map(data => {
@@ -573,24 +569,32 @@ class TransitionResultsPage extends React.Component {
           moment(data.startDate.value).format("MMM Do"),
           formattedTime
         ]);
-        insideArray.push(Math.floor((data.inside / data.sessionTotal) * 100));
-        outsideArray.push(Math.floor((data.outside / data.sessionTotal) * 100));
+        lineArray.push(Math.floor(data.line / data.sessionTotal * 100));
+        travelingArray.push(Math.floor(data.traveling / data.sessionTotal * 100));
+        waitingArray.push(Math.floor(data.waiting / data.sessionTotal * 100));
+        routinesArray.push(Math.floor(data.routines / data.sessionTotal * 100));
+        behaviorManagementArray.push(Math.floor(data.behaviorManagement / data.sessionTotal * 100));
+        otherArray.push(Math.floor(data.other / data.sessionTotal * 100));
         totalArray.push(Math.floor((data.total / data.sessionTotal) * 100));
       });
 
       this.setState({
         trendsDates: dateArray,
-        trendsInside: insideArray,
-        trendsOutside: outsideArray,
+        trendsLine: lineArray,
+        trendsTraveling: travelingArray,
+        trendsWaiting: waitingArray,
+        trendsRoutines: routinesArray,
+        trendsBehaviorManagement: behaviorManagementArray,
+        trendsOther: otherArray,
         trendsTotal: totalArray
       });
     });
   };
 
   handleTrendsFormatTime = totalTime => {
-    let seconds = Math.floor((totalTime / 1000) % 60);
-    let minutes = Math.floor((totalTime / 1000 / 60) % 60);
-    let hours = Math.floor((totalTime / 1000 / 3600) % 60);
+    const seconds = Math.round(totalTime / 1000 % 60);
+    const minutes = Math.floor((totalTime / 1000 / 60) % 60);
+    const hours = Math.floor((totalTime / 1000 / 3600) % 60);
     let secondsString = "";
     let minutesString = "";
 
@@ -606,7 +610,7 @@ class TransitionResultsPage extends React.Component {
       minutesString = minutes.toString();
     }
 
-    let formattedTime =
+    const formattedTime =
       hours.toString() + ":" + minutesString + ":" + secondsString;
 
     return formattedTime;
@@ -615,41 +619,73 @@ class TransitionResultsPage extends React.Component {
   handleTrendsFormatData = () => {
     return {
       labels: this.state.trendsDates,
-      datasets: [
+      datasets:  [
         {
-          label: "TOTAL",
+          label: 'TOTAL',
           backgroundColor: this.state.trendsTotalColor,
           borderColor: this.state.trendsTotalColor,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsTotal
+          data: this.state.trendsTotal,
         },
         {
-          label: "INSIDE",
-          backgroundColor: this.state.trendsInsideColor,
-          borderColor: this.state.trendsInsideColor,
+          label: 'WAITING IN LINE',
+          backgroundColor: TransitionTypeColors.lineColor,
+          borderColor: TransitionTypeColors.lineColor,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsInside
+          data: this.state.trendsLine,
         },
         {
-          label: "OUTSIDE",
-          backgroundColor: this.state.trendsOutsideColor,
-          borderColor: this.state.trendsOutsideColor,
+          label: 'TRAVELING',
+          backgroundColor: TransitionTypeColors.travelingColor,
+          borderColor: TransitionTypeColors.travelingColor,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsOutside
+          data: this.state.trendsTraveling,
+        },
+        {
+          label: 'CHILD WAITING',
+          backgroundColor: TransitionTypeColors.waitingColor,
+          borderColor: TransitionTypeColors.waitingColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsWaiting,
+        },
+        {
+          label: 'ROUTINES',
+          backgroundColor: TransitionTypeColors.routinesColor,
+          borderColor: TransitionTypeColors.routinesColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsRoutines,
+        },
+        {
+          label: 'BEHAVIOR MANAGEMENT',
+          backgroundColor: TransitionTypeColors.behaviorManagementColor,
+          borderColor: TransitionTypeColors.behaviorManagementColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsBehaviorManagement,
+        },
+        {
+          label: 'OTHER',
+          backgroundColor: TransitionTypeColors.otherColor,
+          borderColor: TransitionTypeColors.otherColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsOther,
         }
       ]
     };
   };
 
   handleNotesFetching = sessionId => {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then(notesArr => {
-      let formattedNotesArr = [];
+      const formattedNotesArr = [];
       notesArr.map(note => {
-        let newTimestamp = new Date(
+        const newTimestamp = new Date(
           note.timestamp.seconds * 1000
         ).toLocaleString("en-US", {
           hour: "numeric",
@@ -668,46 +704,15 @@ class TransitionResultsPage extends React.Component {
     });
   };
 
-  handleListDetailFetching = sessionId => {
-    let firebase = this.context;
-    firebase.fetchTransitionLog(sessionId).then(logArr => {
-      let formattedLogArr = [];
-      let newId = 0;
-      logArr.map(log => {
-        newId += 1;
-        let startTime = new moment(log.transitionStart.value);
-        let newStartTime = startTime.format("hh:mm A");
-        let endTime = new moment(log.transitionEnd.value);
-        let dur = moment.duration(endTime.diff(startTime));
-        let newDuration = dur.minutes() + "m " + dur.seconds() + "s";
-        formattedLogArr.push({
-          id: newId,
-          startTime: newStartTime,
-          duration: newDuration,
-          type: log.type.toUpperCase()
-        });
-      });
-      this.setState({
-        log: formattedLogArr
-      });
-    });
-  };
-
-  summaryClick = () => {
-    if (this.state.view !== ViewEnum.SUMMARY) {
-      this.setState({ view: ViewEnum.SUMMARY });
+  dataClick = () => {
+    if (this.state.view !== ViewEnum.DATA) {
+      this.setState({ view: ViewEnum.DATA });
     }
   };
 
-  listClick = () => {
-    if (this.state.view !== ViewEnum.LIST) {
-      this.setState({ view: ViewEnum.LIST });
-    }
-  };
-
-  trendsClick = () => {
-    if (this.state.view !== ViewEnum.TRENDS) {
-      this.setState({ view: ViewEnum.TRENDS });
+  questionsClick = () => {
+    if (this.state.view !== ViewEnum.QUESTIONS) {
+      this.setState({ view: ViewEnum.QUESTIONS });
     }
   };
 
@@ -734,56 +739,48 @@ class TransitionResultsPage extends React.Component {
       this.setState({
         categoryView: "line",
         openPanel: null
-      });
-    }
-  };
-
-  /* travelingClick = () => {
-    if (this.state.categoryView !== "traveling") {
-      this.setState({openPanel: null},
-        () => {this.setState({categoryView: "traveling"})
       })
     }
   }
- */
+
   travelingClick = () => {
     if (this.state.categoryView !== "traveling") {
       this.setState({
         categoryView: "traveling",
         openPanel: null
-      });
+      })
     }
-  };
+  }
 
   childrenWaitingClick = () => {
     if (this.state.categoryView !== "childrenWaiting") {
       this.setState({
         categoryView: "childrenWaiting",
         openPanel: null
-      });
+      })
     }
-  };
+  }
 
   routinesClick = () => {
     if (this.state.categoryView !== "routines") {
       this.setState({
         categoryView: "routines",
         openPanel: null
-      });
+      })
     }
-  };
+  }
 
   behaviorClick = () => {
     if (this.state.categoryView !== "behavior") {
       this.setState({
         categoryView: "behavior",
         openPanel: null
-      });
+      })
     }
-  };
+  }
 
   handleDateFetching = teacherId => {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.fetchSessionDates(teacherId, "transition").then(dates =>
       this.setState({
         sessionDates: dates
@@ -807,6 +804,30 @@ class TransitionResultsPage extends React.Component {
     }
   };
 
+  handleSummary = () => {
+    if (this.state.tabValue !== 0) {
+      this.setState({
+        tabValue: 0
+      })
+    }
+  };
+
+  handleDetails = () => {
+    if (this.state.tabValue !== 1) {
+      this.setState({
+        tabValue: 1
+      })
+    }
+  };
+
+  handleTrends = () => {
+    if (this.state.tabValue !== 2) {
+      this.setState({
+        tabValue: 2
+      })
+    }
+  };
+
   handlePanelChange = panel => {
     if (this.state.openPanel === panel) {
       this.setState({ openPanel: null });
@@ -821,39 +842,37 @@ class TransitionResultsPage extends React.Component {
     }
   };
 
-  changeSessionId = event => {
-    this.setState(
-      {
-        sessionId: event.target.value
-      },
-      () => {
-        this.handleNotesFetching(this.state.sessionId);
-        this.handleListDetailFetching(this.state.sessionId);
-        let firebase = this.context;
+  changeSessionId = (event) => {
+    this.setState({
+      sessionId: event.target.value,
+    }, () => {
+      this.handleNotesFetching(this.state.sessionId);
+      const firebase = this.context;
 
-        //firebase.fetchTransitionSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].inside));
+      firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
+        console.log("the start date is ", summary[0].startDate.value);
+        console.log("the total transition time is ", summary[0].total);
+        console.log("the session total is ", summary[0].sessionTotal);
+        console.log("the learning activity time is ", summary[0].sessionTotal - summary[0].total);
+        this.setState({
+          transitionTime: summary[0].total,
+          sessionTotal: summary[0].sessionTotal,
+          learningActivityTime: summary[0].sessionTotal - summary[0].total
+        })
+      });
 
-        firebase.fetchTransitionSummary(this.state.sessionId).then(summary => {
-          //     this.setState({
-          //       insideTime: summary[0].inside,
-          //       outsideTime: summary[0].outside,
-          //       totalTime: summary[0].total,
-          //       sessionTotal: summary[0].sessionTotal,
-          //       learningActivityTime: summary[0].sessionTotal - summary[0].total
-          console.log("the start date is ", summary[0].startDate.value);
-          console.log("the total transition time is ", summary[0].total);
-          console.log("the session total is ", summary[0].sessionTotal);
-          this.setState({
-            transitionTime: summary[0].total,
-            sessionTotal: summary[0].sessionTotal,
-            learningActivityTime: summary[0].sessionTotal - summary[0].total
-          });
-
-          // })});
-        });
-      }
-    );
-  };
+      firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
+        this.setState({
+          sessionLine: Math.round(((type[0].line/type[0].total)*100)),
+          sessionTraveling: Math.round(((type[0].traveling/type[0].total)*100)),
+          sessionWaiting: Math.round(((type[0].waiting/type[0].total)*100)),
+          sessionRoutines: Math.round(((type[0].routines/type[0].total)*100)),
+          sessionBehaviorManagement: Math.round(((type[0].behaviorManagement/type[0].total)*100)),
+          sessionOther: Math.round(((type[0].other/type[0].total)*100)),
+          transitionTime: type[0].total
+        })
+      });
+  })};
 
   render() {
     const { classes } = this.props;
@@ -862,572 +881,317 @@ class TransitionResultsPage extends React.Component {
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <main style={{ overflow: "hidden", flex: 1 }}>
-          <Grid
-            container
-            spacing={16}
-            justify="center"
-            direction="row"
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Grid
-                container
-                alignItems="center"
-                justify="center"
-                direction="column"
-              >
-                <Card className={classes.dashboardCard}>
-                  <Grid
-                    container
-                    flexGrow={1}
-                    spacing={0}
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                  >
-                    <Grid
-                      item
-                      style={{ marginTop: "10px", marginBottom: "5px" }}
-                    >
-                      <img
-                        src={TransitionTimeIconImage}
-                        alt="Transition Time Icon"
-                        width="100vw"
-                        height="100vh"
-                      />
-                    </Grid>
-                    <Grid item className={classes.resultsButtons}>
-                      <TextField
-                        select
-                        className={classes.viewButtons}
-                        label="Date"
-                        value={this.state.sessionId}
-                        onChange={this.changeSessionId}
-                        InputLabelProps={{ shrink: true }}
-                      >
-                        {this.state.sessionDates.map(date => {
-                          return (
-                            <MenuItem id={date.id} value={date.id}>
-                              <em>
-                                {moment(date.sessionStart.value).format(
-                                  "MMM Do YY hh:mm A"
-                                )}
-                              </em>
-                            </MenuItem>
-                          );
-                        })}
-                      </TextField>
-                    </Grid>
-                    <Grid item className={classes.resultsButtons}>
-                      <Button
-                        size="large"
-                        variant={
-                          this.state.view === ViewEnum.SUMMARY
-                            ? "contained"
-                            : "outlined"
-                        }
-                        className={
-                          this.state.view === ViewEnum.SUMMARY
-                            ? classes.viewButtonsSelected
-                            : classes.viewButtons
-                        }
-                        onClick={this.summaryClick}
-                      >
-                        Summary
-                      </Button>
-                    </Grid>
-                    <Grid item className={classes.resultsButtons}>
-                      <Button
-                        size="large"
-                        color={"#094492"}
-                        variant={
-                          this.state.view === ViewEnum.LIST
-                            ? "contained"
-                            : "outlined"
-                        }
-                        className={
-                          this.state.view === ViewEnum.LIST
-                            ? classes.viewButtonsSelected
-                            : classes.viewButtons
-                        }
-                        onClick={this.listClick}
-                      >
-                        List Detail
-                      </Button>
-                    </Grid>
-                    <Grid item className={classes.resultsButtons}>
-                      <Button
-                        size="large"
-                        color={"#094492"}
-                        variant={
-                          this.state.view === ViewEnum.TRENDS
-                            ? "contained"
-                            : "outlined"
-                        }
-                        className={
-                          this.state.view === ViewEnum.TRENDS
-                            ? classes.viewButtonsSelected
-                            : classes.viewButtons
-                        }
-                        onClick={this.trendsClick}
-                      >
-                        Trends
-                      </Button>
-                    </Grid>
-                    <Grid item className={classes.resultsButtons}>
-                      <Button
-                        size="large"
-                        color={"#094492"}
-                        variant={
-                          this.state.view === ViewEnum.COACH_PREP
-                            ? "contained"
-                            : "outlined"
-                        }
-                        className={
-                          this.state.view === ViewEnum.COACH_PREP
-                            ? classes.viewButtonsSelected
-                            : classes.viewButtons
-                        }
-                        onClick={this.coachPrepClick}
-                      >
-                        Coach Prep
-                      </Button>
-                    </Grid>
-                    <Grid item className={classes.resultsButtons}>
-                      <Button
-                        size="large"
-                        color={"#094492"}
-                        variant={
-                          this.state.view === ViewEnum.ACTION_PLAN
-                            ? "contained"
-                            : "outlined"
-                        }
-                        className={
-                          this.state.view === ViewEnum.ACTION_PLAN
-                            ? classes.viewButtonsSelected
-                            : classes.viewButtons
-                        }
-                        onClick={this.actionPlanClick}
-                      >
-                        Action Plan
-                      </Button>
-                    </Grid>
-                    <Grid
-                      item
-                      style={{ marginTop: "7vh", marginBottom: "2vh" }}
-                    >
-                      <Button
-                        size="large"
-                        color={"#094492"}
-                        variant={
-                          this.state.view === ViewEnum.NOTES
-                            ? "contained"
-                            : "outlined"
-                        }
-                        className={
-                          this.state.view === ViewEnum.NOTES
-                            ? classes.viewButtonsSelected
-                            : classes.viewButtons
-                        }
-                        onClick={this.notesClick}
-                      >
-                        Notes
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Card>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              xs={8}
+        <Grid container spacing={16} justify="center" direction="row" alignItems="center">
+          <Grid item xs={3}>
+            <Grid container 
+              alignItems="center"
               justify="center"
               direction="column"
-              alignItems="center"
             >
-              <TabBar
-                position="static"
-                color="default"
-                className={classes.tabBar}
-              >
-                <Tabs
-                  value={this.state.tabValue}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="fullWidth"
-                >
-                  <Tab label="Results" onClick={this.handleResults} />
-                  <Tab
-                    label="Data-Driven Coaching"
-                    onClick={this.handleCoaching}
-                  />
-                </Tabs>
-              </TabBar>
-              <SwipeableViews
-                index={this.state.tabValue}
-                className={classes.swipeableView}
-              >
-                <div>
-                  {this.state.view === ViewEnum.SUMMARY ? (
-                    <div className={classes.resultsContent}>
-                      <Typography
-                        variant="h5"
-                        style={{ padding: 15, textAlign: "center" }}
-                      >
-                        Total Transition Time: {this.state.totalTime}
-                      </Typography>
-                      <TransitionTimePie
-                        transitionTime={this.state.transitionTime}
-                        learningActivityTime={this.state.learningActivityTime}
-                        style={{ overflow: "hidden" }}
-                      />
-                    </div>
-                  ) : this.state.view === ViewEnum.LIST ? (
-                    <div className={classes.resultsContent}>
-                      <ListDetailTableTransitionResults
-                        data={this.state.log}
-                        style={{ overflow: "hidden" }}
-                      />
-                    </div>
-                  ) : this.state.view === ViewEnum.TRENDS ? (
-                    <div className={classes.resultsContent}>
-                      <TransitionTrendsGraph
-                        data={this.handleTrendsFormatData}
-                        style={{ overflow: "hidden" }}
-                      />
-                    </div>
-                  ) : this.state.view === ViewEnum.NOTES ? (
-                    <div className={classes.resultsContent}>
-                      <NotesListDetailTable
-                        data={this.state.notes}
-                        style={{ overflow: "hidden" }}
-                      />
-                    </div>
-                  ) : this.state.view === ViewEnum.ACTION_PLAN ? (
-                    <div className={classes.resultsContent} /> // replace this null with next steps content
-                  ) : null}
-                </div>
-                <div>
-                  {this.state.view === ViewEnum.LIST ? (
-                    <div>
-                      <Grid container direction="column">
-                        <Grid
-                          container
-                          direction="row"
-                          justify="center"
-                          alignItems="center"
-                        >
-                          <Typography variant="subtitle2">
-                            In which type of transition did children spend the
-                            most amount of time?
-                          </Typography>
-                        </Grid>
-                        <Grid
-                          container
-                          direction="row"
-                          justify="center"
-                          alignItems="center"
-                        >
-                          <Typography variant="subtitle2">
-                            Select a transition type to view questions that will
-                            encourage reflection about teaching practices.
-                          </Typography>
-                        </Grid>
-                        <Grid
-                          container
-                          direction="row"
-                          justify="space-around"
-                          alignItems="center"
-                          style={{ marginTop: "1vh" }}
-                        >
-                          <Grid item>
-                            <Button
-                              style={
-                                this.state.categoryView === "line"
-                                  ? raisedThemes.palette.waitingColor
-                                  : themes.palette.waitingColor
-                              }
-                              onClick={this.lineClick}
-                            >
-                              <img
-                                src={WaitingInLineImage}
-                                className={classes.transitionTypeButton}
-                              />
-                            </Button>
-                          </Grid>
-                          <Grid item>
-                            <Button
-                              style={
-                                this.state.categoryView === "traveling"
-                                  ? raisedThemes.palette.travelingColor
-                                  : themes.palette.travelingColor
-                              }
-                              onClick={this.travelingClick}
-                            >
-                              <img
-                                src={WalkingImage}
-                                className={classes.transitionTypeButton}
-                              />
-                            </Button>
-                          </Grid>
-                          <Grid item>
-                            <Button
-                              style={
-                                this.state.categoryView === "childrenWaiting"
-                                  ? raisedThemes.palette.childWaitingColor
-                                  : themes.palette.childWaitingColor
-                              }
-                              onClick={this.childrenWaitingClick}
-                            >
-                              <img
-                                src={ChildWaitingImage}
-                                className={classes.transitionTypeButton}
-                              />
-                            </Button>
-                          </Grid>
-                          <Grid item>
-                            <Button
-                              style={
-                                this.state.categoryView === "routines"
-                                  ? raisedThemes.palette.classroomRoutinesColor
-                                  : themes.palette.classroomRoutinesColor
-                              }
-                              onClick={this.routinesClick}
-                            >
-                              <img
-                                src={ClassroomRoutinesImage}
-                                className={classes.transitionTypeButton}
-                              />
-                            </Button>
-                          </Grid>
-                          <Grid item>
-                            <Button
-                              style={
-                                this.state.categoryView === "behavior"
-                                  ? raisedThemes.palette.bmiColor
-                                  : themes.palette.bmiColor
-                              }
-                              onClick={this.behaviorClick}
-                            >
-                              <img
-                                src={BMDImage}
-                                className={classes.transitionTypeButton}
-                              />
-                            </Button>
-                          </Grid>
-                        </Grid>
-                        <Grid
-                          container
-                          direction="row"
-                          justify="space-around"
-                          alignItems="center"
-                          style={{ marginTop: ".5vh" }}
-                        >
-                          <Grid
-                            item
-                            xs={2}
-                            className={classes.buttonText}
-                            style={{
-                              fontWeight:
-                                this.state.categoryView === "line"
-                                  ? "bold"
-                                  : "normal"
-                            }}
-                          >
-                            Waiting in Line
-                          </Grid>
-                          <Grid
-                            item
-                            xs={2}
-                            className={classes.buttonText}
-                            style={{
-                              fontWeight:
-                                this.state.categoryView === "traveling"
-                                  ? "bold"
-                                  : "normal"
-                            }}
-                          >
-                            Traveling
-                          </Grid>
-                          <Grid
-                            item
-                            xs={2}
-                            className={classes.buttonText}
-                            style={{
-                              fontWeight:
-                                this.state.categoryView === "childrenWaiting"
-                                  ? "bold"
-                                  : "normal"
-                            }}
-                          >
-                            Children Waiting
-                          </Grid>
-                          <Grid
-                            item
-                            xs={2}
-                            className={classes.buttonText}
-                            style={{
-                              fontWeight:
-                                this.state.categoryView === "routines"
-                                  ? "bold"
-                                  : "normal"
-                            }}
-                          >
-                            Classroom Routines
-                          </Grid>
-                          <Grid
-                            item
-                            xs={2}
-                            className={classes.buttonText}
-                            style={{
-                              fontWeight:
-                                this.state.categoryView === "behavior"
-                                  ? "bold"
-                                  : "normal"
-                            }}
-                          >
-                            Behavior Management
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid
-                        container
-                        direction="column"
-                        style={{ marginTop: "1vh" }}
-                      >
-                        {this.state.categoryView === "line" ? (
-                          <DataQuestions
-                            questions={LineQuestions}
-                            openPanel={this.state.openPanel}
-                            handlePanelChange={this.handlePanelChange}
-                            addedToPrep={this.state.addedToPrep}
-                            handleAddToPlan={this.handleAddToPlan}
-                          />
-                        ) : this.state.categoryView === "traveling" ? (
-                          <DataQuestions
-                            questions={TravelingQuestions}
-                            openPanel={this.state.openPanel}
-                            handlePanelChange={this.handlePanelChange}
-                            addedToPrep={this.state.addedToPrep}
-                            handleAddToPlan={this.handleAddToPlan}
-                          />
-                        ) : this.state.categoryView === "childrenWaiting" ? (
-                          <DataQuestions
-                            questions={WaitingQuestions}
-                            openPanel={this.state.openPanel}
-                            handlePanelChange={this.handlePanelChange}
-                            addedToPrep={this.state.addedToPrep}
-                            handleAddToPlan={this.handleAddToPlan}
-                          />
-                        ) : this.state.categoryView === "routines" ? (
-                          <DataQuestions
-                            questions={RoutinesQuestions}
-                            openPanel={this.state.openPanel}
-                            handlePanelChange={this.handlePanelChange}
-                            addedToPrep={this.state.addedToPrep}
-                            handleAddToPlan={this.handleAddToPlan}
-                          />
-                        ) : this.state.categoryView === "behavior" ? (
-                          <DataQuestions
-                            questions={BehaviorQuestions}
-                            openPanel={this.state.openPanel}
-                            handlePanelChange={this.handlePanelChange}
-                            addedToPrep={this.state.addedToPrep}
-                            handleAddToPlan={this.handleAddToPlan}
-                          />
-                        ) : (
-                          <div />
-                        )}
-                      </Grid>
-                    </div>
-                  ) : this.state.view === ViewEnum.COACH_PREP ? (
-                    <Grid>
-                      <Card
-                        className={classes.coachPrepCard}
-                        style={{ height: "30vh" }}
-                      >
-                        <CardContent>
-                          <Typography variant="h5">Data Reflection</Typography>
-                          <TextField
-                            placeholder="Choose questions from the Data-Driven Coaching tab of the Details section."
-                            fullWidth
-                            disabled
-                          />
-                          <TextField
-                            placeholder="Or add your own questions here!"
-                            fullWidth
-                            multiline
-                          />
-                          {this.state.selectedQuestions.map((item, index) => (
-                            <div>
-                              <Typography
-                                key={index}
-                                variant="h7"
-                                style={{ textDecoration: "underline" }}
-                              >
-                                {item.type}
-                              </Typography>
-                              <ol
-                                style={{
-                                  marginTop: ".5vh",
-                                  marginBottom: "1vh"
-                                }}
-                              >
-                                {item.questions.map((question, i) => (
-                                  <li>
-                                    <Typography key={i} variant="subtitle2">
-                                      {question}
-                                    </Typography>
-                                  </li>
-                                ))}
-                              </ol>
-                            </div>
-                          ))}
-                        </CardContent>
-                      </Card>
-                      <Card
-                        className={classes.coachPrepCard}
-                        style={{ height: "20vh" }}
-                      >
-                        <CardContent>
-                          <Typography variant="h5">
-                            Strengths-Based Feedback
-                          </Typography>
-                          <TextField
-                            placeholder="Add your observations of positive things the teacher did."
-                            fullWidth
-                            multiline
-                          />
-                        </CardContent>
-                      </Card>
-                      <Card
-                        className={classes.coachPrepCard}
-                        style={{ height: "20vh" }}
-                      >
-                        <CardContent>
-                          <Typography variant="h5">Notes</Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ) : this.state.view === ViewEnum.SUMMARY ? (
-                    <Typography style={{ textAlign: "center" }}>
-                      Go to the Details tab to view the Data-Reflection
-                      Questions.
-                    </Typography>
-                  ) : this.state.view === ViewEnum.TRENDS ? (
-                    <Typography style={{ textAlign: "center" }}>
-                      Go to the Details tab to view the Data-Reflection
-                      Questions.
-                    </Typography>
-                  ) : (
-                    <div />
-                  )}
-                </div>
-              </SwipeableViews>
+              <ResultsDashboard
+                magic8="Transition Time"
+                view={this.state.view}
+                dataClick={this.dataClick}
+                questionsClick={this.questionsClick}
+                coachPrepClick={this.coachPrepClick}
+                actionPlanClick={this.actionPlanClick}
+                notesClick={this.notesClick}
+                viewEnum={ViewEnum}
+                sessionId={this.state.sessionId}
+                changeSessionId={this.changeSessionId}
+                sessionDates={this.state.sessionDates}
+              />
             </Grid>
           </Grid>
-        </main>
+          <Grid container xs={8} justify="flex-start" direction="column" alignItems="center" style={{height: '90vh'}}>
+            <div>
+              {this.state.view === ViewEnum.DATA ? (
+                <div className={classes.resultsContent} style={{width: '60vw'}}>
+                  <Grid item>
+                    <TabBar position="static" color="default" className={classes.tabBar}>
+                      <Tabs
+                        value={this.state.tabValue}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        variant="fullWidth"
+                      >
+                        <Tab label="Summary" onClick={this.handleSummary} />
+                        <Tab label="Details" onClick={this.handleDetails} />
+                        <Tab label="Trends" onClick={this.handleTrends} />
+                      </Tabs>
+                    </TabBar>
+                  </Grid>
+                  <Grid item>
+                    {this.state.tabValue === 0 ? (
+                      <div>
+                        {this.state.sessionId ? (
+                          <div>
+                            <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+                              Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
+                            </Typography>
+                            <TransitionTimePie
+                              transitionTime={this.state.transitionTime}
+                              learningActivityTime={this.state.learningActivityTime}
+                              style={{overflow:"hidden", width: '100%'}}
+                            />
+                          </div>
+                        ) : (
+                          <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+                            Please choose a date from the dropdown menu.
+                          </Typography>
+                        )}
+                      </div>
+                      ) : this.state.tabValue === 1 ? (
+                      <div>
+                        <Grid style={{alignItems: "center"}}>
+                          {this.state.sessionId ? (
+                            <div>
+                              <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+                                Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
+                              </Typography>
+                              <TransitionBarChart
+                                line={this.state.sessionLine}
+                                traveling={this.state.sessionTraveling}
+                                waiting={this.state.sessionWaiting}
+                                routines={this.state.sessionRoutines}
+                                behaviorManagement={this.state.sessionBehaviorManagement}
+                                other={this.state.sessionOther}
+                                style={{alignItems: "center", width: '100%', border: '20px solid blue'}}
+                              />
+                          </div>
+                          ) : (
+                            <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+                            Please choose a date from the dropdown menu.
+                            </Typography>
+                          )}
+                        </Grid>
+                      </div>
+                    ) : (
+                      <div>
+                        <TransitionTrendsGraph
+                          data={this.handleTrendsFormatData}
+                          style={{overflow:"hidden", width: '100%', border: '20px solid blue'}}
+                        />
+                      </div>
+                    )}
+                  </Grid>
+                </div>
+              ) : this.state.view === ViewEnum.NOTES ? (
+                <div className={classes.resultsContent}>
+                  <Grid item>
+                    <NotesListDetailTable
+                      data={this.state.notes}
+                      style={{overflow:"hidden", minWidth: '100%'}}
+                    />
+                  </Grid>
+                </div>
+              ) : this.state.view === ViewEnum.QUESTIONS ? (
+                <div className={classes.resultsContent}>
+                  <Grid container direction="column">
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <Typography variant="subtitle2">
+                        In which type of transition did children spend the most amount of time?
+                      </Typography>
+                    </Grid>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <Typography variant="subtitle2">
+                        Select a transition type to view questions that will encourage reflection about teaching practices.
+                      </Typography>
+                    </Grid>
+                    <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
+                      <Grid item>
+                        <Button 
+                          style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
+                          onClick={this.lineClick}
+                        >
+                          <img src={WaitinginLine} className={classes.transitionTypeButton}/>
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
+                          onClick={this.travelingClick}
+                        >
+                          <img src={Walking} className={classes.transitionTypeButton}/>
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          style={this.state.categoryView === "childrenWaiting" ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}
+                          onClick={this.childrenWaitingClick}
+                        >
+                          <img src={ChildWaiting} className={classes.transitionTypeButton}/>
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          style={this.state.categoryView === "routines" ? raisedThemes.palette.classroomRoutinesColor : themes.palette.classroomRoutinesColor}
+                          onClick={this.routinesClick}
+                        >
+                          <img src={ClassroomRoutines} className={classes.transitionTypeButton}/>
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          style={this.state.categoryView === "behavior" ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}
+                          onClick={this.behaviorClick}
+                        >
+                          <img src={bmi} className={classes.transitionTypeButton}/>
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh"}}>
+                      <Grid
+                        item xs={2}
+                        className = {classes.buttonText}
+                        style={{fontWeight: this.state.categoryView === "line" ? "bold" : "normal"}}
+                      >
+                        Waiting in Line
+                      </Grid>
+                      <Grid
+                        item xs={2}
+                        className = {classes.buttonText}
+                        style={{fontWeight: this.state.categoryView === "traveling" ? "bold" : "normal"}}
+                      >
+                        Traveling
+                      </Grid>
+                      <Grid
+                        item xs={2}
+                        className = {classes.buttonText}
+                        style={{fontWeight: this.state.categoryView === "childrenWaiting" ? "bold" : "normal"}}
+                      >
+                        Children Waiting
+                      </Grid>
+                      <Grid
+                        item xs={2}
+                        className = {classes.buttonText}
+                        style={{fontWeight: this.state.categoryView === "routines" ? "bold" : "normal"}}
+                      >
+                        Classroom Routines
+                      </Grid>
+                      <Grid
+                        item xs={2}
+                        className = {classes.buttonText}
+                        style={{fontWeight: this.state.categoryView === "behavior" ? "bold" : "normal"}}
+                      >
+                        Behavior Management
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid container direction="column" style={{marginTop: "1vh"}}>
+                    {this.state.categoryView === "line" ? (
+                      <DataQuestions
+                        questions={LineQuestions}
+                        openPanel={this.state.openPanel}
+                        handlePanelChange={this.handlePanelChange}
+                        addedToPrep={this.state.addedToPrep}
+                        handleAddToPlan={this.handleAddToPlan}
+                      />
+                    ) : this.state.categoryView === "traveling" ? (
+                      <DataQuestions
+                        questions={TravelingQuestions}
+                        openPanel={this.state.openPanel}
+                        handlePanelChange={this.handlePanelChange}
+                        addedToPrep={this.state.addedToPrep}
+                        handleAddToPlan={this.handleAddToPlan}
+                      />
+                    ) : this.state.categoryView === "childrenWaiting" ? (
+                      <DataQuestions
+                        questions={WaitingQuestions}
+                        openPanel={this.state.openPanel}
+                        handlePanelChange={this.handlePanelChange}
+                        addedToPrep={this.state.addedToPrep}
+                        handleAddToPlan={this.handleAddToPlan}
+                      />
+                    ) : this.state.categoryView === "routines" ? (
+                      <DataQuestions
+                        questions={RoutinesQuestions}
+                        openPanel={this.state.openPanel}
+                        handlePanelChange={this.handlePanelChange}
+                        addedToPrep={this.state.addedToPrep}
+                        handleAddToPlan={this.handleAddToPlan}
+                      />
+                    ) : this.state.categoryView === "behavior" ? (
+                      <DataQuestions
+                        questions={BehaviorQuestions}
+                        openPanel={this.state.openPanel}
+                        handlePanelChange={this.handlePanelChange}
+                        addedToPrep={this.state.addedToPrep}
+                        handleAddToPlan={this.handleAddToPlan}
+                      />
+                    ) : <div/>}
+                  </Grid>
+                </div>
+              ) : this.state.view === ViewEnum.COACH_PREP ? (
+                <div className={classes.resultsContent}>
+                  <Grid>
+                    <Card className={classes.coachPrepCard} style={{height: "30vh"}}>
+                      <CardContent>
+                        <Typography variant="h5">
+                          Data Reflection
+                        </Typography>
+                        <TextField
+                          placeholder="Choose questions from the Data-Driven Coaching tab of the Details section." 
+                          fullWidth 
+                          disabled
+                        />
+                        <TextField
+                          placeholder="Or add your own questions here!"
+                          fullWidth
+                          multiline
+                        />
+                        {this.state.selectedQuestions.map((item, index) => (
+                          <div>
+                            <Typography
+                              key={index}
+                              variant="h7"
+                              style={{textDecoration: "underline"}}
+                            >
+                              {item.type}
+                            </Typography>
+                            <ol style={{marginTop: ".5vh", marginBottom: "1vh"}}>
+                              {item.questions.map((question, i) => (
+                                <li>
+                                  <Typography
+                                    key={i}
+                                    variant="subtitle2"
+                                  >
+                                    {question}
+                                  </Typography>
+                                </li>
+                              ))}
+                            </ol>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                    <Card className={classes.coachPrepCard} style={{height: "20vh"}}>
+                      <CardContent>
+                        <Typography variant="h5">
+                          Strengths-Based Feedback
+                        </Typography>
+                        <TextField
+                          placeholder="Add your observations of positive things the teacher did."
+                          fullWidth
+                          multiline
+                        />
+                      </CardContent>
+                    </Card>
+                    <Card className={classes.coachPrepCard} style={{height: "20vh"}}>
+                      <CardContent>
+                        <Typography variant="h5">
+                          Notes
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </div>
+              ) : this.state.view === ViewEnum.ACTION_PLAN ? (
+                <div className={classes.resultsContent} /> // replace this null with next steps content
+              ) : null}
+            </div>
+          </Grid>
+        </Grid>
       </div>
     );
   }

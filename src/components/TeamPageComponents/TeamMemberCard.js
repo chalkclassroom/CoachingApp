@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import CCImage from "../assets/images/CCImage.jpg";
-import DMImage from "../assets/images/DMImage.jpg";
-import KNImage from "../assets/images/KNImage.jpg";
-import CSImage from "../assets/images/CSImage.jpg";
+import CCImage from "../../assets/images/CCImage.jpg";
+import DMImage from "../../assets/images/DMImage.jpg";
+import KNImage from "../../assets/images/KNImage.jpg";
+import CSImage from "../../assets/images/CSImage.jpg";
 
 const styles = {
   imageBox: {
@@ -58,10 +58,10 @@ class TeamMemberCard extends React.Component {
             className={classes.image}
           />
           <div style={{ padding: 8 }}>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle1" style={{fontFamily: "Arimo"}}>
               <strong>{this.props.person.name}</strong>
             </Typography>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle1" style={{fontFamily: "Arimo"}}>
               {this.props.person.role}
             </Typography>
           </div>

@@ -13,7 +13,7 @@ import Select from "@material-ui/core/Select";
 import GenerateReportImage from "../../../assets/images/GenerateReportImage.svg";
 import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
 import { withStyles } from "@material-ui/core/styles";
-//import spreadsheetData from "../../../SPREADSHEET_SECRETS";
+// import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -115,7 +115,7 @@ class SequentialActivitiesResultsPage extends React.Component {
   }
 
   handleAppend(entry) {
-    let newEntries = this.state.entries;
+    const newEntries = this.state.entries;
     entry.type = this.state.type;
     newEntries.push(entry);
     this.setState({ entries: newEntries });
@@ -182,9 +182,9 @@ class SequentialActivitiesResultsPage extends React.Component {
   // };
 
   handleTrendsFormatTime = totalTime => {
-    let seconds = Math.floor((totalTime / 1000) % 60);
-    let minutes = Math.floor((totalTime / 1000 / 60) % 60);
-    let hours = Math.floor((totalTime / 1000 / 3600) % 60);
+    const seconds = Math.floor((totalTime / 1000) % 60);
+    const minutes = Math.floor((totalTime / 1000 / 60) % 60);
+    const hours = Math.floor((totalTime / 1000 / 3600) % 60);
     let secondsString = "";
     let minutesString = "";
 
@@ -200,7 +200,7 @@ class SequentialActivitiesResultsPage extends React.Component {
       minutesString = minutes.toString();
     }
 
-    let formattedTime =
+    const formattedTime =
       hours.toString() + ":" + minutesString + ":" + secondsString;
     console.log("formatted time is ", formattedTime);
 
@@ -240,12 +240,12 @@ class SequentialActivitiesResultsPage extends React.Component {
   };
 
   handleNotesFetching = sessionId => {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then(notesArr => {
       console.log(notesArr);
-      let formattedNotesArr = [];
+      const formattedNotesArr = [];
       notesArr.map(note => {
-        let newTimestamp = new Date(
+        const newTimestamp = new Date(
           note.timestamp.seconds * 1000
         ).toLocaleString("en-US", {
           hour: "numeric",
@@ -304,7 +304,7 @@ class SequentialActivitiesResultsPage extends React.Component {
       () => {
         this.handleNotesFetching(this.state.sessionId);
         this.handleListDetailFetching(this.state.sessionId);
-        let firebase = this.context;
+        const firebase = this.context;
 
         firebase
           .fetchChildSeqSummary(this.state.sessionId)
@@ -333,9 +333,9 @@ class SequentialActivitiesResultsPage extends React.Component {
       () => {
         this.handleNotesFetching(this.state.sessionId);
         this.handleListDetailFetching(this.state.sessionId);
-        //let firebase = this.context;
+        // let firebase = this.context;
 
-        //firebase.fetchChildACSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].childAC));
+        // firebase.fetchChildACSummary(this.state.sessionId).then(summary => console.log("summary time: ", summary[0].childAC));
 
         // firebase.fetchChildACSummary(this.state.sessionId).then(summary=>{
         //     this.setState({

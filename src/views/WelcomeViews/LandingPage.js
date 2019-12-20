@@ -1,1012 +1,964 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
-import HomepageIllustrationImage from "../../assets/images/HomepageIllustrationImage.svg";
-import Helmet from "react-helmet";
-import ChildrenWalkingImage from "../../assets/images/ChildrenWalkingImage.png";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import SlideOneImage from "../../assets/images/SlideOneImage.png";
-import SlideTwoImage from "../../assets/images/SlideTwoImage.png";
-import SlideThreeImage from "../../assets/images/SlideThreeImage.png";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from "react-responsive-carousel";
+import Grid from '@material-ui/core/Grid/Grid';
+import LogoImage from '../../assets/images/LogoImage.svg';
+import PieChartImage from '../../assets/images/PieChartImage.svg';
+import HighFiveImage from '../../assets/images/HighFiveImage.svg';
+import BookImage from '../../assets/images/BookImage.svg';
+import FeedbackImage from '../../assets/images/FeedbackImage.svg';
+import MedalImage from '../../assets/images/MedalImage.svg';
+import LightbulbImage from '../../assets/images/LightbulbImage.svg';
+import BoxImage from '../../assets/images/BoxImage.svg';
+import SchoolImage from '../../assets/images/SchoolImage.svg';
+import ProblemOrangeImage from '../../assets/images/ProblemOrangeImage.svg';
+import LightbulbYellowImpactImage from '../../assets/images/LightbulbYellowImpactImage.svg';
+import PilotProgramImage from '../../assets/images/PilotProgramImage.svg';
+import EventsImage from '../../assets/images/EventsImage.svg';
+import SearchEngineImage from '../../assets/images/SearchEngineImage.svg';
+import MNPSLogoImage from '../../assets/images/MNPSLogoImage.jpg';
+import AbtLogoImage from '../../assets/images/AbtLogoImage.png';
+import PreschoolPromiseLogoImage from '../../assets/images/PreschoolPromiseLogoImage.jpg';
+import UDaytonLogoImage from '../../assets/images/UDaytonLogoImage.jpg';
+import UnitedWayLogoImage from '../../assets/images/UnitedWayLogoImage.jpg';
+import VanderbiltPeabodyLogoImage from '../../assets/images/VanderbiltPeabodyLogoImage.png';
+import WondryLogoImage from '../../assets/images/WondryLogoImage.png';
+import Typography from '@material-ui/core/Typography/Typography';
+import LandingDetail from '../../components/LandingPageComponents/LandingDetail.js';
+import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard.js';
+import Impact from '../../components/LandingPageComponents/Impact.js';
+import TextField from '@material-ui/core/TextField';
+import Fab from '@material-ui/core/Fab';
+import iPadImage from '../../assets/images/iPadImage.svg';
+import CoachingCycleFullImage from '../../assets/images/CoachingCycleFullImage.svg';
+import CoachingCycleFullMobileImage from '../../assets/images/CoachingCycleFullMobileImage.svg';
+import CoachLandingImage from '../../assets/images/CoachLandingImage.jpg';
+import CoachLandingLargeImage from '../../assets/images/CoachLandingLargeImage.jpg';
+import CoachLandingMobileImage from '../../assets/images/CoachLandingMobileImage.jpg';
+import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.js';
+import PilotModal from '../../components/LandingPageComponents/PilotModal.js';
+import DemoModal from '../../components/LandingPageComponents/DemoModal.js';
+import { ClickAwayListener } from '@material-ui/core/es';
 
 const styles = {
-  paper: {
-    background: "blue"
-  },
-  gridList: {
-    flexWrap: "nowrap",
-    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: "translateZ(0)"
-  },
   root: {
-    flexGrow: 1,
-    display: "flex",
-    minHeight: "calc(100%-100px)",
-    flexDirection: "column",
-    justifyContent: "center"
+    backgroundColor: '#ffffff'
   },
-  card: {
-    width: "100%"
+  mobileRoot: {
+    backgroundColor: '#ffffff'
   },
-  cardMedia: {
-    paddingTop: "56.25%",
-    height: "100%"
+  chalkTitle: {
+    fontFamily: 'Arimo',
+    fontSize: 'calc(16px + (80 - 16) * ((100vw - 300px) / (1600 - 300)))',
+    color: 'white',
+    lineHeight: '130%',
+    letterSpacing: '0.07em',
+    textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'
   },
-  cardContent: {
-    flexGrow: 1
+  tagline: {
+    fontFamily: 'Arimo',
+    fontSize: 'calc(12px + (36 - 12) * ((100vw - 300px) / (1600 - 300)))',
+    color: 'white',
+    textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'
   },
-  slide: {
-    width: "100%",
-    height: "calc(100vh - 80px)",
-    display: "flex !important",
-    justifyContent: "center",
-    alignItems: "center"
+  blueMask: {
+    position: 'absolute',
+    bottom: 0,
+    background: 'linear-gradient(to right, rgba(69, 154, 235, 0.3), rgba(69, 154, 235, 0.3))',
+    width: '100%',
   },
-  slideImg: {
-    position: "relative",
-    top: "2px",
-    maxWidth: "100vw",
-    maxHeight: "calc(100vh - 82px)"
-  }
+  section: {
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  partnersText: {
+    fontStyle: 'italic',
+    fontSize: 16,
+    color: '#2F4B65',
+    fontFamily: 'Arimo',
+    paddingLeft: '2em'
+  },
+  input: {
+    disableUnderline: true,
+    color: '#233342',
+    fontSize: 20,
+    marginLeft: '0.5em'
+  },
+  demoButton: {
+    color: '#459aeb',
+    backgroundColor: '#ffffff',
+    fontSize: 16,
+    fontFamily: 'Arimo',
+    fontStyle: 'bold'
+  },
+  sectionTitle: {
+    fontFamily: 'Arimo',
+    color: '#2F4B65',
+    fontSize: 42,
+    textAlign: 'center'
+  },
+  getInvolvedTitle: {
+    color: '#2F4B65',
+    fontSize: 42,
+    paddingTop: 20,
+    width: '100%',
+    fontFamily: 'Arimo'
+  },
+  mailingListText: {
+    color: '#2f4b65',
+    fontSize: 22,
+    paddingTop: 30,
+    fontFamily: 'Arimo',
+    fontWeight: 'bold', 
+  },
+  textField: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    textAlign: 'center',
+    width: '90%',
+    fontFamily: 'Arimo'
+  },
+  mailingListButton: {
+    color: '#ffffff',
+    backgroundColor: '#459aeb',
+    fontSize: 14,
+    fontFamily: 'Arimo',
+    letterSpacing: '0.03em'
+  },
+  partnerLogo: {
+    maxWidth:125
+  },
+  "@media (max-width: 700px)": {
+    root: {
+      display: "none"
+    },
+    largeRoot: {
+      display: "none"
+    },
+    chalkTitle: {
+      fontSize: 'calc(24px + (50 - 24) * ((100vw - 300px) / (700 - 300)))',
+    },
+    tagline: {
+      fontSize: 'calc(14px + (24 - 14) * ((100vw - 300px) / (700 - 300)))',
+    },
+    sectionTitle: {
+      fontSize: 32
+    },
+    getInvolvedTitle: {
+      textAlign: 'center',
+    },
+    mailingListText: {
+      paddingLeft: '1em',
+      paddingRight: '1em',
+      paddingTop: '2em',
+      fontSize: 18
+    },
+    mailingListButton: {
+      paddingTop: '1em',
+      paddingBottom: '1em'
+    }
+  },
+  "@media (min-width: 701px) and (max-width: 1279px)": {
+    mobileRoot: {
+      display: "none"
+    },
+    largeRoot: {
+      display: "none"
+    },
+    largeImage: {
+      display: "none"
+    }
+  },
+  "@media (min-width: 1280px)": {
+    rootImage: {
+      display: "none"
+    },
+    mobileRoot: {
+      display: "none"
+    },
+  },
 };
 
+
 class LandingPage extends React.Component {
-  topCard = props => {
-    return (
-      <svg viewBox="0 0 1470 845" {...props}>
-        <defs>
-          <linearGradient
-            id="prefix__a"
-            x1={0.5}
-            y1={0.325}
-            x2={0.5}
-            y2={1}
-            gradientUnits="objectBoundingBox"
-          >
-            <stop offset={0} stopColor="#a1c4fd" />
-            <stop offset={1} stopColor="#c2e9fb" />
-          </linearGradient>
-        </defs>
-        <g data-name="Top Card" transform="translate(0 -16)">
-          <path
-            data-name="Rectangle 14"
-            d="M0 0h1469.155v767.529a78 78 0 0 1-78 78H78a78 78 0 0 1-78-78V0z"
-            transform="translate(0 16)"
-            fill="url(#prefix__a)"
-          />
-          <text
-            data-name="CONNECT WITH US!"
-            transform="translate(118.231 548.334)"
-            fill="#fff"
-            fontSize={30}
-            fontFamily="Avenir-Black, Avenir"
-            fontWeight={800}
-          >
-            <tspan x={0} y={0}>
-              {"CONNECT WITH US!"}
-            </tspan>
-          </text>
-          <text
-            data-name="\u25CB Collect Information about Relevant Classroom Practices \u25CB Identify Areas of Strength and Areas of Opportunity \u25CB Develop Strategies for Success"
-            transform="translate(118.587 422.904)"
-            fill="#fff"
-            fontSize={15}
-            fontFamily="LucidaGrande-Bold, Lucida Grande"
-            fontWeight={700}
-          >
-            <tspan x={0} y={0}>
-              {"\u25CB"}
-            </tspan>
-            <tspan y={0} fontFamily="Avenir-Medium, Avenir" fontWeight={500}>
-              {" Collect Information about Relevant Classroom Practices"}
-            </tspan>
-            <tspan x={0} y={20}>
-              {"\u25CB"}
-            </tspan>
-            <tspan y={20} fontFamily="Avenir-Medium, Avenir" fontWeight={500}>
-              {" Identify Areas of Strength and Areas of Opportunity"}
-            </tspan>
-            <tspan x={0} y={40}>
-              {"\u25CB"}
-            </tspan>
-            <tspan y={40} fontFamily="Avenir-Medium, Avenir" fontWeight={500}>
-              {" Develop Strategies for Success"}
-            </tspan>
-            <tspan fontFamily="Avenir-Medium, Avenir" fontWeight={500} />
-          </text>
-          <text
-            data-name="We are currently selecting a small group of schools to get access to our Beta Version Sign up for our mailing list to be the first to get updates!"
-            transform="translate(118.231 578.654)"
-            fill="#fff"
-            fontSize={15}
-            fontFamily="Avenir-Medium, Avenir"
-            fontWeight={500}
-          >
-            <tspan x={0} y={0}>
-              {"We are currently selecting a small group of schools to get"}
-            </tspan>
-            <tspan x={0} y={20}>
-              {"access to our Beta Version "}
-            </tspan>
-            <tspan x={0} y={60}>
-              {"Sign up for our mailing list to be the first to get updates!"}
-            </tspan>
-          </text>
-          <g
-            data-name="Group 200"
-            fontSize={85}
-            fontFamily="Avenir-Black, Avenir"
-            fontWeight={800}
-          >
-            <text
-              data-name="OUR TOOL"
-              transform="translate(130.782 256.392)"
-              fill="#8eb1eb"
-            >
-              <tspan x={0} y={0}>
-                {"OUR "}
-              </tspan>
-              <tspan x={0} y={116}>
-                {"TOOL"}
-              </tspan>
-            </text>
-            <text
-              data-name="OUR TOOL"
-              transform="translate(118.587 256.392)"
-              fill="#fff"
-            >
-              <tspan x={0} y={0}>
-                {"OUR "}
-              </tspan>
-              <tspan x={0} y={116}>
-                {"TOOL"}
-              </tspan>
-            </text>
-          </g>
-          <image
-            data-name={2068180}
-            width={950}
-            height={950}
-            transform="translate(560 -80)"
-            xlinkHref={HomepageIllustrationImage}
-          />
-        </g>
-      </svg>
-    );
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      events: false,
+      pilotModal: false,
+      demo: false,
+      email: "",
+      emailAdded: false,
+      errors: true,
+      emailError: '',
+    }
+  }
+
+  handleEventsButton = () => {
+    this.setState({ events: true });
   };
 
-  problemScope = props => {
-    return (
-      <svg
-        id="prefix__Layer_1"
-        x={0}
-        y={0}
-        viewBox="0 0 930.8 430.9"
-        xmlSpace="preserve"
-        {...props}
-      >
-        <style>
-          {
-            ".prefix__st0{fill:#fff}.prefix__st1{font-family:'Avenir-Black'}.prefix__st4{fill:#8eb1eb}.prefix__st5{font-size:6.9767px}.prefix__st6{fill:#86b1f8}"
-          }
-        </style>
-        <g id="prefix__Problem_Scope" transform="translate(-4137 1186.165)">
-          <text
-            transform="translate(4542.306 -1121.839)"
-            className="prefix__st0 prefix__st1"
-            fontSize={20.058}
-          >
-            {"Problem/Scope"}
-          </text>
-          <text
-            transform="translate(4580 -770)"
-            className="prefix__st0 prefix__st1"
-            fontSize={20.058}
-          >
-            {"The big 3"}
-          </text>
-          <g id="prefix__Group_201">
-            <path
-              className="prefix__st0"
-              d="M4978.5-838.8h-629.1c-43.1 0-78-34.9-78-78v-157.6h629.1c43.1 0 78 34.9 78 78v157.6z"
-            />
-            <g transform="translate(4137 -1186.17)">
-              <path
-                id="prefix__Rectangle_133-2"
-                d="M375 96.9h159.6c38.5 0 69.8 31.2 69.8 69.8v201.4H444.7c-38.5 0-69.8-31.2-69.8-69.8V96.9h.1z"
-                fill="#324993"
-              />
-            </g>
-          </g>
-          <text
-            transform="translate(4331.331 -896.8)"
-            className="prefix__st4 prefix__st1 prefix__st5"
-          >
-            {"There are over 1.5 million children enrolled"}
-          </text>
-          <text
-            transform="translate(4373.517 -887.208)"
-            className="prefix__st4 prefix__st1 prefix__st5"
-          >
-            {"In pre-k in the US"}
-          </text>
-          <text
-            transform="translate(4760.189 -896.8)"
-            className="prefix__st4 prefix__st1 prefix__st5"
-          >
-            {"Observation Tools must be designed to differentiate,"}
-          </text>
-          <text
-            transform="translate(4754.125 -887.208)"
-            className="prefix__st4 prefix__st1 prefix__st5"
-          >
-            {"And it\u2019s not enough to provide scores without a roadmap"}
-          </text>
-          <g id="prefix__achievement" transform="translate(4546.372 -1043.636)">
-            <path
-              id="prefix__Path_33"
-              className="prefix__st6"
-              d="M81.2 38.8l4.5 9c1.4 2.8 4.1 4.8 7.2 5.2l10 1.4-7.1 6.8c-2.3 2.3-3.4 5.5-2.8 8.7l1.7 9.6-9.2-4.7c-2.7-1.4-6-1.4-8.7 0l-9.2 4.7 1.7-9.6c.6-3.2-.5-6.5-2.8-8.7l-7.1-6.8 10-1.4c3.1-.4 5.8-2.4 7.2-5.2l4.6-9m0-9.8c-1.3 0-2.4.7-3 1.9L71.1 45c-.5 1-1.4 1.7-2.5 1.8L53 49.1c-1.9.3-3.2 2.2-2.8 4.1.1.7.5 1.4 1 1.9l11.1 10.6c.8.8 1.2 2 1 3.1L60.6 84c-.4 1.8.8 3.6 2.6 4h.1c.2 0 .4 0 .6.1.5 0 1.1-.1 1.6-.4l14.2-7.4c1-.5 2.1-.5 3.1 0L97 87.8c.5.3 1 .4 1.6.4 1.9 0 3.4-1.6 3.4-3.5v-.6l-2.7-15.2c-.2-1.1.2-2.3 1-3.1l11.1-10.6c1.4-1.3 1.4-3.6.1-5-.5-.5-1.2-.9-1.9-1L93.9 47c-1.1-.2-2-.9-2.5-1.8l-7.3-14.3c-.5-1.2-1.7-1.9-2.9-1.9z"
-            />
-            <g id="prefix__Group_7" transform="translate(0 73.337)">
-              <path
-                id="prefix__Path_34"
-                className="prefix__st6"
-                d="M78.2 32.3zm0 0zm39.4-6.8c-10.3.2-24.4.5-33.2 5.1 8.9-4 22.9-4.1 33.2-3.5v3.8c-10.4-1.1-24.8-3.6-33.5-.1-.3.1-.5.3-.8.5-.4.2-.7.6-.7 1-.1.7-.7 1.3-1.5 1.3h-1.4c-.7 0-1.4-.5-1.5-1.3-.1-.4-.3-.7-.6-.9 0 0-.1 0-.1-.1-.3-.2-.5-.3-.8-.5-8.8-3.5-23.3-1-33.7.1v-3.8c10.2-.7 24.2-.5 33.1 3.4-8.8-4.6-22.8-4.9-33.1-5v-3.4c11.8-.7 25.6-8.5 37.4 7.6 11.9-16.1 25.6-8.3 37.3-7.6l-.1 3.4zm-39.4 6.8z"
-              />
-            </g>
-          </g>
-          <text
-            transform="translate(4537.736 -902.88)"
-            className="prefix__st4 prefix__st1 prefix__st5"
-          >
-            {"The quality of a child\u2019s pre-k classroom environment"}
-          </text>
-          <text
-            transform="translate(4556.934 -893.288)"
-            className="prefix__st4 prefix__st1 prefix__st5"
-          >
-            {"sets the stage for later achievement, but"}
-          </text>
-          <text
-            transform="translate(4552.576 -883.695)"
-            className="prefix__st4 prefix__st1 prefix__st5"
-          >
-            {"understanding and assessing quality is hard"}
-          </text>
-          <path
-            id="prefix__observation"
-            className="prefix__st6"
-            d="M4899.4-945.5l-7.2-6c2.5-3.8 3.4-8.4 2.4-12.8-1.3-6.2-6.5-10.4-12.3-11.5v-30.3c0-.8-.7-1.5-1.5-1.5h-38.6c-5.6 0-9.9 3.6-10.2 9.5v39.2c0 .2 0 .3.1.5.5 4.8 4.4 8.5 9.2 8.6h27.7c.2.2.3.3.4.5 4.8 4.9 12.3 5.4 18.1 2.1 1.2-.7 2.3-1.5 3.2-2.5l7.1 5.8c1.1.9 2.7-.7 1.6-1.6zm-55.1-59.1h35v28.6c-5 .3-9.5 3-12.2 7.2h-25.7c-2.4-.1-4.7.8-6.4 2.5V-998v-.2c.3-5.7 4.9-6.4 9.3-6.4zm-3 51.7h-.1c-8.1-.4-8.1-13.3.1-12.8h24.3c-.5 1.6-.8 3.2-.8 4.9h-23.6c-.8 0-1.5.8-1.4 1.6 0 .8.7 1.4 1.4 1.4h23.8c.3 1.7.9 3.4 1.7 4.9h-25.4zm45.4 2.6c-4.5 3-10.4 2.7-14.5-.7-4.6-3.7-5.5-10.3-2.9-15.5.5-.6.8-1.3 1.3-1.9 2.5-3.1 6.3-4.8 10.3-4.5 11.2 1 15.1 15.9 5.8 22.6zm-39.7-34.1c0-.6.5-1.1 1.1-1.2s1.1.5 1.2 1.1v8.6c0 .6-.5 1.1-1.1 1.2-.6 0-1.1-.5-1.2-1.1v-8.6zm6.1-3.7c0-.6.5-1.1 1.1-1.2.6 0 1.1.5 1.2 1.1V-975.9c0 .6-.5 1.1-1.1 1.2s-1.1-.5-1.2-1.1V-988.1zm6.2 3.3c0-.6.5-1.1 1.1-1.1.6 0 1.1.5 1.1 1.1v8.9c0 .6-.5 1.1-1.1 1.1-.6 0-1.1-.5-1.1-1.1v-8.9zm6.3-3.3c0-.6.5-1.1 1.1-1.2.6 0 1.1.5 1.2 1.1V-975.9c0 .6-.5 1.1-1.1 1.2s-1.1-.5-1.2-1.1V-988.1zm-16.7-1.4c-.5.4-1.2.3-1.6-.1-.4-.4-.3-1 0-1.5l5.8-5.8c.4-.4 1.1-.4 1.6 0l6.6 6.5h-1.6l6.1-6.5c.5-.4 1.2-.3 1.6.2.3.4.3 1 0 1.4l-6.1 6.5c-.4.4-1.1.5-1.5 0l-6.6-6.5h1.6l-5.9 5.8z"
-          />
-          <g id="prefix__Group_10" transform="translate(4262.507 -1029.88)">
-            <text
-              transform="translate(149.3 72.65)"
-              className="prefix__st4 prefix__st1"
-              fontSize={21.802}
-              id="prefix__Student_Icon"
-            >
-              {"1.5M+"}
-            </text>
-            <g id="prefix__children">
-              <path
-                id="prefix__Path_42"
-                className="prefix__st6"
-                d="M128.8 92.6v-4.3h4.3c.8 0 1.4-.6 1.4-1.4 0-.8-.6-1.4-1.4-1.4h-4.3v-4.3c0-.8-.6-1.4-1.4-1.4-.8 0-1.4.6-1.4 1.4v4.3h-4.3c-.8 0-1.4.6-1.4 1.4 0 .8.6 1.4 1.4 1.4h4.3v4.3h2.8z"
-              />
-              <path
-                id="prefix__Path_43"
-                className="prefix__st6"
-                d="M144.9 65.9c0-5.5-3.4-10.5-8.5-12.6v-1.1c.1-12.9-10.4-23.4-23.3-23.5-12.9-.1-23.4 10.4-23.5 23.3v.2l-.4.2c-5.8 1.5-9.9 6.8-9.9 12.8 0 6.8 5 12.8 11.2 13.8l-2.9 13.9H91l3.1-15c0-.6 0-1.2-.2-1.8-.3-.4-.8-.7-1.4-.7-5.5-.1-9.9-4.6-9.9-10.1 0-4.5 3-8.5 7.4-9.6 1.4 8.5 7.4 16.4 15.7 19.2l-3.8 17.9h3.4l4.3-18.6c.3-.9-.2-1.9-1.1-2.2-8.8-2.4-14.9-10.4-15-19.5-.1-11.1 8.9-20.2 20.1-20.3s20.2 8.9 20.3 20.1c.1 9.4-6.3 17.5-15.4 19.7-.4 0-.9.4-1.1.7-.2.4-.3.9-.2 1.4l1.6 6.1c-1.9 2.3-3 5.3-2.9 8.3 0 1.7.3 3.3.9 4.9h2.4c-.7-2.2-1.1-3.4-1.1-4.9 0-5.4 4.3-10.1 9.6-10.1 5.4 0 9.6 4.7 9.6 10.1 0 1.6-.4 2.4-1.1 4.7h2.4c.4-2.2.9-3.4.9-4.9 0-3.4-1.4-6.6-3.8-8.9 5.4-2.1 9.2-7.5 9.2-13.5zm-10.7 9.9l-2.9.7c-1.4-.5-2.8-.8-4.3-.9-2.2 0-4.4.6-6.3 1.8l-.7-2.7c8.1-2.5 14.2-9.3 15.9-17.7 3.4 1.8 5.6 5.3 5.6 9.2 0 4.5-3 8.4-7.3 9.6z"
-              />
-              <path
-                id="prefix__Path_44"
-                className="prefix__st6"
-                d="M98.6 52.7c0 1.9 1.5 3.4 3.4 3.4s3.4-1.5 3.4-3.4-1.5-3.4-3.4-3.4c-1.9.1-3.4 1.6-3.4 3.4z"
-              />
-              <path
-                id="prefix__Path_45"
-                className="prefix__st6"
-                d="M121.2 52.7c0 1.7 1.4 3.1 3.1 3.1 1.7 0 3.1-1.4 3.1-3.1 0-1.7-1.4-3.1-3.1-3.1-1.7 0-3.1 1.4-3.1 3.1z"
-              />
-              <g id="prefix__Group_9" transform="translate(10.798)">
-                <path
-                  id="prefix__Path_46"
-                  className="prefix__st6"
-                  d="M83.9 46.3l4.6-7.3 4.1 7.9c.2 0 13.8 2 34.2-.6-3.7-12.4-11-19.1-25.2-19.1-14.1 0-19.7 6-23.6 18.2"
-                />
-              </g>
-            </g>
-          </g>
-        </g>
-      </svg>
-    );
+  handlePilotButton = () => {
+    this.setState({ pilotModal: true });
+    console.log("handle pilot button executed");
   };
 
-  benefits = props => {
-    return (
-      <svg data-name="Layer 1" viewBox="0 0 1000 1000" {...props}>
-        <title>{"Benefits"}</title>
-        <circle cx={804.73} cy={300.28} r={189.5} fill="#ffd9d9" />
-        <text
-          transform="translate(30 24.81)"
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={29.05}
-          fill="#fff"
-          fontFamily="Avenir-Black,Avenir"
-          fontWeight={800}
-          data-name="Benefits"
-        >
-          {"Benefits"}
-        </text>
-        <text
-          transform="translate(30 67.22)"
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={17.43}
-          fill="#fff"
-          fontFamily="Avenir-Black,Avenir"
-          fontWeight={800}
-          data-name="Grounded in Rigorous Research"
-        >
-          {"G"}
-          <tspan x={13.56} y={0} letterSpacing="-.018em">
-            {"r"}
-          </tspan>
-          <tspan x={20.34} y={0}>
-            {"ounded in Rigo"}
-          </tspan>
-          <tspan x={145.24} y={0} letterSpacing="-.018em">
-            {"r"}
-          </tspan>
-          <tspan x={152.02} y={0}>
-            {"ous Resea"}
-          </tspan>
-          <tspan x={234.62} y={0} letterSpacing="-.018em">
-            {"r"}
-          </tspan>
-          <tspan x={241.4} y={0}>
-            {"ch"}
-          </tspan>
-        </text>
-        <text
-          transform="translate(30.58 191.55)"
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={17.43}
-          fill="#fff"
-          fontFamily="Avenir-Black,Avenir"
-          fontWeight={800}
-          data-name="Data that Matters"
-        >
-          {"Data that Matters"}
-        </text>
-        <text
-          transform="translate(30 289.16)"
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={17.43}
-          fill="#fff"
-          fontFamily="Avenir-Black,Avenir"
-          fontWeight={800}
-          data-name="Feedback is Individualized and Timely"
-        >
-          {"Feedback is Individualized and Timely"}
-        </text>
-        <text
-          transform="translate(30.58 426.85)"
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={17.43}
-          fill="#fff"
-          fontFamily="Avenir-Black,Avenir"
-          fontWeight={800}
-          data-name="Emphasis on Teacher Learning"
-        >
-          {"Emphasis on "}
-          <tspan x={108.11} y={0} letterSpacing="-.111em">
-            {"T"}
-          </tspan>
-          <tspan x={116.18} y={0}>
-            {"eacher Lea"}
-          </tspan>
-          <tspan x={204.94} y={0} letterSpacing=".018em">
-            {"r"}
-          </tspan>
-          <tspan x={212.34} y={0}>
-            {"ning"}
-          </tspan>
-        </text>
-        <text
-          transform="translate(548.82 534.92)"
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={17.43}
-          fill="#fff"
-          fontFamily="Avenir-Black,Avenir"
-          fontWeight={800}
-          data-name="Works Across Any Curriculum"
-        >
-          <tspan letterSpacing="-.018em">{"W"}</tspan>
-          <tspan x={17.12} y={0}>
-            {"orks Ac"}
-          </tspan>
-          <tspan x={79.08} y={0} letterSpacing="-.018em">
-            {"r"}
-          </tspan>
-          <tspan x={85.86} y={0}>
-            {"oss Any Curriculum"}
-          </tspan>
-        </text>
-        <g
-          data-name="The Magic 8 practices observed using the CQ-REF were developed and validated through observations in hundreds of preschool classrooms. Each one is included because it predicts child gains across multiple academic and self-regulation domains. If the scor"
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={13.363}
-          fill="#fff"
-        >
-          <text
-            transform="translate(30.58 86.97)"
-            style={{
-              isolation: "isolate"
-            }}
-            fontFamily="Avenir-Medium,Avenir"
-            fontWeight={500}
-          >
-            {"The Magic 8 practices observed using the CQ-REF we"}
-            <tspan x={325.94} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={330.65} y={0}>
-              {"e developed and validated th"}
-            </tspan>
-            <tspan x={508.12} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={512.82} y={0}>
-              {"ough observations in hund"}
-            </tspan>
-            <tspan x={673.49} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={678.19} y={0}>
-              {"eds of p"}
-            </tspan>
-            <tspan x={727.7} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={732.41} y={0}>
-              {"eschool class"}
-            </tspan>
-            <tspan x={810.89} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={815.59} y={0}>
-              {"ooms."}
-            </tspan>
-          </text>
-          <text
-            transform="translate(30.58 104.98)"
-            style={{
-              isolation: "isolate"
-            }}
-            fontFamily="Avenir-Medium,Avenir"
-            fontWeight={500}
-          >
-            {"Each one is included because it p"}
-            <tspan x={200.75} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={205.45} y={0}>
-              {"edicts child gains ac"}
-            </tspan>
-            <tspan x={326.21} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={330.91} y={0} letterSpacing="0em">
-              {"oss multiple academic and self-"}
-            </tspan>
-            <tspan x={519.26} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={523.96} y={0}>
-              {"egulation domains."}
-            </tspan>
-          </text>
-          <text
-            transform="translate(30.58 141.01)"
-            style={{
-              isolation: "isolate"
-            }}
-            fontFamily="Avenir-Black,Avenir"
-            fontWeight={800}
-          >
-            {"If the sco"}
-            <tspan x={58.37} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={63.57} y={0}>
-              {"e for a class"}
-            </tspan>
-            <tspan x={138.28} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={143.47} y={0}>
-              {"oom goes up, outcomes for child"}
-            </tspan>
-            <tspan x={350.99} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={356.19} y={0} letterSpacing="0em">
-              {"en imp"}
-            </tspan>
-            <tspan x={399.01} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={404.2} y={0} letterSpacing="0em">
-              {"ove!"}
-            </tspan>
-          </text>
-        </g>
-        <image
-          data-name={972}
-          width={896}
-          height={1031}
-          transform="matrix(.3 0 0 .3 667.56 146.91)"
-          xlinkHref={ChildrenWalkingImage}
-          style={{
-            isolation: "isolate"
-          }}
-        />
-        <g
-          data-name="The CQ-REF observation tool only collects information that truly matters for children s outcomes. No fluff no frills only meaningful information tied to action that can affect real change."
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={13.363}
-          fill="#fff"
-          fontFamily="Avenir-Medium,Avenir"
-          fontWeight={500}
-        >
-          <text
-            transform="translate(30.58 217.12)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {
-              "The CQ-REF observation tool only collects information that truly matters for child"
-            }
-            <tspan x={492.07} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={496.77} y={0}>
-              {"en"}
-            </tspan>
-            <tspan x={511.63} y={0} letterSpacing="-.074em">
-              {"\u2019"}
-            </tspan>
-            <tspan x={514.35} y={0} letterSpacing="0em">
-              {"s"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(30.58 235.13)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"outcomes. No flu"}
-            <tspan x={104.24} y={0} letterSpacing="-.018em">
-              {"f"}
-            </tspan>
-            <tspan x={108.45} y={0}>
-              {
-                "f, no frills, only meaningful information tied to action that can a"
-              }
-            </tspan>
-            <tspan x={489.15} y={0} letterSpacing="-.018em">
-              {"f"}
-            </tspan>
-            <tspan x={493.36} y={0}>
-              {"fect "}
-            </tspan>
-            <tspan x={520.34} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={525.04} y={0}>
-              {"eal"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(30.58 253.14)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"change."}
-          </text>
-        </g>
-        <g
-          data-name="Observed behaviors are instantly summarized and available for coaches and instructional leaders to have meaningful and collaborative conversations with teachers but it doesn t stop there. When an area of opportunity for a teacher is identified the tool p"
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={13.363}
-          fill="#fff"
-          fontFamily="Avenir-Medium,Avenir"
-          fontWeight={500}
-        >
-          <text
-            transform="translate(30 314.72)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"Observed behaviors a"}
-            <tspan x={132.89} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={137.6} y={0}>
-              {
-                "e instantly summarized and available for coaches and instructional"
-              }
-            </tspan>
-          </text>
-          <text
-            transform="translate(30 332.73)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {
-              "leaders to have meaningful and collaborative conversations with teachers, but it doesn"
-            }
-            <tspan x={523.52} y={0} letterSpacing="-.018em">
-              {"\u2019"}
-            </tspan>
-            <tspan x={527} y={0}>
-              {"t"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(30 350.74)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"stop the"}
-            <tspan x={50.5} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={55.2} y={0}>
-              {"e. When an a"}
-            </tspan>
-            <tspan x={133.93} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={138.64} y={0}>
-              {"ea of opportunity for a teacher is identified, the tool p"}
-            </tspan>
-            <tspan x={466.62} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={471.33} y={0}>
-              {"ovides an"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(30 368.75)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"easy-to-use action plan generator so you\u2019"}
-            <tspan x={250.1} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={254.8} y={0}>
-              {"e never left wondering, \u201CWhat now?\u201D."}
-            </tspan>
-          </text>
-        </g>
-        <g
-          data-name="Feedback reflection and professional development are cornerstones of growth and the continual process to refine one s craft. Our tool supports teachers and coaches on their journey to provide the highest quality experiences for the children and families"
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={13.363}
-          fill="#fff"
-          fontFamily="Avenir-Medium,Avenir"
-          fontWeight={500}
-        >
-          <text
-            transform="translate(31.16 452.42)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"Feedback, "}
-            <tspan x={66.6} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={71.3} y={0}>
-              {"eflection, and p"}
-            </tspan>
-            <tspan x={165.62} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={170.32} y={0}>
-              {"ofessional development a"}
-            </tspan>
-            <tspan x={325.29} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={329.99} y={0}>
-              {"e cornerstones of g"}
-            </tspan>
-            <tspan x={447.85} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={452.55} y={0} letterSpacing="0em">
-              {"owth and the"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(31.16 470.43)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"continual p"}
-            <tspan x={66.84} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={71.54} y={0} letterSpacing="0em">
-              {"ocess to "}
-            </tspan>
-            <tspan x={125.53} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={130.23} y={0}>
-              {"efine one"}
-            </tspan>
-            <tspan x={186.69} y={0} letterSpacing="-.074em">
-              {"\u2019"}
-            </tspan>
-            <tspan x={189.42} y={0} letterSpacing="0em">
-              {"s craft. Our tool supports teachers and coaches on their"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(31.16 488.44)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"journey to p"}
-            <tspan x={73.53} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={78.24} y={0} letterSpacing="0em">
-              {"ovide the highest quality experiences for the child"}
-            </tspan>
-            <tspan x={380.93} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={385.63} y={0}>
-              {"en and families they serve."}
-            </tspan>
-          </text>
-        </g>
-        <g
-          data-name="The Magic 8 practices are not tied to any specific curricula and can be observed in any pre-k classroom making the CQ-REF an ideal observation tool for schools across the nation."
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={13.363}
-          fill="#fff"
-          fontFamily="Avenir-Medium,Avenir"
-          fontWeight={500}
-        >
-          <text
-            transform="translate(548.82 564.55)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"The Magic 8 practices a"}
-            <tspan x={143.05} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={147.75} y={0}>
-              {"e not tied to any specific curricula and can"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(548.82 582.56)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"be observed in any p"}
-            <tspan x={126.99} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={131.69} y={0}>
-              {"e-k class"}
-            </tspan>
-            <tspan x={182.44} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={187.14} y={0}>
-              {"oom making the CQ-REF an ideal"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(548.82 600.57)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"observation tool for schools ac"}
-            <tspan x={185.95} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={190.66} y={0}>
-              {"oss the nation."}
-            </tspan>
-          </text>
-        </g>
-        <g
-          data-name="Coaches and instructional leaders can engage in training and get certified to use the CQ-REF from anywhere. No expensive travel or spending days at a time sitting in a conference room. Our modular approach also makes sure you learn what you need as you nee"
-          style={{
-            isolation: "isolate"
-          }}
-          fontSize={13.363}
-          fill="#fff"
-          fontFamily="Avenir-Medium,Avenir"
-          fontWeight={500}
-        >
-          <text
-            transform="translate(548.82 618.58)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"Coaches and instructional leaders can engage in training and get"}
-          </text>
-          <text
-            transform="translate(548.82 636.59)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"certified to use the CQ-REF f"}
-            <tspan x={175.46} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={180.17} y={0} letterSpacing="0em">
-              {"om anywhe"}
-            </tspan>
-            <tspan x={249.25} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={253.96} y={0}>
-              {"e. No expensive travel or"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(548.82 654.6)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"spending days at a time sitting in a confe"}
-            <tspan x={248.22} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={252.93} y={0}>
-              {"ence "}
-            </tspan>
-            <tspan x={285.37} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={290.08} y={0}>
-              {"oom. Our modular"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(548.82 672.61)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"app"}
-            <tspan x={23.26} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={27.97} y={0}>
-              {"oach also makes su"}
-            </tspan>
-            <tspan x={143.85} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={148.55} y={0}>
-              {"e you learn what you need as you need it,"}
-            </tspan>
-          </text>
-          <text
-            transform="translate(548.82 690.62)"
-            style={{
-              isolation: "isolate"
-            }}
-          >
-            {"which aids in "}
-            <tspan x={80.67} y={0} letterSpacing="-.018em">
-              {"r"}
-            </tspan>
-            <tspan x={85.37} y={0}>
-              {"etention and training satisfaction."}
-            </tspan>
-          </text>
-        </g>
-      </svg>
-    );
+  handleDemoButton = () => {
+    this.setState({ demo: true });
   };
 
-  screenshotGrid = props => {
-    const { classes } = this.props;
-    return (
-      <div length={500} width={500}>
-        <Carousel swipeable={true}>
-          <div>
-            <img src={SlideOneImage} alt="sample" />
-            <p className="legend">Legend 1</p>
-          </div>
-          <div>
-            <img src={SlideTwoImage} alt="sample" />
-            <p className="legend">Legend 2</p>
-          </div>
-          <div>
-            <img src={SlideThreeImage} alt="sample" />
-            <p className="legend">Legend 3</p>
-          </div>
-        </Carousel>
-      </div>
-    );
+  handleClickAwayEvents = () => {
+    this.setState({ events: false });
+  }
+
+  handleClose = () => {
+    this.setState({ 
+      pilotModal: false,
+      demo: false,
+      events: false
+    });
   };
+
+  handleSubmit = (event) =>{
+    this.validateEmail();
+    if (!this.state.errors){
+      this.props.firebase.emailListSignUp({
+        email: this.state.email,
+      })
+      .then(() => {
+        this.setState({ emailAdded: true });
+      });
+    }
+  };
+
+  validateState = (name, value) => {
+    switch (name) {
+      case 'email':
+        if (value.length === 0) {
+          this.setState({
+            'emailError': 'Cannot be empty or contain numbers',
+          });
+        } else if (!this.validateEmail(value)) {
+          this.setState({
+            'emailError': 'Not a valid email address',
+            'errors': true,
+          });
+        } else {
+          this.setState({
+            'emailError': '',
+            'errors': false,
+          });
+        }
+        break;
+      default:
+        this.validateState('email', this.state.email);
+        break;
+    }
+  };
+
+  validateEmail = (email) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
+    this.validateState(name, event.target.value);
+  };
+
   render() {
     const { classes } = this.props;
-    return (
-      <>
-        <div>
-          {this.topCard(this.props)}
-          <br></br>
-          {this.problemScope(this.props)}
-          <br></br>
-          <div>{this.screenshotGrid(this.props)}</div>
-          <br></br>
-          {this.benefits(this.props)}
-          <Helmet>
-            <style>{"body { background-color: #86B1F8;}"}</style>
-          </Helmet>
-        </div>
-      </>
+    return(
+      <div>
+        <head>
+          <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        </head>
+        <body className={classes.root}>
+          {this.state.events ? (
+            <ClickAwayListener onClickAway={this.handleClickAwayEvents}>
+              <UpcomingEventsModal />
+            </ClickAwayListener> 
+          ) : this.state.pilotModal ? (
+              <PilotModal handleClose={this.handleClose} firebase={this.props.firebase}/>
+          ) : this.state.demo ? (
+            <DemoModal handleClose={this.handleClose} />
+          ) : (
+            <div />
+          )}
+          <Grid container direction="column" justify="center" alignItems="center">
+            <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 10}}>
+              <img src={CoachLandingImage} alt = "Coach and Teacher" width="100%" style={{postion: 'relative'}} className={classes.rootImage}/>
+              <img src={CoachLandingLargeImage} alt = "Coach and Teacher" width="100%" style={{postion: 'relative'}} className={classes.largeImage}/>
+              <Grid item xs={10} style={{position: 'absolute'}}>
+                <Grid container direction="row" justify="flex-start" alignItems="center">
+                  <Grid xs={7} style={{paddingTop: '2vh'}}>
+                    <Typography className={classes.chalkTitle}>
+                      <strong>C</strong>oaching to
+                    </Typography>
+                    <Typography className={classes.chalkTitle}>
+                      <strong>H</strong>elp
+                    </Typography>
+                    <Typography className={classes.chalkTitle}>
+                      <strong>A</strong>ctivate
+                    </Typography>
+                    <Typography className={classes.chalkTitle}>
+                      <strong>L</strong>earning for
+                    </Typography>
+                    <Typography className={classes.chalkTitle}>
+                      <strong>K</strong>ids
+                    </Typography>
+                    <Typography className={classes.tagline} style={{paddingTop: '7vh'}}>
+                      Empowering coaches and teachers
+                    </Typography>
+                    <Typography className={classes.tagline}>
+                      to use meaningful data
+                    </Typography>
+                    <Typography className={classes.tagline}>
+                      to benefit young children
+                    </Typography>
+                  </Grid>
+                  <Grid xs={5}>
+                    <Grid container direction="column" justify="center" alignItems="center" style={{}}>
+                      <Grid item alignItems="center">
+                        <img src={iPadImage} alt="tablet" width='100%'/>
+                      </Grid>
+                      <Grid item style={{paddingTop: '4vh'}}>
+                        <Fab onClick={this.handleDemoButton} variant="extended" className={classes.demoButton}> 
+                          <strong>SEE DEMO</strong>
+                        </Fab>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
+              <Grid item>
+                <Typography className={classes.sectionTitle}>
+                  Why <strong>CHALK?</strong>
+                </Typography>
+              </Grid>
+              <Grid item style={{paddingRight: '3em', paddingBottom: '3em', paddingTop: '2em', width:"90%"}}>
+                <Impact
+                  icon={SchoolImage}
+                  color='#094492'
+                  title="IMPACT"
+                  position="center"
+                  text="Research shows that high-quality pre-k education supports
+                        children's early cognitive development and future achievement."
+                />
+              </Grid>
+              <Grid item style={{paddingRight: '3em', paddingBottom: '3em', width:"90%"}}>
+                <Impact
+                  icon={ProblemOrangeImage}
+                  color='#E55529'
+                  title="PROBLEM"
+                  position="center"
+                  text="However, current tools to observe and track classroom 
+                        practices over time are difficult to use and time-consuming."
+                />
+              </Grid>
+              <Grid item style={{paddingRight: '3em', paddingBottom: '1em', width: '90%'}}>
+                <Impact
+                  icon={LightbulbYellowImpactImage}
+                  color='#ffd300'
+                  title="MISSION"
+                  position="flex-start"
+                  paddingTop='1em'
+                  text={<div>
+                          CHALK's mission is to advance pre-k quality with an easy-to-use 
+                          tool for coaches and teachers that:
+                          <ul>
+                            <li>Focuses classroom observations on effective practices</li>
+                            <li>Links results to coaching strategies</li>
+                            <li>Accelerates professional growth through teacher-created action plans</li>
+                          </ul>
+                        </div>}
+                />
+              </Grid>
+            </Grid>
+            <Grid container direction="row" justify="center" alignItems="stretch" style={{backgroundColor: '#459aeb'}} className={classes.section}>
+              <Grid item xs={4} style={{padding: 30}}>
+                <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
+                  <FeaturesCard
+                    icon={LogoImage}
+                    altText="Owl Logo"
+                    title="Key Classroom Practices"
+                    text="Our tool focuses on key classroom practices that predict
+                          children's gains across multiple academic and self-regulation
+                          domains."
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={4} style={{paddingTop: 30, paddingBottom: 30, paddingRight: 30}}>
+                <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
+                  <FeaturesCard
+                    icon={SearchEngineImage}
+                    altText="Observe"
+                    title="Observation Tools"
+                    text="CHALK provides targeted observation tools that allow 
+                          instructional coaches to easily track key classroom 
+                          practices on their digital devices in real-time."
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={4} style={{paddingTop: 30, paddingBottom: 30, paddingRight: 30}}>
+                <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
+                  <FeaturesCard
+                    icon={PieChartImage}
+                    altText="Pie Chart"
+                    title="Visualized Data"
+                    text="Our tool instantly transforms observation data into 
+                          user-friendly visualizations for coaches and teachers 
+                          to engage in data-driven coaching conversations for 
+                          professional growth."
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container direction="column" justify="center" alignItems = "center" className={classes.section} style={{backgroundColor: '#dbebfb'}}>
+              <Grid item style={{padding: 20}}>
+                <Typography className={classes.sectionTitle}>
+                  How <strong>CHALK</strong> Works
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <img src={CoachingCycleFullImage} alt="Coaching Cycle" width="90%" style={{paddingBottom: 20}}/>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
+              <Grid item style={{padding: 20}}>
+                <Typography className={classes.sectionTitle}>
+                  How <strong>CHALK</strong> empowers coaches and teachers
+                </Typography>
+              </Grid>
+              <Grid item style={{paddingTop: '2em'}}>
+                <Grid container direction="row">
+                  <Grid item xs={12}>
+                    <LandingDetail
+                      icon1={HighFiveImage}
+                      iconAlt1="High Five"
+                      title1="Empowering Teachers and Coaches"
+                      text1="Our tool encourages coaches and teachers to work together
+                      in setting data-driven goals to improve specifc classroom
+                      practices that benefit children."
+                      icon2={BookImage}
+                      iconAlt2="Book"
+                      title2="Grounded in Rigorous Research"
+                      text2="Users are guided to observe targeted instructional practices that
+                      have predicted academic and self-regulation gains for children
+                      across hundreds of observations in early childhood classrooms."
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item style={{paddingTop: '3em'}}>
+                <Grid container direction="row">
+                  <Grid item xs={12}>
+                    <LandingDetail
+                      icon1={FeedbackImage}
+                      iconAlt1="Feedback"
+                      title1="Individualized and Timely Feedback"
+                      text1="Data collected from classroom observations are
+                        instantly transformed into simple visualizations and 
+                        guidance for next steps."
+                      icon2={MedalImage}
+                      iconAlt2="Medal"
+                      title2="Target Key Classroom Practices"
+                      text2="Our tool focuses on characteristics of the classroom 
+                        environment that have a direct, meaningful impact on 
+                        children's learning."
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item style={{paddingTop: '3em', paddingBottom: '2em'}}>
+                <Grid container direction="row">
+                  <Grid item xs={12}>
+                    <LandingDetail
+                      icon1={LightbulbImage}
+                      iconAlt1="Lightbulb"
+                      title1="Emphasis on Teacher Learning"
+                      text1="Teacher reflection and goal-setting in collaboration
+                        with responsive coaches builds a culture of learning
+                        and self efficacy."
+                      icon2={BoxImage}
+                      iconAlt2="Box"
+                      title2="Works Across Any Curriculum"
+                      text2="We focus on classroom practices that are 
+                        important across curricula so teachers and coaches 
+                        can apply this tool to any curriculum they use."
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid 
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              style={{backgroundColor: '#dbebfb'}}
+              className={classes.section}
+            >
+              <Grid item style={{width: '100%'}}>
+                <Grid container direction="row" justify="flex-start" alignItems="flex-start" style={{paddingBottom: '1em'}}>
+                  <Grid item xs={2} />
+                  <Grid item xs={10} component={Typography} className={classes.getInvolvedTitle}>
+                    <strong>GET INVOLVED</strong>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <Grid container direction="row">
+                  <Grid item xs={12}>
+                    <LandingDetail
+                      icon1={PilotProgramImage}
+                      iconAlt1="Participation"
+                      title1="Participate in our pilot program!"
+                      text1="If you are interested in piloting our tool,
+                        we would love your feedback so we can make CHALK
+                        the best it can be!"
+                      button1="Fill out form"
+                      onClick1={this.handlePilotButton}
+                      icon2={EventsImage}
+                      iconAlt2="People"
+                      title2="Join us at our upcoming events!"
+                      text2="We give frequent presentations and demonstrations
+                        of CHALK. See a list of these events here!"
+                      button2="View our events"
+                      onClick2={this.handleEventsButton}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item style={{width: '100%', paddingTop: '2em'}}>
+                
+                  {this.state.emailAdded ? (
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <Grid item xs={12}>
+                        <Typography className={classes.mailingListText} style={{textAlign: 'center'}}>
+                          You have been added to our mailing list.
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  ) : (
+                    <Grid container direction="row" justify="flex-start" alignItems="center">
+                      <Grid item xs={1} />
+                      <Grid item xs={4}>
+                        <Typography className={classes.mailingListText}>
+                          Stay informed with our mailing list!
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Grid container direction="row" justify="flex-end" alignItems="center">
+                        <TextField
+                          label="Enter your email here"
+                          margin="normal"
+                          value={this.state.email}
+                          onChange={this.handleChange('email')}
+                          helperText={this.state.emailError}
+                          InputLabelProps={{style: {color: '#dbdbdb', fontSize: 20, marginLeft: '0.5em'}}}
+                          InputProps={{classes: {input: classes.input}, disableUnderline: true}}
+                          className={classes.textField}
+                        />
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={3}>
+                      <Grid container direction="row" justify="center" alignItems="center">
+                        <Fab variant="extended" onClick={this.handleSubmit} className={classes.mailingListButton}>
+                          <strong>Join mailing list</strong>
+                        </Fab>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  )}
+                
+              </Grid>
+            </Grid>
+            <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em'}} className={classes.section}>
+              <Grid item style={{width: '100%'}}>
+                <Grid container direction="row" justify="flex-start" alignItems="center">
+                  <Typography className={classes.partnersText}>
+                    Working closely with our partners to better education
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid item style={{width: '97%'}}>
+                <Grid container direction="row" justify="space-around" alignItems="center">
+                  <Grid item>
+                    <img src={MNPSLogoImage} alt="Metro Nashville Public Schools" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={UnitedWayLogoImage} alt="United Way" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={PreschoolPromiseLogoImage} alt="Preschool Promise" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={AbtLogoImage} alt="Abt Associates" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={WondryLogoImage} alt="The Wondry" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={VanderbiltPeabodyLogoImage} alt="Vanderbilt Peabody College" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={UDaytonLogoImage} alt="University of Dayton" className={classes.partnerLogo} />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </body>
+        <body className={classes.mobileRoot}>
+          {this.state.events ? (
+            <ClickAwayListener onClickAway={this.handleClickAwayEvents}>
+              <UpcomingEventsModal />
+            </ClickAwayListener> 
+          ) : this.state.pilotModal ? (
+              <PilotModal handleClose={this.handleClose} firebase={this.props.firebase}/>
+          ) : this.state.demo ? (
+            <DemoModal handleClose={this.handleClose} />
+          ) : (
+            <div />
+          )}
+          <Grid container direction="column" justify="center" alignItems="center">
+            <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 10}}>
+              <img src={CoachLandingMobileImage} alt = "Coach and Teacher" width="100%" style={{postion: 'relative'}}/>
+              <Grid item xs={10} style={{position: 'absolute'}}>
+                <Grid container direction="row" justify="flex-start" alignItems="center">
+                  <Grid xs={8} style={{paddingTop: '0vh'}}>
+                    <Typography className={classes.chalkTitle}>
+                      <strong>C</strong>oaching to
+                    </Typography>
+                    <Typography className={classes.chalkTitle}>
+                      <strong>H</strong>elp
+                    </Typography>
+                    <Typography className={classes.chalkTitle}>
+                      <strong>A</strong>ctivate
+                    </Typography>
+                    <Typography className={classes.chalkTitle}>
+                      <strong>L</strong>earning for
+                    </Typography>
+                    <Typography className={classes.chalkTitle}>
+                      <strong>K</strong>ids
+                    </Typography>
+                    <Typography className={classes.tagline} style={{paddingTop: '9vh'}}>
+                      Empowering coaches and teachers
+                    </Typography>
+                    <Typography className={classes.tagline}>
+                      to use meaningful data
+                    </Typography>
+                    <Typography className={classes.tagline}>
+                      to benefit young children
+                    </Typography>
+                  </Grid>
+                  <Grid xs={4}>
+                    <Grid container direction="column" justify="center" alignItems="center" style={{width: '100%'}}>
+                      <Grid item alignItems="center">
+                        <img src={iPadImage} alt="tablet" width='100%'/>
+                      </Grid>
+                      <Grid item style={{paddingTop: '4vh'}}>
+                        <Fab onClick={this.handleDemoButton} variant="extended" className={classes.demoButton}> 
+                          <strong>SEE DEMO</strong>
+                        </Fab>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
+              <Grid item>
+                <Typography className={classes.sectionTitle}>
+                  Why <strong>CHALK?</strong>
+                </Typography>
+              </Grid>
+              <Grid item style={{paddingBottom: '3em', paddingTop: '2em', width:"90%"}}>
+                <Impact
+                  icon={SchoolImage}
+                  color='#094492'
+                  title="IMPACT"
+                  position="center"
+                  text="Research shows that high-quality pre-k education supports
+                        children's early cognitive development and future achievement."
+                />
+              </Grid>
+              <Grid item style={{paddingBottom: '3em', width:"90%"}}>
+                <Impact
+                  icon={ProblemOrangeImage}
+                  color='#E55529'
+                  title="PROBLEM"
+                  position="center"
+                  text="However, current tools to observe and track classroom 
+                        practices over time are difficult to use and time-consuming."
+                />
+              </Grid>
+              <Grid item style={{paddingBottom: '1em', width: '90%'}}>
+                <Impact
+                  icon={LightbulbYellowImpactImage}
+                  color='#ffd300'
+                  title="MISSION"
+                  position="flex-start"
+                  paddingTop='1em'
+                  text={<div>
+                          CHALK's mission is to advance pre-k quality with an easy-to-use 
+                          tool for coaches and teachers that:
+                          <ul>
+                            <li>Focuses classroom observations on effective practices</li>
+                            <li>Links results to coaching strategies</li>
+                            <li>Accelerates professional growth through teacher-created action plans</li>
+                          </ul>
+                        </div>}
+                />
+              </Grid>
+            </Grid>
+            <Grid container direction="column" justify="center" alignItems="stretch" style={{backgroundColor: '#459aeb'}} className={classes.section}>
+              <Grid item style={{padding: 30}}>
+                <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
+                  <FeaturesCard
+                    icon={LogoImage}
+                    altText="Owl Logo"
+                    title="Key Classroom Practices"
+                    text="Our tool focuses on key classroom practices that predict
+                          children's gains across multiple academic and self-regulation
+                          domains."
+                  />
+                </Grid>
+              </Grid>
+              <Grid item style={{paddingLeft: 30, paddingBottom: 30, paddingRight: 30}}>
+                <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
+                  <FeaturesCard
+                    icon={SearchEngineImage}
+                    altText="Observe"
+                    title="Observation Tools"
+                    text="CHALK provides targeted observation tools that allow
+                          instructional coaches to easily track key classroom
+                          practices on their digital devices in real-time."
+                  />
+                </Grid>
+              </Grid>
+              <Grid item style={{paddingLeft: 30, paddingBottom: 30, paddingRight: 30}}>
+                <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
+                  <FeaturesCard
+                    icon={PieChartImage}
+                    altText="Pie Chart"
+                    title="Visualized Data"
+                    text="Our tool instantly transforms observation data into
+                          user-friendly visualizations for coaches and teachers
+                          to engage in data-driven coaching conversations for
+                          professional growth."
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container direction="column" justify="center" alignItems = "center" className={classes.section} style={{backgroundColor: '#dbebfb'}}>
+              <Grid item style={{padding: 20}}>
+                <Typography className={classes.sectionTitle}>
+                  How <strong>CHALK</strong> Works
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <img src={CoachingCycleFullMobileImage} alt="Coaching Cycle" width="90%" style={{paddingBottom: 20}}/>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
+              <Grid item style={{padding: 20}}>
+                <Typography className={classes.sectionTitle}>
+                  How <strong>CHALK</strong> empowers coaches and teachers
+                </Typography>
+              </Grid>
+              <Grid item style={{paddingTop: '2em'}}>
+                <LandingDetail
+                  icon={HighFiveImage}
+                  iconAlt="High Five"
+                  title="Empowering Teachers and Coaches"
+                  text="Our tool encourages coaches and teachers to work together
+                  in setting data-driven goals to improve specifc classroom
+                  practices that benefit children."
+                />
+              </Grid>
+              <Grid item style={{paddingTop: '3em'}}>
+                <LandingDetail
+                  icon={BookImage}
+                  iconAlt="Book"
+                  title="Grounded in Rigorous Research"
+                  text="Users are guided to observe targeted instructional practices that
+                  have predicted academic and self-regulation gains for children
+                  across hundreds of observations in early childhood classrooms."
+                />
+              </Grid>
+              <Grid item style={{paddingTop: '3em'}}>
+                <LandingDetail
+                  icon={FeedbackImage}
+                  iconAlt="Feedback"
+                  title="Individualized and Timely Feedback"
+                  text="Data collected from classroom observations are
+                        instantly transformed into simple visualizations and 
+                        guidance for next steps."
+                />
+              </Grid>
+              <Grid item style={{paddingTop: '3em'}}>
+                <LandingDetail
+                  icon={MedalImage}
+                  iconAlt="Medal"
+                  title="Target Key Classroom Practices"
+                  text="Our tool focuses on characteristics of the classroom 
+                        environment that have a direct, meaningful impact on 
+                        children's learning."
+                />
+              </Grid>
+              <Grid item style={{paddingTop: '3em'}}>
+                <LandingDetail
+                  icon={LightbulbImage}
+                  iconAlt="Lightbulb"
+                  title="Emphasis on Teacher Learning"
+                  text="Teacher reflection and goal-setting in collaboration
+                    with responsive coaches builds a culture of learning
+                    and self efficacy."
+                />
+              </Grid>
+              <Grid item style={{paddingTop: '3em', paddingBottom: '2em'}}>
+                <LandingDetail
+                  icon={BoxImage}
+                  iconAlt="Box"
+                  title="Works Across Any Curriculum"
+                  text="We focus on classroom practices that are 
+                    important across curricula so teachers and coaches 
+                    can apply this tool to any curriculum they use."
+                />
+              </Grid>
+            </Grid>
+            <Grid 
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              style={{backgroundColor: '#dbebfb'}}
+              className={classes.section}
+            >
+              <Grid item style={{width: '100%'}}>
+                <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: '1em'}}>
+                  <Grid item xs={12} component={Typography} className={classes.getInvolvedTitle}>
+                    <strong>GET INVOLVED</strong>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <LandingDetail
+                  icon={PilotProgramImage}
+                  iconAlt="Participation"
+                  title="Participate in our pilot program!"
+                  text="If you are interested in piloting our tool,
+                    we would love your feedback so we can make CHALK
+                    the best it can be!"
+                  button="Fill out form"
+                  onClick={this.handlePilotButton}
+                />
+              </Grid>
+              <Grid item>
+                <LandingDetail
+                  icon={EventsImage}
+                  iconAlt="People"
+                  title="Join us at our upcoming events!"
+                  text="We give frequent presentations and demonstrations
+                    of CHALK. See a list of these events here!"
+                  button="View our events"
+                  onClick={this.handleEventsButton}
+                />
+              </Grid>
+              <Grid item style={{width: '100%'}}>
+                {this.state.emailAdded ? (
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <Grid item xs={12}>
+                      <Typography className={classes.mailingListText} style={{textAlign: 'center', fontSize: 16}}>
+                        You have been added to our mailing list.
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ) : (
+                  <Grid container direction="column" justify="flex-start" alignItems="center">
+                    <Grid item>
+                      <Typography className={classes.mailingListText}>
+                        Stay informed with our mailing list!
+                      </Typography>
+                    </Grid>
+                    <Grid item style={{width: '100%'}}>
+                      <Grid container direction="row" justify="center" alignItems="stretch">
+                      <TextField
+                        label="Enter your email here"
+                        margin="normal"
+                        value={this.state.email}
+                        onChange={this.handleChange('email')}
+                        helperText={this.state.emailError}
+                        InputLabelProps={{style: {color: '#dbdbdb', fontSize: 20, marginLeft: '0.5em'}}}
+                        InputProps={{classes: {input: classes.input}, disableUnderline: true}}
+                        className={classes.textField}
+                      />
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <Fab variant="extended" onClick={this.handleSubmit} className={classes.mailingListButton}>
+                        <strong>Join mailing list</strong>
+                      </Fab>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                )}
+              </Grid>
+            </Grid>
+            <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em'}} className={classes.section}>
+              <Grid item style={{width: '100%'}}>
+                <Grid container direction="row" justify="flex-start" alignItems="center">
+                  <Typography className={classes.partnersText}>
+                    Working closely with our partners to better education
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid item style={{width: '97%'}}>
+                <Grid container direction="row" justify="space-around" alignItems="center">
+                  <Grid item>
+                    <img src={MNPSLogoImage} alt="Metro Nashville Public Schools" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={UnitedWayLogoImage} alt="United Way" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={PreschoolPromiseLogoImage} alt="Preschool Promise" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={AbtLogoImage} alt="Abt Associates" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={WondryLogoImage} alt="The Wondry" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item>
+                    <img src={VanderbiltPeabodyLogoImage} alt="Vanderbilt Peabody College" className={classes.partnerLogo} />
+                  </Grid>
+                  <Grid item style={{paddingTop: '1em'}}>
+                    <img src={UDaytonLogoImage} alt="University of Dayton" className={classes.partnerLogo} />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </body>
+      </div>
     );
   }
 }
+
 LandingPage.propTypes = {
   classes: PropTypes.object.isRequired
 };

@@ -132,7 +132,7 @@ class Magic8MenuPage extends Component {
   };
 
   setUnlockedSectionsState() {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.getUnlockedSections().then(unlocked => {
       this.setState({
         unlocked: unlocked

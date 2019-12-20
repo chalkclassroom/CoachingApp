@@ -59,7 +59,7 @@ class HomePage extends React.Component {
   };
 
   componentDidMount() {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase.getCoachFirstName().then(name => {
       this.setState({ coachName: name });
     });

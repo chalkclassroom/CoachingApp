@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography/index";
 import TrainingQuestion from "./TrainingQuestion";
 import FirebaseContext from "../Firebase/FirebaseContext";
 import MenuItem from "@material-ui/core/MenuItem";
-//import moment from "../../views/protected/ClassroomClimateViews/ClassroomClimateResultsPage";
+// import moment from "../../views/protected/ClassroomClimateViews/ClassroomClimateResultsPage";
 import TextField from "@material-ui/core/TextField";
 
 const styles = theme => ({
@@ -64,8 +64,8 @@ class TrainingQuestionnaire extends React.Component {
     ) {
       return [];
     } else {
-      let stringsArray = [];
-      for (var i = 0; i < this.state.questions.length; i++) {
+      const stringsArray = [];
+      for (let i = 0; i < this.state.questions.length; i++) {
         stringsArray.push("Q: " + (i + 1));
       }
       return stringsArray;
@@ -129,7 +129,7 @@ class TrainingQuestionnaire extends React.Component {
   }
 
   componentDidMount() {
-    let firebase = this.context;
+    const firebase = this.context;
     firebase
       .handleFetchQuestions(questionArray[this.props.section - 1])
       .then(questions => {
@@ -144,7 +144,7 @@ class TrainingQuestionnaire extends React.Component {
     console.log(this.state.correctResponses, this.state.questions.length);
     if (this.state.correctResponses / this.state.questions.length >= 0.8) {
       console.log("Passed");
-      let firebase = this.context;
+      const firebase = this.context;
       firebase.handleUnlockSection(this.props.section);
     } else {
       console.log("Failed Try Again");

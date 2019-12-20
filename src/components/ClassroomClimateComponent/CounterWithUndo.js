@@ -25,10 +25,10 @@ const CounterWithUndo = ({
   popOffClimateStack,
   firebase
 }) => {
-  let handleDelete = () => {
+  const handleDelete = () => {
     if (climateStackSize > 0) {
       popOffClimateStack();
-      let mEntry = {
+      const mEntry = {
         BehaviorResponse: "UNDO",
         Type: "UNDO"
       };
