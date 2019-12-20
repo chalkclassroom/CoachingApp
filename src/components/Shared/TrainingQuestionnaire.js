@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import FirebaseContext from '../Firebase/context';
+import FirebaseContext from '../Firebase/FirebaseContext';
 import questionBank from './QuestionBank';
 import TrainingQuestion from './TrainingQuestion';
 import { withStyles } from '@material-ui/core/styles';
