@@ -19,7 +19,7 @@ module.exports = (env, argv) => {
                 filename: "bundled.js"
             },
             resolve: {
-              extensions: ['.ts', '.tsx', '.js', '.json']
+                extensions: ['.ts', '.tsx', '.js', '.json']
             },
             module: {
                 rules: [
