@@ -14,7 +14,7 @@ import {
   emptyClimateStack
 } from "../../../state/actions/classroom-climate";
 import Dashboard from "../../../components/Dashboard";
-import Countdown from "../../../components/Countdown";
+import Countdown from "../../../components/Countdown.tsx";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
 
 /*
@@ -41,6 +41,10 @@ const styles = {
   }
 };
 
+/**
+ * classroom climate observation tool
+ * @class ClassroomClimatePage
+ */
 class ClassroomClimatePage extends React.Component {
   state = {
     auth: true,
@@ -64,14 +68,6 @@ class ClassroomClimatePage extends React.Component {
     }
   };
 
-  handleRecsModal = open => {
-    if (open) {
-      this.setState({ recs: true });
-    } else {
-      this.setState({ recs: false });
-    }
-  };
-
   handleRatingModal = () => {
     this.setState({ ratingIsOpen: true });
   };
@@ -80,6 +76,9 @@ class ClassroomClimatePage extends React.Component {
     this.setState({ help: false });
   };
 
+  /**
+   * @param {number} rating
+   */
   handleRatingConfirmation = rating => {
     this.setState({ ratingIsOpen: false });
 
@@ -102,33 +101,25 @@ class ClassroomClimatePage extends React.Component {
     this.setState({ incompleteRating: false });
   };
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.timer = setInterval(this.tick, 1000);
   }
 
+  /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     clearInterval(this.timer);
   }
-
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        {/* {this.state.recs ? (
-          <FirebaseContext.Consumer>
-            {firebase => (
-              <Recs
-                open={true}
-                onClose={this.handleRecsModal}
-                firebase={firebase}
-              />
-            )}
-          </FirebaseContext.Consumer>
-        ) : (
-          <div />
-        )} */}
         <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
           <RatingModal
             handleRatingConfirmation={this.handleRatingConfirmation}
@@ -198,7 +189,9 @@ class ClassroomClimatePage extends React.Component {
 }
 
 ClassroomClimatePage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  appendClimateRating: PropTypes.func.isRequired
 };
 
 ClassroomClimatePage.contextType = FirebaseContext;

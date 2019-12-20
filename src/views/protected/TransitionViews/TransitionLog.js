@@ -8,11 +8,6 @@ import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import { connect } from "react-redux";
 
-const COLOR_1 = "#F9A796";
-const COLOR_2 = "#E99C2E";
-const COLOR_3 = "#E55529";
-const obsTime = null;
-
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters(),
@@ -22,17 +17,6 @@ const styles = theme => ({
     marginRight: "5%"
   }
 });
-
-const getHexFromType = type => {
-  switch (type) {
-    case "inside":
-      return COLOR_2;
-    case "outside":
-      return COLOR_3;
-    default:
-      return "#FFFFFF";
-  }
-};
 
 const TransitionLog = ({ entries, classes }) => {
   return (
@@ -52,7 +36,7 @@ const TransitionLog = ({ entries, classes }) => {
           }}
         >
           <List
-            className={{
+            style={{
               display: "flex"
             }}
           >
@@ -83,6 +67,7 @@ const TransitionLog = ({ entries, classes }) => {
 };
 
 TransitionLog.propTypes = {
+  classes: PropTypes.object.isRequired,
   entries: PropTypes.array.isRequired
 };
 

@@ -21,7 +21,15 @@ const styles = {
   }
 };
 
+/**
+ * formats table display of observation notes on results screens
+ * @class NotesListDetailTable
+ */
 class NotesListDetailTable extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -54,7 +62,7 @@ class NotesListDetailTable extends React.Component {
 
 NotesListDetailTable.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.array.isRequired
 };
 
 export default withStyles(styles)(NotesListDetailTable);

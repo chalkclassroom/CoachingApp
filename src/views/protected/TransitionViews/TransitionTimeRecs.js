@@ -10,6 +10,10 @@ import CountdownImage from "../../../assets/images/CountdownImage.png";
 import SchoolImage from "../../../assets/images/SchoolImage.png";
 import TimeImage from "../../../assets/images/TimeImage.png";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
@@ -52,19 +56,23 @@ const buttonTheme = createMuiTheme({
   }
 });
 
+/**
+ * observation recommendations for transition time
+ * @class TransitionTimeRecs
+ */
 class TransitionTimeRecs extends React.Component {
   state = {
     open: true
-  };
-
-  handleOpen = () => {
-    this.setState({ open: true });
   };
 
   handleClose = () => {
     this.setState({ open: false });
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 

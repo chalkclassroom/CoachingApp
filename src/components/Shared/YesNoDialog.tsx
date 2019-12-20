@@ -1,18 +1,42 @@
-import React from "react";
+import * as React from "react";
+import * as PropTypes from 'prop-types';
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { withStyles } from "@material-ui/core";
 
-const styles = {
+const styles: object = {
   button: {
     fontSize: "15px",
     borderWidth: "2px"
   }
 };
 
-class YesNoDialog extends React.Component {
+interface Props {
+  classes: { button: string },
+  shouldOpen: boolean,
+  onAccept(param: number | void): void,
+  buttonText: string | React.ReactElement,
+  buttonVariant: string,
+  buttonColor: string,
+  buttonAriaLabel: string,
+  backgroundColor: string,
+  buttonWidth: string,
+  buttonMargin: number,
+  dialogTitle: string,
+  onAcceptParams: number
+}
+
+interface State {
+  open: boolean
+}
+
+/**
+ * dialog for buttons with yes/no option
+ * @class YesNoDialog
+ */
+class YesNoDialog extends React.Component<Props, State> {
   /*
       REQUIRED PROPS:
       1. buttonText: text of button to initialize dialog.
@@ -48,13 +72,34 @@ class YesNoDialog extends React.Component {
     this.setState({ open: false });
   };
 
+  static propTypes = {
+    shouldOpen: PropTypes.bool,
+    onAccept: PropTypes.func,
+    classes: PropTypes.object,
+    buttonText: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.string
+    ]),
+    buttonVariant: PropTypes.string.isRequired,
+    buttonColor: PropTypes.string,
+    buttonAriaLabel: PropTypes.string,
+    backgroundColor: PropTypes.string,
+    buttonWidth: PropTypes.string,
+    buttonMargin: PropTypes.number,
+    dialogTitle: PropTypes.string,
+    onAcceptParams: PropTypes.number
+  }
+
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
       <div>
         <Button
           onClick={this.handleClickOpen}
-          style={this.props.buttonStyle}
           variant={this.props.buttonVariant}
           color={this.props.buttonColor}
           aria-label={this.props.buttonAriaLabel}
@@ -62,7 +107,8 @@ class YesNoDialog extends React.Component {
             color: this.props.buttonColor,
             backgroundColor: this.props.backgroundColor,
             borderColor: this.props.buttonColor,
-            width: this.props.buttonWidth
+            width: this.props.buttonWidth,
+            margin: this.props.buttonMargin
           }}
           className={classes.button}
         >

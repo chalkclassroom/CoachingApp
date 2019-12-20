@@ -19,7 +19,14 @@ const styles = theme => ({
   }
 });
 
+/**
+ * formatting and functionality for knowledge check question
+ * @class TrainingQuestion
+ */
 class TrainingQuestion extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +37,11 @@ class TrainingQuestion extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  /** 
+   * lifecycle method invoked before mounted component receives new props
+   * @param {Props} nextProps
+   */
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { question, answer, options, selected } = nextProps;
     console.log(this.props);
 
@@ -42,6 +53,9 @@ class TrainingQuestion extends React.Component {
     });
   }
 
+  /**
+   * @param {event} event
+   */
   handleChange = event => {
     this.setState({ selected: event.target.value });
     console.log(event.target.value, this.state.answer);
@@ -53,6 +67,10 @@ class TrainingQuestion extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -94,7 +112,11 @@ class TrainingQuestion extends React.Component {
 
 TrainingQuestion.propTypes = {
   classes: PropTypes.object.isRequired,
-  incrementCorrectResponsesHandler: PropTypes.func.isRequired
+  incrementCorrectResponsesHandler: PropTypes.func.isRequired,
+  options: PropTypes.array.isRequired,
+  selected: PropTypes.number.isRequired,
+  question: PropTypes.string.isRequired,
+  answer: PropTypes.number.isRequired
 };
 
 export default withStyles(styles)(TrainingQuestion);

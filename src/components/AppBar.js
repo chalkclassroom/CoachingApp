@@ -20,7 +20,7 @@ import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
-import * as Constants from '../constants';
+// import * as Constants from '../constants';
 
 const styles = {
   root: {
@@ -91,7 +91,15 @@ const theme = createMuiTheme({
   shadows: ["none"]
 });
 
+/**
+ * App bar
+ * @class AppBar
+ * @extends React.Component
+ * @param {event} event
+ * @return {void}
+ */
 class AppBar extends React.Component {
+  /** @param {Props} props */
   constructor(props) {
     super(props);
     this.state = {
@@ -134,15 +142,19 @@ class AppBar extends React.Component {
     this.setState({ open: false });
   };
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.props.firebase.auth.onAuthStateChanged(authUser => {
       authUser ? this.setState({ auth: true }) : this.setState({ auth: false });
     });
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
-
     return (
       <MuiThemeProvider theme={theme}>
         <div className={classes.root}>
@@ -331,7 +343,8 @@ class AppBar extends React.Component {
 
 AppBar.propTypes = {
   classes: PropTypes.object.isRequired,
-  firebase: PropTypes.object.isRequired
+  firebase: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 export default withRouter(connect()(withStyles(styles)(AppBar)));

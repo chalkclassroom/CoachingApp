@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../../App.css";
 import PropTypes from "prop-types";
-import Magic8Card from "../../components/Magic8Card.js";
+import Magic8Card from "../../components/Magic8Card.tsx";
 import { Button, Typography } from "@material-ui/core";
 import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
@@ -72,7 +72,14 @@ const MAP = {
   AssociativeCooperativeInteractions: 8
 };
 
+/**
+ * magic 8 menu
+ * @class Magic8MenuPage
+ */
 class Magic8MenuPage extends Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
@@ -92,6 +99,10 @@ class Magic8MenuPage extends Component {
     this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this);
   }
 
+  /**
+   * @param {string} selected 
+   * @param {string} title 
+   */
   onClick(selected, title) {
     if (selected && this.state.numSelected > 0) {
       this.setState({
@@ -131,6 +142,9 @@ class Magic8MenuPage extends Component {
     }
   };
 
+  /**
+   * @return {void}
+   */
   setUnlockedSectionsState() {
     const firebase = this.context;
     firebase.getUnlockedSections().then(unlocked => {
@@ -140,10 +154,15 @@ class Magic8MenuPage extends Component {
     });
   }
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.setUnlockedSectionsState();
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
@@ -159,7 +178,7 @@ class Magic8MenuPage extends Component {
           </div>
           <div>
             <Typography className={classes.instructionText}>
-              Select the skill you'd like to{" "}
+              Select the skill you&apos;d like to{" "}
               {this.state.page === "Training" ? "learn:" : "focus on:"}
             </Typography>
           </div>
@@ -278,7 +297,8 @@ class Magic8MenuPage extends Component {
 
 Magic8MenuPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  type: PropTypes.string.isRequired
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 Magic8MenuPage.contextType = FirebaseContext;

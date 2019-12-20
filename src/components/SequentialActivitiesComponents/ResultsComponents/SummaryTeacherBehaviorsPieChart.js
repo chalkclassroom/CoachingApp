@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Pie } from "react-chartjs-2";
 
@@ -19,17 +19,25 @@ const teacherBehaviorsData = {
   ]
 };
 
+/**
+ * pie chart for sequential teacher behaviors
+ * @class SummaryTeacherBehaviorsPieChart
+ */
 class SummaryTeacherBehaviorsPieChart extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
 
     return <Pie data={teacherBehaviorsData} width="650" height="400" />;
   }
 }
 
-SummaryTeacherBehaviorsPieChart.propTypes = {
+/* SummaryTeacherBehaviorsPieChart.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
-};
+}; */
 
 export default withStyles(styles)(SummaryTeacherBehaviorsPieChart);

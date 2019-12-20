@@ -13,7 +13,14 @@ const styles = {
   }
 };
 
+/**
+ * Behavior Type Buttons for Climate Observation
+ * @class BehaviorCounter
+ */
 class BehaviorCounter extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     const mEntry = {
@@ -24,6 +31,9 @@ class BehaviorCounter extends React.Component {
     this.props.firebase.handleSession(mEntry);
   }
 
+  /**
+   * @param {string} entry
+   */
   handlePushFire = entry => {
     const mEntry = {
       BehaviorResponse: entry,
@@ -46,7 +56,7 @@ class BehaviorCounter extends React.Component {
     }
   };
 
-  CustomUI2 = props => {
+  customUI2 = props => {
     return (
       // <<<<<<< Updated upstream
       <svg width={595.172} height={555.055} {...props}>
@@ -206,7 +216,7 @@ class BehaviorCounter extends React.Component {
             id="prefix__Specific_Approval"
             data-name="Specific Approval"
             transform="translate(185 445.275)"
-            data-name="Group 1"
+            // data-name="Group 1"
             onClick={() => this.handlePushFire("specificapproval")}
           >
             <g
@@ -313,7 +323,7 @@ class BehaviorCounter extends React.Component {
             id="prefix__Disapproval_"
             data-name="Disapproval"
             transform="translate(487 -123.198)"
-            data-name="Group 1"
+            // data-name="Group 1"
             onClick={() => this.handlePushFire("disapproval")}
           >
             <g
@@ -401,15 +411,22 @@ class BehaviorCounter extends React.Component {
       </svg>
     );
   };
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    return <>{this.CustomUI2(this.props)}</>;
+    return <>{this.customUI2(this.props)}</>;
   }
 }
 
 BehaviorCounter.propTypes = {
   // climateType: PropTypes.string.isRequired,
   teacherId: PropTypes.string.isRequired,
-  climateStackSize: PropTypes.number.isRequired
+  climateStackSize: PropTypes.number.isRequired,
+  firebase: PropTypes.object.isRequired,
+  pushOntoClimateStack: PropTypes.func.isRequired,
+  popOffClimateStack: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {

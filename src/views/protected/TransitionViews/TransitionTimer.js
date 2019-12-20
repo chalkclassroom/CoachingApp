@@ -1,10 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import CircularProgressbar from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import Button from "@material-ui/core/Button/Button";
 import Grid from "@material-ui/core/Grid/Grid";
 import ms from "pretty-ms";
-import YesNoDialog from "../../../components/Shared/YesNoDialog";
+import YesNoDialog from "../../../components/Shared/YesNoDialog.tsx";
 import cyan from "@material-ui/core/colors/teal";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -20,10 +21,17 @@ const theme = createMuiTheme({
   }
 });
 
+/**
+ * transition timer
+ * @class TransitionTimer
+ */
 class TransitionTimer extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
-    this.onCancel = this.onCancel.bind(this);
+    // this.onCancel = this.onCancel.bind(this);
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
@@ -76,16 +84,24 @@ class TransitionTimer extends React.Component {
     this.props.handleEndTransition();
   };
 
+  /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     clearInterval(this.timer);
   }
 
+  /**
+   * @param {Object} entry
+   */
   handleAppend = entry => {
     this.props.pushOntoTransitionStack(entry);
     const firebase = this.context;
     firebase.handlePushTransition(entry);
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     setTimeout(() => {
       this.setState({ percentage: this.state.isOn ? 100 : 0 });
@@ -140,6 +156,15 @@ class TransitionTimer extends React.Component {
     );
   }
 }
+
+TransitionTimer.propTypes = {
+  teacherId: PropTypes.string.isRequired,
+  firebase: PropTypes.object.isRequired,
+  transitionType: PropTypes.string,
+  handleEndTransition: PropTypes.func.isRequired,
+  pushOntoTransitionStack: PropTypes.func.isRequired,
+  typeSelected: PropTypes.bool.isRequired
+};
 
 const mapStateToProps = state => {
   return {

@@ -5,20 +5,14 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import FilledInput from "@material-ui/core/FilledInput";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton/IconButton";
-import Select from "@material-ui/core/Select";
 import GenerateReportImage from "../../../assets/images/GenerateReportImage.svg";
 import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
 import { withStyles } from "@material-ui/core/styles";
-// import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import { ImmortalDB } from "immortal-db";
-import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import "chartjs-plugin-datalabels";
 import ChildTeacherBehaviorPieSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
 import ChildTeacherBehaviorDetailsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
@@ -388,9 +382,9 @@ class SequentialActivitiesResultsPage extends React.Component {
                     onChange={this.changeSessionId}
                     InputLabelProps={{ shrink: true }}
                   >
-                    {this.state.sessionDates.map(date => {
+                    {this.state.sessionDates.map((date, index) => {
                       return (
-                        <MenuItem id={date.id} value={date.id}>
+                        <MenuItem key={index} id={date.id} value={date.id}>
                           <em>
                             {moment(date.sessionStart.value).format(
                               "MMM Do YY hh:mm A"
@@ -531,7 +525,8 @@ class SequentialActivitiesResultsPage extends React.Component {
 }
 
 SequentialActivitiesResultsPage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(SequentialActivitiesResultsPage);

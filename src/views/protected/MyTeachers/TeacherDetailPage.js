@@ -253,7 +253,14 @@ const sortedSvg = [
   AssocCoopIconImage
 ];
 
+/**
+ * page with details about a teacher
+ * @class TeacherDetailPage
+ */
 class TeacherDetailPage extends Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     const id = this.props.match.params.teacherid;
@@ -345,6 +352,7 @@ class TeacherDetailPage extends Component {
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const firebase = this.context;
     firebase
@@ -401,6 +409,9 @@ class TeacherDetailPage extends Component {
     });
   };
 
+  /**
+   * @param {event} e
+   */
   handleEditText = e => {
     const type = e.target.name;
     const val = e.target.value;
@@ -412,6 +423,11 @@ class TeacherDetailPage extends Component {
     );
   };
 
+  /**
+   * validates user-entered text
+   * @param {type} type
+   * @param {value} val
+   */
   validateInputText = (type, val) => {
     switch (type) {
       case "inputFirstName":
@@ -539,6 +555,9 @@ class TeacherDetailPage extends Component {
     }
   };
 
+  /**
+   * @param {boolean} successful
+   */
   handleEditAlert = successful => {
     if (successful) {
       this.setState(
@@ -587,6 +606,10 @@ class TeacherDetailPage extends Component {
       );
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     const {
@@ -784,12 +807,12 @@ class TeacherDetailPage extends Component {
             aria-labelledby="edit-teacher-title"
           >
             <DialogTitle id="edit-teacher-title">
-              Edit {firstName} {lastName}'s Info
+              Edit {firstName} {lastName}&apos;s Info
             </DialogTitle>
             <DialogContent>
               <DialogContentText>
                 Make edits to the form below and confirm to update this
-                teacher's information.
+                teacher&apos;s information.
               </DialogContentText>
               <TextField
                 autoFocus
@@ -898,7 +921,10 @@ class TeacherDetailPage extends Component {
 }
 
 TeacherDetailPage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 TeacherDetailPage.contextType = FirebaseContext;

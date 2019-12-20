@@ -11,9 +11,18 @@ import Typography from "@material-ui/core/Typography/Typography";
 
 const styles = {};
 
+/**
+ * Swipe View for Child and Teacher Associative&Cooperative Pie Charts
+ * @class ChildTeacherBehaviorDetailsSlider
+ * @return {void}
+ */
 class ChildTeacherBehaviorPieSlider extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     const settings = {
       dots: true,
       infinite: true,
@@ -52,8 +61,13 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
 }
 
 ChildTeacherBehaviorPieSlider.propTypes = {
-  classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  // classes: PropTypes.object.isRequired,
+  // data: PropTypes.object.isRequired,
+  acTime: PropTypes.number.isRequired,
+  noAcTime: PropTypes.number.isRequired,
+  noOppTime: PropTypes.number.isRequired,
+  supportTime: PropTypes.number.isRequired,
+  noSupportTime: PropTypes.number.isRequired
 };
 
 export default withStyles(styles)(ChildTeacherBehaviorPieSlider);

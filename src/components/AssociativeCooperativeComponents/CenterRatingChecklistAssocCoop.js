@@ -15,7 +15,7 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
-import Countdown from "../Countdown";
+import Countdown from "../Countdown.tsx";
 
 const styles = {
   root: {
@@ -48,8 +48,14 @@ const childBehaviors = {
 };
 
 const RATING_INTERVAL = 60000;
-const TEN_PERCENT = 0.1 * RATING_INTERVAL;
+// const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
+/**
+ * Center Rating Checklist for Associative and Cooperative
+ * @class CenterRatingChecklistAssocCoop
+ * @param {value} value
+ * @return {void}
+ */
 class CenterRatingChecklistAssocCoop extends React.Component {
   state = {
     auth: true,
@@ -76,10 +82,12 @@ class CenterRatingChecklistAssocCoop extends React.Component {
     }
   };
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.timer = setInterval(this.tick, 1000);
   }
 
+  /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     clearInterval(this.timer);
   }
@@ -214,6 +222,10 @@ class CenterRatingChecklistAssocCoop extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <div className={this.props.classes.root}>
@@ -223,11 +235,11 @@ class CenterRatingChecklistAssocCoop extends React.Component {
           aria-labelledby="simple-dialog-title"
         >
           <DialogTitle id="simple-dialog-title">
-            Don't forget to circulate!
+            Don&apos;t forget to circulate!
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              You've been at the {this.props.currentCenter} center for 1 minute.
+              You&apos;ve been at the {this.props.currentCenter} center for 1 minute.
             </DialogContentText>
           </DialogContent>
         </Dialog>
@@ -548,7 +560,11 @@ class CenterRatingChecklistAssocCoop extends React.Component {
 }
 
 CenterRatingChecklistAssocCoop.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  toggleScreen: PropTypes.func.isRequired,
+  firebase: PropTypes.object.isRequired,
+  finishVisit: PropTypes.func.isRequired,
+  currentCenter: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(CenterRatingChecklistAssocCoop);

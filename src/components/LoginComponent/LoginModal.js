@@ -9,6 +9,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/es/IconButton";
 import Tooltip from "@material-ui/core/es/Tooltip";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
@@ -36,6 +40,10 @@ const styles = theme => ({
   },
 });
 
+/**
+ * login modal
+ * @class LoginModal
+ */
 class LoginModal extends React.Component {
   state = {
     open: true,
@@ -50,14 +58,10 @@ class LoginModal extends React.Component {
     this.setState({ open: false });
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  handleChangeIndex = index => {
-    this.setState({ value: index });
-  };
-
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -97,7 +101,8 @@ class LoginModal extends React.Component {
 
 LoginModal.propTypes = {
   classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired
+  handleClose: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(LoginModal);

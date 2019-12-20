@@ -10,7 +10,7 @@ import CalendarImage from "../../../assets/images/CalendarImage.svg";
 import ObserveImage from "../../../assets/images/ObserveImage.svg";
 import ResultsImage from "../../../assets/images/ResultsImage.svg";
 import MessagesImage from "../../../assets/images/MessagesImage.svg";
-import TeacherModal from "./TeacherModal";
+import TeacherModal from "./TeacherModal.tsx";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 
 const styles = {
@@ -40,6 +40,10 @@ const styles = {
   }
 };
 
+/**
+ * home page
+ * @class HomePage
+ */
 class HomePage extends React.Component {
   state = {
     teacherModal: false,
@@ -47,17 +51,21 @@ class HomePage extends React.Component {
     coachName: ""
   };
 
+  /**
+   * @param {string} type
+   */
   showTeacherModal = type => {
     this.setState({ teacherModal: true, type: type });
   };
 
-  handleClose = event => {
+  handleClose = () => {
     this.setState({
       teacherModal: false,
       type: ""
     });
   };
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const firebase = this.context;
     firebase.getCoachFirstName().then(name => {
@@ -67,6 +75,10 @@ class HomePage extends React.Component {
     firebase.handleFetchQuestions("transition");
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (

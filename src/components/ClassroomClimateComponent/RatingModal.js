@@ -4,13 +4,12 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
-import YesNoDialog from "../../components/Shared/YesNoDialog";
-import ExNegativeFaceImage from "../../assets/images/ExNegativeFaceImage.png";
-import NegativeFaceImage from "../../assets/images/NegativeFaceImage.png";
-import NeutralFaceImage from "../../assets/images/NeutralFaceImage.png";
-import PleasantFaceImage from "../../assets/images/PleasantFaceImage.png";
-import VibrantFaceImage from "../../assets/images/VibrantFaceImage.png";
+import YesNoDialog from "../../components/Shared/YesNoDialog.tsx";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
@@ -31,13 +30,17 @@ const styles = theme => ({
   }
 });
 
+/**
+ * Rating Modal for Climate Observation
+ * @class RatingModal
+ */
 class RatingModal extends React.Component {
   state = {
     rating: 0,
     value: "undefined"
   };
 
-  handleAngerClick = event => {
+  handleAngerClick = () => {
     if (this.state.value !== "Anger") {
       this.setState({ value: "Anger" });
       this.setState({ rating: 1 });
@@ -76,6 +79,10 @@ class RatingModal extends React.Component {
         N.B. You must wrap this "modal" component in a modal of your own.
         This is for performance reasons, cf. https://material-ui.com/utils/modal/#performance
      */
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -91,7 +98,7 @@ class RatingModal extends React.Component {
             Teacher Tone Rating
           </Typography>
           <Typography variant="subtitle2" gutterBottom>
-            Please rate the teacher's current tone.
+            Please rate the teacher&apos;s current tone.
           </Typography>
           <div style={{ height: 20 }} />
           <Grid container direction={"row"} justify={"space-between"}>
@@ -273,7 +280,7 @@ class RatingModal extends React.Component {
                 buttonColor={"#e55529"}
                 buttonWidth={"170px"}
                 backgroundColor={"#fff"}
-                buttonStyle={{ margin: 10 }}
+                buttonMargin={10}
                 dialogTitle={`Are you sure you want to skip this rating? This option should only be used in exceptional circumstances.`}
                 onAccept={this.props.handleRatingConfirmation}
                 onAcceptParams={0}
@@ -289,7 +296,9 @@ class RatingModal extends React.Component {
 }
 
 RatingModal.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  handleIncomplete: PropTypes.func.isRequired,
+  handleRatingConfirmation: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(RatingModal);

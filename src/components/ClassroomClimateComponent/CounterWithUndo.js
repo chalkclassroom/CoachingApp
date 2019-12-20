@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -19,7 +20,6 @@ const styles = theme => ({
 });
 
 const CounterWithUndo = ({
-  entries,
   classes,
   climateStackSize,
   popOffClimateStack,
@@ -67,6 +67,13 @@ const CounterWithUndo = ({
       </Paper>
     </div>
   );
+};
+
+CounterWithUndo.propTypes = {
+  classes: PropTypes.object.isRequired,
+  climateStackSize: PropTypes.number.isRequired,
+  popOffClimateStack: PropTypes.func.isRequired,
+  firebase: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {

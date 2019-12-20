@@ -27,7 +27,14 @@ const styles = theme => ({
   }
 });
 
+/**
+ * form to create account on chalkcoaching.com
+ * @class SignUpForm
+ */
 class SignUpForm extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -44,6 +51,12 @@ class SignUpForm extends React.Component {
     };
   }
 
+  /**
+   * responds to change in user-entered text
+   * @param {string} name
+   * @param {event} event
+   * @return {void}
+   */
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value
@@ -51,6 +64,11 @@ class SignUpForm extends React.Component {
     this.validateState(name, event.target.value);
   };
 
+  /**
+   * validates user-entered text
+   * @param {string} name
+   * @param {value} value
+   */
   validateState = (name, value) => {
     switch (name) {
       case "firstName":
@@ -138,12 +156,17 @@ class SignUpForm extends React.Component {
     }
   };
 
+  /**
+   * validates that user-entered text is a valid email
+   * @param {string} email
+   * @return {boolean}
+   */
   validateEmail = email => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
-  handleSubmit = event => {
+  handleSubmit = () => {
     this.validateState();
     if (!this.state.errors) {
       this.props.firebase
@@ -164,6 +187,10 @@ class SignUpForm extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -260,7 +287,9 @@ class SignUpForm extends React.Component {
 
 SignUpForm.propTypes = {
   classes: PropTypes.object.isRequired,
-  mRole: PropTypes.string.isRequired
+  mRole: PropTypes.string.isRequired,
+  firebase: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 export default withRouter(connect()(withStyles(styles)(SignUpForm)));

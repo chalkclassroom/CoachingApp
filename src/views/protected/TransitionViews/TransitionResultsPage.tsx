@@ -1,139 +1,68 @@
-import React from "react";
-import PropTypes from "prop-types";
-import MenuItem from "@material-ui/core/MenuItem";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import Card from "@material-ui/core/Card";
-import TextField from '@material-ui/core/TextField';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import SwipeableViews from 'react-swipeable-views';
-import TabBar from '@material-ui/core/AppBar';
-import TransitionTimeIcon from "../../../assets/icons/TransitionTime.svg";
+import TextField from "@material-ui/core/TextField";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import TabBar from "@material-ui/core/AppBar";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
-// import spreadsheetData from "../../../SPREADSHEET_SECRETS";
-import FirebaseContext from "../../../components/Firebase/context";
+import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
-import { ImmortalDB } from "immortal-db";
-import ListDetailTableTransitionResults from "../../../components/ResultsComponents/ListDetailTableTransitionResults.js";
+// import { ImmortalDB } from "immortal-db";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
 import DataQuestions from "../../../components/ResultsComponents/DataQuestions";
-import 'chartjs-plugin-datalabels';
+import "chartjs-plugin-datalabels";
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
 import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
-import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
-import moment from 'moment';
-import ChildWaiting from "../../../assets/icons/ChildWaiting.svg"; 
-import WaitinginLine from "../../../assets/icons/WaitinginLine.svg"; 
-import Walking from "../../../assets/icons/Walking.svg"; 
-import ClassroomRoutines from "../../../assets/icons/classroomRoutines.svg"; 
-import bmi from "../../../assets/icons/BehaviorManagementDisruption.svg"; 
-import { lightGreen, white, deepOrange, orange, blue, indigo } from '@material-ui/core/colors';
-import { red } from '@material-ui/core/es/colors';
-import CardContent from '@material-ui/core/CardContent';
+import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph.tsx";
+import * as moment from "moment";
+import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
+import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";
+import WalkingImage from "../../../assets/images/WalkingImage.svg";
+import ClassroomRoutinesImage from "../../../assets/images/ClassroomRoutinesImage.svg";
+import BMDImage from "../../../assets/images/BMDImage.svg";
+import {
+  lightGreen,
+  deepOrange,
+  orange,
+  blue,
+  indigo
+} from "@material-ui/core/colors";
+import { red } from "@material-ui/core/es/colors";
+import CardContent from "@material-ui/core/CardContent";
 import ResultsDashboard from '../../../components/ResultsDashboard';
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     height: "100vh",
     flexDirection: "column"
-  },
-  main: {
-    flex: 1,
-    height: "90%",
-    marginTop: "10vh"
-  },
-  grow: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
-  },
-  viewButtons: {
-    minWidth: 150,
-    textAlign: "center",
-    color: "#094492",
-    borderColor: "#094492",
-  },
-  viewButtonsSelected: {
-    minWidth: 150,
-    textAlign: "center",
-    color: "#fff",
-    backgroundColor: "#094492"
-  },
-  buttonsList: {
-    position: "relative",
-    top: "3vh"
-  },
-  title: {
-    position: "relative",
-    left: "33%",
-    top: "10%"
-  },
-  secondTitle: {
-    position: "relative",
-    left: "40%",
-    top: "10%"
-  },
-  chart: {
-    position: "relative",
-    left: "7%",
-    top: "5%"
-  },
-  generateReport: {
-    position: "relative",
-    right: "10%",
-    top: "76%",
-    left: "10%"
   },
   resultsContent: {
     position: "relative",
     width: '60vw',
     marginTop: '5vh'
   },
-  dashboardCard: {
-    border: "3px solid #d9d9d9",
-    borderRadius: 10,
-    backgroundColor: "#fff",
-    height: "100%",
-    boxShadow: "5px",
-    width: "90%",
-    marginRight: "5%",
-    marginLeft: "5%",
-    flexDirection: "column",
-    alignItems: "center",
-    justify: "space-evenly",
-    display: "flex",
-    flex: "1",
-    flexWrap: "nowrap"
-  },
   buttonText: {
     fontSize: "12px",
-    textAlign: "center" 
+    textAlign: "center"
   },
   transitionTypeButton: {
-    width: '70px',
-    height: '70px'
+    width: "70px",
+    height: "70px"
   },
   tabBar: {
     marginBottom: "10px",
     height: "5%",
     width: "100%"
   },
-  swipeableView: {
-    width: "100%",
-    height: "75vh"
-  },
   coachPrepCard: {
     width: "100%",
     overflow: "auto"
   },
-  resultsButtons: {
-    marginTop: "2vh"
-  }
 };
 
 const TransitionTypeColors = {
@@ -148,86 +77,99 @@ const TransitionTypeColors = {
 const raisedThemes = createMuiTheme({
   palette: {
     waitingColor: {
-      backgroundColor: lightGreen[300], color:'#000',
-      textColor: white,
-      primaryTextColor: white,
-      boxShadow: "4px 4px #a9a9a9",
+      backgroundColor: lightGreen[300],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white',
+      boxShadow: "4px 4px #a9a9a9"
     },
     travelingColor: {
-      backgroundColor: orange[400], color: '#000',
-      textColor: white, 
-      primaryTextColor: white,
+      backgroundColor: orange[400],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
     },
-    childWaitingColor: { 
-      backgroundColor: deepOrange[400], color: '#000',
-      textColor: white,
-      primaryTextColor: white, 
+    childWaitingColor: {
+      backgroundColor: deepOrange[400],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
-    }, 
-    classroomRoutinesColor: { 
-      backgroundColor: blue[300], color: '#000',
-      textColor: white,
-      primaryTextColor: white, 
+    },
+    classroomRoutinesColor: {
+      backgroundColor: blue[300],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
-    }, 
-    bmiColor: { 
-      backgroundColor: red['A200'], color: '#000',
-      textColor: white,
-      primaryTextColor: white, 
+    },
+    bmiColor: {
+      backgroundColor: red["A200"],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
-    }, 
-    otherColor: { 
-      backgroundColor: indigo['A200'], color: '#000',
-      textColor: white,
-      primaryTextColor: white, 
+    },
+    otherColor: {
+      backgroundColor: indigo["A200"],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
     }
   }
-})
+});
 
 const themes = createMuiTheme({
   palette: {
-    waitingColor: { 
-      backgroundColor: lightGreen[300], color: '#000',
-      textColor: white, 
-      primaryTextColor: white, 
+    waitingColor: {
+      backgroundColor: lightGreen[300],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
-    travelingColor: { 
-      backgroundColor: orange[400], color: '#000',
-      textColor: white, 
-      primaryTextColor: white,
-    }, 
-    childWaitingColor: { 
-      backgroundColor: deepOrange[400], color: '#000',
-      textColor: white,
-      primaryTextColor: white, 
-    }, 
-    classroomRoutinesColor: { 
-      backgroundColor: blue[300], color: '#000',
-      textColor: white,
-      primaryTextColor: white, 
-    }, 
-    bmiColor: { 
-      backgroundColor: red['A200'], color: '#000',
-      textColor: white,
-      primaryTextColor: white, 
-    }, 
-    otherColor: { 
-      backgroundColor: indigo['A200'], color: '#000',
-      textColor: white,
-      primaryTextColor: white, 
-    }}, 
+    travelingColor: {
+      backgroundColor: orange[400],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white'
+    },
+    childWaitingColor: {
+      backgroundColor: deepOrange[400],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white'
+    },
+    classroomRoutinesColor: {
+      backgroundColor: blue[300],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white'
+    },
+    bmiColor: {
+      backgroundColor: red["A200"],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white'
+    },
+    otherColor: {
+      backgroundColor: indigo["A200"],
+      color: "#000",
+      textColor: 'white',
+      primaryTextColor: 'white'
+    }
+  },
   overrides: {
     MuiButton: {
       raisedPrimary: {
-        color: 'white',
+        color: "white"
       },
-      textColor: white, 
-      primaryTextColor: white, 
-    },
-  }, 
-})
+      textColor: 'white',
+      primaryTextColor: 'white'
+    }
+  }
+});
 
 const ViewEnum = {
   DATA: 1,
@@ -237,144 +179,289 @@ const ViewEnum = {
   NOTES: 5
 };
 
-
 const LineQuestions = [
-  {name: "TransitionPanel1A", title: "Line-up Process", text: "How do you like to transition children from " +
-  "where they are in the classroom to the line-up area? Do you prefer to line them up individually or send them " +
-  "in groups? Talk about the differences in those approaches. What are the effects on the children?"},
-  {name: "TransitionPanel1B", title: "Child Engagement", text: "Talk about any types of learning activities " +
-  "that have helped children transition during the line-up process. Are the children engaged during the activities? " +
-  "What are some successes or challenges? How do you all decide on what transition activities to do with children?"},
-  {name: "TransitionPanel1C", title: "Causes for Waiting", text: "Talk about what children do when they get in line. " +
-  "Do they have designated spots on which to stand? Do certain children have more difficulty with the process? " +
-  "Are there any challenges that come up when they are lining up?"}
+  {
+    name: "TransitionPanel1A",
+    title: "Line-up Process",
+    text:
+      "How do you like to transition children from " +
+      "where they are in the classroom to the line-up area? Do you prefer to line them up individually or send them " +
+      "in groups? Talk about the differences in those approaches. What are the effects on the children?"
+  },
+  {
+    name: "TransitionPanel1B",
+    title: "Child Engagement",
+    text:
+      "Talk about any types of learning activities " +
+      "that have helped children transition during the line-up process. Are the children engaged during the activities? " +
+      "What are some successes or challenges? How do you all decide on what transition activities to do with children?"
+  },
+  {
+    name: "TransitionPanel1C",
+    title: "Causes for Waiting",
+    text:
+      "Talk about what children do when they get in line. " +
+      "Do they have designated spots on which to stand? Do certain children have more difficulty with the process? " +
+      "Are there any challenges that come up when they are lining up?"
+  }
 ];
 
 const TravelingQuestions = [
-  {name: "TransitionPanel2A", title: "Travel Destinations", text: "Let's think about the transitions you make " +
-  "outside the classroom. What's outside of your control and what do you have some control over? (We have to walk " +
-  "to the playground on the other side of the building, but we could get creative about ways to reduce time spent " +
-  "on bathroom breaks in the hallway.)"},
-  {name: "TransitionPanel2B", title: "Practice and Positive Reinforcement", text: "Talk about how you reinforce " +
-  "children's successes during transitions? What's the most effective way you've found to keep encouraging them?"},
-  {name: "TransitionPanel2C", title: "Revisiting Routines and Expectations", text: "Talk about some of the transitions " +
-  "skills children may need to relearn or practice. What have you been noticing lately about their challenges during " +
-  "transitions outside the classroom?"},
-  {name: "TransitionPanel2D", title: "Individualized Support", text: "What are some strategies that help children " +
-  "with challenging behavior during long transitions outside the classroom? What do children with challenging behavior " +
-  "need to be successful? What motivate them at other times during the day?"},
-  {name: "TransitionPanel2E", title: "Child Engagement", text: "How does the teacher engage children during walks to " +
-  "other parts of the school building (e.g., pretending to walk like an animal)? Since you can't get around walking all " +
-  "that way to the playground, talk about strategies you've used in the past to keep the children engaged. What works?"},
-]
+  {
+    name: "TransitionPanel2A",
+    title: "Travel Destinations",
+    text:
+      "Let's think about the transitions you make " +
+      "outside the classroom. What's outside of your control and what do you have some control over? (We have to walk " +
+      "to the playground on the other side of the building, but we could get creative about ways to reduce time spent " +
+      "on bathroom breaks in the hallway.)"
+  },
+  {
+    name: "TransitionPanel2B",
+    title: "Practice and Positive Reinforcement",
+    text:
+      "Talk about how you reinforce " +
+      "children's successes during transitions? What's the most effective way you've found to keep encouraging them?"
+  },
+  {
+    name: "TransitionPanel2C",
+    title: "Revisiting Routines and Expectations",
+    text:
+      "Talk about some of the transitions " +
+      "skills children may need to relearn or practice. What have you been noticing lately about their challenges during " +
+      "transitions outside the classroom?"
+  },
+  {
+    name: "TransitionPanel2D",
+    title: "Individualized Support",
+    text:
+      "What are some strategies that help children " +
+      "with challenging behavior during long transitions outside the classroom? What do children with challenging behavior " +
+      "need to be successful? What motivate them at other times during the day?"
+  },
+  {
+    name: "TransitionPanel2E",
+    title: "Child Engagement",
+    text:
+      "How does the teacher engage children during walks to " +
+      "other parts of the school building (e.g., pretending to walk like an animal)? Since you can't get around walking all " +
+      "that way to the playground, talk about strategies you've used in the past to keep the children engaged. What works?"
+  }
+];
 
 const WaitingQuestions = [
-  {name: "TransitionPanel3A", title: "Preparation of Materials", text: "Talk about the best time of the " + 
-  "day that you've found for gathering materials for lessons and activities. Are there challenging times as well?"},
-  {name: "TransitionPanel3B", title: "Teacher Teamwork", text: "How do you and your teaching assistant help each " + 
-  "other with lesson prep and organization? What systems seem to work best in your experience? If you could try " +
-  "something new or change one of your routines around getting ready for a lesson, what would it be?"},
-  {name: "TransitionPanel3C", title: "Child Engagement", text: "Talk about the times of the day that you feel the " +
-  "most organized and prepared. What are the differences in children's behavior when you feel prepared? Talk about " +
-  "the most chaotic or overwhelming times. Are there any tips you can take from those other parts of the day when you " +
-  "feel more calm and prepared? Talk about some things you've been wanting to try during those overwhelming parts of the day."},
-  {name: "TransitionPanel3D", title: "Classroom Organization", text: "Talk about how the classroom environment and " +
-  "layout affect the flow of the day and children's waiting time. Where are materials for different activities stored " +
-  "and how quickly or not can children access materials?"},
-]
+  {
+    name: "TransitionPanel3A",
+    title: "Preparation of Materials",
+    text:
+      "Talk about the best time of the " +
+      "day that you've found for gathering materials for lessons and activities. Are there challenging times as well?"
+  },
+  {
+    name: "TransitionPanel3B",
+    title: "Teacher Teamwork",
+    text:
+      "How do you and your teaching assistant help each " +
+      "other with lesson prep and organization? What systems seem to work best in your experience? If you could try " +
+      "something new or change one of your routines around getting ready for a lesson, what would it be?"
+  },
+  {
+    name: "TransitionPanel3C",
+    title: "Child Engagement",
+    text:
+      "Talk about the times of the day that you feel the " +
+      "most organized and prepared. What are the differences in children's behavior when you feel prepared? Talk about " +
+      "the most chaotic or overwhelming times. Are there any tips you can take from those other parts of the day when you " +
+      "feel more calm and prepared? Talk about some things you've been wanting to try during those overwhelming parts of the day."
+  },
+  {
+    name: "TransitionPanel3D",
+    title: "Classroom Organization",
+    text:
+      "Talk about how the classroom environment and " +
+      "layout affect the flow of the day and children's waiting time. Where are materials for different activities stored " +
+      "and how quickly or not can children access materials?"
+  }
+];
 
 const RoutinesQuestions = [
-  {name: "TransitionPanel4A", title: "Types of Routines", text: "Talk about all the different classroom routines " +
-  "that happen each day. Which types are more challenging for children? Why might that be? (e.g., Do children do well " +
-  "transitioning from morning meeting to centers but face obstacles cleaning up after centers and transitioning to the " +
-  "read aloud?) Are there one or two classroom routines that have been on your mind or that you want to focus on? " +
-  "On a perfect day, what might that routine look like?"},
-  {name: "TransitionPanel4B", title: "Classroom Organization", text: "Let's talk about the relationship between " +
-  "classroom environment/layout and children's transition time. Do you feel like children spend too much time cleaning " +
-  "up materials? What helps them know where to put materials? How does the amount of materials affect clean-up time? " +
-  "What visuals or other strategies help them during classroom routines?"},
-  {name: "TransitionPanel4C", title: "Centers", text: "Let's talk about the routines and systems that  help children " +
-  "choose centers and move between centers. What's going well this year? How are children doing with a) choosing their " +
-  "first center, b) leaving one center and going to another one, c) sticking with an activity once they begin?"},
-  {name: "TransitionPanel4D", title: "Teacher Teamwork", text: "Talk about how you and your teaching assistant work " +
-  "together to make transitions go smoothly. Do you have designated roles for transition times throughout the day?"},
-  {name: "TransitionPanel4E", title: "Number of Transitions", text: "If you could get rid of one transition, what would " +
-  "it be? Is there a time of day when you feel like you're constantly reminding children where they should be? Let's look " +
-  "at the daily schedule for any transitions that could be changed/removed."},
-]
+  {
+    name: "TransitionPanel4A",
+    title: "Types of Routines",
+    text:
+      "Talk about all the different classroom routines " +
+      "that happen each day. Which types are more challenging for children? Why might that be? (e.g., Do children do well " +
+      "transitioning from morning meeting to centers but face obstacles cleaning up after centers and transitioning to the " +
+      "read aloud?) Are there one or two classroom routines that have been on your mind or that you want to focus on? " +
+      "On a perfect day, what might that routine look like?"
+  },
+  {
+    name: "TransitionPanel4B",
+    title: "Classroom Organization",
+    text:
+      "Let's talk about the relationship between " +
+      "classroom environment/layout and children's transition time. Do you feel like children spend too much time cleaning " +
+      "up materials? What helps them know where to put materials? How does the amount of materials affect clean-up time? " +
+      "What visuals or other strategies help them during classroom routines?"
+  },
+  {
+    name: "TransitionPanel4C",
+    title: "Centers",
+    text:
+      "Let's talk about the routines and systems that  help children " +
+      "choose centers and move between centers. What's going well this year? How are children doing with a) choosing their " +
+      "first center, b) leaving one center and going to another one, c) sticking with an activity once they begin?"
+  },
+  {
+    name: "TransitionPanel4D",
+    title: "Teacher Teamwork",
+    text:
+      "Talk about how you and your teaching assistant work " +
+      "together to make transitions go smoothly. Do you have designated roles for transition times throughout the day?"
+  },
+  {
+    name: "TransitionPanel4E",
+    title: "Number of Transitions",
+    text:
+      "If you could get rid of one transition, what would " +
+      "it be? Is there a time of day when you feel like you're constantly reminding children where they should be? Let's look " +
+      "at the daily schedule for any transitions that could be changed/removed."
+  }
+];
 
 const BehaviorQuestions = [
-  {name: "TransitionPanel5A", title: "Communicating Expectations", text: "Talk about the types of strategies " +
-  "(verbal, visual, gesture) you like to use to communicate behavior expectations before, during, and/or after transitions? " +
-  "Do children know where to go and what to do during a transition? How do they know?"},
-  {name: "TransitionPanel5B", title: "Individualized Support", text: "Talk about children who might benefit from " +
-  "individualized strategies to help them during transitions? What has worked in the past? What have you been thinking " +
-  "about trying?"},
-  {name: "TransitionPanel5C", title: "Teacher Teamwork", text: "Let's talk about how you and the paraprofessional/teaching " +
-  "assistant work together to teach and reinforce behavior expectations during transitions. What has worked? " +
-  "What felt less effective? How do you decide which member of the teaching team leads the different transitions " +
-  "across the day?"},
-  {name: "TransitionPanel5D", title: "Reinforcing Behaviors", text: "Talk about how you let children know when they " +
-  "do a transition well. What are you looking for so that you can give them positive reinforcement? " +
-  "How do you respond when they don't meet behavior expectations during transitions?"},
-  {name: "TransitionPanel5E", title: "Consistency of Routines", text: "Talk about the challenges you and/or children " +
-  "experience during transitions. Which part of the transition is the most challenging for children? Why might that be? " +
-  "What have you been brainstorming in terms of strategies to help them? If you could improve one aspect of a " +
-  "tricky transition, what would it be?"},
-]
+  {
+    name: "TransitionPanel5A",
+    title: "Communicating Expectations",
+    text:
+      "Talk about the types of strategies " +
+      "(verbal, visual, gesture) you like to use to communicate behavior expectations before, during, and/or after transitions? " +
+      "Do children know where to go and what to do during a transition? How do they know?"
+  },
+  {
+    name: "TransitionPanel5B",
+    title: "Individualized Support",
+    text:
+      "Talk about children who might benefit from " +
+      "individualized strategies to help them during transitions? What has worked in the past? What have you been thinking " +
+      "about trying?"
+  },
+  {
+    name: "TransitionPanel5C",
+    title: "Teacher Teamwork",
+    text:
+      "Let's talk about how you and the paraprofessional/teaching " +
+      "assistant work together to teach and reinforce behavior expectations during transitions. What has worked? " +
+      "What felt less effective? How do you decide which member of the teaching team leads the different transitions " +
+      "across the day?"
+  },
+  {
+    name: "TransitionPanel5D",
+    title: "Reinforcing Behaviors",
+    text:
+      "Talk about how you let children know when they " +
+      "do a transition well. What are you looking for so that you can give them positive reinforcement? " +
+      "How do you respond when they don't meet behavior expectations during transitions?"
+  },
+  {
+    name: "TransitionPanel5E",
+    title: "Consistency of Routines",
+    text:
+      "Talk about the challenges you and/or children " +
+      "experience during transitions. Which part of the transition is the most challenging for children? Why might that be? " +
+      "What have you been brainstorming in terms of strategies to help them? If you could improve one aspect of a " +
+      "tricky transition, what would it be?"
+  }
+];
 
+interface Props {
+  location: { state: { teacher: { id: string }}},
+  classes: Style
+}
 
+interface Style {
+  root: string,
+  resultsContent: string,
+  buttonText: string,
+  transitionTypeButton: string,
+  tabBar: string,
+  coachPrepCard: string
+}
 
+interface State {
+  view: number,
+  categoryView: string,
+  sessionId: string,
+  sessionDates: Array<string>,
+  notes: Array<object>,
+  sessionLine: number,
+  sessionTraveling: number,
+  sessionWaiting: number,
+  sessionRoutines: number,
+  sessionBehaviorManagement: number,
+  sessionOther: number,
+  trendsDates: Array<string>,
+  trendsLine: Array<number>,
+  trendsTraveling: Array<number>,
+  trendsWaiting: Array<number>,
+  trendsRoutines: Array<number>,
+  trendsBehaviorManagement: Array<number>,
+  trendsOther: Array<number>,
+  trendsTotalColor: string,
+  transitionTime: number,
+  sessionTotal: number,
+  learningActivityTime: number,
+  tabValue: number,
+  openPanel: string,
+  addedToPrep: Array<string>,
+  selectedQuestions: Array<string>
+}
 
-
-
-
-class TransitionResults extends React.Component {
-  constructor(props) {
+/**
+ * transition results
+ * @class TransitionResultsPage
+ */
+class TransitionResultsPage extends React.Component<Props, State> {
+  /**
+   * @param {Props} props
+   */
+  constructor(props: Props) {
     super(props);
-    this.handleAppend = this.handleAppend.bind(this);
-    this.handleTypeChange = this.handleTypeChange.bind(this);
+    // this.handleTypeChange = this.handleTypeChange.bind(this);
   }
 
   state = {
-    auth: true,
-    anchorEl: null,
-    help: false,
-    type: null,
-    hex: "#FFFFFF",
-    entries: [],
-    dbCounter: 0, // @Hack @Temporary !!!
     view: ViewEnum.DATA,
-    categoryView: null,
+    categoryView: '',
     sessionId: "",
     sessionDates: [],
     notes: [],
-    log: [],
-    sessionLine: null,
-    sessionTraveling: null,
-    sessionWaiting: null,
-    sessionRoutines: null,
-    sessionBehaviorManagement: null,
-    sessionOther: null,
+    sessionLine: 0,
+    sessionTraveling: 0,
+    sessionWaiting: 0,
+    sessionRoutines: 0,
+    sessionBehaviorManagement: 0,
+    sessionOther: 0,
     trendsDates: [],
-    trendsLine:  [],
+    trendsLine: [],
     trendsTraveling: [],
     trendsWaiting:  [],
     trendsRoutines: [],
     trendsBehaviorManagement:  [],
     trendsOther: [],
-    trendsTotal:  [],
+    trendsTotal: [],
     trendsTotalColor: "#0988EC",
-    totalTime: null,
+    // totalTime: null,
     transitionTime: 0,
-    sessionTotal: null,
+    sessionTotal: 0,
     learningActivityTime: 0,
     tabValue: 0,
-    openPanel: null,
+    openPanel: '',
     addedToPrep: [],
-    selectedQuestions: [],
+    selectedQuestions: []
   };
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const teacherId = this.props.location.state.teacher.id;
     this.handleTrendsFetch(teacherId);
@@ -382,93 +469,57 @@ class TransitionResults extends React.Component {
     this.handleDateFetching(this.props.location.state.teacher.id);
   }
 
-  handleAppend(entry) {
-    const newEntries = this.state.entries;
-    entry.type = this.state.type;
-    newEntries.push(entry);
-    this.setState({ entries: newEntries });
-
-    this.handleSpreadsheetAppend(entry);
-
-    this.handleDBinsert(entry);
-  }
-
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
-
-  handleTypeChange(newType) {
-      this.setState({ type: newType });
-      this.changeHex(newType);
-  }
-
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-
-  handleClickAway = () => {
-    this.setState({ help: false });
-  };
-
-  handleDBinsert = async entry => {
-    // Once we integrate users, the user + some index will be the key for the DB.
-    await ImmortalDB.set(
-      JSON.stringify(this.state.dbCounter),
-      JSON.stringify(entry)
-    );
-
-    this.setState({ dbCounter: this.state.dbCounter + 1 });
-  };
-
-  handleTrendsFetch = (teacherId) => {
+  /**
+   * @param {string} teacherId
+   */
+  handleTrendsFetch = (teacherId: string) => {
     const firebase = this.context;
-    const dateArray = [];
-    const lineArray = [];
-    const travelingArray = [];
-    const waitingArray = [];
-    const routinesArray = [];
-    const behaviorManagementArray = [];
-    const otherArray = [];
-    const totalArray = [];
+    const dateArray: Array<string> = [];
+    const lineArray: Array<number> = [];
+    const travelingArray: Array<number> = [];
+    const waitingArray: Array<number> = [];
+    const routinesArray: Array<number> = [];
+    const behaviorManagementArray: Array<number> = [];
+    const otherArray: Array<number> = [];
+    const totalArray: Array<number> = [];
     let formattedTime;
     firebase.fetchTransitionTrend(teacherId).then(dataSet => {
-        dataSet.map( data => {
-          formattedTime = this.handleTrendsFormatTime(data.total);
-          dateArray.push([moment(data.startDate.value).format("MMM Do"), formattedTime]);
-          lineArray.push(Math.floor(data.line / data.sessionTotal * 100));
-          travelingArray.push(Math.floor(data.traveling / data.sessionTotal * 100));
-          waitingArray.push(Math.floor(data.waiting / data.sessionTotal * 100));
-          routinesArray.push(Math.floor(data.routines / data.sessionTotal * 100));
-          behaviorManagementArray.push(Math.floor(data.behaviorManagement / data.sessionTotal * 100));
-          otherArray.push(Math.floor(data.other / data.sessionTotal * 100));
-          totalArray.push(Math.floor(data.total / data.sessionTotal * 100));
-        });
+      dataSet.forEach(data => {
+        formattedTime = this.handleTrendsFormatTime(data.total);
+        dateArray.push(
+          moment(data.startDate.value).format("MMM Do"),
+          formattedTime
+        );
+        lineArray.push(Math.floor(data.line / data.sessionTotal * 100));
+        travelingArray.push(Math.floor(data.traveling / data.sessionTotal * 100));
+        waitingArray.push(Math.floor(data.waiting / data.sessionTotal * 100));
+        routinesArray.push(Math.floor(data.routines / data.sessionTotal * 100));
+        behaviorManagementArray.push(Math.floor(data.behaviorManagement / data.sessionTotal * 100));
+        otherArray.push(Math.floor(data.other / data.sessionTotal * 100));
+        totalArray.push(Math.floor((data.total / data.sessionTotal) * 100));
+      });
 
-        this.setState({
-          trendsDates: dateArray,
-          trendsLine: lineArray,
-          trendsTraveling: travelingArray,
-          trendsWaiting: waitingArray,
-          trendsRoutines: routinesArray,
-          trendsBehaviorManagement: behaviorManagementArray,
-          trendsOther: otherArray,
-          trendsTotal: totalArray
-        });
+      this.setState({
+        trendsDates: dateArray,
+        trendsLine: lineArray,
+        trendsTraveling: travelingArray,
+        trendsWaiting: waitingArray,
+        trendsRoutines: routinesArray,
+        trendsBehaviorManagement: behaviorManagementArray,
+        trendsOther: otherArray,
+        trendsTotal: totalArray
+      });
     });
   };
 
-  handleTrendsFormatTime = (totalTime) => {
+  /**
+   * @param {number} totalTime
+   * @return {number}
+   */
+  handleTrendsFormatTime = (totalTime: number) => {
     const seconds = Math.round(totalTime / 1000 % 60);
-    const minutes =  Math.floor(totalTime / 1000 / 60 % 60);
-    const hours = Math.floor(totalTime / 1000 / 3600 % 60);
+    const minutes = Math.floor((totalTime / 1000 / 60) % 60);
+    const hours = Math.floor((totalTime / 1000 / 3600) % 60);
     let secondsString = "";
     let minutesString = "";
 
@@ -484,7 +535,8 @@ class TransitionResults extends React.Component {
       minutesString = minutes.toString();
     }
 
-    const formattedTime = hours.toString() + ":" + minutesString + ":" + secondsString;
+    const formattedTime =
+      hours.toString() + ":" + minutesString + ":" + secondsString;
 
     return formattedTime;
   };
@@ -550,27 +602,34 @@ class TransitionResults extends React.Component {
           data: this.state.trendsOther,
         }
       ]
-    }
+    };
   };
 
-  handleNotesFetching = (sessionId) => {
+  /**
+   * @param {string} sessionId
+   */
+  handleNotesFetching = (sessionId: string) => {
     const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then(
-      notesArr => {
-        const formattedNotesArr = [];
-        notesArr.map(note => {
-          const newTimestamp = new Date(note.timestamp.seconds*1000).toLocaleString("en-US", {
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true
-          });
-          formattedNotesArr.push({id: note.id, content: note.content, timestamp: newTimestamp})
+    firebase.handleFetchNotesResults(sessionId).then(notesArr => {
+      const formattedNotesArr: {id: number, content: string, timestamp: any}[] = [];
+      notesArr.map(note => {
+        const newTimestamp = new Date(
+          note.timestamp.seconds * 1000
+        ).toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true
         });
-        this.setState({
-          notes: formattedNotesArr,
+        formattedNotesArr.push({
+          id: note.id,
+          content: note.content,
+          timestamp: newTimestamp
         });
-      }
-    );
+      });
+      this.setState({
+        notes: formattedNotesArr
+      });
+    });
   };
 
   dataClick = () => {
@@ -648,27 +707,16 @@ class TransitionResults extends React.Component {
     }
   }
 
-  handleDateFetching = (teacherId) => {
+  /**
+   * @param {string} teacherId
+   */
+  handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, 'transition').then(dates=>this.setState({
-      sessionDates: dates
-    }));
-  };
-
-  handleResults = () => {
-    if (this.state.tabValue === 1) {
+    firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<string>) =>
       this.setState({
-        tabValue: 0
+        sessionDates: dates
       })
-    }
-  };
-
-  handleCoaching = () => {
-    if (this.state.tabValue === 0) {
-      this.setState({
-        tabValue: 1
-      })
-    }
+    );
   };
 
   handleSummary = () => {
@@ -695,20 +743,29 @@ class TransitionResults extends React.Component {
     }
   };
 
-  handlePanelChange = (panel) => {
+  /**
+   * @param {string} panel
+   */
+  handlePanelChange = (panel: string) => {
     if (this.state.openPanel === panel) {
-      this.setState({openPanel: null})
+      this.setState({ openPanel: '' });
     } else {
-      this.setState({openPanel: panel})
+      this.setState({ openPanel: panel });
     }
   };
 
-  handleAddToPlan = (panel) => {
+  /**
+   * @param {string} panel
+   */
+  handleAddToPlan = (panel: string) => {
     if (!this.state.addedToPrep.includes(panel)) {
-      this.setState({addedToPrep: [...this.state.addedToPrep, panel]})
+      this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
     }
-  }
+  };
 
+  /**
+   * @param {event} event
+   */
   changeSessionId = (event) => {
     this.setState({
       sessionId: event.target.value,
@@ -741,12 +798,21 @@ class TransitionResults extends React.Component {
       });
   })};
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
+  };
+
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {(firebase: object) => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid container spacing={16} justify="center" direction="row" alignItems="center">
           <Grid item xs={3}>
@@ -871,7 +937,7 @@ class TransitionResults extends React.Component {
                           style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
                           onClick={this.lineClick}
                         >
-                          <img src={WaitinginLine} className={classes.transitionTypeButton}/>
+                          <img src={WaitingInLineImage} className={classes.transitionTypeButton}/>
                         </Button>
                       </Grid>
                       <Grid item>
@@ -879,7 +945,7 @@ class TransitionResults extends React.Component {
                           style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
                           onClick={this.travelingClick}
                         >
-                          <img src={Walking} className={classes.transitionTypeButton}/>
+                          <img src={WalkingImage} className={classes.transitionTypeButton}/>
                         </Button>
                       </Grid>
                       <Grid item>
@@ -887,7 +953,7 @@ class TransitionResults extends React.Component {
                           style={this.state.categoryView === "childrenWaiting" ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}
                           onClick={this.childrenWaitingClick}
                         >
-                          <img src={ChildWaiting} className={classes.transitionTypeButton}/>
+                          <img src={ChildWaitingImage} className={classes.transitionTypeButton}/>
                         </Button>
                       </Grid>
                       <Grid item>
@@ -895,7 +961,7 @@ class TransitionResults extends React.Component {
                           style={this.state.categoryView === "routines" ? raisedThemes.palette.classroomRoutinesColor : themes.palette.classroomRoutinesColor}
                           onClick={this.routinesClick}
                         >
-                          <img src={ClassroomRoutines} className={classes.transitionTypeButton}/>
+                          <img src={ClassroomRoutinesImage} className={classes.transitionTypeButton}/>
                         </Button>
                       </Grid>
                       <Grid item>
@@ -903,7 +969,7 @@ class TransitionResults extends React.Component {
                           style={this.state.categoryView === "behavior" ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}
                           onClick={this.behaviorClick}
                         >
-                          <img src={bmi} className={classes.transitionTypeButton}/>
+                          <img src={BMDImage} className={classes.transitionTypeButton}/>
                         </Button>
                       </Grid>
                     </Grid>
@@ -1008,19 +1074,17 @@ class TransitionResults extends React.Component {
                           multiline
                         />
                         {this.state.selectedQuestions.map((item, index) => (
-                          <div>
+                          <div key={index}>
                             <Typography
-                              key={index}
-                              variant="h7"
+                              variant="h6"
                               style={{textDecoration: "underline"}}
                             >
                               {item.type}
                             </Typography>
                             <ol style={{marginTop: ".5vh", marginBottom: "1vh"}}>
-                              {item.questions.map((question, i) => (
-                                <li>
+                              {item.questions.map((question: string, i: number) => (
+                                <li key={i}>
                                   <Typography
-                                    key={i}
                                     variant="subtitle2"
                                   >
                                     {question}
@@ -1064,9 +1128,5 @@ class TransitionResults extends React.Component {
   }
 }
 
-TransitionResults.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-TransitionResults.contextType = FirebaseContext;
-export default withStyles(styles)(TransitionResults);
+TransitionResultsPage.contextType = FirebaseContext;
+export default withStyles(styles)(TransitionResultsPage);
