@@ -1,43 +1,58 @@
-import React, { Component } from "react";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   }
-});
+};
 
-class TransitionTimeHelp extends Component {
+interface Props {
+  classes: { paper: string }
+}
+
+interface State {
+  open: boolean
+}
+
+/**
+ * Modal when user presses disabled 'complete observation' button
+ * @class IncompleteObservation
+ */
+class IncompleteObservation extends React.Component<Props, State> {
   state = {
     open: true
   };
 
-  handleOpen = () => {
-    this.setState({ open: true });
+  static propTypes = {
+    classes: PropTypes.object.isRequired
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -52,14 +67,15 @@ class TransitionTimeHelp extends Component {
               justify="flex-start"
             >
               <Typography variant="h4" gutterBottom>
-                Reducing Transitions
+                Incomplete Observation
               </Typography>
               <Typography variant="subtitle2" gutterBottom>
-                Remember, a <strong>transition</strong> is a period of time in
-                which <strong>most</strong> of the class is not involved in a
-                learning activity.
+                You have not completed your observation yet.
               </Typography>
-              <TransitionHelpCard />
+              <Typography variant="subtitle2" gutterBottom>
+                Please <strong>Submit</strong> this observation or press the{" "}
+                <strong>Back</strong> button.
+              </Typography>
             </Grid>
           </div>
         </Modal>
@@ -68,4 +84,4 @@ class TransitionTimeHelp extends Component {
   }
 }
 
-export default withStyles(styles)(TransitionTimeHelp);
+export default withStyles(styles)(IncompleteObservation);

@@ -24,9 +24,9 @@ import UnitedWayLogoImage from '../../assets/images/UnitedWayLogoImage.jpg';
 import VanderbiltPeabodyLogoImage from '../../assets/images/VanderbiltPeabodyLogoImage.png';
 import WondryLogoImage from '../../assets/images/WondryLogoImage.png';
 import Typography from '@material-ui/core/Typography/Typography';
-import LandingDetail from '../../components/LandingPageComponents/LandingDetail.js';
-import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard.js';
-import Impact from '../../components/LandingPageComponents/Impact.js';
+import LandingDetail from '../../components/LandingPageComponents/LandingDetail.tsx';
+import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard.tsx';
+import Impact from '../../components/LandingPageComponents/Impact.tsx';
 import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
 import iPadImage from '../../assets/images/iPadImage.svg';
@@ -35,9 +35,9 @@ import CoachingCycleFullMobileImage from '../../assets/images/CoachingCycleFullM
 import CoachLandingImage from '../../assets/images/CoachLandingImage.jpg';
 import CoachLandingLargeImage from '../../assets/images/CoachLandingLargeImage.jpg';
 import CoachLandingMobileImage from '../../assets/images/CoachLandingMobileImage.jpg';
-import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.js';
+import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.tsx';
 import PilotModal from '../../components/LandingPageComponents/PilotModal.js';
-import DemoModal from '../../components/LandingPageComponents/DemoModal.js';
+import DemoModal from '../../components/LandingPageComponents/DemoModal.tsx';
 import { ClickAwayListener } from '@material-ui/core/es';
 
 const styles = {
@@ -179,8 +179,14 @@ const styles = {
   },
 };
 
-
+/**
+ * landing page
+ * @class LandingPage
+ */
 class LandingPage extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
 
@@ -220,7 +226,7 @@ class LandingPage extends React.Component {
     });
   };
 
-  handleSubmit = (event) =>{
+  handleSubmit = () =>{
     this.validateEmail();
     if (!this.state.errors){
       this.props.firebase.emailListSignUp({
@@ -232,6 +238,11 @@ class LandingPage extends React.Component {
     }
   };
 
+  /**
+   * validates user-entered text
+   * @param {string} name
+   * @param {value} value
+   */
   validateState = (name, value) => {
     switch (name) {
       case 'email':
@@ -257,11 +268,22 @@ class LandingPage extends React.Component {
     }
   };
 
+  /**
+   * validates that user-entered text is a valid email
+   * @param {string} email
+   * @return {boolean}
+   */
   validateEmail = (email) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
+  /**
+   * responds to change in user-entered text
+   * @param {string} name
+   * @param {event} event
+   * @return {void}
+   */
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
@@ -269,6 +291,10 @@ class LandingPage extends React.Component {
     this.validateState(name, event.target.value);
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return(
@@ -370,7 +396,7 @@ class LandingPage extends React.Component {
                   position="flex-start"
                   paddingTop='1em'
                   text={<div>
-                          CHALK's mission is to advance pre-k quality with an easy-to-use 
+                          CHALK&apos;s mission is to advance pre-k quality with an easy-to-use 
                           tool for coaches and teachers that:
                           <ul>
                             <li>Focuses classroom observations on effective practices</li>
@@ -710,7 +736,7 @@ class LandingPage extends React.Component {
                   position="flex-start"
                   paddingTop='1em'
                   text={<div>
-                          CHALK's mission is to advance pre-k quality with an easy-to-use 
+                          CHALK&apos;s mission is to advance pre-k quality with an easy-to-use 
                           tool for coaches and teachers that:
                           <ul>
                             <li>Focuses classroom observations on effective practices</li>
@@ -960,7 +986,8 @@ class LandingPage extends React.Component {
 }
 
 LandingPage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(LandingPage);

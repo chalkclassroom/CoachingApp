@@ -28,8 +28,14 @@ const styles = theme => ({
   },
 });
 
+/**
+ * Pilot sign up form on landing page
+ * @class PilotForm
+ */
 class PilotForm extends React.Component{
-
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -48,6 +54,12 @@ class PilotForm extends React.Component{
     };
   }
 
+  /**
+   * responds to change in user-entered text
+   * @param {string} name
+   * @param {event} event
+   * @return {void}
+   */
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
@@ -55,6 +67,11 @@ class PilotForm extends React.Component{
     this.validateState(name, event.target.value);
   };
 
+  /**
+   * validates user-entered text
+   * @param {string} name
+   * @param {value} value
+   */
   validateState = (name, value) => {
     switch (name) {
       case 'firstName':
@@ -142,12 +159,20 @@ class PilotForm extends React.Component{
     }
   };
 
+  /**
+   * verifies that user-entered text is a valid email address
+   * @param {string} email
+   * @return {boolean}
+   */
   validateEmail = (email) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
-  handleSubmit = (event) =>{
+  /**
+   * submits pilot form to firebase
+   */
+  handleSubmit = () =>{
     this.validateState();
     if (!this.state.errors){
       this.props.firebase.firebasePilotSignUp({
@@ -165,6 +190,10 @@ class PilotForm extends React.Component{
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render(){
     const { classes } = this.props;
 
@@ -262,7 +291,8 @@ class PilotForm extends React.Component{
 
 PilotForm.propTypes = {
   classes: PropTypes.object.isRequired,
-  mRole: PropTypes.string.isRequired,
+  mRole: PropTypes.string,
+  firebase: PropTypes.object.isRequired
 };
 
 export default withRouter(connect()(withStyles(styles)(PilotForm)));

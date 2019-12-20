@@ -9,7 +9,7 @@ import TableCell from '@material-ui/core/TableCell/index';
 import Typography from '@material-ui/core/Typography/index';
 
 
-const styles = theme => ({
+const styles = () => ({
   definitionTitle: {
     backgroundColor: "#094492",
     color: "white",

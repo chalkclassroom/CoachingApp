@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import { toggleSequentialMaterials } from "../../state/actions/sequential-activities";
 import Dashboard from "../Dashboard";
-import Countdown from "../Countdown";
+import Countdown from "../Countdown.tsx";
 
 const styles = {
   root: {
@@ -40,6 +40,10 @@ const TeacherChildEnum = {
 
 const RATING_INTERVAL = 60000;
 
+/**
+ * center rating checklist for sequential activities
+ * @class CenterRatingChecklistSeqAct
+ */
 class CenterRatingChecklistSeqAct extends React.Component {
   state = {
     auth: true,
@@ -65,10 +69,12 @@ class CenterRatingChecklistSeqAct extends React.Component {
     }
   };
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.timer = setInterval(this.tick, 1000);
   }
 
+  /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     clearInterval(this.timer);
   }
@@ -97,16 +103,20 @@ class CenterRatingChecklistSeqAct extends React.Component {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
-      const mEntry = {
+      /* const mEntry = {
         checked: this.state.checked,
         people: this.state.people
-      };
+      }; */
 
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();
     }
   };
 
+  /**
+   * @param {value} value
+   * @return {void}
+   */
   handleToggle = value => () => {
     // Prevents updating state of checkbox when disabled
     if (
@@ -188,6 +198,10 @@ class CenterRatingChecklistSeqAct extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return (
       <div className={this.props.classes.root}>
@@ -197,11 +211,11 @@ class CenterRatingChecklistSeqAct extends React.Component {
           aria-labelledby="simple-dialog-title"
         >
           <DialogTitle id="simple-dialog-title">
-            Don't forget to circulate!
+            Don&apos;t forget to circulate!
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              You've been at the {this.props.currentCenter} center for 1 minute.
+              You&apos;ve been at the {this.props.currentCenter} center for 1 minute.
             </DialogContentText>
           </DialogContent>
         </Dialog>
@@ -501,7 +515,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.teacherDisabled()}
                           />
                           <ListItemText>
-                            Supporting children's <b>drawing</b> of an image or{" "}
+                            Supporting children&apos;s <b>drawing</b> of an image or{" "}
                             <b>writing</b> a message
                           </ListItemText>
                         </ListItem>
@@ -547,7 +561,10 @@ class CenterRatingChecklistSeqAct extends React.Component {
 }
 
 CenterRatingChecklistSeqAct.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  toggleScreen: PropTypes.func.isRequired,
+  finishVisit: PropTypes.func.isRequired,
+  currentCenter: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => {

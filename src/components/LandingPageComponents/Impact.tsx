@@ -1,10 +1,11 @@
-import React from 'react';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from "@material-ui/core/styles";
 
 
-const styles = {
+const styles: object = {
   titleText: {
     fontSize: 24,
     textAlign: 'center',
@@ -27,10 +28,53 @@ const styles = {
   }
 };
 
-class Impact extends React.Component {
-  constructor(props){
+interface Style {
+  root: string,
+  mobileRoot: string,
+  titleText: string,
+  bodyText: string,
+  '@media (max-width: 700px)': string,
+  '@media (min-width: 701px)': string
+}
+
+interface Props {
+  classes: Style,
+  position: string,
+  paddingTop: string,
+  color: string,
+  icon: string,
+  title: string,
+  text: string | object
+}
+
+/**
+ * formatting for impact icons and descriptions on landing page
+ * @class Impact
+ */
+class Impact extends React.Component<Props, {}> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props){
     super(props);
   }
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    position: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired,
+    paddingTop: PropTypes.string,
+    color: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    text: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
+    ])
+  }
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return(
@@ -91,5 +135,18 @@ class Impact extends React.Component {
     );
   }
 }
+
+Impact.propTypes = {
+  classes: PropTypes.object.isRequired,
+  position: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  paddingTop: PropTypes.string,
+  color: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  text: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ])
+};
 
 export default withStyles(styles)(Impact);

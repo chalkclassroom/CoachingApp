@@ -5,11 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import FilledInput from "@material-ui/core/FilledInput";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton/IconButton";
-import Select from "@material-ui/core/Select";
 import GenerateReportImage from "../../../assets/images/GenerateReportImage.svg";
 import AssocCoopIconImage from "../../../assets/images/AssocCoopIconImage.svg";
 import { withStyles } from "@material-ui/core/styles";
@@ -25,7 +21,6 @@ import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCoo
 import moment from "moment";
 import TextField from "@material-ui/core/TextField";
 import ChildTeacherBehaviorPieSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
-import ChildBehaviorsPie from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildBehaviorsPie";
 
 const styles = {
   root: {
@@ -571,9 +566,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component {
                     onChange={this.changeSessionId}
                     InputLabelProps={{ shrink: true }}
                   >
-                    {this.state.sessionDates.map(date => {
+                    {this.state.sessionDates.map((date, index) => {
                       return (
-                        <MenuItem id={date.id} value={date.id}>
+                        <MenuItem key={index} id={date.id} value={date.id}>
                           <em>
                             {moment(date.sessionStart.value).format(
                               "MMM Do YY hh:mm A"

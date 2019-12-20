@@ -1,22 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import Button from "@material-ui/core/Button/Button";
+import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/context";
-import TransitionTimeIcon from "../../../assets/icons/TransitionTime.svg";
-import 'chartjs-plugin-datalabels';
-import TrainingVideo
-    from "../../../components/Shared/TrainingVideo";
-import ChildTeacherBehaviorTrendsSlider
-    from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+import "chartjs-plugin-datalabels";
+import TrainingVideo from "../../../components/Shared/TrainingVideo.tsx";
+import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
-import Button from '@material-ui/core/Button';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 
-
-const styles = () => ({
+const styles: object = {
   root: {
     flexGrow: 1,
     height: '100vh',
@@ -130,7 +127,7 @@ const styles = () => ({
       fontSize: '0.7em'
     }
   }
-});
+};
 
 const ViewEnum = {
   CONCEPTS: 1,
@@ -141,13 +138,36 @@ const ViewEnum = {
   KNOWLEDGECHECK: 6
 };
 
-class TransitionTimeTrainingPage extends Component {
-  constructor(props) {
+interface Props {
+  classes: Style
+}
+
+interface Style {
+  root: string,
+  viewButtons: string,
+  buttonsList: string,
+  resultsContent: string
+}
+
+interface State {
+  view: number
+}
+
+/**
+ * transition time training
+ * @class TransitionTimeTrainingPage
+ */
+class TransitionTimeTrainingPage extends React.Component<Props, State> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
     super(props);
-    this.state = {
-      view: ViewEnum.CONCEPTS
-    };
   }
+
+  state = {
+    view: ViewEnum.CONCEPTS
+  };
 
   conceptsClick = () => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
@@ -185,13 +205,21 @@ class TransitionTimeTrainingPage extends Component {
     }
   }
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
+
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     const { view } = this.state;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase}/>}
+          {(firebase: object) => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
         <Button variant="contained" size="medium" className={classes.backButton}
@@ -219,7 +247,7 @@ class TransitionTimeTrainingPage extends Component {
             <TrainingDashboard
               ViewEnum={ViewEnum}
               view={view}
-              Icon={TransitionTimeIcon}
+              Icon={TransitionTimeIconImage}
               conceptsClick={this.conceptsClick}
               definitionsClick={this.definitionsClick}
               exampleClick={this.exampleClick}
@@ -249,9 +277,5 @@ class TransitionTimeTrainingPage extends Component {
     );
   }
 }
-
-TransitionTimeTrainingPage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(TransitionTimeTrainingPage);

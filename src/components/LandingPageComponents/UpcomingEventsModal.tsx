@@ -1,20 +1,25 @@
-import React from "react";
+import * as React from "react";
+import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
 import ReimagineBadgeImage from "../../assets/images/ReimagineBadgeImage.jpg";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
   
-const styles = theme => ({
+const styles: object = {
   root: {
     backgroundColor: '#ffffff'
   },
@@ -24,9 +29,8 @@ const styles = theme => ({
   paper: {
     position: "absolute",
     width: "67%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   },
   infoText: {
@@ -67,21 +71,44 @@ const styles = theme => ({
       display: "none"
     }
   }
-});
+};
 
-class UpcomingEventsModal extends React.Component {
+interface Style {
+  root: string,
+  mobileRoot: string,
+  paper: string,
+  infoText: string,
+  detailText: string,
+  titleText: string,
+  "@media (max-width: 700px)": string,
+  '@media (min-width: 701px)': string
+}
+
+interface Props {
+  classes: Style
+}
+
+interface State {
+  open: boolean
+}
+
+/**
+ * Modal displaying upcoming events on landing page
+ * @class UpcomingEventsModal
+ */
+class UpcomingEventsModal extends React.Component<Props, State> {
   state = {
-      open: true
+    open: true
   };
 
-  handleOpen = () => {
-    this.setState({ open: true });
+  static propTypes = {
+    classes: PropTypes.object.isRequired
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -161,5 +188,6 @@ class UpcomingEventsModal extends React.Component {
     );
   }
 }
-    
+
+
 export default withStyles(styles)(UpcomingEventsModal);

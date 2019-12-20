@@ -1,6 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
+import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
@@ -15,25 +16,45 @@ function getModalStyle() {
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    //backgroundColor: theme.palette.background.paper,
+    //boxShadow: theme.shadows[5],
+    //padding: theme.spacing.unit * 4,
     borderRadius: 8
   }
-});
+};
+
+interface Props {
+  classes: Style
+}
+
+interface Style {
+  paper: string,
+  definitionTitle: string,
+  definitionText: string,
+  buttonTitle: string,
+  lineExamples: string,
+  travelingExamples: string,
+  waitingExamples: string,
+  routinesExamples: string,
+  behaviorExamples: string,
+}
+
+interface State {
+  open: boolean
+}
 
 /**
- * Modal when User does not Complete Tone Rating in Climate Observation
- * @class EmptyToneRating
+ * transition time look-fors
+ * @class TransitionTimeHelp
  */
-class EmptyToneRating extends React.Component {
+class TransitionTimeHelp extends React.Component<Props, State> {
   state = {
     open: true
   };
@@ -45,6 +66,10 @@ class EmptyToneRating extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
 
   /**
    * render function
@@ -64,15 +89,14 @@ class EmptyToneRating extends React.Component {
               justify="flex-start"
             >
               <Typography variant="h4" gutterBottom>
-                Incomplete Observation
+                Reducing Transitions
               </Typography>
               <Typography variant="subtitle2" gutterBottom>
-                You have not completed your observation yet.
+                Remember, a <strong>transition</strong> is a period of time in
+                which <strong>most</strong> of the class is not involved in a
+                learning activity.
               </Typography>
-              <Typography variant="subtitle2" gutterBottom>
-                Please choose one of the five <strong>tone ratings</strong>{" "}
-                before pressing <strong>Confirm Rating</strong>.
-              </Typography>
+              <TransitionHelpCard />
             </Grid>
           </div>
         </Modal>
@@ -81,8 +105,4 @@ class EmptyToneRating extends React.Component {
   }
 }
 
-EmptyToneRating.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(EmptyToneRating);
+export default withStyles(styles)(TransitionTimeHelp);

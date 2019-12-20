@@ -51,6 +51,10 @@ class TrainingQuestion extends Component {
     }
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes, question, options, selected, feedback } = this.props;
     console.log(question, feedback);

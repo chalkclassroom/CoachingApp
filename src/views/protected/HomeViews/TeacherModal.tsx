@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
@@ -11,80 +11,113 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import TeacherImage from "../../../assets/images/TeacherImage.svg";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import StarsIcon from '@material-ui/icons/Stars';
 import * as Constants from '../../../constants';
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "40%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    borderRadius: 8
+    borderRadius: 8,
+    backgroundColor: 'white',
+    padding: '2em'
   },
   root: {
     width: "100%",
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: 'white'
   },
   list: {
     width: "100%",
     height: "500",
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: 'white'
   },
   inline: {
     display: "inline"
   }
-});
+};
 
-class TeacherModal extends React.Component {
-  constructor(props) {
+interface Style {
+  paper: string,
+  root: string,
+  list: string,
+  inline: string
+}
+
+interface Props {
+  classes: Style,
+  type: string,
+  history: { push(object: Push): void },
+  firebase: { getTeacherList(): Promise<Teacher[]> },
+  handleClose(): void
+}
+
+interface Push {
+  pathname: string,
+  state: object
+}
+
+interface State {
+  open: boolean,
+  teachers: Array<Teacher>
+}
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
+/**
+ * modal to select teacher before observation or results
+ * @class TeacherModal
+ */
+class TeacherModal extends React.Component<Props, State> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
     super(props);
     this.state = {
       open: true,
-      value: 0,
       teachers: []
     };
 
     this.selectTeacher = this.selectTeacher.bind(this);
   }
 
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
   handleClose = () => {
     this.setState({ open: false });
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  handleChangeIndex = index => {
-    this.setState({ value: index });
-  };
-
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
-    this.props.firebase.getTeacherList().then(teacherPromiseList => {
+    console.log(typeof this.props.handleClose);
+    this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Teacher>) => {
       const teacherList = [];
       teacherPromiseList.forEach(tpromise => {
-        tpromise.then(data => {
+        tpromise.then((data: Teacher) => {
           teacherList.push(data);
-          this.setState((previousState, currentProps) => {
+          this.setState((previousState) => {
             return {
               teachers: previousState.teachers.concat(data)
             };
@@ -94,13 +127,29 @@ class TeacherModal extends React.Component {
     });
   }
 
-  selectTeacher(teacherInfo) {
+  /**
+   * @param {object} teacherInfo 
+   */
+  selectTeacher(teacherInfo: Teacher) {
     this.props.history.push({
       pathname: "/Magic8Menu",
       state: { teacher: teacherInfo, type: this.props.type }
     });
+    console.log(' history is ', this.props.history, ' and the type is ', typeof this.props.history);
   }
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    type: PropTypes.string.isRequired,
+    firebase: PropTypes.exact({getTeacherList: PropTypes.func}).isRequired,
+    history: PropTypes.exact({push: PropTypes.func}).isRequired
+  }
+
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -177,11 +226,5 @@ class TeacherModal extends React.Component {
     );
   }
 }
-
-TeacherModal.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired,
-  type: PropTypes.string.isRequired
-};
 
 export default withRouter(connect()(withStyles(styles)(TeacherModal)));
