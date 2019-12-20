@@ -29,7 +29,7 @@ import CalendarIcon from "@material-ui/icons/CalendarToday";
 import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
-import TeacherModal from "../views/protected/HomeViews/TeacherModal";
+import TeacherModal from "../views/protected/HomeViews/TeacherModal.tsx";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import { connect } from "react-redux";
 
@@ -112,6 +112,12 @@ const styles = theme => ({
   }
 });
 
+/**
+ * Navigation Menu
+ * @class BurgerMenu
+ * @param {type} type
+ * 
+ */
 class BurgerMenu extends React.Component {
   state = {
     menu: 0,
@@ -132,7 +138,7 @@ class BurgerMenu extends React.Component {
     this.setState({ teacherModal: true, type: type });
   };
 
-  handleTeacherModalClose = event => {
+  handleTeacherModalClose = () => {
     this.setState({
       teacherModal: false,
       type: ""
@@ -147,6 +153,10 @@ class BurgerMenu extends React.Component {
     }
   };
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
@@ -423,7 +433,9 @@ class BurgerMenu extends React.Component {
 BurgerMenu.propTypes = {
   classes: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired
+  open: PropTypes.bool.isRequired,
+  history: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired
 };
 
 export default withRouter(connect()(withStyles(styles)(BurgerMenu)));

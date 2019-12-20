@@ -62,7 +62,7 @@ const ChildBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value, context) {
+      formatter: function(value) {
         return value + "%";
       }
     }
@@ -121,16 +121,25 @@ const TeacherBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value, context) {
+      formatter: function(value) {
         return value + "%";
       }
     }
   }
 };
 
+/**
+ * Swipe View for Child and Teacher Associative&Cooperative Trends Graphs
+ * @class ChildTeacherBehaviorTrendsSlider
+ * @return {void}
+ */
 class ChildTeacherBehaviorTrendsSlider extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     const settings = {
       dots: true,
       infinite: true,
@@ -168,8 +177,10 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component {
 }
 
 ChildTeacherBehaviorTrendsSlider.propTypes = {
-  classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  // classes: PropTypes.object.isRequired,
+  // data: PropTypes.object.isRequired,
+  childData: PropTypes.func.isRequired,
+  teacherData: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ChildTeacherBehaviorTrendsSlider);

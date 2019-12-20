@@ -1,31 +1,45 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '../../components/AppBar';
 import LandingPage from './LandingPage';
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     backgroundColor:'#ffffff',
     height: '100vh'
   },
-  grow: {
-    flexGrow: 1,
-  }
 };
 
-class WelcomePage extends React.Component {
+interface Props {
+  classes: { root: string }
+}
+
+interface State {}
+
+/**
+ * welcome page
+ * @class WelcomePage
+ */
+class WelcomePage extends React.Component<Props, State> {
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }  
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const {classes} = this.props;
     return ( 
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase}/>}
+          {(firebase: object) => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
         <FirebaseContext.Consumer>
-          {firebase => <LandingPage firebase={firebase}/> }
+          {(firebase: object) => <LandingPage firebase={firebase}/> }
         </FirebaseContext.Consumer>
       </div>
     );

@@ -23,7 +23,15 @@ const styles = {
   }
 };
 
+/**
+ * about page
+ * @class AboutPage
+ */
 class AboutPage extends React.Component {
+  /** 
+   * @param {Props} props
+   * @return {ReactElement}
+   */
   headerGraphic = props => {
     return (
       <svg viewBox="-200 -100 1800 1000" {...props}>
@@ -93,6 +101,10 @@ class AboutPage extends React.Component {
       </svg>
     );
   };
+  /** 
+   * @param {Props} props
+   * @return {ReactElement}
+   */
   foundationsComponent = props => {
     return (
       <svg viewBox="-110 0 2000 1200" {...props}>
@@ -533,6 +545,10 @@ class AboutPage extends React.Component {
       </svg>
     );
   };
+  /** 
+   * @param {Props} props
+   * @return {ReactElement}
+   */
   dataComponent = props => {
     return (
       <svg viewBox="-80 0 1800 600" {...props}>
@@ -737,6 +753,10 @@ class AboutPage extends React.Component {
     );
   };
 
+  /** 
+   * @param {Props} props
+   * @return {ReactElement}
+   */
   measuringComponent = props => {
     return (
       <svg data-name="Layer 1" viewBox="-100 0 2000 1200" {...props}>
@@ -975,8 +995,8 @@ class AboutPage extends React.Component {
       </svg>
     );
   };
-
-  gallery = props => {
+  
+  gallery = () => {
     return (
       <InfiniteCarousel
         breakpoints={[
@@ -1021,6 +1041,10 @@ class AboutPage extends React.Component {
       </InfiniteCarousel>
     );
   };
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (

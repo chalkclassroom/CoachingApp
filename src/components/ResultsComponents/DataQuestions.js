@@ -27,10 +27,21 @@ const styles = {
   }
 };
 
+/**
+ * formatting for expansion panel of data-driven coaching questions
+ * @class DataQuestions
+ */
 class DataQuestions extends React.Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
   }
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
@@ -78,8 +89,9 @@ class DataQuestions extends React.Component {
 }
 
 DataQuestions.propTypes = {
+  classes: PropTypes.object.isRequired,
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  openPanel: PropTypes.string.isRequired,
+  openPanel: PropTypes.string,
   handlePanelChange: PropTypes.func.isRequired,
   addedToPrep: PropTypes.array.isRequired,
   handleAddToPlan: PropTypes.func.isRequired

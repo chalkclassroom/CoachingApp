@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 import { withStyles } from "@material-ui/core/styles";
@@ -7,7 +7,7 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import EmailIcon from '@material-ui/icons/Email';
 import * as Constants from '../../constants';
 
-const styles = {
+const styles: object = {
   name: {
     textAlign: 'left',
     paddingTop: 20,
@@ -29,11 +29,44 @@ const styles = {
   }
 }
 
-class TeamMemberExpansion extends React.Component {
-  constructor(props) {
+interface Style {
+  name: string,
+  role: string,
+  description: string,
+  grid: string
+}
+
+interface Props {
+  classes: Style,
+  person: { email: string, name: string, role: string, description: string, link: string }
+}
+
+/**
+ * formatting for description of team member
+ * @class TeamMemberExpansion
+ */
+class TeamMemberExpansion extends React.Component<Props, {}> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
     super(props);
   }
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    person: PropTypes.exact({
+      email: PropTypes.string,
+      name: PropTypes.string,
+      role: PropTypes.string,
+      description: PropTypes.string,
+      link: PropTypes.string
+    }).isRequired
+  }
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return(
@@ -88,7 +121,4 @@ class TeamMemberExpansion extends React.Component {
   }
 }
 
-TeamMemberExpansion.propTypes = {
-  person: PropTypes.object.isRequired,
-};
 export default withStyles(styles)(TeamMemberExpansion);

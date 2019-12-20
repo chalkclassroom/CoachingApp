@@ -31,9 +31,17 @@ const climateTrendOptions = {
   }
 };
 
+/**
+ * specifies data sets and formatting for climate trends graph
+ * @class ClimateTrendsGraph
+ */
 class ClimateTrendsGraph extends React.Component {
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
 
     return (
       <Bar
@@ -47,8 +55,8 @@ class ClimateTrendsGraph extends React.Component {
 }
 
 ClimateTrendsGraph.propTypes = {
-  classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  // classes: PropTypes.object.isRequired,
+  data: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ClimateTrendsGraph);

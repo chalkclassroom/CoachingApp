@@ -1,37 +1,59 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import DemoVideo from './DemoVideo';
+import DemoVideo from './DemoVideo.tsx';
 import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "60%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   },
   photoIcon: {
     height:"15vh"
   }
-});
+};
 
-class PilotModal extends React.Component {
+interface Style {
+  paper: string,
+  photoIcon: string
+}
+
+interface Props {
+  classes: Style,
+  handleClose(): void
+}
+
+interface State {
+  open: boolean,
+  role: number
+}
+
+/**
+ * formatting for modal containing demo video on landing page
+ * @class DemoModal
+ */
+class DemoModal extends React.Component<Props, State> {
   state = {
     open: true,
     role: 0
@@ -45,14 +67,15 @@ class PilotModal extends React.Component {
     this.setState({ open: false });
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    handleClose: PropTypes.func.isRequired
   };
 
-  handleChangeRole = role => {
-    this.setState({ role: role });
-  };
-
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 
@@ -80,9 +103,4 @@ class PilotModal extends React.Component {
   }
 }
 
-PilotModal.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(PilotModal);
+export default withStyles(styles)(DemoModal);

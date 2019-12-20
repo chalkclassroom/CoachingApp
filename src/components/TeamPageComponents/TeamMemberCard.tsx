@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import { withStyles } from "@material-ui/core/styles";
@@ -8,10 +8,10 @@ import DMImage from "../../assets/images/DMImage.jpg";
 import KNImage from "../../assets/images/KNImage.jpg";
 import CSImage from "../../assets/images/CSImage.jpg";
 
-const styles = {
+const styles: object = {
   imageBox: {
     width: "60%",
-    textAlign: "center",
+    //textAlign: "center",
     borderRadius: "15px"
   },
   image: {
@@ -20,8 +20,31 @@ const styles = {
   }
 };
 
-class TeamMemberCard extends React.Component {
-  constructor(props) {
+interface Style {
+  imageBox: string,
+  image: string
+}
+
+interface Props {
+  classes: Style,
+  person: { initials: string, name: string, role: string},
+  open: boolean,
+  handleClick(): void
+}
+
+interface State {
+  image: string
+}
+
+/**
+ * formatting for card for each team member
+ * @class TeamMemberCard
+ */
+class TeamMemberCard extends React.Component<Props, State> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -29,6 +52,7 @@ class TeamMemberCard extends React.Component {
     };
   }
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount = () => {
     this.props.person.initials === "CC"
       ? this.setState({ image: CCImage })
@@ -39,6 +63,21 @@ class TeamMemberCard extends React.Component {
       : this.setState({ image: CSImage });
   };
 
+  static propTypes = {
+    person: PropTypes.exact({
+      initials: PropTypes.string,
+      name: PropTypes.string,
+      role: PropTypes.string,
+    }).isRequired,
+    classes: PropTypes.object.isRequired,
+    open: PropTypes.bool.isRequired,
+    handleClick: PropTypes.func.isRequired
+  };
+
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return (
@@ -71,7 +110,5 @@ class TeamMemberCard extends React.Component {
   }
 }
 
-TeamMemberCard.propTypes = {
-  person: PropTypes.object.isRequired
-};
+
 export default withStyles(styles)(TeamMemberCard);

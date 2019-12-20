@@ -1,12 +1,12 @@
-import React from 'react';
+import * as React from 'react';
+import * as PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { withStyles } from "@material-ui/core/styles";
 
-
-const styles = {
+const styles: object = {
   card: {
     paddingTop: 2,
     width: '95%',
@@ -25,10 +25,44 @@ const styles = {
   }
 };
 
-class FeaturesCard extends React.Component {
-  constructor(props){
+interface Style {
+  card: string,
+  titleText: string,
+  detailText: string
+}
+
+interface Props {
+  classes: Style,
+  altText: string,
+  icon: string,
+  title: string,
+  text: string
+}
+
+/**
+ * formatting for features highlighted on landing page
+ * @class FeaturesCard
+ */
+class FeaturesCard extends React.Component<Props, {}> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props){
     super(props);
   }
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    altText: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired
+  };
+
+  /**
+   * render function 
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
     return(

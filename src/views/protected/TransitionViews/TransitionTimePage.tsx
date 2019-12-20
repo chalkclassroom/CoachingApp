@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import TransitionTimeHelp from "./TransitionTimeHelp";
@@ -15,48 +15,68 @@ import { resetTransitionTime } from "../../../state/actions/transition-time";
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     display: "flex",
     minHeight: "100vh",
     flexDirection: "column"
   },
-  grow: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
-  }
 };
 
-class TransitionTimePage extends React.Component {
-  constructor(props) {
+interface Props {
+  classes: { root: string },
+  location: { state: { teacher: { id: string }}}
+};
+
+interface State {
+  auth: boolean,
+  help: boolean,
+  notes: boolean,
+  recs: boolean,
+  transitionType: string,
+  open: boolean,
+  transitionEnded: boolean
+};
+
+/**
+ * transition time observation tool
+ * @class TransitionTimePage
+ */
+class TransitionTimePage extends React.Component<Props, State> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
     super(props);
 
     this.state = {
       auth: true,
-      anchorEl: null,
       help: false,
       notes: false,
       recs: true,
-      transitionType: null,
+      transitionType: "",
       open: false,
       transitionEnded: false
     };
 
-    this.handleTransitionType = this.handleTransitionType.bind(this);
+    // this.handleTransitionType = this.handleTransitionType.bind(this);
   }
 
-  handleTransitionType = type => {
+  /**
+   * @param {string} type
+   */
+  handleTransitionType = (type: string) => {
     if (this.state.transitionEnded) {
       this.setState({ transitionEnded: false });
     }
     this.setState({ transitionType: type });
   };
 
-  handleRecsModal = open => {
+  /**
+   * @param {boolean} open
+   */
+  handleRecsModal = (open: boolean) => {
     if (open) {
       this.setState({ recs: true });
     } else {
@@ -69,23 +89,10 @@ class TransitionTimePage extends React.Component {
     this.setState({ transitionType: null });
   };
 
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
-
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-
-  handleNotes = open => {
+  /**
+   * @param {boolean} open
+   */
+  handleNotes = (open: boolean) => {
     if (open) {
       this.setState({ notes: true });
     } else {
@@ -97,15 +104,22 @@ class TransitionTimePage extends React.Component {
     this.setState({ help: false });
   };
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
+  };
+
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
 
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {(firebase: object) => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         {this.state.help ? (
           <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
@@ -113,7 +127,7 @@ class TransitionTimePage extends React.Component {
           </ClickAwayListener>
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>
-            {firebase => (
+            {(firebase: object) => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}
@@ -177,7 +191,7 @@ class TransitionTimePage extends React.Component {
                 direction={"column"}
               >
                 <FirebaseContext.Consumer>
-                  {firebase => (
+                  {(firebase: object) => (
                     <TransitionTimer
                       teacherId={this.props.location.state.teacher.id}
                       firebase={firebase}
@@ -196,10 +210,6 @@ class TransitionTimePage extends React.Component {
     );
   }
 }
-
-TransitionTimePage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default connect(null, { resetTransitionTime })(
   withStyles(styles)(TransitionTimePage)

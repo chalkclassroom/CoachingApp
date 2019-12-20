@@ -1,4 +1,5 @@
-import React from "react";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
@@ -9,23 +10,26 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
 function getModalStyle() {
   return {
     position: "fixed",
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    borderRadius: 8
+    borderRadius: 8,
+    backgroundColor: 'white',
+    padding: '1em'
   },
   definitionTitle: {
     backgroundColor: "#094492",
@@ -65,9 +69,33 @@ const styles = theme => ({
     backgroundColor: "#FF5252",
     width: "20%"
   }
-});
+};
 
-class TransitionTimeHelp extends React.Component {
+interface Props {
+  classes: Style
+}
+
+interface Style {
+  paper: string,
+  definitionTitle: string,
+  definitionText: string,
+  buttonTitle: string,
+  lineExamples: string,
+  travelingExamples: string,
+  waitingExamples: string,
+  routinesExamples: string,
+  behaviorExamples: string,
+}
+
+interface State {
+  open: boolean
+}
+
+/**
+ * transition time look-fors
+ * @class TransitionTimeHelp
+ */
+class TransitionTimeHelp extends React.Component<Props, State> {
   state = {
     open: true
   };
@@ -80,6 +108,14 @@ class TransitionTimeHelp extends React.Component {
     this.setState({ open: false });
   };
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
+
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const { classes } = this.props;
 

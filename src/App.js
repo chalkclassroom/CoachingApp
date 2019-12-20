@@ -1,12 +1,13 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types';
 import "./App.css";
-import WelcomePage from "./views/WelcomeViews/WelcomePage";
+import WelcomePage from "./views/WelcomeViews/WelcomePage.tsx";
 import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage";
 import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage";
 import Magic8MenuPage from "./views/protected/Magic8MenuPage";
-import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage";
+import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage.tsx";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
-import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage";
+import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage.tsx";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
 import HomePage from "./views/protected/HomeViews/HomePage";
 import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
@@ -19,14 +20,14 @@ import {
 } from "@material-ui/core/styles";
 import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage";
 import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage";
-import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage";
+import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage.tsx";
 import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage";
 import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage";
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
-import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage";
-import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage";
+import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
+import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
 import AboutPage from "./views/WelcomeViews/AboutPage";
-import TeamPage from "./views/WelcomeViews/TeamPage";
+import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
@@ -56,6 +57,10 @@ const styles = createMuiTheme({
   }
 });
 
+/**
+ * 
+ * @return {ReactElement}
+ */
 function PrivateRoute({ component: Component, auth, ...rest }) {
   return (
     <Route
@@ -69,6 +74,12 @@ function PrivateRoute({ component: Component, auth, ...rest }) {
       }
     />
   );
+}
+
+PrivateRoute.propTypes = {
+  component: PropTypes.element.isRequired,
+  auth: PropTypes.bool.isRequired,
+  location: PropTypes.object.isRequired
 }
 /*
 function PublicRoute({ component: Component, auth, ...rest }) {
@@ -86,7 +97,13 @@ function PublicRoute({ component: Component, auth, ...rest }) {
     );
 }
 */
+/**
+ * @class App
+ */
 class App extends Component {
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -95,6 +112,7 @@ class App extends Component {
     };
   }
 
+  /** invoked after component mounts */
   componentDidMount() {
     this.removeListener = this.props.firebase.auth.onAuthStateChanged(user => {
       if (user) {
@@ -111,10 +129,15 @@ class App extends Component {
     });
   }
 
+  /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     this.removeListener();
   }
 
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     return this.state.loading === true ? (
       <h1>Loading</h1>
@@ -248,4 +271,9 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  firebase: PropTypes.object.isRequired
+};
+
 export default withStyles(styles)(App);
