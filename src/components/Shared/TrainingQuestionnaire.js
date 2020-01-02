@@ -254,7 +254,7 @@ class TrainingQuestionnaire extends Component {
     // }
     else {
       return <DialogContentText>
-        Uh oh! You didn&apos;t answer enough of the questions correctly. You must answer some more questions.
+        Uh oh! You didn&apos;t answer enough of the questions correctly. Please try again.
       </DialogContentText>
     }
   }
