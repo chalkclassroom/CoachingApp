@@ -149,6 +149,7 @@ function TrainingDashboard(props) {
             variant={view === ViewEnum.EXAMPLE ? "contained" : "outlined"}
             onClick={exampleClick}
             style={{ fontSize:'1em' }}
+            disabled
           >
             EXAMPLE
           </Button>
@@ -173,6 +174,7 @@ function TrainingDashboard(props) {
             variant={view === ViewEnum.TRYIT ? "contained" : "outlined"}
             onClick={tryItClick}
             style={{ fontSize:'1em' }}
+            disabled
           >
             TRY IT YOURSELF
           </Button>
