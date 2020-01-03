@@ -17,13 +17,11 @@ interface Props {
   classes: { root: string }
 }
 
-interface State {}
-
 /**
  * welcome page
  * @class WelcomePage
  */
-class WelcomePage extends React.Component<Props, State> {
+class WelcomePage extends React.Component<Props, {}> {
   static propTypes = {
     classes: PropTypes.object.isRequired
   }  
