@@ -10,9 +10,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import "chartjs-plugin-datalabels";
-// import TrainingVideo
-// from "../../../components/Shared/TrainingVideo";
-import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider.tsx";
+import TrainingVideo from "../../../components/Shared/TrainingVideo";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 
 const styles: object = {
@@ -229,20 +227,30 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
                 <div>
                   {this.state.view === ViewEnum.CONCEPTS ? (
                     <div className={classes.resultsContent}>
-                      {/* <TrainingVideo/> */}
+                      <TrainingVideo videoUrl={"https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/AC_Concepts.mp4?alt=media&token=6499ec3f-8f39-4334-aeea-8e34a4e8fb7e"}/>
                     </div>
                   ) : this.state.view === ViewEnum.EXAMPLE ? (
                     <div className={classes.resultsContent}>
-                      {/* <TrainingVideo/> */}
+                      <Typography variant="h4">
+                        COMING SOON...
+                      </Typography>
                     </div>
                   ) : this.state.view === ViewEnum.DEMONSTRATION ? (
                     <div className={classes.resultsContent}>
-                      <ChildTeacherBehaviorTrendsSlider />
+                      <Typography variant="h4">
+                        COMING SOON...
+                      </Typography>
                     </div>
-                  ) : this.state.view === ViewEnum.TRYIT ? null : this.state
+                  ) : this.state.view === ViewEnum.TRYIT ? (
+                    <div className={classes.resultsContent}>
+                      <Typography variant="h4">
+                        COMING SOON...
+                      </Typography>
+                    </div>
+                  ) : this.state
                       .view === ViewEnum.KNOWLEDGECHECK ? (
                     <div className={classes.resultsContent}>
-                      <TrainingQuestionnaire section={8} />
+                      <TrainingQuestionnaire section={'ac'} />
                     </div> // replace this null with next steps content
                   ) : null}
                 </div>

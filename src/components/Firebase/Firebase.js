@@ -369,6 +369,26 @@ class Firebase {
       .catch(error => console.error("Error getting documents: ", error));
   };
 
+  pushKnowledgeCheck = async function(entry) {
+    const {
+      type,
+      questionIndex,
+      answerIndex,
+      isCorrect
+    } = entry;
+    return this.db
+      .collection("knowledgeChecks")
+      .add({
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        answeredBy: this.auth.currentUser.uid,
+        type: type,
+        questionIndex: questionIndex,
+        answerIndex: answerIndex,
+        isCorrect: isCorrect
+      })
+    .catch(error => console.error("Error occurred recording knowlegde check answer: ", error))
+  }
+
   handleSession = async function(mEntry) {
     this.sessionRef = this.db.collection("observations").doc();
     this.sessionRef
@@ -894,13 +914,9 @@ class Firebase {
           // return sanitizedMessage;
           result.data[0]
       )
-      .catch(error =>
-        console.error(
-          "Error occurred getting teacher sequential trend: ",
-          error
-        )
-      );
-  };
+      .catch(error => console.error("Error occurred getting teacher sequential trend: ", error))
+  }
+
 }
 
 export default Firebase;

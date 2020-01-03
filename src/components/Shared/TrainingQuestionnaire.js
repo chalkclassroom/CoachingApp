@@ -1,258 +1,330 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles/index";
-import Stepper from "@material-ui/core/Stepper/index";
-import Step from "@material-ui/core/Step/index";
-import StepLabel from "@material-ui/core/StepLabel/index";
-import Button from "@material-ui/core/Button/index";
-import Typography from "@material-ui/core/Typography/index";
-import TrainingQuestion from "./TrainingQuestion";
-import FirebaseContext from "../Firebase/FirebaseContext";
-// import moment from "../../views/protected/ClassroomClimateViews/ClassroomClimateResultsPage";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import FirebaseContext from '../Firebase/FirebaseContext';
+import questionBank from './QuestionBank';
+import TrainingQuestion from './TrainingQuestion';
+import { withStyles } from '@material-ui/core/styles';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContentText from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 
-const styles = theme => ({
+
+const styles = {
   root: {
-    width: "90%"
+    display: 'flex',
+    flexDirection: 'column'
   },
   button: {
-    marginRight: theme.spacing.unit
+    margin: '1em'
   },
-  instructions: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
+  nextButton: {
+    justifySelf: 'flex-end'
   }
-});
-
-const questionArray = [
-  "transition",
-  "climate",
-  "math",
-  "student",
-  "level",
-  "listening",
-  "sequential",
-  "ac"
-];
+};
 
 /**
  * knowledge check questionnaire
  * @class TrainingQuestionnaire
  */
-class TrainingQuestionnaire extends React.Component {
+class TrainingQuestionnaire extends Component {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props) {  // section -> one of ('transition','climate','ac',etc...)
     super(props);
     this.state = {
-      activeStep: 0,
-      skipped: new Set(),
       questions: [],
-      correctResponses: 0,
-      passed: 0
+      batch: [],
+      currentBatch: -1,
+      currentQuestion: 0,
+      numCorrect: 0,
+      selectedOption: -1,
+      feedback: "",
+      recentlySubmitted: false,
+      recentlyCorrect: false,
+      answeredBatch: false,
+      modalOpen: false,
+      passed: false,
+      // failed: false
     };
-  }
 
-  /**
-   * @return {void}
-   */
-  incrementCorrectResponsesHandler = () => {
-    this.setState((prevState) => ({
-      correctResponses: prevState.correctResponses + 1
-    }));
-  }
-
-  /**
-   * @return {(string|Array)}
-   */
-  getSteps() {
-    if (
-      this.state.questions === undefined ||
-      this.state.questions.length == 0
-    ) {
-      return [];
+    this.BATCH_LENGTH = 5;
+    this.componentDidMount = this.componentDidMount.bind(this);
+    if (this.props.section === 'transition'){
+      this.magic8Number = 1
+    } else if (this.props.section === 'climate'){
+      this.magic8Number = 2
+    } else if (this.props.section === 'math'){
+      this.magic8Number = 3
+    } else if (this.props.section === 'student'){
+      this.magic8Number = 4
+    } else if (this.props.section === 'level'){
+      this.magic8Number = 5
+    } else if (this.props.section === 'listening'){
+      this.magic8Number = 6
+    } else if (this.props.section === 'sequential'){
+      this.magic8Number = 7
     } else {
-      const stringsArray = [];
-      for (let i = 0; i < this.state.questions.length; i++) {
-        stringsArray.push("Q: " + (i + 1));
-      }
-      return stringsArray;
+      this.magic8Number = 8
     }
-  }
-
-  /**
-   * @param {number} step
-   * @return {ReactElement}
-   */
-  getStepContent(step) {
-    if (
-      this.state.questions === undefined ||
-      this.state.questions.length == 0
-    ) {
-      return <div> Loading ... </div>;
-    } else {
-      console.log("step", step, this.state.questions);
-      console.log(
-        "<div><TrainingQuestion options=" +
-          this.state.questions[step].options +
-          "/></div>"
-      );
-      return (
-        <TrainingQuestion
-          selected={-1}
-          incrementCorrectResponsesHandler={
-            this.incrementCorrectResponsesHandler
-          }
-          question={this.state.questions[step].question}
-          answer={this.state.questions[step].answer}
-          options={this.state.questions[step].options}
-        />
-      );
-    }
-  }
-
-  handleNext = () => {
-    const { activeStep } = this.state;
-    let { skipped } = this.state;
-    if (this.isStepSkipped(activeStep)) {
-      skipped = new Set(skipped.values());
-      skipped.delete(activeStep);
-    }
-    this.setState({
-      activeStep: activeStep + 1,
-      skipped
-    });
-  };
-
-  handleBack = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep - 1
-    }));
-  };
-
-  handleReset = () => {
-    this.setState({
-      activeStep: 0
-    });
-  };
-
-  /**
-   * @param {number} step 
-   * @return {boolean}
-   */
-  isStepSkipped(step) {
-    return this.state.skipped.has(step);
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
+    const questions = questionBank[this.props.section];
+    this.setState({
+      questions: questions,
+      batch: questions.slice(0, this.BATCH_LENGTH),
+      currentBatch: 0
+    });
+  }
+
+  setSelection = selection => this.setState({ selectedOption: selection })
+
+  getStepLabels = () => {
+    const { batch } = this.state;
+    const stepLabels = [];
+    if (batch !== undefined && batch.length !== 0) {
+      for (var i in batch) {
+        stepLabels.push("Q:" + (Number(i) + 1));
+      }
+    }
+    return stepLabels;
+  }
+
+  getStepContent = step => {
+    const { batch, selectedOption, feedback, recentlyCorrect } = this.state;
+    if (batch === undefined || batch.length === 0) {
+      return <div> Loading... </div>
+    } else {
+      const { text, options } = batch[step];
+      return <TrainingQuestion selected={selectedOption} setSelection={this.setSelection}
+        question={text} options={options} feedback={feedback} recentlyCorrect={recentlyCorrect}/>
+    }
+  }
+
+  getSubmitButton = () => {
+    return <Button
+      variant="contained"
+      color="primary"
+      onClick={this.handleSubmit}
+      className={this.props.classes.button}
+      disabled={this.state.selectedOption === -1}
+    >
+      Submit
+    </Button>
+  }
+
+  getButtons = () => {
+    const { currentQuestion, recentlySubmitted, answeredBatch } = this.state;
+    const { classes } = this.props;
+    if (recentlySubmitted && currentQuestion < this.BATCH_LENGTH - 1) {
+    return <div>
+        {this.getSubmitButton()}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={this.handleNext}
+          className={classes.button}
+        >
+          Next
+        </Button>
+      </div>
+    } else {
+      if (answeredBatch) {
+        return <div>
+          {this.getSubmitButton()}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={this.handleFinish}
+            className={classes.button}
+          >
+            Finish
+          </Button>
+        </div>
+      } else {
+        return this.getSubmitButton()
+      }
+    }
+  }
+
+  handleSubmit = () => {
     const firebase = this.context;
-    firebase
-      .handleFetchQuestions(questionArray[this.props.section - 1])
-      .then(questions => {
-        console.log(questions);
+    const { batch, currentQuestion, selectedOption, numCorrect } = this.state;
+    const { options, feedback } = batch[currentQuestion];
+    const isCorrect = options.get(Array.from(options.keys())[selectedOption]);
+    firebase.pushKnowledgeCheck({
+      type: this.props.section,
+      questionIndex: currentQuestion,
+      answerIndex: selectedOption,
+      isCorrect: isCorrect
+    })
+      .catch(error => console.error("Was unable to record knowledge check in dB: ", error))
+    
+    if (isCorrect) { // correct answer
+      this.setState({
+        feedback: "Correct! " + feedback,
+        selectedOption: -1,
+        recentlySubmitted: true,
+        recentlyCorrect: true,
+        numCorrect: numCorrect + 1
+      })
+    } else {  // incorrect answer
+      this.setState({
+        feedback: "Oops, sorry! " + feedback,
+        selectedOption: -1,
+        recentlySubmitted: true,
+        recentlyCorrect: false
+      })
+    }
+    if (currentQuestion === this.BATCH_LENGTH - 1) {
+      this.setState({
+        answeredBatch: true
+      })
+    }
+  }
+
+  handleNext = () => {
+    const { currentQuestion, recentlyCorrect } = this.state;
+    if (recentlyCorrect) {
+      this.setState({
+        currentQuestion: currentQuestion + 1,
+        feedback: "",
+        // numCorrect: numCorrect + 1,
+        recentlySubmitted: false,
+        recentlyCorrect: false
+      })
+    } else {
+      this.setState({
+        currentQuestion: currentQuestion + 1,
+        feedback: "",
+        recentlySubmitted: false
+      })
+    }
+  }
+
+  handleFinish = () => {
+    const { numCorrect } = this.state;
+    console.log('num correct is: ', numCorrect);
+    this.unlockBasedOnGrade();
+    if (numCorrect / this.BATCH_LENGTH >= 0.8) { // passed
+      this.setState({
+        modalOpen: true,
+        passed: true
+      })
+    } else { // failed
+      // if (currentBatch === 1) { // 2nd attempt
+        // this.setState({
+          // modalOpen: true,
+          // // failed: true // Change this for different re-try implementations
+        // })
+      // } else { // 1st attempt
         this.setState({
-          questions: questions
-        });
-      });
+          modalOpen: true
+        })
+    }
   }
 
-  /**
-   * @return {void}
-   */
-  unlockBasedOnGrade() {
-    console.log(this.state.correctResponses, this.state.questions.length);
-    if (this.state.correctResponses / this.state.questions.length >= 0.8) {
-      console.log("Passed");
+  unlockBasedOnGrade = () => {
+    if (this.state.numCorrect / this.BATCH_LENGTH >= 0.8) {
+      console.log("passed");
       const firebase = this.context;
-      firebase.handleUnlockSection(this.props.section);
+      firebase.handleUnlockSection(this.magic8Number);
     } else {
-      console.log("Failed Try Again");
+      console.log("failed try again");
     }
   }
 
-  /**
-   * invoked before rendering when new props or state are received
-   * @param {nextProps} nextProps 
-   * @param {nextState} nextState 
-   * @param {nextContent} nextContext 
-   * @return {boolean}
-   */
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.correctResponses + 1 === nextState.correctResponses) {
-      return false;
-    } else {
-      return true;
+  getModalContent = () => {
+    if (this.state.passed) {
+      return <DialogContentText>
+        Congrats! You&apos;ve passed the knowledge check! Your observation tool has been unlocked.
+      </DialogContentText>
+    }
+    // else if (this.state.failed) {
+    //   return <DialogContentText>
+    //     They failed both batches of questions... Where do we send them from here?
+    //   </DialogContentText>
+    // }
+    else {
+      return <DialogContentText>
+        Uh oh! You didn&apos;t answer enough of the questions correctly. Please try again.
+      </DialogContentText>
     }
   }
 
-  /**
-   * render function
-   * @return {ReactElement}
-   */
+  getModalAction = () => {
+    if (this.state.passed ) { //|| this.state.failed) {
+      return <DialogActions>
+        <Button onClick={() => this.setState({ modalOpen: false })}>
+          OK
+        </Button>
+      </DialogActions>
+    }  else {
+      return <DialogActions>
+        <Button onClick={this.loadNextBatch}>
+            OK
+        </Button>
+      </DialogActions>
+    }
+  }
+
+  loadNextBatch = () => {
+    const { questions, currentBatch } = this.state;
+    const batchToLoad = ((currentBatch + 1) % 2) * 5;
+    this.setState({
+      batch: questions.slice(batchToLoad, batchToLoad + this.BATCH_LENGTH),
+      currentBatch: currentBatch + 1,
+      currentQuestion: 0,
+      numCorrect: 0,
+      selectedOption: -1,
+      feedback: "",
+      recentlySubmitted: false,
+      recentlyCorrect: false,
+      answeredBatch: false,
+      modalOpen: false
+    });
+  }
+
   render() {
     const { classes } = this.props;
-    const steps = this.getSteps();
-    const { activeStep, questions } = this.state;
-    if (activeStep === questions.length && questions !== 0) {
-      console.log("calling unlock firebase");
-      this.unlockBasedOnGrade();
-    }
-
+    const { currentQuestion, modalOpen } = this.state;
     return (
       <div className={classes.root}>
-        <Stepper activeStep={activeStep}>
-          {steps.map((label, index) => {
-            const props = {};
-            const labelProps = {};
-            return (
-              <Step key={index} {...props}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-        <div>
-          {activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>
-                Completed Training
-              </Typography>
-            </div>
-          ) : (
-            <div>
-              {console.log("active", activeStep)}
-              {this.getStepContent(activeStep)}
-              <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={this.handleBack}
-                  className={classes.button}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleNext}
-                  className={classes.button}
-                >
-                  {activeStep === this.state.questions.length - 1
-                    ? "Finish"
-                    : "Next"}
-                </Button>
-              </div>
-            </div>
+        <Stepper activeStep={currentQuestion}>
+          {this.getStepLabels().map((label, index) => 
+            <Step key={index} >
+              <StepLabel>{label}</StepLabel>
+            </Step>
           )}
+        </Stepper>
+        <div className={classes.stepContentContainer}>
+          {this.getStepContent(currentQuestion)}
+          <div className={classes.buttonContainer}>
+            {this.getButtons()}
+          </div>
         </div>
+        <Dialog open={modalOpen} onClose={null} >
+          <DialogTitle id="knowledge-check-modal-title">
+          Your Results
+          </DialogTitle>
+          {this.getModalContent()}
+          {this.getModalAction()}
+        </Dialog>
       </div>
-    );
+    )
   }
 }
 
 TrainingQuestionnaire.propTypes = {
   classes: PropTypes.object,
-  section: PropTypes.number.isRequired
+  section: PropTypes.string.isRequired
 };
 
 TrainingQuestionnaire.contextType = FirebaseContext;
