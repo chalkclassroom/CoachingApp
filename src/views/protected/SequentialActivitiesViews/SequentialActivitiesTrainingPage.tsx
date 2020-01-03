@@ -11,7 +11,6 @@ import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo";
-import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 
 const styles: object = {

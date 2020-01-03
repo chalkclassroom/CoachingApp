@@ -7,7 +7,6 @@ import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo.tsx";
-import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
