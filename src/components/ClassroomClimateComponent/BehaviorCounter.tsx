@@ -1,6 +1,6 @@
-import React from "react";
+import * as React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
   popOffClimateStack,
@@ -13,15 +13,32 @@ const styles = {
   }
 };
 
+interface Props {
+  teacherId: string,
+  firebase: {
+    auth: {
+      currentUser: {
+        uid: string
+      }
+    },
+    handleSession(entry: object): void,
+    handlePushClimate(entry: object): void
+  },
+  pushOntoClimateStack(entry: object): void,
+  popOffClimateStack(): void,
+  climateStackSize: number
+}
+
 /**
  * Behavior Type Buttons for Climate Observation
  * @class BehaviorCounter
+ * @param {Props} props
  */
-class BehaviorCounter extends React.Component {
+class BehaviorCounter extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     const mEntry = {
       teacher: this.props.teacherId,
@@ -32,11 +49,11 @@ class BehaviorCounter extends React.Component {
   }
 
   /**
-   * @param {string} entry
+   * @param {string} type
    */
-  handlePushFire = entry => {
+  handlePushFire = (type: string) => {
     const mEntry = {
-      BehaviorResponse: entry,
+      BehaviorResponse: type,
       // Type: this.props.climateType
       Type: "climate"
     };
@@ -56,7 +73,7 @@ class BehaviorCounter extends React.Component {
     }
   };
 
-  customUI2 = props => {
+  customUI2 = (props: Props) => {
     return (
       // <<<<<<< Updated upstream
       <svg width={595.172} height={555.055} {...props}>
@@ -411,6 +428,15 @@ class BehaviorCounter extends React.Component {
       </svg>
     );
   };
+
+  static propTypes = {
+    teacherId: PropTypes.string.isRequired,
+    climateStackSize: PropTypes.number.isRequired,
+    firebase: PropTypes.object.isRequired,
+    pushOntoClimateStack: PropTypes.func.isRequired,
+    popOffClimateStack: PropTypes.func.isRequired
+  }
+  
   /**
    * render function
    * @return {ReactElement}

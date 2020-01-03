@@ -1,10 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button/Button";
-import YesNoDialog from "../../components/Shared/YesNoDialog.tsx";
+import YesNoDialog from "../../components/Shared/YesNoDialog";
 
 /**
  * specifies styling for modal
@@ -16,25 +16,32 @@ function getModalStyle() {
     top: `35%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "80%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   }
-});
+};
+
+interface Props {
+  classes: {
+    paper: string
+  },
+  handleIncomplete(): void,
+  handleRatingConfirmation(rating: number): void
+}
 
 /**
  * Rating Modal for Climate Observation
  * @class RatingModal
  */
-class RatingModal extends React.Component {
+class RatingModal extends React.Component<Props, {}> {
   state = {
     rating: 0,
     value: "undefined"
@@ -75,6 +82,12 @@ class RatingModal extends React.Component {
     }
   };
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    handleIncomplete: PropTypes.func.isRequired,
+    handleRatingConfirmation: PropTypes.func.isRequired
+  }
+
   /*
         N.B. You must wrap this "modal" component in a modal of your own.
         This is for performance reasons, cf. https://material-ui.com/utils/modal/#performance
@@ -104,7 +117,6 @@ class RatingModal extends React.Component {
           <Grid container direction={"row"} justify={"space-between"}>
             <Grid
               item
-              align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
@@ -114,6 +126,7 @@ class RatingModal extends React.Component {
                 <Button
                   onClick={this.handleAngerClick}
                   variant={this.state.value === "Anger" ? "contained" : "text"}
+                  style={{width: "100%"}}
                 >
                   <Typography variant="h2" align={"center"}>
                     1
@@ -130,7 +143,6 @@ class RatingModal extends React.Component {
             </Grid>
             <Grid
               item
-              align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
@@ -142,6 +154,7 @@ class RatingModal extends React.Component {
                   variant={
                     this.state.value === "Irritation" ? "contained" : "text"
                   }
+                  style={{width: "100%"}}
                 >
                   <Typography variant="h2" align={"center"}>
                     2
@@ -158,7 +171,6 @@ class RatingModal extends React.Component {
             </Grid>
             <Grid
               item
-              align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
@@ -170,6 +182,7 @@ class RatingModal extends React.Component {
                   variant={
                     this.state.value === "Neutral" ? "contained" : "text"
                   }
+                  style={{width: "100%"}}
                 >
                   <Typography variant="h2" align={"center"}>
                     3
@@ -186,7 +199,6 @@ class RatingModal extends React.Component {
             </Grid>
             <Grid
               item
-              align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
@@ -199,6 +211,7 @@ class RatingModal extends React.Component {
                     ? "contained"
                     : "text"
                 }
+                style={{width: "100%"}}
               >
                 <Typography variant="h2" align={"center"}>
                   4
@@ -218,7 +231,6 @@ class RatingModal extends React.Component {
             </Grid>
             <Grid
               item
-              align="center"
               alignItems="center"
               justify="center"
               direction={"column"}
@@ -229,6 +241,7 @@ class RatingModal extends React.Component {
                 variant={
                   this.state.value === "Excitement" ? "contained" : "text"
                 }
+                style={{width: "100%"}}
               >
                 <Typography variant="h2" align={"center"}>
                   5
@@ -247,10 +260,9 @@ class RatingModal extends React.Component {
           <Grid
             container
             alignItems={"center"}
-            align="center"
             justify={"center"}
             direction={"row"}
-            style={{ spacing: 4 }}
+            //style={{ spacing: 4 }}
           >
             <Grid item xs={3} />
             <Grid item xs={3} justify={"center"}>
@@ -294,11 +306,5 @@ class RatingModal extends React.Component {
     );
   }
 }
-
-RatingModal.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleIncomplete: PropTypes.func.isRequired,
-  handleRatingConfirmation: PropTypes.func.isRequired
-};
 
 export default withStyles(styles)(RatingModal);

@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
@@ -15,25 +15,30 @@ function getModalStyle() {
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   }
-});
+};
+
+interface Props {
+  classes: {
+    paper: string
+  }
+}
 
 /**
  * Modal when User does not Complete Tone Rating in Climate Observation
  * @class EmptyToneRating
  */
-class EmptyToneRating extends React.Component {
+class EmptyToneRating extends React.Component<Props, {}> {
   state = {
     open: true
   };
@@ -45,6 +50,10 @@ class EmptyToneRating extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
 
   /**
    * render function
@@ -80,9 +89,5 @@ class EmptyToneRating extends React.Component {
     );
   }
 }
-
-EmptyToneRating.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(EmptyToneRating);

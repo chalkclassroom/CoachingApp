@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
@@ -22,16 +22,15 @@ function getModalStyle() {
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   },
   disapprovalTitle: {
@@ -78,13 +77,27 @@ const styles = theme => ({
     backgroundColor: "#B3D1FA",
     padding: "1%"
   }
-});
+};
+
+interface Props {
+  classes: {
+    paper: string,
+    disapprovalTitle: string,
+    disapprovalExample: string,
+    redirectionTitle: string,
+    redirectionExample: string,
+    generalTitle: string,
+    generalExample: string,
+    specificTitle: string,
+    specificExample: string
+  }
+}
 
 /**
  * Definitions and Reminders for Classroom Climate Observation
  * @class ClassroomClimateHelp
  */
-class ClassroomClimateHelp extends React.Component {
+class ClassroomClimateHelp extends React.Component<Props, {}> {
   state = {
     open: true
   };
@@ -96,6 +109,10 @@ class ClassroomClimateHelp extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
 
   /**
    * render function
@@ -214,9 +231,5 @@ class ClassroomClimateHelp extends React.Component {
     );
   }
 }
-
-ClassroomClimateHelp.propTypes ={
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(ClassroomClimateHelp);

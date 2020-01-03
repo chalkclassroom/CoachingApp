@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 // import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { HorizontalBar } from "react-chartjs-2";
@@ -41,8 +41,8 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component {
     return (
       <HorizontalBar
         data={teacherBehaviorsData}
-        width="650"
-        height="400"
+        width={650}
+        height={400}
         options={{
           scales: {
             xAxes: [
