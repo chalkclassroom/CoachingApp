@@ -12,7 +12,6 @@ import Typography from "@material-ui/core/Typography/Typography";
 // import { ImmortalDB } from "immortal-db";
 import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo.tsx";
-import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 
 const styles = {
@@ -263,13 +262,23 @@ class ClassroomClimateTrainingPage extends React.Component {
                       </div>
                     ) : this.state.view === ViewEnum.EXAMPLE ? (
                       <div className={classes.resultsContent}>
-                        <TrainingVideo />
+                        <Typography variant="h4">
+                          COMING SOON...
+                        </Typography>
                       </div>
                     ) : this.state.view === ViewEnum.DEMONSTRATION ? (
                       <div className={classes.resultsContent}>
-                        <ChildTeacherBehaviorTrendsSlider />
+                        <Typography variant="h4">
+                          COMING SOON...
+                        </Typography>
                       </div>
-                    ) : this.state.view === ViewEnum.TRYIT ? null : this.state
+                    ) : this.state.view === ViewEnum.TRYIT ? (
+                      <div className={classes.resultsContent}>
+                        <Typography variant="h4">
+                          COMING SOON...
+                        </Typography>
+                      </div>
+                    ) : this.state
                         .view === ViewEnum.KNOWLEDGECHECK ? (
                       <div className={classes.resultsContent}>
                         <TrainingQuestionnaire section={'climate'} />

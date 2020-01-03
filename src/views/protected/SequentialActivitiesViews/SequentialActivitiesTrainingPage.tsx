@@ -10,9 +10,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 import "chartjs-plugin-datalabels";
-// import TrainingVideo
-// from "../../../components/Shared/TrainingVideo";
-import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
+import TrainingVideo from "../../../components/Shared/TrainingVideo";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 
 const styles: object = {
@@ -233,18 +231,27 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
                 <div>
                   {this.state.view === ViewEnum.CONCEPTS ? (
                     <div className={classes.resultsContent}>
-                      {/* <TrainingVideo/> */}
+                      <TrainingVideo videoUrl={"https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Sequential_Concepts.mp4?alt=media&token=44a1fe64-2e44-46e6-9c3f-cd8fd873b3e0"}/>
                     </div>
                   ) : this.state.view === ViewEnum.EXAMPLE ? (
                     <div className={classes.resultsContent}>
-                      {/* <TrainingVideo/> */}
+                      <Typography variant="h4">
+                        COMING SOON...
+                      </Typography>
                     </div>
                   ) : this.state.view === ViewEnum.DEMONSTRATION ? (
                     <div className={classes.resultsContent}>
-                      <ChildTeacherBehaviorTrendsSlider />
+                      <Typography variant="h4">
+                        COMING SOON...
+                      </Typography>
                     </div>
-                  ) : this.state.view === ViewEnum.TRYIT ? null : this.state
-                      .view === ViewEnum.KNOWLEDGECHECK ? (
+                  ) : this.state.view === ViewEnum.TRYIT ? (
+                    <div className={classes.resultsContent}>
+                      <Typography variant="h4">
+                        COMING SOON...
+                      </Typography>
+                    </div>
+                  ) : this.state.view === ViewEnum.KNOWLEDGECHECK ? (
                     <div className={classes.resultsContent}>
                       <TrainingQuestionnaire section={'sequential'} />
                     </div> // replace this null with next steps content
