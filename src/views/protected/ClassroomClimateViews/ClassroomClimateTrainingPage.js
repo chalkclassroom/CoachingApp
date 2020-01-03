@@ -263,13 +263,23 @@ class ClassroomClimateTrainingPage extends React.Component {
                       </div>
                     ) : this.state.view === ViewEnum.EXAMPLE ? (
                       <div className={classes.resultsContent}>
-                        <TrainingVideo />
+                        <Typography variant="h4">
+                          COMING SOON...
+                        </Typography>
                       </div>
                     ) : this.state.view === ViewEnum.DEMONSTRATION ? (
                       <div className={classes.resultsContent}>
-                        <ChildTeacherBehaviorTrendsSlider />
+                        <Typography variant="h4">
+                          COMING SOON...
+                        </Typography>
                       </div>
-                    ) : this.state.view === ViewEnum.TRYIT ? null : this.state
+                    ) : this.state.view === ViewEnum.TRYIT ? (
+                      <div className={classes.resultsContent}>
+                        <Typography variant="h4">
+                          COMING SOON...
+                        </Typography>
+                      </div>
+                    ) : this.state
                         .view === ViewEnum.KNOWLEDGECHECK ? (
                       <div className={classes.resultsContent}>
                         <TrainingQuestionnaire section={'climate'} />
