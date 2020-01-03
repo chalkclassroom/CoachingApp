@@ -246,7 +246,7 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
                   ) : this.state.view === ViewEnum.TRYIT ? null : this.state
                       .view === ViewEnum.KNOWLEDGECHECK ? (
                     <div className={classes.resultsContent}>
-                      <TrainingQuestionnaire section={7} />
+                      <TrainingQuestionnaire section={'sequential'} />
                     </div> // replace this null with next steps content
                   ) : null}
                 </div>

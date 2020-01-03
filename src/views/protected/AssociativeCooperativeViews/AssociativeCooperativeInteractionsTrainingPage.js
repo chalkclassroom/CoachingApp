@@ -300,7 +300,7 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component {
                   ) : this.state.view === ViewEnum.TRYIT ? null : this.state
                       .view === ViewEnum.KNOWLEDGECHECK ? (
                     <div className={classes.resultsContent}>
-                      <TrainingQuestionnaire section={8} />
+                      <TrainingQuestionnaire section={'ac'} />
                     </div> // replace this null with next steps content
                   ) : null}
                 </div>

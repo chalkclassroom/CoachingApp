@@ -27,9 +27,14 @@ const styles = {
   }
 };
 
-
+/**
+ * knowledge check questionnaire
+ * @class TrainingQuestionnaire
+ */
 class TrainingQuestionnaire extends Component {
-
+  /**
+   * @param {Props} props 
+   */
   constructor(props) {  // section -> one of ('transition','climate','ac',etc...)
     super(props);
     this.state = {
@@ -50,8 +55,26 @@ class TrainingQuestionnaire extends Component {
 
     this.BATCH_LENGTH = 5;
     this.componentDidMount = this.componentDidMount.bind(this);
+    if (this.props.section === 'transition'){
+      this.magic8Number = 1
+    } else if (this.props.section === 'climate'){
+      this.magic8Number = 2
+    } else if (this.props.section === 'math'){
+      this.magic8Number = 3
+    } else if (this.props.section === 'student'){
+      this.magic8Number = 4
+    } else if (this.props.section === 'level'){
+      this.magic8Number = 5
+    } else if (this.props.section === 'listening'){
+      this.magic8Number = 6
+    } else if (this.props.section === 'sequential'){
+      this.magic8Number = 7
+    } else {
+      this.magic8Number = 8
+    }
   }
 
+  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const questions = questionBank[this.props.section];
     this.setState({
@@ -133,7 +156,7 @@ class TrainingQuestionnaire extends Component {
 
   handleSubmit = () => {
     const firebase = this.context;
-    const { batch, currentQuestion, selectedOption } = this.state;
+    const { batch, currentQuestion, selectedOption, numCorrect } = this.state;
     const { options, feedback } = batch[currentQuestion];
     const isCorrect = options.get(Array.from(options.keys())[selectedOption]);
     firebase.pushKnowledgeCheck({
@@ -149,7 +172,8 @@ class TrainingQuestionnaire extends Component {
         feedback: "Correct! " + feedback,
         selectedOption: -1,
         recentlySubmitted: true,
-        recentlyCorrect: true
+        recentlyCorrect: true,
+        numCorrect: numCorrect + 1
       })
     } else {  // incorrect answer
       this.setState({
@@ -167,12 +191,12 @@ class TrainingQuestionnaire extends Component {
   }
 
   handleNext = () => {
-    const { currentQuestion, numCorrect, recentlyCorrect } = this.state;
+    const { currentQuestion, recentlyCorrect } = this.state;
     if (recentlyCorrect) {
       this.setState({
         currentQuestion: currentQuestion + 1,
         feedback: "",
-        numCorrect: numCorrect + 1,
+        // numCorrect: numCorrect + 1,
         recentlySubmitted: false,
         recentlyCorrect: false
       })
@@ -187,12 +211,13 @@ class TrainingQuestionnaire extends Component {
 
   handleFinish = () => {
     const { numCorrect } = this.state;
+    console.log('num correct is: ', numCorrect);
+    this.unlockBasedOnGrade();
     if (numCorrect / this.BATCH_LENGTH >= 0.8) { // passed
       this.setState({
         modalOpen: true,
         passed: true
       })
-
     } else { // failed
       // if (currentBatch === 1) { // 2nd attempt
         // this.setState({
@@ -206,10 +231,20 @@ class TrainingQuestionnaire extends Component {
     }
   }
 
+  unlockBasedOnGrade = () => {
+    if (this.state.numCorrect / this.BATCH_LENGTH >= 0.8) {
+      console.log("passed");
+      const firebase = this.context;
+      firebase.handleUnlockSection(this.magic8Number);
+    } else {
+      console.log("failed try again");
+    }
+  }
+
   getModalContent = () => {
     if (this.state.passed) {
       return <DialogContentText>
-        Congrats! You've passed the knowledge check! Here's where we need to put a call to firebase to unlock your Magic8 (firebase.handleUnlockSection())
+        Congrats! You&apos;ve passed the knowledge check! Your observation tool has been unlocked.
       </DialogContentText>
     }
     // else if (this.state.failed) {
@@ -219,7 +254,7 @@ class TrainingQuestionnaire extends Component {
     // }
     else {
       return <DialogContentText>
-        Uh oh! You didn't score high enough, we must ask you some more questions...
+        Uh oh! You didn&apos;t answer enough of the questions correctly. Please try again.
       </DialogContentText>
     }
   }

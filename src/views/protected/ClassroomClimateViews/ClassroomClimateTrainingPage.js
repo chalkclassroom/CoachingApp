@@ -272,7 +272,7 @@ class ClassroomClimateTrainingPage extends React.Component {
                     ) : this.state.view === ViewEnum.TRYIT ? null : this.state
                         .view === ViewEnum.KNOWLEDGECHECK ? (
                       <div className={classes.resultsContent}>
-                        <TrainingQuestionnaire section={2} />
+                        <TrainingQuestionnaire section={'climate'} />
                       </div>
                     ) : null}
                   </div>
