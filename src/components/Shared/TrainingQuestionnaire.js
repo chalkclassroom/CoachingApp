@@ -51,15 +51,12 @@ class TrainingQuestionnaire extends React.Component {
       correctResponses: 0,
       passed: 0
     };
-    this.incrementCorrectResponsesHandler = this.incrementCorrectResponsesHandler.bind(
-      this
-    );
   }
 
   /**
    * @return {void}
    */
-  incrementCorrectResponsesHandler() {
+  incrementCorrectResponsesHandler = () => {
     this.setState((prevState) => ({
       correctResponses: prevState.correctResponses + 1
     }));

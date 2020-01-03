@@ -37,11 +37,16 @@ interface Props {
   handleRatingConfirmation(rating: number): void
 }
 
+interface State {
+  rating: number,
+  value: string
+}
+
 /**
  * Rating Modal for Climate Observation
  * @class RatingModal
  */
-class RatingModal extends React.Component<Props, {}> {
+class RatingModal extends React.Component<Props, State> {
   state = {
     rating: 0,
     value: "undefined"
