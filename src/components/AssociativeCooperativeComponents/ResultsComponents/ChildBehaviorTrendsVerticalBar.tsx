@@ -1,39 +1,46 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Line } from "react-chartjs-2";
-
-const styles = {};
 
 /**
  * specifies data sets (and formatting) for the child behaviors details horizontal bar
  * @type {{datasets: *[], labels: string[][]}}
  */
-/* const teacherBehaviorsData = {
+/* const childBehaviorsData = {
   labels: ["August 19, 2018", "September 30, 2018", "October 22, 2018"],
   datasets: [
     {
-      label: "Present, but No Support",
-      backgroundColor: "#E99C2E",
-      borderColor: "#E99C2E",
-      borderWidth: 2,
-      data: [4, 5, 7]
+      label: "No Opportunity",
+      backgroundColor: "#F44336",
+      borderColor: "#F44336",
+      fill: false,
+      lineTension: 0,
+      data: [32, 27, 29]
     },
     {
-      label: "Teacher Support",
-      backgroundColor: "#0988EC",
-      borderColor: "#0988EC",
-      borderWidth: 2,
-      data: [6, 5, 8]
+      label: "No Assoc./Coop. Interaction",
+      backgroundColor: "#E99C2E",
+      borderColor: "#E99C2E",
+      fill: false,
+      lineTension: 0,
+      data: [12, 14, 19]
+    },
+    {
+      label: "Associative and/or Cooperative",
+      backgroundColor: "#6F39C4",
+      borderColor: "#6F39C4",
+      fill: false,
+      lineTension: 0,
+      data: [14, 20, 29]
     }
   ]
 }; */
 
 /**
- * formatting for A&C teacher behavior trends graph, including title and scales for the axes
+ * formatting for A&C child behavior trends graph, including title and scales for the axes
  * @type {{showScale: boolean, pointDot: boolean, scales: {yAxes: {ticks: {min: number, max: number, callback: (function(*): string), beginAtZero: boolean}, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[], xAxes: {display: boolean, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[]}, title: {display: boolean, fontSize: number, text: string, fontStyle: string}, showLines: boolean}}
  */
-const TeacherBehaviorTrendsOptions = {
+const ChildBehaviorTrendsOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
@@ -68,7 +75,7 @@ const TeacherBehaviorTrendsOptions = {
           beginAtZero: true,
           min: 0,
           max: 100,
-          callback: function(value) {
+          callback: function(value: number) {
             return value + "%";
           }
         },
@@ -85,19 +92,26 @@ const TeacherBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value) {
+      formatter: function(value: number) {
         return value + "%";
       }
     }
   }
 };
 
+interface Props {
+  data: object
+}
+
 /**
- * Vertical Bar Chart for Associative&Cooperative Teacher Behaviors
- * @class TeacherBehaviorTrendsVerticalBar
+ * Vertical Bar Chart for Associative&Cooperative Child Behaviors
+ * @class ChildBehaviorTrendsVerticalBar
  * @return {void}
  */
-class TeacherBehaviorTrendsVerticalBar extends React.Component {
+class ChildBehaviorTrendsVerticalBar extends React.Component<Props, {}> {
+  static propTypes = {
+    data: PropTypes.object.isRequired
+  }
   /**
    * render function
    * @return {ReactElement}
@@ -108,17 +122,17 @@ class TeacherBehaviorTrendsVerticalBar extends React.Component {
     return (
       <Line
         data={this.props.data}
-        options={TeacherBehaviorTrendsOptions}
-        width="650"
-        height="400"
+        options={ChildBehaviorTrendsOptions}
+        width={650}
+        height={400}
       />
     );
   }
 }
 
-TeacherBehaviorTrendsVerticalBar.propTypes = {
+ChildBehaviorTrendsVerticalBar.propTypes = {
   // classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(TeacherBehaviorTrendsVerticalBar);
+export default ChildBehaviorTrendsVerticalBar;

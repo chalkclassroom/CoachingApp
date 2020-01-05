@@ -142,7 +142,6 @@ class TransitionTimer extends React.Component {
             <YesNoDialog
               buttonVariant={"outlined"}
               buttonColor={"primary"}
-              buttonAriaLabel={"Cancel"}
               buttonText={"Cancel Transition"}
               dialogTitle={
                 "Are you sure you want to cancel the current active transition?"

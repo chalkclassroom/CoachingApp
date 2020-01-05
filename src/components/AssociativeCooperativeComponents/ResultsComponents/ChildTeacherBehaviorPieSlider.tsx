@@ -1,22 +1,35 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import ChildBehaviorsPie from "./ChildBehaviorsPie";
-import TeacherBehaviorsPie from "./TeacherBehaviorsPie";
+import ChildBehaviorsPie from "./ChildBehaviorsPie.tsx";
+import TeacherBehaviorsPie from "./TeacherBehaviorsPie.tsx";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 
-const styles = {};
+interface Props {
+  acTime: number,
+  noAcTime: number,
+  noOppTime: number,
+  supportTime: number,
+  noSupportTime: number
+}
 
 /**
  * Swipe View for Child and Teacher Associative&Cooperative Pie Charts
  * @class ChildTeacherBehaviorDetailsSlider
  * @return {void}
  */
-class ChildTeacherBehaviorPieSlider extends React.Component {
+class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
+  
+  static propTypes = {
+    acTime: PropTypes.number.isRequired,
+    noAcTime: PropTypes.number.isRequired,
+    noOppTime: PropTypes.number.isRequired,
+    supportTime: PropTypes.number.isRequired,
+    noSupportTime: PropTypes.number.isRequired
+  }
   /**
    * render function
    * @return {ReactElement}
@@ -60,14 +73,4 @@ class ChildTeacherBehaviorPieSlider extends React.Component {
   }
 }
 
-ChildTeacherBehaviorPieSlider.propTypes = {
-  // classes: PropTypes.object.isRequired,
-  // data: PropTypes.object.isRequired,
-  acTime: PropTypes.number.isRequired,
-  noAcTime: PropTypes.number.isRequired,
-  noOppTime: PropTypes.number.isRequired,
-  supportTime: PropTypes.number.isRequired,
-  noSupportTime: PropTypes.number.isRequired
-};
-
-export default withStyles(styles)(ChildTeacherBehaviorPieSlider);
+export default ChildTeacherBehaviorPieSlider;

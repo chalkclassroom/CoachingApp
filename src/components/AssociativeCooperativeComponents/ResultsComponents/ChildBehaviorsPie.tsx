@@ -1,48 +1,32 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
 
-const styles = {};
-
-/**
- * specifies data sets (and formatting) for child behaviors pie chart
- */
-// const childBehaviorsData = {
-//     labels: [
-//         'Assoc./Coop. Interaction',
-//         'No Assoc./Coop. Interaction',
-//         'No Opportunity (1 Child)'
-//     ],
-//     datasets: [{
-//         data: [300, 50, 100],
-//         backgroundColor: [
-//             '#6F39C4',
-//             '#E99C2E',
-//             '#E55529'
-//         ],
-//         hoverBackgroundColor: [
-//             '#6F39C4',
-//             '#E99C2E',
-//             '#E55529'
-//         ]
-//     }]
-// };
+interface Props {
+  acTime: number,
+  noAcTime: number,
+  noOppTime: number
+}
 
 /**
  * Pie Chart for Associative&Cooperative Child Behaviors
  * @class ChildBehaviorsPie
  * @return {void}
  */
-class ChildBehaviorsPie extends React.Component {
+class ChildBehaviorsPie extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
   }
 
-  state = {};
+  static propTypes = {
+    acTime: PropTypes.number.isRequired,
+    noAcTime: PropTypes.number.isRequired,
+    noOppTime: PropTypes.number.isRequired,
+  };
+
   /**
    * render function
    * @return {ReactElement}
@@ -71,7 +55,8 @@ class ChildBehaviorsPie extends React.Component {
         options={{
           tooltips: {
             callbacks: {
-              label: function(tooltipItem, data) {
+              label: function(tooltipItem: { datasetIndex: number, index: number },
+                data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const meta = dataset._meta[Object.keys(dataset._meta)[0]];
                 const total = meta.total;
@@ -81,26 +66,18 @@ class ChildBehaviorsPie extends React.Component {
                 );
                 return currentValue + " (" + percentage + "%)";
               },
-              title: function(tooltipItem, data) {
+              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }) {
                 return data.labels[tooltipItem[0].index];
               }
             },
             bodyFontSize: 16
           }
         }}
-        width="650"
-        height="400"
+        width={650}
+        height={400}
       />
     );
   }
 }
 
-ChildBehaviorsPie.propTypes = {
-  // classes: PropTypes.object.isRequired,
-  // data: PropTypes.object.isRequired
-  acTime: PropTypes.number.isRequired,
-  noAcTime: PropTypes.number.isRequired,
-  noOppTime: PropTypes.number.isRequired,
-};
-
-export default withStyles(styles)(ChildBehaviorsPie);
+export default ChildBehaviorsPie;

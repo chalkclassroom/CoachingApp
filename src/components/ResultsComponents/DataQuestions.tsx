@@ -1,6 +1,6 @@
 // props: questions array of objects with name, title, and text for data driven coaching questions
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -11,7 +11,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
-const styles = {
+const styles: object = {
   expansionPanel: {
     overflow: "hidden"
   },
@@ -27,17 +27,46 @@ const styles = {
   }
 };
 
+interface Style {
+  expansionPanel: string,
+  expansionPanelTitle: string,
+  expansionPanelText: string,
+  addButton: string
+}
+
+interface Props {
+  classes: Style,
+  questions: Array<{name: string, title: string, text: string}>,
+  openPanel: string,
+  handlePanelChange(panel: string): void,
+  addedToPrep: Array<string>,
+  handleAddToPlan(panel: string): void 
+}
+
 /**
  * formatting for expansion panel of data-driven coaching questions
  * @class DataQuestions
  */
-class DataQuestions extends React.Component {
+class DataQuestions extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
   }
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    questions: PropTypes.arrayOf(PropTypes.exact({
+      name: PropTypes.string,
+      title: PropTypes.string,
+      text: PropTypes.string})).isRequired,
+    openPanel: PropTypes.string,
+    handlePanelChange: PropTypes.func.isRequired,
+    addedToPrep: PropTypes.array.isRequired,
+    handleAddToPlan: PropTypes.func.isRequired
+  };
+
   /**
    * render function
    * @return {ReactElement}
@@ -87,14 +116,5 @@ class DataQuestions extends React.Component {
     );
   }
 }
-
-DataQuestions.propTypes = {
-  classes: PropTypes.object.isRequired,
-  questions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  openPanel: PropTypes.string,
-  handlePanelChange: PropTypes.func.isRequired,
-  addedToPrep: PropTypes.array.isRequired,
-  handleAddToPlan: PropTypes.func.isRequired
-};
 
 export default withStyles(styles)(DataQuestions);

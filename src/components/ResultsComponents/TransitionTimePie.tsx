@@ -1,35 +1,35 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
-import FirebaseContext from "../../components/Firebase/FirebaseContext";
+import FirebaseContext from "../Firebase/FirebaseContext";
 
-const styles = {
-  // idk how this works
-};
+interface Props {
+  transitionTime: number,
+  learningActivityTime: number,
+}
 
 /**
  * specifies data sets and formatting for the transition summary pie graph
  * @class TransitionTimePie
  */
-class TransitionTimePie extends React.Component {
+class TransitionTimePie extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
   }
 
-  state = {};
+  static propTypes = {
+    transitionTime: PropTypes.number.isRequired,
+    learningActivityTime: PropTypes.number.isRequired,
+  };
 
   /**
    * render function
    * @return {ReactElement}
    */
   render() {
-    // const { classes } = this.props;
-    console.log("inside time: ", this.state.inside);
-    console.log("total session time: " + this.props.sessionTotal);
     const transitionData = {
       labels: ["Transition Time", "Learning Activity (No Transition)"],
       datasets: [
@@ -44,10 +44,11 @@ class TransitionTimePie extends React.Component {
     return (
       <Pie
         data={transitionData}
-        options={{
+        options={{ 
           tooltips: {
             callbacks: {
-              label: function(tooltipItem, data) {
+              label: function(tooltipItem: { datasetIndex: number, index: number },
+                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }) {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const meta = dataset._meta[Object.keys(dataset._meta)[0]];
                 const total = meta.total;
@@ -57,7 +58,7 @@ class TransitionTimePie extends React.Component {
                 );
                 return currentValue + " (" + percentage + "%)";
               },
-              title: function(tooltipItem, data) {
+              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }) {
                 return data.labels[tooltipItem[0].index];
               }
             }
@@ -78,7 +79,7 @@ class TransitionTimePie extends React.Component {
               font: {
                 size: 20
               },
-              formatter: function(value) {
+              formatter: function(value: number) {
                 return (
                   Math.floor((value/1000)/60) + "m "
                   + Math.round((((value/1000)/60) % 1) * 60) + "s"
@@ -94,13 +95,5 @@ class TransitionTimePie extends React.Component {
   }
 }
 
-TransitionTimePie.propTypes = {
-  // classes: PropTypes.object.isRequired,
-  // data: PropTypes.object.isRequired
-  transitionTime: PropTypes.number.isRequired,
-  learningActivityTime: PropTypes.number.isRequired,
-  sessionTotal: PropTypes.number
-};
-
 TransitionTimePie.contextType = FirebaseContext;
-export default withStyles(styles)(TransitionTimePie);
+export default TransitionTimePie;

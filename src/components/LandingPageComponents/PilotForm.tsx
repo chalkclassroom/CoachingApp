@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography/Typography';
 import Grid from "@material-ui/core/Grid";
 import { connect } from 'react-redux';
 
-const styles = theme => ({
+const styles: object = {
   main: {
     width: '100%',
     display: 'block',
@@ -18,25 +18,54 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px`,
+    padding: '2em 2em 2em'
   },
   form: {
     width: '100%', // Fix IE 11 issue.
   },
   submit: {
-    marginTop: theme.spacing.unit * 3,
+    marginTop: '3em',
   },
-});
+};
+
+interface Style {
+  main: string,
+  paper: string,
+  form: string,
+  submit: string
+}
+
+interface Props {
+  classes: Style,
+  firebase: { firebasePilotSignUp(userData: object, mRole: string): Promise<void>}
+  mRole: string
+}
+
+interface State {
+  firstName: string,
+  firstNameError: string,
+  lastName: string,
+  lastNameError: string,
+  email: string,
+  emailError: string,
+  password: string,
+  passwordError: string,
+  confirmPassword: string,
+  confirmPasswordError: string,
+  program: string,
+  pilotSignUp: boolean,
+  errors: boolean
+}
 
 /**
  * Pilot sign up form on landing page
  * @class PilotForm
  */
-class PilotForm extends React.Component{
+class PilotForm extends React.Component<Props, State>{
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       firstName: '',
@@ -51,6 +80,7 @@ class PilotForm extends React.Component{
       confirmPasswordError:'',
       program: '',
       pilotSignUp: false,
+      errors: false
     };
   }
 
@@ -72,7 +102,8 @@ class PilotForm extends React.Component{
    * @param {string} name
    * @param {value} value
    */
-  validateState = (name, value) => {
+  validateState = (name: string, value: string) => {
+    console.log('name: ', name, ' value: ', value)
     switch (name) {
       case 'firstName':
         if (value.length < 1) {
@@ -164,7 +195,7 @@ class PilotForm extends React.Component{
    * @param {string} email
    * @return {boolean}
    */
-  validateEmail = (email) => {
+  validateEmail = (email: string) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
@@ -188,6 +219,12 @@ class PilotForm extends React.Component{
           console.log('pilot submitted');
       });
     }
+  };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    mRole: PropTypes.string,
+    firebase: PropTypes.exact({firebasePilotSignUp: PropTypes.func}).isRequired
   };
 
   /**
@@ -288,11 +325,5 @@ class PilotForm extends React.Component{
     );
   }
 }
-
-PilotForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  mRole: PropTypes.string,
-  firebase: PropTypes.object.isRequired
-};
 
 export default withRouter(connect()(withStyles(styles)(PilotForm)));

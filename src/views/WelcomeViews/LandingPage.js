@@ -36,7 +36,7 @@ import CoachLandingImage from '../../assets/images/CoachLandingImage.jpg';
 import CoachLandingLargeImage from '../../assets/images/CoachLandingLargeImage.jpg';
 import CoachLandingMobileImage from '../../assets/images/CoachLandingMobileImage.jpg';
 import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.tsx';
-import PilotModal from '../../components/LandingPageComponents/PilotModal.js';
+import PilotModal from '../../components/LandingPageComponents/PilotModal.tsx';
 import DemoModal from '../../components/LandingPageComponents/DemoModal.tsx';
 import { ClickAwayListener } from '@material-ui/core/es';
 

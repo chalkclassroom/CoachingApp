@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 // import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { Pie } from "react-chartjs-2";
@@ -31,7 +31,7 @@ class SummaryChildBehaviorsPieChart extends React.Component {
   render() {
     // const { classes } = this.props;
 
-    return <Pie data={childBehaviorsData} width="650" height="400" />;
+    return <Pie data={childBehaviorsData} width={650} height={400} />;
   }
 }
 

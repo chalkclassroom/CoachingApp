@@ -1,9 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Bar } from "react-chartjs-2";
 
-const styles = {};
+interface Props {
+  data: {labels: Array<string>, datasets: Array<{label: string, data: number, backgroundColor: string}>}
+}
 
 /**
  * formatting for transition trends graph, including title and scales for the axes
@@ -35,7 +36,12 @@ const climateTrendOptions = {
  * specifies data sets and formatting for climate trends graph
  * @class ClimateTrendsGraph
  */
-class ClimateTrendsGraph extends React.Component {
+class ClimateTrendsGraph extends React.Component<Props, {}> {
+  
+  static propTypes = {
+    data: PropTypes.func.isRequired
+  };
+
   /**
    * render function
    * @return {ReactElement}
@@ -47,16 +53,11 @@ class ClimateTrendsGraph extends React.Component {
       <Bar
         data={this.props.data}
         options={climateTrendOptions}
-        width="650"
-        height="400"
+        width={650}
+        height={400}
       />
     );
   }
 }
 
-ClimateTrendsGraph.propTypes = {
-  // classes: PropTypes.object.isRequired,
-  data: PropTypes.func.isRequired
-};
-
-export default withStyles(styles)(ClimateTrendsGraph);
+export default ClimateTrendsGraph;

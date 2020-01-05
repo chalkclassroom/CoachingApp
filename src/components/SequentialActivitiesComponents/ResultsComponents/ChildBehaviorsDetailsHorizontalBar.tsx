@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 // import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { HorizontalBar } from "react-chartjs-2";
@@ -11,24 +11,26 @@ const styles = {};
  */
 const childBehaviorsData = {
   labels: [
-    "Talking to each other about current activity",
-    "Engaging in pretend play without clear roles or order",
-    "Following formal rules and/or taking turns",
-    "Speaking or acting in character during a clear pretend play scenario"
+    "Using regular objects in a sequential way",
+    "Writing names or meaningful messages",
+    "Drawing meaninful images",
+    "Using sequential materials in a prescribed way",
+    "Following formal rules of a game and/or taking turns",
+    "Speaking or acting according to a predetermined scenario"
   ],
   datasets: [
     {
       label: "Number of Times Observed",
-      backgroundColor: "#a086c9",
-      borderColor: "#6F39C4",
+      backgroundColor: "#FFD300",
+      borderColor: "#FFD300",
       borderWidth: 2,
-      data: [65, 59, 80, 81]
+      data: [3, 8, 2, 7, 2, 1]
     }
   ]
 };
 
 /**
- * Horizontal Bar Graph for Associative&Cooperative Child Behaviors
+ * horizontal bar chart for sequential child behaviors
  * @class ChildBehaviorsDetailsHorizontalBar
  * @return {void}
  */
@@ -39,7 +41,26 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component {
    */
   render() {
     // const { classes } = this.props;
-    return <HorizontalBar data={childBehaviorsData} width="650" height="400" />;
+
+    return (
+      <HorizontalBar
+        data={childBehaviorsData}
+        width={650}
+        height={400}
+        options={{
+          scales: {
+            xAxes: [
+              {
+                ticks: {
+                  suggestedMin: 0,
+                  suggestedMax: 10
+                }
+              }
+            ]
+          }
+        }}
+      />
+    );
   }
 }
 
