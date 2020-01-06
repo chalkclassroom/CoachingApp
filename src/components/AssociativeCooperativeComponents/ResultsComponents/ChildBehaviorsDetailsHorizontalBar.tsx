@@ -32,9 +32,9 @@ const childBehaviorsData = {
 class ChildBehaviorsDetailsHorizontalBar extends React.Component {
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return <HorizontalBar data={childBehaviorsData} width={650} height={400} />;
   }
 }

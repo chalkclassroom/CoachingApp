@@ -61,9 +61,9 @@ class FeaturesCard extends React.Component<Props, {}> {
 
   /**
    * render function 
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return(
       <Card className={classes.card}>

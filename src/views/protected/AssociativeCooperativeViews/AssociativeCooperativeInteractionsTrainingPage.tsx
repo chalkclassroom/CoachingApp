@@ -62,6 +62,9 @@ interface State {
  * @class AssociativeCooperativeInteractionsTrainingPage
  */
 class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Props, State> {
+  /**
+   * @param {Props} props 
+   */
   constructor(props: Props) {
     super(props);
   }
@@ -70,31 +73,31 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
     view: ViewEnum.CONCEPTS
   };
 
-  conceptsClick = () => {
+  conceptsClick = (): void => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
       this.setState({ view: ViewEnum.CONCEPTS });
     }
   };
 
-  exampleClick = () => {
+  exampleClick = (): void => {
     if (this.state.view !== ViewEnum.EXAMPLE) {
       this.setState({ view: ViewEnum.EXAMPLE });
     }
   };
 
-  demonstrationClick = () => {
+  demonstrationClick = (): void => {
     if (this.state.view !== ViewEnum.DEMONSTRATION) {
       this.setState({ view: ViewEnum.DEMONSTRATION });
     }
   };
 
-  tryItClick = () => {
+  tryItClick = (): void => {
     if (this.state.view !== ViewEnum.TRYIT) {
       this.setState({ view: ViewEnum.TRYIT });
     }
   };
 
-  knowledgeCheckClick = () => {
+  knowledgeCheckClick = (): void => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
       this.setState({ view: ViewEnum.KNOWLEDGECHECK });
     }
@@ -106,14 +109,14 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
           <Grid

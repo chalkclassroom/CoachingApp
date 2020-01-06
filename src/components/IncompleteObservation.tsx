@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -51,9 +51,9 @@ class IncompleteObservation extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

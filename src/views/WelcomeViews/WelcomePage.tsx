@@ -27,17 +27,17 @@ class WelcomePage extends React.Component<Props, {}> {
   }  
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const {classes} = this.props;
     return ( 
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase}/>}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <LandingPage firebase={firebase}/> }
+          {(firebase: object): React.ReactNode => <LandingPage firebase={firebase}/> }
         </FirebaseContext.Consumer>
       </div>
     );

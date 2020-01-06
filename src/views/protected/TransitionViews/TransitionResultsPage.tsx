@@ -12,12 +12,12 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 // import { ImmortalDB } from "immortal-db";
-import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.tsx";
-import DataQuestions from "../../../components/ResultsComponents/DataQuestions.tsx";
+import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable";
+import DataQuestions from "../../../components/ResultsComponents/DataQuestions";
 import "chartjs-plugin-datalabels";
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
-import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart.tsx";
-import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph.tsx";
+import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
+import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import * as moment from "moment";
 import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
 import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";
@@ -462,7 +462,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   };
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     const teacherId = this.props.location.state.teacher.id;
     this.handleTrendsFetch(teacherId);
 
@@ -472,7 +472,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleTrendsFetch = (teacherId: string) => {
+  handleTrendsFetch = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<string> = [];
     const lineArray: Array<number> = [];
@@ -516,7 +516,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
    * @param {number} totalTime
    * @return {number}
    */
-  handleTrendsFormatTime = (totalTime: number) => {
+  handleTrendsFormatTime = (totalTime: number): string => {
     const seconds = Math.round(totalTime / 1000 % 60);
     const minutes = Math.floor((totalTime / 1000 / 60) % 60);
     const hours = Math.floor((totalTime / 1000 / 3600) % 60);
@@ -541,7 +541,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     return formattedTime;
   };
 
-  handleTrendsFormatData = () => {
+  handleTrendsFormatData = (): object => {
     return {
       labels: this.state.trendsDates,
       datasets:  [
@@ -608,7 +608,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} sessionId
    */
-  handleNotesFetching = (sessionId: string) => {
+  handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then(notesArr => {
       const formattedNotesArr: {id: number, content: string, timestamp: any}[] = [];
@@ -632,37 +632,37 @@ class TransitionResultsPage extends React.Component<Props, State> {
     });
   };
 
-  dataClick = () => {
+  dataClick = (): void => {
     if (this.state.view !== ViewEnum.DATA) {
       this.setState({ view: ViewEnum.DATA });
     }
   };
 
-  questionsClick = () => {
+  questionsClick = (): void => {
     if (this.state.view !== ViewEnum.QUESTIONS) {
       this.setState({ view: ViewEnum.QUESTIONS });
     }
   };
 
-  notesClick = () => {
+  notesClick = (): void => {
     if (this.state.view !== ViewEnum.NOTES) {
       this.setState({ view: ViewEnum.NOTES });
     }
   };
 
-  coachPrepClick = () => {
+  coachPrepClick = (): void => {
     if (this.state.view !== ViewEnum.COACH_PREP) {
       this.setState({ view: ViewEnum.COACH_PREP });
     }
   };
 
-  actionPlanClick = () => {
+  actionPlanClick = (): void => {
     if (this.state.view !== ViewEnum.ACTION_PLAN) {
       this.setState({ view: ViewEnum.ACTION_PLAN });
     }
   };
 
-  lineClick = () => {
+  lineClick = (): void => {
     if (this.state.categoryView !== "line") {
       this.setState({
         categoryView: "line",
@@ -671,7 +671,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     }
   }
 
-  travelingClick = () => {
+  travelingClick = (): void => {
     if (this.state.categoryView !== "traveling") {
       this.setState({
         categoryView: "traveling",
@@ -680,7 +680,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     }
   }
 
-  childrenWaitingClick = () => {
+  childrenWaitingClick = (): void => {
     if (this.state.categoryView !== "childrenWaiting") {
       this.setState({
         categoryView: "childrenWaiting",
@@ -689,7 +689,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     }
   }
 
-  routinesClick = () => {
+  routinesClick = (): void => {
     if (this.state.categoryView !== "routines") {
       this.setState({
         categoryView: "routines",
@@ -698,7 +698,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     }
   }
 
-  behaviorClick = () => {
+  behaviorClick = (): void => {
     if (this.state.categoryView !== "behavior") {
       this.setState({
         categoryView: "behavior",
@@ -710,7 +710,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<string>) =>
       this.setState({
@@ -719,7 +719,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     );
   };
 
-  handleSummary = () => {
+  handleSummary = (): void => {
     if (this.state.tabValue !== 0) {
       this.setState({
         tabValue: 0
@@ -727,7 +727,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     }
   };
 
-  handleDetails = () => {
+  handleDetails = (): void => {
     if (this.state.tabValue !== 1) {
       this.setState({
         tabValue: 1
@@ -735,7 +735,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     }
   };
 
-  handleTrends = () => {
+  handleTrends = (): void => {
     if (this.state.tabValue !== 2) {
       this.setState({
         tabValue: 2
@@ -746,7 +746,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} panel
    */
-  handlePanelChange = (panel: string) => {
+  handlePanelChange = (panel: string): void => {
     if (this.state.openPanel === panel) {
       this.setState({ openPanel: '' });
     } else {
@@ -757,7 +757,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} panel
    */
-  handleAddToPlan = (panel: string) => {
+  handleAddToPlan = (panel: string): void => {
     if (!this.state.addedToPrep.includes(panel)) {
       this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
     }
@@ -766,7 +766,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   /**
    * @param {event} event
    */
-  changeSessionId = (event) => {
+  changeSessionId = (event): void => {
     this.setState({
       sessionId: event.target.value,
     }, () => {
@@ -805,14 +805,14 @@ class TransitionResultsPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid container spacing={16} justify="center" direction="row" alignItems="center">
           <Grid item xs={3}>

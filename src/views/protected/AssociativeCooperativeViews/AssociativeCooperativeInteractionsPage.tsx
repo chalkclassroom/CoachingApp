@@ -35,13 +35,17 @@ interface State {
   completeEnabled: boolean,
 }
 
+/**
+ * Associative & Cooperative Observation Tool
+ * @class AssociativeCooperativeInteractionsPage
+ */
 class AssociativeCooperativeInteractionsPage extends React.Component<Props, State> {
   state = {
     auth: true,
     completeEnabled: false,
   };
 
-  handleCompleteButton = (enable: boolean) => {
+  handleCompleteButton = (enable: boolean): void => {
     this.setState({ completeEnabled: enable });
   };
 
@@ -50,12 +54,16 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
     location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
   };
 
-  render() {
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => (
+          {(firebase: object): React.ReactNode => (
             <AppBar
               firebase={firebase}
               //classes={{ root: this.props.classes.grow }}

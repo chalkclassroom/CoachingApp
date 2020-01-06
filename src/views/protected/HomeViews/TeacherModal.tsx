@@ -20,7 +20,7 @@ import * as Constants from '../../../constants';
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -105,7 +105,7 @@ class TeacherModal extends React.Component<Props, State> {
     this.selectTeacher = this.selectTeacher.bind(this);
   }
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
@@ -130,7 +130,7 @@ class TeacherModal extends React.Component<Props, State> {
   /**
    * @param {object} teacherInfo 
    */
-  selectTeacher(teacherInfo: Teacher) {
+  selectTeacher(teacherInfo: Teacher): void {
     this.props.history.push({
       pathname: "/Magic8Menu",
       state: { teacher: teacherInfo, type: this.props.type }
@@ -148,9 +148,9 @@ class TeacherModal extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

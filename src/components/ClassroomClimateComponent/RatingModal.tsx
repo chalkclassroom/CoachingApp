@@ -10,7 +10,7 @@ import YesNoDialog from "../../components/Shared/YesNoDialog";
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `35%`,
@@ -52,35 +52,35 @@ class RatingModal extends React.Component<Props, State> {
     value: "undefined"
   };
 
-  handleAngerClick = () => {
+  handleAngerClick = (): void => {
     if (this.state.value !== "Anger") {
       this.setState({ value: "Anger" });
       this.setState({ rating: 1 });
     }
   };
 
-  handleIrritationClick = () => {
+  handleIrritationClick = (): void => {
     if (this.state.value !== "Irritation") {
       this.setState({ value: "Irritation" });
       this.setState({ rating: 2 });
     }
   };
 
-  handleNeutralClick = () => {
+  handleNeutralClick = (): void => {
     if (this.state.value !== "Neutral") {
       this.setState({ value: "Neutral" });
       this.setState({ rating: 3 });
     }
   };
 
-  handlePositiveInterestClick = () => {
+  handlePositiveInterestClick = (): void => {
     if (this.state.value !== "Positive Interest") {
       this.setState({ value: "Positive Interest" });
       this.setState({ rating: 4 });
     }
   };
 
-  handleExcitementClick = () => {
+  handleExcitementClick = (): void => {
     if (this.state.value !== "Excitement") {
       this.setState({ value: "Excitement" });
       this.setState({ rating: 5 });
@@ -99,9 +99,9 @@ class RatingModal extends React.Component<Props, State> {
      */
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

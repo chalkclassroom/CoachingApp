@@ -1,8 +1,8 @@
 import * as React from "react";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import ChildBehaviorsDetailsHorizontalBar from "./ChildBehaviorsDetailsHorizontalBar.tsx";
-import TeacherBehaviorsDetailsHorizontalBar from "./TeacherBehaviorsDetailsHorizontalBar.tsx";
+import ChildBehaviorsDetailsHorizontalBar from "./ChildBehaviorsDetailsHorizontalBar";
+import TeacherBehaviorsDetailsHorizontalBar from "./TeacherBehaviorsDetailsHorizontalBar";
 
 /**
  * Swipe View for Child and Teacher Associative&Cooperative Bar Charts
@@ -12,9 +12,9 @@ import TeacherBehaviorsDetailsHorizontalBar from "./TeacherBehaviorsDetailsHoriz
 class ChildTeacherBehaviorDetailsSlider extends React.Component {
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     // const { classes } = this.props;
     // var settings = {
     //     dots: true,

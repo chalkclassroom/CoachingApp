@@ -40,7 +40,7 @@ interface Style {
 interface Props {
   classes: Style,
   position: string,
-  paddingTop: string,
+  paddingTop?: string,
   color: string,
   icon: string,
   title: string,
@@ -73,9 +73,9 @@ class Impact extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return(
       <div>

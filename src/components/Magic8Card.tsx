@@ -86,7 +86,7 @@ class Magic8Card extends React.Component<Props, State> {
   }
 
   /** @param {event} e */
-  onClick(e) {
+  onClick(e): void {
     e.preventDefault();
     const { onClick, numSelected } = this.props;
     onClick(this.state.selected, this.props.title);
@@ -109,9 +109,9 @@ class Magic8Card extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <CardBase>

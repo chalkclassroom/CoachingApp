@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -23,9 +23,8 @@ const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    //backgroundColor: theme.palette.background.paper,
-    //boxShadow: theme.shadows[5],
-    //padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   }
 };
@@ -59,11 +58,11 @@ class TransitionTimeHelp extends React.Component<Props, State> {
     open: true
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
@@ -73,9 +72,9 @@ class TransitionTimeHelp extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

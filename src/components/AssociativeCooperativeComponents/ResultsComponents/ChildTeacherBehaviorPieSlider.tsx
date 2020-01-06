@@ -3,8 +3,8 @@ import * as PropTypes from "prop-types";
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import ChildBehaviorsPie from "./ChildBehaviorsPie.tsx";
-import TeacherBehaviorsPie from "./TeacherBehaviorsPie.tsx";
+import ChildBehaviorsPie from "./ChildBehaviorsPie";
+import TeacherBehaviorsPie from "./TeacherBehaviorsPie";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 
@@ -32,9 +32,9 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     // const { classes } = this.props;
     const settings = {
       dots: true,

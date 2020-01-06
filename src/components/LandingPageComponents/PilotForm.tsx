@@ -102,7 +102,7 @@ class PilotForm extends React.Component<Props, State>{
    * @param {string} name
    * @param {value} value
    */
-  validateState = (name: string, value: string) => {
+  validateState = (name: string, value: string): void => {
     console.log('name: ', name, ' value: ', value)
     switch (name) {
       case 'firstName':
@@ -195,7 +195,7 @@ class PilotForm extends React.Component<Props, State>{
    * @param {string} email
    * @return {boolean}
    */
-  validateEmail = (email: string) => {
+  validateEmail = (email: string): boolean => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
@@ -203,7 +203,7 @@ class PilotForm extends React.Component<Props, State>{
   /**
    * submits pilot form to firebase
    */
-  handleSubmit = () =>{
+  handleSubmit = (): void =>{
     this.validateState();
     if (!this.state.errors){
       this.props.firebase.firebasePilotSignUp({
@@ -229,9 +229,9 @@ class PilotForm extends React.Component<Props, State>{
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render(){
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

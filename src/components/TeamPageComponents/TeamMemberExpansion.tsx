@@ -65,9 +65,9 @@ class TeamMemberExpansion extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return(
       <Grid container direction="row" justify="center" alignItems="center" className={classes.grid}>
@@ -98,7 +98,7 @@ class TeamMemberExpansion extends React.Component<Props, {}> {
             <Typography variant="subtitle1" className={classes.description}>
               {this.props.person.description}
             </Typography>
-            {this.props.person.link? (
+            {this.props.person.link ? (
               <a href={this.props.person.link} style={{textDecoration: 'none'}}>
                 <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                   <Grid item>

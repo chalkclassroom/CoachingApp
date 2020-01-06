@@ -37,9 +37,9 @@ const childBehaviorsData = {
 class ChildBehaviorsDetailsHorizontalBar extends React.Component {
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     // const { classes } = this.props;
 
     return (

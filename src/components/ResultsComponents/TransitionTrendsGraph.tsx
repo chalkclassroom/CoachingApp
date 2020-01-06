@@ -98,9 +98,9 @@ class TransitionTrendsGraph extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return (
       <Line
         data={this.props.data}

@@ -51,7 +51,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
   /**
    * @param {string} type
    */
-  handlePushFire = (type: string) => {
+  handlePushFire = (type: string): void => {
     const mEntry = {
       BehaviorResponse: type,
       // Type: this.props.climateType
@@ -61,7 +61,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
     this.props.pushOntoClimateStack(mEntry);
   };
 
-  handleUndo = () => {
+  handleUndo = (): void => {
     if (this.props.climateStackSize > 0) {
       this.props.popOffClimateStack();
       // <<<<<<< Updated upstream
@@ -439,9 +439,9 @@ class BehaviorCounter extends React.Component<Props, {}> {
   
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return <>{this.customUI2(this.props)}</>;
   }
 }

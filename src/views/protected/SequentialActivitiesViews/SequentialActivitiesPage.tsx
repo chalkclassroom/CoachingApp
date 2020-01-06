@@ -32,7 +32,9 @@ interface Style {
 }
 
 interface State {
-
+  auth: boolean,
+  help: boolean,
+  completeEnabled: boolean
 }
 
 /**
@@ -46,25 +48,14 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
     completeEnabled: false
   };
 
-  handleClickAway = () => {
+  handleClickAway = (): void => {
     this.setState({ help: false });
-  };
-
-  /**
-   * @param {boolean} open
-   */
-  handleNotes = (open: boolean) => {
-    if (open) {
-      this.setState({ notes: true });
-    } else {
-      this.setState({ notes: false });
-    }
   };
 
   /**
    * @param {boolean} enable
    */
-  handleCompleteButton = (enable: boolean) => {
+  handleCompleteButton = (enable: boolean): void => {
     this.setState({ completeEnabled: enable });
   };
 
@@ -74,13 +65,13 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object)=> (
+          {(firebase: object): React.ReactNode => (
             <AppBar
               firebase={firebase}
               classes={{ root: this.props.classes.grow }}
@@ -97,7 +88,7 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
         )}
         <main style={{ flex: 1 }}>
           <FirebaseContext.Consumer>
-            {(firebase: object) => (
+            {(firebase: object): React.ReactNode => (
               <CenterMenuSequentialActivities
                 firebase={firebase}
                 onStatusChange={this.handleCompleteButton}

@@ -78,7 +78,7 @@ class TeamPage extends React.Component<Props, State> {
     };
   }
 
-  openCC = () => {
+  openCC = (): void => {
     if (this.state.open === "CC") {
       this.setState({
         open: null
@@ -90,7 +90,7 @@ class TeamPage extends React.Component<Props, State> {
     }
   };
 
-  openDM = () => {
+  openDM = (): void => {
     if (this.state.open === "DM") {
       this.setState({
         open: null
@@ -102,7 +102,7 @@ class TeamPage extends React.Component<Props, State> {
     }
   };
 
-  openKN = () => {
+  openKN = (): void => {
     if (this.state.open === "KN") {
       this.setState({
         open: null
@@ -114,7 +114,7 @@ class TeamPage extends React.Component<Props, State> {
     }
   };
 
-  openCS = () => {
+  openCS = (): void => {
     if (this.state.open === "CS") {
       this.setState({
         open: null
@@ -132,9 +132,9 @@ class TeamPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div>
@@ -144,7 +144,7 @@ class TeamPage extends React.Component<Props, State> {
         </head>
         <body className={classes.root}>
           <FirebaseContext.Consumer>
-            {(firebase: object) => <AppBar firebase={firebase} />}
+            {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container
@@ -469,7 +469,7 @@ class TeamPage extends React.Component<Props, State> {
         </body>
         <body className={classes.mobileRoot}>
           <FirebaseContext.Consumer>
-            {(firebase: object) => <AppBar firebase={firebase} />}
+            {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container

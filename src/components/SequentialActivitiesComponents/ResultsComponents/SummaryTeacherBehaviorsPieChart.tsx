@@ -26,9 +26,9 @@ const teacherBehaviorsData = {
 class SummaryTeacherBehaviorsPieChart extends React.Component {
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     // const { classes } = this.props;
 
     return <Pie data={teacherBehaviorsData} width={650} height={400} />;

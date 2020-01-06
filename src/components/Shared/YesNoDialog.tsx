@@ -52,17 +52,17 @@ class YesNoDialog extends React.Component<Props, State> {
     open: false
   };
 
-  handleClickOpen = () => {
+  handleClickOpen = (): void => {
     if (this.props.shouldOpen) {
       this.setState({ open: true });
     }
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
-  handleAccept = () => {
+  handleAccept = (): void => {
     if (this.props.onAcceptParams !== null) {
       this.props.onAccept(this.props.onAcceptParams);
     } else {
@@ -90,9 +90,9 @@ class YesNoDialog extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div>

@@ -12,7 +12,7 @@ import IconButton from "@material-ui/core/es/IconButton/IconButton";
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -66,11 +66,11 @@ class PilotModal extends React.Component<Props, State> {
     role: 0
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
@@ -82,9 +82,9 @@ class PilotModal extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

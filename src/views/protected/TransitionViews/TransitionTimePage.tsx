@@ -66,7 +66,7 @@ class TransitionTimePage extends React.Component<Props, State> {
   /**
    * @param {string} type
    */
-  handleTransitionType = (type: string) => {
+  handleTransitionType = (type: string): void => {
     if (this.state.transitionEnded) {
       this.setState({ transitionEnded: false });
     }
@@ -76,7 +76,7 @@ class TransitionTimePage extends React.Component<Props, State> {
   /**
    * @param {boolean} open
    */
-  handleRecsModal = (open: boolean) => {
+  handleRecsModal = (open: boolean): void => {
     if (open) {
       this.setState({ recs: true });
     } else {
@@ -84,7 +84,7 @@ class TransitionTimePage extends React.Component<Props, State> {
     }
   };
 
-  handleEndTransition = () => {
+  handleEndTransition = (): void => {
     this.setState({ transitionEnded: true });
     this.setState({ transitionType: null });
   };
@@ -92,7 +92,7 @@ class TransitionTimePage extends React.Component<Props, State> {
   /**
    * @param {boolean} open
    */
-  handleNotes = (open: boolean) => {
+  handleNotes = (open: boolean): void => {
     if (open) {
       this.setState({ notes: true });
     } else {
@@ -100,7 +100,7 @@ class TransitionTimePage extends React.Component<Props, State> {
     }
   };
 
-  handleClickAwayHelp = () => {
+  handleClickAwayHelp = (): void => {
     this.setState({ help: false });
   };
 
@@ -111,15 +111,15 @@ class TransitionTimePage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         {this.state.help ? (
           <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
@@ -127,7 +127,7 @@ class TransitionTimePage extends React.Component<Props, State> {
           </ClickAwayListener>
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>
-            {(firebase: object) => (
+            {(firebase: object): React.ReactNode => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}
@@ -191,7 +191,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                 direction={"column"}
               >
                 <FirebaseContext.Consumer>
-                  {(firebase: object) => (
+                  {(firebase: object): React.ReactNode => (
                     <TransitionTimer
                       teacherId={this.props.location.state.teacher.id}
                       firebase={firebase}

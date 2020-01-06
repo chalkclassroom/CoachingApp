@@ -6,7 +6,7 @@ import { withStyles } from "@material-ui/core/styles/index";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import "chartjs-plugin-datalabels";
-import TrainingVideo from "../../../components/Shared/TrainingVideo.tsx";
+import TrainingVideo from "../../../components/Shared/TrainingVideo";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
@@ -138,14 +138,24 @@ const ViewEnum = {
 };
 
 interface Props {
-  classes: Style
+  classes: Style,
+  location: { state: string },
+  history: {
+    goBack(): void,
+    replace(pathname: string, state?: {type: string}): void
+  }
 }
 
 interface Style {
   root: string,
   viewButtons: string,
   buttonsList: string,
-  resultsContent: string
+  resultsContent: string,
+  titleContainer: string,
+  backButton: string,
+  main: string,
+  dashboardContainer: string,
+  trainingContentCard: string
 }
 
 interface State {
@@ -168,37 +178,37 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
     view: ViewEnum.CONCEPTS
   };
 
-  conceptsClick = () => {
+  conceptsClick = (): void => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
       this.setState({view: ViewEnum.CONCEPTS})
     }
   }
 
-  definitionsClick = () => {
+  definitionsClick = (): void => {
     if (this.state.view !== ViewEnum.DEFINITIONS) {
       this.setState({view: ViewEnum.DEFINITIONS})
     }
   }
 
-  exampleClick = () => {
+  exampleClick = (): void => {
     if (this.state.view !== ViewEnum.EXAMPLE) {
       this.setState({view: ViewEnum.EXAMPLE})
     }
   }
 
-  demonstrationClick = () => {
+  demonstrationClick = (): void => {
     if (this.state.view !== ViewEnum.DEMONSTRATION) {
       this.setState({view: ViewEnum.DEMONSTRATION})
     }
   }
 
-  tryItClick = () => {
+  tryItClick = (): void => {
     if (this.state.view !== ViewEnum.TRYIT) {
       this.setState({view: ViewEnum.TRYIT})
     }
   }
 
-  knowledgeCheckClick = () => {
+  knowledgeCheckClick = (): void => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
       this.setState({view: ViewEnum.KNOWLEDGECHECK})
     }
@@ -210,19 +220,19 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     const { view } = this.state;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
         <Button variant="contained" size="medium" className={classes.backButton}
-                  onClick={() => {
+                  onClick={(): void => {
                     if (this.props.location.state !== undefined) { // came from MyTeachers
                       this.props.history.goBack();
                     } else {

@@ -18,9 +18,9 @@ const styles = {};
 class ChildTeacherBehaviorDetailsSlider extends React.Component {
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     // const { classes } = this.props;
     const settings = {
       dots: true,

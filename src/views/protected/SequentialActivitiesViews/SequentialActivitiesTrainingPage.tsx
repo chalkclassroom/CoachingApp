@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid/index";
 import Button from "@material-ui/core/Button/Button";
 import List from "@material-ui/core/List/index";
 import ListItem from "@material-ui/core/ListItem/index";
-const SequentialIconImage = require("../../../assets/images/SequentialIconImage.svg");
+import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
@@ -73,31 +73,31 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
     view: ViewEnum.CONCEPTS
   };
 
-  conceptsClick = () => {
+  conceptsClick = (): void => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
       this.setState({ view: ViewEnum.CONCEPTS });
     }
   };
 
-  exampleClick = () => {
+  exampleClick = (): void => {
     if (this.state.view !== ViewEnum.EXAMPLE) {
       this.setState({ view: ViewEnum.EXAMPLE });
     }
   };
 
-  demonstrationClick = () => {
+  demonstrationClick = (): void => {
     if (this.state.view !== ViewEnum.DEMONSTRATION) {
       this.setState({ view: ViewEnum.DEMONSTRATION });
     }
   };
 
-  tryItClick = () => {
+  tryItClick = (): void => {
     if (this.state.view !== ViewEnum.TRYIT) {
       this.setState({ view: ViewEnum.TRYIT });
     }
   };
 
-  knowledgeCheckClick = () => {
+  knowledgeCheckClick = (): void => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
       this.setState({ view: ViewEnum.KNOWLEDGECHECK });
     }
@@ -109,15 +109,15 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
           <Grid

@@ -52,7 +52,7 @@ class Countdown extends React.Component<Props, State> {
     };
   }
 
-  tick = () => {
+  tick = (): void => {
     if (this.state.time <= 0) {
       this.setState({ time: this.props.timerTime });
     } else {
@@ -65,12 +65,12 @@ class Countdown extends React.Component<Props, State> {
   };
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     this.timer = setInterval(this.tick, 1000);
   }
 
   /** lifecycle method invoked just before component is unmounted */
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     clearInterval(this.timer);
   }
 
@@ -82,9 +82,9 @@ class Countdown extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <Grid

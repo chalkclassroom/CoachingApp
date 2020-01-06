@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import DemoVideo from './DemoVideo.tsx';
+import DemoVideo from './DemoVideo';
 import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
@@ -12,7 +12,7 @@ import IconButton from "@material-ui/core/es/IconButton/IconButton";
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -59,11 +59,11 @@ class DemoModal extends React.Component<Props, State> {
     role: 0
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
@@ -74,9 +74,9 @@ class DemoModal extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

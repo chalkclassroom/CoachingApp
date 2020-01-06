@@ -48,9 +48,9 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     // const { classes } = this.props;
     // console.log("inside time: ", this.state.inside);
     const teacherBehaviorsData = {
