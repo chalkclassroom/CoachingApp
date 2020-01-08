@@ -17,11 +17,13 @@ import {
   MuiThemeProvider,
   withStyles
 } from "@material-ui/core/styles";
+
 import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage";
 import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage";
 import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage";
 import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage";
 import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage";
+
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage";
@@ -31,6 +33,7 @@ import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import ReactGA from 'react-ga';
+import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -164,6 +167,11 @@ class App extends Component {
               path="/AssociativeCooperativeInteractions"
               component={AssociativeCooperativeInteractionsPage}
             />
+           <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstruction"
+              component={MathInstructionPage}
+            />  
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsResults"
@@ -241,6 +249,21 @@ class App extends Component {
               path="/ClassroomClimateResults"
               component={ClassroomClimateResultsPage}
             />
+         {/*    <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstruction"
+              component={MathInstructionPage}
+            />  
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstruction"
+              component={MathInstructionPage}
+            />  
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstruction"
+              component={MathInstructionPage}
+            />  */} 
             <Route render={() => <h3>No Match</h3>} />
           </Switch>
         </MuiThemeProvider>
