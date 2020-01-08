@@ -306,7 +306,7 @@ class Dashboard extends React.Component {
                           ? this.resetTransitionTime()
                           : magic8 === "Sequential Activities"
                           ? this.deleteAllCenters()
-                          : this.props.deleteAllCenters();
+                          : this.deleteAllCenters();
                         this.props.history.push({
                           pathname: "/Home",
                           state: this.props.history.state
