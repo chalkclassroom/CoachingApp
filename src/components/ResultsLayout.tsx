@@ -12,10 +12,8 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
-import NotesListDetailTable from "./ResultsComponents/NotesListDetailTable.tsx";
-import DataQuestions from "./ResultsComponents/DataQuestions.tsx";
+import NotesListDetailTable from "./ResultsComponents/NotesListDetailTable";
 import "chartjs-plugin-datalabels";
-import * as moment from "moment";
 import ResultsDashboard from './ResultsDashboard';
 
 const styles: object = {

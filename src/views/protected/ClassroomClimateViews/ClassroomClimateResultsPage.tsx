@@ -19,7 +19,7 @@ import moment from "moment";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.tsx";
 import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
 import AverageToneRating from "../../../components/ResultsComponents/AverageToneRating.js";
-import ClimateTrendsGraph from "../../../components/ResultsComponents/ClimateTrendsGraph.tsx";
+import ClimateTrendsGraph from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateTrendsGraph.tsx";
 import ResultsLayout from '../../../components/ResultsLayout';
 import BehaviorResponsesSummaryChart from "../../../components/ClassroomClimateComponent/ResultsComponents/BehaviorResponsesSummaryChart";
 import BehaviorResponsesDetailsChart from "../../../components/ClassroomClimateComponent/ResultsComponents/BehaviorResponsesDetailsChart";
@@ -88,11 +88,41 @@ const ViewEnum = {
   NEXT_STEPS: 5
 };
 
+interface Props {
+
+}
+
+interface Style {
+  root: string,
+  main: string,
+  grow: string,
+  menuButton: string,
+  viewButtons: string,
+  buttonsList: string,
+  title: string,
+  secondTitle: string,
+  chart: string,
+  generateReport: string,
+  resultsContent: string
+}
+
+interface State {
+  disapprovalBehaviorCount: number,
+  redirectionsBehaviorCount: number,
+  nonspecificBehaviorCount: number,
+  specificBehaviorCount: number,
+  averageToneRating: number,
+  sessionId: string,
+  trendsDates: Array<string>,
+  trendsPos: Array<number>,
+  trendsNeg: Array<number>
+}
+
 /**
  * classroom climate results
  * @class ClassroomClimateResultsPage
  */
-class ClassroomClimateResultsPage extends React.Component {
+class ClassroomClimateResultsPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
@@ -104,12 +134,6 @@ class ClassroomClimateResultsPage extends React.Component {
 
   state = {
     // auth: true,
-    // anchorEl: null,
-    // help: false,
-    // type: null,
-    // hex: "#FFFFFF",
-    // entries: [],
-    // dbCounter: 0, // @Hack @Temporary !!!
     // view: ViewEnum.SUMMARY,
     // sessionDates: [],
     disapprovalBehaviorCount: 0,
@@ -418,14 +442,12 @@ class ClassroomClimateResultsPage extends React.Component {
           magic8="Classroom Climate"
           handleTrendsFetch={this.handleTrendsFetching}
           observationType="climate"
-          // handleTrendsFormat={this.trendsFormatData}
           summaryGraph={
             <BehaviorResponsesSummaryChart
               positiveResponses={this.state.specificBehaviorCount+this.state.nonspecificBehaviorCount}
               negativeResponses={this.state.redirectionsBehaviorCount+this.state.disapprovalBehaviorCount}
             />
           }
-          
           detailsGraph={
             <BehaviorResponsesDetailsChart
               disapprovalBehaviorCount={this.state.disapprovalBehaviorCount}

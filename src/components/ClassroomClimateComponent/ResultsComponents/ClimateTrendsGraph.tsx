@@ -26,10 +26,10 @@ const climateTrendOptions = {
       }
     ]
   },
-  tooltips: {
+  /* tooltips: {
     displayColors: true,
     multiKeyBackground: "white"
-  }
+  }, */
 };
 
 /**
