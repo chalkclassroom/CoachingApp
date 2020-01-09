@@ -24,6 +24,7 @@ import ResultsLayout from '../../../components/ResultsLayout';
 import BehaviorResponsesSummaryChart from "../../../components/ClassroomClimateComponent/ResultsComponents/BehaviorResponsesSummaryChart";
 import BehaviorResponsesDetailsChart from "../../../components/ClassroomClimateComponent/ResultsComponents/BehaviorResponsesDetailsChart";
 import ClimateCoachingQuestions from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateCoachingQuestions";
+import ClimateSummarySlider from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateSummarySlider";
 
 
 const styles = {
@@ -89,7 +90,8 @@ const ViewEnum = {
 };
 
 interface Props {
-
+  classes: Style,
+  location: { state: { teacher: { id: string }}},
 }
 
 interface Style {
@@ -126,7 +128,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     // this.handleAppend = this.handleAppend.bind(this);
     // this.handleTypeChange = this.handleTypeChange.bind(this);
@@ -176,6 +178,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   componentDidMount() {
     const firebase = this.context;
     firebase.fetchBehaviourTypeCount(this.state.sessionId);
+    firebase.fetchAvgToneRating(this.state.sessionId);
   }
 
   /**
@@ -248,40 +251,10 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
             .catch(error => console.error("Error:", error));
     }; */
 
-  summaryClick = () => {
-    if (this.state.view !== ViewEnum.SUMMARY) {
-      this.setState({ view: ViewEnum.SUMMARY });
-    }
-  };
-
-  detailsClick = () => {
-    if (this.state.view !== ViewEnum.DETAILS) {
-      this.setState({ view: ViewEnum.DETAILS });
-    }
-  };
-
-  trendsClick = () => {
-    if (this.state.view !== ViewEnum.TRENDS) {
-      this.setState({ view: ViewEnum.TRENDS });
-    }
-  };
-
-  notesClick = () => {
-    if (this.state.view !== ViewEnum.NOTES) {
-      this.setState({ view: ViewEnum.NOTES });
-    }
-  };
-
-  nextStepsClick = () => {
-    if (this.state.view !== ViewEnum.NEXT_STEPS) {
-      this.setState({ view: ViewEnum.NEXT_STEPS });
-    }
-  };
-
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = teacherId => {
+  /* handleDateFetching = (teacherId) => {
     console.log("handle date fetching called");
     const firebase = this.context;
     firebase.fetchSessionDates(teacherId, "climate").then(dates =>
@@ -293,32 +266,27 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     firebase.fetchAvgToneRating(this.state.sessionId);
     firebase.fetchBehaviourTypeCount(this.state.sessionId);
     firebase.fetchBehaviourTrend(teacherId);
-  };
+  }; */
 
   /**
    * @param {string} teacherId
    */
-  handleTrendsFetching = teacherId => {
+  handleTrendsFetching = (teacherId: string): void => {
     const firebase = this.context;
-    const dateArray = [];
-    const posArray = [];
-    const negArray = [];
-    const posBkgColor = [];
-    const negBkgColor = [];
-    firebase.fetchBehaviourTrend(teacherId).then(dataSet => {
-      dataSet.map(data => {
+    const dateArray: Array<string> = [];
+    const posArray: Array<number> = [];
+    const negArray: Array<number> = [];
+    firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<object>) => {
+      console.log("dataset is: ", dataSet);
+      dataSet.forEach((data: {dayOfEvent: {value: string}, positive: number, negative: number}) => {
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
         posArray.push(data.positive);
         negArray.push(data.negative);
-        posBkgColor.push("#009365");
-        negBkgColor.push("#E55529");
       });
       this.setState({
         trendsDates: dateArray,
         trendsPos: posArray,
         trendsNeg: negArray,
-        trendsPosCol: posBkgColor,
-        trendsNegCol: negBkgColor
       });
     });
   };
@@ -326,7 +294,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} sessionId
    */
-  handleNotesFetching = sessionId => {
+  handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then(notesArr => {
       console.log(notesArr);
@@ -442,13 +410,14 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           magic8="Classroom Climate"
           handleTrendsFetch={this.handleTrendsFetching}
           observationType="climate"
-          summaryGraph={
-            <BehaviorResponsesSummaryChart
+          summary={
+            <ClimateSummarySlider
               positiveResponses={this.state.specificBehaviorCount+this.state.nonspecificBehaviorCount}
               negativeResponses={this.state.redirectionsBehaviorCount+this.state.disapprovalBehaviorCount}
+              averageToneRating={this.state.averageToneRating}
             />
           }
-          detailsGraph={
+          details={
             <BehaviorResponsesDetailsChart
               disapprovalBehaviorCount={this.state.disapprovalBehaviorCount}
               redirectionsBehaviorCount={this.state.redirectionsBehaviorCount}

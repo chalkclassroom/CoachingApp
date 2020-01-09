@@ -61,8 +61,8 @@ interface Props {
   handleTrendsFetch: any,
   magic8: string,
   observationType: string,
-  summaryGraph: React.ReactNode,
-  detailsGraph: React.ReactNode,
+  summary: React.ReactNode,
+  details: React.ReactNode,
   trendsGraph: React.ReactNode,
   changeSessionId: any,
   sessionId: string,
@@ -79,7 +79,7 @@ interface Style {
 }
 
 interface State {
-  sessionId: string,
+  // sessionId: string,
   view: number,
   tabValue: number,
   notes: Array<object>,
@@ -302,7 +302,7 @@ class ResultsLayout extends React.Component<Props, State> {
                       <div>
                         {this.props.sessionId ? (
                           <div>
-                            {this.props.summaryGraph}
+                            {this.props.summary}
                           </div>
                         ) : (
                           <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
@@ -315,7 +315,7 @@ class ResultsLayout extends React.Component<Props, State> {
                         <Grid style={{alignItems: "center"}}>
                           {this.props.sessionId ? (
                             <div>
-                              {this.props.detailsGraph}
+                              {this.props.details}
                           </div>
                           ) : (
                             <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>

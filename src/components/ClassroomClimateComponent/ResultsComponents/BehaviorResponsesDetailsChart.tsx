@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import {HorizontalBar} from 'react-chartjs-2';
-import Typoraphy from '@material-ui/core/Typography';
 
 
 interface Props {
@@ -57,8 +56,9 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: Math.max(this.props.disapprovalBehaviorCount, this.props.redirectionsBehaviorCount, this.props.nonspecificBehaviorCount, this.props.specificBehaviorCount)*2,
-                  fontSize: 16
+                  max: Math.max(this.props.disapprovalBehaviorCount, this.props.redirectionsBehaviorCount, this.props.nonspecificBehaviorCount, this.props.specificBehaviorCount),
+                  fontSize: 16,
+                  stepSize: 1
                 },
                 scaleLabel: {
                   display: true,
