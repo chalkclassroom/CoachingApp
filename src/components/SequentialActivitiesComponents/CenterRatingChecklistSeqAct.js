@@ -31,11 +31,9 @@ const styles = {
   }
 };
 
-const TeacherChildEnum = {
-  CHILD_1: 1,
-  CHILD_2: 2,
-  CHILD_1_TEACHER: 3,
-  CHILD_2_TEACHER: 4
+const TeacherEnum = {
+  NO_TEACHER: 1,
+  TEACHER: 2,
 };
 
 const RATING_INTERVAL = 60000;
@@ -146,19 +144,18 @@ class CenterRatingChecklistSeqAct extends React.Component {
 
   teacherDisabled = () => {
     return (
-      this.state.people === TeacherChildEnum.CHILD_1 ||
-      this.state.people === TeacherChildEnum.CHILD_2 ||
+      this.state.people === TeacherEnum.NO_TEACHER ||
       this.state.people === undefined
     );
   };
 
-  handleChild1Click = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_1) {
-      this.setState({ people: TeacherChildEnum.CHILD_1 });
+  handleNoTeacherClick = () => {
+    if (this.state.people !== TeacherEnum.NO_TEACHER) {
+      this.setState({ people: TeacherEnum.NO_TEACHER });
 
       const { checked } = this.state;
       const newChecked = [...checked];
-      for (let i = 5; i <= 8; i++) {
+      for (let i = 6; i <= 10; i++) {
         // If there are teacher ratings checked, remove them
         if (checked.includes(i)) {
           const currentIndex = checked.indexOf(i);
@@ -169,32 +166,9 @@ class CenterRatingChecklistSeqAct extends React.Component {
     }
   };
 
-  handleChild2Click = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_2) {
-      this.setState({ people: TeacherChildEnum.CHILD_2 });
-
-      const { checked } = this.state;
-      const newChecked = [...checked];
-      for (let i = 5; i <= 8; i++) {
-        // If there are teacher ratings checked, remove them
-        if (checked.includes(i)) {
-          const currentIndex = checked.indexOf(i);
-          newChecked.splice(currentIndex);
-        }
-      }
-      this.setState({ checked: newChecked });
-    }
-  };
-
-  handleChild1TeacherClick = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_1_TEACHER) {
-      this.setState({ people: TeacherChildEnum.CHILD_1_TEACHER });
-    }
-  };
-
-  handleChild2TeacherClick = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_2_TEACHER) {
-      this.setState({ people: TeacherChildEnum.CHILD_2_TEACHER });
+  handleTeacherClick = () => {
+    if (this.state.people !== TeacherEnum.TEACHER) {
+      this.setState({ people: TeacherEnum.TEACHER });
     }
   };
 
@@ -270,8 +244,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 </Typography>
                 <div style={{ height: 20 }} />
                 <Typography variant={"subtitle2"} gutterBottom>
-                  Please select the number of children and teachers at the
-                  center:
+                  Please indicate who is present at the center:
                 </Typography>
                 <Grid
                   container
@@ -281,54 +254,28 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 >
                   <Grid item>
                     <Button
-                      onClick={this.handleChild1Click}
+                      onClick={this.handleNoTeacherClick}
                       size="small"
                       variant={
-                        this.state.people === TeacherChildEnum.CHILD_1
+                        this.state.people === TeacherEnum.NO_TEACHER
                           ? "contained"
                           : "outlined"
                       }
                     >
-                      1 child
+                      No Teacher
                     </Button>
                   </Grid>
                   <Grid item>
                     <Button
-                      onClick={this.handleChild2Click}
+                      onClick={this.handleTeacherClick}
                       size="small"
                       variant={
-                        this.state.people === TeacherChildEnum.CHILD_2
+                        this.state.people === TeacherEnum.TEACHER
                           ? "contained"
                           : "outlined"
                       }
                     >
-                      2+ children without teacher
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={this.handleChild1TeacherClick}
-                      size="small"
-                      variant={
-                        this.state.people === TeacherChildEnum.CHILD_1_TEACHER
-                          ? "contained"
-                          : "outlined"
-                      }
-                    >
-                      1 child with teacher
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={this.handleChild2TeacherClick}
-                      size="small"
-                      variant={
-                        this.state.people === TeacherChildEnum.CHILD_2_TEACHER
-                          ? "contained"
-                          : "outlined"
-                      }
-                    >
-                      2+ children with teacher
+                      Teacher Present
                     </Button>
                   </Grid>
                 </Grid>
@@ -352,7 +299,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            Using regular objects or sequential materials in a{" "}
+                            Using materials in a{" "}
                             <b>step-by-step, predictable way</b>
                           </ListItemText>
                         </ListItem>
@@ -368,8 +315,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            <b>Drawing</b> meaningful images or <b>writing</b>{" "}
-                            names or meaningful messages
+                            <b>Drawing</b> recognizable images or <b>writing</b>{" "}
+                            names or messages (letters or letter-like forms)
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -384,8 +331,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.childDisabled()}
                           />
                           <ListItemText>
-                            Following <b>formal rules of a game</b> and/or
-                            taking turns
+                            Playing a game with <b>set rules</b> and/or {" "}
+                            <b>taking turns</b>
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -401,7 +348,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           />
                           <ListItemText>
                             Speaking or acting according to a{" "}
-                            <b>predetermined scenario</b>
+                            <b>pretend scenario</b> that follows a
+                            predictable plot
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -417,37 +365,6 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           />
                           <ListItemText>None</ListItemText>
                         </ListItem>
-                        {/* <ListItem
-                          onClick={this.handleToggle(6)}
-                          disabled={this.childDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.childDisabled() &&
-                              this.state.checked.indexOf(6) !== -1
-                            }
-                            disabled={this.childDisabled()}
-                          />
-                          <ListItemText>
-                            Speaking or acting according to a{" "}
-                            <b>predetermined scenario</b>
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleToggle(7)}
-                          disabled={this.childDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.childDisabled() &&
-                              this.state.checked.indexOf(7) !== -1
-                            }
-                            disabled={this.childDisabled()}
-                          />
-                          <ListItemText>
-                            None
-                          </ListItemText>
-                        </ListItem> */}
                       </List>
                     </Card>
                   </Grid>
@@ -469,7 +386,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.teacherDisabled()}
                           />
                           <ListItemText>
-                            <b>Encouraging</b> sequential use of materials
+                            <b>Helping</b> children do sequential activities
+                            with manipulatives or toys
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -485,6 +403,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           />
                           <ListItemText>
                             <b>Demonstrating the steps</b> to an activity
+                            or game
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -499,8 +418,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disabled={this.teacherDisabled()}
                           />
                           <ListItemText>
-                            Helping children <b>act out</b> a dramatic play{" "}
-                            scenario or book
+                            Supporting children as they <b>act out</b> 
+                            a dramatic play scenario or book {" "}
                           </ListItemText>
                         </ListItem>
                         <ListItem
