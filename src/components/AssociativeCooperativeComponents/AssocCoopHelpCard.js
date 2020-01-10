@@ -57,111 +57,83 @@ function AssocCoopHelpCard(props) {
       <Table>
         <TableHead>
           <TableRow>
+            
             <TableCell className={classes.definitionTitle}>
-              TRANSITIONS BEGIN WHEN:
+           Child Behaviors            
             </TableCell>
-            <TableCell className={classes.definitionTitle}>
-              TRANSITIONS END WHEN:
-            </TableCell>
+
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
             <TableCell className={classes.definitionText}>
               <strong>
-                A majority (more than half) of the children are in transition
-              </strong>
+              Associative Interactions              </strong>
             </TableCell>
             <TableCell className={classes.definitionText}>
               <strong>
-                A majority (more than half) of the children have started the next
-                activity
+
+              Cooperative Interactions
+          
               </strong>
             </TableCell>
           </TableRow>
         </TableBody>
       </Table>
-      <Typography variant="subtitle2" gutterBottom style={{ padding: 10 }}>
-        While you are recording a transition, choose the button representing the{" "}
-        <strong>primary</strong> reason for that transition.{" "}
-        <strong>Change </strong>
-        the button if the primary reason changes during the same transition. Choose
-        the <strong>“Other”</strong> button if the reason for the transition is not
-        represented in the other buttons, and you will be prompted to explain the
-        reason in the Notes.
-      </Typography>
+     
       <Table>
         <TableHead>
-          <TableRow>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
-              Waiting in line/lining up
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
-              Traveling outside the classroom
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
-              Children waiting on teacher/materials
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
-              Classroom Routines
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
-              Behavior Management Disruption
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+ 
+       
           <TableRow>
             <TableCell padding="checkbox" className={classes.lineExamples}>
-              <strong>Lining up or waiting in line</strong>
+              <strong>Participating in a conversation about a shared activity</strong>
             </TableCell>
             <TableCell padding="checkbox" className={classes.travelingExamples}>
-              <strong>Walking from one part of the school to another</strong>
+              <strong>Engaging in an open-ended activity without clear roles or order</strong>
             </TableCell>
             <TableCell padding="checkbox" className={classes.waitingExamples}>
               <strong>
-                Delays or interruptions because teacher or materials are not ready
+              Following formal rules of a game and/or taking turns
               </strong>
             </TableCell>
             <TableCell padding="checkbox" className={classes.routinesExamples}>
-              <strong>Participating in routine, non-learning activities</strong>
+              <strong>Doing an activity together that has a predetermined sequence </strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.behaviorExamples}>
-              <strong>Delays or interruptions due to behavior management</strong>
-            </TableCell>
+ 
           </TableRow>
+          </TableHead>
+        <TableBody>
           <TableRow>
             <TableCell padding="checkbox" className={classes.lineExamples}>
-              Lining up to leave the classroom, playground, etc.
+            Talking about what kind of structure to build at blocks
             </TableCell>
             <TableCell padding="checkbox" className={classes.travelingExamples}>
-              Walking to the playground, library, music room, etc.
+            Pretending to be a family but it’s unclear who is the parent and who is the child; no defined storyline
             </TableCell>
             <TableCell padding="checkbox" className={classes.waitingExamples}>
-              Teacher stops an activity or delays the start of a new activity to
-              gather or prepare materials
+            Following the rules for a memory card game
             </TableCell>
             <TableCell padding="checkbox" className={classes.routinesExamples}>
-              Cleaning up, hand-washing, getting out cots or meal trays, etc.
+             Pretending to be a customer and server at a restaurant while using role speech (“What would you like to eat?”)
             </TableCell>
-            <TableCell padding="checkbox" className={classes.behaviorExamples}>
-              Teacher stops a learning activity to address behavior
-            </TableCell>
+           
           </TableRow>
           <TableRow>
             <TableCell padding="checkbox" className={classes.lineExamples}>
-              Children are lined up but are waiting to go to the next place
+
+            Talking while making pretend potions together at the sand table
             </TableCell>
             <TableCell
               padding="checkbox"
-              className={classes.travelingExamples}
-            ></TableCell>
+              className={classes.travelingExamples} >
+                Drawing together at the dry erase board
+              </TableCell>
             <TableCell padding="checkbox" className={classes.waitingExamples}>
-              Teacher stops an activity or delays the start of a new activity to do
-              something unrelated to activity
+            Following a set of rules for an invented game
             </TableCell>
             <TableCell padding="checkbox" className={classes.routinesExamples}>
-              Bathroom and/or water break in the classroom or hallway
+            Completing a pattern block design together
             </TableCell>
             <TableCell
               padding="checkbox"
@@ -170,8 +142,7 @@ function AssocCoopHelpCard(props) {
           </TableRow>
           <TableRow>
             <TableCell padding="checkbox" className={classes.lineExamples}>
-              Waiting in line for lunch
-            </TableCell>
+            Talking to a teacher about a book character            </TableCell>
             <TableCell
               padding="checkbox"
               className={classes.travelingExamples}
@@ -179,9 +150,10 @@ function AssocCoopHelpCard(props) {
             <TableCell
               padding="checkbox"
               className={classes.waitingExamples}
-            ></TableCell>
+            >
+            Moving cars around the blocks center together
+            </TableCell>
             <TableCell padding="checkbox" className={classes.routinesExamples}>
-              Moving from one activity to another (e.g., whole group to centers)
             </TableCell>
             <TableCell
               padding="checkbox"
@@ -190,6 +162,261 @@ function AssocCoopHelpCard(props) {
           </TableRow>
         </TableBody>
       </Table>
+
+
+
+      <Table>
+        <TableHead>
+          <TableRow>
+            
+            <TableCell className={classes.definitionTitle}>
+           Teacher Behaviors            
+            </TableCell>
+
+          </TableRow>
+        </TableHead>
+
+ 
+        <TableHead>
+ 
+       
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.lineExamples}>
+              <strong>Participating in children’s play</strong>
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.travelingExamples}>
+              <strong>
+Asking questions to extend children’s thinking about a shared activity
+</strong>
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.waitingExamples}>
+              <strong>
+
+              Encouraging children to share, work, or interact with each other
+              </strong>
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.routinesExamples}>
+              <strong>Helping children find the words to communicate </strong>
+            </TableCell>
+ 
+          </TableRow>
+          </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.lineExamples}>
+            
+Talking to children about their play-doh creations
+
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.travelingExamples}>
+
+            Asking children what will happen next during dramatic play
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.waitingExamples}>
+
+            Demonstrating how to play a new game
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.routinesExamples}>
+
+            Prompting children to ask peers to play or share a material
+            </TableCell>
+           
+          </TableRow>
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.lineExamples}>
+
+
+            Co-writing a label with a child for his drawing
+            </TableCell>
+            <TableCell
+              padding="checkbox"
+              className={classes.travelingExamples} >
+
+Asking children what shape of blocks they will need to keep their building from falling
+              </TableCell>
+            <TableCell padding="checkbox" className={classes.waitingExamples}>
+
+
+            Modeling the steps for sharing
+
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.routinesExamples}>
+            Helping children solve problems during games or other shared activities (Say, “It’s my turn.”)
+
+            </TableCell>
+            <TableCell
+              padding="checkbox"
+              className={classes.behaviorExamples}
+            >
+              
+              Taking on a role in dramatic play
+
+
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.lineExamples}>
+            Asking children what they think a character will do next while reading a book together
+
+           </TableCell>
+            <TableCell
+              padding="checkbox"
+              className={classes.travelingExamples}
+            ></TableCell>
+            <TableCell
+              padding="checkbox"
+              className={classes.waitingExamples}
+            >
+              Giving positive feedback when children share or interact
+
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.routinesExamples}>
+
+            </TableCell>
+            <TableCell
+              padding="checkbox"
+              className={classes.behaviorExamples}
+            ></TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+
+      <Table>
+        <TableHead>
+          <TableRow>
+            
+            <TableCell className={classes.definitionTitle}>
+           Child Behaviors            
+            </TableCell>
+
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell className={classes.definitionText}>
+              <strong>
+              Associative Interactions              </strong>
+            </TableCell>
+            <TableCell className={classes.definitionText}>
+
+            Participating in a conversation about a shared activity
+            </TableCell>
+            <TableCell className={classes.definitionText}>
+
+
+            Example: Talking about what kind of structure to build at blocks; Making pretend potions together with cups at the sand table; Talking to a teacher about a book character
+            </TableCell>
+            <TableCell className={classes.definitionText}>
+
+
+            Engaging in an open-ended activity without clear roles or order
+            </TableCell>
+            <TableCell className={classes.definitionText}>
+
+
+            Example: Pretending to be a family but it’s unclear who is the parent or child and the scenario is unclear; Moving cars around the blocks center together
+            </TableCell>
+            <TableCell className={classes.definitionText}>
+              <strong>
+              Cooperative Interactions              </strong>
+            </TableCell>
+            <TableCell className={classes.definitionText}>
+
+
+            Following formal rules of a game and/or taking turns
+</TableCell>
+<TableCell className={classes.definitionText}>
+
+
+
+Example: Following the rules for a memory card game
+</TableCell>
+<TableCell className={classes.definitionText}>
+
+
+
+Talking about or doing an activity together that has a predetermined sequence 
+</TableCell>
+<TableCell className={classes.definitionText}>
+
+
+Example: Pretending to be a customer and server at a restaurant while using role speech (“What would you like to eat?”);
+Completing a pattern block design together
+</TableCell>
+
+<TableCell className={classes.definitionText}>
+              <strong>
+              Teacher Behaviors              </strong>
+            </TableCell>
+            <TableCell className={classes.definitionText}>
+
+
+
+            Participating in children’s play
+</TableCell>
+<TableCell className={classes.definitionText}>
+
+
+
+
+Example: Talking to children about their play-doh creations; Co-writing a label with a child for his drawing; Taking on a role in dramatic play
+</TableCell>
+<TableCell className={classes.definitionText}>
+
+
+
+
+Asking questions to extend children’s thinking about a shared activity
+</TableCell>
+<TableCell className={classes.definitionText}>
+
+
+Example: Asking children what will happen next during dramatic play or what shape of blocks they will need to keep their building from falling
+
+
+</TableCell>
+<TableCell className={classes.definitionText}>
+
+
+
+Encouraging children to share, work, or interact with each other
+
+
+</TableCell>
+<TableCell className={classes.definitionText}>
+
+
+
+Example: Demonstrating how to play a new game; Teaching children the steps for sharing; giving positive feedback when children share or interact 
+
+</TableCell>
+<TableCell className={classes.definitionText}>
+
+
+
+
+Helping children find the words to communicate
+</TableCell>
+<TableCell className={classes.definitionText}>
+
+
+
+Example: Prompting children to ask peers to play or share a material; helping children solve problems during games (Say, “It’s my turn.”)
+
+</TableCell>
+
+
+          </TableRow>
+        </TableBody>
+      </Table>
+
+
+
+
+
+
+
+
     </div>
   )
 }

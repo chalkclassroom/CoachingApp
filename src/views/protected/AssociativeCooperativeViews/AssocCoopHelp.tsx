@@ -89,12 +89,11 @@ class AssocCoopHelp extends React.Component<Props, State> {
               justify="flex-start"
             >
               <Typography variant="h4" gutterBottom>
-                Reducing Transitions
+              Associative and Cooperative Interactions
+
               </Typography>
               <Typography variant="subtitle2" gutterBottom>
-                Remember, a <strong>transition</strong> is a period of time in
-                which <strong>most</strong> of the class is not involved in a
-                learning activity.
+<strong>Hints + Reminders: Classifying Associative and Cooperative Interactions</strong>
               </Typography>
               <AssocCoopHelpCard />
             </Grid>
