@@ -32,6 +32,7 @@ import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from "@material-ui/core/es";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
@@ -91,10 +92,12 @@ const styles = {
     borderWidth: "2px",
     fontSize: "15px",
     alignSelf: "flex-end",
-    marginTop: "auto"
+    marginTop: "auto",
+    fontFamily: "Arimo"
   },
   gridTopMargin: {
-    marginTop: "5px"
+    marginTop: "5px",
+    fontFamily: "Arimo"
   }
 };
 
@@ -216,131 +219,139 @@ class Dashboard extends React.Component {
     const magic8 = this.props.magic8;
     return (
       <div>
-        {this.state.help ? (
-          <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
-            {(() => {
-              switch (magic8) {
-                case "Transition Time":
-                  return <TransitionTimeHelp />;
-                case "Classroom Climate":
-                  return <ClassroomClimateHelp />;
-                default:
-                  return <div />;
-              }
-            })()}
-          </ClickAwayListener>
-        ) : this.state.notes ? (
-          <FirebaseContext.Consumer>
-            {firebase => (
-              <Notes
-                open={true}
-                onClose={this.handleNotes}
-                color={this.props.color}
-                text={magic8 + " Notes"}
-                firebase={firebase}
-              />
-            )}
-          </FirebaseContext.Consumer>
-        ) : this.state.incomplete ? (
-          <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
-            <IncompleteObservation />
-          </ClickAwayListener>
-        ) : (
-          <div />
-        )}
-        <Card className={classes.card}>
-          <Grid
-            container
-            flexGrow={1}
-            padding="50"
-            spacing={0}
-            direction="column"
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item className={classes.iconGrid}>
-              <img
-                src={this.state.icon}
-                alt="Magic 8 Icon"
-                className={classes.icon}
-              />
-            </Grid>
-            <Grid
-              item
-              className={classes.infoDisplayGrid}
-              style={{ alignItems: this.props.infoPlacement }}
-            >
-              {this.props.infoDisplay}
-            </Grid>
+        <head>
+          <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        </head>
+        <body>
+          {this.state.help ? (
+            <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
+              {(() => {
+                switch (magic8) {
+                  case "Transition Time":
+                    return <TransitionTimeHelp />;
+                  case "Classroom Climate":
+                    return <ClassroomClimateHelp />;
+                  case "Sequential Activities":
+                    return <SequentialActivitiesHelp />;
+                  default:
+                    return <div />;
+                }
+              })()}
+            </ClickAwayListener>
+          ) : this.state.notes ? (
+            <FirebaseContext.Consumer>
+              {firebase => (
+                <Notes
+                  open={true}
+                  onClose={this.handleNotes}
+                  color={this.props.color}
+                  text={magic8 + " Notes"}
+                  firebase={firebase}
+                />
+              )}
+            </FirebaseContext.Consumer>
+          ) : this.state.incomplete ? (
+            <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
+              <IncompleteObservation />
+            </ClickAwayListener>
+          ) : (
+            <div />
+          )}
+          <Card className={classes.card}>
             <Grid
               container
-              className={classes.gridTopMargin}
-              direction="row"
-              spacing={16}
-              alignItems="center"
-              alignContent="center"
+              flexGrow={1}
+              padding="50"
+              spacing={0}
+              direction="column"
               justify="center"
+              alignItems="center"
             >
-              <Button className="lookFor" onClick={this.handleHelpModal}>
+              <Grid item className={classes.iconGrid}>
                 <img
-                  src={this.state.lookForsIcon}
-                  alt="Look-Fors"
-                  className={classes.helpIcon}
+                  src={this.state.icon}
+                  alt="Magic 8 Icon"
+                  className={classes.icon}
                 />
-              </Button>
-              <Button className="notes" onClick={this.handleNotes}>
-                <img
-                  src={this.state.notesIcon}
-                  alt="Notes"
-                  className={classes.helpIcon}
-                />
-              </Button>
-            </Grid>
-            <Grid item className={classes.gridTopMargin}>
-              Start Time: {this.state.time}
-            </Grid>
-            {this.props.completeObservation ? (
-              <Grid item className={classes.completeGrid}>
-                <FirebaseContext.Consumer>
-                  {firebase => (
-                    <YesNoDialog
-                      buttonText={<b>COMPLETE OBSERVATION</b>}
-                      buttonVariant={"outlined"}
-                      buttonColor={this.props.color}
-                      buttonMargin={10}
-                      dialogTitle={
-                        "Are you sure you want to complete this observation?"
-                      }
-                      shouldOpen={true}
-                      onAccept={() => {
-                        magic8 === "Classroom Climate"
-                          ? this.emptyClimateStack()
-                          : magic8 === "Transition Time"
-                          ? this.resetTransitionTime()
-                          : this.deleteAllCenters();
-                        this.props.history.push({
-                          pathname: "/Home",
-                          state: this.props.history.state
-                        });
-                        firebase.endSession();
-                      }}
-                    />
-                  )}
-                </FirebaseContext.Consumer>
               </Grid>
-            ) : (
-              <Grid item className={classes.completeGrid}>
-                <Button
-                  variant="outlined"
-                  onClick={this.handleIncomplete}
-                  className={classes.completeButton}
-                >
-                  <b>COMPLETE OBSERVATION</b>
+              <Grid
+                item
+                className={classes.infoDisplayGrid}
+                style={{ alignItems: this.props.infoPlacement }}
+              >
+                {this.props.infoDisplay}
+              </Grid>
+              <Grid
+                container
+                className={classes.gridTopMargin}
+                direction="row"
+                spacing={16}
+                alignItems="center"
+                alignContent="center"
+                justify="center"
+              >
+                <Button className="lookFor" onClick={this.handleHelpModal}>
+                  <img
+                    src={this.state.lookForsIcon}
+                    alt="Look-Fors"
+                    className={classes.helpIcon}
+                  />
+                </Button>
+                <Button className="notes" onClick={this.handleNotes}>
+                  <img
+                    src={this.state.notesIcon}
+                    alt="Notes"
+                    className={classes.helpIcon}
+                  />
                 </Button>
               </Grid>
-            )}
-          </Grid>
-        </Card>
+              <Grid item className={classes.gridTopMargin}>
+                Start Time: {this.state.time}
+              </Grid>
+              {this.props.completeObservation ? (
+                <Grid item className={classes.completeGrid}>
+                  <FirebaseContext.Consumer>
+                    {firebase => (
+                      <YesNoDialog
+                        buttonText={<b>COMPLETE OBSERVATION</b>}
+                        buttonVariant={"outlined"}
+                        buttonColor={this.props.color}
+                        buttonMargin={10}
+                        dialogTitle={
+                          "Are you sure you want to complete this observation?"
+                        }
+                        shouldOpen={true}
+                        onAccept={() => {
+                          magic8 === "Classroom Climate"
+                            ? this.emptyClimateStack()
+                            : magic8 === "Transition Time"
+                            ? this.resetTransitionTime()
+                            : this.deleteAllCenters();
+                          this.props.history.push({
+                            pathname: "/Home",
+                            state: this.props.history.state
+                          });
+                          firebase.endSession();
+                        }}
+                      />
+                    )}
+                  </FirebaseContext.Consumer>
+                </Grid>
+              ) : (
+                <Grid item className={classes.completeGrid}>
+                  <Button
+                    variant="outlined"
+                    onClick={this.handleIncomplete}
+                    className={classes.completeButton}
+                  >
+                    <b>COMPLETE OBSERVATION</b>
+                  </Button>
+                </Grid>
+              )}
+            </Grid>
+          </Card>
+        </body>
       </div>
     );
   }
