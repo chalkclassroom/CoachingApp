@@ -123,7 +123,7 @@ class ActionPlanForm extends React.Component<Props, State> {
           >
             <Grid item>
 {/*               {this.props.location.state.teacher.firstName} */}
-              {this.props.teacherFirstName + this.props.teacherLastName}
+              {this.props.teacherFirstName + " " + this.props.teacherLastName}
             </Grid>
           </Grid>
         </Grid>
