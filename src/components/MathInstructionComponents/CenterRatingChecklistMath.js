@@ -30,10 +30,8 @@ const styles = {
 };
 
 const TeacherChildEnum = {
-   CHILD_1: 1,
-  CHILD_2: 2,
-  CHILD_1_TEACHER: 3,
-  CHILD_2_TEACHER: 4 
+  NO_TEACHER:1,
+  TEACHER_PRESENT:2
 };
 
 const teacherBehaviors = {
@@ -147,42 +145,21 @@ class CenterRatingChecklistMath extends React.Component {
 
   childDisabled = () => {
     return (
-      this.state.people === TeacherChildEnum.CHILD_1 ||
       this.state.people === undefined
     );
   };
 
   teacherDisabled = () => {
     return (
-      this.state.people === TeacherChildEnum.CHILD_1 ||
-      this.state.people === TeacherChildEnum.CHILD_2 ||
+      this.state.people === TeacherChildEnum.NO_TEACHER ||
       this.state.people === undefined
     );
   };
 
-  handleChild1Click = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_1) {
-      this.setState({ people: TeacherChildEnum.CHILD_1 });
-      this.setState({ acType: teacherBehaviors.noSupp });
-      this.setState({ acType: childBehaviors.noOpp });
-
-      const { checked } = this.state;
-      const newChecked = [...checked];
-      for (let i = 5; i <= 8; i++) {
-        // If there are teacher ratings checked, remove them
-        if (checked.includes(i)) {
-          const currentIndex = checked.indexOf(i);
-          newChecked.splice(currentIndex);
-        }
-      }
-      this.setState({ checked: newChecked });
-    }
-  };
-
-  handleChild2Click = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_2) {
-      this.setState({ people: TeacherChildEnum.CHILD_2 });
-      this.setState({ acType: teacherBehaviors.noSupp });
+  handleTeacherClick = () => {
+    if (this.state.people !== TeacherChildEnum.TEACHER_PRESENT) {
+      this.setState({ people: TeacherChildEnum.TEACHER_PRESENT });
+      this.setState({ acType: teacherBehaviors.ac });
       this.setState({ acType: childBehaviors.ac });
 
       const { checked } = this.state;
@@ -198,22 +175,45 @@ class CenterRatingChecklistMath extends React.Component {
     }
   };
 
-  handleChild1TeacherClick = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_1_TEACHER) {
-      this.setState({ people: TeacherChildEnum.CHILD_1_TEACHER });
-      this.setState({ acType: teacherBehaviors.support });
+  handleNoTeacherClick = () => {
+    if (this.state.people !== TeacherChildEnum.NO_TEACHER) {
+      this.setState({ people: TeacherChildEnum.NO_TEACHER });
+      this.setState({ acType: teacherBehaviors.noSupp });
       this.setState({ acType: childBehaviors.ac });
+
+      const { checked } = this.state;
+      const newChecked = [...checked];
+      for (let i = 5; i <= 8; i++) {
+        // If there are teacher ratings checked, remove them
+        if (checked.includes(i)) {
+          const currentIndex = checked.indexOf(i);
+          newChecked.splice(currentIndex);
+        }
+      }
+      this.setState({ checked: newChecked });
     }
   };
 
-  handleChild2TeacherClick = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_2_TEACHER) {
-      this.setState({ people: TeacherChildEnum.CHILD_2_TEACHER });
-      this.setState({ acType: teacherBehaviors.support });
+
+ handleNoTeacherClick = () => {
+    if (this.state.people !== TeacherChildEnum.NO_TEACHER) {
+      this.setState({ people: TeacherChildEnum.NO_TEACHER });
+      this.setState({ acType: teacherBehaviors.noSupp });
       this.setState({ acType: childBehaviors.ac });
+
+      const { checked } = this.state;
+      const newChecked = [...checked];
+      for (let i = 5; i <= 8; i++) {
+        // If there are teacher ratings checked, remove them
+        if (checked.includes(i)) {
+          const currentIndex = checked.indexOf(i);
+          newChecked.splice(currentIndex);
+        }
+      }
+      this.setState({ checked: newChecked });
     }
   };
-
+ 
   render() {
     return (
       <div className={this.props.classes.root}>
@@ -283,7 +283,7 @@ class CenterRatingChecklistMath extends React.Component {
                 </Typography>
                 <div style={{ height: 20 }} />
                 <Typography variant={"subtitle2"} gutterBottom>
-                  Please select the number of children and teachers at the
+                  Please select if teacher is present or not at the
                   center:
                 </Typography>
                 <Grid
@@ -292,59 +292,33 @@ class CenterRatingChecklistMath extends React.Component {
                   justify={"space-around"}
                   xs={12}
                 >
+                  </Grid> 
                   <Grid item>
                     <Button
-                      onClick={this.handleChild1Click}
+                      onClick={this.handleNoTeacherClick} 
                       size="small"
                       variant={
-                        this.state.people === TeacherChildEnum.CHILD_1
+                        this.state.people === TeacherChildEnum.NO_TEACHER
                           ? "contained"
                           : "outlined"
                       }
                     >
-                      1 child
+                      no teacher
                     </Button>
                   </Grid>
                   <Grid item>
                     <Button
-                      onClick={this.handleChild2Click}
+                      onClick={this.handleTeacherClick}
                       size="small"
                       variant={
-                        this.state.people === TeacherChildEnum.CHILD_2
+                        this.state.people === TeacherChildEnum.TEACHER_PRESENT
                           ? "contained"
                           : "outlined"
                       }
                     >
-                      2+ children without teacher
+                     teacher present
                     </Button>
                   </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={this.handleChild1TeacherClick}
-                      size="small"
-                      variant={
-                        this.state.people === TeacherChildEnum.CHILD_1_TEACHER
-                          ? "contained"
-                          : "outlined"
-                      }
-                    >
-                      1 child with teacher
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={this.handleChild2TeacherClick}
-                      size="small"
-                      variant={
-                        this.state.people === TeacherChildEnum.CHILD_2_TEACHER
-                          ? "contained"
-                          : "outlined"
-                      }
-                    >
-                      2+ children with teacher -- Update Needed
-                    </Button>
-                  </Grid>
-                </Grid>
                 <div style={{ height: 20 }} />
                 <Grid container direction={"row"} spacing={16} xs={12}>
                   <Grid item xs={6}>
@@ -472,7 +446,7 @@ class CenterRatingChecklistMath extends React.Component {
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(9)
+                              this.state.checked.includes(8)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -483,19 +457,20 @@ class CenterRatingChecklistMath extends React.Component {
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(10)}
+                          onClick={this.handleToggle(9)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(10)
+                              this.state.checked.includes(9)
                             }
                             disabled={this.teacherDisabled()}
                           />
                           <ListItemText>None</ListItemText>
                         </ListItem>
                       </List>
+                      
                     </Card>
                   </Grid>
                 </Grid>
