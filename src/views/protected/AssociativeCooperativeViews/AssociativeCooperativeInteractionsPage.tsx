@@ -6,6 +6,8 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
 import CenterMenuAssocCoop from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
+import AssocCoopHelp from "../AssociativeCooperativeViews/AssocCoopHelp"
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 const styles: object = {
   root: {
@@ -38,7 +40,8 @@ interface State {
 class AssociativeCooperativeInteractionsPage extends React.Component<Props, State> {
   state = {
     auth: true,
-    completeEnabled: false,
+    help: false,
+    completeEnabled: false
   };
 
   handleCompleteButton = (enable: boolean) => {
@@ -55,14 +58,21 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => (
-            <AppBar
-              firebase={firebase}
+          {(firebase: object) => (<AppBar firebase={firebase}
               //classes={{ root: this.props.classes.grow }}
               className={classes.grow}
             />
           )}
         </FirebaseContext.Consumer>
+
+        {this.state.help ? (
+          <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
+            <AssocCoopHelp />
+          </ClickAwayListener>
+          ) : (
+            <div />
+          )}
+
         {/* this.state.recs ? (
           <FirebaseContext.Consumer>
             {firebase => (
