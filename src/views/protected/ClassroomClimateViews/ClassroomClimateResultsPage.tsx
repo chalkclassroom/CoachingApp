@@ -27,11 +27,12 @@ import ClimateCoachingQuestions from "../../../components/ClassroomClimateCompon
 import ClimateSummarySlider from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateSummarySlider";
 
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     height: "100vh",
-    flexDirection: "column"
+    flexDirection: "column",
+    overflow: "hidden"
   },
   main: {
     flex: 1,
@@ -81,14 +82,6 @@ const styles = {
   }
 };
 
-const ViewEnum = {
-  SUMMARY: 1,
-  DETAILS: 2,
-  TRENDS: 3,
-  NOTES: 4,
-  NEXT_STEPS: 5
-};
-
 interface Props {
   classes: Style,
   location: { state: { teacher: { id: string }}},
@@ -130,143 +123,27 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-    // this.handleAppend = this.handleAppend.bind(this);
-    // this.handleTypeChange = this.handleTypeChange.bind(this);
+
+    this.state = {
+      disapprovalBehaviorCount: 0,
+      redirectionsBehaviorCount: 0,
+      nonspecificBehaviorCount: 0,
+      specificBehaviorCount: 0,
+      averageToneRating: 0,
+      sessionId: '',
+      trendsDates: [],
+      trendsPos: [],
+      trendsNeg: [],
+      notes: []
+    };
   }
 
-  state = {
-    // auth: true,
-    // view: ViewEnum.SUMMARY,
-    // sessionDates: [],
-    disapprovalBehaviorCount: 0,
-    redirectionsBehaviorCount: 0,
-    nonspecificBehaviorCount: 0,
-    specificBehaviorCount: 0,
-    averageToneRating: 0,
-    //percentage: false,
-    sessionId: '',
-    trendsDates: [],
-    trendsPos: [],
-    trendsNeg: [],
-    //trendsPosCol: [],
-    //trendsNegCol: [],
-    //notes: []
-  };
-
   /** lifecycle method invoked after component mounts */
-  /* componentDidMount() {
-    const teacherId = this.props.location.state.teacher.id;
-    console.log(this.props.location.state);
-    this.handleDateFetching(this.props.location.state.teacher.id);
-    console.log(teacherId);
-    console.log("handle behavior count results fetching called");
-    const firebase = this.context;
-    firebase.fetchBehaviourTypeCount(this.state.sessionId).then(() => {
-      console.log(
-        this.state.disapprovalBehaviorCount +
-          " " +
-          this.state.redirectionsBehaviorCount +
-          " " +
-          this.state.nonspecificBehaviorCount +
-          " " +
-          this.state.specificBehaviorCount
-      );
-    });
-    this.handleTrendsFetching(teacherId);
-  } */
-
   componentDidMount() {
     const firebase = this.context;
     firebase.fetchBehaviourTypeCount(this.state.sessionId);
     firebase.fetchAvgToneRating(this.state.sessionId);
   }
-
-  /**
-   * @param {Object} entry 
-   */
-  /* handleAppend(entry) {
-    const newEntries = this.state.entries;
-    // entry.type = this.state.type;
-    newEntries.push(entry);
-    this.setState({ entries: newEntries });
-
-    // this.handleSpreadsheetAppend(entry);
-
-    this.handleDBinsert(entry);
-  } */
-
-  // handleTypeChange(newType) {
-  //     this.setState({ type: newType });
-  //     this.changeHex(newType);
-  // }
-
-  /* handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
-
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleHelpModal = () => {
-    this.setState({ help: true });
-  };
-
-  handleClickAway = () => {
-    this.setState({ help: false });
-  };
-
-  handleDBinsert = async entry => {
-    await ImmortalDB.set(
-      JSON.stringify(this.state.dbCounter),
-      JSON.stringify(entry)
-    );
-
-    this.setState({ dbCounter: this.state.dbCounter + 1 });
-  };
- */
-  /* handleSpreadsheetAppend = entry => {
-        let url = new URL(spreadsheetData.scriptLink),
-            params = {
-                sheet: "ClassroomClimateTime",
-                del: "false",
-                TrnDur: entry.time
-            };
-        Object.keys(params).forEach(key =>
-            url.searchParams.append(key, params[key])
-        );
-        fetch(url, {
-            method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: {
-                "content-type": "application/json"
-            }
-        })
-            .then(response => console.log("Success"))
-            .catch(error => console.error("Error:", error));
-    }; */
-
-  /**
-   * @param {string} teacherId
-   */
-  /* handleDateFetching = (teacherId) => {
-    console.log("handle date fetching called");
-    const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "climate").then(dates =>
-      this.setState({
-        sessionDates: dates
-      })
-    );
-
-    firebase.fetchAvgToneRating(this.state.sessionId);
-    firebase.fetchBehaviourTypeCount(this.state.sessionId);
-    firebase.fetchBehaviourTrend(teacherId);
-  }; */
 
   /**
    * @param {string} teacherId
@@ -345,9 +222,9 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   };
 
   /**
-   * @param {event} event
+   * @param {SyntheticEvent} event
    */
-  changeSessionId = event => {
+  changeSessionId = (event: React.SyntheticEvent) => {
     console.log("sessionId", event.target.value);
     let specificCount = 0;
     let nonspecificCount = 0;
@@ -360,21 +237,21 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       () => {
         this.handleNotesFetching(this.state.sessionId);
         const firebase = this.context;
-        firebase.fetchAvgToneRating(this.state.sessionId).then(json =>
-          json.map(toneRating => {
+        firebase.fetchAvgToneRating(this.state.sessionId).then((json: Array<{average: number}>) =>
+          json.forEach(toneRating => {
             this.setState({
               averageToneRating: toneRating.average
             });
           })
         );
 
-        firebase
+        /* firebase
           .fetchBehaviourTypeCount(this.state.sessionId)
-          .then(json => console.log("attempt behavior count: ", json));
+          .then((json: Array<{behaviorResponse: string, count: number}>) => console.log("attempt behavior count: ", json)); */
         // .gets json, then map to the state
 
-        firebase.fetchBehaviourTypeCount(this.state.sessionId).then(json => {
-          json.map(behavior => {
+        firebase.fetchBehaviourTypeCount(this.state.sessionId).then((json: Array<{behaviorResponse: string, count: number}>) => {
+          json.forEach(behavior => {
             if (behavior.behaviorResponse === "specificapproval") {
               specificCount = behavior.count;
             } else if (behavior.behaviorResponse === "nonspecificapproval") {
@@ -396,11 +273,16 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     );
   };
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired
+  };
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
@@ -428,16 +310,16 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           trendsGraph={<ClimateTrendsGraph data={this.trendsFormatData}/>}
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
+          notes={this.state.notes}
           questions={<ClimateCoachingQuestions />}
+          teacherFirstName={this.props.location.state.teacher.firstName}
+          teacherLastName={this.props.location.state.teacher.lastName}
         />
       </div>
     );
   }
 }
 
-ClassroomClimateResultsPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired
-};
+
 ClassroomClimateResultsPage.contextType = FirebaseContext;
 export default withStyles(styles)(ClassroomClimateResultsPage);

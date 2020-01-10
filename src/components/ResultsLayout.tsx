@@ -15,6 +15,7 @@ import Typography from "@material-ui/core/Typography/Typography";
 import NotesListDetailTable from "./ResultsComponents/NotesListDetailTable";
 import "chartjs-plugin-datalabels";
 import ResultsDashboard from './ResultsDashboard';
+import ActionPlanForm from './ActionPlanForm';
 
 const styles: object = {
   root: {
@@ -66,7 +67,10 @@ interface Props {
   trendsGraph: React.ReactNode,
   changeSessionId: any,
   sessionId: string,
-  questions: React.ReactNode
+  questions: React.ReactNode,
+  notes: Array<{timestamp: any, content: string}>,
+  teacherFirstName: string,
+  teacherLastName: string
 }
 
 interface Style {
@@ -101,7 +105,7 @@ class ResultsLayout extends React.Component<Props, State> {
       //sessionId: '',
       view: ViewEnum.DATA,
       tabValue: 0,
-      notes: [],
+      // notes: [],
       sessionDates: [],
     }
   }
@@ -173,75 +177,8 @@ class ResultsLayout extends React.Component<Props, State> {
     console.log('date fetching was called');
   };
 
-  /**
-   * @param {string} sessionId
-   */
-  handleNotesFetching = (sessionId: string) => {
-    const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then(notesArr => {
-      const formattedNotesArr: {id: number, content: string, timestamp: any}[] = [];
-      notesArr.map(note => {
-        const newTimestamp = new Date(
-          note.timestamp.seconds * 1000
-        ).toLocaleString("en-US", {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true
-        });
-        formattedNotesArr.push({
-          id: note.id,
-          content: note.content,
-          timestamp: newTimestamp
-        });
-      });
-      this.setState({
-        notes: formattedNotesArr
-      });
-    });
-  };
-
-  /**
-   * @param {event} event
-   */
-  // changeSessionId = (event) => {
-  //   this.setState({
-  //     sessionId: event.target.value,
-  //   }, () => {
-  //     this.handleNotesFetching(this.state.sessionId);
-  //     const firebase = this.context;
-
-      // this.props.firebase.fetchSummary();
-      // this.props.firebase.fetchDetails();
-
-      /* firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
-        console.log("the start date is ", summary[0].startDate.value);
-        console.log("the total transition time is ", summary[0].total);
-        console.log("the session total is ", summary[0].sessionTotal);
-        console.log("the learning activity time is ", summary[0].sessionTotal - summary[0].total);
-        this.setState({
-          transitionTime: summary[0].total,
-          sessionTotal: summary[0].sessionTotal,
-          learningActivityTime: summary[0].sessionTotal - summary[0].total
-        })
-      });
-
-      firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
-        this.setState({
-          sessionLine: Math.round(((type[0].line/type[0].total)*100)),
-          sessionTraveling: Math.round(((type[0].traveling/type[0].total)*100)),
-          sessionWaiting: Math.round(((type[0].waiting/type[0].total)*100)),
-          sessionRoutines: Math.round(((type[0].routines/type[0].total)*100)),
-          sessionBehaviorManagement: Math.round(((type[0].behaviorManagement/type[0].total)*100)),
-          sessionOther: Math.round(((type[0].other/type[0].total)*100)),
-          transitionTime: type[0].total
-        })
-      }); */
-  //})};
-
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
-    // const teacherId = this.props.location.state.teacher.id;
-    // this.props.handleTrendsFetch(teacherId);
     this.handleDateFetching(this.props.teacherId);
     this.props.handleTrendsFetch(this.props.teacherId);
   }
@@ -291,9 +228,9 @@ class ResultsLayout extends React.Component<Props, State> {
                         textColor="primary"
                         variant="fullWidth"
                       >
-                        <Tab label="Summary" onClick={this.handleSummary} />
-                        <Tab label="Details" onClick={this.handleDetails} />
-                        <Tab label="Trends" onClick={this.handleTrends} />
+                        <Tab label="Summary" onClick={this.handleSummary} style={{fontFamily: "Arimo"}} />
+                        <Tab label="Details" onClick={this.handleDetails} style={{fontFamily: "Arimo"}} />
+                        <Tab label="Trends" onClick={this.handleTrends} style={{fontFamily: "Arimo"}} />
                       </Tabs>
                     </TabBar>
                   </Grid>
@@ -305,7 +242,7 @@ class ResultsLayout extends React.Component<Props, State> {
                             {this.props.summary}
                           </div>
                         ) : (
-                          <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+                          <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
                             Please choose a date from the dropdown menu.
                           </Typography>
                         )}
@@ -318,8 +255,8 @@ class ResultsLayout extends React.Component<Props, State> {
                               {this.props.details}
                           </div>
                           ) : (
-                            <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
-                            Please choose a date from the dropdown menu.
+                            <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
+                              Please choose a date from the dropdown menu.
                             </Typography>
                           )}
                         </Grid>
@@ -335,7 +272,7 @@ class ResultsLayout extends React.Component<Props, State> {
                 <div className={classes.resultsContent}>
                   <Grid item>
                     <NotesListDetailTable
-                      data={this.state.notes}
+                      data={this.props.notes}
                       style={{overflow:"hidden", minWidth: '100%'}}
                     />
                   </Grid>
@@ -409,7 +346,9 @@ class ResultsLayout extends React.Component<Props, State> {
                   </Grid> */}
                 </div>
               ) : this.state.view === ViewEnum.ACTION_PLAN ? (
-                <div className={classes.resultsContent} /> // replace this null with next steps content
+                <div className={classes.resultsContent} >
+                  <ActionPlanForm teacherFirstName={this.props.teacherFirstName} teacherLastName={this.props.teacherLastName}/>
+                </div>
               ) : null}
             </div>
           </Grid>

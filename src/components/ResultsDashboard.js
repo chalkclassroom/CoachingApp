@@ -86,12 +86,14 @@ const styles = {
     textAlign: "center",
     color: "#094492",
     borderColor: "#094492",
+    fontFamily: "Arimo"
   },
   viewButtonsSelected: {
     minWidth: 150,
     textAlign: "center",
     color: "#fff",
-    backgroundColor: "#094492"
+    backgroundColor: "#094492",
+    fontFamily: "Arimo"
   },
 };
 

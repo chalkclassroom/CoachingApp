@@ -88,7 +88,8 @@ class DataQuestions extends React.Component<Props, {}> {
                 style={{
                   textDecoration: this.props.addedToPrep.includes(item.name)
                     ? "underline"
-                    : null
+                    : null,
+                  fontFamily: "Arimo"
                 }}
               >
                 {item.title}
@@ -102,7 +103,7 @@ class DataQuestions extends React.Component<Props, {}> {
                 <Grid item xs={10}>
                   <div className={classes.expansionPanelText}>
                     
-                      <ul>
+                      <ul style={{fontFamily: "Arimo"}}>
                         {questions}
                       </ul>
                     

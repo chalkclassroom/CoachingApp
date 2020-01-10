@@ -115,7 +115,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
             </Button>
           </Grid>
         </Grid>
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh"}}>
+        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh", fontFamily: "Arimo"}}>
           <Grid
             item xs={2}
             // className = {classes.buttonText}
