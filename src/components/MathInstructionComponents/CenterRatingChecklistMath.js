@@ -292,7 +292,7 @@ class CenterRatingChecklistMath extends React.Component {
                   justify={"space-around"}
                   xs={12}
                 >
-                  </Grid> 
+                  
                   <Grid item>
                     <Button
                       onClick={this.handleNoTeacherClick} 
@@ -319,9 +319,11 @@ class CenterRatingChecklistMath extends React.Component {
                      teacher present
                     </Button>
                   </Grid>
+                  </Grid> 
                 <div style={{ height: 20 }} />
                 <Grid container direction={"row"} spacing={16} xs={12}>
-                  <Grid item xs={6}>
+                  <Grid item
+                   xs={6}>
                     <Card>
                       <Typography variant="h6" align={"center"}>
                         Math Types
