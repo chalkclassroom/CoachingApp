@@ -25,12 +25,16 @@ const styles = () => ({
   definitionText: {
     backgroundColor: "#c5aee7",
     color: "white",
-    width: "50%"
+    width: "50%",
+    fontSize: 14,
+    textAlign: "center"
   },
   definition2Text: {
     backgroundColor: "#8b5fd1",
     color: "white",
-    width: "50%"
+    width: "50%",
+    fontSize: 14,
+    textAlign: "center"
   },
   buttonACTitle: {
     backgroundColor: "#f6f6f1", 

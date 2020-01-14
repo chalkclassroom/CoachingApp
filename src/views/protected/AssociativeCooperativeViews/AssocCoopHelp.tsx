@@ -23,10 +23,9 @@ const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    //backgroundColor: theme.palette.background.paper,
-    //boxShadow: theme.shadows[5],
-    //padding: theme.spacing.unit * 4,
-    borderRadius: 8
+    backgroundColor: 'white',
+    padding: '2em',
+    borderRadius: 8,
   }
 };
 
@@ -40,10 +39,7 @@ interface Style {
   definitionText: string,
   buttonTitle: string,
   lineExamples: string,
-  travelingExamples: string,
-  waitingExamples: string,
-  routinesExamples: string,
-  behaviorExamples: string,
+
 }
 
 interface State {
@@ -80,26 +76,34 @@ class AssocCoopHelp extends React.Component<Props, State> {
 
     return (
       <div>
-        <Modal open={this.state.open}>
-          <div style={getModalStyle()} className={classes.paper}>
-            <Grid
-              container
-              alignItems="center"
-              direction="column"
-              justify="flex-start"
-            >
-              <Typography variant="h4" gutterBottom>
-              Associative and Cooperative Interactions
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-<strong>Hints + Reminders: Classifying Associative and Cooperative Interactions</strong>
-              </Typography>
-              <AssocCoopHelpCard />
-            </Grid>
-          </div>
-        </Modal>
+        <head>
+          <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        </head>
+        <body>
+          <Modal open={this.state.open}>
+            <div style={getModalStyle()} className={classes.paper}>
+              <Grid
+                container
+                alignItems="center"
+                direction="column"
+                justify="flex-start"
+              >
+                <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+                Associative and Cooperative Interactions
+                </Typography>
+                <Typography variant="subtitle2" gutterBottom style={{fontFamily: "Arimo"}}>
+                <strong>Hints + Reminders: Classifying Associative and Cooperative Interactions</strong>
+                </Typography>
+                <AssocCoopHelpCard />
+              </Grid>
+            </div>
+          </Modal>
+        </body>
       </div>
     );
+
+    
   }
 }
 
