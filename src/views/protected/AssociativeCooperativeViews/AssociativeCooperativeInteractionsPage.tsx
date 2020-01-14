@@ -9,6 +9,7 @@ import { deleteAllCenters } from "../../../state/actions/associative-cooperative
 import AssocCoopHelp from "../AssociativeCooperativeViews/AssocCoopHelp"
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
+
 const styles: object = {
   root: {
     flexGrow: 1,
@@ -34,14 +35,14 @@ interface Props {
 
 interface State {
   auth: boolean,
-  completeEnabled: boolean,
+  completeEnabled: boolean
 }
 
 class AssociativeCooperativeInteractionsPage extends React.Component<Props, State> {
+  
   state = {
     auth: true,
-    help: false,
-    completeEnabled: false
+     completeEnabled: false
   };
 
   handleCompleteButton = (enable: boolean) => {
@@ -65,13 +66,6 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
           )}
         </FirebaseContext.Consumer>
 
-        {this.state.help ? (
-          <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
-            <AssocCoopHelp />
-          </ClickAwayListener>
-          ) : (
-            <div />
-          )}
 
         {/* this.state.recs ? (
           <FirebaseContext.Consumer>
@@ -87,6 +81,8 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
           <div />
         ) */}
         <main style={{ flex: 1 }}>
+       
+          
           <FirebaseContext.Consumer>
             {(firebase: object) => (
               <CenterMenuAssocCoop

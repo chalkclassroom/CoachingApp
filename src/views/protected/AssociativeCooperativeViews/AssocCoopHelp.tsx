@@ -51,7 +51,7 @@ interface State {
 }
 
 /**
- * transition time look-fors
+ * Assoc Coop time look-fors
  * @class AssocCoopHelp
  */
 class AssocCoopHelp extends React.Component<Props, State> {
@@ -90,9 +90,8 @@ class AssocCoopHelp extends React.Component<Props, State> {
             >
               <Typography variant="h4" gutterBottom>
               Associative and Cooperative Interactions
-
               </Typography>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant="h6" gutterBottom>
 <strong>Hints + Reminders: Classifying Associative and Cooperative Interactions</strong>
               </Typography>
               <AssocCoopHelpCard />

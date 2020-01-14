@@ -32,6 +32,8 @@ import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from "@material-ui/core/es";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
+
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
@@ -224,6 +226,8 @@ class Dashboard extends React.Component {
                   return <TransitionTimeHelp />;
                 case "Classroom Climate":
                   return <ClassroomClimateHelp />;
+                case "Associative and Cooperative":
+                    return <AssocCoopHelp />;
                 default:
                   return <div />;
               }
