@@ -9,14 +9,14 @@ import TableCell from '@material-ui/core/TableCell/index';
 
 const styles = () => ({
   definitionTitle: {
-    backgroundColor: "#6F39C4",
+    backgroundColor: "#6f39c4",
     color: "white",
     fontSize: 18,
     textAlign: "center",
     width: "50%"
   },
   definition2Title: {
-    backgroundColor: "#6F39C4",
+    backgroundColor: "#459aeB",
     color: "white",
     fontSize: 18,
     textAlign: "center",
@@ -36,7 +36,7 @@ const styles = () => ({
     fontSize: 14,
     textAlign: "center"
   },
-  buttonACTitle: {
+  buttonTitle: {
     backgroundColor: "#f6f6f1", 
     color: "black",
     fontSize: 14,
@@ -79,16 +79,16 @@ function AssocCoopHelpCard(props) {
         </TableHead>
       <TableBody>
           <TableRow>
-            <TableCell padding="checkbox" className={classes.buttonACTitle}>
+            <TableCell padding="checkbox" className={classes.buttonTitle}>
               <strong> Participating in a conversation about a shared activity</strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonACTitle}>
+            <TableCell padding="checkbox" className={classes.buttonTitle}>
               <strong>Engaging in an open-ended activity without clear roles or order</strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonACTitle}>
+            <TableCell padding="checkbox" className={classes.buttonTitle}>
               <strong> Following formal rules of a game and/or taking turns</strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonACTitle}>
+            <TableCell padding="checkbox" className={classes.buttonTitle}>
               <strong>Doing an activity together that has a predetermined sequence </strong>
             </TableCell>
           </TableRow>
@@ -149,16 +149,16 @@ function AssocCoopHelpCard(props) {
 
         <TableHead>      
           <TableRow>
-            <TableCell padding="checkbox" className={classes.buttonACTitle}>
-              <strong>Participating in children’s play bolded </strong>
+            <TableCell padding="checkbox" className={classes.buttonTitle}>
+              <strong>Participating in children’s play </strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonACTitle}>
+            <TableCell padding="checkbox" className={classes.buttonTitle}>
               <strong> Asking questions to extend children’s thinking about a shared activity </strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonACTitle}>
+            <TableCell padding="checkbox" className={classes.buttonTitle}>
               <strong> Encouraging children to share, work, or interact with each other  </strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonACTitle}>
+            <TableCell padding="checkbox" className={classes.buttonTitle}>
               <strong>Helping children find the words to communicate </strong>
               </TableCell>            
           </TableRow>
@@ -184,11 +184,9 @@ function AssocCoopHelpCard(props) {
             <TableCell padding="checkbox" className={classes.lineExamples}>
             Co-writing a label with a child for his drawing
             </TableCell>
-            <TableCell
-              padding="checkbox"
-              className={classes.lineExamples} >
+            <TableCell padding="checkbox" className={classes.lineExamples} >
           Asking children what shape of blocks they will need to keep their building from falling
-              </TableCell>
+             </TableCell>
             <TableCell padding="checkbox" className={classes.lineExamples}>
             Modeling the steps for sharing
             </TableCell>
