@@ -38,6 +38,8 @@ interface Style {
   definitionTitle: string,
   definitionText: string,
   buttonTitle: string,
+  definition2Title: string,
+  definition2Text: string,
   lineExamples: string,
 
 }
