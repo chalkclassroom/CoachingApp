@@ -1,4 +1,5 @@
 import * as firebase from "firebase";
+import { SSL_OP_NO_TLSv1_1 } from "constants";
 
 // Need to find a new place for this...
 // ask Jules about where to put it
@@ -915,7 +916,62 @@ class Firebase {
           result.data[0]
       )
       .catch(error => console.error("Error occurred getting teacher sequential trend: ", error))
+  };
+
+  createActionPlan = async function(teacherId) {
+    const data = Object.assign(
+      {},
+      {
+        coach: this.auth.currentUser.uid,
+        teacher: teacherId,
+        date: new Date().toLocaleDateString(),
+        goal: '',
+        benefit: ''
+      }
+    );
+    const actionPlansRef = firebase.firestore().collection('actionPlans').doc();
+    actionPlansRef.set(data).then(() => {
+      const actionStepsRef = actionPlansRef.collection("actionSteps").doc();
+      actionStepsRef.set({
+        materials: '',
+        person: '',
+        text: '',
+        // timeline: firebase.firestore.FieldValue.serverTimestamp()
+        timeline: new Date().toLocaleDateString()
+      }).then(() => {
+        console.log('action steps created');
+      }).catch(() => {
+        console.log('error creating action steps');
+      })
+    }).catch(() => {
+      console.log('error creating action plan');
+    })
   }
+
+  getActionPlan = async function(userData) {
+    const today = new Date().toLocaleDateString();
+    this.sessionRef = this.db.collection("actionPlans")
+      .where("coach", "==", this.auth.currentUser.uid)
+      .where("teacher", "==", userData)
+      .where("date", "==", today);
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+          })
+        );
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve action plan id')
+      })
+  }
+
+  /* saveActionPlan = async function(userData) {
+    
+  } */
 
 }
 

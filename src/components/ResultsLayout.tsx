@@ -347,7 +347,14 @@ class ResultsLayout extends React.Component<Props, State> {
                 </div>
               ) : this.state.view === ViewEnum.ACTION_PLAN ? (
                 <div className={classes.resultsContent} >
-                  <ActionPlanForm teacherFirstName={this.props.teacherFirstName} teacherLastName={this.props.teacherLastName}/>
+                  <FirebaseContext.Consumer>
+                    {(firebase: object) => <ActionPlanForm
+                      teacherFirstName={this.props.teacherFirstName}
+                      teacherLastName={this.props.teacherLastName}
+                      teacherId={this.props.teacherId}
+                      firebase={firebase}
+                    />}
+                  </FirebaseContext.Consumer>
                 </div>
               ) : null}
             </div>
