@@ -1,10 +1,35 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button/Button";
+import { Button, Card, Grid } from '@material-ui/core';
 import ListItem from "@material-ui/core/ListItem/index";
 import { withStyles } from '@material-ui/core/styles';
 
+import { createMuiTheme } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#094492'
+    }
+  }
+});
+
+
 const styles = {
+  card: {
+    border: "3px solid #d9d9d9",
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    height: "100%",
+    boxShadow: "5px",
+    width: "100%",
+    flexDirection: "column",
+    alignItems: "center",
+    justify: "space-evenly",
+    display: "flex",
+    flex: "1",
+    flexWrap: "nowrap"
+  },
   container: {
     minWidth: '240px',
     display: 'flex',
@@ -12,6 +37,7 @@ const styles = {
     justifyContent: 'center',
     fontSize: '1em'
   },
+  
   iconContainer: {
     display: 'flex',
     flexDireciton: 'column',
@@ -109,9 +135,26 @@ function TrainingDashboard(props) {
     tryItClick,
     knowledgeCheckClick
   } = props;
-  const { container, buttonsListContainer, iconContainer, viewButtons } = classes;
+
+  const { container, 
+          buttonsListContainer, 
+          iconContainer, 
+          viewButtons 
+        } = classes;
 
   return (
+<div>
+    <Card className={classes.card}>
+          <Grid
+            container
+            padding={12}
+            spacing={0}
+            direction="column"
+            justify="center"
+            alignItems="center"
+            style={{marginRight: 20, marginLeft: 20}}
+          >
+          </Grid>
     <div className={container}>
       <ListItem className={iconContainer}>
         <img src={Icon} width={"100px"} alt="Magic Eight" />
@@ -192,6 +235,9 @@ function TrainingDashboard(props) {
           </Button>
         </ListItem>
       </div>
+      </div>
+
+    </Card>
     </div>
   );
 }
