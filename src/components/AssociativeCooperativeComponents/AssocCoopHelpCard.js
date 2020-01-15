@@ -23,7 +23,7 @@ const styles = () => ({
     width: "50%"
   },
   definitionText: {
-    backgroundColor: "#c5aee7",
+    backgroundColor: "#a481d9",
     color: "white",
     width: "50%",
     fontSize: 14,
