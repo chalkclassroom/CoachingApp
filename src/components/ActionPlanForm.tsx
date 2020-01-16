@@ -5,18 +5,18 @@ import Typography from '@material-ui/core/Typography';
 import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import FirebaseContext from "./Firebase/FirebaseContext.js";
 
 interface Props {
-  // location: {state: {teacher: {firstName: string}}},
   teacherFirstName: string,
   teacherLastName: string,
   firebase: {
     createActionPlan(teacherId: string, sessionId: string): Promise<void>,
-    getActionPlan(sessionId: string): any,
-    saveActionPlan(actionPlanId: string, goal: string, benefit: string): Promise<void>
+    getActionPlan(sessionId: string): Promise<Array<{id: string, goal: string, benefit: string}>>,
+    getActionSteps(actionPlanId: string): Promise<Array<{step: string, materials: string, person: string, timeline: string}>>,
+    saveActionPlan(actionPlanId: string, goal: string, benefit: string): Promise<void>,
+    saveActionStep(actionPlanId: string, index: string, step: string, materials: string, person: string, timeline: string): Promise<void>,
+    createActionStep(actionPlanId: string, index: string): Promise<void>
   },
-  // firebase: object,
   teacherId: string,
   sessionId: string
 }
@@ -25,7 +25,7 @@ interface State {
   goal: string,
   benefit: string,
   actionSteps: string,
-  actionStepsArray: Array<{text: string, materials: string, person: string, timeline: string}>,
+  actionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}>,
   editMode: boolean,
   actionPlanExists: boolean,
   actionPlanId: string
@@ -47,7 +47,7 @@ class ActionPlanForm extends React.Component<Props, State> {
       goal: '',
       benefit: '',
       actionSteps: '',
-      actionStepsArray: [{text: '', materials: '', person: '', timeline: ''}],
+      actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}],
       editMode: false,
       actionPlanExists: false,
       actionPlanId: ''
@@ -56,7 +56,9 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   handleAddActionStep = (): void => {
     this.setState({
-      actionStepsArray: [...this.state.actionStepsArray, {text: '', materials: '', person: '', timeline: ''}]
+      actionStepsArray: [...this.state.actionStepsArray, {step: '', materials: '', person: '', timeline: ''}]
+    }, () => {
+      this.props.firebase.createActionStep(this.state.actionPlanId, (this.state.actionStepsArray.length-1).toString());
     })
   }
 
@@ -66,23 +68,31 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @param {event} event
    * @return {void}
    */
-  handleChange = (name: string) => event => {
+  handleChange = (name: string) => (event): void => {
     this.setState({
       [name]: event.target.value,
     });
     // this.validateState(name, event.target.value);
-    console.log(this.state.goal);
+    // console.log(this.state.goal);
   };
 
+  /**
+   * @param {number} number
+   * @return {void}
+   */
   handleChangeActionStep = (number: number) => (event): void => {
     const newArray = [...this.state.actionStepsArray];
-    newArray[number].text = event.target.value;
+    newArray[number].step = event.target.value;
     this.setState({
       actionStepsArray: newArray
     });
-    console.log(this.state.actionStepsArray[0].text);
+    console.log(this.state.actionStepsArray[0].step);
   }
 
+  /**
+   * @param {number} number
+   * @return {void}
+   */
   handleChangeMaterials = (number: number) => (event): void => {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].materials = event.target.value;
@@ -92,6 +102,10 @@ class ActionPlanForm extends React.Component<Props, State> {
     console.log(this.state.actionStepsArray[0].materials);
   }
 
+  /**
+   * @param {number} number
+   * @return {void}
+   */
   handleChangePerson = (number: number) => (event): void => {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].person = event.target.value;
@@ -101,6 +115,10 @@ class ActionPlanForm extends React.Component<Props, State> {
     console.log(this.state.actionStepsArray[0].person);
   }
 
+  /**
+   * @param {number} number
+   * @return {void}
+   */
   handleChangeTimeline = (number: number) => (event): void => {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].timeline = event.target.value;
@@ -125,17 +143,35 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 
   getActionPlan = (): void => {
-    this.props.firebase.getActionPlan(this.props.sessionId).then((actionPlanData: Array<{id: string}>) => {
+    this.props.firebase.getActionPlan(this.props.sessionId).then((actionPlanData: Array<{id: string, goal: string, benefit: string}>) => {
       console.log('apf line 133', actionPlanData);
       if (actionPlanData[0]) {
         this.setState({
           actionPlanExists: true,
-          actionPlanId: actionPlanData[0].id
+          actionPlanId: actionPlanData[0].id,
+          goal: actionPlanData[0].goal,
+          benefit: actionPlanData[0].benefit
+        });
+        const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
+        this.props.firebase.getActionSteps(actionPlanData[0].id).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
+          actionStepsData.forEach((value, index) => {
+            newActionStepsArray[index] = {step: value.step, materials: value.materials, person: value.person, timeline: value.timeline};
+          })
+        }).then(() => {
+          this.setState({
+            actionStepsArray: newActionStepsArray
+          }, () => {console.log('action steps array: ', this.state.actionStepsArray)});
         })
+        .catch(() => {
+          console.log('error retrieving action steps');
+        });
       } else {
         this.setState({
           actionPlanExists: false,
-          actionPlanId: ''
+          actionPlanId: '',
+          goal: '',
+          benefit: '',
+          actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}]
         })
       }
      })
@@ -152,21 +188,33 @@ class ActionPlanForm extends React.Component<Props, State> {
     .catch(() => {
       console.log("error with saving action plan");
     })
+    this.state.actionStepsArray.forEach((value, index) => {
+      this.props.firebase.saveActionStep(this.state.actionPlanId, index.toString(), value.step, value.materials, value.person, value.timeline)
+        .then(() => {
+          console.log("action step ", index, " saved");
+        })
+        .catch(() => {
+          console.log("error in saving action step ", index);
+        })
+    })
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     this.getActionPlan();
   }
 
   static propTypes = {
     teacherFirstName: PropTypes.string.isRequired,
     teacherLastName: PropTypes.string.isRequired,
-    firebase: {
-      createActionPlan(teacherId: string, sessionId: string): Promise<void>,
-      getActionPlan(sessionId: string): any,
-      saveActionPlan(actionPlanId: string, goal: string, benefit: string): Promise<void>
-    },
+    firebase: PropTypes.exact({
+      createActionPlan: PropTypes.func,
+      getActionPlan: PropTypes.func,
+      getActionSteps: PropTypes.func,
+      saveActionPlan: PropTypes.func,
+      saveActionStep: PropTypes.func,
+      createActionStep: PropTypes.func,
+    }).isRequired,
     teacherId: PropTypes.string.isRequired,
     sessionId: PropTypes.string.isRequired
   };
@@ -268,7 +316,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         name={"actionSteps" + index.toString()}
                         type="text"
                         label={index===0 ? "Action Steps" : null}
-                        value={value.text}
+                        value={value.step}
                         onChange={this.handleChangeActionStep(index)}
                         margin="normal"
                         variant="standard"

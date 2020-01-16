@@ -932,11 +932,11 @@ class Firebase {
     );
     const actionPlansRef = firebase.firestore().collection('actionPlans').doc();
     actionPlansRef.set(data).then(() => {
-      const actionStepsRef = actionPlansRef.collection("actionSteps").doc();
+      const actionStepsRef = actionPlansRef.collection("actionSteps").doc('0');
       actionStepsRef.set({
         materials: '',
         person: '',
-        text: '',
+        step: '',
         // timeline: firebase.firestore.FieldValue.serverTimestamp()
         timeline: new Date().toLocaleDateString()
       }).then(() => {
@@ -946,6 +946,20 @@ class Firebase {
       })
     }).catch(() => {
       console.log('error creating action plan');
+    })
+  }
+  
+  createActionStep = async function(actionPlanId, index) {
+    const actionStepsRef = this.db.collection('actionPlans').doc(actionPlanId).collection("actionSteps").doc(index);
+    actionStepsRef.set({
+      step: '',
+      materials: '',
+      person: '',
+      timeline: ''
+    }).then(() => {
+      console.log('action steps created');
+    }).catch(() => {
+      console.log('error creating action steps');
     })
   }
 
@@ -958,12 +972,34 @@ class Firebase {
         querySnapshot.forEach(doc =>
           idArr.push({
             id: doc.id,
+            goal: doc.data().goal,
+            benefit: doc.data().benefit
           })
         );
         return idArr;
       })
       .catch(() => {
         console.log( 'unable to retrieve action plan id')
+      })
+  }
+
+  getActionSteps = async function(actionPlanId, index) {
+    this.sessionRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps");
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const actionStepsArr = [];
+        querySnapshot.forEach(doc => 
+          actionStepsArr.push({
+            step: doc.data().step,
+            materials: doc.data().materials,
+            person: doc.data().person,
+            timeline: doc.data().timeline
+          })
+        );
+        return actionStepsArr;
+      })
+      .catch(() => {
+        console.log('error retrieving action steps');
       })
   }
 
@@ -975,6 +1011,22 @@ class Firebase {
     })
     .then(() => {
       console.log("Action plan updated successfully!");
+    })
+    .catch((error) => {
+      console.error("Error updating action plan: ", error);
+    })
+  }
+
+  saveActionStep = async function(actionPlanId, index, step, materials, person, timeline) {
+    var actionStepsRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps").doc(index);
+    return actionStepsRef.update({
+      step: step, 
+      materials: materials,
+      person: person,
+      timeline: timeline
+    })
+    .then(() => {
+      console.log("Action step updated successfully!");
     })
     .catch((error) => {
       console.error("Error updating action plan: ", error);
