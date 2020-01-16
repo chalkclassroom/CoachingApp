@@ -918,10 +918,11 @@ class Firebase {
       .catch(error => console.error("Error occurred getting teacher sequential trend: ", error))
   };
 
-  createActionPlan = async function(teacherId) {
+  createActionPlan = async function(teacherId, sessionId) {
     const data = Object.assign(
       {},
       {
+        sessionId: sessionId,
         coach: this.auth.currentUser.uid,
         teacher: teacherId,
         date: new Date().toLocaleDateString(),
@@ -948,12 +949,9 @@ class Firebase {
     })
   }
 
-  getActionPlan = async function(userData) {
-    const today = new Date().toLocaleDateString();
+  getActionPlan = async function(sessionId) {
     this.sessionRef = this.db.collection("actionPlans")
-      .where("coach", "==", this.auth.currentUser.uid)
-      .where("teacher", "==", userData)
-      .where("date", "==", today);
+      .where("sessionId", "==", sessionId)
     return this.sessionRef.get()
       .then(querySnapshot => {
         const idArr = [];
@@ -969,9 +967,19 @@ class Firebase {
       })
   }
 
-  /* saveActionPlan = async function(userData) {
-    
-  } */
+  saveActionPlan = async function(actionPlanId, goal, benefit) {
+    var actionPlanRef = this.db.collection("actionPlans").doc(actionPlanId);
+    return actionPlanRef.update({
+      goal: goal,
+      benefit: benefit
+    })
+    .then(() => {
+      console.log("Action plan updated successfully!");
+    })
+    .catch((error) => {
+      console.error("Error updating action plan: ", error);
+    })
+  }
 
 }
 

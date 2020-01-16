@@ -347,14 +347,21 @@ class ResultsLayout extends React.Component<Props, State> {
                 </div>
               ) : this.state.view === ViewEnum.ACTION_PLAN ? (
                 <div className={classes.resultsContent} >
-                  <FirebaseContext.Consumer>
-                    {(firebase: object) => <ActionPlanForm
-                      teacherFirstName={this.props.teacherFirstName}
-                      teacherLastName={this.props.teacherLastName}
-                      teacherId={this.props.teacherId}
-                      firebase={firebase}
-                    />}
-                  </FirebaseContext.Consumer>
+                  {this.props.sessionId ? (
+                     <FirebaseContext.Consumer>
+                      {(firebase: object) => <ActionPlanForm
+                        teacherFirstName={this.props.teacherFirstName}
+                        teacherLastName={this.props.teacherLastName}
+                        teacherId={this.props.teacherId}
+                        sessionId={this.props.sessionId}
+                        firebase={firebase}
+                      />}
+                    </FirebaseContext.Consumer>
+                  ) : (
+                    <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
+                      Please choose a date from the dropdown menu.
+                    </Typography>
+                  )}
                 </div>
               ) : null}
             </div>
