@@ -275,7 +275,76 @@ const questionBank = {
       "positive classroom climate."
     }
   ],
-  'math':[],
+  'math':[
+    {
+      text: "Sample math question 1?",
+      options: new Map([
+        ["Option 1", false],
+        ["Option 2", false],
+        ["Option 3", false],
+        ["A and B only", true],
+        ["A, B, and C", false]
+      ]),
+      feedback: "The correct answer is D. sample text hint, " +
+        "sample text hint. " +
+        "sample text hint " +
+        "sample text hint."
+    },
+    {
+      text: "Sample math question 2.",
+      options: new Map([
+        ["True", true],
+        ["False", false]
+      ]),
+      feedback: "The correct answer is True.sample text hint, " +
+      "sample text hint. " +
+      "sample text hint " +
+      "sample text hint."
+    },
+    {
+      text: "Sample math question 3?",
+      options: new Map([
+        ["sample option 1",
+        false],
+        ["sample option 2", false],
+        ["Sample option 3 ", true],
+        ["Sample option 4 ", false]
+      ]),
+      feedback: "The correct answer is C. sample text hint. " +
+      "sample text hint " +
+      "sample text hint. " +
+      "sample text hint " +
+      "sample text hint " +
+      "sample text hint."
+    },
+    {
+      text: "Sample math question 4.",
+      options: new Map([
+        ["True", true],
+        ["False", false]
+      ]),
+      feedback: "The correct answer is True.sample text hint, " +
+      "sample text hint. " +
+      "sample text hint " +
+      "sample text hint."
+    },
+    {
+      text: "Sample math question 5?",
+      options: new Map([
+        ["sample option 1",
+        false],
+        ["sample option 2", false],
+        ["Sample option 3 ", true],
+        ["Sample option 4 ", false]
+      ]),
+      feedback: "The correct answer is C. sample text hint. " +
+      "sample text hint " +
+      "sample text hint. " +
+      "sample text hint " +
+      "sample text hint " +
+      "sample text hint."
+    }
+  ],
   'student':[],
   'level':[],
   'listening':[],
@@ -543,6 +612,8 @@ const questionBank = {
       "and share ideas / communicate about their game."
     }
   ]
+
+  
 };
 
 export default questionBank;
