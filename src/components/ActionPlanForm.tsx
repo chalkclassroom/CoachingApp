@@ -18,7 +18,10 @@ interface Props {
     createActionStep(actionPlanId: string, index: string): Promise<void>
   },
   teacherId: string,
-  sessionId: string
+  sessionId: string,
+  disabled: boolean,
+  handleEditActionPlan(): void,
+  actionPlanExists: boolean
 }
 
 interface State {
@@ -172,7 +175,7 @@ class ActionPlanForm extends React.Component<Props, State> {
           goal: '',
           benefit: '',
           actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}]
-        })
+        }, () => {console.log('action plan exists? ', this.state.actionPlanExists)})
       }
      })
   }
@@ -202,6 +205,7 @@ class ActionPlanForm extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     this.getActionPlan();
+    console.log('comp did mount executed');
   }
 
   static propTypes = {
@@ -226,8 +230,8 @@ class ActionPlanForm extends React.Component<Props, State> {
   render(): React.ReactNode {
     return (
       <div>
-        {this.state.actionPlanExists ? 
-          (<Grid
+        {/* {this.props.actionPlanExists ?  */}
+          <Grid
             container
             direction="column"
             justify="flex-start"
@@ -246,7 +250,9 @@ class ActionPlanForm extends React.Component<Props, State> {
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  edit
+                  <Button disabled={!this.props.handleEditActionPlan} onClick={this.props.handleEditActionPlan}>
+                    edit
+                  </Button>
                 </Grid>
                 <Grid item xs={2}>
                   <Button onClick={this.handleSave}>
@@ -279,6 +285,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                 margin="normal"
                 variant="standard"
                 fullWidth
+                disabled={this.props.disabled}
                 multiline
                 rowsMax={4}
                 rows={4}
@@ -298,6 +305,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                 margin="normal"
                 variant="standard"
                 fullWidth
+                disabled={this.props.disabled}
                 multiline
                 rowsMax={3}
                 rows={3}
@@ -321,6 +329,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         margin="normal"
                         variant="standard"
                         fullWidth
+                        disabled={this.props.disabled}
                         multiline
                         rowsMax={2}
                         rows={2}
@@ -340,6 +349,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         margin="normal"
                         variant="standard"
                         fullWidth
+                        disabled={this.props.disabled}
                         multiline
                         rowsMax={2}
                         rows={2}
@@ -359,6 +369,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         margin="normal"
                         variant="standard"
                         fullWidth
+                        disabled={this.props.disabled}
                         multiline
                         rowsMax={2}
                         rows={2}
@@ -378,6 +389,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         margin="normal"
                         variant="standard"
                         fullWidth
+                        disabled={this.props.disabled}
                         multiline
                         rowsMax={2}
                         rows={2}
@@ -393,13 +405,13 @@ class ActionPlanForm extends React.Component<Props, State> {
             <Button onClick={this.handleAddActionStep}>
               <AddCircleIcon />
             </Button>
-          </Grid>)
-          : (
+          </Grid>
+          {/* : (
             <Button onClick={this.handleCreate}>
               Create Action Plan
             </Button>
-          )
-        }
+          ) */}
+        
       </div>
     );
   }

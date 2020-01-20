@@ -963,6 +963,22 @@ class Firebase {
     })
   }
 
+  findActionPlan = async function(sessionId) {
+    this.sessionRef = this.db.collection("actionPlans")
+      .where("benefit", "==", "maybe")
+    return this.sessionRef.get().then((doc) => {
+      if (doc.exists) {
+        console.log('action plan found');
+        return true;
+      } else {
+        console.log('action plan not found');
+        return false
+      }
+    }).catch((error) => {
+      console.log("error finding action plan: ", error)
+    })
+  }
+
   getActionPlan = async function(sessionId) {
     this.sessionRef = this.db.collection("actionPlans")
       .where("sessionId", "==", sessionId)

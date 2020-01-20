@@ -110,7 +110,8 @@ interface State {
   sessionId: string,
   trendsDates: Array<string>,
   trendsPos: Array<number>,
-  trendsNeg: Array<number>
+  trendsNeg: Array<number>,
+  actionPlanExists: boolean
 }
 
 /**
@@ -134,7 +135,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       trendsDates: [],
       trendsPos: [],
       trendsNeg: [],
-      notes: []
+      notes: [],
+      actionPlanExists: false
     };
   }
 
@@ -244,6 +246,29 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
             });
           })
         );
+        /* if (firebase.findActionPlan(this.state.sessionId)) {
+          this.setState({
+            actionPlanExists: true
+          }, () => console.log('sessionId: ', this.state.sessionId, 'state of action plan exists: ', this.state.actionPlanExists))
+        } else {
+          this.setState({
+            actionPlanExists: false
+          }, () => console.log('sessionId: ', this.state.sessionId, 'state of action plan exists: ', this.state.actionPlanExists))
+        } */
+        firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
+          if (actionPlanData.length>0) {
+            console.log('actionplan data: ', actionPlanData>0)
+            this.setState({
+              actionPlanExists: true
+            }, () => console.log('sessionId: ', this.state.sessionId, 'state of action plan exists: ', this.state.actionPlanExists))
+          } else {
+            this.setState({
+              actionPlanExists: false
+            }, () => console.log('sessionId: ', this.state.sessionId, 'state of action plan exists: ', this.state.actionPlanExists))
+          }
+        }).catch(() => {
+          console.log('blah blah action plan')
+        })
 
         /* firebase
           .fetchBehaviourTypeCount(this.state.sessionId)
@@ -314,6 +339,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           questions={<ClimateCoachingQuestions />}
           teacherFirstName={this.props.location.state.teacher.firstName}
           teacherLastName={this.props.location.state.teacher.lastName}
+          actionPlanExists={this.state.actionPlanExists}
         />
       </div>
     );

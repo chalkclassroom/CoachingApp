@@ -16,6 +16,7 @@ import NotesListDetailTable from "./ResultsComponents/NotesListDetailTable";
 import "chartjs-plugin-datalabels";
 import ResultsDashboard from './ResultsDashboard';
 import ActionPlanForm from './ActionPlanForm';
+import ActionPlanModal from './ActionPlanModal';
 
 const styles: object = {
   root: {
@@ -70,7 +71,8 @@ interface Props {
   questions: React.ReactNode,
   notes: Array<{timestamp: any, content: string}>,
   teacherFirstName: string,
-  teacherLastName: string
+  teacherLastName: string,
+  actionPlanExists: boolean
 }
 
 interface Style {
@@ -88,6 +90,8 @@ interface State {
   tabValue: number,
   notes: Array<object>,
   sessionDates: Array<string>,
+  actionPlanEditMode: boolean,
+  // actionPlanExists: boolean
 }
 
 /**
@@ -107,6 +111,8 @@ class ResultsLayout extends React.Component<Props, State> {
       tabValue: 0,
       // notes: [],
       sessionDates: [],
+      actionPlanEditMode: false,
+      // actionPlanExists: false,
     }
   }
 
@@ -177,22 +183,37 @@ class ResultsLayout extends React.Component<Props, State> {
     console.log('date fetching was called');
   };
 
+  handleEditActionPlan = (): void => {
+    this.setState({
+      actionPlanEditMode: true
+    })
+  }
+
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
+    const firebase = this.context;
     this.handleDateFetching(this.props.teacherId);
     this.props.handleTrendsFetch(this.props.teacherId);
+    /* const actionPlanExists = firebase.findActionPlan(this.props.sessionId);
+    if (actionPlanExists) {
+      this.setState({
+        actionPlanExists: true
+      }, () => {console.log('ap exists true')})
+    } else {
+      console.log('ap exists false')
+    } */
   }
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid container spacing={16} justify="center" direction="row" alignItems="center">
           <Grid item xs={3}>
@@ -348,7 +369,7 @@ class ResultsLayout extends React.Component<Props, State> {
               ) : this.state.view === ViewEnum.ACTION_PLAN ? (
                 <div className={classes.resultsContent} >
                   {this.props.sessionId ? (
-                     <FirebaseContext.Consumer>
+                     /* <FirebaseContext.Consumer>
                       {(firebase: object) => <ActionPlanForm
                         teacherFirstName={this.props.teacherFirstName}
                         teacherLastName={this.props.teacherLastName}
@@ -356,7 +377,39 @@ class ResultsLayout extends React.Component<Props, State> {
                         sessionId={this.props.sessionId}
                         firebase={firebase}
                       />}
-                    </FirebaseContext.Consumer>
+                    </FirebaseContext.Consumer> */
+                    this.props.actionPlanExists? (
+                      this.state.actionPlanEditMode ? (
+                        <FirebaseContext.Consumer>
+                          {(firebase: object) => <ActionPlanModal 
+                            firebase={firebase}
+                            teacherFirstName={this.props.teacherFirstName}
+                            teacherLastName={this.props.teacherLastName}
+                            teacherId={this.props.teacherId}
+                            sessionId={this.props.sessionId}
+                            handleEditActionPlan={this.handleEditActionPlan}
+                            disabled={false}
+                          />}
+                        </FirebaseContext.Consumer>
+                      ) : (
+                        <FirebaseContext.Consumer>
+                          {(firebase: object) => <ActionPlanForm 
+                            firebase={firebase}
+                            teacherFirstName={this.props.teacherFirstName}
+                            teacherLastName={this.props.teacherLastName}
+                            teacherId={this.props.teacherId}
+                            sessionId={this.props.sessionId}
+                            handleEditActionPlan={this.handleEditActionPlan}
+                            disabled={true}
+                            actionPlanExists={this.props.actionPlanExists}
+                          />}
+                        </FirebaseContext.Consumer>
+                      )
+                    ) : (
+                      <Typography>
+                        create action plan
+                      </Typography>
+                    )  
                   ) : (
                     <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
                       Please choose a date from the dropdown menu.
