@@ -11,14 +11,17 @@ import Typography from '@material-ui/core/Typography/index';
 
 const styles = () => ({
   definitionTitle: {
-    backgroundColor: "#094492",
-    color: "white",
+    backgroundColor: "#cccccc",
+    color: "black",
     fontSize: 18,
     textAlign: "center",
     width: "50%"
   },
   definitionText: {
-    backgroundColor: "#759fe5",
+    backgroundColor: "#e7da84",
+    color: "black",
+    fontSize: 18,
+    textAlign: "center",
     width: "50%"
   },
   buttonTitle: {
@@ -28,20 +31,20 @@ const styles = () => ({
     textAlign: "center", 
     width: "20%"
   },
-  lineExamples: {
-    backgroundColor: "#AED581",
+   countChildExamples: {
+    backgroundColor: "#d9ead3",
     width:"20%"
   },
-  travelingExamples: {
-    backgroundColor: "#FFA726",
+   shapeChildExamples: {
+    backgroundColor: "#c9daf8",
     width:"20%"
   },
-  waitingExamples: {
-    backgroundColor: "#FF7043",
+   patternChildExamples: {
+    backgroundColor: "#f4cccc",
     width:"20%"
   },
-  routinesExamples: {
-    backgroundColor: "#64B5F6",
+   measureChildExamples: {
+    backgroundColor: "#fff2cc",
     width:"20%"
   },
   behaviorExamples: {
@@ -58,138 +61,213 @@ function MathInstructionHelpCard(props) {
         <TableHead>
           <TableRow>
             <TableCell className={classes.definitionTitle}>
-              SAMPLE NEED TO MODIFY LATERS BEGIN WHEN:
-            </TableCell>
-            <TableCell className={classes.definitionTitle}>
-              SAMPLE NEED TO MODIFY LATERS END WHEN:
+            Student Math Type
             </TableCell>
           </TableRow>
         </TableHead>
+      </Table>
+
+      <Table>
         <TableBody>
-          <TableRow>
-            <TableCell className={classes.definitionText}>
+        <TableRow>
+            <TableCell padding="checkbox" className={classes.countChildExamples}>
               <strong>
-                A majority (more than half) of the children are in SAMPLE NEED TO MODIFY LATER
+              Counting and Numbers
               </strong>
             </TableCell>
-            <TableCell className={classes.definitionText}>
+            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
               <strong>
-                A majority (more than half) of the children have started the next
-                activity
+              Shapes and Spatial Reasoning
+             </strong>
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+              <strong>
+                Patterns
+              </strong>
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.measureChildExamples}>
+              <strong>
+              Measurement and Data
               </strong>
             </TableCell>
           </TableRow>
+
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.countChildExamples}>
+              <strong>Counts, quantifies, or describes sets of objects; connects numerals to counted objects</strong>
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
+              <strong>Identifies, compares, builds, or takes apart shapes; talks about the  position of objects; works with maps</strong>
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+              <strong>
+              Notices, copies, or creates a pattern in the environment or with manipulatives
+              </strong>
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.measureChildExamples}>
+              <strong>
+                Compares and orders objects by size, length, or weight; relates time to daily routines or schedule; represents or analyzes data
+             </strong>
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.countChildExamples}>
+            Counts six marbles and says, “I have six.”            </TableCell>
+            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
+            Points to a picture of a piece of pizza in a book and says, “This is a triangle!” 
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+            While looking at tiles on the floor child says, “I see black, white, black, white”
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.measureChildExamples}>
+            Places toy animals side by side in order of length
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.countChildExamples}>
+            Notices parts of a whole: “I have five bears, two are red and three are blue.”
+            </TableCell>
+            <TableCell padding="checkbox"  className={classes.shapeChildExamples} >
+            Creates a square from two triangles.
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+            Adds to a green-red-green pattern using cubes
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.measureChildExamples}>
+            Determines that his shoe is “12 cubes long”
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.countChildExamples}>
+            Places seven buttons on the 7 card.
+             </TableCell>
+             <TableCell padding="checkbox"  className={classes.shapeChildExamples} >
+             Says, “I put the book in the middle of the table.”
+             </TableCell>
+             <TableCell padding="checkbox" className={classes.patternChildExamples}>
+             Creates an A-B-C pattern using stickers (frog, heart, dog, frog, heart dog...etc.)
+             </TableCell>
+            <TableCell padding="checkbox" className={classes.measureChildExamples}>
+            Looks at the picture schedule and says, “Next we have recess!”
+            </TableCell>
+            </TableRow>
+
+            <TableRow>
+            <TableCell padding="checkbox" className={classes.countChildExamples}>
+ 
+             </TableCell>
+             <TableCell padding="checkbox"  className={classes.shapeChildExamples} >
+             Draws a simple map of the classroom.
+             </TableCell>
+             <TableCell padding="checkbox" className={classes.patternChildExamples}>
+ 
+             </TableCell>
+            <TableCell padding="checkbox" className={classes.measureChildExamples}>
+            ** I don’t think they would do anything with graphs/data during centers so perhaps we save this one for whole group/small group when we create that?
+            </TableCell>
+            </TableRow>
         </TableBody>
       </Table>
-      <Typography variant="subtitle2" gutterBottom style={{ padding: 10 }}>
-        While you are recording a SAMPLE NEED TO MODIFY LATER, choose the button representing the{" "}
-        <strong>primary</strong> reason for that SAMPLE NEED TO MODIFY LATER.{" "}
-        <strong>Change </strong>
-        the button if the primary reason changes during the same SAMPLE NEED TO MODIFY LATER. Choose
-        the <strong>“Other”</strong> button if the reason for the SAMPLE NEED TO MODIFY LATER is not
-        represented in the other buttons, and you will be prompted to explain the
-        reason in the Notes.
-      </Typography>
+
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
-              Waiting in line/lining up
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
-              Traveling outside the classroom
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
-              Children waiting on teacher/materials
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
-              Classroom Routines
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
-              Behavior Management Disruption
+            <TableCell className={classes.definitionText}>
+            Teacher Behaviors
             </TableCell>
           </TableRow>
         </TableHead>
+      </Table>
+
+      <Table>
         <TableBody>
+       
           <TableRow>
-            <TableCell padding="checkbox" className={classes.lineExamples}>
-              <strong>Lining up or waiting in line</strong>
+            <TableCell padding="checkbox" className={classes.countChildExamples}>
+              <strong>Using math vocabulary</strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.travelingExamples}>
-              <strong>Walking from one part of the school to another</strong>
+            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
+              <strong>Asking questions about math concepts</strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.waitingExamples}>
-              <strong>
-                Delays or interruptions because teacher or materials are not ready
-              </strong>
+            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+              <strong> Demonstrating  math concepts  </strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.routinesExamples}>
-              <strong>Participating in routine, non-learning activities</strong>
+          
+          </TableRow>
+
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.countChildExamples}>
+            number words (one, two, three)
+less
+equal
+compare
+behind
+above
+square
+cone
+pattern
+measure
+length
             </TableCell>
-            <TableCell padding="checkbox" className={classes.behaviorExamples}>
-              <strong>Delays or interruptions due to behavior management</strong>
+            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
+            How many buttons do you have?
             </TableCell>
+            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+            Shows how to say one number as each object is counted. 
+            </TableCell>
+
+
           </TableRow>
           <TableRow>
-            <TableCell padding="checkbox" className={classes.lineExamples}>
-              Lining up to leave the classroom, playground, etc.
+          <TableCell padding="checkbox" className={classes.countChildExamples}>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.travelingExamples}>
-              Walking to the playground, library, music room, etc.
+            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
+            Who has more- Anna or Marco?
             </TableCell>
-            <TableCell padding="checkbox" className={classes.waitingExamples}>
-              Teacher stops an activity or delays the start of a new activity to
-              gather or prepare materials
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.routinesExamples}>
-              Cleaning up, hand-washing, getting out cots or meal trays, etc.
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.behaviorExamples}>
-              Teacher stops a learning activity to address behavior
+            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+            Models how to identify shapes by counting the sides.
             </TableCell>
           </TableRow>
+
           <TableRow>
-            <TableCell padding="checkbox" className={classes.lineExamples}>
-              Children are lined up but are waiting to go to the next place
+          <TableCell padding="checkbox" className={classes.countChildExamples}>
             </TableCell>
-            <TableCell
-              padding="checkbox"
-              className={classes.travelingExamples}
-            ></TableCell>
-            <TableCell padding="checkbox" className={classes.waitingExamples}>
-              Teacher stops an activity or delays the start of a new activity to do
-              something unrelated to activity
+            <TableCell  padding="checkbox" className={classes.shapeChildExamples}>
+            How many do you need to get to five?
             </TableCell>
-            <TableCell padding="checkbox" className={classes.routinesExamples}>
-              Bathroom and/or water break in the classroom or hallway
+            <TableCell padding="checkbox" className={classes.patternChildExamples} >
+            Shows how to create a repeating pattern with cubes. 
             </TableCell>
-            <TableCell
-              padding="checkbox"
-              className={classes.behaviorExamples}
-            ></TableCell>
           </TableRow>
+
           <TableRow>
-            <TableCell padding="checkbox" className={classes.lineExamples}>
-              Waiting in line for lunch
+          <TableCell padding="checkbox" className={classes.countChildExamples}>
             </TableCell>
-            <TableCell
-              padding="checkbox"
-              className={classes.travelingExamples}
-            ></TableCell>
-            <TableCell
-              padding="checkbox"
-              className={classes.waitingExamples}
-            ></TableCell>
-            <TableCell padding="checkbox" className={classes.routinesExamples}>
-              Moving from one activity to another (e.g., whole group to centers)
+            <TableCell  padding="checkbox" className={classes.shapeChildExamples}>
+            How do you know that’s a triangle?
+             </TableCell>
+            <TableCell padding="checkbox" className={classes.patternChildExamples} >
+            Demonstrates how to compare the length of two blocks.
             </TableCell>
-            <TableCell
-              padding="checkbox"
-              className={classes.behaviorExamples}
-            ></TableCell>
           </TableRow>
+
+          <TableRow>
+          <TableCell padding="checkbox" className={classes.countChildExamples}>
+            </TableCell>
+            <TableCell  padding="checkbox" className={classes.shapeChildExamples}>
+            Where did you put the orange block--above or below the blue block?
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.patternChildExamples} >
+            Models how to use position words when talking about the location of objects.
+            </TableCell>
+          </TableRow>
+
         </TableBody>
       </Table>
+
+
     </div>
   )
 }

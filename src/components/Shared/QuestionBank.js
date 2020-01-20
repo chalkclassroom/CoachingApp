@@ -277,72 +277,105 @@ const questionBank = {
   ],
   'math':[
     {
-      text: "Sample math question 1?",
+      text: "A teacher observes a child in dramatic play placing toy eggs in a basket. She says, “Wow, Jaden, you have a big basket of eggs! How many do you have?” Which of the following behaviors did the teacher use?",
       options: new Map([
-        ["Option 1", false],
-        ["Option 2", false],
-        ["Option 3", false],
-        ["A and B only", true],
-        ["A, B, and C", false]
-      ]),
-      feedback: "The correct answer is D. sample text hint, " +
-        "sample text hint. " +
-        "sample text hint " +
-        "sample text hint."
+        ["Asking questions about math concepts", true],
+        ["Demonstrating math concepts", false],
+        ["Using math vocabulary", false],
+        ["A and B only", false]     
+       ]),
+      feedback: "The correct answer is A. When a teacher asks, “How many do you have?” that is considered asking questions about math concepts because it prompts the child to use counting skills such as one-to-one correspondence or subitizing."
     },
     {
-      text: "Sample math question 2.",
+      text: "A child is playing with blocks and begins to put all the green triangles into a pile and the red triangles into a separate pile. What type of math is this child doing?",
       options: new Map([
-        ["True", true],
-        ["False", false]
+        ["Measurement and data", false ],
+        ["Patterns", false],
+  ["Shapes and spatial reasoning ", false],
+  ["None of the above ", true]
       ]),
-      feedback: "The correct answer is True.sample text hint, " +
-      "sample text hint. " +
-      "sample text hint " +
-      "sample text hint."
+      feedback: " The correct answer is D. The child is sorting the triangles by color; therefore the child is not doing one of the math types listed in the answers. If the child had sorted the blocks by shape, placing those with three sides (triangles) in one pile and those with four sides (squares) in a separate pile, then the correct type of math would be shapes and spatial reasoning. "
     },
     {
-      text: "Sample math question 3?",
+      text: "Which of the following is NOT an example of the math type counting and number?",
       options: new Map([
-        ["sample option 1",
-        false],
-        ["sample option 2", false],
-        ["Sample option 3 ", true],
-        ["Sample option 4 ", false]
+        ["Matching a card showing three dots with a card showing the numeral 3",false],
+        ["Making a pattern with magnet numbers (1,2,1,2)", true],
+        ["Counting all of the letter A’s on a book page", false],        
+        ["Singing a counting song like ‘Five Little Monkeys”", false]
       ]),
-      feedback: "The correct answer is C. sample text hint. " +
-      "sample text hint " +
-      "sample text hint. " +
-      "sample text hint " +
-      "sample text hint " +
-      "sample text hint."
+      feedback: "The correct answer is B. Making a pattern with magnet numbers (1,2,1,2) is an example of patterning (not counting and number). Whenever a child repeats a sequence of items, the child is creating a pattern."
     },
     {
-      text: "Sample math question 4.",
+      text: "A child is putting beans on one side of a bucket balance and marbles on the other side. The bucket with marbles sinks and the bucket with beans rises. If the child ________________, this would be an example of the math type measurement and data.",
       options: new Map([
-        ["True", true],
-        ["False", false]
+  [" Counts the beans ", false],
+        ["Says there are more marbles than beans", false],
+        ["Says the marbles are heavier", true],
+        ["All of the above", false]
       ]),
-      feedback: "The correct answer is True.sample text hint, " +
-      "sample text hint. " +
-      "sample text hint " +
-      "sample text hint."
-    },
+      feedback: "The correct answer is C. One way that children engage in the math type measurement and data is by comparing objects by weight. The child does this when she observes that the marbles in the bucket balance are heavier."
+        },
     {
-      text: "Sample math question 5?",
+      text: " A child is exploring letter stamps at the writing center. At first he tries out the A, C, and S stamps. Then he starts alternating the A and S stamp across the bottom of the paper. What type of math is he doing??",
       options: new Map([
-        ["sample option 1",
-        false],
-        ["sample option 2", false],
-        ["Sample option 3 ", true],
-        ["Sample option 4 ", false]
+        ["Patterns", true],
+        ["Shapes and spatial reasoning ", false],
+        ["Counting and number ", false],
+        ["Measurement and data ", false]
       ]),
-      feedback: "The correct answer is C. sample text hint. " +
-      "sample text hint " +
-      "sample text hint. " +
-      "sample text hint " +
-      "sample text hint " +
-      "sample text hint."
+      feedback: " The correct answer is A.  When children repeat a sequence like A, S, A, S they are creating a pattern."
+    },
+{
+      text: "A teacher is introducing measurement concepts to a small group of children using blocks to determine the length of a table. She lines blocks from one edge of the table to the other. When she reaches the end of the table, she says, “Hmm, it looks like the table is 16 blocks long plus part of a block. So it is more than 16 blocks but less than 17 blocks.” In this scenario, the teacher is_______________.?",
+      options: new Map([
+        ["Demonstrating a math concept", false],
+        ["Asking questions about a math concept", false ],
+        ["Demonstrating a math concepts and using math vocabulary ", true],
+        ["Asking questions about a math concept and using math vocabulary ", false]
+      ]),
+      feedback: "The correct answer is C. The teacher models, or demonstrates, how to use blocks (a non-standard unit of measurement) to figure out the length of the table. In addition, the teacher uses math vocabulary including “long,” “more,” and “less” as she demonstrates the measurement concepts."
+    },
+
+{
+      text: "A teacher reads a book about a bear who picks seven apples every Sunday, then eats one per day until he has none left. One child says, “On the next page, he’s going to have four left!” This child is showing what type of mathematical thinking?",
+      options: new Map([
+        ["Measurement and data ", false ],
+        ["Counting and number ", true],       
+        ["Shapes and spatial reasoning ", false],
+        ["All the above", false ]
+      ]),
+      feedback: "The correct answer is B. The child notices that each time the bear eats an apple, it is one less than the amount the bear had before. When the child predicts that the bear will have four on the next page, the child shows his knowledge that counting backward is one less. (I could also see some people thinking of patterning?).",
+    },
+{
+      text: " A teacher watches a child at the art center play with a handful of pipe cleaners. She encourages the child to create something and he builds a house. The teacher asks, “What shapes do you see in your house?” The child replies, “It’s just a house!” The teacher is ______________; the child is doing this type of math: _______________.?",
+      options: new Map([
+        ["Using math vocabulary; measurement and data",false],
+        ["Asking questions about math concepts; shapes and spatial reasoning", false],
+        ["Using math vocabulary; shapes and spatial reasoning ", false],
+        ["Asking questions about math concepts; none ", true]
+      ]),
+      feedback: "The correct answer is D. The teacher is asking questions about math concepts when she asks the child about shapes. However, the child does not show that she is thinking about a particular math concept when she replies, “It’s just a house!” Therefore, there is no math type to identify regarding the child’s behavior."
+    },
+{
+      text: "A child in the music center listens to a peer create a rhythm on the hand drums (one beat slow, three beats fast, ba-da-da-da). The child copies the rhythm (ba-da-da-da) with his hands over and over again. This is an example of ________________.?",
+      options: new Map([
+        ["Patterns", true],
+        ["Counting and number ", false],
+        ["Measurement and data ", false ],
+        ["Shapes and spatial reasoning ", false],
+      ]),
+      feedback: " The correct answer is A. When children create a pattern in their environment, whether it is using blocks to make a red-blue-red-blue pattern or hand-clapping to repeat a series of beats, this is doing patterns.."
+    },
+{
+      text: " Two children at the blocks center have each connected several train cars together to make one long line of trains. One boy says, “Mine is the longest!” The teacher joins their play and says, “How do you know your train is longer than Leo’s train? Let’s find out how long they are.” The boys eagerly start pointing to their trains one by one and saying, “one, two, three, four,” etc. What type(s) of math are the children doing?",
+      options: new Map([
+        ["Counting and number",false],
+        ["Patterns; counting and number ", false],
+        ["Measurement and data; counting and number", true],
+        ["Patterns ", false],
+      ]),
+      feedback: "The correct answer is C. When children compare objects by length to figure which is the longest (or longer, shorter, etc.), they are doing measurement and data math. Because the boys counted their trains to help them compare lengths, they are also engaged in the counting and number type of math."
     }
   ],
   'student':[],

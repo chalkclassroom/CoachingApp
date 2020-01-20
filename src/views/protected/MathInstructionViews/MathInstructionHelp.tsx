@@ -89,13 +89,12 @@ class MathInstructionTimeHelp extends React.Component<Props, State> {
               justify="flex-start"
             >
               <Typography variant="h4" gutterBottom>
-                 MathInstruction
+              Math Opportunities
               </Typography>
               <Typography variant="subtitle2" gutterBottom>
-                SAMPLE, a <strong>MathInstruction</strong> sample <strong>most</strong> of the class is not involved in a
-                learning activity.
+              <strong>CENTERS</strong> 
               </Typography>
-              <MathInstructionHelpCard />
+              <MathInstructionHelpCard/>
             </Grid>
           </div>
         </Modal>
