@@ -32,6 +32,7 @@ import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from "@material-ui/core/es";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
@@ -219,46 +220,43 @@ class Dashboard extends React.Component {
     const magic8 = this.props.magic8;
     return (
       <div>
-        <head>
-          <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        </head>
-        <body>
-          {this.state.help ? (
-            <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
-              {(() => {
-                switch (magic8) {
-                  case "Transition Time":
-                    return <TransitionTimeHelp />;
-                  case "Classroom Climate":
-                    return <ClassroomClimateHelp />;
-                  case "Sequential Activities":
+        {this.state.help ? (
+          <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
+            {(() => {
+              switch (magic8) {
+                case "Transition Time":
+                  return <TransitionTimeHelp />;
+                case "Classroom Climate":
+                  return <ClassroomClimateHelp />;
+                case "Associative and Cooperative":
+                    return <AssocCoopHelp />;
+                case "Sequential Activities":
                     return <SequentialActivitiesHelp />;
-                  default:
-                    return <div />;
-                }
-              })()}
-            </ClickAwayListener>
-          ) : this.state.notes ? (
-            <FirebaseContext.Consumer>
-              {firebase => (
-                <Notes
-                  open={true}
-                  onClose={this.handleNotes}
-                  color={this.props.color}
-                  text={magic8 + " Notes"}
-                  firebase={firebase}
-                />
-              )}
-            </FirebaseContext.Consumer>
-          ) : this.state.incomplete ? (
-            <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
-              <IncompleteObservation />
-            </ClickAwayListener>
-          ) : (
-            <div />
-          )}
-          <Card className={classes.card}>
+                default:
+                  return <div />;
+              }
+            })()}
+          </ClickAwayListener>
+        ) : this.state.notes ? (
+          <FirebaseContext.Consumer>
+            {firebase => (
+              <Notes
+                open={true}
+                onClose={this.handleNotes}
+                color={this.props.color}
+                text={magic8 + " Notes"}
+                firebase={firebase}
+              />
+            )}
+          </FirebaseContext.Consumer>
+        ) : this.state.incomplete ? (
+          <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
+            <IncompleteObservation />
+          </ClickAwayListener>
+        ) : (
+          <div />
+        )}
+        <Card className={classes.card}>
             <Grid
               container
               flexGrow={1}
