@@ -365,7 +365,7 @@ const questionBank = {
         ["Measurement and data ", false ],
         ["Shapes and spatial reasoning ", false],
       ]),
-      feedback: " The correct answer is A. When children create a pattern in their environment, whether it is using blocks to make a red-blue-red-blue pattern or hand-clapping to repeat a series of beats, this is doing patterns.."
+      feedback: " The correct answer is A. When children create a pattern in their environment, whether it is using blocks to make a red-blue-red-blue pattern or hand-clapping to repeat a series of beats, this is doing patterns."
     },
 {
       text: " Two children at the blocks center have each connected several train cars together to make one long line of trains. One boy says, “Mine is the longest!” The teacher joins their play and says, “How do you know your train is longer than Leo’s train? Let’s find out how long they are.” The boys eagerly start pointing to their trains one by one and saying, “one, two, three, four,” etc. What type(s) of math are the children doing?",
@@ -520,7 +520,7 @@ const questionBank = {
         ["Introduce visuals that remind children how to play a game", false],
         ["Explain to children that we take turns during board games and ask who would like to go first", false],
         ["Demonstrate how to move the game pieces on the board ", false],
-        ["All of the above", true],
+        ["All of the above", true]
       ]),
       feedback: "The correct answer is D. Children may have a difficult time interacting " + 
       "cooperatively by playing a board game if they don’t remember how to play.  If teachers introduce " + 
@@ -534,7 +534,7 @@ const questionBank = {
         ["Cooperative interaction", false],
         ["Associative interaction", false],
         ["Not enough information to choose an answer", true],
-        ["None of the above", false],
+        ["None of the above", false]
       ]),
       feedback: "The correct answer is C.  In order to know whether this is an associative or " + 
       "cooperative interaction, we need more information about the child’s interaction with " + 
@@ -549,7 +549,7 @@ const questionBank = {
         ["Interacting with a teacher", false],
         ["Talking", false],
         ["A or B", true],
-        ["None of the above", false],
+        ["None of the above", false]
       ]),
       feedback: "The correct answer is D.  An interaction can be considered associative or " + 
       "cooperative if the child is interacting with another person, whether it is another " + 
@@ -572,7 +572,7 @@ const questionBank = {
         ["Participating in children’s play", false],
         ["Encouraging children to spread out across centers", true],
         ["Encouraging children to work together", false],
-        ["Helping children find words to communicate", false],
+        ["Helping children find words to communicate", false]
       ]),
       feedback: "The correct answer is B.  In order for an interaction to be associative or " + 
       "cooperative, children need to be interacting with another child(ren) or an adult.  If a " + 
@@ -586,7 +586,7 @@ const questionBank = {
         ["Demonstrate the game", false],
         ["Model good sportsmanship", false],
         ["Help children communicate (Say, “it’s my turn next”)", false],
-        ["All of the above", true],
+        ["All of the above", true]
       ]),
       feedback: "The correct answer is D.  When children are struggling to play a game, it might " + 
       "be because they do not know how to play, have not developed good sportsmanship, or might " + 
@@ -600,7 +600,7 @@ const questionBank = {
         ["Cooperative interaction", true],
         ["Associative interaction", false],
         ["Not enough information to choose an answer", false],
-        ["None of the above", false],
+        ["None of the above", false]
       ]),
       feedback: "The correct answer is A. When children take turns, they are exhibiting cooperative behavior."
     },
@@ -610,7 +610,7 @@ const questionBank = {
         ["Children are playing with shared materials", false],
         ["Children are communicating about a task with their peers", false],
         ["Children are constructing an idea together", false],
-        ["All of the above", true],
+        ["All of the above", true]
       ]),
       feedback: "The correct answer is D.  Associative interactions are seen when children " + 
       "are playing with shared materials, communicating about a task with others, or " + 
@@ -625,7 +625,7 @@ const questionBank = {
         ["Engaging in a cooperative interaction", false],
         ["Acting out a recognizable scenario", false],
         ["B & C", true],
-        ["A & C", false],
+        ["A & C", false]
       ]),
       feedback: "The correct answer is D.  The children in this scenario are acting out a common " + 
       "scenario (dinnertime) and using role speech. Therefore, this is an example of a cooperative interaction."
@@ -637,7 +637,7 @@ const questionBank = {
         ["Board games", true],
         ["Crayons", false],
         ["Worksheets", false],
-        ["Backpacks", false],
+        ["Backpacks", false]
       ]),
       feedback: "The correct answer is A.  Although materials like crayons may be present during " + 
       "cooperative interactions, board games are particularly likely to help children initiate " + 

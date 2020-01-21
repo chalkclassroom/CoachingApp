@@ -15,6 +15,7 @@ const styles = () => ({
     color: "black",
     fontSize: 18,
     textAlign: "center",
+    verticalAlign: "middle",
     width: "50%"
   },
   definitionText: {
@@ -25,31 +26,56 @@ const styles = () => ({
     width: "50%"
   },
   buttonTitle: {
-    backgroundColor: "#094492", 
+    backgroundColor: "#094492",
     color: "white",
     fontSize: 14,
-    textAlign: "center", 
+    textAlign: "center",
     width: "20%"
   },
-   countChildExamples: {
+  countChildExamples: {
     backgroundColor: "#d9ead3",
-    width:"20%"
+    width: "20%"
   },
-   shapeChildExamples: {
+  countTeacherExamples: {
+    backgroundColor: "#d9ead3",
+    width: "20%",
+    verticalAlign: "baseline"
+  },
+  shapeChildExamples: {
     backgroundColor: "#c9daf8",
-    width:"20%"
+    width: "20%"
   },
-   patternChildExamples: {
+  patternChildExamples: {
     backgroundColor: "#f4cccc",
-    width:"20%"
+    width: "20%"
   },
-   measureChildExamples: {
+  measureChildExamples: {
     backgroundColor: "#fff2cc",
-    width:"20%"
+    width: "20%"
+  },
+  countExamples: {
+    backgroundColor: "#d9ead3",
+    textAlign: "center",
+    width: "20%"
+  },
+  shapeExamples: {
+    backgroundColor: "#c9daf8",
+    textAlign: "center",
+    width: "20%"
+  },
+  patternExamples: {
+    backgroundColor: "#f4cccc",
+    textAlign: "center",
+    width: "20%"
+  },
+  measureExamples: {
+    backgroundColor: "#fff2cc",
+    textAlign: "center",
+    width: "20%"
   },
   behaviorExamples: {
     backgroundColor: "#FF5252",
-    width:"20%"
+    width: "20%"
   }
 });
 
@@ -61,7 +87,7 @@ function MathInstructionHelpCard(props) {
         <TableHead>
           <TableRow>
             <TableCell className={classes.definitionTitle}>
-            Student Math Type
+              Student Math Type
             </TableCell>
           </TableRow>
         </TableHead>
@@ -69,25 +95,25 @@ function MathInstructionHelpCard(props) {
 
       <Table>
         <TableBody>
-        <TableRow>
-            <TableCell padding="checkbox" className={classes.countChildExamples}>
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.countExamples}>
               <strong>
-              Counting and Numbers
+                Counting and Numbers
               </strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
+            <TableCell padding="checkbox" className={classes.shapeExamples}>
               <strong>
-              Shapes and Spatial Reasoning
+                Shapes and Spatial Reasoning
              </strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+            <TableCell padding="checkbox" className={classes.patternExamples}>
               <strong>
                 Patterns
               </strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.measureChildExamples}>
+            <TableCell padding="checkbox" className={classes.measureExamples}>
               <strong>
-              Measurement and Data
+                Measurement and Data
               </strong>
             </TableCell>
           </TableRow>
@@ -101,7 +127,7 @@ function MathInstructionHelpCard(props) {
             </TableCell>
             <TableCell padding="checkbox" className={classes.patternChildExamples}>
               <strong>
-              Notices, copies, or creates a pattern in the environment or with manipulatives
+                Notices, copies, or creates a pattern in the environment or with manipulatives
               </strong>
             </TableCell>
             <TableCell padding="checkbox" className={classes.measureChildExamples}>
@@ -113,61 +139,60 @@ function MathInstructionHelpCard(props) {
 
           <TableRow>
             <TableCell padding="checkbox" className={classes.countChildExamples}>
-            Counts six marbles and says, “I have six.”            </TableCell>
+              Counts six marbles and says, “I have six.”            </TableCell>
             <TableCell padding="checkbox" className={classes.shapeChildExamples}>
-            Points to a picture of a piece of pizza in a book and says, “This is a triangle!” 
+              Points to a picture of a piece of pizza in a book and says, “This is a triangle!”
             </TableCell>
             <TableCell padding="checkbox" className={classes.patternChildExamples}>
-            While looking at tiles on the floor child says, “I see black, white, black, white”
+              While looking at tiles on the floor child says, “I see black, white, black, white”
             </TableCell>
             <TableCell padding="checkbox" className={classes.measureChildExamples}>
-            Places toy animals side by side in order of length
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell padding="checkbox" className={classes.countChildExamples}>
-            Notices parts of a whole: “I have five bears, two are red and three are blue.”
-            </TableCell>
-            <TableCell padding="checkbox"  className={classes.shapeChildExamples} >
-            Creates a square from two triangles.
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.patternChildExamples}>
-            Adds to a green-red-green pattern using cubes
-            </TableCell>
-            <TableCell padding="checkbox" className={classes.measureChildExamples}>
-            Determines that his shoe is “12 cubes long”
+              Places toy animals side by side in order of length
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell padding="checkbox" className={classes.countChildExamples}>
-            Places seven buttons on the 7 card.
-             </TableCell>
-             <TableCell padding="checkbox"  className={classes.shapeChildExamples} >
-             Says, “I put the book in the middle of the table.”
-             </TableCell>
-             <TableCell padding="checkbox" className={classes.patternChildExamples}>
-             Creates an A-B-C pattern using stickers (frog, heart, dog, frog, heart dog...etc.)
-             </TableCell>
-            <TableCell padding="checkbox" className={classes.measureChildExamples}>
-            Looks at the picture schedule and says, “Next we have recess!”
+              Notices parts of a whole: “I have five bears, two are red and three are blue.”
             </TableCell>
-            </TableRow>
+            <TableCell padding="checkbox" className={classes.shapeChildExamples} >
+              Creates a square from two triangles.
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+              Adds to a green-red-green pattern using cubes
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.measureChildExamples}>
+              Determines that his shoe is “12 cubes long”
+            </TableCell>
+          </TableRow>
 
-            <TableRow>
+          <TableRow>
             <TableCell padding="checkbox" className={classes.countChildExamples}>
- 
+              Places seven buttons on the 7 card.
              </TableCell>
-             <TableCell padding="checkbox"  className={classes.shapeChildExamples} >
-             Draws a simple map of the classroom.
+            <TableCell padding="checkbox" className={classes.shapeChildExamples} >
+              Says, “I put the book in the middle of the table.”
              </TableCell>
-             <TableCell padding="checkbox" className={classes.patternChildExamples}>
- 
+            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+              Creates an A-B-C pattern using stickers (frog, heart, dog, frog, heart dog...etc.)
              </TableCell>
             <TableCell padding="checkbox" className={classes.measureChildExamples}>
-            ** I don’t think they would do anything with graphs/data during centers so perhaps we save this one for whole group/small group when we create that?
+              Looks at the picture schedule and says, “Next we have recess!”
             </TableCell>
-            </TableRow>
+          </TableRow>
+
+          <TableRow>
+            <TableCell padding="checkbox" className={classes.countChildExamples}>
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.shapeChildExamples} >
+              Draws a simple map of the classroom.
+             </TableCell>
+            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+            </TableCell>
+            <TableCell padding="checkbox" className={classes.measureChildExamples}>
+              ** I don’t think they would do anything with graphs/data during centers so perhaps we save this one for whole group/small group when we create that?
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
 
@@ -175,7 +200,7 @@ function MathInstructionHelpCard(props) {
         <TableHead>
           <TableRow>
             <TableCell className={classes.definitionText}>
-            Teacher Behaviors
+              Teacher Behaviors
             </TableCell>
           </TableRow>
         </TableHead>
@@ -183,90 +208,77 @@ function MathInstructionHelpCard(props) {
 
       <Table>
         <TableBody>
-       
           <TableRow>
-            <TableCell padding="checkbox" className={classes.countChildExamples}>
+            <TableCell padding="checkbox" className={classes.countExamples}>
               <strong>Using math vocabulary</strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
+            <TableCell padding="checkbox" className={classes.shapeExamples}>
               <strong>Asking questions about math concepts</strong>
             </TableCell>
-            <TableCell padding="checkbox" className={classes.patternChildExamples}>
+            <TableCell padding="checkbox" className={classes.patternExamples}>
               <strong> Demonstrating  math concepts  </strong>
             </TableCell>
-          
           </TableRow>
 
           <TableRow>
-            <TableCell padding="checkbox" className={classes.countChildExamples}>
-            number words (one, two, three)
-less
-equal
-compare
-behind
-above
-square
-cone
-pattern
-measure
-length
-            </TableCell>
+            <TableCell rowspan="6" padding="checkbox" className={classes.countTeacherExamples}>
+              <div> number words (one, two, three) </div>
+              <div>less</div>
+              <div>equal</div>
+              <div>compare</div>
+              <div>behind</div>
+              <div>above</div>
+              <div>square</div>
+              <div>cone</div>
+              <div>pattern</div>
+              <div>measure</div>
+              <div>length</div>
+            </TableCell >
             <TableCell padding="checkbox" className={classes.shapeChildExamples}>
-            How many buttons do you have?
+              How many buttons do you have?
             </TableCell>
             <TableCell padding="checkbox" className={classes.patternChildExamples}>
-            Shows how to say one number as each object is counted. 
+              Shows how to say one number as each object is counted.
             </TableCell>
-
-
           </TableRow>
+
           <TableRow>
-          <TableCell padding="checkbox" className={classes.countChildExamples}>
-            </TableCell>
             <TableCell padding="checkbox" className={classes.shapeChildExamples}>
-            Who has more- Anna or Marco?
+              Who has more- Anna or Marco?
             </TableCell>
             <TableCell padding="checkbox" className={classes.patternChildExamples}>
-            Models how to identify shapes by counting the sides.
+              Models how to identify shapes by counting the sides.
             </TableCell>
           </TableRow>
 
           <TableRow>
-          <TableCell padding="checkbox" className={classes.countChildExamples}>
-            </TableCell>
-            <TableCell  padding="checkbox" className={classes.shapeChildExamples}>
-            How many do you need to get to five?
+            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
+              How many do you need to get to five?
             </TableCell>
             <TableCell padding="checkbox" className={classes.patternChildExamples} >
-            Shows how to create a repeating pattern with cubes. 
+              Shows how to create a repeating pattern with cubes.
             </TableCell>
           </TableRow>
 
           <TableRow>
-          <TableCell padding="checkbox" className={classes.countChildExamples}>
-            </TableCell>
-            <TableCell  padding="checkbox" className={classes.shapeChildExamples}>
-            How do you know that’s a triangle?
+            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
+              How do you know that’s a triangle?
              </TableCell>
             <TableCell padding="checkbox" className={classes.patternChildExamples} >
-            Demonstrates how to compare the length of two blocks.
+              Demonstrates how to compare the length of two blocks.
             </TableCell>
           </TableRow>
 
           <TableRow>
-          <TableCell padding="checkbox" className={classes.countChildExamples}>
-            </TableCell>
-            <TableCell  padding="checkbox" className={classes.shapeChildExamples}>
-            Where did you put the orange block--above or below the blue block?
+            <TableCell padding="checkbox" className={classes.shapeChildExamples}>
+              Where did you put the orange block--above or below the blue block?
             </TableCell>
             <TableCell padding="checkbox" className={classes.patternChildExamples} >
-            Models how to use position words when talking about the location of objects.
+              Models how to use position words when talking about the location of objects.
             </TableCell>
           </TableRow>
-
         </TableBody>
       </Table>
-
 
     </div>
   )
