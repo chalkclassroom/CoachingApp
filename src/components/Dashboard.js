@@ -150,7 +150,7 @@ class Dashboard extends React.Component {
           lookForsIcon: ClassroomClimateLookForsImage,
           notesIcon: ClassroomClimateNotesImage
         })
-      : this.props.magic8 === "Math"
+      : this.props.magic8 === "Math Instruction"
       ? this.setState({
           icon: MathIconImage,
           lookForsIcon: MathLookForsImage,
