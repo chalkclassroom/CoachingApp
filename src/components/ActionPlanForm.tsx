@@ -21,7 +21,9 @@ interface Props {
   sessionId: string,
   disabled: boolean,
   handleEditActionPlan(): void,
-  actionPlanExists: boolean
+  handleClose(): void,
+  actionPlanExists: boolean,
+  editMode: boolean
 }
 
 interface State {
@@ -31,7 +33,8 @@ interface State {
   actionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}>,
   editMode: boolean,
   actionPlanExists: boolean,
-  actionPlanId: string
+  actionPlanId: string,
+  createMode: boolean
 }
 
 
@@ -52,8 +55,9 @@ class ActionPlanForm extends React.Component<Props, State> {
       actionSteps: '',
       actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}],
       editMode: false,
-      actionPlanExists: false,
-      actionPlanId: ''
+      actionPlanExists: this.props.actionPlanExists,
+      actionPlanId: '',
+      createMode: false
     }
   }
 
@@ -135,7 +139,9 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.props.firebase.createActionPlan(this.props.teacherId, this.props.sessionId)
       .then(() => {
         this.setState({
-          editMode: true
+          editMode: true,
+          actionPlanExists: true,
+          createMode: true
         });
         console.log('this.props.sessionId: ', this.props.sessionId);
         this.getActionPlan();
@@ -202,10 +208,35 @@ class ActionPlanForm extends React.Component<Props, State> {
     })
   }
 
+  handleSaveAndClose = (): void => {
+    this.handleSave();
+    this.props.handleClose();
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     this.getActionPlan();
     console.log('comp did mount executed');
+  }
+
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   * @param {State} prevState
+   */
+  componentDidUpdate(prevProps: Props, prevState: State): void {
+    if (this.props.sessionId !== prevProps.sessionId) {
+      this.getActionPlan();
+      this.setState({
+        createMode: false
+      })
+    }
+    if (this.props.editMode != prevProps.editMode) {
+      this.getActionPlan();
+    }
+    if (this.state.actionPlanExists != prevState.actionPlanExists) {
+      this.getActionPlan();
+    }
   }
 
   static propTypes = {
@@ -230,7 +261,7 @@ class ActionPlanForm extends React.Component<Props, State> {
   render(): React.ReactNode {
     return (
       <div>
-        {/* {this.props.actionPlanExists ?  */}
+        {this.props.actionPlanExists || this.state.createMode ? 
           <Grid
             container
             direction="column"
@@ -246,7 +277,7 @@ class ActionPlanForm extends React.Component<Props, State> {
               >
                 <Grid item xs={3}>
                   <Typography style={{fontFamily: "Arimo"}}>
-                    ACTION PLAN {this.props.sessionId}
+                    ACTION PLAN
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
@@ -259,8 +290,10 @@ class ActionPlanForm extends React.Component<Props, State> {
                     save
                   </Button>
                 </Grid>
-                <Grid item xs={2}>
-                  save & close
+                <Grid item xs={2} onClick={this.handleSaveAndClose}>
+                  <Button>
+                    save & close
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
@@ -405,13 +438,12 @@ class ActionPlanForm extends React.Component<Props, State> {
             <Button onClick={this.handleAddActionStep}>
               <AddCircleIcon />
             </Button>
-          </Grid>
-          {/* : (
-            <Button onClick={this.handleCreate}>
-              Create Action Plan
-            </Button>
-          ) */}
-        
+          </Grid>   
+        : 
+        <Button onClick={this.handleCreate}>
+          Create Action Plan
+        </Button>  
+      }     
       </div>
     );
   }

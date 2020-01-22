@@ -51,7 +51,8 @@ interface Style {
 interface Props {
   classes: Style,
   handleClose(): void,
-  firebase: {}
+  firebase: {},
+  handleSaveAndClose(): void
 }
 
 interface State {
@@ -74,6 +75,7 @@ class ActionPlanModal extends React.Component<Props, State> {
 
   handleClose = () => {
     this.setState({ open: false });
+    this.props.handleClose();
   };
 
   static propTypes = {
@@ -84,9 +86,9 @@ class ActionPlanModal extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
@@ -111,8 +113,10 @@ class ActionPlanModal extends React.Component<Props, State> {
               teacherLastName={this.props.teacherLastName}
               teacherId={this.props.teacherId}
               sessionId={this.props.sessionId}
+              handleClose={this.handleClose}
               // handleEditActionPlan={this.handleEditActionPlan}
               disabled={false}
+              actionPlanExists={this.props.actionPlanExists}
             />
           </div>
         </Modal>
