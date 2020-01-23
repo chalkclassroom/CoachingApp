@@ -4,25 +4,6 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
  
-const RecipentAddress: React.FC<{}> = () => {
- return (
-   <Autocomplete
-      id="search bar"
-     options={top100Films}
-     getOptionLabel={option => option.title}
-     <div>
-       <TextField
-         id="outlined-basic"
-         label="Outlined"
-         margin="normal"
-         variant="outlined"
-         style={{width: "100%"}}
-       />
-     </div>
-   />
- );
-}
-
 const top100Films = [
   { title: 'The Shawshank Redemption', year: 1994 },
   { title: 'The Godfather', year: 1972 },
@@ -126,4 +107,25 @@ const top100Films = [
   { title: 'Monty Python and the Holy Grail', year: 1975 },
 ];
 
-export default TextField;
+const RecipientAddress: React.FC<{}> = () => {
+ return (
+   <Autocomplete
+     id="search bar"
+     options={top100Films}
+     getOptionLabel={option => option.title}
+     renderInput={() => (
+      <div>
+        <TextField
+          id="outlined-basic"
+          label="Outlined"
+          margin="normal"
+          variant="outlined"
+          style={{width: "100%"}}
+        />
+      </div>
+     )}
+   />
+ );
+}
+
+export default RecipientAddress;
