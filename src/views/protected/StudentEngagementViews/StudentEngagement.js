@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {Button} from '@material-ui/core';
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
@@ -14,6 +15,7 @@ import { appendClimateRating, emptyClimateStack } from "../../../state/actions/c
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
+import StudentList from "./StudentList";
 
 /*
     N.B. Time measured in milliseconds.
@@ -36,6 +38,13 @@ const styles = ({
   },
   grow: {
     flexGrow: 1
+  },
+  completeButton: {
+    color: "black",
+    borderColor: "#d9d9d9",
+    borderWidth: "2px",
+    fontSize: "15px",
+    marginTop: "auto"
   }
 });
 
@@ -109,6 +118,7 @@ class StudentEngagement extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
@@ -175,6 +185,11 @@ class StudentEngagement extends React.Component {
                   justify={"center"}
                   direction={"column"}
                 >
+                <h1>Create Student List</h1>
+                <StudentList></StudentList>
+                <Button variant="outlined" onClick={this.handleIncomplete} className={classes.completeButton}>
+                  <b>Begin Observation</b>
+                </Button>
                 </Grid>
               </Grid>
             </Grid>

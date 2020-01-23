@@ -46,6 +46,7 @@
     "react-slick": "^0.23.2",
     "react-svg-piechart": "^2.4.1",
     "react-swipeable-views": "^0.13.3",
+    "react-table": "^7.0.0-beta.20",
     "react-uikit-overlay": "^2.0.2",
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
