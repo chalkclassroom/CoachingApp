@@ -257,99 +257,98 @@ class Dashboard extends React.Component {
           <div />
         )}
         <Card className={classes.card}>
+          <Grid
+            container
+            flexGrow={1}
+            padding="50"
+            spacing={0}
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item className={classes.iconGrid}>
+              <img
+                src={this.state.icon}
+                alt="Magic 8 Icon"
+                className={classes.icon}
+              />
+            </Grid>
+            <Grid
+              item
+              className={classes.infoDisplayGrid}
+              style={{ alignItems: this.props.infoPlacement }}
+            >
+              {this.props.infoDisplay}
+            </Grid>
             <Grid
               container
-              flexGrow={1}
-              padding="50"
-              spacing={0}
-              direction="column"
-              justify="center"
+              className={classes.gridTopMargin}
+              direction="row"
+              spacing={16}
               alignItems="center"
+              alignContent="center"
+              justify="center"
             >
-              <Grid item className={classes.iconGrid}>
+              <Button className="lookFor" onClick={this.handleHelpModal}>
                 <img
-                  src={this.state.icon}
-                  alt="Magic 8 Icon"
-                  className={classes.icon}
+                  src={this.state.lookForsIcon}
+                  alt="Look-Fors"
+                  className={classes.helpIcon}
                 />
-              </Grid>
-              <Grid
-                item
-                className={classes.infoDisplayGrid}
-                style={{ alignItems: this.props.infoPlacement }}
-              >
-                {this.props.infoDisplay}
-              </Grid>
-              <Grid
-                container
-                className={classes.gridTopMargin}
-                direction="row"
-                spacing={16}
-                alignItems="center"
-                alignContent="center"
-                justify="center"
-              >
-                <Button className="lookFor" onClick={this.handleHelpModal}>
-                  <img
-                    src={this.state.lookForsIcon}
-                    alt="Look-Fors"
-                    className={classes.helpIcon}
-                  />
-                </Button>
-                <Button className="notes" onClick={this.handleNotes}>
-                  <img
-                    src={this.state.notesIcon}
-                    alt="Notes"
-                    className={classes.helpIcon}
-                  />
-                </Button>
-              </Grid>
-              <Grid item className={classes.gridTopMargin}>
-                Start Time: {this.state.time}
-              </Grid>
-              {this.props.completeObservation ? (
-                <Grid item className={classes.completeGrid}>
-                  <FirebaseContext.Consumer>
-                    {firebase => (
-                      <YesNoDialog
-                        buttonText={<b>COMPLETE OBSERVATION</b>}
-                        buttonVariant={"outlined"}
-                        buttonColor={this.props.color}
-                        buttonMargin={10}
-                        dialogTitle={
-                          "Are you sure you want to complete this observation?"
-                        }
-                        shouldOpen={true}
-                        onAccept={() => {
-                          magic8 === "Classroom Climate"
-                            ? this.emptyClimateStack()
-                            : magic8 === "Transition Time"
-                            ? this.resetTransitionTime()
-                            : this.deleteAllCenters();
-                          this.props.history.push({
-                            pathname: "/Home",
-                            state: this.props.history.state
-                          });
-                          firebase.endSession();
-                        }}
-                      />
-                    )}
-                  </FirebaseContext.Consumer>
-                </Grid>
-              ) : (
-                <Grid item className={classes.completeGrid}>
-                  <Button
-                    variant="outlined"
-                    onClick={this.handleIncomplete}
-                    className={classes.completeButton}
-                  >
-                    <b>COMPLETE OBSERVATION</b>
-                  </Button>
-                </Grid>
-              )}
+              </Button>
+              <Button className="notes" onClick={this.handleNotes}>
+                <img
+                  src={this.state.notesIcon}
+                  alt="Notes"
+                  className={classes.helpIcon}
+                />
+              </Button>
             </Grid>
-          </Card>
-        </body>
+            <Grid item className={classes.gridTopMargin}>
+              Start Time: {this.state.time}
+            </Grid>
+            {this.props.completeObservation ? (
+              <Grid item className={classes.completeGrid}>
+                <FirebaseContext.Consumer>
+                  {firebase => (
+                    <YesNoDialog
+                      buttonText={<b>COMPLETE OBSERVATION</b>}
+                      buttonVariant={"outlined"}
+                      buttonColor={this.props.color}
+                      buttonMargin={10}
+                      dialogTitle={
+                        "Are you sure you want to complete this observation?"
+                      }
+                      shouldOpen={true}
+                      onAccept={() => {
+                        magic8 === "Classroom Climate"
+                          ? this.emptyClimateStack()
+                          : magic8 === "Transition Time"
+                          ? this.resetTransitionTime()
+                          : this.deleteAllCenters();
+                        this.props.history.push({
+                          pathname: "/Home",
+                          state: this.props.history.state
+                        });
+                        firebase.endSession();
+                      }}
+                    />
+                  )}
+                </FirebaseContext.Consumer>
+              </Grid>
+            ) : (
+              <Grid item className={classes.completeGrid}>
+                <Button
+                  variant="outlined"
+                  onClick={this.handleIncomplete}
+                  className={classes.completeButton}
+                >
+                  <b>COMPLETE OBSERVATION</b>
+                </Button>
+              </Grid>
+            )}
+          </Grid>
+        </Card>
       </div>
     );
   }
