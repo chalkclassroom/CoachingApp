@@ -17,16 +17,8 @@ import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
 import StudentList from "./StudentList";
 
-/*
-    N.B. Time measured in milliseconds.
 
-    Rationale for the 2:10 interval -
-    Give coaches ~10 seconds to make and confirm their rating,
-    catch up on behavior approval/disapproval count if they need to,
-    and then allow for 2 full minutes in between ratings.
- */
-
-const RATING_INTERVAL = 60000;
+const RATING_INTERVAL = 5000;
 
 const styles = ({
   root: {
@@ -38,28 +30,30 @@ const styles = ({
   },
   grow: {
     flexGrow: 1
-  },
-  completeButton: {
-    color: "black",
-    borderColor: "#d9d9d9",
-    borderWidth: "2px",
-    fontSize: "15px",
-    marginTop: "auto"
   }
 });
 
 class StudentEngagement extends React.Component {
-  state = {
+  constructor(props) {
+  super(props)
+  this.state = {
     auth: true,
     time: RATING_INTERVAL,
     ratingIsOpen: false,
+    ratingStart: false,
     ratings: [],
     recs: true,
     incompleteRating: false,
+    studentNames: []
+  }
+    this.beginObservation = this.beginObservation.bind(this);
   };
 
   tick = () => {
-    if (this.state.time <= 0) {
+    if (!this.state.ratingStart) {
+      // wait to start ratings
+    }
+    else if (this.state.time <= 0) {
       this.handleRatingModal();
       this.setState({ time: RATING_INTERVAL });
     } else {
@@ -117,6 +111,12 @@ class StudentEngagement extends React.Component {
     clearInterval(this.timer);
   }
 
+  beginObservation = (studentNames) => {
+    this.setState({ ratingStart: true });
+    this.setState({ studentNames: studentNames});
+    console.log(studentNames)
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -172,7 +172,10 @@ class StudentEngagement extends React.Component {
                   <Dashboard 
                     magic8="Level of Engagement"
                     color="#0988ec"
-                    infoDisplay= {<Countdown color="#0988ec" timerTime={RATING_INTERVAL}/>}
+                    infoDisplay= {
+                      this.state.ratingStart?
+                      <Countdown color="#0988ec" timerTime={RATING_INTERVAL}/> : <div></div>
+                    }
                     infoPlacement="center"
                     completeObservation={true}
                   />
@@ -185,11 +188,11 @@ class StudentEngagement extends React.Component {
                   justify={"center"}
                   direction={"column"}
                 >
-                <h1>Create Student List</h1>
-                <StudentList></StudentList>
-                <Button variant="outlined" onClick={this.handleIncomplete} className={classes.completeButton}>
-                  <b>Begin Observation</b>
-                </Button>
+                {!this.state.ratingStart &&
+                <StudentList
+                  beginObservation = {this.beginObservation}
+                />
+                }
                 </Grid>
               </Grid>
             </Grid>

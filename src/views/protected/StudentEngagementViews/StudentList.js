@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { useTable } from "react-table";
+import PropTypes from 'prop-types';
+import { Button} from '@material-ui/core';
+
+
+
 
 const Styles = styled.div`
   padding: 1rem;
@@ -28,6 +33,14 @@ const Styles = styled.div`
         border-right: 0;
       }
     }
+  }
+  Button {
+    color: "black";
+    borderColor: "#d9d9d9";
+    borderWidth: "2px";
+    fontSize: "15px";
+    marginTop: "auto";
+  
   }
 `;
 
@@ -96,7 +109,7 @@ function Table({ columns, data, updateMyData }) {
   );
 }
 
-function StudentList() {
+function StudentList({beginObservation}) {
   const columns = React.useMemo(
     () => [
       {
@@ -137,13 +150,30 @@ function StudentList() {
     );
   };
 
-  console.log(data)
+  const flattened = (data) => {
+    let flattenedData = [];
+    for (var item of data) {
+      for (var prop in item) {
+        flattenedData.push(item[prop])
+      }
+    }
+    return flattenedData;
+  }
+
 
   return (
     <Styles>
+      <h1>Create Student List</h1>
       <Table columns={columns} data={data} updateMyData={updateMyData} />
+      <Button variant="outlined" onClick={() => beginObservation(flattened(data))}>
+                      <b>Begin Observation</b>
+      </Button>
     </Styles>
   );
 }
+
+StudentList.propTypes = {
+  beginObservation: PropTypes.func.isRequired,
+};
 
 export default StudentList;
