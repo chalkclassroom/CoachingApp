@@ -246,35 +246,20 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
             });
           })
         );
-        /* if (firebase.findActionPlan(this.state.sessionId)) {
-          this.setState({
-            actionPlanExists: true
-          }, () => console.log('sessionId: ', this.state.sessionId, 'state of action plan exists: ', this.state.actionPlanExists))
-        } else {
-          this.setState({
-            actionPlanExists: false
-          }, () => console.log('sessionId: ', this.state.sessionId, 'state of action plan exists: ', this.state.actionPlanExists))
-        } */
         firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
           if (actionPlanData.length>0) {
             console.log('actionplan data: ', actionPlanData>0)
             this.setState({
               actionPlanExists: true
-            }, () => console.log('sessionId: ', this.state.sessionId, 'state of action plan exists: ', this.state.actionPlanExists))
+            })
           } else {
             this.setState({
               actionPlanExists: false
-            }, () => console.log('sessionId: ', this.state.sessionId, 'state of action plan exists: ', this.state.actionPlanExists))
+            })
           }
         }).catch(() => {
-          console.log('blah blah action plan')
+          console.log('unable to retrieve action plan')
         })
-
-        /* firebase
-          .fetchBehaviourTypeCount(this.state.sessionId)
-          .then((json: Array<{behaviorResponse: string, count: number}>) => console.log("attempt behavior count: ", json)); */
-        // .gets json, then map to the state
-
         firebase.fetchBehaviourTypeCount(this.state.sessionId).then((json: Array<{behaviorResponse: string, count: number}>) => {
           json.forEach(behavior => {
             if (behavior.behaviorResponse === "specificapproval") {

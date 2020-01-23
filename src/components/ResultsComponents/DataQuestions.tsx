@@ -97,28 +97,24 @@ class DataQuestions extends React.Component<Props, {}> {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Grid container direction="column">
-            {item.text.map((questions, index) => (
-              <Grid container direction="row" key={index}>
-              
-                <Grid item xs={10}>
-                  <div className={classes.expansionPanelText}>
-                    
-                      <ul style={{fontFamily: "Arimo"}}>
-                        {questions}
-                      </ul>
-                    
-                  </div>
-                </Grid>
-                <Grid item xs={1}>
-                  <Button
-                    onClick={this.props.handleAddToPlan.bind(this, item.name)}
-                  >
-                    <AddCircleIcon className={classes.addButton} />
-                  </Button>
-                </Grid>
-                
-              </Grid>
-              ))}
+                {item.text.map((questions, index) => (
+                  <Grid container direction="row" key={index}>
+                    <Grid item xs={10}>
+                      <div className={classes.expansionPanelText}>
+                        <ul style={{fontFamily: "Arimo"}}>
+                          {questions}
+                        </ul>
+                      </div>
+                    </Grid>
+                    <Grid item xs={1}>
+                      <Button
+                        onClick={this.props.handleAddToPlan.bind(this, item.name)}
+                      >
+                        <AddCircleIcon className={classes.addButton} />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                ))}
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>

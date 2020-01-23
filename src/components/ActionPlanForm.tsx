@@ -79,8 +79,6 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.setState({
       [name]: event.target.value,
     });
-    // this.validateState(name, event.target.value);
-    // console.log(this.state.goal);
   };
 
   /**
@@ -93,7 +91,6 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.setState({
       actionStepsArray: newArray
     });
-    console.log(this.state.actionStepsArray[0].step);
   }
 
   /**
@@ -106,7 +103,6 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.setState({
       actionStepsArray: newArray
     });
-    console.log(this.state.actionStepsArray[0].materials);
   }
 
   /**
@@ -119,7 +115,6 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.setState({
       actionStepsArray: newArray
     });
-    console.log(this.state.actionStepsArray[0].person);
   }
 
   /**
@@ -132,7 +127,6 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.setState({
       actionStepsArray: newArray
     });
-    console.log(this.state.actionStepsArray[0].timeline);
   }
 
   handleCreate = (): void => {
@@ -143,7 +137,6 @@ class ActionPlanForm extends React.Component<Props, State> {
           actionPlanExists: true,
           createMode: true
         });
-        console.log('this.props.sessionId: ', this.props.sessionId);
         this.getActionPlan();
       })
       .catch(() => {
@@ -153,7 +146,6 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   getActionPlan = (): void => {
     this.props.firebase.getActionPlan(this.props.sessionId).then((actionPlanData: Array<{id: string, goal: string, benefit: string}>) => {
-      console.log('apf line 133', actionPlanData);
       if (actionPlanData[0]) {
         this.setState({
           actionPlanExists: true,
@@ -190,9 +182,8 @@ class ActionPlanForm extends React.Component<Props, State> {
    * saves action plan by updating Cloud Firestore records
    */
   handleSave = (): void => {
-    console.log('was handle save even executed');
     this.props.firebase.saveActionPlan(this.state.actionPlanId, this.state.goal, this.state.benefit).then(() => {
-      console.log("saving action plan worked");
+      console.log("action plan saved");
     })
     .catch(() => {
       console.log("error with saving action plan");
@@ -216,7 +207,6 @@ class ActionPlanForm extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     this.getActionPlan();
-    console.log('comp did mount executed');
   }
 
   /** 
@@ -251,7 +241,12 @@ class ActionPlanForm extends React.Component<Props, State> {
       createActionStep: PropTypes.func,
     }).isRequired,
     teacherId: PropTypes.string.isRequired,
-    sessionId: PropTypes.string.isRequired
+    sessionId: PropTypes.string.isRequired,
+    disabled: PropTypes.bool.isRequired,
+    handleEditActionPlan: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    actionPlanExists: PropTypes.bool.isRequired,
+    editMode: PropTypes.bool.isRequired
   };
 
   /**
@@ -267,12 +262,14 @@ class ActionPlanForm extends React.Component<Props, State> {
             direction="column"
             justify="flex-start"
             alignItems="flex-start"
+            style={{width: '100%'}}
           >
-            <Grid item>
+            <Grid item style={{width: '100%'}}>
               <Grid
                 container
                 direction="row"
-                justify="space-around"
+                justify="space-between"
+                alignItems="flex-start"
                 style={{width: '100%'}}
               >
                 <Grid item xs={3}>
@@ -281,17 +278,17 @@ class ActionPlanForm extends React.Component<Props, State> {
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Button disabled={!this.props.handleEditActionPlan} onClick={this.props.handleEditActionPlan}>
+                  <Button disabled={!this.props.handleEditActionPlan} variant="contained" onClick={this.props.handleEditActionPlan}>
                     edit
                   </Button>
                 </Grid>
                 <Grid item xs={2}>
-                  <Button onClick={this.handleSave}>
+                  <Button variant="contained" onClick={this.handleSave}>
                     save
                   </Button>
                 </Grid>
-                <Grid item xs={2} onClick={this.handleSaveAndClose}>
-                  <Button>
+                <Grid item xs={5}>
+                  <Button variant="contained" onClick={this.handleSaveAndClose}>
                     save & close
                   </Button>
                 </Grid>
@@ -301,6 +298,7 @@ class ActionPlanForm extends React.Component<Props, State> {
               <Grid
                 container
                 direction="row"
+                style={{fontFamily: 'Arimo'}}
               >
                 <Grid item>
                   {this.props.teacherFirstName + " " + this.props.teacherLastName}

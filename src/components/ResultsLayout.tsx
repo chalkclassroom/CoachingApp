@@ -236,6 +236,7 @@ class ResultsLayout extends React.Component<Props, State> {
             >
               <ResultsDashboard
                 magic8={this.props.magic8}
+                color="#0988ec"
                 view={this.state.view}
                 dataClick={this.dataClick}
                 questionsClick={this.questionsClick}
