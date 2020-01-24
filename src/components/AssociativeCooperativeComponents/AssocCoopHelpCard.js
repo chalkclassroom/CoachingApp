@@ -13,39 +13,45 @@ const styles = () => ({
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    width: "50%"
+    width: "50%",
+    fontFamily: 'Arimo'
   },
   definition2Title: {
     backgroundColor: "#459aeB",
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    width: "50%"
+    width: "50%",
+    fontFamily: 'Arimo'
   },
   definitionText: {
     backgroundColor: "#a481d9",
     color: "white",
     width: "50%",
     fontSize: 14,
-    textAlign: "center"
+    textAlign: "center",
+    fontFamily: 'Arimo'
   },
   definition2Text: {
     backgroundColor: "#8b5fd1",
     color: "white",
     width: "50%",
     fontSize: 14,
-    textAlign: "center"
+    textAlign: "center",
+    fontFamily: 'Arimo'
   },
   buttonTitle: {
     backgroundColor: "#f6f6f1",
     color: "black",
     fontSize: 14,
     textAlign: "center",
-    width: "20%"
+    width: "20%",
+    fontFamily: 'Arimo'
   },
   lineExamples: {
     backgroundColor: "#f6f6f1",
-    width: "20%"
+    width: "20%",
+    fontFamily: 'Arimo'
   }
 });
 

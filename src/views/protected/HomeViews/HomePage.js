@@ -6,12 +6,13 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CalendarImage from "../../../assets/images/CalendarImage.svg";
+import MyTeachersImage from "../../../assets/images/MyTeachersImage.svg";
 import ObserveImage from "../../../assets/images/ObserveImage.svg";
 import ResultsImage from "../../../assets/images/ResultsImage.svg";
 import MessagesImage from "../../../assets/images/MessagesImage.svg";
 import TeacherModal from "./TeacherModal.tsx";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
+import { withRouter } from "react-router-dom";
 
 const styles = {
   root: {
@@ -110,13 +111,14 @@ class HomePage extends React.Component {
                   alignItems="center"
                   direction="column"
                   justify="flex-start"
+                  onClick={() => this.props.history.push("/MyTeachers")}
                 >
                   <Grid item>
-                    <img src={CalendarImage} className={classes.image} />
+                    <img src={MyTeachersImage} className={classes.image} />
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
-                      Schedules & Calendar
+                      My Teachers
                     </Typography>
                   </Grid>
                 </Grid>
@@ -214,8 +216,9 @@ class HomePage extends React.Component {
 }
 
 HomePage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 HomePage.contextType = FirebaseContext;
-export default withStyles(styles)(HomePage);
+export default withRouter(withStyles(styles)(HomePage));
