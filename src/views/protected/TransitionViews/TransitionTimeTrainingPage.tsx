@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
+import * as Constants from "../../../constants/index"
 import Button from "@material-ui/core/Button/Button";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
@@ -236,7 +237,12 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
             <b>Training Home</b>
           </Button>
           <h1 style={{ justifySelf: 'center' }}>Training Tool</h1>
-          <Button variant='contained' size='medium' className={classes.backButton} onClick={null} style={{ visibility:'hidden' }}>
+          <Button 
+          variant='contained' 
+          size='medium' 
+          className={classes.backButton} 
+          onClick={null} 
+          style={{ visibility:'hidden' }}>
             <ChevronLeftRoundedIcon />
             <b>Training Home</b>
           </Button>
@@ -253,6 +259,7 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
               demonstrationClick={this.demonstrationClick}
               tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
+              buttonColor={Constants.TransitionColor}
             />
           </div>
           <div className={classes.trainingContentCard}>

@@ -5,15 +5,6 @@ import ListItem from "@material-ui/core/ListItem/index";
 import { withStyles } from '@material-ui/core/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#094492'
-    }
-  }
-});
-
-
 const styles = {
   card: {
     border: "3px solid #d9d9d9",
@@ -127,6 +118,7 @@ function TrainingDashboard(props) {
     ViewEnum,
     view,
     Icon,
+    buttonColor,
     conceptsClick,
     definitionsClick,
     exampleClick,
@@ -162,11 +154,12 @@ function TrainingDashboard(props) {
         <ListItem className={viewButtons}>
           <Button
             size="large"
-            color={"primary"}
+          //  color={"primary"}
             fullWidth={true}
             variant={view === ViewEnum.CONCEPTS ? "contained" : "outlined"}
-            onClick={conceptsClick}
-            style={{ fontSize:'1em' }} // necessary to responsively change font sizes w/ media queries
+            onClick={conceptsClick } 
+          //  style={{ fontSize:'1em' }} // necessary to responsively change font sizes w/ media queries
+            style={{ fontSize:'1em' , backgroundColor: buttonColor, color:'white' }}  
           >
             CONCEPTS
           </Button>
@@ -174,11 +167,11 @@ function TrainingDashboard(props) {
         <ListItem className={viewButtons}>
           <Button
             size="large"
-            color={"primary"}
+           // color={"primary"}
             fullWidth={true}
             variant={view === ViewEnum.DEFINITIONS ? "contained" : "outlined"}
-            onClick={definitionsClick}
-            style={{ fontSize:'1em' }}
+            onClick={definitionsClick }
+            style={{ fontSize:'1em' , backgroundColor: buttonColor, color:'white' }}  
           >
             DEFINITIONS
           </Button>
@@ -186,11 +179,13 @@ function TrainingDashboard(props) {
         <ListItem className={viewButtons}>
           <Button
             size="large"
-            color={"primary"}
+           // color={"primary"}
             fullWidth={true}
             variant={view === ViewEnum.EXAMPLE ? "contained" : "outlined"}
             onClick={exampleClick}
-            style={{ fontSize:'1em' }}
+           // style={{ fontSize:'1em' }}
+            style={{ fontSize:'1em' , backgroundColor: buttonColor, color:'white' }}  
+
             disabled
           >
             EXAMPLE
@@ -199,11 +194,13 @@ function TrainingDashboard(props) {
         <ListItem className={viewButtons}>
           <Button
             size="large"
-            color={"primary"}
+           // color={"primary"}
             fullWidth={true}
             variant={view === ViewEnum.DEMONSTRATION ? "contained" : "outlined"}
             onClick={demonstrationClick}
-            style={{ fontSize:'1em' }}
+           // style={{ fontSize:'1em' }}
+           style={{ fontSize:'1em' , backgroundColor: buttonColor, color:'white' }}  
+
           >
             DEMONSTRATION
           </Button>
@@ -211,11 +208,13 @@ function TrainingDashboard(props) {
         <ListItem className={viewButtons}>
           <Button
             size="large"
-            color={"primary"}
+           // color={"primary"}
             fullWidth={true}
             variant={view === ViewEnum.TRYIT ? "contained" : "outlined"}
             onClick={tryItClick}
-            style={{ fontSize:'1em' }}
+           // style={{ fontSize:'1em' }}
+           style={{ fontSize:'1em' , backgroundColor: buttonColor, color:'white' }}  
+
             disabled
           >
             TRY IT YOURSELF
@@ -224,11 +223,13 @@ function TrainingDashboard(props) {
         <ListItem className={viewButtons}>
           <Button
             size="large"
-            color={"primary"}
+           // color={"primary"}
             fullWidth={true}
             variant={view === ViewEnum.KNOWLEDGECHECK ? "contained" : "outlined"}
             onClick={knowledgeCheckClick}
-            style={{ fontSize:'1em' }}
+           // style={{ fontSize:'1em' }}
+           style={{ fontSize:'1em' , backgroundColor: buttonColor, color:'white' }}  
+
           >
             KNOWLEDGE CHECK
           </Button>

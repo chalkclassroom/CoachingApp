@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
+import * as Constants from "../../../constants/index";
 import Button from "@material-ui/core/Button/Button";
 import MathIconImage from "../../../assets/images/MathIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
@@ -11,6 +12,7 @@ import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionna
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import MathInstructionHelpCard from '../../../components/MathInstructionComponents/MathInstructionHelpCard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+
 
 const styles: object = {
   root: {
@@ -253,6 +255,7 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
               demonstrationClick={this.demonstrationClick}
               tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
+              buttonColor={Constants.MathColor}
             />
           </div>
           <div className={classes.trainingContentCard}>
