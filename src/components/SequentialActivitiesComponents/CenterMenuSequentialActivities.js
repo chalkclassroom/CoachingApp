@@ -130,91 +130,85 @@ class CenterChecklist extends React.Component {
   render() {
     return (
       <div>
-        <head>
-          <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        </head>
-        <body>
-          <Grid container direction="column" justify="center" alignItems="center">
-            <Typography
-              component="h4"
-              variant="h4"
-              align="center"
-              style={{ padding: "10px", fontFamily: "Arimo" }}
-            >
-              Which centers are open?
-            </Typography>
-            <Typography variant="h5" align="center" style={{fontFamily: "Arimo", padding: 10}}>
-              You will have the opportunity to add additional centers <br />
-              if the ones in your classroom are not listed here.
-            </Typography>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="flex-start"
-            >
-              <Grid item>
-                <List>
-                  {commonFirstHalf.map((value, index) => (
-                    <ListItem
-                      key={index}
-                      role={undefined}
-                      dense
-                      button
+        <Grid container direction="column" justify="center" alignItems="center">
+          <Typography
+            component="h4"
+            variant="h4"
+            align="center"
+            style={{ padding: "10px", fontFamily: "Arimo" }}
+          >
+            Which centers are open?
+          </Typography>
+          <Typography variant="h5" align="center" style={{fontFamily: "Arimo", padding: 10}}>
+            You will have the opportunity to add additional centers <br />
+            if the ones in your classroom are not listed here.
+          </Typography>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="flex-start"
+          >
+            <Grid item>
+              <List>
+                {commonFirstHalf.map((value, index) => (
+                  <ListItem
+                    key={index}
+                    role={undefined}
+                    dense
+                    button
+                    disableRipple
+                    onClick={this.handleToggle(value)}
+                  >
+                    <Checkbox
+                      checked={this.state.checked.includes(value)}
+                      tabIndex={-1}
                       disableRipple
-                      onClick={this.handleToggle(value)}
-                    >
-                      <Checkbox
-                        checked={this.state.checked.includes(value)}
-                        tabIndex={-1}
-                        disableRipple
-                      />
-                      <ListItemText
-                        primary={<Typography variant="h6" style={{fontFamily: "Arimo"}}>{value}</Typography>}
-                        disableTypography
-                        style={{ whiteSpace: "normal", wordWrap: "break-word", fontFamily: "Arimo" }}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Grid>
-              <Grid item>
-                <List>
-                  {commonSecondHalf.map((value, index) => (
-                    <ListItem
-                      key={index}
-                      role={undefined}
-                      dense
-                      button
-                      disableRipple
-                      onClick={this.handleToggle(value)}
-                    >
-                      <Checkbox
-                        checked={this.state.checked.includes(value)}
-                        tabIndex={-1}
-                        disableRipple
-                      />
-                      <ListItemText
-                        primary={<Typography variant="h6" style={{fontFamily: "Arimo"}}>{value}</Typography>}
-                        disableTypography
-                        style={{ whiteSpace: "normal", wordWrap: "break-word", fontFamily: "Arimo" }}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Grid>
+                    />
+                    <ListItemText
+                      primary={<Typography variant="h6" style={{fontFamily: "Arimo"}}>{value}</Typography>}
+                      disableTypography
+                      style={{ whiteSpace: "normal", wordWrap: "break-word", fontFamily: "Arimo" }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
             </Grid>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.handleDone}
-              style={{fontFamily: "Arimo", fontSize: 18}}
-            >
-              Done
-            </Button>
+            <Grid item>
+              <List>
+                {commonSecondHalf.map((value, index) => (
+                  <ListItem
+                    key={index}
+                    role={undefined}
+                    dense
+                    button
+                    disableRipple
+                    onClick={this.handleToggle(value)}
+                  >
+                    <Checkbox
+                      checked={this.state.checked.includes(value)}
+                      tabIndex={-1}
+                      disableRipple
+                    />
+                    <ListItemText
+                      primary={<Typography variant="h6" style={{fontFamily: "Arimo"}}>{value}</Typography>}
+                      disableTypography
+                      style={{ whiteSpace: "normal", wordWrap: "break-word", fontFamily: "Arimo" }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Grid>
           </Grid>
-        </body>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={this.handleDone}
+            style={{fontFamily: "Arimo", fontSize: 18}}
+          >
+            Done
+          </Button>
+        </Grid>
       </div>
     );
   }
@@ -237,46 +231,40 @@ class NewCenterDialog extends React.Component {
   render() {
     return (
       <div>
-        <head>
-          <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        </head>
-        <body>
-          <Dialog
-            open={this.props.open}
-            onClose={this.props.handleClose}
-            aria-labelledby="form-dialog-title"
-          >
-            <DialogTitle id="form-dialog-title" style={{fontFamily: "Arimo"}}>Add a New Center</DialogTitle>
-            <DialogContent>
-              <DialogContentText style={{fontFamily: "Arimo"}}>
-                Please enter the name of the new center.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                inputRef={cn => (this.centerName = cn)}
-                margin="dense"
-                id="center-name"
-                label="Center Name"
-                type="text"
-                fullWidth
-                style={{fontFamily: "Arimo"}}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.props.handleClose} color="primary" style={{fontFamily: "Arimo"}}>
-                Cancel
-              </Button>
-              <Button
-                onClick={() => this.props.handleSubmit(this.centerName.value)}
-                color="primary"
-                style={{fontFamily: "Arimo"}}
-              >
-                Add Center
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </body>
+        <Dialog
+          open={this.props.open}
+          onClose={this.props.handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title" style={{fontFamily: "Arimo"}}>Add a New Center</DialogTitle>
+          <DialogContent>
+            <DialogContentText style={{fontFamily: "Arimo"}}>
+              Please enter the name of the new center.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              inputRef={cn => (this.centerName = cn)}
+              margin="dense"
+              id="center-name"
+              label="Center Name"
+              type="text"
+              fullWidth
+              style={{fontFamily: "Arimo"}}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.props.handleClose} color="primary" style={{fontFamily: "Arimo"}}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => this.props.handleSubmit(this.centerName.value)}
+              color="primary"
+              style={{fontFamily: "Arimo"}}
+            >
+              Add Center
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
@@ -377,89 +365,83 @@ class CenterMenuSequentialActivities extends React.Component {
       case CENTER_MENU:
         return (
           <div>
-            <head>
-              <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            </head>
-            <body>
+            <Grid
+              container
+              justify="center"
+              alignItems="stretch"
+              direction="row"
+            >
               <Grid
                 container
-                justify="center"
-                alignItems="stretch"
+                justify="flex-start"
+                alignItems="center"
                 direction="row"
               >
-                <Grid
-                  container
-                  justify="flex-start"
-                  alignItems="center"
-                  direction="row"
-                >
-                  <Grid container spacing={0} direction="row" alignItems="center">
-                    <NewCenterDialog
-                      open={this.state.addDialog}
-                      handleClose={this.handleClose}
-                      handleSubmit={this.handleAddCenter}
-                    />
-                    <Grid container xs={3}>
-                      <Grid
-                        container
-                        alignItems={"center"}
-                        justify={"center"}
-                        direction={"column"}
-                      >
-                        <div style={{ margin: 20 }} />
-                        <Dashboard
-                          magic8="Sequential Activities"
-                          color="#ffd300"
-                          infoDisplay={
-                            <TotalVisitCount count={this.state.totalVisitCount} />
-                          }
-                          infoPlacement="flex-start"
-                          completeObservation={true}
-                        />
-                      </Grid>
+                <Grid container spacing={0} direction="row" alignItems="center">
+                  <NewCenterDialog
+                    open={this.state.addDialog}
+                    handleClose={this.handleClose}
+                    handleSubmit={this.handleAddCenter}
+                  />
+                  <Grid container xs={3}>
+                    <Grid
+                      container
+                      alignItems={"center"}
+                      justify={"center"}
+                      direction={"column"}
+                    >
+                      <div style={{ margin: 20 }} />
+                      <Dashboard
+                        magic8="Sequential Activities"
+                        color="#ffd300"
+                        infoDisplay={
+                          <TotalVisitCount count={this.state.totalVisitCount} />
+                        }
+                        infoPlacement="flex-start"
+                        completeObservation={true}
+                      />
                     </Grid>
-                    <Grid container xs={9}>
-                      {this.props.centers.map((center, index) => (
-                        <Grid
-                          key={index}
-                          item
-                          xs={4}
-                          style={{ textAlign: "center", padding: "10px" }}
-                        >
-                          <VisitCenterButton
-                            centerName={center.name}
-                            visitCount={center.count}
-                            onClick={() => this.handleCenterVisit(center.name)}
-                          />
-                        </Grid>
-                      ))}
+                  </Grid>
+                  <Grid container xs={9}>
+                    {this.props.centers.map((center, index) => (
                       <Grid
+                        key={index}
                         item
                         xs={4}
                         style={{ textAlign: "center", padding: "10px" }}
                       >
-                        <Button
-                          variant="contained"
-                          style={{
-                            minHeight: 150,
-                            maxHeight: 150,
-                            minWidth: 150,
-                            maxWidth: 150,
-                            backgroundColor: grey[400],
-                            fontFamily: "Arimo",
-                            fontSize: 18
-                          }}
-                          onClick={this.handleClickOpen}
-                        >
-                          Add Center <br /> <br /> +
-                        </Button>
+                        <VisitCenterButton
+                          centerName={center.name}
+                          visitCount={center.count}
+                          onClick={() => this.handleCenterVisit(center.name)}
+                        />
                       </Grid>
+                    ))}
+                    <Grid
+                      item
+                      xs={4}
+                      style={{ textAlign: "center", padding: "10px" }}
+                    >
+                      <Button
+                        variant="contained"
+                        style={{
+                          minHeight: 150,
+                          maxHeight: 150,
+                          minWidth: 150,
+                          maxWidth: 150,
+                          backgroundColor: grey[400],
+                          fontFamily: "Arimo",
+                          fontSize: 18
+                        }}
+                        onClick={this.handleClickOpen}
+                      >
+                        Add Center <br /> <br /> +
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </body>
+            </Grid>
           </div>
         );
       case RATING_SCREEN:
