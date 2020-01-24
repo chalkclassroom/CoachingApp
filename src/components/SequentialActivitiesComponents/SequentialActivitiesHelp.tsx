@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -35,14 +35,6 @@ interface Props {
 
 interface Style {
   paper: string,
-  definitionTitle: string,
-  definitionText: string,
-  buttonTitle: string,
-  lineExamples: string,
-  travelingExamples: string,
-  waitingExamples: string,
-  routinesExamples: string,
-  behaviorExamples: string,
 }
 
 interface State {
@@ -50,7 +42,7 @@ interface State {
 }
 
 /**
- * transition time look-fors
+ * sequential activities look-fors
  * @class SequentialActivitiesHelp
  */
 class SequentialActivitiesHelp extends React.Component<Props, State> {
@@ -58,11 +50,11 @@ class SequentialActivitiesHelp extends React.Component<Props, State> {
     open: true
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
@@ -72,38 +64,32 @@ class SequentialActivitiesHelp extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
       <div>
-        <head>
-          <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        </head>
-        <body>
-          <Modal open={this.state.open}>
-            <div style={getModalStyle()} className={classes.paper}>
-              <Grid
-                container
-                alignItems="center"
-                direction="column"
-                justify="flex-start"
-              >
-                <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                  Sequential Activities
-                </Typography>
-                <Typography variant="subtitle2" gutterBottom style={{fontFamily: "Arimo"}}>
-                  Remember, sequential activities require children to follow
-                  a <strong>logical order</strong> or <strong>sequence</strong>.
-                </Typography>
-                <SequentialHelpCard />
-              </Grid>
-            </div>
-          </Modal>
-        </body>
+        <Modal open={this.state.open}>
+          <div style={getModalStyle()} className={classes.paper}>
+            <Grid
+              container
+              alignItems="center"
+              direction="column"
+              justify="flex-start"
+            >
+              <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+                Sequential Activities
+              </Typography>
+              <Typography variant="subtitle2" gutterBottom style={{fontFamily: "Arimo"}}>
+                Remember, sequential activities require children to follow
+                a <strong>logical order</strong> or <strong>sequence</strong>.
+              </Typography>
+              <SequentialHelpCard />
+            </Grid>
+          </div>
+        </Modal>
       </div>
     );
   }
