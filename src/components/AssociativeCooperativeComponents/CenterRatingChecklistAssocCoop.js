@@ -22,7 +22,8 @@ const styles = {
     flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    fontFamily: "Arimo"
   },
   grow: {
     flexGrow: 1
@@ -234,11 +235,11 @@ class CenterRatingChecklistAssocCoop extends React.Component {
           onClose={this.handleTimeUpClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title">
+          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
             Don&apos;t forget to circulate!
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
               You&apos;ve been at the {this.props.currentCenter} center for 1 minute.
             </DialogContentText>
           </DialogContent>
@@ -248,9 +249,11 @@ class CenterRatingChecklistAssocCoop extends React.Component {
           onClose={this.handlePeopleWarningClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title">Wait!</DialogTitle>
+          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
+            Wait!
+          </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
               Please select the number of children and teachers at the center
               before submitting your rating.
             </DialogContentText>
@@ -283,18 +286,18 @@ class CenterRatingChecklistAssocCoop extends React.Component {
             <Grid item xs={9}>
               <Grid>
                 <div style={{ margin: 10 }} />
-                <Button size={"small"} onClick={this.handleBackButton}>
+                <Button size={"small"} onClick={this.handleBackButton} style={{fontFamily: 'Arimo'}}>
                   <KeyboardArrowLeft />
                   Back
                 </Button>
               </Grid>
               <Grid container alignItems="center" direction="column" xs={12}>
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h4" gutterBottom style={{fontFamily: 'Arimo'}}>
                   {this.props.currentCenter[0].toUpperCase() +
                     this.props.currentCenter.substr(1)}
                 </Typography>
                 <div style={{ height: 20 }} />
-                <Typography variant={"subtitle2"} gutterBottom>
+                <Typography variant={"subtitle2"} gutterBottom style={{fontFamily: 'Arimo'}}>
                   Please select the number of children and teachers at the
                   center:
                 </Typography>
@@ -313,6 +316,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           ? "contained"
                           : "outlined"
                       }
+                      style={{fontFamily: 'Arimo'}}
                     >
                       1 child
                     </Button>
@@ -326,6 +330,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           ? "contained"
                           : "outlined"
                       }
+                      style={{fontFamily: 'Arimo'}}
                     >
                       2+ children without teacher
                     </Button>
@@ -339,6 +344,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           ? "contained"
                           : "outlined"
                       }
+                      style={{fontFamily: 'Arimo'}}
                     >
                       1 child with teacher
                     </Button>
@@ -352,6 +358,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                           ? "contained"
                           : "outlined"
                       }
+                      style={{fontFamily: 'Arimo'}}
                     >
                       2+ children with teacher
                     </Button>
@@ -376,7 +383,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             Participating in a <b>conversation</b> about a{" "}
                             <b>shared activity</b>
                           </ListItemText>
@@ -392,7 +399,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             Engaging <b>together</b> in an{" "}
                             <b>open-ended activity</b> without clear roles or
                             order
@@ -409,7 +416,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             Following <b>formal rules of a game</b> and/or
                             taking turns
                           </ListItemText>
@@ -425,7 +432,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             Talking about or doing an activity together that has
                             a <b>predetermined sequence</b> (e.g., acting out
                             restaurant in a dramatic play; doing pattern blocks
@@ -465,7 +472,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             <b>Participating</b> in children’s play
                           </ListItemText>
                         </ListItem>
@@ -480,7 +487,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             Asking questions to{" "}
                             <b>extend children’s thinking</b> about their shared
                             activity
@@ -497,7 +504,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             <b>Encouraging</b> children to <b>share</b>,
                             <b>work</b>, or <b>interact</b> with each other
                           </ListItemText>
@@ -513,7 +520,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             Helping children find the{" "}
                             <b>words to communicate</b>
                           </ListItemText>
@@ -529,7 +536,9 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>None</ListItemText>
+                          <ListItemText disableTypography>
+                            None
+                          </ListItemText>
                         </ListItem>
                       </List>
                     </Card>
@@ -545,7 +554,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                     variant="contained"
                     color={"secondary"}
                     onClick={this.handleSubmit}
-                    style={{ marginTop: 20 }}
+                    style={{ marginTop: 20, fontFamily: 'Arimo' }}
                   >
                     Submit
                   </Button>

@@ -11,7 +11,7 @@ import CSImage from "../../assets/images/CSImage.jpg";
 const styles: object = {
   imageBox: {
     width: "60%",
-    //textAlign: "center",
+    textAlign: "center",
     borderRadius: "15px"
   },
   image: {
@@ -27,7 +27,7 @@ interface Style {
 
 interface Props {
   classes: Style,
-  person: { initials: string, name: string, role: string},
+  person: { email: string, name: string, role: string, initials: string, description: string, link: string },
   open: boolean,
   handleClick(): void
 }
@@ -53,7 +53,7 @@ class TeamMemberCard extends React.Component<Props, State> {
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount = () => {
+  componentDidMount() {
     this.props.person.initials === "CC"
       ? this.setState({ image: CCImage })
       : this.props.person.initials === "DM"
@@ -65,10 +65,13 @@ class TeamMemberCard extends React.Component<Props, State> {
 
   static propTypes = {
     person: PropTypes.exact({
-      initials: PropTypes.string,
+      email: PropTypes.string,
       name: PropTypes.string,
+      initials: PropTypes.string,
       role: PropTypes.string,
-    }).isRequired,
+      description: PropTypes.string,
+      link: PropTypes.string
+    }),
     classes: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     handleClick: PropTypes.func.isRequired

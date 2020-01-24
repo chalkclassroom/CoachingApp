@@ -138,11 +138,7 @@ class TeamPage extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
-        <head>
-          <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        </head>
-        <body className={classes.root}>
+        <div className={classes.root}>
           <FirebaseContext.Consumer>
             {(firebase: object) => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
@@ -466,8 +462,8 @@ class TeamPage extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-        </body>
-        <body className={classes.mobileRoot}>
+        </div>
+        <div className={classes.mobileRoot}>
           <FirebaseContext.Consumer>
             {(firebase: object) => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
@@ -797,7 +793,7 @@ class TeamPage extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-        </body>
+        </div>
       </div>
     );
   }
