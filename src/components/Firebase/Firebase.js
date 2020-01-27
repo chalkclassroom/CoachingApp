@@ -751,6 +751,24 @@ class Firebase {
       );
   };
 
+  fetchMathDetails = async function(sessionId) {
+    const getMathDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcMathDetails"
+    );
+    return getMathDetailsFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          // Read result of the Cloud Function.
+          // var sanitizedMessage = result.data[0];
+          // console.log(sanitizedMessage);
+          // return sanitizedMessage;
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting Math details: ", error)
+      );
+  };
+
   fetchSeqDetails = async function(sessionId) {
     const getSeqDetailsFirebaseFunction = this.functions.httpsCallable(
       "funcSeqDetails"

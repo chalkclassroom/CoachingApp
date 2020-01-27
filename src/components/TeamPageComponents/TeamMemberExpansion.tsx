@@ -38,7 +38,7 @@ interface Style {
 
 interface Props {
   classes: Style,
-  person: { email: string, name: string, role: string, description: string, link: string }
+  person: { email: string, name: string, role: string, initials: string, description: string, link: string }
 }
 
 /**
@@ -58,10 +58,11 @@ class TeamMemberExpansion extends React.Component<Props, {}> {
     person: PropTypes.exact({
       email: PropTypes.string,
       name: PropTypes.string,
+      initials: PropTypes.string,
       role: PropTypes.string,
       description: PropTypes.string,
       link: PropTypes.string
-    }).isRequired
+    })
   }
   /**
    * render function

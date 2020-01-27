@@ -26,7 +26,8 @@ import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/As
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
-import MathInstructionTrainingPage from "./views/protected/MathInstructionViews/MathInstructionTrainingPage";
+import MathInstructionTrainingPage from "./views/protected/MathInstructionViews/MathInstructionTrainingPage.tsx";
+import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage"; 
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
@@ -193,6 +194,11 @@ class App extends Component {
               path="/AssociativeCooperativeInteractionsResults"
               component={AssociativeCooperativeInteractionsResultsPage}
             />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstruction"
+              component={MathInstructionPage}
+            />  
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivities"

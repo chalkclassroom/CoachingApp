@@ -13,38 +13,42 @@ import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import PropTypes from "prop-types";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
-import { toggleSequentialMaterials } from "../../state/actions/sequential-activities";
 import Dashboard from "../Dashboard";
-import Countdown from "../Countdown.tsx";
+import Countdown from "../Countdown";
 
 const styles = {
   root: {
     flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    flexDirection: "column",
-    paddingTop: '2%',
-    fontFamily: 'Arimo'
+    flexDirection: "column"
   },
   grow: {
     flexGrow: 1
   }
 };
 
-const TeacherEnum = {
-  NO_TEACHER: 1,
-  TEACHER: 2,
+const TeacherChildEnum = {
+  NO_TEACHER:1,
+  TEACHER_PRESENT:2
+};
+
+const teacherBehaviors = {
+  noSupp: "no support",
+  support: "support"
+};
+
+const childBehaviors = {
+  noOpp: "no opportunity",
+  ac: "ac",
+  noAc: "no ac"
 };
 
 const RATING_INTERVAL = 60000;
+const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
-/**
- * center rating checklist for sequential activities
- * @class CenterRatingChecklistSeqAct
- */
-class CenterRatingChecklistSeqAct extends React.Component {
+class CenterRatingChecklistMath extends React.Component {
   state = {
     auth: true,
     anchorEl: null,
@@ -53,7 +57,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
     people: undefined,
     time: RATING_INTERVAL,
     timeUpOpen: false,
-    peopleWarning: false
+    peopleWarning: false,
+    acType: ""
   };
 
   tick = () => {
@@ -69,12 +74,10 @@ class CenterRatingChecklistSeqAct extends React.Component {
     }
   };
 
-  /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.timer = setInterval(this.tick, 1000);
   }
 
-  /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     clearInterval(this.timer);
   }
@@ -103,20 +106,20 @@ class CenterRatingChecklistSeqAct extends React.Component {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
-      /* const mEntry = {
+      const mEntry = {
         checked: this.state.checked,
         people: this.state.people
-      }; */
-
+        // acType: this.state.acType
+      };
+      // <<<<<<< HEAD
+      // =======
+      this.props.firebase.handlePushAC(mEntry);
+      // >>>>>>> 7416dfe9eba94b55b62425799cbd308062bc27b4
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();
     }
   };
 
-  /**
-   * @param {value} value
-   * @return {void}
-   */
   handleToggle = value => () => {
     // Prevents updating state of checkbox when disabled
     if (
@@ -141,23 +144,27 @@ class CenterRatingChecklistSeqAct extends React.Component {
   };
 
   childDisabled = () => {
-    return this.state.people === undefined;
-  };
-
-  teacherDisabled = () => {
     return (
-      this.state.people === TeacherEnum.NO_TEACHER ||
       this.state.people === undefined
     );
   };
 
-  handleNoTeacherClick = () => {
-    if (this.state.people !== TeacherEnum.NO_TEACHER) {
-      this.setState({ people: TeacherEnum.NO_TEACHER });
+  teacherDisabled = () => {
+    return (
+      this.state.people === TeacherChildEnum.NO_TEACHER ||
+      this.state.people === undefined
+    );
+  };
+
+  handleTeacherClick = () => {
+    if (this.state.people !== TeacherChildEnum.TEACHER_PRESENT) {
+      this.setState({ people: TeacherChildEnum.TEACHER_PRESENT });
+      this.setState({ acType: teacherBehaviors.ac });
+      this.setState({ acType: childBehaviors.ac });
 
       const { checked } = this.state;
       const newChecked = [...checked];
-      for (let i = 6; i <= 10; i++) {
+      for (let i = 5; i <= 8; i++) {
         // If there are teacher ratings checked, remove them
         if (checked.includes(i)) {
           const currentIndex = checked.indexOf(i);
@@ -168,16 +175,45 @@ class CenterRatingChecklistSeqAct extends React.Component {
     }
   };
 
-  handleTeacherClick = () => {
-    if (this.state.people !== TeacherEnum.TEACHER) {
-      this.setState({ people: TeacherEnum.TEACHER });
+  handleNoTeacherClick = () => {
+    if (this.state.people !== TeacherChildEnum.NO_TEACHER) {
+      this.setState({ people: TeacherChildEnum.NO_TEACHER });
+      this.setState({ acType: teacherBehaviors.noSupp });
+      this.setState({ acType: childBehaviors.ac });
+
+      const { checked } = this.state;
+      const newChecked = [...checked];
+      for (let i = 5; i <= 8; i++) {
+        // If there are teacher ratings checked, remove them
+        if (checked.includes(i)) {
+          const currentIndex = checked.indexOf(i);
+          newChecked.splice(currentIndex);
+        }
+      }
+      this.setState({ checked: newChecked });
     }
   };
 
-  /**
-   * render function
-   * @return {ReactNode}
-   */
+
+ handleNoTeacherClick = () => {
+    if (this.state.people !== TeacherChildEnum.NO_TEACHER) {
+      this.setState({ people: TeacherChildEnum.NO_TEACHER });
+      this.setState({ acType: teacherBehaviors.noSupp });
+      this.setState({ acType: childBehaviors.ac });
+
+      const { checked } = this.state;
+      const newChecked = [...checked];
+      for (let i = 5; i <= 8; i++) {
+        // If there are teacher ratings checked, remove them
+        if (checked.includes(i)) {
+          const currentIndex = checked.indexOf(i);
+          newChecked.splice(currentIndex);
+        }
+      }
+      this.setState({ checked: newChecked });
+    }
+  };
+ 
   render() {
     return (
       <div className={this.props.classes.root}>
@@ -186,12 +222,12 @@ class CenterRatingChecklistSeqAct extends React.Component {
           onClose={this.handleTimeUpClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
-            Don&apos;t forget to circulate!
+          <DialogTitle id="simple-dialog-title">
+            Don't forget to circulate!
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
-              You&apos;ve been at the {this.props.currentCenter} center for 1 minute.
+            <DialogContentText id="alert-dialog-description">
+              You've been at the {this.props.currentCenter} center for 1 minute.
             </DialogContentText>
           </DialogContent>
         </Dialog>
@@ -200,10 +236,10 @@ class CenterRatingChecklistSeqAct extends React.Component {
           onClose={this.handlePeopleWarningClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>Wait!</DialogTitle>
+          <DialogTitle id="simple-dialog-title">Wait!</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
-              Please select the number of children and teachers at the center
+            <DialogContentText id="alert-dialog-description">
+              Please select if the teachers is present at the center or not
               before submitting your rating.
             </DialogContentText>
           </DialogContent>
@@ -222,10 +258,11 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 justify={"center"}
                 direction={"column"}
               >
+                {/* <div style={{ margin: 20 }} /> */}
                 <Dashboard
-                  magic8="Sequential Activities"
-                  color="#ffd300"
-                  infoDisplay={<Countdown color="#ffd300" timerTime={60000} />}
+                  magic8="Math Instruction"
+                  color="#E55529"
+                  infoDisplay={<Countdown color="#E55529" timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />
@@ -234,7 +271,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
             <Grid item xs={9}>
               <Grid>
                 <div style={{ margin: 10 }} />
-                <Button size={"small"} onClick={this.handleBackButton} style={{fontFamily: 'Arimo'}}>
+                <Button size={"small"} onClick={this.handleBackButton}>
                   <KeyboardArrowLeft />
                   Back
                 </Button>
@@ -245,8 +282,9 @@ class CenterRatingChecklistSeqAct extends React.Component {
                     this.props.currentCenter.substr(1)}
                 </Typography>
                 <div style={{ height: 20 }} />
-                <Typography variant={"subtitle1"} gutterBottom style={{fontFamily: 'Arimo'}}>
-                  Please indicate who is present at the center:
+                <Typography variant={"subtitle2"} gutterBottom>
+                  Please select if teacher is present or not at the
+                  center:
                 </Typography>
                 <Grid
                   container
@@ -254,18 +292,18 @@ class CenterRatingChecklistSeqAct extends React.Component {
                   justify={"space-around"}
                   xs={12}
                 >
+                  
                   <Grid item>
                     <Button
-                      onClick={this.handleNoTeacherClick}
+                      onClick={this.handleNoTeacherClick} 
                       size="small"
                       variant={
-                        this.state.people === TeacherEnum.NO_TEACHER
+                        this.state.people === TeacherChildEnum.NO_TEACHER
                           ? "contained"
                           : "outlined"
                       }
-                      style={{fontFamily: "Arimo"}}
                     >
-                      No Teacher
+                      no teacher
                     </Button>
                   </Grid>
                   <Grid item>
@@ -273,22 +311,22 @@ class CenterRatingChecklistSeqAct extends React.Component {
                       onClick={this.handleTeacherClick}
                       size="small"
                       variant={
-                        this.state.people === TeacherEnum.TEACHER
+                        this.state.people === TeacherChildEnum.TEACHER_PRESENT
                           ? "contained"
                           : "outlined"
                       }
-                      style={{fontFamily: "Arimo"}}
                     >
-                      Teacher Present
+                     teacher present
                     </Button>
                   </Grid>
-                </Grid>
+                  </Grid> 
                 <div style={{ height: 20 }} />
                 <Grid container direction={"row"} spacing={16} xs={12}>
-                  <Grid item xs={6}>
+                  <Grid item
+                   xs={6}>
                     <Card>
                       <Typography variant="h6" align={"center"}>
-                        Child Behaviors
+                        Math Types
                       </Typography>
                       <List>
                         <ListItem
@@ -302,12 +340,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText
-                            disableTypography
-                            style={{fontSize: 16}}
-                          >
-                            Using materials in a{" "}
-                            <b>step-by-step, predictable way</b>
+                          <ListItemText>
+                             <b>Counting and Numbers</b> 
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -321,12 +355,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText
-                            disableTypography
-                            style={{ fontSize: 16}}
-                          >
-                            <b>Drawing</b> recognizable images or <b>writing</b>{" "}
-                            names or messages (letters or letter-like forms)
+                          <ListItemText>
+                             <b>Shapes and Spatial reasoning</b>  
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -340,12 +370,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText
-                            disableTypography
-                            style={{fontSize: 16}}
-                          >
-                            Playing a game with <b>set rules</b> and/or {" "}
-                            <b>taking turns</b>
+                          <ListItemText>
+                          <b>Patterns</b>  
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -359,13 +385,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText
-                            disableTypography
-                            style={{fontSize: 16}}
-                          >
-                            Speaking or acting according to a{" "}
-                            <b>pretend scenario</b> that follows a
-                            predictable plot
+                          <ListItemText>
+                            <b>Measurement and Data</b>
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -379,12 +400,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText
-                            disableTypography
-                            style={{fontSize: 16}}
-                          >
-                            None
-                          </ListItemText>
+                          <ListItemText>None</ListItemText>
                         </ListItem>
                       </List>
                     </Card>
@@ -406,12 +422,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText
-                            disableTypography
-                            style={{fontSize: 16}}
-                          >
-                            <b>Helping</b> children do sequential activities
-                            with manipulatives or toys
+                          <ListItemText>
+                         Using <b>math vocabulary</b> 
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -425,12 +437,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText
-                            disableTypography
-                            style={{fontSize: 16}}
-                          >
-                            <b>Demonstrating the steps</b> to an activity
-                            or game
+                          <ListItemText>
+                          <b> Asking questions {" "}</b> about math concepts
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -444,12 +452,10 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText
-                            disableTypography
-                            style={{fontSize: 16}}
-                          >
-                            Supporting children as they <b>act out</b> 
-                            {" "} a dramatic play scenario or book
+                      
+                          <ListItemText>
+    
+                            <b>Demonstrating</b> math concepts
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -458,38 +464,15 @@ class CenterRatingChecklistSeqAct extends React.Component {
                         >
                           <Checkbox
                             checked={
-                              !this.teacherDisabled() &&
+                              !this.childDisabled() &&
                               this.state.checked.includes(9)
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText
-                            disableTypography
-                            style={{fontSize: 16}}
-                          >
-                            Supporting children as they <b>draw</b> images
-                            or <b>write</b> messages
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleToggle(10)}
-                          disabled={this.teacherDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.teacherDisabled() &&
-                              this.state.checked.includes(10)
-                            }
-                            disabled={this.teacherDisabled()}
-                          />
-                          <ListItemText
-                            disableTypography
-                            style={{fontSize: 16}}
-                          >
-                            None
-                          </ListItemText>
+                          <ListItemText>None</ListItemText>
                         </ListItem>
                       </List>
+                      
                     </Card>
                   </Grid>
                 </Grid>
@@ -503,7 +486,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                     variant="contained"
                     color={"secondary"}
                     onClick={this.handleSubmit}
-                    style={{ marginTop: 20, fontFamily: 'Arimo', fontSize: 18}}
+                    style={{ marginTop: 20 }}
                   >
                     Submit
                   </Button>
@@ -517,21 +500,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
   }
 }
 
-CenterRatingChecklistSeqAct.propTypes = {
-  classes: PropTypes.object.isRequired,
-  toggleScreen: PropTypes.func.isRequired,
-  finishVisit: PropTypes.func.isRequired,
-  currentCenter: PropTypes.string.isRequired
+CenterRatingChecklistMath.propTypes = {
+  classes: PropTypes.object.isRequired
 };
 
-const mapStateToProps = state => {
-  return {
-    centers: state.sequentialCenterState.sequentialCenters
-  };
-};
-
-export default withStyles(styles)(
-  connect(mapStateToProps, { toggleSequentialMaterials })(
-    CenterRatingChecklistSeqAct
-  )
-);
+export default withStyles(styles)(CenterRatingChecklistMath);
