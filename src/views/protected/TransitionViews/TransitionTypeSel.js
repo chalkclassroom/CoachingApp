@@ -252,7 +252,6 @@ class TransitionTypeSel extends React.Component {
                     ? themes.palette.waitingColor
                     : clickedThemes.palette.waitingColor
                 }
-                // style={{this.state.selected}}
               >
                 <img
                   alt="Waiting in line"
