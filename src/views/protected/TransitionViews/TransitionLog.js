@@ -9,7 +9,6 @@ import Divider from "@material-ui/core/Divider";
 import { connect } from "react-redux";
 import {
   lightGreen,
-  white,
   deepOrange,
   orange,
   blue,
@@ -27,7 +26,7 @@ const styles = theme => ({
   }
 });
 
-let getHexFromType = type => {
+const getHexFromType = type => {
   switch (type) {
     case "waiting":
       return lightGreen[300];
@@ -84,7 +83,6 @@ const TransitionLog = ({ entries, classes }) => {
                   <br />
                   {entry.duration}
                   <br />
-                  {/* Type:{entry.transitionType === 'inside' ? "Inside Classroom" : "Outside Classroom"} */}
                 </ListItem>
               </React.Fragment>
             ))}
