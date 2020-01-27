@@ -9,7 +9,8 @@ const styles: object = {
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
-    marginTop: 5
+    marginTop: 5,
+    fontFamily: 'Arimo'
   }
 };
 
@@ -50,7 +51,7 @@ class TotalVisitCount extends React.Component<Props, {}> {
       >
         <Grid>
           <div style={{ margin: 20 }} />
-          <Typography variant="h5" component="h3">
+          <Typography variant="h5" component="h3" style={{fontFamily: 'Arimo'}}>
             Total Visits:
           </Typography>
           <Typography

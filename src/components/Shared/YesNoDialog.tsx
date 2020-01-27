@@ -118,7 +118,7 @@ class YesNoDialog extends React.Component<Props, State> {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">
+          <DialogTitle id="alert-dialog-title" style={{fontFamily: 'Arimo'}}>
             {this.props.dialogTitle}
           </DialogTitle>
           <DialogActions>

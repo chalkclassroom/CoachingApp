@@ -66,13 +66,13 @@ class IncompleteObservation extends React.Component<Props, State> {
               direction="column"
               justify="flex-start"
             >
-              <Typography variant="h4" gutterBottom>
+              <Typography variant="h4" gutterBottom style={{fontFamily: 'Arimo'}}>
                 Incomplete Observation
               </Typography>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant="subtitle2" gutterBottom style={{fontFamily: 'Arimo'}}>
                 You have not completed your observation yet.
               </Typography>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant="subtitle2" gutterBottom style={{fontFamily: 'Arimo'}}>
                 Please <strong>Submit</strong> this observation or press the{" "}
                 <strong>Back</strong> button.
               </Typography>
