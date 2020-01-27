@@ -105,7 +105,8 @@ class YesNoDialog extends React.Component<Props, State> {
             backgroundColor: this.props.backgroundColor,
             borderColor: this.props.buttonColor,
             width: this.props.buttonWidth,
-            margin: this.props.buttonMargin
+            margin: this.props.buttonMargin,
+            fontFamily: 'Arimo'
           }}
           className={classes.button}
         >
@@ -121,10 +122,10 @@ class YesNoDialog extends React.Component<Props, State> {
             {this.props.dialogTitle}
           </DialogTitle>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
+            <Button onClick={this.handleClose} color="primary" style={{fontFamily: 'Arimo'}}>
               No
             </Button>
-            <Button onClick={this.handleAccept} color="primary" autoFocus>
+            <Button onClick={this.handleAccept} color="primary" style={{fontFamily: 'Arimo'}} autoFocus>
               Yes
             </Button>
           </DialogActions>
