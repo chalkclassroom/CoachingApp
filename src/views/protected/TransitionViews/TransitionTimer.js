@@ -11,6 +11,7 @@ import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { pushOntoTransitionStack } from "../../../state/actions/transition-time";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
+import * as Constants from '../../../constants';
 
 const theme = createMuiTheme({
   palette: {
@@ -109,7 +110,7 @@ class TransitionTimer extends React.Component {
 
     return (
       <MuiThemeProvider theme={theme}>
-        <div style={{ width: 400 }}>
+        <div style={{ width: 400, fontFamily: 'Arimo' }}>
           <CircularProgressbar
             fill="#19468D"
             background
@@ -118,8 +119,8 @@ class TransitionTimer extends React.Component {
             initialAnimation={false}
             styles={{
               path: { stroke: "#19468D" },
-              text: { fill: "#000", fontSize: "16px" },
-              background: { fill: "#19468D" }
+              text: { fill: "white", fontSize: "16px" },
+              background: { fill: Constants.TransitionColor }
             }}
           />
           <Grid
@@ -135,6 +136,7 @@ class TransitionTimer extends React.Component {
               disabled={!this.props.typeSelected}
               aria-label="Start"
               onClick={this.onStart}
+              style={{fontFamily: 'Arimo'}}
             >
               {this.state.isOn ? "End Transition" : "Start new Transition"}
             </Button>

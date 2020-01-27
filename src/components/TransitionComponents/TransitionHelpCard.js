@@ -15,38 +15,46 @@ const styles = () => ({
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    width: "50%"
+    width: "50%",
+    fontFamily: 'Arimo'
   },
   definitionText: {
     backgroundColor: "#759fe5",
-    width: "50%"
+    width: "50%",
+    fontFamily: 'Arimo'
   },
   buttonTitle: {
     backgroundColor: "#094492", 
     color: "white",
     fontSize: 14,
     textAlign: "center", 
-    width: "20%"
+    width: "20%",
+    fontFamily: 'Arimo'
   },
   lineExamples: {
     backgroundColor: "#AED581",
-    width:"20%"
+    width:"20%",
+    fontFamily: 'Arimo'
   },
   travelingExamples: {
     backgroundColor: "#FFA726",
-    width:"20%"
+    width:"20%",
+    fontFamily: 'Arimo'
   },
   waitingExamples: {
     backgroundColor: "#FF7043",
-    width:"20%"
+    width:"20%",
+    fontFamily: 'Arimo'
   },
   routinesExamples: {
     backgroundColor: "#64B5F6",
-    width:"20%"
+    width:"20%",
+    fontFamily: 'Arimo'
   },
   behaviorExamples: {
     backgroundColor: "#FF5252",
-    width:"20%"
+    width:"20%",
+    fontFamily: 'Arimo'
   }
 });
 
@@ -81,7 +89,7 @@ function TransitionHelpCard(props) {
           </TableRow>
         </TableBody>
       </Table>
-      <Typography variant="subtitle2" gutterBottom style={{ padding: 10 }}>
+      <Typography variant="subtitle2" gutterBottom style={{ padding: 10, fontFamily: 'Arimo' }}>
         While you are recording a transition, choose the button representing the{" "}
         <strong>primary</strong> reason for that transition.{" "}
         <strong>Change </strong>
