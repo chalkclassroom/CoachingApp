@@ -37,17 +37,6 @@ const TeacherChildEnum = {
   CHILD_2_TEACHER: 4
 };
 
-const teacherBehaviors = {
-  noSupp: "no support",
-  support: "support"
-};
-
-const childBehaviors = {
-  noOpp: "no opportunity",
-  ac: "ac",
-  noAc: "no ac"
-};
-
 const RATING_INTERVAL = 60000;
 // const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
@@ -172,8 +161,6 @@ class CenterRatingChecklistAssocCoop extends React.Component {
   handleChild1Click = () => {
     if (this.state.people !== TeacherChildEnum.CHILD_1) {
       this.setState({ people: TeacherChildEnum.CHILD_1 });
-      this.setState({ acType: teacherBehaviors.noSupp });
-      this.setState({ acType: childBehaviors.noOpp });
 
       const { checked } = this.state;
       const newChecked = [...checked];
@@ -191,8 +178,6 @@ class CenterRatingChecklistAssocCoop extends React.Component {
   handleChild2Click = () => {
     if (this.state.people !== TeacherChildEnum.CHILD_2) {
       this.setState({ people: TeacherChildEnum.CHILD_2 });
-      this.setState({ acType: teacherBehaviors.noSupp });
-      this.setState({ acType: childBehaviors.ac });
 
       const { checked } = this.state;
       const newChecked = [...checked];

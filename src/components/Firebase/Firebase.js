@@ -418,7 +418,6 @@ class Firebase {
       .add({
         Checked: mEntry.checked.slice(1),
         PeopleType: mEntry.people,
-        acType: mEntry.type,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
@@ -426,6 +425,18 @@ class Firebase {
       );
   };
 
+  handlePushMath = async function(mEntry) {
+    return this.sessionRef
+      .collection("entries")
+      .add({
+        Checked: mEntry.checked.slice(1),
+        PeopleType: mEntry.people,
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch(error =>
+        console.error("Error occurred adding observation: ", error)
+      );
+  };
   handlePushSequential = async function(mEntry) {
     return this.sessionRef
       .collection("entries")

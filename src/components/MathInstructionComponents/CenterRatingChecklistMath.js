@@ -22,7 +22,8 @@ const styles = {
     flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    fontFamily: "Arimo"
   },
   grow: {
     flexGrow: 1
@@ -32,17 +33,6 @@ const styles = {
 const TeacherChildEnum = {
   NO_TEACHER:1,
   TEACHER_PRESENT:2
-};
-
-const teacherBehaviors = {
-  noSupp: "no support",
-  support: "support"
-};
-
-const childBehaviors = {
-  noOpp: "no opportunity",
-  ac: "ac",
-  noAc: "no ac"
 };
 
 const RATING_INTERVAL = 60000;
@@ -58,7 +48,7 @@ class CenterRatingChecklistMath extends React.Component {
     time: RATING_INTERVAL,
     timeUpOpen: false,
     peopleWarning: false,
-    acType: ""
+    mathType: ""
   };
 
   tick = () => {
@@ -113,7 +103,7 @@ class CenterRatingChecklistMath extends React.Component {
       };
       // <<<<<<< HEAD
       // =======
-      this.props.firebase.handlePushAC(mEntry);
+      this.props.firebase.handlePushMath(mEntry);
       // >>>>>>> 7416dfe9eba94b55b62425799cbd308062bc27b4
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();
@@ -159,8 +149,6 @@ class CenterRatingChecklistMath extends React.Component {
   handleTeacherClick = () => {
     if (this.state.people !== TeacherChildEnum.TEACHER_PRESENT) {
       this.setState({ people: TeacherChildEnum.TEACHER_PRESENT });
-      this.setState({ acType: teacherBehaviors.ac });
-      this.setState({ acType: childBehaviors.ac });
 
       const { checked } = this.state;
       const newChecked = [...checked];
@@ -178,28 +166,6 @@ class CenterRatingChecklistMath extends React.Component {
   handleNoTeacherClick = () => {
     if (this.state.people !== TeacherChildEnum.NO_TEACHER) {
       this.setState({ people: TeacherChildEnum.NO_TEACHER });
-      this.setState({ acType: teacherBehaviors.noSupp });
-      this.setState({ acType: childBehaviors.ac });
-
-      const { checked } = this.state;
-      const newChecked = [...checked];
-      for (let i = 5; i <= 8; i++) {
-        // If there are teacher ratings checked, remove them
-        if (checked.includes(i)) {
-          const currentIndex = checked.indexOf(i);
-          newChecked.splice(currentIndex);
-        }
-      }
-      this.setState({ checked: newChecked });
-    }
-  };
-
-
- handleNoTeacherClick = () => {
-    if (this.state.people !== TeacherChildEnum.NO_TEACHER) {
-      this.setState({ people: TeacherChildEnum.NO_TEACHER });
-      this.setState({ acType: teacherBehaviors.noSupp });
-      this.setState({ acType: childBehaviors.ac });
 
       const { checked } = this.state;
       const newChecked = [...checked];
@@ -222,11 +188,11 @@ class CenterRatingChecklistMath extends React.Component {
           onClose={this.handleTimeUpClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title">
+          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
             Don't forget to circulate!
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
               You've been at the {this.props.currentCenter} center for 1 minute.
             </DialogContentText>
           </DialogContent>
@@ -236,9 +202,9 @@ class CenterRatingChecklistMath extends React.Component {
           onClose={this.handlePeopleWarningClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title">Wait!</DialogTitle>
+          <DialogTitle id="simple-dialog-title"  style={{fontFamily: 'Arimo'}}>Wait!</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
+            <DialogContentText id="alert-dialog-description"  style={{fontFamily: 'Arimo'}}>
               Please select if the teachers is present at the center or not
               before submitting your rating.
             </DialogContentText>
@@ -271,18 +237,18 @@ class CenterRatingChecklistMath extends React.Component {
             <Grid item xs={9}>
               <Grid>
                 <div style={{ margin: 10 }} />
-                <Button size={"small"} onClick={this.handleBackButton}>
+                <Button size={"small"} onClick={this.handleBackButton}  style={{fontFamily: 'Arimo'}}>
                   <KeyboardArrowLeft />
                   Back
                 </Button>
               </Grid>
               <Grid container alignItems="center" direction="column" xs={12}>
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h4" gutterBottom  style={{fontFamily: 'Arimo'}}>
                   {this.props.currentCenter[0].toUpperCase() +
                     this.props.currentCenter.substr(1)}
                 </Typography>
                 <div style={{ height: 20 }} />
-                <Typography variant={"subtitle2"} gutterBottom>
+                <Typography variant={"subtitle2"} gutterBottom  style={{fontFamily: 'Arimo'}}>
                   Please select if teacher is present or not at the
                   center:
                 </Typography>
@@ -302,6 +268,7 @@ class CenterRatingChecklistMath extends React.Component {
                           ? "contained"
                           : "outlined"
                       }
+                      style={{fontFamily: 'Arimo'}}
                     >
                       no teacher
                     </Button>
@@ -315,6 +282,7 @@ class CenterRatingChecklistMath extends React.Component {
                           ? "contained"
                           : "outlined"
                       }
+                      style={{fontFamily: 'Arimo'}}
                     >
                      teacher present
                     </Button>
@@ -486,7 +454,7 @@ class CenterRatingChecklistMath extends React.Component {
                     variant="contained"
                     color={"secondary"}
                     onClick={this.handleSubmit}
-                    style={{ marginTop: 20 }}
+                    style={{ marginTop: 20, fontFamily: 'Arimo' }}
                   >
                     Submit
                   </Button>

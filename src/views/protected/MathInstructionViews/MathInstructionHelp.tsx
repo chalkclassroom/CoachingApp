@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -23,10 +23,9 @@ const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    //backgroundColor: theme.palette.background.paper,
-    //boxShadow: theme.shadows[5],
-    //padding: theme.spacing.unit * 4,
-    borderRadius: 8
+    backgroundColor: 'white',
+    padding: '2em',
+    borderRadius: 8,
   }
 };
 
@@ -36,14 +35,6 @@ interface Props {
 
 interface Style {
   paper: string,
-  definitionTitle: string,
-  definitionText: string,
-  buttonTitle: string,
-  lineExamples: string,
-  travelingExamples: string,
-  waitingExamples: string,
-  routinesExamples: string,
-  behaviorExamples: string,
 }
 
 interface State {
@@ -59,11 +50,11 @@ class MathInstructionTimeHelp extends React.Component<Props, State> {
     open: true
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
@@ -73,9 +64,9 @@ class MathInstructionTimeHelp extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
@@ -88,12 +79,15 @@ class MathInstructionTimeHelp extends React.Component<Props, State> {
               direction="column"
               justify="flex-start"
             >
-              <Typography variant="h4" gutterBottom>
+              
+              <Typography variant="h4"  style={{fontFamily: "Arimo"}} gutterBottom>
               Math Opportunities
               </Typography>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant="subtitle2" gutterBottom style={{fontFamily: "Arimo"}}>
               <strong>CENTERS</strong> 
               </Typography>
+
+          
               <MathInstructionHelpCard/>
             </Grid>
           </div>
@@ -104,3 +98,4 @@ class MathInstructionTimeHelp extends React.Component<Props, State> {
 }
 
 export default withStyles(styles)(MathInstructionTimeHelp);
+

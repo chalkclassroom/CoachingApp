@@ -31,7 +31,8 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    fontFamily: "Arimo"
   },
   grow: {
     flexGrow: 1
