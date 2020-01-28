@@ -115,7 +115,7 @@ class ActionPlanModal extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               handleClose={this.handleClose}
               // handleEditActionPlan={this.handleEditActionPlan}
-              disabled={false}
+              readOnly={false}
               actionPlanExists={this.props.actionPlanExists}
             />
           </div>

@@ -392,7 +392,7 @@ class ResultsLayout extends React.Component<Props, State> {
                           sessionId={this.props.sessionId}
                           handleEditActionPlan={this.handleEditActionPlan}
                           handleClose={null}
-                          disabled={true}
+                          readOnly={true}
                           actionPlanExists={this.props.actionPlanExists}
                           editMode={this.state.actionPlanEditMode}
                         />}
@@ -407,7 +407,7 @@ class ResultsLayout extends React.Component<Props, State> {
                             sessionId={this.props.sessionId}
                             handleEditActionPlan={this.handleEditActionPlan}
                             handleClose={this.handleSaveAndCloseActionPlan}
-                            disabled={false}
+                            readOnly={false}
                             actionPlanExists={true}
                           />}
                         </FirebaseContext.Consumer>

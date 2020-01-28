@@ -938,7 +938,7 @@ class Firebase {
         person: '',
         step: '',
         // timeline: firebase.firestore.FieldValue.serverTimestamp()
-        timeline: new Date().toLocaleDateString()
+        timeline: ''
       }).then(() => {
         console.log('action steps created');
       }).catch(() => {
@@ -989,7 +989,8 @@ class Firebase {
           idArr.push({
             id: doc.id,
             goal: doc.data().goal,
-            benefit: doc.data().benefit
+            benefit: doc.data().benefit,
+            date: doc.data().date
           })
         );
         return idArr;

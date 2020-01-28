@@ -5,6 +5,9 @@ import Typography from '@material-ui/core/Typography';
 import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import EditImage from '../assets/images/EditImage.svg';
+import SaveImage from '../assets/images/SaveImage.svg';
+import SaveAndCloseImage from '../assets/images/SaveAndCloseImage.svg';
 
 interface Props {
   teacherFirstName: string,
@@ -19,7 +22,7 @@ interface Props {
   },
   teacherId: string,
   sessionId: string,
-  disabled: boolean,
+  readOnly: boolean,
   handleEditActionPlan(): void,
   handleClose(): void,
   actionPlanExists: boolean,
@@ -29,6 +32,7 @@ interface Props {
 interface State {
   goal: string,
   benefit: string,
+  date: string,
   actionSteps: string,
   actionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}>,
   editMode: boolean,
@@ -52,6 +56,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.state = {
       goal: '',
       benefit: '',
+      date: '',
       actionSteps: '',
       actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}],
       editMode: false,
@@ -151,7 +156,8 @@ class ActionPlanForm extends React.Component<Props, State> {
           actionPlanExists: true,
           actionPlanId: actionPlanData[0].id,
           goal: actionPlanData[0].goal,
-          benefit: actionPlanData[0].benefit
+          benefit: actionPlanData[0].benefit,
+          date: actionPlanData[0].date
         });
         const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
         this.props.firebase.getActionSteps(actionPlanData[0].id).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
@@ -242,7 +248,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     }).isRequired,
     teacherId: PropTypes.string.isRequired,
     sessionId: PropTypes.string.isRequired,
-    disabled: PropTypes.bool.isRequired,
+    readOnly: PropTypes.bool.isRequired,
     handleEditActionPlan: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     actionPlanExists: PropTypes.bool.isRequired,
@@ -269,39 +275,48 @@ class ActionPlanForm extends React.Component<Props, State> {
                 container
                 direction="row"
                 justify="space-between"
-                alignItems="flex-start"
+                alignItems="center"
                 style={{width: '100%'}}
               >
-                <Grid item xs={3}>
-                  <Typography style={{fontFamily: "Arimo"}}>
+                <Grid item xs={6}>
+                  <Typography variant="h4" style={{fontFamily: "Arimo"}}>
                     ACTION PLAN
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
-                  <Button disabled={!this.props.handleEditActionPlan} variant="contained" onClick={this.props.handleEditActionPlan}>
-                    edit
+                <Grid item xs={1}>
+                  <Button disabled={!this.props.handleEditActionPlan} onClick={this.props.handleEditActionPlan}>
+                    <img alt="Edit" src={EditImage} style={{width: '100%'}}/>
                   </Button>
                 </Grid>
-                <Grid item xs={2}>
-                  <Button variant="contained" onClick={this.handleSave}>
-                    save
+                <Grid item xs={1}>
+                  <Button onClick={this.handleSave}>
+                    <img alt="Save" src={SaveImage} style={{width: '100%'}}/>
                   </Button>
                 </Grid>
-                <Grid item xs={5}>
-                  <Button variant="contained" onClick={this.handleSaveAndClose}>
-                    save & close
+                <Grid item xs={1}>
+                  <Button onClick={this.handleSaveAndClose}>
+                    <img alt="Save & Close" src={SaveAndCloseImage} style={{width: '100%'}}/>
                   </Button>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item>
+            <Grid item style={{width: '100%'}}>
               <Grid
                 container
                 direction="row"
+                justify="space-between"
                 style={{fontFamily: 'Arimo'}}
               >
-                <Grid item>
+                <Grid item xs={4}>
                   {this.props.teacherFirstName + " " + this.props.teacherLastName}
+                </Grid>
+                <Grid item xs={4}>
+
+                </Grid>
+                <Grid item xs={4}>
+                  <Grid container direction="row" justify="flex-end">
+                    {this.state.date}
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
@@ -316,11 +331,10 @@ class ActionPlanForm extends React.Component<Props, State> {
                 margin="normal"
                 variant="standard"
                 fullWidth
-                disabled={this.props.disabled}
                 multiline
                 rowsMax={4}
                 rows={4}
-                InputProps={{disableUnderline: true, style: {fontFamily: "Arimo", marginLeft: '0.5em', marginRight: '0.5em'}}}
+                InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", marginLeft: '0.5em', marginRight: '0.5em'}}}
                 InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
                 style={{border: '2px solid #094492', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '20%'}}
               />
@@ -336,11 +350,10 @@ class ActionPlanForm extends React.Component<Props, State> {
                 margin="normal"
                 variant="standard"
                 fullWidth
-                disabled={this.props.disabled}
                 multiline
                 rowsMax={3}
                 rows={3}
-                InputProps={{disableUnderline: true, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
+                InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
                 InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
                 style={{border: '2px solid #e99c2e', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '25%'}}
               />
@@ -360,11 +373,10 @@ class ActionPlanForm extends React.Component<Props, State> {
                         margin="normal"
                         variant="standard"
                         fullWidth
-                        disabled={this.props.disabled}
                         multiline
                         rowsMax={2}
                         rows={2}
-                        InputProps={{disableUnderline: true, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
+                        InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
                         InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
                         style={{border: '2px solid #0988ec', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '25%'}}
                       />
@@ -380,11 +392,10 @@ class ActionPlanForm extends React.Component<Props, State> {
                         margin="normal"
                         variant="standard"
                         fullWidth
-                        disabled={this.props.disabled}
                         multiline
                         rowsMax={2}
                         rows={2}
-                        InputProps={{disableUnderline: true, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
+                        InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
                         InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
                         style={{border: '2px solid #009365', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '25%'}}
                       />
@@ -394,17 +405,16 @@ class ActionPlanForm extends React.Component<Props, State> {
                         id={"person" + index.toString()}
                         name={"person" + index.toString()}
                         type="text"
-                        label={index===0 ? "Person Responsible" : null}
+                        label={index===0 ? "Person" : null}
                         value={value.person}
                         onChange={this.handleChangePerson(index)}
                         margin="normal"
                         variant="standard"
                         fullWidth
-                        disabled={this.props.disabled}
                         multiline
                         rowsMax={2}
                         rows={2}
-                        InputProps={{disableUnderline: true, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
+                        InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
                         InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
                         style={{border: '2px solid #ffd300', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '25%'}}
                       />
@@ -420,11 +430,10 @@ class ActionPlanForm extends React.Component<Props, State> {
                         margin="normal"
                         variant="standard"
                         fullWidth
-                        disabled={this.props.disabled}
                         multiline
                         rowsMax={2}
                         rows={2}
-                        InputProps={{disableUnderline: true, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
+                        InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
                         InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
                         style={{border: '2px solid #6f39c4', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '25%'}}
                       />
@@ -433,7 +442,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                 </Grid>
               );
             })}
-            <Button onClick={this.handleAddActionStep}>
+            <Button disabled={this.props.readOnly} onClick={this.handleAddActionStep}>
               <AddCircleIcon />
             </Button>
           </Grid>   
