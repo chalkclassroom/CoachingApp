@@ -405,9 +405,7 @@ class ResultsLayout extends React.Component<Props, State> {
                             teacherLastName={this.props.teacherLastName}
                             teacherId={this.props.teacherId}
                             sessionId={this.props.sessionId}
-                            handleEditActionPlan={this.handleEditActionPlan}
                             handleClose={this.handleSaveAndCloseActionPlan}
-                            readOnly={false}
                             actionPlanExists={true}
                           />}
                         </FirebaseContext.Consumer>

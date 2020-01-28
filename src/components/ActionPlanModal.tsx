@@ -2,17 +2,13 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import Grid from "@material-ui/core/Grid";
 import ActionPlanForm from './ActionPlanForm';
-import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
-import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {React.CSSProperties}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -52,7 +48,11 @@ interface Props {
   classes: Style,
   handleClose(): void,
   firebase: {},
-  handleSaveAndClose(): void
+  teacherFirstName: string,
+  teacherLastName: string,
+  teacherId: string,
+  sessionId: string,
+  actionPlanExists: boolean,
 }
 
 interface State {
@@ -62,6 +62,7 @@ interface State {
 
 /**
  * formatting for modal containing pilot sign up form on landing page
+ * @class ActionPlanModal
  */
 class ActionPlanModal extends React.Component<Props, State> {
   state = {
@@ -69,11 +70,11 @@ class ActionPlanModal extends React.Component<Props, State> {
     role: 0
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
     this.props.handleClose();
   };
@@ -81,7 +82,12 @@ class ActionPlanModal extends React.Component<Props, State> {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
-    firebase: PropTypes.object.isRequired
+    firebase: PropTypes.object.isRequired,
+    teacherFirstName: PropTypes.string.isRequired,
+    teacherLastName: PropTypes.string.isRequired,
+    teacherId: PropTypes.string.isRequired,
+    sessionId: PropTypes.string.isRequired,
+    actionPlanExists: PropTypes.bool.isRequired,
   };
 
   /**
@@ -95,18 +101,6 @@ class ActionPlanModal extends React.Component<Props, State> {
       <div>
         <Modal open={this.state.open}>
           <div style={getModalStyle()} className={classes.paper}>
-            {/* <Grid container direction="row">
-              <Grid item xs={11} />
-              <Grid item xs={1}>
-                <IconButton style={{ padding: 10 }}>
-                  <Tooltip title={"Close"} placement={"right"}>
-                    <CloseIcon
-                      onClick={this.props.handleClose}
-                    />
-                  </Tooltip>
-                </IconButton>
-              </Grid>
-            </Grid> */}
             <ActionPlanForm 
               firebase={this.props.firebase}
               teacherFirstName={this.props.teacherFirstName}
@@ -114,7 +108,6 @@ class ActionPlanModal extends React.Component<Props, State> {
               teacherId={this.props.teacherId}
               sessionId={this.props.sessionId}
               handleClose={this.handleClose}
-              // handleEditActionPlan={this.handleEditActionPlan}
               readOnly={false}
               actionPlanExists={this.props.actionPlanExists}
             />

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { TextField } from '@material-ui/core';
@@ -9,7 +10,16 @@ import EditImage from '../assets/images/EditImage.svg';
 import SaveImage from '../assets/images/SaveImage.svg';
 import SaveAndCloseImage from '../assets/images/SaveAndCloseImage.svg';
 
+const styles: object = {
+  textField: {
+    borderRadius: '0.5em',
+    overflowY: 'auto',
+    overflowX: 'hidden'
+  }
+}
+
 interface Props {
+  classes: Style,
   teacherFirstName: string,
   teacherLastName: string,
   firebase: {
@@ -26,7 +36,7 @@ interface Props {
   handleEditActionPlan(): void,
   handleClose(): void,
   actionPlanExists: boolean,
-  editMode: boolean
+  editMode: boolean,
 }
 
 interface State {
@@ -39,6 +49,10 @@ interface State {
   actionPlanExists: boolean,
   actionPlanId: string,
   createMode: boolean
+}
+
+interface Style {
+  textField: string
 }
 
 
@@ -150,7 +164,8 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 
   getActionPlan = (): void => {
-    this.props.firebase.getActionPlan(this.props.sessionId).then((actionPlanData: Array<{id: string, goal: string, benefit: string}>) => {
+    this.props.firebase.getActionPlan(this.props.sessionId)
+    .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
       if (actionPlanData[0]) {
         this.setState({
           actionPlanExists: true,
@@ -186,6 +201,7 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   /**
    * saves action plan by updating Cloud Firestore records
+   * @return {void}
    */
   handleSave = (): void => {
     this.props.firebase.saveActionPlan(this.state.actionPlanId, this.state.goal, this.state.benefit).then(() => {
@@ -205,6 +221,10 @@ class ActionPlanForm extends React.Component<Props, State> {
     })
   }
 
+  /**
+   * saves action plan, action steps, and closes the action plan modal
+   * @return {void}
+   */
   handleSaveAndClose = (): void => {
     this.handleSave();
     this.props.handleClose();
@@ -252,7 +272,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     handleEditActionPlan: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     actionPlanExists: PropTypes.bool.isRequired,
-    editMode: PropTypes.bool.isRequired
+    editMode: PropTypes.bool.isRequired,
   };
 
   /**
@@ -260,6 +280,7 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const { classes } = this.props;
     return (
       <div>
         {this.props.actionPlanExists || this.state.createMode ? 
@@ -311,7 +332,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                   {this.props.teacherFirstName + " " + this.props.teacherLastName}
                 </Grid>
                 <Grid item xs={4}>
-
+                  {/* coach name */}
                 </Grid>
                 <Grid item xs={4}>
                   <Grid container direction="row" justify="flex-end">
@@ -334,9 +355,14 @@ class ActionPlanForm extends React.Component<Props, State> {
                 multiline
                 rowsMax={4}
                 rows={4}
-                InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", marginLeft: '0.5em', marginRight: '0.5em'}}}
+                className={classes.textField}
+                InputProps={{
+                  disableUnderline: true,
+                  readOnly: this.props.readOnly,
+                  style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                }}
                 InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                style={{border: '2px solid #094492', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '20%'}}
+                style={{border: '2px solid #094492'}}
               />
             </Grid>
             <Grid item xs={12} style={{width: "100%", paddingBottom: '0.1em'}}>
@@ -353,9 +379,14 @@ class ActionPlanForm extends React.Component<Props, State> {
                 multiline
                 rowsMax={3}
                 rows={3}
-                InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
+                className={classes.textField}
+                InputProps={{
+                  disableUnderline: true,
+                  readOnly: this.props.readOnly,
+                  style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                }}
                 InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                style={{border: '2px solid #e99c2e', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '25%'}}
+                style={{border: '2px solid #e99c2e'}}
               />
             </Grid>
             {this.state.actionStepsArray.map((value, index) => {
@@ -376,9 +407,14 @@ class ActionPlanForm extends React.Component<Props, State> {
                         multiline
                         rowsMax={2}
                         rows={2}
-                        InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
+                        className={classes.textField}
+                        InputProps={{
+                          disableUnderline: true,
+                          readOnly: this.props.readOnly,
+                          style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                        }}
                         InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                        style={{border: '2px solid #0988ec', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '25%'}}
+                        style={{border: '2px solid #0988ec'}}
                       />
                       </Grid>
                     <Grid item xs={2}>
@@ -395,9 +431,14 @@ class ActionPlanForm extends React.Component<Props, State> {
                         multiline
                         rowsMax={2}
                         rows={2}
-                        InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
+                        className={classes.textField}
+                        InputProps={{
+                          disableUnderline: true,
+                          readOnly: this.props.readOnly,
+                          style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                        }}
                         InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                        style={{border: '2px solid #009365', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '25%'}}
+                        style={{border: '2px solid #009365'}}
                       />
                     </Grid>
                     <Grid item xs={2}>
@@ -414,9 +455,14 @@ class ActionPlanForm extends React.Component<Props, State> {
                         multiline
                         rowsMax={2}
                         rows={2}
-                        InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
+                        className={classes.textField}
+                        InputProps={{
+                          disableUnderline: true,
+                          readOnly: this.props.readOnly,
+                          style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                        }}
                         InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                        style={{border: '2px solid #ffd300', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '25%'}}
+                        style={{border: '2px solid #ffd300'}}
                       />
                     </Grid>
                     <Grid item xs={2}  >
@@ -433,9 +479,14 @@ class ActionPlanForm extends React.Component<Props, State> {
                         multiline
                         rowsMax={2}
                         rows={2}
-                        InputProps={{disableUnderline: true, readOnly: this.props.readOnly, style: {fontFamily: "Arimo", width: '98%', height: '25%', maxHeight:'25%', marginLeft: '0.5em'}}}
+                        className={classes.textField}
+                        InputProps={{
+                          disableUnderline: true,
+                          readOnly: this.props.readOnly,
+                          style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                        }}
                         InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                        style={{border: '2px solid #6f39c4', borderRadius: '0.5em', overflowY: 'scroll', overflowX: 'hidden', minHeight: '25%'}}
+                        style={{border: '2px solid #6f39c4'}}
                       />
                     </Grid>
                   </Grid>
@@ -456,4 +507,4 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 }
 
-export default ActionPlanForm;
+export default withStyles(styles)(ActionPlanForm);

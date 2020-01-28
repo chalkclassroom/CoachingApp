@@ -32,7 +32,7 @@ const styles: object = {
     flexGrow: 1,
     height: "100vh",
     flexDirection: "column",
-    overflow: "hidden"
+    overflow: "auto"
   },
   main: {
     flex: 1,
