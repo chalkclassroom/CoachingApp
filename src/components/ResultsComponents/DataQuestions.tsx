@@ -36,7 +36,7 @@ interface Style {
 
 interface Props {
   classes: Style,
-  questions: Array<{name: string, title: string, text: string}>,
+  questions: Array<{name: string, title: string, text: Array<string>}>,
   openPanel: string,
   handlePanelChange(panel: string): void,
   addedToPrep: Array<string>,
@@ -60,7 +60,7 @@ class DataQuestions extends React.Component<Props, {}> {
     questions: PropTypes.arrayOf(PropTypes.exact({
       name: PropTypes.string,
       title: PropTypes.string,
-      text: PropTypes.string})).isRequired,
+      text: PropTypes.array})).isRequired,
     openPanel: PropTypes.string,
     handlePanelChange: PropTypes.func.isRequired,
     addedToPrep: PropTypes.array.isRequired,
@@ -88,26 +88,33 @@ class DataQuestions extends React.Component<Props, {}> {
                 style={{
                   textDecoration: this.props.addedToPrep.includes(item.name)
                     ? "underline"
-                    : null
+                    : null,
+                  fontFamily: "Arimo"
                 }}
               >
                 {item.title}
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Grid container direction="row">
-                <Grid item xs={11}>
-                  <Typography className={classes.expansionPanelText}>
-                    {item.text}
-                  </Typography>
-                </Grid>
-                <Grid item xs={1}>
-                  <Button
-                    onClick={this.props.handleAddToPlan.bind(this, item.name)}
-                  >
-                    <AddCircleIcon className={classes.addButton} />
-                  </Button>
-                </Grid>
+              <Grid container direction="column">
+                {item.text.map((questions, index) => (
+                  <Grid container direction="row" key={index}>
+                    <Grid item xs={10}>
+                      <div className={classes.expansionPanelText}>
+                        <ul style={{fontFamily: "Arimo"}}>
+                          {questions}
+                        </ul>
+                      </div>
+                    </Grid>
+                    <Grid item xs={1}>
+                      <Button
+                        onClick={this.props.handleAddToPlan.bind(this, item.name)}
+                      >
+                        <AddCircleIcon className={classes.addButton} />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                ))}
               </Grid>
             </ExpansionPanelDetails>
           </ExpansionPanel>

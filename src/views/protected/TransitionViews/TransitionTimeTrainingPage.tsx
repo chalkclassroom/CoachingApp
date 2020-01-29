@@ -253,6 +253,7 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
               demonstrationClick={this.demonstrationClick}
               tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
+              color="#ffd300"
             />
           </div>
           <div className={classes.trainingContentCard}>

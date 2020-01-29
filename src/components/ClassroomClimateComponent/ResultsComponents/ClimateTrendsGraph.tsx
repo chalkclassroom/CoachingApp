@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 
 interface Props {
   data: {labels: Array<string>, datasets: Array<{label: string, data: number, backgroundColor: string}>}
@@ -26,10 +26,10 @@ const climateTrendOptions = {
       }
     ]
   },
-  tooltips: {
+  /* tooltips: {
     displayColors: true,
     multiKeyBackground: "white"
-  }
+  }, */
 };
 
 /**
@@ -50,7 +50,7 @@ class ClimateTrendsGraph extends React.Component<Props, {}> {
     // const { classes } = this.props;
 
     return (
-      <Bar
+      <Line
         data={this.props.data}
         options={climateTrendOptions}
         width={650}

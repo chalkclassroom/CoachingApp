@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import "./App.css";
 import WelcomePage from "./views/WelcomeViews/WelcomePage.tsx";
 import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage";
-import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage";
+import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage.tsx";
 import Magic8MenuPage from "./views/protected/Magic8MenuPage";
 import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage.tsx";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";

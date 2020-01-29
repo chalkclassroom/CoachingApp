@@ -661,7 +661,7 @@ class Firebase {
 
   fetchTransitionSummary = async function(sessionId) {
     const getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable(
-      "funcTransitionOfSession"
+      "funcTransitionSessionSummary"
     );
 
     return getTransitionTypeCountFirebaseFunction({ sessionId: sessionId })
@@ -915,6 +915,138 @@ class Firebase {
           result.data[0]
       )
       .catch(error => console.error("Error occurred getting teacher sequential trend: ", error))
+  };
+
+  createActionPlan = async function(teacherId, sessionId) {
+    const data = Object.assign(
+      {},
+      {
+        sessionId: sessionId,
+        coach: this.auth.currentUser.uid,
+        teacher: teacherId,
+        date: new Date().toLocaleDateString(),
+        goal: '',
+        benefit: ''
+      }
+    );
+    const actionPlansRef = firebase.firestore().collection('actionPlans').doc();
+    actionPlansRef.set(data).then(() => {
+      const actionStepsRef = actionPlansRef.collection("actionSteps").doc('0');
+      actionStepsRef.set({
+        materials: '',
+        person: '',
+        step: '',
+        // timeline: firebase.firestore.FieldValue.serverTimestamp()
+        timeline: ''
+      }).then(() => {
+        console.log('action steps created');
+      }).catch(() => {
+        console.log('error creating action steps');
+      })
+    }).catch(() => {
+      console.log('error creating action plan');
+    })
+  }
+  
+  createActionStep = async function(actionPlanId, index) {
+    const actionStepsRef = this.db.collection('actionPlans').doc(actionPlanId).collection("actionSteps").doc(index);
+    actionStepsRef.set({
+      step: '',
+      materials: '',
+      person: '',
+      timeline: ''
+    }).then(() => {
+      console.log('action steps created');
+    }).catch(() => {
+      console.log('error creating action steps');
+    })
+  }
+
+  findActionPlan = async function(sessionId) {
+    this.sessionRef = this.db.collection("actionPlans")
+      .where("benefit", "==", "maybe")
+    return this.sessionRef.get().then((doc) => {
+      if (doc.exists) {
+        console.log('action plan found');
+        return true;
+      } else {
+        console.log('action plan not found');
+        return false
+      }
+    }).catch((error) => {
+      console.log("error finding action plan: ", error)
+    })
+  }
+
+  getActionPlan = async function(sessionId) {
+    this.sessionRef = this.db.collection("actionPlans")
+      .where("sessionId", "==", sessionId)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            goal: doc.data().goal,
+            benefit: doc.data().benefit,
+            date: doc.data().date
+          })
+        );
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve action plan id')
+      })
+  }
+
+  getActionSteps = async function(actionPlanId, index) {
+    this.sessionRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps");
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const actionStepsArr = [];
+        querySnapshot.forEach(doc => 
+          actionStepsArr.push({
+            step: doc.data().step,
+            materials: doc.data().materials,
+            person: doc.data().person,
+            timeline: doc.data().timeline
+          })
+        );
+        return actionStepsArr;
+      })
+      .catch(() => {
+        console.log('error retrieving action steps');
+      })
+  }
+
+  saveActionPlan = async function(actionPlanId, goal, benefit) {
+    var actionPlanRef = this.db.collection("actionPlans").doc(actionPlanId);
+    return actionPlanRef.update({
+      goal: goal,
+      benefit: benefit
+    })
+    .then(() => {
+      console.log("Action plan updated successfully!");
+    })
+    .catch((error) => {
+      console.error("Error updating action plan: ", error);
+    })
+  }
+
+  saveActionStep = async function(actionPlanId, index, step, materials, person, timeline) {
+    var actionStepsRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps").doc(index);
+    return actionStepsRef.update({
+      step: step, 
+      materials: materials,
+      person: person,
+      timeline: timeline
+    })
+    .then(() => {
+      console.log("Action step updated successfully!");
+    })
+    .catch((error) => {
+      console.error("Error updating action plan: ", error);
+    })
   }
 
 }

@@ -1,18 +1,19 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Pie } from "react-chartjs-2";
-import FirebaseContext from "../Firebase/FirebaseContext";
+import { Pie } from "react-chartjs-2";;
+import FirebaseContext from "../../Firebase/FirebaseContext";
+import * as Constants from '../../../constants';
 
 interface Props {
-  transitionTime: number,
-  learningActivityTime: number,
+  positiveResponses: number,
+  negativeResponses: number,
 }
 
 /**
- * specifies data sets and formatting for the transition summary pie graph
- * @class TransitionTimePie
+ * specifies data sets and formatting for the climate behavior responses pie chart
+ * @class BehaviorResponsesSummaryChart
  */
-class TransitionTimePie extends React.Component<Props, {}> {
+class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -21,8 +22,8 @@ class TransitionTimePie extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    transitionTime: PropTypes.number.isRequired,
-    learningActivityTime: PropTypes.number.isRequired,
+    positiveResponses: PropTypes.number.isRequired,
+    negativeResponses: PropTypes.number.isRequired,
   };
 
   /**
@@ -30,20 +31,20 @@ class TransitionTimePie extends React.Component<Props, {}> {
    * @return {ReactElement}
    */
   render() {
-    const transitionData = {
-      labels: ["Transition Time", "Learning Activity (No Transition)"],
+    const behaviorResponseData = {
+      labels: ["General/Specific Approvals", "Redirections/Disapprovals"],
       datasets: [
         {
-          data: [this.props.transitionTime, this.props.learningActivityTime],
-          backgroundColor: ["#ec2409", "#0988EC"],
-          hoverBackgroundColor: ["#ec2409", "#0988EC"]
+          data: [this.props.positiveResponses, this.props.negativeResponses],
+          backgroundColor: [Constants.ClimateColor, "#ec2409"],
+          hoverBackgroundColor: [Constants.ClimateColor, "#ec2409"]
         }
       ]
     };
 
     return (
       <Pie
-        data={transitionData}
+        data={behaviorResponseData}
         options={{ 
           tooltips: {
             callbacks: {
@@ -72,6 +73,12 @@ class TransitionTimePie extends React.Component<Props, {}> {
               fontSize: 14,
             }
           },
+          title: {
+            display: true,
+            text: "Classroom Climate Summary",
+            fontSize: 20,
+            fontStyle: "bold"
+          },
           plugins: {
             datalabels: {
               display: 'auto',
@@ -81,8 +88,7 @@ class TransitionTimePie extends React.Component<Props, {}> {
               },
               formatter: function(value: number) {
                 return (
-                  Math.floor((value/1000)/60) + "m "
-                  + Math.round((((value/1000)/60) % 1) * 60) + "s"
+                  value
                 );
               }
             }
@@ -95,5 +101,5 @@ class TransitionTimePie extends React.Component<Props, {}> {
   }
 }
 
-TransitionTimePie.contextType = FirebaseContext;
-export default TransitionTimePie;
+BehaviorResponsesSummaryChart.contextType = FirebaseContext;
+export default BehaviorResponsesSummaryChart;
