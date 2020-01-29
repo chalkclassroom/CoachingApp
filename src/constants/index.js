@@ -1,3 +1,12 @@
+import {
+  lightGreen,
+  deepOrange,
+  orange,
+  blue,
+  indigo
+} from "@material-ui/core/colors";
+import { red } from "@material-ui/core/es/colors";
+
 // Colors
 export const TransitionColor = '#094492';
 export const ClimateColor = '#0988ec';
@@ -7,6 +16,15 @@ export const InstructionColor = '#009365';
 export const ListeningColor = '#4fd9b3';
 export const SequentialColor = '#ffd300';
 export const ACColor = '#6f39c4';
+
+export const TransitionTypeColors = {
+  lineColor: lightGreen[300],
+  travelingColor: orange[400],
+  waitingColor: deepOrange[400],
+  routinesColor: blue[300],
+  behaviorManagementColor: red['A200'],
+  otherColor: indigo['A200'],
+}
 
 
 // Team Members

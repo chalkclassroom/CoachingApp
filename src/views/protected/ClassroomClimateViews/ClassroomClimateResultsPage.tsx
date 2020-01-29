@@ -15,7 +15,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
 // import { ImmortalDB } from "immortal-db";
-import moment from "moment";
+import * as moment from "moment";
 import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.tsx";
 import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
 import AverageToneRating from "../../../components/ResultsComponents/AverageToneRating.js";
@@ -32,73 +32,18 @@ const styles: object = {
     flexGrow: 1,
     height: "100vh",
     flexDirection: "column",
-    overflow: "auto"
+    overflowY: "auto",
+    overflowX: "hidden"
   },
-  main: {
-    flex: 1,
-    height: "90%",
-    marginTop: "10vh"
-  },
-  grow: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
-  },
-  viewButtons: {
-    minWidth: 150,
-    textAlign: "center"
-  },
-  buttonsList: {
-    position: "relative",
-    top: "3vh"
-  },
-  title: {
-    position: "relative",
-    left: "33%",
-    top: "10%"
-  },
-  secondTitle: {
-    position: "relative",
-    left: "40%",
-    top: "10%"
-  },
-  chart: {
-    position: "relative",
-    left: "7%",
-    top: "5%"
-  },
-  generateReport: {
-    position: "relative",
-    right: "10%",
-    top: "76%",
-    left: "10%"
-  },
-  resultsContent: {
-    height: "60vh",
-    position: "relative",
-    top: "8vh"
-  }
 };
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: { id: string }}},
+  location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
 }
 
 interface Style {
-  root: string,
-  main: string,
-  grow: string,
-  menuButton: string,
-  viewButtons: string,
-  buttonsList: string,
-  title: string,
-  secondTitle: string,
-  chart: string,
-  generateReport: string,
-  resultsContent: string
+  root: string
 }
 
 interface State {
@@ -111,6 +56,7 @@ interface State {
   trendsDates: Array<string>,
   trendsPos: Array<number>,
   trendsNeg: Array<number>,
+  notes: Array<{id: string, content: string, timestamp: Date}>,
   actionPlanExists: boolean
 }
 
@@ -175,10 +121,10 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
    */
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then(notesArr => {
+    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: Date}>) => {
       console.log(notesArr);
-      const formattedNotesArr = [];
-      notesArr.map(note => {
+      const formattedNotesArr: Array<{id: string, content: string, timestamp: Date}> = [];
+      notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
         ).toLocaleString("en-US", {
@@ -227,7 +173,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
    * @param {SyntheticEvent} event
    */
   changeSessionId = (event: React.SyntheticEvent) => {
-    console.log("sessionId", event.target.value);
+    console.log("sessionId", event.target.value, "type is: ", typeof event);
     let specificCount = 0;
     let nonspecificCount = 0;
     let disapprovalCount = 0;

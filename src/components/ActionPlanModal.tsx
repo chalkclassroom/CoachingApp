@@ -13,7 +13,7 @@ function getModalStyle(): React.CSSProperties {
     position: "fixed",
     top: `50%`,
     left: `62.5%`,
-    transform: `translate(-50%, -50%)`
+    transform: `translate(-50%, -50%)`,
   } as React.CSSProperties;
 }
 

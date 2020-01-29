@@ -1,205 +1,35 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button/Button";
-import Card from "@material-ui/core/Card";
-import TextField from "@material-ui/core/TextField";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import TabBar from "@material-ui/core/AppBar";
-import { withStyles, createMuiTheme } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import AppBar from "../../../components/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
-// import { ImmortalDB } from "immortal-db";
-import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.tsx";
-import DataQuestions from "../../../components/ResultsComponents/DataQuestions.tsx";
 import TransitionCoachingQuestions from "../../../components/TransitionComponents/ResultsComponents/TransitionCoachingQuestions"
 import "chartjs-plugin-datalabels";
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
 import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart.tsx";
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph.tsx";
 import * as moment from "moment";
-import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
-import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";
-import WalkingImage from "../../../assets/images/WalkingImage.svg";
-import ClassroomRoutinesImage from "../../../assets/images/ClassroomRoutinesImage.svg";
-import BMDImage from "../../../assets/images/BMDImage.svg";
-import {
-  lightGreen,
-  deepOrange,
-  orange,
-  blue,
-  indigo
-} from "@material-ui/core/colors";
-import { red } from "@material-ui/core/es/colors";
-import CardContent from "@material-ui/core/CardContent";
-import ResultsDashboard from '../../../components/ResultsDashboard';
+import ResultsLayout from '../../../components/ResultsLayout';
+import * as Constants from '../../../constants';
 
 const styles: object = {
   root: {
     flexGrow: 1,
     height: "100vh",
-    flexDirection: "column"
+    flexDirection: "column",
+    overflowX: 'hidden',
+    overflowY: 'auto'
   },
-  resultsContent: {
-    position: "relative",
-    width: '60vw',
-    marginTop: '5vh'
-  },
-  buttonText: {
-    fontSize: "12px",
-    textAlign: "center"
-  },
-  transitionTypeButton: {
-    width: "70px",
-    height: "70px"
-  },
-  tabBar: {
-    marginBottom: "10px",
-    height: "5%",
-    width: "100%"
-  },
-  coachPrepCard: {
-    width: "100%",
-    overflow: "auto"
-  },
-};
-
-const TransitionTypeColors = {
-  lineColor: lightGreen[300],
-  travelingColor: orange[400],
-  waitingColor: deepOrange[400],
-  routinesColor: blue[300],
-  behaviorManagementColor: red['A200'],
-  otherColor: indigo['A200'],
-}
-
-const raisedThemes = createMuiTheme({
-  palette: {
-    waitingColor: {
-      backgroundColor: lightGreen[300],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    },
-    travelingColor: {
-      backgroundColor: orange[400],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    },
-    childWaitingColor: {
-      backgroundColor: deepOrange[400],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    },
-    classroomRoutinesColor: {
-      backgroundColor: blue[300],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    },
-    bmiColor: {
-      backgroundColor: red["A200"],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    },
-    otherColor: {
-      backgroundColor: indigo["A200"],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    }
-  }
-});
-
-const themes = createMuiTheme({
-  palette: {
-    waitingColor: {
-      backgroundColor: lightGreen[300],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    },
-    travelingColor: {
-      backgroundColor: orange[400],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    },
-    childWaitingColor: {
-      backgroundColor: deepOrange[400],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    },
-    classroomRoutinesColor: {
-      backgroundColor: blue[300],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    },
-    bmiColor: {
-      backgroundColor: red["A200"],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    },
-    otherColor: {
-      backgroundColor: indigo["A200"],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    }
-  },
-  overrides: {
-    MuiButton: {
-      raisedPrimary: {
-        color: "white"
-      },
-      textColor: 'white',
-      primaryTextColor: 'white'
-    }
-  }
-});
-
-const ViewEnum = {
-  DATA: 1,
-  QUESTIONS: 2,
-  COACH_PREP: 3,
-  ACTION_PLAN: 4,
-  NOTES: 5
 };
 
 interface Props {
-  location: { state: { teacher: { id: string }}},
-  classes: Style
-}
-
-interface Style {
-  root: string,
-  resultsContent: string,
-  buttonText: string,
-  transitionTypeButton: string,
-  tabBar: string,
-  coachPrepCard: string
+  location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
+  classes: { root: string }
 }
 
 interface State {
-  view: number,
-  categoryView: string,
   sessionId: string,
-  sessionDates: Array<string>,
-  notes: Array<object>,
+  notes: Array<{timestamp: Date, content: string}>,
   sessionLine: number,
   sessionTraveling: number,
   sessionWaiting: number,
@@ -213,14 +43,12 @@ interface State {
   trendsRoutines: Array<number>,
   trendsBehaviorManagement: Array<number>,
   trendsOther: Array<number>,
+  trendsTotal: Array<number>,
   trendsTotalColor: string,
   transitionTime: number,
   sessionTotal: number,
   learningActivityTime: number,
-  tabValue: number,
-  openPanel: string,
-  addedToPrep: Array<string>,
-  selectedQuestions: Array<string>
+  actionPlanExists: boolean
 }
 
 /**
@@ -233,46 +61,38 @@ class TransitionResultsPage extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-    // this.handleTypeChange = this.handleTypeChange.bind(this);
+
+    this.state = {
+      sessionId: "",
+      notes: [],
+      sessionLine: 0,
+      sessionTraveling: 0,
+      sessionWaiting: 0,
+      sessionRoutines: 0,
+      sessionBehaviorManagement: 0,
+      sessionOther: 0,
+      trendsDates: [],
+      trendsLine: [],
+      trendsTraveling: [],
+      trendsWaiting:  [],
+      trendsRoutines: [],
+      trendsBehaviorManagement:  [],
+      trendsOther: [],
+      trendsTotal: [],
+      trendsTotalColor: "#ec2409",
+      transitionTime: 0,
+      sessionTotal: 0,
+      learningActivityTime: 0,
+      actionPlanExists: false
+    };
   }
 
-  state = {
-    view: ViewEnum.DATA,
-    categoryView: '',
-    sessionId: "",
-    sessionDates: [],
-    notes: [],
-    sessionLine: 0,
-    sessionTraveling: 0,
-    sessionWaiting: 0,
-    sessionRoutines: 0,
-    sessionBehaviorManagement: 0,
-    sessionOther: 0,
-    trendsDates: [],
-    trendsLine: [],
-    trendsTraveling: [],
-    trendsWaiting:  [],
-    trendsRoutines: [],
-    trendsBehaviorManagement:  [],
-    trendsOther: [],
-    trendsTotal: [],
-    trendsTotalColor: "#0988EC",
-    // totalTime: null,
-    transitionTime: 0,
-    sessionTotal: 0,
-    learningActivityTime: 0,
-    tabValue: 0,
-    openPanel: '',
-    addedToPrep: [],
-    selectedQuestions: []
-  };
+  
 
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const teacherId = this.props.location.state.teacher.id;
     this.handleTrendsFetch(teacherId);
-
-    this.handleDateFetching(this.props.location.state.teacher.id);
   }
 
   /**
@@ -361,48 +181,48 @@ class TransitionResultsPage extends React.Component<Props, State> {
         },
         {
           label: 'WAITING IN LINE',
-          backgroundColor: TransitionTypeColors.lineColor,
-          borderColor: TransitionTypeColors.lineColor,
+          backgroundColor: Constants.TransitionTypeColors.lineColor,
+          borderColor: Constants.TransitionTypeColors.lineColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsLine,
         },
         {
           label: 'TRAVELING',
-          backgroundColor: TransitionTypeColors.travelingColor,
-          borderColor: TransitionTypeColors.travelingColor,
+          backgroundColor: Constants.TransitionTypeColors.travelingColor,
+          borderColor: Constants.TransitionTypeColors.travelingColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsTraveling,
         },
         {
           label: 'CHILD WAITING',
-          backgroundColor: TransitionTypeColors.waitingColor,
-          borderColor: TransitionTypeColors.waitingColor,
+          backgroundColor: Constants.TransitionTypeColors.waitingColor,
+          borderColor: Constants.TransitionTypeColors.waitingColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsWaiting,
         },
         {
           label: 'ROUTINES',
-          backgroundColor: TransitionTypeColors.routinesColor,
-          borderColor: TransitionTypeColors.routinesColor,
+          backgroundColor: Constants.TransitionTypeColors.routinesColor,
+          borderColor: Constants.TransitionTypeColors.routinesColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsRoutines,
         },
         {
           label: 'BEHAVIOR MANAGEMENT',
-          backgroundColor: TransitionTypeColors.behaviorManagementColor,
-          borderColor: TransitionTypeColors.behaviorManagementColor,
+          backgroundColor: Constants.TransitionTypeColors.behaviorManagementColor,
+          borderColor: Constants.TransitionTypeColors.behaviorManagementColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsBehaviorManagement,
         },
         {
           label: 'OTHER',
-          backgroundColor: TransitionTypeColors.otherColor,
-          borderColor: TransitionTypeColors.otherColor,
+          backgroundColor: Constants.TransitionTypeColors.otherColor,
+          borderColor: Constants.TransitionTypeColors.otherColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsOther,
@@ -438,137 +258,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
     });
   };
 
-  dataClick = () => {
-    if (this.state.view !== ViewEnum.DATA) {
-      this.setState({ view: ViewEnum.DATA });
-    }
-  };
-
-  questionsClick = () => {
-    if (this.state.view !== ViewEnum.QUESTIONS) {
-      this.setState({ view: ViewEnum.QUESTIONS });
-    }
-  };
-
-  notesClick = () => {
-    if (this.state.view !== ViewEnum.NOTES) {
-      this.setState({ view: ViewEnum.NOTES });
-    }
-  };
-
-  coachPrepClick = () => {
-    if (this.state.view !== ViewEnum.COACH_PREP) {
-      this.setState({ view: ViewEnum.COACH_PREP });
-    }
-  };
-
-  actionPlanClick = () => {
-    if (this.state.view !== ViewEnum.ACTION_PLAN) {
-      this.setState({ view: ViewEnum.ACTION_PLAN });
-    }
-  };
-
-  lineClick = () => {
-    if (this.state.categoryView !== "line") {
-      this.setState({
-        categoryView: "line",
-        openPanel: null
-      })
-    }
-  }
-
-  travelingClick = () => {
-    if (this.state.categoryView !== "traveling") {
-      this.setState({
-        categoryView: "traveling",
-        openPanel: null
-      })
-    }
-  }
-
-  childrenWaitingClick = () => {
-    if (this.state.categoryView !== "childrenWaiting") {
-      this.setState({
-        categoryView: "childrenWaiting",
-        openPanel: null
-      })
-    }
-  }
-
-  routinesClick = () => {
-    if (this.state.categoryView !== "routines") {
-      this.setState({
-        categoryView: "routines",
-        openPanel: null
-      })
-    }
-  }
-
-  behaviorClick = () => {
-    if (this.state.categoryView !== "behavior") {
-      this.setState({
-        categoryView: "behavior",
-        openPanel: null
-      })
-    }
-  }
-
-  /**
-   * @param {string} teacherId
-   */
-  handleDateFetching = (teacherId: string) => {
-    const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<string>) =>
-      this.setState({
-        sessionDates: dates
-      })
-    );
-  };
-
-  handleSummary = () => {
-    if (this.state.tabValue !== 0) {
-      this.setState({
-        tabValue: 0
-      })
-    }
-  };
-
-  handleDetails = () => {
-    if (this.state.tabValue !== 1) {
-      this.setState({
-        tabValue: 1
-      })
-    }
-  };
-
-  handleTrends = () => {
-    if (this.state.tabValue !== 2) {
-      this.setState({
-        tabValue: 2
-      })
-    }
-  };
-
-  /**
-   * @param {string} panel
-   */
-  handlePanelChange = (panel: string) => {
-    if (this.state.openPanel === panel) {
-      this.setState({ openPanel: '' });
-    } else {
-      this.setState({ openPanel: panel });
-    }
-  };
-
-  /**
-   * @param {string} panel
-   */
-  handleAddToPlan = (panel: string) => {
-    if (!this.state.addedToPrep.includes(panel)) {
-      this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
-    }
-  };
-
   /**
    * @param {event} event
    */
@@ -591,6 +280,21 @@ class TransitionResultsPage extends React.Component<Props, State> {
         })
       });
 
+      firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
+        if (actionPlanData.length>0) {
+          console.log('actionplan data: ', actionPlanData>0)
+          this.setState({
+            actionPlanExists: true
+          })
+        } else {
+          this.setState({
+            actionPlanExists: false
+          })
+        }
+      }).catch(() => {
+        console.log('unable to retrieve action plan')
+      })
+
       firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
         this.setState({
           sessionLine: Math.round(((type[0].line/type[0].total)*100)),
@@ -611,191 +315,62 @@ class TransitionResultsPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
-        </FirebaseContext.Consumer>
-        <Grid container spacing={16} justify="center" direction="row" alignItems="center">
-          <Grid item xs={3}>
-            <Grid container 
-              alignItems="center"
-              justify="center"
-              direction="column"
-            >
-              <ResultsDashboard
-                magic8="Transition Time"
-                view={this.state.view}
-                dataClick={this.dataClick}
-                questionsClick={this.questionsClick}
-                coachPrepClick={this.coachPrepClick}
-                actionPlanClick={this.actionPlanClick}
-                notesClick={this.notesClick}
-                viewEnum={ViewEnum}
-                sessionId={this.state.sessionId}
-                changeSessionId={this.changeSessionId}
-                sessionDates={this.state.sessionDates}
-              />
-            </Grid>
-          </Grid>
-          <Grid container xs={8} justify="flex-start" direction="column" alignItems="center" style={{height: '90vh'}}>
+        {console.log("transition: ", this.state.transitionTime)}
+        {console.log("learning activity: ", this.state.learningActivityTime)}
+        {console.log("session total: ", this.state.sessionTotal)}
+        <ResultsLayout
+          teacherId={this.props.location.state.teacher.id}
+          magic8="Transition Time"
+          handleTrendsFetch={this.handleTrendsFetch}
+          observationType="transition"
+          summary={
             <div>
-              {this.state.view === ViewEnum.DATA ? (
-                <div className={classes.resultsContent} style={{width: '60vw'}}>
-                  <Grid item>
-                    <TabBar position="static" color="default" className={classes.tabBar}>
-                      <Tabs
-                        value={this.state.tabValue}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        variant="fullWidth"
-                      >
-                        <Tab label="Summary" onClick={this.handleSummary} />
-                        <Tab label="Details" onClick={this.handleDetails} />
-                        <Tab label="Trends" onClick={this.handleTrends} />
-                      </Tabs>
-                    </TabBar>
-                  </Grid>
-                  <Grid item>
-                    {this.state.tabValue === 0 ? (
-                      <div>
-                        {this.state.sessionId ? (
-                          <div>
-                            <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
-                              Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
-                            </Typography>
-                            <TransitionTimePie
-                              transitionTime={this.state.transitionTime}
-                              learningActivityTime={this.state.learningActivityTime}
-                              style={{overflow:"hidden", width: '100%'}}
-                            />
-                          </div>
-                        ) : (
-                          <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
-                            Please choose a date from the dropdown menu.
-                          </Typography>
-                        )}
-                      </div>
-                      ) : this.state.tabValue === 1 ? (
-                      <div>
-                        <Grid style={{alignItems: "center"}}>
-                          {this.state.sessionId ? (
-                            <div>
-                              <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
-                                Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
-                              </Typography>
-                              <TransitionBarChart
-                                line={this.state.sessionLine}
-                                traveling={this.state.sessionTraveling}
-                                waiting={this.state.sessionWaiting}
-                                routines={this.state.sessionRoutines}
-                                behaviorManagement={this.state.sessionBehaviorManagement}
-                                other={this.state.sessionOther}
-                                style={{alignItems: "center", width: '100%', border: '20px solid blue'}}
-                              />
-                          </div>
-                          ) : (
-                            <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
-                            Please choose a date from the dropdown menu.
-                            </Typography>
-                          )}
-                        </Grid>
-                      </div>
-                    ) : (
-                      <div>
-                        <TransitionTrendsGraph
-                          data={this.handleTrendsFormatData}
-                          style={{overflow:"hidden", width: '100%', border: '20px solid blue'}}
-                        />
-                      </div>
-                    )}
-                  </Grid>
-                </div>
-              ) : this.state.view === ViewEnum.NOTES ? (
-                <div className={classes.resultsContent}>
-                  <Grid item>
-                    <NotesListDetailTable
-                      data={this.state.notes}
-                      style={{overflow:"hidden", minWidth: '100%'}}
-                    />
-                  </Grid>
-                </div>
-              ) : this.state.view === ViewEnum.QUESTIONS ? (
-                <div className={classes.resultsContent}>
-                  <TransitionCoachingQuestions />
-                </div>
-              ) : this.state.view === ViewEnum.COACH_PREP ? (
-                <div className={classes.resultsContent}>
-                  <Grid>
-                    <Card className={classes.coachPrepCard} style={{height: "30vh"}}>
-                      <CardContent>
-                        <Typography variant="h5">
-                          Data Reflection
-                        </Typography>
-                        <TextField
-                          placeholder="Choose questions from the Data-Driven Coaching tab of the Details section." 
-                          fullWidth 
-                          disabled
-                        />
-                        <TextField
-                          placeholder="Or add your own questions here!"
-                          fullWidth
-                          multiline
-                        />
-                        {this.state.selectedQuestions.map((item, index) => (
-                          <div key={index}>
-                            <Typography
-                              variant="h6"
-                              style={{textDecoration: "underline"}}
-                            >
-                              {item.type}
-                            </Typography>
-                            <ol style={{marginTop: ".5vh", marginBottom: "1vh"}}>
-                              {item.questions.map((question: string, i: number) => (
-                                <li key={i}>
-                                  <Typography
-                                    variant="subtitle2"
-                                  >
-                                    {question}
-                                  </Typography>
-                                </li>
-                              ))}
-                            </ol>
-                          </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-                    <Card className={classes.coachPrepCard} style={{height: "20vh"}}>
-                      <CardContent>
-                        <Typography variant="h5">
-                          Strengths-Based Feedback
-                        </Typography>
-                        <TextField
-                          placeholder="Add your observations of positive things the teacher did."
-                          fullWidth
-                          multiline
-                        />
-                      </CardContent>
-                    </Card>
-                    <Card className={classes.coachPrepCard} style={{height: "20vh"}}>
-                      <CardContent>
-                        <Typography variant="h5">
-                          Notes
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                </div>
-              ) : this.state.view === ViewEnum.ACTION_PLAN ? (
-                <div className={classes.resultsContent} /> // replace this null with next steps content
-              ) : null}
+              <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+                Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
+              </Typography>
+              <TransitionTimePie
+                transitionTime={this.state.transitionTime}
+                learningActivityTime={this.state.learningActivityTime}
+                style={{overflow:"hidden", width: '100%'}}
+              />
             </div>
-          </Grid>
-        </Grid>
+          }
+          details={
+            <div>
+              <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+                Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
+              </Typography>
+              <TransitionBarChart
+                line={this.state.sessionLine}
+                traveling={this.state.sessionTraveling}
+                waiting={this.state.sessionWaiting}
+                routines={this.state.sessionRoutines}
+                behaviorManagement={this.state.sessionBehaviorManagement}
+                other={this.state.sessionOther}
+                style={{alignItems: "center", width: '100%', border: '20px solid blue'}}
+              />
+            </div>
+          }
+          trendsGraph={
+            <TransitionTrendsGraph
+              data={this.handleTrendsFormatData}
+              style={{overflow:"hidden", width: '100%', border: '20px solid blue'}}
+            />
+          }
+          changeSessionId={this.changeSessionId}
+          sessionId={this.state.sessionId}
+          notes={this.state.notes}
+          questions={<TransitionCoachingQuestions />}
+          teacherFirstName={this.props.location.state.teacher.firstName}
+          teacherLastName={this.props.location.state.teacher.lastName}
+          actionPlanExists={this.state.actionPlanExists}
+        />
       </div>
     );
   }

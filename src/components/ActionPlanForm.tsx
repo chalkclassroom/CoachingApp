@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import EditImage from '../assets/images/EditImage.svg';
 import SaveImage from '../assets/images/SaveImage.svg';
-import SaveAndCloseImage from '../assets/images/SaveAndCloseImage.svg';
+import CloseImage from '../assets/images/CloseImage.svg';
 
 const styles: object = {
   textField: {
@@ -34,7 +34,7 @@ interface Props {
   sessionId: string,
   readOnly: boolean,
   handleEditActionPlan(): void,
-  handleClose(): void,
+  handleClose?(): void,
   actionPlanExists: boolean,
   editMode: boolean,
 }
@@ -270,7 +270,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     sessionId: PropTypes.string.isRequired,
     readOnly: PropTypes.bool.isRequired,
     handleEditActionPlan: PropTypes.func.isRequired,
-    handleClose: PropTypes.func.isRequired,
+    handleClose: PropTypes.func,
     actionPlanExists: PropTypes.bool.isRequired,
     editMode: PropTypes.bool.isRequired,
   };
@@ -299,7 +299,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                 alignItems="center"
                 style={{width: '100%'}}
               >
-                <Grid item xs={6}>
+                <Grid item xs={9}>
                   <Typography variant="h4" style={{fontFamily: "Arimo"}}>
                     ACTION PLAN
                   </Typography>
@@ -316,7 +316,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                 </Grid>
                 <Grid item xs={1}>
                   <Button onClick={this.handleSaveAndClose}>
-                    <img alt="Save & Close" src={SaveAndCloseImage} style={{width: '100%'}}/>
+                    <img alt="Close" src={CloseImage} style={{width: '95%'}}/>
                   </Button>
                 </Grid>
               </Grid>

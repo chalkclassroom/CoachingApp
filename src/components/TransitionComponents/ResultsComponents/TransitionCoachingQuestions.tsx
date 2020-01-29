@@ -265,12 +265,12 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     return(
       <Grid container direction="column">
         <Grid container direction="row" justify="center" alignItems="center">
-          <Typography variant="subtitle2">
+          <Typography variant="subtitle2" style={{fontFamily: 'Arimo'}}>
             In which type of transition did children spend the most amount of time?
           </Typography>
         </Grid>
         <Grid container direction="row" justify="center" alignItems="center">
-          <Typography variant="subtitle2">
+          <Typography variant="subtitle2" style={{fontFamily: 'Arimo'}}>
             Select a transition type to view questions that will encourage reflection about teaching practices.
           </Typography>
         </Grid>

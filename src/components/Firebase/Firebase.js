@@ -1,5 +1,4 @@
 import * as firebase from "firebase";
-import { SSL_OP_NO_TLSv1_1 } from "constants";
 
 // Need to find a new place for this...
 // ask Jules about where to put it
@@ -662,7 +661,7 @@ class Firebase {
 
   fetchTransitionSummary = async function(sessionId) {
     const getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable(
-      "funcTransitionOfSession"
+      "funcTransitionSessionSummary"
     );
 
     return getTransitionTypeCountFirebaseFunction({ sessionId: sessionId })

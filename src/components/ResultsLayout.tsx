@@ -60,7 +60,7 @@ interface Props {
   // location: { state: { teacher: { id: string }}},
   teacherId: string,
   classes: Style,
-  handleTrendsFetch: any,
+  handleTrendsFetch(teacherId: string): void,
   magic8: string,
   observationType: string,
   summary: React.ReactNode,
@@ -69,7 +69,7 @@ interface Props {
   changeSessionId: any,
   sessionId: string,
   questions: React.ReactNode,
-  notes: Array<{timestamp: any, content: string}>,
+  notes: Array<{timestamp: Date, content: string}>,
   teacherFirstName: string,
   teacherLastName: string,
   actionPlanExists: boolean
@@ -88,7 +88,7 @@ interface State {
   // sessionId: string,
   view: number,
   tabValue: number,
-  notes: Array<object>,
+  // notes: Array<object>,
   sessionDates: Array<string>,
   actionPlanEditMode: boolean,
   // actionPlanExists: boolean
@@ -107,7 +107,7 @@ class ResultsLayout extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      //sessionId: '',
+      // sessionId: '',
       view: ViewEnum.DATA,
       tabValue: 0,
       // notes: [],
@@ -307,6 +307,7 @@ class ResultsLayout extends React.Component<Props, State> {
                   <Grid item>
                     <NotesListDetailTable
                       data={this.props.notes}
+                      magic8={this.props.magic8}
                       style={{overflow:"hidden", minWidth: '100%'}}
                     />
                   </Grid>
