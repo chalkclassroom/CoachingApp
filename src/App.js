@@ -146,7 +146,7 @@ class App extends Component {
       <BrowserRouter>
         <MuiThemeProvider theme={styles}>
           <Switch>
-            <Route exact path="/" component={WelcomePage} />
+            <Route exact path="/" component={MessagingView} />
             <Route exact path="/forgot" component={ForgotPasswordPage} />
             <PrivateRoute
               auth={this.state.auth}

@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import ChooseIntent from '../../../components/MesssagingComponents/ChooseIntent';
 import EmailBody from '../../../components/MesssagingComponents/EmailBody';
-// import RecipientAddress from '../../../components/MesssagingComponents/RecipientAddress';
+import RecipientAddress from '../../../components/MesssagingComponents/RecipientAddress';
 import SubmitButton from '../../../components/MesssagingComponents/SubmitButton';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
@@ -39,15 +39,15 @@ const MessagingView: React.FC<MessagingViewProps> = () => {
         <div>
         <div style={{padding: "5px"}} >
         <ChooseIntent/>
-        <AppBar style={{width: `calc(100% - ${drawerWidth}px)`, height: `80px`, marginLeft: drawerWidth, position: "fixed"}}>
+        {/* <AppBar style={{width: `calc(100% - ${drawerWidth}px)`, height: `80px`, marginLeft: drawerWidth, position: "fixed"}}>
           <Toolbar>
             <Typography variant="h6" noWrap>
               Send to
             </Typography>
             <TextField id="standard-basic" label="search email here" style={{width: "100%"}} />
           </Toolbar>
-        </AppBar>
-        {/* <RecipientAddress /> */}
+        </AppBar> */}
+        <RecipientAddress />
         <main style={{marginTop: `80px`, marginLeft: drawerWidth}}>
         <EmailBody emailText={emailContent}
             emailTextRef={textRef}
