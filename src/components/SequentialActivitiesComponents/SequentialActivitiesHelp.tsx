@@ -1,6 +1,7 @@
 import * as React from "react";
-import * as PropTypes from "prop-types";
+import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
+import SequentialHelpCard from './SequentialHelpCard';
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
@@ -9,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -24,12 +25,16 @@ const styles: object = {
     width: "67%",
     backgroundColor: 'white',
     padding: '2em',
-    borderRadius: 8
+    borderRadius: 8,
   }
 };
 
 interface Props {
-  classes: { paper: string }
+  classes: Style
+}
+
+interface Style {
+  paper: string,
 }
 
 interface State {
@@ -37,23 +42,31 @@ interface State {
 }
 
 /**
- * Modal when user presses disabled 'complete observation' button
- * @class IncompleteObservation
+ * sequential activities look-fors
+ * @class SequentialActivitiesHelp
  */
-class IncompleteObservation extends React.Component<Props, State> {
+class SequentialActivitiesHelp extends React.Component<Props, State> {
   state = {
     open: true
   };
 
+  handleOpen = (): void => {
+    this.setState({ open: true });
+  };
+
+  handleClose = (): void => {
+    this.setState({ open: false });
+  };
+
   static propTypes = {
     classes: PropTypes.object.isRequired
-  };
+  }
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
@@ -66,16 +79,14 @@ class IncompleteObservation extends React.Component<Props, State> {
               direction="column"
               justify="flex-start"
             >
-              <Typography variant="h4" gutterBottom style={{fontFamily: 'Arimo'}}>
-                Incomplete Observation
+              <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+                Sequential Activities
               </Typography>
-              <Typography variant="subtitle2" gutterBottom style={{fontFamily: 'Arimo'}}>
-                You have not completed your observation yet.
+              <Typography variant="subtitle2" gutterBottom style={{fontFamily: "Arimo"}}>
+                Remember, sequential activities require children to follow
+                a <strong>logical order</strong> or <strong>sequence</strong>.
               </Typography>
-              <Typography variant="subtitle2" gutterBottom style={{fontFamily: 'Arimo'}}>
-                Please <strong>Submit</strong> this observation or press the{" "}
-                <strong>Back</strong> button.
-              </Typography>
+              <SequentialHelpCard />
             </Grid>
           </div>
         </Modal>
@@ -84,4 +95,4 @@ class IncompleteObservation extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(IncompleteObservation);
+export default withStyles(styles)(SequentialActivitiesHelp);

@@ -85,31 +85,31 @@ export const DF = {
 };
 export const MF = {
   'name': 'Mary Fuhs, Ph.D.',
-  'role': 'Director of CQ-REF Pilot Study',
+  'role': 'Director of Pilot Study',
   'job': 'Assistant Professor of Psychology',
   'affiliation': 'University of Dayton'
 };
 export const PM = {
   'name': 'Percival Matthews, Ph.D.',
-  'role': 'CQ-REF Advisory Board Member',
+  'role': 'Advisory Board Member',
   'job': 'Assistant Professor of Educational Psychology',
   'affiliation': 'University of Wisconsin'
 };
 export const LM = {
   'name': 'Laura Moore, M.P.P.',
-  'role': 'CQ-REF Advisory Board Member',
+  'role': 'Advisory Board Member',
   'job': 'Deputy Policy Director for Opportunity Insights',
   'affiliation': 'Harvard University'
 };
 export const SJW = {
   'name': 'Sandra Jo Wilson, Ph.D.',
-  'role': 'CQ-REF Pilot Study Independent Evaluator',
+  'role': 'Pilot Study Independent Evaluator',
   'job': 'Principal Associate, Social and Economic Policy',
   'affiliation': 'Abt Associates'
 };
 export const LW = {
   'name': 'Lisa Wiltshire, M.S.',
-  'role': 'CQ-REF Advisory Board Member',
+  'role': 'Advisory Board Member',
   'job': 'Policy Director',
   'affiliation': 'Tennesseans for Quality Early Education'
 };

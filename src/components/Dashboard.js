@@ -32,6 +32,8 @@ import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from "@material-ui/core/es";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
+import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
@@ -91,10 +93,12 @@ const styles = {
     borderWidth: "2px",
     fontSize: "15px",
     alignSelf: "flex-end",
-    marginTop: "auto"
+    marginTop: "auto",
+    fontFamily: "Arimo"
   },
   gridTopMargin: {
-    marginTop: "5px"
+    marginTop: "5px",
+    fontFamily: "Arimo"
   }
 };
 
@@ -146,7 +150,7 @@ class Dashboard extends React.Component {
           lookForsIcon: ClassroomClimateLookForsImage,
           notesIcon: ClassroomClimateNotesImage
         })
-      : this.props.magic8 === "Math"
+      : this.props.magic8 === "Math Instruction"
       ? this.setState({
           icon: MathIconImage,
           lookForsIcon: MathLookForsImage,
@@ -224,6 +228,10 @@ class Dashboard extends React.Component {
                   return <TransitionTimeHelp />;
                 case "Classroom Climate":
                   return <ClassroomClimateHelp />;
+                case "Associative and Cooperative":
+                    return <AssocCoopHelp />;
+                case "Sequential Activities":
+                    return <SequentialActivitiesHelp />;
                 default:
                   return <div />;
               }
