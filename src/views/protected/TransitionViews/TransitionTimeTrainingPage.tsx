@@ -259,7 +259,7 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
           <div className={classes.trainingContentCard}>
             {view === ViewEnum.CONCEPTS ? 
               <TrainingVideo
-                videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT%20Concepts%205-31-19.mp4?alt=media&token=0f968fb5-047a-4fb9-90ec-7149b40a3e9c'} />
+                videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT%20Concepts%201.30.2020.mp4?alt=media&token=0561eb57-b13c-43c5-a135-33223c3bb369'} />
             : view === ViewEnum.DEFINITIONS ?
               <TransitionHelpCard />
             : view === ViewEnum.EXAMPLE ? 

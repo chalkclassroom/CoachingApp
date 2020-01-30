@@ -36,7 +36,7 @@ interface State {
   sessionRoutines: number,
   sessionBehaviorManagement: number,
   sessionOther: number,
-  trendsDates: Array<string>,
+  trendsDates: Array<Array<string>>,
   trendsLine: Array<number>,
   trendsTraveling: Array<number>,
   trendsWaiting: Array<number>,
@@ -71,7 +71,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
       sessionRoutines: 0,
       sessionBehaviorManagement: 0,
       sessionOther: 0,
-      trendsDates: [],
+      trendsDates: [[]],
       trendsLine: [],
       trendsTraveling: [],
       trendsWaiting:  [],
@@ -100,7 +100,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
    */
   handleTrendsFetch = (teacherId: string) => {
     const firebase = this.context;
-    const dateArray: Array<string> = [];
+    const dateArray: Array<Array<string>> = [];
     const lineArray: Array<number> = [];
     const travelingArray: Array<number> = [];
     const waitingArray: Array<number> = [];
@@ -112,10 +112,10 @@ class TransitionResultsPage extends React.Component<Props, State> {
     firebase.fetchTransitionTrend(teacherId).then(dataSet => {
       dataSet.forEach(data => {
         formattedTime = this.handleTrendsFormatTime(data.total);
-        dateArray.push(
+        dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
           formattedTime
-        );
+        ]);
         lineArray.push(Math.floor(data.line / data.sessionTotal * 100));
         travelingArray.push(Math.floor(data.traveling / data.sessionTotal * 100));
         waitingArray.push(Math.floor(data.waiting / data.sessionTotal * 100));
@@ -295,7 +295,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
         console.log('unable to retrieve action plan')
       })
 
-      firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
+      /* firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
         this.setState({
           sessionLine: Math.round(((type[0].line/type[0].total)*100)),
           sessionTraveling: Math.round(((type[0].traveling/type[0].total)*100)),
@@ -305,6 +305,17 @@ class TransitionResultsPage extends React.Component<Props, State> {
           sessionOther: Math.round(((type[0].other/type[0].total)*100)),
           transitionTime: type[0].total
         })
+      }); */
+      firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
+        this.setState({
+          sessionLine: Math.round(((type[0].line))),
+          sessionTraveling: Math.round(((type[0].traveling))),
+          sessionWaiting: Math.round(((type[0].waiting))),
+          sessionRoutines: Math.round(((type[0].routines))),
+          sessionBehaviorManagement: Math.round(((type[0].behaviorManagement))),
+          sessionOther: Math.round(((type[0].other))),
+          transitionTime: type[0].total
+        }, () => {console.log("session line is ", this.state.sessionLine)})
       });
   })};
 
@@ -331,19 +342,19 @@ class TransitionResultsPage extends React.Component<Props, State> {
           observationType="transition"
           summary={
             <div>
-              <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+              <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: 'Arimo'}}>
                 Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
               </Typography>
               <TransitionTimePie
                 transitionTime={this.state.transitionTime}
                 learningActivityTime={this.state.learningActivityTime}
-                style={{overflow:"hidden", width: '100%'}}
+                style={{overflow:"hidden", height: '80vh'}}
               />
             </div>
           }
           details={
             <div>
-              <Typography variant="h5" style={{padding: 15, textAlign: "center"}}>
+              <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: 'Arimo'}}>
                 Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
               </Typography>
               <TransitionBarChart
@@ -353,14 +364,14 @@ class TransitionResultsPage extends React.Component<Props, State> {
                 routines={this.state.sessionRoutines}
                 behaviorManagement={this.state.sessionBehaviorManagement}
                 other={this.state.sessionOther}
-                style={{alignItems: "center", width: '100%', border: '20px solid blue'}}
+                style={{alignItems: "center", height: '80vh'}}
               />
             </div>
           }
           trendsGraph={
             <TransitionTrendsGraph
               data={this.handleTrendsFormatData}
-              style={{overflow:"hidden", width: '100%', border: '20px solid blue'}}
+              style={{overflow:"hidden", height: '80vh'}}
             />
           }
           changeSessionId={this.changeSessionId}

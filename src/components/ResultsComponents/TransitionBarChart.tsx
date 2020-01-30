@@ -35,9 +35,9 @@ class TransitionBarChart extends React.Component<Props, {}> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const transitionData = {
       labels: [
         "Waiting in Line",
@@ -47,8 +47,19 @@ class TransitionBarChart extends React.Component<Props, {}> {
         "Behavior Management",
         "Other"
       ],
-      datasets: [{
+      /* datasets: [{
         data: [this.props.line, this.props.traveling, this.props.waiting, this.props.routines, this.props.behaviorManagement, this.props.other],
+        backgroundColor: [lightGreen[300], orange[400], deepOrange[400], blue[300], red['A200'], indigo['A200']],
+        hoverBackgroundColor: [lightGreen[300], orange[400], deepOrange[400], blue[300], red['A200'], indigo['A200']],
+      }] */
+      datasets: [{
+        data: [
+          this.props.line/1000/60,
+          this.props.traveling/1000/60,
+          this.props.waiting/1000/60,
+          this.props.routines/1000/60,
+          this.props.behaviorManagement/1000/60,
+          this.props.other/1000/60],
         backgroundColor: [lightGreen[300], orange[400], deepOrange[400], blue[300], red['A200'], indigo['A200']],
         hoverBackgroundColor: [lightGreen[300], orange[400], deepOrange[400], blue[300], red['A200'], indigo['A200']],
       }]
@@ -62,14 +73,17 @@ class TransitionBarChart extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: 100,
-                  fontSize: 16
+                  // max: 100,
+                  max: 20,
+                  fontSize: 16,
+                  fontFamily: 'Arimo'
                 },
                 scaleLabel: {
                   display: true,
-                  labelString: "Percentage of Time in Each Transition Type",
+                  labelString: "Time (minutes) in Each Transition Type",
                   fontSize: 18,
                   fontColor: "#000000",
+                  fontFamily: 'Arimo'
                 },
                 afterFit: function(scale: { height: number }) {
                   scale.height = 100 // creates pading between ticks and scaleLabel
@@ -79,13 +93,15 @@ class TransitionBarChart extends React.Component<Props, {}> {
             yAxes: [
               {
                 ticks: {
-                  fontSize: 16
+                  fontSize: 16,
+                  fontFamily: 'Arimo'
                 },
                 scaleLabel: {
                   display: true,
                   labelString: "Transition Types",
                   fontSize: 18,
-                  fontColor: "#000000"
+                  fontColor: "#000000",
+                  fontFamily: 'Arimo'
                 },
                 afterFit: function(scale: { width: number }) {
                   scale.width = 260
@@ -108,9 +124,11 @@ class TransitionBarChart extends React.Component<Props, {}> {
                 size: 14,
                 weight: 'bold'
               },
+              fontFamily: 'Arimo',
               formatter: function(value: number) {
                 if (value > 0) {
-                  return value + '%';
+                  // return value + '%';
+                  return (Math.floor(value) + 'm ' + Math.floor((value % 1) * 60) + 's');
                 } else {
                   return null;
                 }
@@ -118,8 +136,8 @@ class TransitionBarChart extends React.Component<Props, {}> {
             }
           }
         }}
-        width={650}
-        height={400}
+        // width={650}
+        // height={400}
       />
     );
   }
