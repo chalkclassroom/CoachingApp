@@ -418,7 +418,6 @@ class Firebase {
       .add({
         Checked: mEntry.checked.slice(1),
         PeopleType: mEntry.people,
-        acType: mEntry.type,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
