@@ -18,6 +18,11 @@ module.exports = (env, argv) => {
                 path: path.resolve(__dirname, "build"),
                 filename: "bundled.js"
             },
+            devServer:{
+                historyApiFallback: true,
+                contentBase: './',
+                hot: true
+            },
             resolve: {
                 extensions: ['.ts', '.tsx', '.js', '.json']
             },
