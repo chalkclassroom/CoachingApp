@@ -14,11 +14,62 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from 'moment';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import * as Constants from '../constants';
 
-const theme = createMuiTheme({
+const TransitionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: '#094492'
+      main: Constants.TransitionColor
+    }
+  }
+});
+
+const ClimateTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.ClimateColor
+    }
+  }
+});
+const MathTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.MathColor
+    }
+  }
+});
+const EngagementTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.EngagementColor
+    }
+  }
+});
+const InstructionTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.InstructionColor
+    }
+  }
+});
+const ListeningTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.ListeningColor
+    }
+  }
+});
+const SequentialTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.SequentialColor
+    }
+  }
+});
+const ACTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.ACColor
     }
   }
 });
@@ -84,14 +135,13 @@ const styles = {
   viewButtons: {
     minWidth: 150,
     textAlign: "center",
-    color: "#094492",
-    borderColor: "#094492",
+    fontFamily: "Arimo"
   },
   viewButtonsSelected: {
     minWidth: 150,
     textAlign: "center",
     color: "#fff",
-    backgroundColor: "#094492"
+    fontFamily: "Arimo"
   },
 };
 
@@ -110,26 +160,51 @@ class ResultsDashboard extends React.Component {
     this.state = {
       auth: true,
       icon: null,
+      theme: null,
     }
   }
 
   componentDidMount = () => {
     if (this.props.magic8 === "Transition Time") {
-      this.setState({ icon: TransitionTimeIconImage });
+      this.setState({
+        icon: TransitionTimeIconImage,
+        theme: TransitionTheme
+      });
     } else if (this.props.magic8 === "Classroom Climate") {
-      this.setState({ icon: ClassroomClimateIconImage })
+      this.setState({
+        icon: ClassroomClimateIconImage,
+        theme: ClimateTheme
+      })
     } else if (this.props.magic8 === "Math") {
-      this.setState({ icon: MathIconImage })
+      this.setState({
+        icon: MathIconImage,
+        theme: MathTheme
+      })
     } else if (this.props.magic8 === "Level of Engagement") {
-      this.setState({ icon: EngagementIconImage })
+      this.setState({
+        icon: EngagementIconImage,
+        theme: EngagementTheme
+      })
     } else if (this.props.magic8 === "Level of Instruction") {
-      this.setState({ icon: InstructionIconImage })
+      this.setState({
+        icon: InstructionIconImage,
+        theme: InstructionTheme
+      })
     } else if (this.props.magic8 === "Listening to Children") {
-      this.setState({ icon: ListeningIconImage })
+      this.setState({
+        icon: ListeningIconImage,
+        theme: ListeningTheme
+      })
     } else if (this.props.magic8 === "Sequential Activities") {
-      this.setState({ icon: SequentialIconImage })
+      this.setState({
+        icon: SequentialIconImage,
+        theme: SequentialTheme
+      })
     } else {
-      this.setState({ icon: AssocCoopIconImage })
+      this.setState({
+        icon: AssocCoopIconImage,
+        theme: ACTheme
+      })
     }
   };
 
@@ -171,7 +246,7 @@ class ResultsDashboard extends React.Component {
             </Grid>
 
             <Grid item className={classes.resultsButtons}>
-              <MuiThemeProvider theme={theme}>
+              <MuiThemeProvider theme={this.state.theme}>
                 <Button
                   size="large"
                   color="primary"
@@ -188,7 +263,7 @@ class ResultsDashboard extends React.Component {
               </MuiThemeProvider>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <MuiThemeProvider theme={theme}>
+              <MuiThemeProvider theme={this.state.theme}>
                 <Button
                   size="large"
                   color="primary"
@@ -205,7 +280,7 @@ class ResultsDashboard extends React.Component {
               </MuiThemeProvider>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <MuiThemeProvider theme={theme}>
+              <MuiThemeProvider theme={this.state.theme}>
                 <Button
                   size="large"
                   color="primary"
@@ -222,7 +297,7 @@ class ResultsDashboard extends React.Component {
               </MuiThemeProvider>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <MuiThemeProvider theme={theme}>
+              <MuiThemeProvider theme={this.state.theme}>
                 <Button
                   size="large"
                   color="primary"
@@ -239,7 +314,7 @@ class ResultsDashboard extends React.Component {
               </MuiThemeProvider>
             </Grid>
             <Grid item style={{marginTop: "7vh", marginBottom: "2vh"}}>
-              <MuiThemeProvider theme={theme}>
+              <MuiThemeProvider theme={this.state.theme}>
                 <Button
                   size="large"
                   color="primary"
@@ -273,7 +348,7 @@ ResultsDashboard.propTypes = {
   sessionId: PropTypes.string.isRequired,
   sessionDates: PropTypes.array.isRequired,
   viewEnum: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired, 
   view: PropTypes.number.isRequired
 };
 

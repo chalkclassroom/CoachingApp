@@ -31,7 +31,7 @@ import Notes from "./Notes";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from "@material-ui/core/es";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
-import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import ClassroomClimateHelp from "../views/protected/ClassroomClimateViews/ClassroomClimateHelp.tsx";
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import MathInstructionHelp from "../views/protected/MathInstructionViews/MathInstructionHelp.tsx";

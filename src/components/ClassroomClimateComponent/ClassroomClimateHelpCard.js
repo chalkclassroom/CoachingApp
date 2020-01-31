@@ -1,31 +1,13 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Modal from "@material-ui/core/Modal";
-import Typography from "@material-ui/core/Typography";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import React from 'react';
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles/index";
+import Table from '@material-ui/core/Table/index';
+import TableHead from '@material-ui/core/TableHead/index';
+import TableRow from '@material-ui/core/TableRow/index';
+import TableBody from '@material-ui/core/TableBody/index';
+import TableCell from '@material-ui/core/TableCell/index';
 
-// TODO: Fix spacing, make everything more readable and easily modifiable
-
-/**
- * specifies styling for modal
- * @return {css}
- */
-function getModalStyle() {
-  return {
-    position: "fixed",
-    top: `50%`,
-    left: `50%`,
-    transform: `translate(-50%, -50%)`
-  } as React.CSSProperties;
-}
-
-const styles: object = {
+const styles = () => ({
   paper: {
     position: "absolute",
     width: "67%",
@@ -77,67 +59,14 @@ const styles: object = {
     backgroundColor: "#B3D1FA",
     padding: "1%"
   }
-};
+});
 
-interface Props {
-  classes: {
-    paper: string,
-    disapprovalTitle: string,
-    disapprovalExample: string,
-    redirectionTitle: string,
-    redirectionExample: string,
-    generalTitle: string,
-    generalExample: string,
-    specificTitle: string,
-    specificExample: string
-  }
-}
 
-/**
- * Definitions and Reminders for Classroom Climate Observation
- * @class ClassroomClimateHelp
- */
-class ClassroomClimateHelp extends React.Component<Props, {}> {
-  state = {
-    open: true
-  };
-
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  static propTypes = {
-    classes: PropTypes.object.isRequired
-  }
-
-  /**
-   * render function
-   * @return {ReactElement}
-   */
-  render() {
-    const { classes } = this.props;
-
-    return (
-      <div>
-        <Modal open={this.state.open}>
-          <div style={getModalStyle()} className={classes.paper}>
-            <Grid
-              container
-              alignItems="center"
-              direction="column"
-              justify="flex-start"
-            >
-              <Typography variant="h4" gutterBottom>
-                Positive Climate
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                Hints + Reminders: Classifying Behavior Responses
-              </Typography>
-              <Table padding="checkbox">
+function ClassroomClimateHelpCard(props) {
+  const { classes } = props;
+  return (
+    <div>
+       <Table padding="checkbox">
                 <TableHead>
                   <TableRow>
                     <TableCell className={classes.disapprovalTitle}>
@@ -224,12 +153,12 @@ class ClassroomClimateHelp extends React.Component<Props, {}> {
                   </TableRow>
                 </TableBody>
               </Table>
-            </Grid>
-          </div>
-        </Modal>
-      </div>
-    );
-  }
+    </div>
+  )
 }
 
-export default withStyles(styles)(ClassroomClimateHelp);
+ClassroomClimateHelpCard.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(ClassroomClimateHelpCard);
