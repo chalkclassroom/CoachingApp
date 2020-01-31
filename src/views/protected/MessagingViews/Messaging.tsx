@@ -4,12 +4,7 @@ import ChooseIntent from '../../../components/MesssagingComponents/ChooseIntent'
 import EmailBody from '../../../components/MesssagingComponents/EmailBody';
 import RecipientAddress from '../../../components/MesssagingComponents/RecipientAddress';
 import SubmitButton from '../../../components/MesssagingComponents/SubmitButton';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import TextField from '@material-ui/core/TextField';
-
+import './Messaging.css';
 
 type MessagingViewProps = {
     
@@ -36,28 +31,25 @@ const MessagingView: React.FC<MessagingViewProps> = () => {
     </div>;
 
     return (
-        <div>
-        <div style={{padding: "5px"}} >
-        <ChooseIntent/>
-        {/* <AppBar style={{width: `calc(100% - ${drawerWidth}px)`, height: `80px`, marginLeft: drawerWidth, position: "fixed"}}>
-          <Toolbar>
-            <Typography variant="h6" noWrap>
-              Send to
-            </Typography>
-            <TextField id="standard-basic" label="search email here" style={{width: "100%"}} />
-          </Toolbar>
-        </AppBar> */}
-        <RecipientAddress />
-        <main style={{marginTop: `80px`, marginLeft: drawerWidth}}>
-        <EmailBody emailText={emailContent}
-            emailTextRef={textRef}
-        />
-        </main>
+        <div className="grid-container">
+            <div className='intent'>
+              <ChooseIntent />
+            </div>
+            <div className='non-intent'>
+              <div className='recipient'>
+                <RecipientAddress />
+              </div>
+              {/* <main style={{marginTop: `80px`, marginLeft: drawerWidth}}> */}
+              <div className='emailbody'>
+                <EmailBody emailText={emailContent} emailTextRef={textRef} />
+              </div>
+              {/* </main> */}
+              {/* <div style={{position: "fixed", bottom: "16px", right: "16px"}}> */}
+              <div className='submit'>
+                <SubmitButton sendMail={(): void => console.log('hello')}/>
+              </div>
+          </div>
         </div>
-        <div style={{position: "fixed", bottom: "16px", right: "16px"}}>
-        <SubmitButton sendMail={(): void => console.log('hello')}/>
-        </div>
-      </div>
     );
 }
 
