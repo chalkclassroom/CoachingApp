@@ -13,7 +13,15 @@ import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionna
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import SequentialHelpCard from "../../../components/SequentialActivitiesComponents/SequentialHelpCard";
+import { createMuiTheme } from "@material-ui/core/es/styles";
 
+const SequentialTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.SequentialColor
+    }
+  }
+});
 
 const styles: object = {
   root: {
@@ -256,7 +264,7 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
               demonstrationClick={this.demonstrationClick}
               tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
-              buttonColor={Constants.SequentialColor}
+              colorTheme={SequentialTheme}
             />
           </div>
           <div className={classes.trainingContentCard}>

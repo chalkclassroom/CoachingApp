@@ -436,8 +436,8 @@ const questionBank = {
       options: new Map([
         ["Suggesting that the baby might be hungry", false],
         ["Asking what they are playing", false],
-        ["Encouraging the children to talk about what the baby wants to eat", true],
-        ["All of the above", false],
+        ["Encouraging the children to talk about what the baby wants to eat", false],
+        ["All of the above", true],
       ]),
       feedback: "The correct answer is D. When children are not yet acting out a recognizable scenario in " + 
       "dramatic play, a teacher can encourage them to do so by asking what they are playing. Teachers can " + 

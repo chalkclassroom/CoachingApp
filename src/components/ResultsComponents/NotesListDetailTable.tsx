@@ -7,6 +7,7 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import Paper from "@material-ui/core/Paper/Paper";
+import * as Constants from "../../constants";
 
 const styles: object = {
   paper: {
@@ -15,7 +16,6 @@ const styles: object = {
     marginRight: "10%"
   },
   tableHeader: {
-    backgroundColor: "#094492",
     color: "white",
     fontSize: 14
   }
@@ -28,7 +28,8 @@ interface Style {
 
 interface Props {
   classes: Style,
-  data: Array<{ timestamp: any, content: string }>
+  data: Array<{ timestamp: Date, content: string }>,
+  magic8: string
 }
 
 /**
@@ -39,23 +40,38 @@ class NotesListDetailTable extends React.Component<Props, {}> {
   
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    data: PropTypes.array.isRequired
+    data: PropTypes.array.isRequired,
+    magic8: PropTypes.string.isRequired
   };
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
+    let color = '';
+    this.props.magic8 === "Transition Time" ? 
+      color = Constants.TransitionColor
+    : this.props.magic8 === "Classroom Climate" ?
+      color = Constants.ClimateColor
+    : this.props.magic8 === "Math" ?
+      color = Constants.MathColor
+    : this.props.magic8 === "Level of Engagement" ?
+      color = Constants.EngagementColor
+    : this.props.magic8 === "Level of Instruction" ?
+      color = Constants.ListeningColor
+    : this.props.magic8 === "Sequential Activities" ?
+      color = Constants.SequentialColor
+    : color = Constants.ACColor
 
     return (
       <Paper className={classes.paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell className={classes.tableHeader}>Time</TableCell>
-              <TableCell className={classes.tableHeader} align="right">
+              <TableCell className={classes.tableHeader} style={{backgroundColor: color}}>Time</TableCell>
+              <TableCell className={classes.tableHeader} style={{backgroundColor: color}} align="right">
                 Notes
               </TableCell>
             </TableRow>

@@ -294,7 +294,7 @@ class CenterRatingChecklistMath extends React.Component {
                    xs={6}>
                     <Card>
                       <Typography variant="h6" align={"center"}>
-                        Math Types
+                        Child Behaviors
                       </Typography>
                       <List>
                         <ListItem

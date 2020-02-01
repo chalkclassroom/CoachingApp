@@ -23,9 +23,9 @@ const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    //backgroundColor: theme.palette.background.paper,
+    backgroundColor: 'white',
     //boxShadow: theme.shadows[5],
-    //padding: theme.spacing.unit * 4,
+    padding: '1em',
     borderRadius: 8
   }
 };
@@ -88,10 +88,10 @@ class TransitionTimeHelp extends React.Component<Props, State> {
               direction="column"
               justify="flex-start"
             >
-              <Typography variant="h4" gutterBottom>
+              <Typography variant="h4" gutterBottom style={{fontFamily: 'Arimo'}}>
                 Reducing Transitions
               </Typography>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant="subtitle2" gutterBottom style={{fontFamily: 'Arimo'}}>
                 Remember, a <strong>transition</strong> is a period of time in
                 which <strong>most</strong> of the class is not involved in a
                 learning activity.

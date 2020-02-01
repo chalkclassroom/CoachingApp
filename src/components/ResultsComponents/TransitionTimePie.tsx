@@ -35,8 +35,8 @@ class TransitionTimePie extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.transitionTime, this.props.learningActivityTime],
-          backgroundColor: ["#E55529", "#0988EC"],
-          hoverBackgroundColor: ["#E55529", "#0988EC"]
+          backgroundColor: ["#ec2409", "#0988EC"],
+          hoverBackgroundColor: ["#ec2409", "#0988EC"]
         }
       ]
     };
@@ -70,6 +70,7 @@ class TransitionTimePie extends React.Component<Props, {}> {
               padding: 20,
               fontColor: "black",
               fontSize: 14,
+              fontFamily: 'Arimo'
             }
           },
           plugins: {
@@ -79,6 +80,7 @@ class TransitionTimePie extends React.Component<Props, {}> {
               font: {
                 size: 20
               },
+              fontFamily: 'Arimo',
               formatter: function(value: number) {
                 return (
                   Math.floor((value/1000)/60) + "m "
@@ -88,8 +90,8 @@ class TransitionTimePie extends React.Component<Props, {}> {
             }
           }
         }}
-        width={650}
-        height={400}
+        // width={520}
+        // height={'100%'}
       />
     );
   }

@@ -1,30 +1,30 @@
 // build_utils/webpack.production.js
 
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 module.exports = () => ({
-    devtool: "nosource-source-map",
+    devtool: 'nosource-source-map',
     output: {
-        filename: "production.js"
+        filename: 'production.js',
     },
     optimization: {
         minimizer: [
             new TerserPlugin({
                 test: /\.js(\?.*)?$/i,
                 parallel: true,
-              }),
-            new OptimizeCSSAssetsPlugin({})
-        ]
+            }),
+            new OptimizeCSSAssetsPlugin({}),
+        ],
     },
     module: {
         rules: [
             {
                 test: /\.sa?css$/,
-                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
-            }
-        ]
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+            },
+        ],
     },
-    plugins: [new MiniCssExtractPlugin()]
-});
+    plugins: [new MiniCssExtractPlugin()],
+})

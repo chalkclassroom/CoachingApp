@@ -131,6 +131,56 @@ const themes = createMuiTheme({
   }
 });
 
+const clickedThemes = createMuiTheme({
+  palette: {
+    waitingColor: {
+      backgroundColor: lightGreen[100],
+      color: "#000",
+      textColor: white,
+      primaryTextColor: white
+    },
+    travelingColor: {
+      backgroundColor: orange[200],
+      color: "#000",
+      textColor: white,
+      primaryTextColor: white
+    },
+    childWaitingColor: {
+      backgroundColor: deepOrange[200],
+      color: "#000",
+      textColor: white,
+      primaryTextColor: white
+    },
+    classroomRoutinesColor: {
+      backgroundColor: blue[100],
+      color: "#000",
+      textColor: white,
+      primaryTextColor: white
+    },
+    bmiColor: {
+      backgroundColor: red["A100"],
+      color: "#000",
+      textColor: white,
+      primaryTextColor: white
+    },
+    otherColor: {
+      backgroundColor: indigo["A100"],
+      color: "#000",
+      textColor: white,
+      primaryTextColor: white
+    }
+  },
+  overrides: {
+    MuiButton: {
+      raisedPrimary: {
+        color: "white"
+      },
+      textColor: white,
+      primaryTextColor: white
+    }
+  }
+});
+
 /**
  * transition type buttons
  * @class TransitionTypeSel
@@ -181,7 +231,7 @@ class TransitionTypeSel extends React.Component {
 
     return (
       <div>
-        <Grid container alignItems="flex-start" direction={"row"}>
+        <Grid container alignItems="flex-start" direction={"row"} style={{fontFamily: 'Arimo'}}>
           <Grid
             item
             xs={6}
@@ -198,7 +248,9 @@ class TransitionTypeSel extends React.Component {
                 style={
                   this.state.selected === "waiting"
                     ? raisedThemes.palette.waitingColor
-                    : themes.palette.waitingColor
+                    : this.state.selected === null 
+                    ? themes.palette.waitingColor
+                    : clickedThemes.palette.waitingColor
                 }
               >
                 <img
@@ -223,7 +275,9 @@ class TransitionTypeSel extends React.Component {
                 style={
                   this.state.selected === "traveling"
                     ? raisedThemes.palette.travelingColor
-                    : themes.palette.travelingColor
+                    : this.state.selected === null 
+                    ? themes.palette.travelingColor
+                    : clickedThemes.palette.travelingColor
                 }
               >
                 <img
@@ -248,7 +302,9 @@ class TransitionTypeSel extends React.Component {
                 style={
                   this.state.selected === "child waiting"
                     ? raisedThemes.palette.childWaitingColor
-                    : themes.palette.childWaitingColor
+                    : this.state.selected === null 
+                    ? themes.palette.childWaitingColor
+                    : clickedThemes.palette.childWaitingColor
                 }
               >
                 <img
@@ -277,7 +333,9 @@ class TransitionTypeSel extends React.Component {
                 style={
                   this.state.selected === "classroom routines"
                     ? raisedThemes.palette.classroomRoutinesColor
-                    : themes.palette.classroomRoutinesColor
+                    : this.state.selected === null 
+                    ? themes.palette.classroomRoutinesColor
+                    : clickedThemes.palette.classroomRoutinesColor
                 }
               >
                 <img
@@ -301,7 +359,9 @@ class TransitionTypeSel extends React.Component {
                 style={
                   this.state.selected === "behavior management disruption"
                     ? raisedThemes.palette.bmiColor
-                    : themes.palette.bmiColor
+                    : this.state.selected === null 
+                    ? themes.palette.bmiColor
+                    : clickedThemes.palette.bmiColor
                 }
               >
                 <img
@@ -326,7 +386,9 @@ class TransitionTypeSel extends React.Component {
                 style={
                   this.state.selected === "other"
                     ? raisedThemes.palette.otherColor
-                    : themes.palette.otherColor
+                    : this.state.selected === null 
+                    ? themes.palette.otherColor
+                    : clickedThemes.palette.otherColor
                 }
               >
                 <img alt="other" src={OtherImage} height="100" width="100" />
