@@ -3,9 +3,9 @@ import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
 
 interface Props {
-  acTime: number,
-  noAcTime: number,
-  noOppTime: number
+  ac: number,
+  noAc: number,
+  noChildOpp: number
 }
 
 /**
@@ -22,16 +22,16 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    acTime: PropTypes.number.isRequired,
-    noAcTime: PropTypes.number.isRequired,
-    noOppTime: PropTypes.number.isRequired,
+    ac: PropTypes.number.isRequired,
+    noAc: PropTypes.number.isRequired,
+    noChildOpp: PropTypes.number.isRequired,
   };
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     // const { classes } = this.props;
 
     const childBehaviorsData = {
@@ -42,7 +42,7 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
       ],
       datasets: [
         {
-          data: [this.props.acTime, this.props.noAcTime, this.props.noOppTime],
+          data: [this.props.ac, this.props.noAc, this.props.noChildOpp],
           backgroundColor: ["#6F39C4", "#E99C2E", "#E55529"],
           hoverBackgroundColor: ["#6F39C4", "#E99C2E", "#E55529"]
         }
@@ -56,7 +56,7 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
-                data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }) {
+                data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const meta = dataset._meta[Object.keys(dataset._meta)[0]];
                 const total = meta.total;
@@ -66,15 +66,16 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
                 );
                 return currentValue + " (" + percentage + "%)";
               },
-              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }) {
+              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
                 return data.labels[tooltipItem[0].index];
               }
             },
             bodyFontSize: 16
           }
         }}
-        width={650}
-        height={400}
+        // width={650}
+        // height={400}
+        width = {300}
       />
     );
   }

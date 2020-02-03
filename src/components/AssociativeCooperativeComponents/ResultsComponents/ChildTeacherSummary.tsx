@@ -19,10 +19,10 @@ interface Props {
 
 /**
  * Swipe View for Child and Teacher Associative&Cooperative Pie Charts
- * @class ChildTeacherBehaviorDetailsSlider
+ * @class ChildTeacherSummary
  * @return {void}
  */
-class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
+class ChildTeacherSummary extends React.Component<Props, {}> {
   
   static propTypes = {
     ac: PropTypes.number.isRequired,
@@ -46,34 +46,37 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
       slidesToScroll: 1
     };
     return (
-      <Slider {...settings}>
-        <div>
-          <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"} variant={"h2"}>
-              Child Behaviors
-            </Typography>
-            <ChildBehaviorsPie
-              ac={this.props.ac}
-              noAc={this.props.noAc}
-              noChildOpp={this.props.noChildOpp}
-            />
+      <div>
+        <Grid direction="row" style={{border: '5px solid black', width: '100%'}}>
+          <Grid item xs={6} style={{border: '5px solid blue'}}>
+            <Grid justify={"center"} direction={"column"}>
+              <Typography align={"center"} variant="h5">
+                Child Behaviors
+              </Typography>
+              <ChildBehaviorsPie
+                ac={this.props.ac}
+                noAc={this.props.noAc}
+                noChildOpp={this.props.noChildOpp}
+              />
+            </Grid>
           </Grid>
-        </div>
-        <div>
-          <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"} variant={"h2"}>
-              Teacher Behaviors
-            </Typography>
-            <TeacherBehaviorsPie
-              support={this.props.support}
-              noSupport={this.props.noSupport}
-              noTeacherOpp={this.props.noTeacherOpp}
-            />
+          <Grid item xs={6} style={{border: '5px solid red'}}>
+            <Grid justify={"center"} direction={"column"}>
+              <Typography align={"center"} variant="h5">
+                Teacher Behaviors
+              </Typography>
+              <TeacherBehaviorsPie
+                support={this.props.support}
+                noSupport={this.props.noSupport}
+                noTeacherOpp={this.props.noTeacherOpp}
+                style={{border: '5px solid green'}}
+              />
+            </Grid>
           </Grid>
-        </div>
-      </Slider>
+        </Grid>
+      </div>
     );
   }
 }
 
-export default ChildTeacherBehaviorPieSlider;
+export default ChildTeacherSummary;

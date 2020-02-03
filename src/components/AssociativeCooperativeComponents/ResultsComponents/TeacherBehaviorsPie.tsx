@@ -24,8 +24,9 @@ import { Pie } from "react-chartjs-2";
 // };
 
 interface Props {
-  noSupportTime: number,
-  supportTime: number
+  noSupport: number,
+  support: number,
+  noTeacherOpp: number
 }
 
 /**
@@ -42,8 +43,9 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    noSupportTime: PropTypes.number.isRequired,
-    supportTime: PropTypes.number.isRequired
+    noSupport: PropTypes.number.isRequired,
+    support: PropTypes.number.isRequired,
+    noTeacherOpp: PropTypes.number.isRequired
   }
 
   /**
@@ -56,14 +58,15 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
     const teacherBehaviorsData = {
       labels: [
         "Teacher Support for Assoc./Coop. Interactions",
-        "Teacher Present, No Support"
+        "Teacher Present, No Support",
+        "Teacher Not Present"
       ],
 
       datasets: [
         {
-          data: [this.props.noSupportTime, this.props.supportTime],
-          backgroundColor: ["#0988EC", "#E99C2E"],
-          hoverBackgroundColor: ["#0988EC", "#E99C2E"]
+          data: [this.props.noSupport, this.props.support, this.props.noTeacherOpp],
+          backgroundColor: ["#0988EC", "#E99C2E", "#094492"],
+          hoverBackgroundColor: ["#0988EC", "#E99C2E", "#094492"]
         }
       ]
     };
@@ -91,8 +94,8 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
             }
           }
         }}
-        width={650}
-        height={400}
+        // width={650}
+        // height={400}
       />
     );
   }
