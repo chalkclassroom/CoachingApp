@@ -43,8 +43,8 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.ac, this.props.noAc, this.props.noChildOpp],
-          backgroundColor: ["#6F39C4", "#E99C2E", "#E55529"],
-          hoverBackgroundColor: ["#6F39C4", "#E99C2E", "#E55529"]
+          backgroundColor: ["#6F39C4", "#ec2409", "#E99C2E"],
+          hoverBackgroundColor: ["#6F39C4", "#ec2409", "#E99C2E"]
         }
       ]
     };
@@ -73,9 +73,8 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
             bodyFontSize: 16
           }
         }}
-        // width={650}
-        // height={400}
-        width = {300}
+        width={6500}
+        height={4000}
       />
     );
   }

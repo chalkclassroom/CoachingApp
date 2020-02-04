@@ -50,9 +50,9 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     // const { classes } = this.props;
     // console.log("inside time: ", this.state.inside);
     const teacherBehaviorsData = {
@@ -64,9 +64,9 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
 
       datasets: [
         {
-          data: [this.props.noSupport, this.props.support, this.props.noTeacherOpp],
-          backgroundColor: ["#0988EC", "#E99C2E", "#094492"],
-          hoverBackgroundColor: ["#0988EC", "#E99C2E", "#094492"]
+          data: [this.props.support, this.props.noSupport, this.props.noTeacherOpp],
+          backgroundColor: ["#459aeb", "#ec2409", "#E99C2E"],
+          hoverBackgroundColor: ["#459aeb", "#ec2409", "#E99C2E"]
         }
       ]
     };
@@ -78,7 +78,7 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
-                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }) {
+                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const meta = dataset._meta[Object.keys(dataset._meta)[0]];
                 const total = meta.total;
@@ -88,14 +88,14 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
                 );
                 return currentValue + " (" + percentage + "%)";
               },
-              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }) {
+              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
                 return data.labels[tooltipItem[0].index];
               }
             }
           }
         }}
-        // width={650}
-        // height={400}
+        width={6500}
+        height={4000}
       />
     );
   }

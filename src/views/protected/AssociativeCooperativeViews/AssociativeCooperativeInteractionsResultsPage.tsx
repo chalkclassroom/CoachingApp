@@ -62,6 +62,14 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       noSupport: 0,
       noTeacherOpp: 0,
       sessionId: '',
+      ac1: 0,
+      ac2: 0,
+      ac3: 0,
+      ac4: 0,
+      teacher1: 0,
+      teacher2: 0,
+      teacher3: 0,
+      teacher4: 0,
       trendsDates: [],
       trendsNoOpp: [],
       trendsNoAC: [],
@@ -319,6 +327,19 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
             support: summary.support,
           });
         });
+
+        firebase.fetchACDetails(this.state.sessionId).then(summary => {
+          this.setState({
+            ac1: summary.ac1,
+            ac2: summary.ac2,
+            ac3: summary.ac3,
+            ac4: summary.ac4,
+            teacher1: summary.teacher1,
+            teacher2: summary.teacher2,
+            teacher3: summary.teacher3,
+            teacher4: summary.teacher4
+          }, () => {console.log(this.state.ac1, this.state.ac2, this.state.ac3, this.state.ac4, this.state.teacher1, this.state.teacher2, this.state.teacher3, this.state.teacher4)})
+        })
       }
     );
   };
@@ -413,7 +434,16 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
             />
           }
           details={
-            <ChildTeacherBehaviorDetailsSlider />
+            <ChildTeacherBehaviorDetailsSlider
+              ac1={this.state.ac1}
+              ac2={this.state.ac2}
+              ac3={this.state.ac3}
+              ac4={this.state.ac4}
+              teacher1={this.state.teacher1}
+              teacher2={this.state.teacher2}
+              teacher3={this.state.teacher3}
+              teacher4={this.state.teacher4}
+            />
           }
           trendsGraph={
             <ChildTeacherBehaviorTrendsSlider

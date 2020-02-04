@@ -47,10 +47,24 @@ class ChildTeacherSummary extends React.Component<Props, {}> {
     };
     return (
       <div>
-        <Grid direction="row" style={{border: '5px solid black', width: '100%'}}>
-          <Grid item xs={6} style={{border: '5px solid blue'}}>
-            <Grid justify={"center"} direction={"column"}>
-              <Typography align={"center"} variant="h5">
+        <Grid container direction="row">
+          <Grid item xs={6}>
+            <Grid container justify={"center"} direction={"column"}>
+              <Typography style={{fontFamily: 'Arimo'}}>
+                Compare how often children:
+                <ul>
+                  <li style={{color: '#6F39C4'}}>
+                    Engaged in associative and cooperative interactions.
+                  </li>
+                  <li style={{color: '#ec2409'}}>
+                    Played in the same area but did not interact.
+                  </li>
+                  <li style={{color: '#E99C2E'}}>
+                    Played alone.
+                  </li>
+                </ul>
+              </Typography>
+              <Typography align={"center"} variant="subtitle1" style={{fontFamily: 'Arimo'}}>
                 Child Behaviors
               </Typography>
               <ChildBehaviorsPie
@@ -60,16 +74,30 @@ class ChildTeacherSummary extends React.Component<Props, {}> {
               />
             </Grid>
           </Grid>
-          <Grid item xs={6} style={{border: '5px solid red'}}>
-            <Grid justify={"center"} direction={"column"}>
-              <Typography align={"center"} variant="h5">
+          <Grid item xs={6}>
+            <Grid container justify={"center"} direction={"column"}>
+            <Typography style={{fontFamily: 'Arimo'}}>
+                Compare how often the teacher:
+                <ul>
+                  <li>
+                    Supported children's associative and cooperative interactions.
+                  </li>
+                  <li>
+                    Was present in the center but did not support associative
+                    and cooperative interactions.
+                  </li>
+                  <li>
+                    Was not present in the centers observed.
+                  </li>
+                </ul>
+              </Typography>
+              <Typography align={"center"} variant="subtitle1" style={{fontFamily: 'Arimo'}}>
                 Teacher Behaviors
               </Typography>
               <TeacherBehaviorsPie
                 support={this.props.support}
                 noSupport={this.props.noSupport}
                 noTeacherOpp={this.props.noTeacherOpp}
-                style={{border: '5px solid green'}}
               />
             </Grid>
           </Grid>

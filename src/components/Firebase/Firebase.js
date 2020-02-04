@@ -743,7 +743,7 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error("Error occurred getting AC details: ", error)
