@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
@@ -28,10 +29,10 @@ interface State {
 }
 
 /**
- * data reflection question layout for classroom climate
- * @class ClimateCoachingQuestions
+ * data reflection question layout for associative & cooperative
+ * @class ACCoachingQuestions
  */
-class ClimateCoachingQuestions extends React.Component<Props, State> {
+class ACCoachingQuestions extends React.Component<Props, State> {
   /**
    * @param {Props} props
    */
@@ -45,28 +46,37 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
     }
   }
 
-  approvalsClick = (): void => {
-    if (this.state.categoryView !== "approvals") {
+  associativeClick = (): void => {
+    if (this.state.categoryView !== "associative") {
       this.setState({
-        categoryView: "approvals",
+        categoryView: "associative",
         openPanel: null
       })
     }
   }
 
-  redirectionsClick = (): void => {
-    if (this.state.categoryView !== "redirections") {
+  cooperativeClick = (): void => {
+    if (this.state.categoryView !== "cooperative") {
       this.setState({
-        categoryView: "redirections",
+        categoryView: "cooperative",
         openPanel: null
       })
     }
   }
 
-  disapprovalsClick = (): void => {
-    if (this.state.categoryView !== "disapprovals") {
+  teacherParticipationClick = (): void => {
+    if (this.state.categoryView !== "teacherParticipation") {
       this.setState({
-        categoryView: "disapprovals",
+        categoryView: "teacherParticipation",
+        openPanel: null
+      })
+    }
+  }
+
+  teacherSupportClick = (): void => {
+    if (this.state.categoryView !== "teacherSupport") {
+      this.setState({
+        categoryView: "teacherSupport",
         openPanel: null
       })
     }
@@ -103,28 +113,43 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
           <Grid item>
             <Button 
               // style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
-              onClick={this.approvalsClick}
+              onClick={this.associativeClick}
             >
-              <ThumbUpIcon fill="#0988ec" />
+              <Typography>
+                Associative Interactions
+              </Typography>
             </Button>
           </Grid>
           <Grid item>
             <Button
               // style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
-              onClick={this.redirectionsClick}
+              onClick={this.cooperativeClick}
             >
-              <ThumbDownIcon fill="#f37b6b" />
+              <Typography>
+                Cooperative Interactions
+              </Typography>
             </Button>
           </Grid>
           <Grid item>
             <Button
-              onClick={this.disapprovalsClick}
+              onClick={this.teacherParticipationClick}
             >
-              <NotInterestedIcon fill="#ec2409" />
+              <Typography>
+                Teacher Participation in Activities
+              </Typography>
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              onClick={this.teacherSupportClick}
+            >
+              <Typography>
+                Teacher Support for Child Interactions
+              </Typography>
             </Button>
           </Grid>
         </Grid>
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh", fontFamily: "Arimo"}}>
+        {/* <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh", fontFamily: "Arimo"}}>
           <Grid
             item xs={2}
           >
@@ -132,37 +157,41 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
           </Grid>
           <Grid
             item xs={2}
-            // className = {classes.buttonText}
-            // style={{fontWeight: this.state.categoryView === "traveling" ? "bold" : "normal"}}
           >
             Redirections
           </Grid>
           <Grid
             item xs={2}
-            // className = {classes.buttonText}
-            // style={{fontWeight: this.state.categoryView === "childrenWaiting" ? "bold" : "normal"}}
           >
             Disapprovals
           </Grid>
-        </Grid>
+        </Grid> */}
         <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "approvals" ? (
+          {this.state.categoryView === "associative" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Climate.Approvals}
+              questions={Constants.CoachingQuestions.AC.Associative}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
             />
-          ) : this.state.categoryView === "redirections" ? (
+          ) : this.state.categoryView === "cooperative" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Climate.Redirections}
+              questions={Constants.CoachingQuestions.AC.Cooperative}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
             />
-          ) : this.state.categoryView === "disapprovals" ? (
+          ) : this.state.categoryView === "teacherParticipation" ? (
+            <DataQuestions
+              questions={Constants.CoachingQuestions.AC.TeacherParticipation}
+              openPanel={this.state.openPanel}
+              handlePanelChange={this.handlePanelChange}
+              addedToPrep={this.state.addedToPrep}
+              handleAddToPlan={this.handleAddToPlan}
+            />
+          ) : this.state.categoryView === "teacherSupport" ? (
             <DataQuestions
               questions={Constants.CoachingQuestions.Climate.Disapprovals}
               openPanel={this.state.openPanel}
@@ -177,4 +206,4 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(ClimateCoachingQuestions);
+export default withStyles(styles)(ACCoachingQuestions);

@@ -38,7 +38,7 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
       labels: [
         "Assoc./Coop. Interaction",
         "No Assoc./Coop. Interaction",
-        "No Opportunity"
+        "1 Child at Center"
       ],
       datasets: [
         {
@@ -71,10 +71,22 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
               }
             },
             bodyFontSize: 16
+          },
+          legend: {
+            display: false,
+            position: 'bottom'
+          },
+          plugins: {
+            datalabels: {
+              color: 'white',
+              font: {
+                size: 20
+              }
+            }
           }
         }}
-        width={6500}
-        height={4000}
+        width={260}
+        // height={160}
       />
     );
   }

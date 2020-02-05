@@ -8,7 +8,7 @@ import ResultsLayout from '../../../components/ResultsLayout';
 import ChildTeacherBehaviorPieSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorPieSlider.tsx";
 import ChildTeacherBehaviorDetailsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider.tsx";
 import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider.tsx";
-import ChildTeacherSummary from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherSummary.tsx";
+import ACCoachingQuestions from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ACCoachingQuestions";
 import * as Constants from '../../../constants';
 
 const styles: object = {
@@ -31,15 +31,28 @@ interface Style {
 }
 
 interface State {
-  disapprovalBehaviorCount: number,
-  redirectionsBehaviorCount: number,
-  nonspecificBehaviorCount: number,
-  specificBehaviorCount: number,
-  averageToneRating: number,
+  ac: number,
+  noAc: number,
+  noChildOpp: number,
+  support: number,
+  noSupport: number,
+  noTeacherOpp: number,
   sessionId: string,
-  trendsDates: Array<string>,
-  trendsPos: Array<number>,
-  trendsNeg: Array<number>,
+  ac1: number,
+  ac2: number,
+  ac3: number,
+  ac4: number,
+  teacher1: number,
+  teacher2: number,
+  teacher3: number,
+  teacher4: number,
+  trendsDates: Array<Array<string>>,
+  trendsNoChildOpp: Array<number>,
+  trendsNoAC: Array<number>,
+  trendsAC: Array<number>,
+  trendsNoTeacherOpp: Array<number>,
+  trendsNoSupport: Array<number>,
+  trendsSupport: Array<number>,
   notes: Array<{id: string, content: string, timestamp: Date}>,
   actionPlanExists: boolean
 }
@@ -84,7 +97,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     const firebase = this.context;
     firebase.fetchBehaviourTypeCount(this.state.sessionId);
     firebase.fetchAvgToneRating(this.state.sessionId);
@@ -127,14 +140,17 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     });
   };
 
+  /**
+   * @param {string} teacherId
+   */
   handleChildTrendsFetch = (teacherId: string): void => {
     const firebase = this.context;
-    const dateArray = [];
-    const noOppArray = [];
-    const noACArray = [];
-    const ACArray = [];
-    firebase.fetchChildACTrend(teacherId).then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, ac: number, noac: number}>) => {
-      console.log("Trends dataSet", dataSet);
+    const dateArray: Array<Array<string>> = [];
+    const noOppArray: Array<number> = [];
+    const noACArray: Array<number> = [];
+    const ACArray: Array<number> = [];
+    firebase.fetchChildACTrend(teacherId)
+    .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, ac: number, noac: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
@@ -150,37 +166,26 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         trendsNoAC: noACArray,
         trendsAC: ACArray
       });
-
-      console.log("trends date array: ", this.state.trendsDates);
-      console.log("trends no opportunity array: ", this.state.trendsNoChildOpp);
-      console.log("trends no ac array: ", this.state.trendsNoAC);
-      console.log("trends ac array: ", this.state.trendsAC);
     });
   };
 
-  handleTeacherTrendsFetch = teacherId => {
-    console.log('handle teacher trends fetch teacher id is ', teacherId);
+  /**
+   * @param {string} teacherId
+   */
+  handleTeacherTrendsFetch = (teacherId: string): void => {
     const firebase = this.context;
-    const dateArray = [];
-    const noSupportArray = [];
-    const supportArray = [];
-    const noOppArray = [];
-    let formattedTime;
-    firebase.fetchTeacherACTrend(teacherId).then(dataSet => {
-      console.log("Trends teacher dataSet", dataSet);
-      console.log('teacher id for teacher trends: ', teacherId);
+    const dateArray: Array<Array<string>> = [];
+    const noSupportArray: Array<number> = [];
+    const supportArray: Array<number> = [];
+    const noOppArray: Array<number> = [];
+    firebase.fetchTeacherACTrend(teacherId)
+    .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, nosupport: number}>) => {
       dataSet.forEach(data => {
-        // formattedTime = this.handleTrendsFormatTime(data.total);
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
-          // formattedTime
         ]);
-        noSupportArray.push(
-          Math.floor((data.nosupport / (data.noOpportunity + data.nosupport + data.support)) * 100)
-        );
-        supportArray.push(
-          Math.floor((data.support / (data.noOpportunity + data.nosupport + data.support)) * 100)
-        );
+        noSupportArray.push(Math.floor((data.nosupport / (data.noOpportunity + data.nosupport + data.support)) * 100));
+        supportArray.push(Math.floor((data.support / (data.noOpportunity + data.nosupport + data.support)) * 100));
         noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.nosupport + data.support)) * 100));
       });
 
@@ -190,41 +195,20 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         trendsSupport: supportArray,
         trendsNoTeacherOpp: noOppArray
       });
-
-      console.log("trends date array: ", this.state.trendsDates);
-      console.log("trends no support array: ", this.state.trendsNoSupport);
-      console.log("trends support array: ", this.state.trendsSupport);
-      console.log("trends no teacher opportunity array: ", this.state.trendsNoTeacherOpp)
     });
   };
 
-  handleTrendsFormatTime = totalTime => {
-    const seconds = Math.floor((totalTime / 1000) % 60);
-    const minutes = Math.floor((totalTime / 1000 / 60) % 60);
-    const hours = Math.floor((totalTime / 1000 / 3600) % 60);
-    let secondsString = "";
-    let minutesString = "";
-
-    if (seconds < 10) {
-      secondsString = "0" + seconds.toString();
-    } else {
-      secondsString = seconds.toString();
-    }
-
-    if (minutes < 10) {
-      minutesString = "0" + minutes.toString();
-    } else {
-      minutesString = minutes.toString();
-    }
-
-    const formattedTime =
-      hours.toString() + ":" + minutesString + ":" + secondsString;
-    console.log("formatted time is ", formattedTime);
-
-    return formattedTime;
-  };
-
-  handleTrendsChildFormatData = () => {
+  handleTrendsChildFormatData = (): {
+      labels: Array<string>,
+      datasets: Array<{
+        label: string,
+        backgroundColor: string,
+        borderColor: string,
+        fill: boolean,
+        lineTension: number,
+        data: Array<number>
+      }>
+    } => {
     return {
       labels: this.state.trendsDates,
       datasets: [
@@ -256,7 +240,17 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     };
   };
 
-  handleTrendsTeacherFormatData = () => {
+  handleTrendsTeacherFormatData = (): {
+    labels: Array<string>,
+    datasets: Array<{
+      label: string,
+      backgroundColor: string,
+      borderColor: string,
+      fill: boolean,
+      lineTension: number,
+      data: Array<number>
+    }>
+  } => {
     return {
       labels: this.state.trendsDates,
       datasets: [
@@ -266,7 +260,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
           borderColor: "#E99C2E",
           fill: false,
           lineTension: 0,
-          data: this.state.trendsSupport
+          data: this.state.trendsNoTeacherOpp
         },
         {
           label: "No Support",
@@ -288,27 +282,21 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     };
   };
 
-  changeSessionId = event => {
-    console.log("sessionId", event.target.value);
+  /**
+   * @param {SyntheticEvent} event
+   */
+  changeSessionId = (event: React.SyntheticEvent): void => {
     this.setState(
       {
         sessionId: event.target.value
       },
       () => {
         this.handleNotesFetching(this.state.sessionId);
-        //this.handleListDetailFetching(this.state.sessionId);
         const firebase = this.context;
 
-        /* firebase
-          .fetchChildACSummary(this.state.sessionId)
-          .then(summary => console.log("summary time: ", summary[0].childAC));
-        firebase
-          .fetchTeacherACSummary(this.state.sessionId)
-          .then(summary => console.log("summary time: ", summary[0].teacherAC)); */
-
-        firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
+        firebase.getActionPlan(this.state.sessionId)
+        .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
           if (actionPlanData.length>0) {
-            console.log('actionplan data: ', actionPlanData>0)
             this.setState({
               actionPlanExists: true
             })
@@ -347,71 +335,11 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
             teacher2: summary.teacher2,
             teacher3: summary.teacher3,
             teacher4: summary.teacher4
-          }, () => {console.log(this.state.ac1, this.state.ac2, this.state.ac3, this.state.ac4, this.state.teacher1, this.state.teacher2, this.state.teacher3, this.state.teacher4)})
+          })
         })
       }
     );
   };
-
-  /**
-   * @param {SyntheticEvent} event
-   */
-  /* changeSessionId = (event: React.SyntheticEvent) => {
-    console.log("sessionId", event.target.value, "type is: ", typeof event);
-    let specificCount = 0;
-    let nonspecificCount = 0;
-    let disapprovalCount = 0;
-    let redirectionCount = 0;
-    this.setState(
-      {
-        sessionId: event.target.value
-      },
-      () => {
-        this.handleNotesFetching(this.state.sessionId);
-        const firebase = this.context;
-        firebase.fetchAvgToneRating(this.state.sessionId).then((json: Array<{average: number}>) =>
-          json.forEach(toneRating => {
-            this.setState({
-              averageToneRating: toneRating.average
-            });
-          })
-        );
-        firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
-          if (actionPlanData.length>0) {
-            console.log('actionplan data: ', actionPlanData>0)
-            this.setState({
-              actionPlanExists: true
-            })
-          } else {
-            this.setState({
-              actionPlanExists: false
-            })
-          }
-        }).catch(() => {
-          console.log('unable to retrieve action plan')
-        })
-        firebase.fetchBehaviourTypeCount(this.state.sessionId).then((json: Array<{behaviorResponse: string, count: number}>) => {
-          json.forEach(behavior => {
-            if (behavior.behaviorResponse === "specificapproval") {
-              specificCount = behavior.count;
-            } else if (behavior.behaviorResponse === "nonspecificapproval") {
-              nonspecificCount = behavior.count;
-            } else if (behavior.behaviorResponse === "disapproval") {
-              disapprovalCount = behavior.count;
-            } else if (behavior.behaviorResponse === "redirection") {
-              redirectionCount = behavior.count;
-            }
-          });
-          this.setState({
-            redirectionsBehaviorCount: redirectionCount,
-            disapprovalBehaviorCount: disapprovalCount,
-            nonspecificBehaviorCount: nonspecificCount,
-            specificBehaviorCount: specificCount
-          });
-        });
-      }
-    );
-  }; */
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -433,13 +361,14 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
           handleTrendsFetch={this.handleTrendsFetching}
           observationType="ac"
           summary={
-            <ChildTeacherSummary
+            <ChildTeacherBehaviorPieSlider
               ac={this.state.ac}
               noAc={this.state.noAc}
               noChildOpp={this.state.noChildOpp}
               support={this.state.support}
               noSupport={this.state.noSupport}
               noTeacherOpp={this.state.noTeacherOpp}
+
             />
           }
           details={
@@ -463,7 +392,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
           notes={this.state.notes}
-          questions={<Typography> questions go here </Typography>}
+          questions={<ACCoachingQuestions />}
           teacherFirstName={this.props.location.state.teacher.firstName}
           teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}

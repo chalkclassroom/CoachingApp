@@ -5,6 +5,8 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import ChildBehaviorsDetailsHorizontalBar from "./ChildBehaviorsDetailsHorizontalBar.tsx";
 import TeacherBehaviorsDetailsHorizontalBar from "./TeacherBehaviorsDetailsHorizontalBar.tsx";
+import BarChildAssociativeImage from '../../../assets/images/BarChildAssociativeImage.svg'
+import BarChildCooperativeImage from '../../../assets/images/BarChildCooperativeImage.svg'
 
 interface Props {
   ac1: number,
@@ -51,7 +53,49 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component<Props, {}> {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>Child Behaviors</Typography>
+            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo'}}>
+              Child Behaviors
+            </Typography>
+            {/* <Typography align="left" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+              Consider:
+            </Typography> */}
+            <Grid container direction="column">
+              <Grid item style={{paddingTop: '0.5em'}}>
+                <Grid container direction="row" alignItems="flex-start" justify="flex-start">
+                  <Grid item xs={1} />
+                  <Grid item xs={10}>
+                    <Typography align="center" style={{fontFamily: 'Arimo', paddingBottom: '1em'}}>
+                      Were the children engaged in {" "}
+                      <span style={{color: "#c5afe7", fontWeight: 'bold'}}>associative interactions</span> {" "}
+                      or <span style={{color: "#6f39c4", fontWeight: 'bold'}}>cooperative interactions</span> more often?
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1} />
+                </Grid>
+              </Grid>
+              <Grid item>
+                <Grid container direction="row">
+                  <Grid item xs={1} />
+                  <Grid item xs={10}>
+                    <Typography align="center" style={{fontFamily: 'Arimo'}}>
+                      Which behaviors did children do more often?
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1} />
+                </Grid>
+              </Grid>
+              <Grid item style={{paddingBottom: 0}}>
+                <Grid container direction="row">
+                  <Grid item xs={1} />
+                  <Grid item xs={10}>
+                    <Typography align="center" style={{fontFamily: 'Arimo'}}>
+                      Which behaviors did children do less often?
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1} />
+                </Grid>
+              </Grid>
+            </Grid>
             <ChildBehaviorsDetailsHorizontalBar
               ac1={this.props.ac1}
               ac2={this.props.ac2}

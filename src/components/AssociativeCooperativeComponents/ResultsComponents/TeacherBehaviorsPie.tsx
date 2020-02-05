@@ -92,6 +92,14 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
                 return data.labels[tooltipItem[0].index];
               }
             }
+          },
+          plugins: {
+            datalabels: {
+              color: 'white',
+              font: {
+                size: 20
+              }
+            }
           }
         }}
         width={6500}

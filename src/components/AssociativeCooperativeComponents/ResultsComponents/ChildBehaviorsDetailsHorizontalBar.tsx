@@ -66,7 +66,15 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
                 ticks: {
                   min: 0,
                   max: 20,
-                  fontSize: 16
+                  fontSize: 16,
+                  fontColor: 'black'
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Number of Times Observed',
+                  // fontStyle: 'bold',
+                  fontSize: 16,
+                  fontColor: 'black'
                 }
               }
             ],
@@ -74,7 +82,8 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
               {
                 ticks: {
                   fontSize: 16,
-
+                  fontColor: 'black',
+                  // fontStyle: 'bold'
                 }
               }
             ]
@@ -87,7 +96,8 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
               display: 'auto',
               color: 'white',
               font: {
-                size: 14
+                size: 16,
+                weight: 'bold'
               }
             }
           }
