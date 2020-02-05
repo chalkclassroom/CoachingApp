@@ -9,6 +9,7 @@ import ChildTeacherBehaviorPieSlider from "../../../components/AssociativeCooper
 import ChildTeacherBehaviorDetailsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider.tsx";
 import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider.tsx";
 import ChildTeacherSummary from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherSummary.tsx";
+import * as Constants from '../../../constants';
 
 const styles: object = {
   root: {
@@ -71,9 +72,10 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       teacher3: 0,
       teacher4: 0,
       trendsDates: [],
-      trendsNoOpp: [],
+      trendsNoChildOpp: [],
       trendsNoAC: [],
       trendsAC: [],
+      trendsNoTeacherOpp: [],
       trendsNoSupport: [],
       trendsSupport: [],
       notes: [],
@@ -125,75 +127,74 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     });
   };
 
-  handleChildTrendsFetch = teacherId => {
+  handleChildTrendsFetch = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray = [];
     const noOppArray = [];
     const noACArray = [];
     const ACArray = [];
-    let formattedTime;
-    firebase.fetchChildACTrend(teacherId).then(dataSet => {
+    firebase.fetchChildACTrend(teacherId).then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, ac: number, noac: number}>) => {
       console.log("Trends dataSet", dataSet);
-      dataSet.map(data => {
-        formattedTime = this.handleTrendsFormatTime(data.total);
+      dataSet.forEach(data => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
-          formattedTime
         ]);
-        noOppArray.push(
-          Math.floor((data.noOpportunity / data.sessionTotal) * 100)
-        );
-        noACArray.push(Math.floor((data.noAC / data.sessionTotal) * 100));
-        ACArray.push(Math.floor((data.AC / data.sessionTotal) * 100));
+        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.noac + data.ac)) * 100));
+        noACArray.push(Math.floor((data.noac / (data.noOpportunity + data.noac + data.ac)) * 100));
+        ACArray.push(Math.floor((data.ac / (data.noOpportunity + data.noac + data.ac)) * 100));
       });
 
       this.setState({
         trendsDates: dateArray,
-        trendsNoOpp: noOppArray,
+        trendsNoChildOpp: noOppArray,
         trendsNoAC: noACArray,
         trendsAC: ACArray
       });
 
       console.log("trends date array: ", this.state.trendsDates);
-      console.log("trends no opportunity array: ", this.state.trendsNoOpp);
+      console.log("trends no opportunity array: ", this.state.trendsNoChildOpp);
       console.log("trends no ac array: ", this.state.trendsNoAC);
-      console.log("trends ac array: ", this.state.trendsNoOpp);
+      console.log("trends ac array: ", this.state.trendsAC);
     });
   };
 
   handleTeacherTrendsFetch = teacherId => {
+    console.log('handle teacher trends fetch teacher id is ', teacherId);
     const firebase = this.context;
     const dateArray = [];
     const noSupportArray = [];
     const supportArray = [];
-    const ACArray = [];
+    const noOppArray = [];
     let formattedTime;
     firebase.fetchTeacherACTrend(teacherId).then(dataSet => {
-      console.log("Trends dataSet", dataSet);
-      dataSet.map(data => {
-        formattedTime = this.handleTrendsFormatTime(data.total);
+      console.log("Trends teacher dataSet", dataSet);
+      console.log('teacher id for teacher trends: ', teacherId);
+      dataSet.forEach(data => {
+        // formattedTime = this.handleTrendsFormatTime(data.total);
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
-          formattedTime
+          // formattedTime
         ]);
         noSupportArray.push(
-          Math.floor((data.noSupport / data.sessionTotal) * 100)
+          Math.floor((data.nosupport / (data.noOpportunity + data.nosupport + data.support)) * 100)
         );
         supportArray.push(
-          Math.floor((data.supportArray / data.sessionTotal) * 100)
+          Math.floor((data.support / (data.noOpportunity + data.nosupport + data.support)) * 100)
         );
-        ACArray.push(Math.floor((data.AC / data.sessionTotal) * 100));
+        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.nosupport + data.support)) * 100));
       });
 
       this.setState({
         trendsDates: dateArray,
         trendsNoSupport: noSupportArray,
-        trendsSupport: supportArray
+        trendsSupport: supportArray,
+        trendsNoTeacherOpp: noOppArray
       });
 
       console.log("trends date array: ", this.state.trendsDates);
       console.log("trends no support array: ", this.state.trendsNoSupport);
       console.log("trends support array: ", this.state.trendsSupport);
+      console.log("trends no teacher opportunity array: ", this.state.trendsNoTeacherOpp)
     });
   };
 
@@ -229,24 +230,24 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       datasets: [
         {
           label: "No Opportunity",
-          backgroundColor: this.state.trendsNoOppColor,
-          borderColor: this.state.trendsNoOppColor,
+          backgroundColor: "#E99C2E",
+          borderColor: "#E99C2E",
           fill: false,
           lineTension: 0,
-          data: this.state.trendsNoOpp
+          data: this.state.trendsNoChildOpp
         },
         {
           label: "No Assoc./Coop. Interaction",
-          backgroundColor: this.state.trendsNoACColor,
-          borderColor: this.state.trendsNoACColor,
+          backgroundColor: '#ec2409',
+          borderColor: '#ec2409',
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoAC
         },
         {
           label: "Associative and/or Cooperative",
-          backgroundColor: this.state.trendsACColor,
-          borderColor: this.state.trendsACColor,
+          backgroundColor: Constants.ACColor,
+          borderColor: Constants.ACColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsAC
@@ -260,21 +261,29 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       labels: this.state.trendsDates,
       datasets: [
         {
+          label: "No Opportunity",
+          backgroundColor: "#E99C2E",
+          borderColor: "#E99C2E",
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsSupport
+        },
+        {
           label: "No Support",
-          backgroundColor: this.state.trendsNoSupportColor,
-          borderColor: this.state.trendsNoSupportColor,
+          backgroundColor: "#ec2409",
+          borderColor: "#ec2409",
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoSupport
         },
         {
           label: "Teacher Support",
-          backgroundColor: this.state.trendsSupportColor,
-          borderColor: this.state.trendsSupportColor,
+          backgroundColor: "#459aeb",
+          borderColor: "#459aeb",
           fill: false,
           lineTension: 0,
           data: this.state.trendsSupport
-        }
+        },
       ]
     };
   };
