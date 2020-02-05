@@ -35,6 +35,7 @@ import ClassroomClimateHelp from "../views/protected/ClassroomClimateViews/Class
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import MathInstructionHelp from "../views/protected/MathInstructionViews/MathInstructionHelp.tsx";
+import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
@@ -163,7 +164,7 @@ class Dashboard extends React.Component {
           lookForsIcon: EngagementLookForsImage,
           notesIcon: EngagementNotesImage
         })
-      : this.props.magic8 === "Level of Instruction"
+      : this.props.magic8 === "Level Of Instruction"
       ? this.setState({
           icon: InstructionIconImage,
           lookForsIcon: InstructionLookForsImage,
@@ -182,9 +183,9 @@ class Dashboard extends React.Component {
           notesIcon: SequentialNotesImage
         })
       : this.setState({
-          icon: AssocCoopIconImage,
-          lookForsIcon: AssocCoopLookForsImage,
-          notesIcon: AssocCoopNotesImage
+        icon: AssocCoopIconImage,
+        lookForsIcon: AssocCoopLookForsImage,
+        notesIcon: AssocCoopNotesImage
         });
   };
 
@@ -235,6 +236,8 @@ class Dashboard extends React.Component {
                     return <SequentialActivitiesHelp />;
                case "Math Instruction":
                     return <MathInstructionHelp/>;
+               case "Level Of Instruction":
+                      return <LevelOfInstructionHelp/>;
                   default:
                   return <div />;
               }

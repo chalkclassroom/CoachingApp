@@ -24,6 +24,8 @@ import SequentialActivitiesPage from "./views/protected/SequentialActivitiesView
 import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage";
 import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage.tsx";
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage.tsx";
+import LevelOfInstructionTrainingPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage.tsx";
+import LevelOfInstructionPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionPage.tsx";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
 import MathInstructionTrainingPage from "./views/protected/MathInstructionViews/MathInstructionTrainingPage.tsx";
@@ -221,6 +223,11 @@ class App extends Component {
             />
             <PrivateRoute
               auth={this.state.auth}
+              path="/LevelOfInstructionTraining"
+              component={LevelOfInstructionTrainingPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
               path="/SequentialActivitiesTraining"
               component={SequentialActivitiesTrainingPage}
             />
@@ -234,6 +241,11 @@ class App extends Component {
               path="/TransitionTimeTraining"
               component={TransitionTimeTrainingPage}
             />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/LevelOfInstruction"
+              component={LevelOfInstructionPage}
+            />            
             <PrivateRoute
               exact
               auth={this.state.auth}

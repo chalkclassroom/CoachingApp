@@ -2,19 +2,14 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
-import TransitionTimeHelp from "./TransitionTimeHelp";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import TransitionTimer from "./TransitionTimer";
-import TransitionLog from "./TransitionLog";
+
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import { connect } from "react-redux";
-import { resetTransitionTime } from "../../../state/actions/transition-time";
-// import TransitionTimeRecs from "./TransitionTimeRecs";
-import TransitionTypeSel from "./TransitionTypeSel";
+import { toggleNewGroupType } from "../../../state/actions/level-of-instruction";
+import GroupTypeSel from "./GroupTypeSel";
 import Dashboard from "../../../components/Dashboard";
-import LevelOfInstructionHelp from "../LevelOfInstructionViews/LevelOfInstructionHelp";
 
 const styles: object = {
   root: {
@@ -37,16 +32,14 @@ interface State {
   help: boolean,
   notes: boolean,
   recs: boolean,
-  transitionType: string,
-  open: boolean,
-  transitionEnded: boolean
-};
+  groupType: string,
+  open: boolean};
 
 /**
  * transition time observation tool
- * @class TransitionTimePage
+ * @class LevelOfInstructionPage
  */
-class TransitionTimePage extends React.Component<Props, State> {
+class LevelOfInstructionPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
@@ -58,9 +51,8 @@ class TransitionTimePage extends React.Component<Props, State> {
       help: false,
       notes: false,
       recs: true,
-      transitionType: null,
-      open: false,
-      transitionEnded: false
+      groupType: null,
+      open: false
     };
 
     // this.handleTransitionType = this.handleTransitionType.bind(this);
@@ -69,11 +61,9 @@ class TransitionTimePage extends React.Component<Props, State> {
   /**
    * @param {string} type
    */
-  handleTransitionType = (type: string): void => {
-    if (this.state.transitionEnded) {
-      this.setState({ transitionEnded: false });
-    }
-    this.setState({ transitionType: type });
+  handleGroupType = (type: string): void => {
+
+    this.setState({ groupType: type });
   };
 
   /**
@@ -88,8 +78,7 @@ class TransitionTimePage extends React.Component<Props, State> {
   };
 
   handleEndTransition = (): void => {
-    this.setState({ transitionEnded: true });
-    this.setState({ transitionType: null });
+    this.setState({ groupType: null });
   };
 
   /**
@@ -124,22 +113,14 @@ class TransitionTimePage extends React.Component<Props, State> {
         <FirebaseContext.Consumer>
           {(firebase: object) => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        {
-/*         
-        this.state.help ? (
-          <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
-           <LevelOfInstructionHelp/>
-          </ClickAwayListener>
-        ) : 
-         */
-        this.state.notes ? (
+       { this.state.notes ? (
           <FirebaseContext.Consumer>
             {(firebase: object) => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}
-                color="#094492"
-                text="Transition Time Notes"
+                color="#009365"
+                text="Level of Instruction Notes"
                 firebase={firebase}
               />
             )}
@@ -167,48 +148,24 @@ class TransitionTimePage extends React.Component<Props, State> {
                 direction={"column"}
               >
                 <Dashboard
-                  magic8="Transition Time"
-                  color="#094492"
-                  infoDisplay={<TransitionLog />}
-                  infoPlacement="center"
+				  magic8="Level Of Instruction"
+                  color="#009365"
                   completeObservation={true}
                 />
               </Grid>
             </Grid>
-            <Grid item xs={4} justify="center">
+            <Grid item xs={9} justify="center">
               <Grid
                 container
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}
               >
-                <TransitionTypeSel
-                  handleTransitionType={this.handleTransitionType}
+                <GroupTypeSel
+                  handleGroupType={this.handleGroupType}
                   handleNotes={this.handleNotes}
-                  transitionType={this.state.transitionType}
-                  transitionEnded={this.state.transitionEnded}
+                  groupType={this.state.groupType}
                 />
-              </Grid>
-            </Grid>
-            <Grid item xs={5}>
-              <Grid
-                container
-                alignItems={"center"}
-                justify={"center"}
-                direction={"column"}
-              >
-                <FirebaseContext.Consumer>
-                  {(firebase: object) => (
-                    <TransitionTimer
-                      teacherId={this.props.location.state.teacher.id}
-                      firebase={firebase}
-                      typeSelected={
-                        this.state.transitionType === null ? false : true
-                      }
-                      handleEndTransition={this.handleEndTransition}
-                    />
-                  )}
-                </FirebaseContext.Consumer>
               </Grid>
             </Grid>
           </Grid>
@@ -218,6 +175,6 @@ class TransitionTimePage extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { resetTransitionTime })(
-  withStyles(styles)(TransitionTimePage)
+export default connect(null,toggleNewGroupType)(
+  withStyles(styles)(LevelOfInstructionPage)
 );
