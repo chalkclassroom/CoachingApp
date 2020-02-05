@@ -183,9 +183,9 @@ class Dashboard extends React.Component {
           notesIcon: SequentialNotesImage
         })
       : this.setState({
-        icon: AssocCoopIconImage,
-        lookForsIcon: AssocCoopLookForsImage,
-        notesIcon: AssocCoopNotesImage
+          icon: AssocCoopIconImage,
+          lookForsIcon: AssocCoopLookForsImage,
+          notesIcon: AssocCoopNotesImage
         });
   };
 

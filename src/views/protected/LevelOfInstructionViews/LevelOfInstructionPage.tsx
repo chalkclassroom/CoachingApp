@@ -7,8 +7,8 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import { connect } from "react-redux";
-import { toggleNewGroupType } from "../../../state/actions/level-of-instruction";
-import GroupTypeSel from "./GroupTypeSel";
+import { toggleLOISettingType } from "../../../state/actions/level-of-instruction";
+import LOISettingTypeSel from "./LOISettingTypeSel";
 import Dashboard from "../../../components/Dashboard";
 
 const styles: object = {
@@ -32,7 +32,7 @@ interface State {
   help: boolean,
   notes: boolean,
   recs: boolean,
-  groupType: string,
+  settingType: string,
   open: boolean};
 
 /**
@@ -51,7 +51,7 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
       help: false,
       notes: false,
       recs: true,
-      groupType: null,
+      settingType: null,
       open: false
     };
 
@@ -61,9 +61,9 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
   /**
    * @param {string} type
    */
-  handleGroupType = (type: string): void => {
+  handleLOISettingType = (type: string): void => {
 
-    this.setState({ groupType: type });
+    this.setState({ settingType: type });
   };
 
   /**
@@ -78,7 +78,7 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
   };
 
   handleEndTransition = (): void => {
-    this.setState({ groupType: null });
+    this.setState({ settingType: null });
   };
 
   /**
@@ -148,7 +148,7 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
                 direction={"column"}
               >
                 <Dashboard
-				  magic8="Level Of Instruction"
+				          magic8="Level Of Instruction"
                   color="#009365"
                   completeObservation={true}
                 />
@@ -160,12 +160,18 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}
-              >
-                <GroupTypeSel
-                  handleGroupType={this.handleGroupType}
+              > 
+              <FirebaseContext.Consumer>
+                 {(firebase: object) =>
+                <LOISettingTypeSel
+                  teacherId={this.props.location.state.teacher.id}
+                  firebase={firebase}
+                 // handleLOISettingType={this.handleLOISettingType}
                   handleNotes={this.handleNotes}
-                  groupType={this.state.groupType}
+                  settingType={this.state.settingType}
                 />
+                 }</FirebaseContext.Consumer>
+
               </Grid>
             </Grid>
           </Grid>
@@ -175,6 +181,6 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
   }
 }
 
-export default connect(null,toggleNewGroupType)(
+export default connect(null,toggleLOISettingType)(
   withStyles(styles)(LevelOfInstructionPage)
 );

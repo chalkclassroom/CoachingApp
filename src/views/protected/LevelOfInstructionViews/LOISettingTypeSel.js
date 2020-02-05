@@ -1,68 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
 import { Fab } from '@material-ui/core';
-import { withStyles, createMuiTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { toggleNewGroupType } from '../../../state/actions/level-of-instruction';
+import { toggleLOISettingType } from '../../../state/actions/level-of-instruction';
+import Typography from "@material-ui/core/Typography";
 import { connect } from 'react-redux';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import Crop75RoundedIcon from '@material-ui/icons/Crop75Rounded';
+
 
 const styles = (theme) => ({
 	button: {
 		margin: theme.spacing.unit,
 		width: 150,
 		height: 150,
-    textAlign: 'center',
-    backgroundColor: '#27B78FFF'
-	},
-	label: {
-		flexDirection: 'column ',
-		textAlign: 'center'
-	},
-	infoButton: {
-    position: 'center ',
-		textAlign: 'center'
-  },
-  titleContainer: {
-		width: '100%',
-		margin: '0',
-		padding: '0',
-		textAlign: 'center',
-		display: 'flex',
-		justifyContent: 'space-around',
-		alignItems: 'center'
+    	textAlign: 'center'
+    	//backgroundColor: '#27B78FFF'
 	}
 });
 
-const themes = createMuiTheme({
-	palette: {
-		infoButton: {
-			backgroundColor: '#ccccccff',
-			color: '#ccccccff',
-      fontFamily: 'Arimo'
-		},
-		groupColor: {
-			backgroundColor: '#27B78FFF',
-			color: '#27B78FFF',
-		  //textColor: 'white',
-			//primaryTextColor: 'white'
-    },
-    backButton: {
-      color: '#333333',
-      borderRadius: 3,
-      textTransform: 'none'
-    }
-    
-  }
-});
-
 /**
- * transition type buttons
- * @class GroupTypeSel
+ * LOI Setting Type buttons
+ * @class LOISettingTypeSel
  */
-class GroupTypeSel extends React.Component {
+class LOISettingTypeSel extends React.Component {
 	/**
    * @param {Props} props 
    */
@@ -83,8 +43,8 @@ class GroupTypeSel extends React.Component {
    * @param {string} type
    */
 	handleButtonChange = (type) => {
-		this.props.handleGroupType(type);
-		this.props.toggleNewGroupType(type);
+	//	this.props.handleLOISettingType(type);
+		this.props.toggleLOISettingType(type);
 		this.setState({
 			selected: type
 		});
@@ -102,13 +62,23 @@ class GroupTypeSel extends React.Component {
 
 		return (
 			<div>
+				 <Grid container direction="column" justify="center" alignItems="center">
+          <Typography
+            component="h4"
+            variant="h4"
+            align="center"
+            style={{ padding: "10px", fontFamily: 'Arimo' }}
+          >
+           What is the activity setting?
+          </Typography>
 
-				<Grid container alignItems="flex-start" container direction={'row'} style={{ fontFamily: 'Arimo' }}>
+				
 
-				<div className={classes.titleContainer}>
+			{/* 	<Grid container alignItems="flex-start" container direction={'row'} style={{ fontFamily: 'Arimo' }}>
+			<div className={classes.titleContainer}>
 					<Button
 						variant="contained"
-            size="medium"
+           	 size="medium"
             onClick={null}
             className={classes.backButton}
             fullWidth={true}
@@ -116,8 +86,8 @@ class GroupTypeSel extends React.Component {
 						<b>Select Activity Setting </b>
 					</Button>
 
-				</div>
-
+				</div> 
+*/}
 				</Grid>
         <Grid container alignItems="flex-start" container direction={'row'} spacing={24} style={{ fontFamily: 'Arimo' }}>
 
@@ -125,7 +95,7 @@ class GroupTypeSel extends React.Component {
 					<Fab
 						onClick={() => this.handleButtonChange('wholeGroup')}
 						classes={{ root: classes.button }}//, label: classes.label
-            style={{root: themes.palette.groupColor}}
+						style={{ backgroundColor: "#27B78FFF" }}
 					>
 						Whole Group
 					</Fab>
@@ -135,7 +105,7 @@ class GroupTypeSel extends React.Component {
 					<Fab
 						onClick={() => this.handleButtonChange('centersOrSmall')}
 						classes={{ root: classes.button }}//, label: classes.label
-            style={{root: themes.palette.groupColor}}
+						style={{ backgroundColor: "#27B78FFF" }}
 					>
 						Centers/Small Group
 					</Fab>
@@ -147,11 +117,11 @@ class GroupTypeSel extends React.Component {
 	}
 }
 
-GroupTypeSel.propTypes = {
+LOISettingTypeSel.propTypes = {
 	classes: PropTypes.object.isRequired,
-	handleGroupType: PropTypes.func.isRequired,
-	toggleNewGroupType: PropTypes.func.isRequired,
+//	handleLOISettingType: PropTypes.func.isRequired,
+	toggleLOISettingType: PropTypes.func.isRequired,
 	handleNotes: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(connect(null, { toggleNewGroupType })(GroupTypeSel));
+export default withStyles(styles)(connect(null, { toggleLOISettingType })(LOISettingTypeSel));

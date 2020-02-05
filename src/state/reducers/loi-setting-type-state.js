@@ -1,15 +1,15 @@
 import {
-  SELECT_LOI_TYPE
+  SELECT_LOI_SETTING
 } from "../actions/level-of-instruction";
 
-const initialState = { groupType: null };
+const initialState = { settingType: null };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case SELECT_LOI_TYPE:
+    case SELECT_LOI_SETTING:
       return {
         ...state,
-        groupType: action.groupType
+        settingType: action.settingType
       };
     default:
       return state;
