@@ -569,6 +569,52 @@ export const CoachingQuestions = {
           'modeling respectful talking and listening skills, or demonstrating good sportsmanship?'
         ]
       },
+    ],
+    'TeacherSupport': [
+      {
+        'name': 'ACPanel4A',
+        'title': 'Sharing and Interacting',
+        'text': [
+          'When children are playing independently, what are some of the strategies ' + 
+          'you might use to encourage them to share or interact with each other?',
+          'What are some of the reasons children are not sharing or interacting' +
+          'more often?'
+        ]
+      },
+      {
+        'name': 'ACPanel4B',
+        'title': 'Communication',
+        'text': [
+          'What are some effective strategies you use for supporting children\'s ' +
+          'ability to communicate with their peers?',
+          'In your experience, what are some effective ways to pre-teach social skills ' + 
+          'or support children\'s interactins in the moment?',
+          'How effective are these strategies with your current students?',
+        ]
+      },
+      {
+        'name': 'ACPanel4C',
+        'title': 'Problem-Solving',
+        'text': [
+          'Talk about how children respond to challenges during associative and cooperative ' +
+          'interactions. What might they need help with (coping with feelings about losing, ' + 
+          'taking turns, sharing materials, learning the underlying concepts or rules of a ' +
+          'new game, etc.)?',
+          'What are some ways that you can support children before problems arise (e.g., ' +
+          'role-playing with puppets, teacher demonstration) and in the moment (e.g., ' +
+          'peer buddy systems, teacher praise)?'
+        ]
+      },
+      {
+        'name': 'ACPanel4D',
+        'title': 'Positive Feedback',
+        'text': [
+          'Think about how children can be encouraged to interact with each other through ' +
+          'positive teacher feedback.', 
+          'When you see children sharing, creating something together, or playing a ' +
+          'cooperative game, what kinds of feedback would help them continue doing those things?',
+        ]
+      },
     ]
   }
 }

@@ -2,13 +2,30 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants';
+
+const AssociativeTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#c5afe7"
+    }
+  }
+});
+
+const CooperativeTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.ACColor
+    }
+  }
+});
 
 const styles: object = {
   categoryView: {
@@ -111,28 +128,40 @@ class ACCoachingQuestions extends React.Component<Props, State> {
       <Grid container direction="column">
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
           <Grid item>
-            <Button 
-              // style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
-              onClick={this.associativeClick}
-            >
-              <Typography>
-                Associative Interactions
-              </Typography>
-            </Button>
+            <MuiThemeProvider theme={AssociativeTheme}>
+              <Button 
+                // style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
+                onClick={this.associativeClick}
+                variant="contained"
+                color="primary"
+                style={{width:'10em', height: '10em'}}
+              >
+                <Typography>
+                  Associative Interactions
+                </Typography>
+              </Button >
+            </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <Button
-              // style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
-              onClick={this.cooperativeClick}
-            >
-              <Typography>
-                Cooperative Interactions
-              </Typography>
-            </Button>
+            <MuiThemeProvider theme={CooperativeTheme}>
+              <Button
+                // style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
+                onClick={this.cooperativeClick}
+                variant="contained"
+                color="primary"
+                style={{width:'10em', height: '10em'}}
+              >
+                <Typography style={{color: 'white'}}>
+                  Cooperative Interactions
+                </Typography>
+              </Button>
+            </MuiThemeProvider>
           </Grid>
           <Grid item>
             <Button
               onClick={this.teacherParticipationClick}
+              variant="contained"
+              style={{width:'10em', height: '10em'}}
             >
               <Typography>
                 Teacher Participation in Activities
@@ -142,6 +171,8 @@ class ACCoachingQuestions extends React.Component<Props, State> {
           <Grid item>
             <Button
               onClick={this.teacherSupportClick}
+              variant="contained"
+              style={{width:'10em', height: '10em'}}
             >
               <Typography>
                 Teacher Support for Child Interactions
@@ -149,23 +180,6 @@ class ACCoachingQuestions extends React.Component<Props, State> {
             </Button>
           </Grid>
         </Grid>
-        {/* <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh", fontFamily: "Arimo"}}>
-          <Grid
-            item xs={2}
-          >
-            Behavior Approvals
-          </Grid>
-          <Grid
-            item xs={2}
-          >
-            Redirections
-          </Grid>
-          <Grid
-            item xs={2}
-          >
-            Disapprovals
-          </Grid>
-        </Grid> */}
         <Grid container direction="column" style={{marginTop: "1vh"}}>
           {this.state.categoryView === "associative" ? (
             <DataQuestions
@@ -174,6 +188,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.ACColor}
             />
           ) : this.state.categoryView === "cooperative" ? (
             <DataQuestions
@@ -182,6 +197,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.ACColor}
             />
           ) : this.state.categoryView === "teacherParticipation" ? (
             <DataQuestions
@@ -190,14 +206,16 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.ACColor}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Climate.Disapprovals}
+              questions={Constants.CoachingQuestions.AC.TeacherSupport}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.ACColor}
             />
           ) : <div/>}
         </Grid>

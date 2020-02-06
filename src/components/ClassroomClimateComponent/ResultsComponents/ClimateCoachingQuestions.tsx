@@ -153,6 +153,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.ClimateColor}
             />
           ) : this.state.categoryView === "redirections" ? (
             <DataQuestions
@@ -161,6 +162,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.ClimateColor}
             />
           ) : this.state.categoryView === "disapprovals" ? (
             <DataQuestions
@@ -169,6 +171,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.ClimateColor}
             />
           ) : <div/>}
         </Grid>
