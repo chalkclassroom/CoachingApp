@@ -13,9 +13,15 @@ const styles = (theme) => ({
 		margin: theme.spacing.unit,
 		width: 150,
 		height: 150,
-    	textAlign: 'center'
+		textAlign: 'center',
+		display: "flex",
+		flexDirection: "column",
+		fontFamily: "Arimo"
     	//backgroundColor: '#27B78FFF'
-	}
+	},
+  grow: {
+    flexGrow: 1
+  }
 });
 
 /**
@@ -29,28 +35,26 @@ class LOISettingTypeSel extends React.Component {
 	constructor(props) {
 		super(props);
 
+		const mEntry = {
+			teacher: this.props.teacherId,
+			observedBy: this.props.firebase.auth.currentUser.uid,
+			type: "Level"
+		  };
+		  this.props.firebase.handleSession(mEntry);
+
 		this.state = {
 			selected: null
 		};
 	}
-	/**
-   * invoked after component updates
-   * @param {prevProps} prevProps
-   */
-
 
 	/**
-   * @param {string} type
+   * @param {string} settingtype
    */
-	handleButtonChange = (type) => {
-	//	this.props.handleLOISettingType(type);
-		this.props.toggleLOISettingType(type);
+	handleButtonChange = (settingtype) => {
+		this.props.toggleLOISettingType(settingtype);
 		this.setState({
-			selected: type
+			selected: settingtype
 		});
-		if (type === 'other') {
-			this.props.handleNotes(true);
-		}
 	};
 
 	/**
@@ -63,32 +67,11 @@ class LOISettingTypeSel extends React.Component {
 		return (
 			<div>
 				 <Grid container direction="column" justify="center" alignItems="center">
-          <Typography
-            component="h4"
-            variant="h4"
-            align="center"
-            style={{ padding: "10px", fontFamily: 'Arimo' }}
+          <Typography component="h4" variant="h4"  align="center" style={{ padding: "10px", fontFamily: 'Arimo' }}
           >
            What is the activity setting?
           </Typography>
-
-				
-
-			{/* 	<Grid container alignItems="flex-start" container direction={'row'} style={{ fontFamily: 'Arimo' }}>
-			<div className={classes.titleContainer}>
-					<Button
-						variant="contained"
-           	 size="medium"
-            onClick={null}
-            className={classes.backButton}
-            fullWidth={true}
-					>
-						<b>Select Activity Setting </b>
-					</Button>
-
-				</div> 
-*/}
-				</Grid>
+	</Grid>
         <Grid container alignItems="flex-start" container direction={'row'} spacing={24} style={{ fontFamily: 'Arimo' }}>
 
 				 <Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>

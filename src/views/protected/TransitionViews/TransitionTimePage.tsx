@@ -14,7 +14,6 @@ import { resetTransitionTime } from "../../../state/actions/transition-time";
 // import TransitionTimeRecs from "./TransitionTimeRecs";
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
-import LevelOfInstructionHelp from "../LevelOfInstructionViews/LevelOfInstructionHelp";
 
 const styles: object = {
   root: {

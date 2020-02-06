@@ -506,6 +506,19 @@ class Firebase {
       );
   };
 
+  handlePushInstruction = async function(mEntry) {
+    return this.sessionRef
+      .collection("entries")
+      .add({
+        InstructionResponse: mEntry.InstructionResponse,
+        Type: mEntry.Type,
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch(error =>
+        console.error("Error occurred adding observation: ", error)
+      );
+  };
+
   handlePushNotes = async function(mNote) {
     return this.sessionRef
       .collection("notes")

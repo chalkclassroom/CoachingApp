@@ -12,9 +12,9 @@ export const SELECT_LOI_SETTING = "setting_type";
 //   loiType
 // });
 
-export const toggleLOISettingType = setting_type => ({
+export const toggleLOISettingType = settingType => ({
   type: SELECT_LOI_SETTING,
-  setting_type
+  settingType
 });
 
 export const pushOntoLoiStack = entry => ({

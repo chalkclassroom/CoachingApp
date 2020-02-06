@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import { Fab } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { toggleLOISettingType } from '../../../state/actions/level-of-instruction';
-import Typography from "@material-ui/core/Typography";
 import { connect } from 'react-redux';
-
 
 const styles = (theme) => ({
 	button: {
@@ -19,10 +16,10 @@ const styles = (theme) => ({
 });
 
 /**
- * LOI Setting Type buttons
- * @class LOISettingTypeSel
+ * Instruction Counter Screen
+ * @class InstructionCounter
  */
-class LOISettingTypeSel extends React.Component {
+class InstructionCounter extends React.Component {
 	/**
    * @param {Props} props 
    */
@@ -69,9 +66,9 @@ class LOISettingTypeSel extends React.Component {
 					<Fab
 						onClick={() => this.handleButtonChange('wholeGroup')}
 						classes={{ root: classes.button }}//, label: classes.label
-						style={{ backgroundColor: "#27B78FFF" }}
+						style={{ backgroundColor: "#38761dff" }}
 					>
-						Whole Group
+						Whole Group test
 					</Fab>
           </Grid>
           <Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
@@ -79,9 +76,9 @@ class LOISettingTypeSel extends React.Component {
 					<Fab
 						onClick={() => this.handleButtonChange('centersOrSmall')}
 						classes={{ root: classes.button }}//, label: classes.label
-						style={{ backgroundColor: "#27B78FFF" }}
+						style={{ backgroundColor: "#38761dff" }}
 					>
-						Centers/Small Group
+						test Centers/Small Group
 					</Fab>
 				</Grid>
         </Grid>
@@ -91,9 +88,9 @@ class LOISettingTypeSel extends React.Component {
  <Fab
    onClick={() => this.handleButtonChange('wholeGroup')}
    classes={{ root: classes.button }}//, label: classes.label
-   style={{ backgroundColor: "#27B78FFF" }}
+   style={{ backgroundColor: "#1155ccff" }}
  >
-   Whole Group
+   Whole test  Group
  </Fab>
  </Grid>
  <Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
@@ -101,9 +98,9 @@ class LOISettingTypeSel extends React.Component {
  <Fab
    onClick={() => this.handleButtonChange('centersOrSmall')}
    classes={{ root: classes.button }}//, label: classes.label
-   style={{ backgroundColor: "#27B78FFF" }}
+   style={{ backgroundColor: "#1155ccff" }}
  >
-   Centers/Small Group
+   Centers tst /Small Group
  </Fab>
 </Grid>
 </Grid>
@@ -112,11 +109,9 @@ class LOISettingTypeSel extends React.Component {
 	}
 }
 
-LOISettingTypeSel.propTypes = {
+InstructionCounter.propTypes = {
 	classes: PropTypes.object.isRequired,
-//	handleLOISettingType: PropTypes.func.isRequired,
-	toggleLOISettingType: PropTypes.func.isRequired,
 	handleNotes: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(connect(null, { toggleLOISettingType })(LOISettingTypeSel));
+export default withStyles(styles)(connect(null, {  })(InstructionCounter));

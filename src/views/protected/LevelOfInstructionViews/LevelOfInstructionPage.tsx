@@ -2,7 +2,6 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
-
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
@@ -113,40 +112,11 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
         <FirebaseContext.Consumer>
           {(firebase: object) => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-       { this.state.notes ? (
-          <FirebaseContext.Consumer>
-            {(firebase: object) => (
-              <Notes
-                open={true}
-                onClose={this.handleNotes}
-                color="#009365"
-                text="Level of Instruction Notes"
-                firebase={firebase}
-              />
-            )}
-          </FirebaseContext.Consumer> /* : this.state.recs ? (
-          <FirebaseContext.Consumer>
-            {firebase => (
-              <Recs
-                open={true}
-                onClose={this.handleRecsModal}
-                firebase={firebase}
-              />
-            )}
-          </FirebaseContext.Consumer>
-        )  */
-        ) : (
-          <div />
-        )}
+
         <main style={{ flex: 1 }}>
           <Grid container spacing={16} alignItems="center">
             <Grid item xs={3}>
-              <Grid
-                container
-                alignItems={"center"}
-                justify={"center"}
-                direction={"column"}
-              >
+              <Grid   container alignItems={"center"}  justify={"center"} direction={"column"} >
                 <Dashboard
 				          magic8="Level Of Instruction"
                   color="#009365"
@@ -166,11 +136,10 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
                 <LOISettingTypeSel
                   teacherId={this.props.location.state.teacher.id}
                   firebase={firebase}
-                 // handleLOISettingType={this.handleLOISettingType}
-                  handleNotes={this.handleNotes}
                   settingType={this.state.settingType}
                 />
-                 }</FirebaseContext.Consumer>
+                 }
+                 </FirebaseContext.Consumer>
 
               </Grid>
             </Grid>
@@ -178,7 +147,7 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
         </main>
       </div>
     );
-  }
+   }
 }
 
 export default connect(null,toggleLOISettingType)(
