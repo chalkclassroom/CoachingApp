@@ -36,10 +36,10 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const teacherBehaviorsData = {
       labels: [
-        "Talking to and playing with children",
-        "Asking questions to extend children's thinking about their shared activity",
-        "Encouraging children to share, work, or interact with each other",
-        "Helping children find the words to communicate"
+        ["Talking to and playing with children"],
+        ["Asking questions to extend children's ", "thinking about their shared activity"],
+        ["Encouraging children to share, work, ", "or interact with each other"],
+        ["Helping children find the words to ", "communicate"]
       ],
       datasets: [
         {
@@ -50,7 +50,55 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
       ]
     };
 
-    return <HorizontalBar data={teacherBehaviorsData} width={650} height={400} />;
+    return (
+      <HorizontalBar
+        data={teacherBehaviorsData}
+        options={{
+          scales: {
+            xAxes: [
+              {
+                ticks: {
+                  min: 0,
+                  max: 20,
+                  fontSize: 16,
+                  fontColor: 'black'
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Number of Times Observed',
+                  // fontStyle: 'bold',
+                  fontSize: 16,
+                  fontColor: 'black'
+                }
+              }
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  fontSize: 16,
+                  fontColor: 'black',
+                  // fontStyle: 'bold'
+                }
+              }
+            ]
+          },
+          legend: {
+            display: false
+          },
+          plugins: {
+            datalabels: {
+              display: 'auto',
+              color: 'white',
+              font: {
+                size: 16,
+                weight: 'bold'
+              }
+            }
+          }
+        }}
+        width={260}
+      />
+    );
   }
 }
 

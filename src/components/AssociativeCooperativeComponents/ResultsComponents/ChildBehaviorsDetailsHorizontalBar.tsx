@@ -102,8 +102,9 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
             }
           }
         }}
-        width={650}
-        height={400}
+        // width={650}
+        // height={400}
+        width={260}
       />
     );
   }

@@ -178,7 +178,9 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component<Props, {}> {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>Child Behaviors</Typography>
+            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
+              Child Behaviors
+            </Typography>
             <Line
               data={this.props.childData}
               options={ChildBehaviorTrendsOptions}
@@ -189,7 +191,9 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component<Props, {}> {
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>Teacher Behaviors</Typography>
+            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
+              Teacher Behaviors
+            </Typography>
             <Line
               data={this.props.teacherData}
               options={TeacherBehaviorTrendsOptions}

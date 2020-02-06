@@ -93,6 +93,10 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
               }
             }
           },
+          legend: {
+            display: false,
+            position: 'bottom'
+          },
           plugins: {
             datalabels: {
               color: 'white',
@@ -102,8 +106,9 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
             }
           }
         }}
-        width={6500}
-        height={4000}
+        // width={6500}
+        // height={4000}
+        width = {260}
       />
     );
   }

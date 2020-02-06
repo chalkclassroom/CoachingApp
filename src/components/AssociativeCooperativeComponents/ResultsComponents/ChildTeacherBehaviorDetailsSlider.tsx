@@ -53,46 +53,33 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component<Props, {}> {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo'}}>
+            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
               Child Behaviors
             </Typography>
-            {/* <Typography align="left" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-              Consider:
-            </Typography> */}
-            <Grid container direction="column">
-              <Grid item style={{paddingTop: '0.5em'}}>
-                <Grid container direction="row" alignItems="flex-start" justify="flex-start">
-                  <Grid item xs={1} />
-                  <Grid item xs={10}>
-                    <Typography align="center" style={{fontFamily: 'Arimo', paddingBottom: '1em'}}>
-                      Were the children engaged in {" "}
-                      <span style={{color: "#c5afe7", fontWeight: 'bold'}}>associative interactions</span> {" "}
-                      or <span style={{color: "#6f39c4", fontWeight: 'bold'}}>cooperative interactions</span> more often?
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={1} />
-                </Grid>
-              </Grid>
-              <Grid item>
+            <Grid container direction="column" alignItems="center">
+              <Grid item style={{width: '100%'}}>
                 <Grid container direction="row">
-                  <Grid item xs={1} />
-                  <Grid item xs={10}>
-                    <Typography align="center" style={{fontFamily: 'Arimo'}}>
-                      Which behaviors did children do more often?
-                    </Typography>
+                  <Grid item xs={11}>
+                    <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                      <Grid item style={{height:"33%", paddingBottom: '2em'}}>
+                        <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1.2em', fontFamily: 'Arimo'}}>
+                          Were the children engaged in {" "}
+                          <span style={{color: "#c5afe7", fontWeight: 'bold'}}>associative interactions</span> {" "}
+                          or <span style={{color: "#6f39c4", fontWeight: 'bold'}}>cooperative interactions</span> more often?
+                        </Typography>
+                      </Grid>
+                      <Grid item style={{height:"33%", paddingBottom: '2em'}}>
+                        <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1.2em', fontFamily: 'Arimo'}}>
+                          Which behaviors did children do more often?
+                        </Typography>
+                      </Grid>
+                      <Grid item style={{height:"33%"}}>
+                        <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1.2em', fontFamily: 'Arimo'}}>
+                          Which behaviors did children do less often?
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={1} />
-                </Grid>
-              </Grid>
-              <Grid item style={{paddingBottom: 0}}>
-                <Grid container direction="row">
-                  <Grid item xs={1} />
-                  <Grid item xs={10}>
-                    <Typography align="center" style={{fontFamily: 'Arimo'}}>
-                      Which behaviors did children do less often?
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={1} />
                 </Grid>
               </Grid>
             </Grid>
@@ -106,7 +93,30 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component<Props, {}> {
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>Teacher Behaviors</Typography>
+            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
+              Teacher Behaviors
+            </Typography>
+            <Grid container direction="column" alignItems="center">
+              <Grid item style={{width: '100%'}}>
+                <Grid container direction="row">
+                  <Grid item xs={11}>
+                    <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                      <Grid item style={{height:"33%", paddingBottom: '2em'}}>
+                        <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1.2em', fontFamily: 'Arimo'}}>
+                          Was there a strategy the teacher used more often to support children&apos;s interactions?
+                        </Typography>
+                      </Grid>
+                      <Grid item style={{height:"33%", paddingBottom: '2em'}}>
+                        <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1.2em', fontFamily: 'Arimo'}}>
+                          Was there a strategy the teacher used less often?
+                        </Typography>
+                      </Grid>
+                      <Grid item style={{height:"33%"}} />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
             <TeacherBehaviorsDetailsHorizontalBar
               teacher1={this.props.teacher1}
               teacher2={this.props.teacher2}

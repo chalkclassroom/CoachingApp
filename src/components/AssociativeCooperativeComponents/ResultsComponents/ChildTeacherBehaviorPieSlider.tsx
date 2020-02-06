@@ -10,6 +10,9 @@ import Typography from "@material-ui/core/Typography/Typography";
 import PieSliceChildACImage from "../../../assets/images/PieSliceChildACImage.svg";
 import PieSliceChildNoACImage from "../../../assets/images/PieSliceChildNoACImage.svg";
 import PieSliceChildNoOppImage from "../../../assets/images/PieSliceChildNoOppImage.svg";
+import PieSliceTeacherSupportImage from "../../../assets/images/PieSliceTeacherSupportImage.svg";
+import PieSliceTeacherNoSupportImage from "../../../assets/images/PieSliceTeacherNoSupportImage.svg";
+import PieSliceTeacherNoOppImage from "../../../assets/images/PieSliceTeacherNoOppImage.svg";
 
 
 interface Props {
@@ -53,54 +56,48 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
       <div>
         <Slider {...settings}>
           <div>
-          <Grid container justify={"center"} direction={"column"}>
+            <Grid container justify={"center"} direction={"column"}>
               <Typography align={"center"} variant="h4" style={{fontFamily: 'Arimo'}}>
                 Child Behaviors
               </Typography>
-              <Typography align="left" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
                 Compare how often children:
               </Typography>
-              <Grid container direction="column">
-                <Grid item style={{paddingTop: '0.5em'}}>
-                  <Grid container direction="row" justify="flex-end">
-                    <Grid item xs={2} />
-                    <Grid item xs={1} alignItems="flex-end" justify="flex-end">
-                      <img alt="purple" src={PieSliceChildACImage} width="50%"/>
+              <Grid container direction="column" alignItems="center">
+                <Grid item style={{width: '100%'}}>
+                  <Grid container direction="row">
+                    <Grid item xs={1}>
+                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
+                        <Grid item style={{height:"33%"}}>
+                          <img alt="purple" src={PieSliceChildACImage} height="95%"/>
+                        </Grid>
+                        <Grid item style={{height:"33%"}}>
+                          <img alt="red" src={PieSliceChildNoACImage} height="95%"/>
+                        </Grid>
+                        <Grid item style={{height:"33%"}}>
+                          <img alt="orange" src={PieSliceChildNoOppImage} height="95%"/>
+                        </Grid>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={7} justify="flex-start" alignItems="flex-end">
-                      <Typography style={{lineHeight:'1em', fontFamily: 'Arimo'}}>
-                        Engaged in associative and cooperative interactions.
-                      </Typography>
+                    <Grid item xs={11}>
+                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                        <Grid item style={{height:"33%"}}>
+                          <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1.8em', fontFamily: 'Arimo'}}>
+                            Engaged in associative and cooperative interactions.
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{height:"33%"}}>
+                          <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1.8em', fontFamily: 'Arimo'}}>
+                            Played in the same area but did not interact.
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{height:"33%"}}>
+                          <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1.8em', fontFamily: 'Arimo'}}>
+                            Played alone (had no opportunity for interaction).
+                          </Typography>
+                        </Grid>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={2} />
-                  </Grid>
-                </Grid>
-                <Grid item style={{paddingTop: '0.5em'}}>
-                  <Grid container direction="row" justify="flex-end">
-                  <Grid item xs={2} />
-                    <Grid item xs={1} alignItems="flex-end" justify="flex-end">
-                      <img alt="purple" src={PieSliceChildNoACImage} width="50%"/>
-                    </Grid>
-                    <Grid item xs={7} justify="flex-start" alignItems="flex-end">
-                      <Typography style={{lineHeight:'1em', fontFamily: 'Arimo'}}>
-                        Played in the same area but did not interact.
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={2} />
-                  </Grid>
-                </Grid>
-                <Grid item style={{paddingTop: '0.5em'}}>
-                  <Grid container direction="row" justify="flex-end">
-                  <Grid item xs={2} />
-                    <Grid item xs={1} alignItems="flex-end" justify="flex-end">
-                      <img alt="purple" src={PieSliceChildNoOppImage} width="50%"/>
-                    </Grid>
-                    <Grid item xs={7} justify="flex-start" alignItems="flex-end">
-                      <Typography style={{lineHeight:'1em', fontFamily: 'Arimo'}}>
-                        Played alone (had no opportunity for interaction).
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={2} />
                   </Grid>
                 </Grid>
               </Grid>
@@ -112,25 +109,51 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
             </Grid>
           </div>
           <div>
-          <Grid container justify={"center"} direction={"column"}>
-            <Typography style={{fontFamily: 'Arimo'}}>
-                Compare how often the teacher:
-                <ul>
-                  <li>
-                    Supported children&apos;s associative and cooperative interactions.
-                  </li>
-                  <li>
-                    Was present in the center but did not support associative
-                    and cooperative interactions.
-                  </li>
-                  <li>
-                    Was not present in the centers observed.
-                  </li>
-                </ul>
-              </Typography>
-              <Typography align={"center"} variant="subtitle1" style={{fontFamily: 'Arimo'}}>
+            <Grid container justify={"center"} direction={"column"}>
+              <Typography align={"center"} variant="h4" style={{fontFamily: 'Arimo'}}>
                 Teacher Behaviors
               </Typography>
+              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                Compare how often the teacher:
+              </Typography>
+              <Grid container direction="column" alignItems="center">
+                <Grid item style={{width: '100%'}}>
+                  <Grid container direction="row">
+                    <Grid item xs={1}>
+                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
+                        <Grid item style={{height:"33%"}}>
+                          <img alt="purple" src={PieSliceTeacherSupportImage} height="95%"/>
+                        </Grid>
+                        <Grid item style={{height:"33%"}}>
+                          <img alt="red" src={PieSliceTeacherNoSupportImage} height="95%"/>
+                        </Grid>
+                        <Grid item style={{height:"33%"}}>
+                          <img alt="orange" src={PieSliceTeacherNoOppImage} height="95%"/>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={11}>
+                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                        <Grid item style={{height:"33%"}}>
+                          <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1.8em', fontFamily: 'Arimo'}}>
+                            Supported children&apos;s associative and cooperative interactions.
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{height:"33%"}}>
+                          <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1em', fontFamily: 'Arimo'}}>
+                            Was present in the center but did not support associative and cooperative interactions.
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{height:"33%"}}>
+                          <Typography variant="subtitle1" style={{paddingLeft: '1em', lineHeight:'1.8em', fontFamily: 'Arimo'}}>
+                            Was not present in the centers observed.
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
               <TeacherBehaviorsPie
                 support={this.props.support}
                 noSupport={this.props.noSupport}
