@@ -9,7 +9,7 @@ import { store } from "./state/store";
 import { AppContainer } from 'react-hot-loader';
 
 
-const render = Component => {
+const render = () => {
         ReactDOM.render(
             <AppContainer>
             <Provider store={store}>
