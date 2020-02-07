@@ -416,7 +416,7 @@ class Firebase {
     return this.sessionRef
       .collection("entries")
       .add({
-        Checked: mEntry.checked.slice(1),
+        Checked: mEntry.checked,
         PeopleType: mEntry.people,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
