@@ -3,30 +3,6 @@ import * as PropTypes from "prop-types";
 import { Line } from "react-chartjs-2";
 
 /**
- * specifies data sets (and formatting) for the child behaviors details horizontal bar
- * @type {{datasets: *[], labels: string[][]}}
- */
-/* const teacherBehaviorsData = {
-  labels: ["August 19, 2018", "September 30, 2018", "October 22, 2018"],
-  datasets: [
-    {
-      label: "Present, but No Support",
-      backgroundColor: "#E99C2E",
-      borderColor: "#E99C2E",
-      borderWidth: 2,
-      data: [4, 5, 7]
-    },
-    {
-      label: "Teacher Support",
-      backgroundColor: "#0988EC",
-      borderColor: "#0988EC",
-      borderWidth: 2,
-      data: [6, 5, 8]
-    }
-  ]
-}; */
-
-/**
  * formatting for A&C teacher behavior trends graph, including title and scales for the axes
  * @type {{showScale: boolean, pointDot: boolean, scales: {yAxes: {ticks: {min: number, max: number, callback: (function(*): string), beginAtZero: boolean}, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[], xAxes: {display: boolean, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[]}, title: {display: boolean, fontSize: number, text: string, fontStyle: string}, showLines: boolean}}
  */
@@ -34,12 +10,6 @@ const TeacherBehaviorTrendsOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
-  // title: {
-  //     display: true,
-  //     text: 'Transition Time Trends',
-  //     fontSize: 20,
-  //     fontStyle: 'bold'
-  // },
   tooltips: {
     mode: "index",
     intersect: false
@@ -65,7 +35,7 @@ const TeacherBehaviorTrendsOptions = {
           beginAtZero: true,
           min: 0,
           max: 100,
-          callback: function(value: number) {
+          callback: function(value: number): string {
             return value + "%";
           }
         },
@@ -82,7 +52,7 @@ const TeacherBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value: number) {
+      formatter: function(value: number): string {
         return value + "%";
       }
     }
@@ -106,10 +76,9 @@ class TeacherBehaviorTrendsVerticalBar extends React.Component<Props, {}> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
-    // const { classes } = this.props;
+  render(): React.ReactNode {
 
     return (
       <Line
@@ -123,7 +92,6 @@ class TeacherBehaviorTrendsVerticalBar extends React.Component<Props, {}> {
 }
 
 TeacherBehaviorTrendsVerticalBar.propTypes = {
-  // classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
 };
 

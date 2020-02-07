@@ -42,10 +42,6 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
         ["Engaging in an open-ended", "activity without clear", "roles or order"],
         ["Following formal rules of a", "game and/or taking turns"],
         ["Doing an activity together", "that has a predetermined", "sequence"]
-        /* "Participating in a conversation about a shared activity",
-        "Engaging in an open-ended activity without clear roles or order",
-        "Following formal rules of a game and/or taking turns",
-        "Doing an activity together that has a predetermined sequence" */
       ],
       datasets: [
         {
@@ -72,7 +68,6 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
                 scaleLabel: {
                   display: true,
                   labelString: 'Number of Times Observed',
-                  // fontStyle: 'bold',
                   fontSize: 16,
                   fontColor: 'black'
                 }
@@ -83,7 +78,6 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
                 ticks: {
                   fontSize: 16,
                   fontColor: 'black',
-                  // fontStyle: 'bold'
                 }
               }
             ]
@@ -102,8 +96,6 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
             }
           }
         }}
-        // width={650}
-        // height={400}
         width={260}
       />
     );

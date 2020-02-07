@@ -32,8 +32,6 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    // const { classes } = this.props;
-
     const childBehaviorsData = {
       labels: [
         "Assoc./Coop. Interaction",
@@ -86,7 +84,6 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
           }
         }}
         width={260}
-        // height={160}
       />
     );
   }

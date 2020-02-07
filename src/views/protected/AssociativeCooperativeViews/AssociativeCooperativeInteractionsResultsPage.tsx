@@ -198,7 +198,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   };
 
   handleTrendsChildFormatData = (): {
-      labels: Array<string>,
+      labels: Array<Array<string>>,
       datasets: Array<{
         label: string,
         backgroundColor: string,
@@ -240,7 +240,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   };
 
   handleTrendsTeacherFormatData = (): {
-    labels: Array<string>,
+    labels: Array<Array<string>>,
     datasets: Array<{
       label: string,
       backgroundColor: string,
@@ -248,7 +248,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       fill: boolean,
       lineTension: number,
       data: Array<number>
-    }>
+    }>,
   } => {
     return {
       labels: this.state.trendsDates,
@@ -308,7 +308,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
           console.log('unable to retrieve action plan')
         })
         
-        firebase.fetchChildACSummary(this.state.sessionId).then(summary => {
+        firebase.fetchChildACSummary(this.state.sessionId).then((summary: {noOpportunity: number, noac: number, ac: number}) => {
           this.setState({
             noChildOpp: summary.noOpportunity,
             noAc: summary.noac,
@@ -316,7 +316,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
           });
         });
 
-        firebase.fetchTeacherACSummary(this.state.sessionId).then(summary => {
+        firebase.fetchTeacherACSummary(this.state.sessionId).then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
           this.setState({
             noTeacherOpp: summary.noOpportunity,
             noSupport: summary.noSupport,

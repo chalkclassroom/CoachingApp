@@ -1,14 +1,9 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { withStyles, createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants';
 
 const AssociativeTheme = createMuiTheme({
@@ -27,18 +22,6 @@ const CooperativeTheme = createMuiTheme({
   }
 });
 
-const styles: object = {
-  categoryView: {
-
-  }
-}
-
-interface Props {
-  classes: {
-    categoryView: string
-  }
-}
-
 interface State {
   categoryView: string,
   openPanel: string,
@@ -49,12 +32,12 @@ interface State {
  * data reflection question layout for associative & cooperative
  * @class ACCoachingQuestions
  */
-class ACCoachingQuestions extends React.Component<Props, State> {
+class ACCoachingQuestions extends React.Component<{}, State> {
   /**
-   * @param {Props} props
+   * @param {null} null
    */
-  constructor(props: Props) {
-    super(props);
+  constructor({}) {
+    super({});
 
     this.state = {
       categoryView: '',
@@ -123,14 +106,12 @@ class ACCoachingQuestions extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
     return(
       <Grid container direction="column">
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
           <Grid item>
             <MuiThemeProvider theme={AssociativeTheme}>
               <Button 
-                // style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
                 onClick={this.associativeClick}
                 variant="contained"
                 color="primary"
@@ -145,7 +126,6 @@ class ACCoachingQuestions extends React.Component<Props, State> {
           <Grid item>
             <MuiThemeProvider theme={CooperativeTheme}>
               <Button
-                // style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
                 onClick={this.cooperativeClick}
                 variant="contained"
                 color="primary"
@@ -224,4 +204,4 @@ class ACCoachingQuestions extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(ACCoachingQuestions);
+export default ACCoachingQuestions;

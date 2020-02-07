@@ -66,7 +66,6 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
                 scaleLabel: {
                   display: true,
                   labelString: 'Number of Times Observed',
-                  // fontStyle: 'bold',
                   fontSize: 16,
                   fontColor: 'black'
                 }
@@ -77,7 +76,6 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
                 ticks: {
                   fontSize: 16,
                   fontColor: 'black',
-                  // fontStyle: 'bold'
                 }
               }
             ]
