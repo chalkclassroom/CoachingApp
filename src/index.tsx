@@ -9,13 +9,13 @@ import { store } from "./state/store";
 import { AppContainer } from 'react-hot-loader';
 
 
-const render = () => {
+const render = Component => {
         ReactDOM.render(
             <AppContainer>
             <Provider store={store}>
                 <FirebaseContext.Provider value={new Firebase()}>
                     <FirebaseContext.Consumer>
-                        {firebase => <App firebase={firebase} />}
+                       {firebase => <App firebase={firebase} />}
                     </FirebaseContext.Consumer>
                 </FirebaseContext.Provider>
             </Provider>
