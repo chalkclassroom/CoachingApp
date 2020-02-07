@@ -8,7 +8,6 @@ const modeConfiguration = mode => require(`./build-utils/webpack.${mode}`)(mode)
 
 module.exports = (env, argv) => {
     console.log(`mode is: ${argv.mode}`);
-
     return webpackMerge(
         {
             mode: argv.mode,
@@ -18,6 +17,11 @@ module.exports = (env, argv) => {
                 path: path.resolve(__dirname, "build"),
                 filename: "bundled.js"
             },
+            devServer:{
+                historyApiFallback: true,
+                contentBase: './',
+                hot: true
+            },
             resolve: {
                 extensions: ['.ts', '.tsx', '.js', '.json']
             },
@@ -26,6 +30,9 @@ module.exports = (env, argv) => {
                     {
                         test: /\.tsx?$/,
                         loader: 'babel-loader',
+                        options: {
+                            cacheDirectory: true,
+                        }
                     },
                     {
                         test: /\.js$/,
@@ -36,6 +43,9 @@ module.exports = (env, argv) => {
                         test: /\.(js|jsx)$/,
                         exclude: /node_modules/,
                         loader: "babel-loader",
+                        options: {
+                            cacheDirectory: true,
+                        }
                     },
                     {
                         test: /\.svg$/,
