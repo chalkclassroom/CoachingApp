@@ -11,10 +11,10 @@ interface Props {
 
 /**
  * Horizontal Bar Chart for Associative&Cooperative Teacher Behaviors
- * @class TeacherBehaviorsDetailsHorizontalBar
+ * @class TeacherBarDetails
  * @return {void}
  */
-class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
+class TeacherBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -36,10 +36,10 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const teacherBehaviorsData = {
       labels: [
-        ["Talking to and playing with children"],
-        ["Asking questions to extend children's", "thinking about their shared activity"],
-        ["Encouraging children to share, work,", "or interact with each other"],
-        ["Helping children find the words to", "communicate"]
+        ["Helping children do sequential", "activities with manipulatives or toys"],
+        ["Demonstrating the steps to an", "activity or game"],
+        ["Supporting children as they act out", "a dramatic play scenario or book"],
+        ["Supporting children as they draw", "images or write messages"]
       ],
       datasets: [
         {
@@ -100,4 +100,4 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
   }
 }
 
-export default TeacherBehaviorsDetailsHorizontalBar;
+export default TeacherBarDetails;
