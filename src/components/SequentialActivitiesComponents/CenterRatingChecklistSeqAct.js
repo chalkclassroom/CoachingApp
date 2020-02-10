@@ -49,7 +49,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
     auth: true,
     anchorEl: null,
     ratings: [],
-    checked: [0],
+    childChecked: [],
+    teacherChecked: [],
     people: undefined,
     time: RATING_INTERVAL,
     timeUpOpen: false,
@@ -103,42 +104,68 @@ class CenterRatingChecklistSeqAct extends React.Component {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
-      /* const mEntry = {
-        checked: this.state.checked,
+      const mEntry = {
+        checked: [...this.state.childChecked, ...this.state.teacherChecked],
         people: this.state.people
-      }; */
+      };
+
+      this.props.firebase.handlePushSequential(mEntry);
 
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();
     }
   };
 
-  /**
-   * @param {value} value
-   * @return {void}
-   */
-  handleToggle = value => () => {
-    // Prevents updating state of checkbox when disabled
-    if (
-      (value <= 5 && this.childDisabled()) ||
-      (value >= 6 && this.teacherDisabled())
-    ) {
+  handleChildToggle = value => () => {
+    if (value <=5 && this.childDisabled()) {
       return;
     }
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
+    const { childChecked } = this.state;
+    const newChecked = [];
+    if (((childChecked.includes(5) && value != 5) || 
+    (childChecked.includes(1) || childChecked.includes(2) ||
+    childChecked.includes(3) || childChecked.includes(4)) && value === 5)) {
+      newChecked.splice(0, newChecked.length);
       newChecked.push(value);
     } else {
-      newChecked.splice(currentIndex, 1);
-    }
+      newChecked.push(...childChecked);
+      const currentIndex = childChecked.indexOf(value);
 
-    this.setState({
-      checked: newChecked
-    });
-  };
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
+      
+    }
+    this.setState({childChecked: newChecked});
+  }
+
+  handleTeacherToggle = value => () => {
+    if (value >=6 && this.teacherDisabled()) {
+      console.log('is this even possible');
+      return;
+    }
+    const { teacherChecked } = this.state;
+    const newChecked = [];
+    if (((teacherChecked.includes(10) && value != 10) || 
+    (teacherChecked.includes(6) || teacherChecked.includes(7) ||
+    teacherChecked.includes(8) || teacherChecked.includes(9)) && value === 10)) {
+      newChecked.splice(0, newChecked.length);
+      newChecked.push(value);
+    } else {
+      newChecked.push(...teacherChecked);
+      const currentIndex = teacherChecked.indexOf(value);
+
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
+      
+    }
+    this.setState({teacherChecked: newChecked});
+  }
 
   childDisabled = () => {
     return this.state.people === undefined;
@@ -155,16 +182,16 @@ class CenterRatingChecklistSeqAct extends React.Component {
     if (this.state.people !== TeacherEnum.NO_TEACHER) {
       this.setState({ people: TeacherEnum.NO_TEACHER });
 
-      const { checked } = this.state;
-      const newChecked = [...checked];
+      const { teacherChecked } = this.state;
+      const newTeacherChecked = [...teacherChecked];
       for (let i = 6; i <= 10; i++) {
         // If there are teacher ratings checked, remove them
-        if (checked.includes(i)) {
-          const currentIndex = checked.indexOf(i);
-          newChecked.splice(currentIndex);
+        if (teacherChecked.includes(i)) {
+          const currentIndex = teacherChecked.indexOf(i);
+          newTeacherChecked.splice(currentIndex);
         }
       }
-      this.setState({ checked: newChecked });
+      this.setState({ teacherChecked: newTeacherChecked });
     }
   };
 
@@ -292,13 +319,13 @@ class CenterRatingChecklistSeqAct extends React.Component {
                       </Typography>
                       <List>
                         <ListItem
-                          onClick={this.handleToggle(1)}
+                          onClick={this.handleChildToggle(1)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(1)
+                              this.state.childChecked.includes(1)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -311,13 +338,13 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(2)}
+                          onClick={this.handleChildToggle(2)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(2)
+                              this.state.childChecked.includes(2)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -330,13 +357,13 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(3)}
+                          onClick={this.handleChildToggle(3)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(3)
+                              this.state.childChecked.includes(3)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -349,13 +376,13 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(4)}
+                          onClick={this.handleChildToggle(4)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(4)
+                              this.state.childChecked.includes(4)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -369,13 +396,13 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(5)}
+                          onClick={this.handleChildToggle(5)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(5)
+                              this.state.childChecked.includes(5)
                             }
                             disabled={this.childDisabled()}
                           />
@@ -396,13 +423,13 @@ class CenterRatingChecklistSeqAct extends React.Component {
                       </Typography>
                       <List>
                         <ListItem
-                          onClick={this.handleToggle(6)}
+                          onClick={this.handleTeacherToggle(6)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(6)
+                              this.state.teacherChecked.includes(6)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -415,13 +442,13 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(7)}
+                          onClick={this.handleTeacherToggle(7)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(7)
+                              this.state.teacherChecked.includes(7)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -434,13 +461,13 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(8)}
+                          onClick={this.handleTeacherToggle(8)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(8)
+                              this.state.teacherChecked.includes(8)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -453,13 +480,13 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(9)}
+                          onClick={this.handleTeacherToggle(9)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(9)
+                              this.state.teacherChecked.includes(9)
                             }
                             disabled={this.teacherDisabled()}
                           />
@@ -472,13 +499,13 @@ class CenterRatingChecklistSeqAct extends React.Component {
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(10)}
+                          onClick={this.handleTeacherToggle(10)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(10)
+                              this.state.teacherChecked.includes(10)
                             }
                             disabled={this.teacherDisabled()}
                           />
