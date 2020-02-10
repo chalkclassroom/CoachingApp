@@ -900,11 +900,11 @@ class Firebase {
       );
   };
 
-  fetchTeacherSeqTrend = async function(sessionId) {
+  fetchTeacherSeqTrend = async function(teacherId) {
     const getTeacherSeqTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherSeqTrend"
     );
-    return getTeacherSeqTrendFirebaseFunction({ sessionId: sessionId })
+    return getTeacherSeqTrendFirebaseFunction({ teacherId: teacherId })
       .then(
         result =>
           // Read result of the Cloud Function.
