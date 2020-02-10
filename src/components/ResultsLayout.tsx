@@ -262,9 +262,9 @@ class ResultsLayout extends React.Component<Props, State> {
                         textColor="primary"
                         variant="fullWidth"
                       >
-                        <Tab label="Summary" onClick={this.handleSummary} style={{fontFamily: "Arimo"}} />
-                        <Tab label="Details" onClick={this.handleDetails} style={{fontFamily: "Arimo"}} />
-                        <Tab label="Trends" onClick={this.handleTrends} style={{fontFamily: "Arimo"}} />
+                        <Tab label="Summary" onClick={this.handleSummary} style={{fontFamily: "Arimo", fontSize: '1em'}} />
+                        <Tab label="Details" onClick={this.handleDetails} style={{fontFamily: "Arimo", fontSize: '1em'}} />
+                        <Tab label="Trends" onClick={this.handleTrends} style={{fontFamily: "Arimo", fontSize: '1em'}} />
                       </Tabs>
                     </TabBar>
                   </Grid>

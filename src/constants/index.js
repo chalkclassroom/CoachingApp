@@ -455,5 +455,166 @@ export const CoachingQuestions = {
         ]
       },
     ]
+  },
+  'AC': {
+    'Associative': [
+      {
+        'name': 'ACPanel1A',
+        'title': 'Organization',
+        'text': [
+          'Think about the total number of children in the classroom and the number ' + 
+          'of centers that are typically open. Are there enough centers open so that ' +
+          'children can spread out and participate in meaningful interactions?',
+          'Are there too many centers open so that several children end up playing alone?'
+        ]
+      },
+      {
+        'name': 'ACPanel1B',
+        'title': 'Time in Centers',
+        'text': [
+          'How does the amount of time children spend in centers affect their ' +
+          'engagement in activities?',
+          'How often do children switch centers? Do they choose when to switch or do ' + 
+          'teachers decide?'
+        ]
+      },
+      {
+        'name': 'ACPanel1C',
+        'title': 'Materials',
+        'text': [
+          'What kinds of props are available to children? Are there costumes and toys ' +
+          'around the same theme that could encourage children to engage in pretend play ' + 
+          'together (e.g., doctor\'s office, restaurant, grocery store).',
+          'Are costumes, props, and toys related to read-alouds that children enjoy or that ' +
+          'reflect their out of school experiences?',
+          'Are there props and toys like cars, road signs, trains, animals, and/or people ' +
+          'that might help children talk to each other and create scenarios as they play?',
+          'Do children help each other build things? Why or why not?'
+        ]
+      },
+    ],
+    'Cooperative' : [
+      {
+        'name': 'ACPanel2A',
+        'title': 'Organization',
+        'text': [
+          'Think about the total number of children in the classroom and the number ' + 
+          'of centers that are typically open. Are there enough centers open so that ' +
+          'children can spread out and participate in meaningful interactions?',
+          'Are there too many centers open so that several children end up playing alone?'
+        ]
+      },
+      {
+        'name': 'ACPanel2B',
+        'title': 'Time in Centers',
+        'text': [
+          'How does the amount of time children spend in centers affect their ' +
+          'engagement in activities?',
+          'How often do children switch centers? Do they choose when to switch or do ' + 
+          'teachers decide?'
+        ]
+      },
+      {
+        'name': 'ACPanel2C',
+        'title': 'Materials',
+        'text': [
+          'Talk about the variety of materials that are in each center.',
+          'Think about the pretend play themes that children like the most. With the ' + 
+          'help of props, how could you encourage them to act out a pretend play scenario ' +
+          'using role speech?',
+          'Are there manipulatives or games at some centers that encourage children to ' +
+          'follow rules and take turns (e.g., rolling a dice or picking and matching cards ' +
+          'that are the same)?',
+          'When using electronic games, tablets, or computers, how can children ' +
+          'be encouraged to cooperate and take turns?',
+        ]
+      },
+    ],
+    'TeacherParticipation' : [
+      {
+        'name': 'ACPanel3A',
+        'title': 'Join Children\'s Play',
+        'text': [
+          'Talk about the ways that you enjoy participating in children\'s play and ' + 
+          'activities. Where do you find yourself spending time during centers?',
+          'What effect does your paticipation have on children?',
+          'What are some effective ways to gracefully enter and exit children\'s play ' +
+          'in order to facilitate more complex interactions without stopping it?'
+        ]
+      },
+      {
+        'name': 'ACPanel3B',
+        'title': 'Extend Thinking',
+        'text': [
+          'Talk about the kinds of questions that you as the teacher can ask to extend ' +
+          'children\'s thinking and promote associative or cooperative interactions.',
+          'Example: If children are pretending to set up a restaurant or play family, what ' + 
+          'kinds of questions would help children enrich their play (e.g., "How does the '+
+          'family work together to take care of the baby?")?',
+          'Example: During games, what kinds of questions do you like to ask to challenge ' +
+          'children\'s thinking (e.g., "What number do you need to roll to win?")',
+          'What other kinds of materials extend children\'s thinking and build on their ' +
+          'curiosity (e.g., books with rich vocabulary on topics that interest children)?'
+        ]
+      },
+      {
+        'name': 'ACPanel3C',
+        'title': 'Model Play and Interpersonal Skills',
+        'text': [
+          'In your experience, how does modeling the use of manipulatives, games, and props ' +
+          'help children get engaged in activities?', 
+          'Talk about the ways that you like to demonstrate the skills needed for social ' +
+          'learning interactions.',
+          'What are some good times of the day and activities for teaching turn-taking, ' +
+          'modeling respectful talking and listening skills, or demonstrating good sportsmanship?'
+        ]
+      },
+    ],
+    'TeacherSupport': [
+      {
+        'name': 'ACPanel4A',
+        'title': 'Sharing and Interacting',
+        'text': [
+          'When children are playing independently, what are some of the strategies ' + 
+          'you might use to encourage them to share or interact with each other?',
+          'What are some of the reasons children are not sharing or interacting' +
+          'more often?'
+        ]
+      },
+      {
+        'name': 'ACPanel4B',
+        'title': 'Communication',
+        'text': [
+          'What are some effective strategies you use for supporting children\'s ' +
+          'ability to communicate with their peers?',
+          'In your experience, what are some effective ways to pre-teach social skills ' + 
+          'or support children\'s interactins in the moment?',
+          'How effective are these strategies with your current students?',
+        ]
+      },
+      {
+        'name': 'ACPanel4C',
+        'title': 'Problem-Solving',
+        'text': [
+          'Talk about how children respond to challenges during associative and cooperative ' +
+          'interactions. What might they need help with (coping with feelings about losing, ' + 
+          'taking turns, sharing materials, learning the underlying concepts or rules of a ' +
+          'new game, etc.)?',
+          'What are some ways that you can support children before problems arise (e.g., ' +
+          'role-playing with puppets, teacher demonstration) and in the moment (e.g., ' +
+          'peer buddy systems, teacher praise)?'
+        ]
+      },
+      {
+        'name': 'ACPanel4D',
+        'title': 'Positive Feedback',
+        'text': [
+          'Think about how children can be encouraged to interact with each other through ' +
+          'positive teacher feedback.', 
+          'When you see children sharing, creating something together, or playing a ' +
+          'cooperative game, what kinds of feedback would help them continue doing those things?',
+        ]
+      },
+    ]
   }
 }

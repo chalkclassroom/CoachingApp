@@ -416,9 +416,8 @@ class Firebase {
     return this.sessionRef
       .collection("entries")
       .add({
-        Checked: mEntry.checked.slice(1),
+        Checked: mEntry.checked,
         PeopleType: mEntry.people,
-        acType: mEntry.type,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
@@ -744,7 +743,7 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error("Error occurred getting AC details: ", error)
@@ -780,7 +779,8 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
+          // console.log(result);
       )
       .catch(error =>
         console.error("Error occurred getting child AC summary: ", error)
@@ -819,7 +819,7 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error("Error occurred getting teacher AC summary: ", error)
@@ -883,11 +883,11 @@ class Firebase {
       );
   };
 
-  fetchTeacherACTrend = async function(sessionId) {
+  fetchTeacherACTrend = async function(teacherId) {
     const getTeacherACTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherACTrend"
     );
-    return getTeacherACTrendFirebaseFunction({ sessionId: sessionId })
+    return getTeacherACTrendFirebaseFunction({ teacherId: teacherId })
       .then(
         result =>
           // Read result of the Cloud Function.
