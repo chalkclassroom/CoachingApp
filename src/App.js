@@ -1,4 +1,3 @@
-import { hot } from 'react-hot-loader/root';
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import "./App.css";
@@ -27,7 +26,7 @@ import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/As
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
-import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
+import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage"; 
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
@@ -60,7 +59,7 @@ const styles = createMuiTheme({
 });
 
 /**
- *
+ * 
  * @return {ReactElement}
  */
 function PrivateRoute({ component: Component, auth, ...rest }) {
@@ -104,7 +103,7 @@ function PublicRoute({ component: Component, auth, ...rest }) {
  */
 class App extends Component {
   /**
-   * @param {Props} props
+   * @param {Props} props 
    */
   constructor(props) {
     super(props);
@@ -198,7 +197,7 @@ class App extends Component {
               auth={this.state.auth}
               path="/MathInstruction"
               component={MathInstructionPage}
-            />
+            />  
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivities"
@@ -283,4 +282,4 @@ App.propTypes = {
   firebase: PropTypes.object.isRequired
 };
 
-export default hot((withStyles(styles)(App)));
+export default withStyles(styles)(App);
