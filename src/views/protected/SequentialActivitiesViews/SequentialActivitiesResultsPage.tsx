@@ -7,7 +7,7 @@ import ResultsLayout from '../../../components/ResultsLayout';
 import SummarySlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/SummarySlider";
 import DetailsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/DetailsSlider";
 import TrendsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/TrendsSlider";
-import ACCoachingQuestions from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ACCoachingQuestions";
+import SequentialCoachingQuestions from "../../../components/SequentialActivitiesComponents/ResultsComponents/SequentialCoachingQuestions";
 import * as Constants from '../../../constants';
 
 const styles: object = {
@@ -384,7 +384,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
           notes={this.state.notes}
-          questions={<ACCoachingQuestions />}
+          questions={<SequentialCoachingQuestions />}
           teacherFirstName={this.props.location.state.teacher.firstName}
           teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
