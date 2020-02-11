@@ -71,7 +71,7 @@ class DetailsSlider extends React.Component<Props, {}> {
               <Grid item style={{width: '100%'}}>
                 <Grid container direction="row">
                   <Grid item xs={11}>
-                    <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                    <Grid container direction="column" justify="center" alignItems="flex-start" style={{height:'100%'}}>
                       <Grid item style={{height:"33%", paddingBottom: '2em'}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
                           Which behaviors did children do more often?
@@ -104,18 +104,17 @@ class DetailsSlider extends React.Component<Props, {}> {
               <Grid item style={{width: '100%'}}>
                 <Grid container direction="row">
                   <Grid item xs={11}>
-                    <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                    <Grid container direction="column" justify="center" alignItems="flex-start" style={{height:'100%'}}>
                       <Grid item style={{height:"33%", paddingBottom: '2em'}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
                           Was there a strategy the teacher used more often to support children&apos;s sequential activities?
                         </Typography>
                       </Grid>
-                      <Grid item style={{height:"33%", paddingBottom: '2em'}}>
+                      <Grid item style={{height:"33%", paddingTop: '0.5em'}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
                           Was there a strategy the teacher used less often?
                         </Typography>
                       </Grid>
-                      <Grid item style={{height:"33%"}} />
                     </Grid>
                   </Grid>
                 </Grid>

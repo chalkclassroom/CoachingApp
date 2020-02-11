@@ -456,8 +456,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disableTypography
                             style={{fontSize: 16}}
                           >
-                            <b>Demonstrating the steps</b> to an activity
-                            or game
+                            Supporting children as they <b>draw</b> images
+                            or <b>write</b> messages
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -475,8 +475,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disableTypography
                             style={{fontSize: 16}}
                           >
-                            Supporting children as they <b>act out</b> 
-                            {" "} a dramatic play scenario or book
+                            <b>Demonstrating the steps</b> to an activity
+                            or game
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -494,8 +494,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                             disableTypography
                             style={{fontSize: 16}}
                           >
-                            Supporting children as they <b>draw</b> images
-                            or <b>write</b> messages
+                            Supporting children as they <b>act out</b> 
+                            {" "} a dramatic play scenario or book
                           </ListItemText>
                         </ListItem>
                         <ListItem

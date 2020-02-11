@@ -37,9 +37,9 @@ class TeacherBarDetails extends React.Component<Props, {}> {
     const teacherBehaviorsData = {
       labels: [
         ["Helping children do sequential", "activities with manipulatives or toys"],
+        ["Supporting children as they draw", "images or write messages"],
         ["Demonstrating the steps to an", "activity or game"],
         ["Supporting children as they act out", "a dramatic play scenario or book"],
-        ["Supporting children as they draw", "images or write messages"]
       ],
       datasets: [
         {

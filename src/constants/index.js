@@ -616,5 +616,145 @@ export const CoachingQuestions = {
         ]
       },
     ]
+  },
+  'Sequential' : {
+    'DrawingAndWriting': [
+      {
+        'name': 'SequentialPanel1A',
+        'title': 'Materials',
+        'text': [
+          'Talk about opportunities that children have for using drawing and ' + 
+          'writing mateirals throughout the day.',
+          'How are drawing materials like crayons, markers, pencils, and paper ' +
+          'distributed around the classroom?'
+        ]
+      },
+      {
+        'name': 'SequentialPanel1B',
+        'title': 'Drawing',
+        'text': [
+          'Do children spend more time drawing without a clear purpose or do they ' +
+          'more often create a drawing and can explain what the drawing represents?',
+          'Talk about a time when children got excited about drawing. ' + 
+          'What do you think fostered the excitement?'
+        ]
+      },
+      {
+        'name': 'SequentialPanel1C',
+        'title': 'Writing',
+        'text': [
+          'How do teachers help children begin to make letter-like forms, letters, ' +
+          'and/or create labels or a message to go with their drawings?', 
+          'Talk about how you know children are ready to begin to experiment with writing.',
+          'In your experience, what motivates different children to begin to write?',
+        ]
+      },
+    ],
+    'GamesAndPretendPlay': [
+      {
+        'name': 'SequentialPanel2A',
+        'title': 'Games',
+        'text': [
+          'Talk about the variety of materials in the classroom that could be ' + 
+          'used in a sequential or step-by-step way.',
+          'Talk about the types of manipulatives or games that encourage ' +
+          'children to follow rules and take turns.'
+        ]
+      },
+      {
+        'name': 'SequentialPanel2B',
+        'title': 'Dramatic Play',
+        'text': [
+          'Talk about the kinds of thematic props that are available to children.',
+          'What costumes and toys around the same theme might encourage children ' +
+          'to engage in pretend play that has a predictable sequence of events, ' + 
+          'like a doctor\'s office, restaurant, or grocery store?'
+        ]
+      },
+      {
+        'name': 'SequentialPanel2C',
+        'title': 'Puppets and Books',
+        'text': [
+          'Talk about ways that children might be encouraged to act out a favorite ' +
+          'book or nursery rhyme with puppets, materials in the classroom, or simple ' +
+          'figures (e.g., craft sticks).',
+        ]
+      },
+    ],
+    'TeacherSupport': [
+      {
+        'name': 'SequentialPanel3A',
+        'title': 'Sequential Materials',
+        'text': [
+          'Talk about what you notice when children do activities or use materials ' + 
+          'that have a predetermined sequence of steps that build on each other.',
+          'Talk about how often children do activities like looking for puzzle ' +
+          'pieces that fit, matching pattern blocks to a pre-made design, or ' +
+          'putting story picture cards in order.',
+          'If these types of materials are available, but children don\'t play ' +
+          'with them very often, what might help them get started?'
+        ]
+      },
+      {
+        'name': 'SequentialPanel3B',
+        'title': 'Regular Objects',
+        'text': [
+          'Talk about the ways that children use regular objects in a step-by-step ' +
+          'predictable way. For example, do they put blocks in size order from ' +
+          'shortest to tallest, sort rocks by color or texture, or create letters ' + 
+          'out of play-doh?',
+          'What might help children do more sequential activities with everyday objects?'
+        ]
+      },
+      {
+        'name': 'SequentialPanel3C',
+        'title': 'Demonstrating Sequential Activities',
+        'text': [
+          'Talk about the benefits of demonstrating the steps of a sequential ' +
+          'activity for children.', 
+          'What aspects of activities like puzzles or matching cards would be ' +
+          'challenging for children in your classroom? What could teachers demonstrate ' +
+          'in order to help children be successful?',
+          'What time of day or activity setting would be good for teacher ' +
+          'demonstrations (small group, centers)?'
+        ]
+      },
+      {
+        'name': 'SequentialPanel3D',
+        'title': 'Encouraging Dramatic Play',
+        'text': [
+          'Let\'s talk about the pretend play themes that generate the highest ' + 
+          'level of excitement and interest.',
+          'Talk about how you help children speak or act in character. How are ' +
+          'children encouraged to act out a clear pretend play scene that has a ' +
+          'predictable sequence of events?'
+        ]
+      },
+      {
+        'name': 'SequentialPanel3E',
+        'title': 'Acting Out Books',
+        'text': [
+          'Talk about ways to encourage children to use books in a sequential way, ' +
+          'such as using self-talk to model "reading" a book even when you don\'t ' +
+          'know all the words, or acting out a story with puppets.' + 
+          'In what areas of the classroom can teachers encourage this type of ' +
+          'sequential activity?'
+        ]
+      },
+      {
+        'name': 'SequentialPanel3F',
+        'title': 'Modeling and Praising Writing',
+        'text': [
+          'Talk about the different ways that you encourage children to write.',
+          'Talk about some effective methods for modeling different reasons for ' + 
+          'writing (e.g., making a list on chart paper for what the class needs ' +
+          'for recess, instructions for a game the children like to play)?',
+          'During centers, how might you sit down with children and begin writing?',
+          'Talk about how praise helps children continue writing? How does praising ' +
+          'all forms of writing (from scribbling to letter-like forms to emerging ' +
+          'spelling) help writers at all stages of development?'
+        ]
+      },
+    ]
   }
 }

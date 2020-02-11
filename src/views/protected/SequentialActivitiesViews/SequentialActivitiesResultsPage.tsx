@@ -91,13 +91,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     };
   }
 
-  /** lifecycle method invoked after component mounts */
-  /* componentDidMount(): void {
-    const firebase = this.context;
-    firebase.fetchBehaviourTypeCount(this.state.sessionId);
-    firebase.fetchAvgToneRating(this.state.sessionId);
-  } */
-
   /**
    * @param {string} teacherId
    */
@@ -112,7 +105,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: Date}>) => {
-      console.log(notesArr);
       const formattedNotesArr: Array<{id: string, content: string, timestamp: Date}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
@@ -128,7 +120,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
           timestamp: newTimestamp
         });
       });
-      console.log(formattedNotesArr);
       this.setState({
         notes: formattedNotesArr
       });
@@ -180,7 +171,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
         supportArray.push(Math.floor((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
         noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
       });
-
       this.setState({
         trendsDates: dateArray,
         trendsNoSupport: noSupportArray,
@@ -190,6 +180,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     });
   };
 
+  /** specifies formatting for child trends */
   handleTrendsChildFormatData = (): {
       labels: Array<Array<string>>,
       datasets: Array<{
@@ -224,6 +215,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     };
   };
 
+  /** specifies formatting for teacher trends */
   handleTrendsTeacherFormatData = (): {
     labels: Array<Array<string>>,
     datasets: Array<{
@@ -277,7 +269,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       () => {
         this.handleNotesFetching(this.state.sessionId);
         const firebase = this.context;
-
         firebase.getActionPlan(this.state.sessionId)
         .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
           if (actionPlanData.length>0) {
@@ -292,14 +283,12 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
         }).catch(() => {
           console.log('unable to retrieve action plan')
         })
-        
         firebase.fetchChildSeqSummary(this.state.sessionId).then((summary: {notSequential: number, sequential: number}) => {
           this.setState({
             notSequential: summary.notSequential,
             sequential: summary.sequential,
           });
         });
-
         firebase.fetchTeacherSeqSummary(this.state.sessionId).then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
           this.setState({
             noTeacherOpp: summary.noOpportunity,
@@ -307,7 +296,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
             support: summary.support,
           });
         });
-
         firebase.fetchSeqDetails(this.state.sessionId)
         .then((summary: {
           sequential1: number,
@@ -345,7 +333,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
         <ResultsLayout
@@ -360,7 +347,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
               support={this.state.support}
               noSupport={this.state.noSupport}
               noTeacherOpp={this.state.noTeacherOpp}
-
             />
           }
           details={

@@ -212,10 +212,6 @@ class ResultsLayout extends React.Component<Props, State> {
     } */
   }
 
-  componentDidUpdate(): void {
-    console.log(this.props.sessionId)
-  }
-
   /**
    * render function
    * @return {ReactNode}
