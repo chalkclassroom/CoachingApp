@@ -6,20 +6,17 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
-import ReplySharpIcon from '@material-ui/icons/ReplySharp';
-
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-//import Box from "@material-ui/core/Box";
-import styled from 'styled-components';
-import { spacing,typography, palette } from '@material-ui/system';
+import grey from "@material-ui/core/colors/grey";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import {
   addNewCenter,
   incrementCenterCount
 } from "../../state/actions/math-instruction";
+
 import PropTypes from "prop-types";
 import Dashboard from "../Dashboard";
 import TotalVisitCount from "../TotalVisitCount";
@@ -29,47 +26,24 @@ import { toggleLOISettingType } from '../../state/actions/level-of-instruction';
 
 // TODO: X in top right corner, press and hold to remove/edit the center.
 
-const Box = styled.div`${palette}${spacing}${typography}`;
-
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
-    border: 0,
-    borderRadius: 3,
-    color: "#fff !important",
-    height: 48,
-    padding: "0 264px",
-    borderRadius:"3px",
-    // marginLeft: "-95%",
-    marginTop: "23%",
-  // position: "absolute",
-
-
+    flexGrow: 1,
+    backgroundColor: "#ffffff",
+    display: "flex",
+    flexDirection: "column",
+    fontFamily: "Arimo"
   },
-  button: {
-		margin: theme.spacing.unit,
-		width: 150,
-		height: 150,
-		textAlign: 'center',
-		display: "flex",
-		flexDirection: "column",
-   // fontFamily: "Arimo",
-    color: "#fff !important",
-   zIndex: "99",
-  
-  // position: "absolute"
-
-    	//backgroundColor: '#27B78FFF'
-	},
   grow: {
     flexGrow: 1
   }
 });
 
-
 const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
   const hsl = Math.max(82 - 4 * visitCount, 54);
   return (
     <Fab
+      variant="contained"
       //color="primary" //color
       style={{
         width: 150,
@@ -77,8 +51,8 @@ const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
         whiteSpace: "normal",
         wordWrap: "break-word",
         fontFamily: "Arimo",
-        backgroundColor: '#27B78FFF',
-        color: "white"
+        backgroundColor: '#27B78FFF'
+
       }}
       onClick={onClick}
     >
@@ -149,75 +123,70 @@ this.props.toggleLOISettingType(checked) });
     this.props.switchToCenterMenu();
   };
 
-  render() 
-  {
-    const { classes } = this.props;
-
+  render() {
     return (
       <div>
-          <Grid container spacing={16} alignItems="center">
+            <Grid
+              justify="center"
+              alignItems="stretch"
+              direction="row"
+              style={{ margin: 10 }}
+            >
+              <Grid justify="flex-start" alignItems="center" direction="row"></Grid>
+<Grid container spacing={16} alignItems="center">
+            <Grid item xs={3}>
+              <Grid   container alignItems={"center"}  justify={"center"} direction={"column"} >
+                      <Dashboard
+                        magic8="Math Instruction"
+                        color="#E55529"
+                        infoDisplay={
+                          <TotalVisitCount count={this.state.totalVisitCount} />
+                        }
+                        infoPlacement="flex-start"
+                        completeObservation={true}
+                      />
+                    </Grid>
+                    </Grid>
 
-               
-                     <Grid item xs={3}>
-                       <Grid
-                         container
-                         alignItems={"center"}
-                         justify={"center"}
-                         direction={"row"}
-                       >
-                         <Dashboard
-                           magic8="Math Instruction"
-                           color="#E55529"
-                           infoPlacement="flex-start"
-                           completeObservation={true}
-                         />
-                       </Grid>
-                 </Grid>
-                 <Grid item xs={9} justify="center">
-                 <Grid container direction="column" justify="center" alignItems="center">
-          <Typography component="h4" variant="h4"  style={{ padding: "10px", fontFamily: 'Arimo' }}
+                    <Grid container direction="column" justify="center" alignItems="center">
+          <Typography component="h4" variant="h4"  align="center" style={{ padding: "10px", fontFamily: 'Arimo' }}
           >
            What is the activity setting?
           </Typography>
-	</Grid>
-        <Grid container alignItems="flex-start" container direction={'row'} style={{ fontFamily: 'Arimo' }}>
+       
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="flex-start"
+          >
 
-				 <Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
-					<Fab
-						onClick={() => this.handleDone('wholeGroup')}
-					//	classes={{ root: classes.button }}//, label: classes.label
-          style={ {backgroundColor: "#27B78FFF",
-          width: 150,
-         height: 150,
-         color: "white"}}
-					>
-						Whole Group
-					</Fab>
+<Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
+ <VisitCenterButton
+   onClick={() => this.handleDone('wholeGroup')}
 
-          </Grid>
-          <Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
+ >
+   Whole Group
+ </VisitCenterButton>
+ </Grid>
+ <Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
 
-					<Fab
-						onClick={() => this.handleDone('centersOrSmall')}
-					//classes={{ root: classes.button }}//, label: classes.label
-            style={ {backgroundColor: "#27B78FFF",
-                     width: 150,
-                    height: 150,
-                    color: "white"}}
-					>
-						Centers/Small Group
-					</Fab>
-				</Grid>
+ <VisitCenterButton
+
+   onClick={() => this.handleDone('centersOrSmall')}
+
+ >
+   Centers/Small Group
+ </VisitCenterButton>
+</Grid>
+</Grid>
+
         </Grid>
         </Grid>
-
-                         
-   
         </Grid>
-   
-   
-                  
-             </div>
+
+
+      </div>
     );
   }
 }
@@ -329,8 +298,6 @@ class CenterMenuMath extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
-
     switch (this.state.status) {
       case CENTER_CHECKLIST:
         return (
@@ -366,7 +333,9 @@ class CenterMenuMath extends React.Component {
                       <Dashboard
                         magic8="Math Instruction"
                         color="#E55529"
-
+                        infoDisplay={
+                          <TotalVisitCount count={this.state.totalVisitCount} />
+                        }
                         infoPlacement="flex-start"
                         completeObservation={true}
                       />
@@ -374,88 +343,55 @@ class CenterMenuMath extends React.Component {
               </Grid>
                   <Grid container xs={9}  container direction={'row'} >
 
-                   <Grid container alignItems="flex-start" item xl={3} md={3} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
-					<Fab
+                   <Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
+					<VisitCenterButton
 						//onClick={() => this.handleButtonChange('wholeGroup')}
-           // classes={{ root: classes.button }}//, label: classes.label
-            className={classes.button}
-
-            style={{ backgroundColor: "#38761dff" }}
+					//	classes={{ root: classes.button }}//, label: classes.label
+					//	style={{ backgroundColor: "#27B78FFF" }}
 					>
-            Ask High-Level Question
-					</Fab>
+						Whole Group
+					</VisitCenterButton>
           </Grid>
+          <Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
 
-          <Grid container alignItems="flex-start" item md={2} style={{ fontFamily: 'Arimo' }}>
-
-         
-          {/* <Box bgcolor="#6aa84fff" color="white" fontFamily= "Arimo"  p={1}>Inferential Instruction</Box>  */}
-          <Button disabled          
-                  style={{ backgroundColor: "#6aa84fff",color: "#fff!important"}}
-                  className={classes.root}>
-                    Inferential Instruction
-          </Button>
-          </Grid>
-          <Grid container alignItems="flex-start" item xl={7} md={7} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
-					<Fab
+					<VisitCenterButton
 					//	onClick={() => this.handleButtonChange('centersOrSmall')}
-          classes={{ root: classes.button }}//, label: classes.label
-          style={{ backgroundColor: "#38761dff"}}
-          >
-          Follow-up on Children’s Responses
-					</Fab>
-			 	 </Grid>
-
-        <Grid container alignItems="flex-start" item xl={3} md={3} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
-					
-          </Grid>
-
-          <Grid container alignItems="flex-start" item md={2} style={{ fontFamily: 'Arimo' }}>
-          <text>
-          <ReplySharpIcon width={50} height={50} > 0</ReplySharpIcon>
-          </text>
-          </Grid>
-
-
-          <Grid container alignItems="flex-start" item xl={7} md={7} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
-
-			
-		  		</Grid>
-
-        <Grid container alignItems="flex-start" item xl={3} md={3} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
-					<Fab
-						//onClick={() => this.handleButtonChange('wholeGroup')}
-						classes={{ root: classes.button }}//, label: classes.label
-            style={{ backgroundColor: "#1155ccff" }}//,{ zIndex: 100 }
+					//	classes={{ root: classes.button }}//, label: classes.label
+					//	style={{ backgroundColor: "#27B78FFF" }}
 					>
-            Ask Low-Level Question
-					</Fab>
-          </Grid>
-
-          <Grid container alignItems="flex-start" item md={2} style={{ fontFamily: 'Arimo' }}>
-
-         
-          {/* <Box bgcolor="#6aa84fff" color="white" fontFamily= "Arimo"  p={1}>Inferential Instruction</Box>  */}
-          <Button disabled          
-                  style={{ backgroundColor: "#6d9eebff",color: "#fff!important"}}
-                 className={classes.root}>
-Basic Skills Instruction
-                   </Button>
-          </Grid>
-
-          <Grid container alignItems="flex-start" item xl={7} md={7} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
-
-					<Fab
-					//	onClick={() => this.handleButtonChange('centersOrSmall')}
-         classes={{ root: classes.button }}//, label: classes.label
-          style={{ backgroundColor: "#1155ccff"}}
-        >
-Teach Specific Skills					</Fab>
+						Centers/Small Group
+					</VisitCenterButton>
 				</Grid>
+
+        <Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
+
+<VisitCenterButton
+//	onClick={() => this.handleButtonChange('centersOrSmall')}
+//	classes={{ root: classes.button }}//, label: classes.label
+//	style={{ backgroundColor: "#27B78FFF" }}
+>
+  Centers/Small Group
+</VisitCenterButton>
+</Grid>
+
+<Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
+
+<VisitCenterButton
+//	onClick={() => this.handleButtonChange('centersOrSmall')}
+//	classes={{ root: classes.button }}//, label: classes.label
+//	style={{ backgroundColor: "#27B78FFF" }}
+>
+  Centers/Small Group
+</VisitCenterButton>
+</Grid>
 
       </Grid>
                     
     </Grid>
+
+
+
+
 
                 </Grid>
               </Grid>

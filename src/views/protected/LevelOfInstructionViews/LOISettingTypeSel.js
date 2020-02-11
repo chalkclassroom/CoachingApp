@@ -16,7 +16,8 @@ const styles = (theme) => ({
 		textAlign: 'center',
 		display: "flex",
 		flexDirection: "column",
-		fontFamily: "Arimo"
+		fontFamily: "Arimo",
+		color: "white"
     	//backgroundColor: '#27B78FFF'
 	},
   grow: {
@@ -72,7 +73,7 @@ class LOISettingTypeSel extends React.Component {
            What is the activity setting?
           </Typography>
 	</Grid>
-        <Grid container alignItems="flex-start" container direction={'row'} spacing={24} style={{ fontFamily: 'Arimo' }}>
+        <Grid container alignItems="flex-start" container direction={'row'} style={{ fontFamily: 'Arimo' }}>
 
 				 <Grid container alignItems="flex-start" item xl={6} md={6} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
 					<Fab
