@@ -3,13 +3,12 @@ import * as PropTypes from "prop-types";
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import ChildBehaviorsPie from "./ChildBehaviorsPie";
-import TeacherBehaviorsPie from "./TeacherBehaviorsPie";
+import ChildPieSummary from "./ChildPieSummary";
+import TeacherPieSummary from "./TeacherPieSummary";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import PieSliceChildACImage from "../../../assets/images/PieSliceChildACImage.svg";
+import PieSliceChildSequentialImage from "../../../assets/images/PieSliceChildSequentialImage.svg";
 import PieSliceChildNonImage from "../../../assets/images/PieSliceChildNonImage.svg";
-import PieSliceChildNoOppImage from "../../../assets/images/PieSliceChildNoOppImage.svg";
 import PieSliceTeacherSupportImage from "../../../assets/images/PieSliceTeacherSupportImage.svg";
 import PieSliceTeacherNoSupportImage from "../../../assets/images/PieSliceTeacherNoSupportImage.svg";
 import PieSliceTeacherNoOppImage from "../../../assets/images/PieSliceTeacherNoOppImage.svg";
@@ -24,9 +23,8 @@ const styles: object = {
 }
 
 interface Props {
-  ac: number,
-  noAc: number,
-  noChildOpp: number,
+  sequential: number,
+  notSequential: number,
   support: number,
   noSupport: number,
   noTeacherOpp: number,
@@ -36,16 +34,15 @@ interface Props {
 }
 
 /**
- * Swipe View for Child and Teacher Associative&Cooperative Pie Charts
- * @class ChildTeacherBehaviorPieSlider
+ * Swipe View for Child and Teacher Sequential Pie Charts
+ * @class SummarySlider
  * @return {void}
  */
-class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
+class SummarySlider extends React.Component<Props, {}> {
   
   static propTypes = {
-    ac: PropTypes.number.isRequired,
-    noAc: PropTypes.number.isRequired,
-    noChildOpp: PropTypes.number.isRequired,
+    sequential: PropTypes.number.isRequired,
+    notSequential: PropTypes.number.isRequired,
     support: PropTypes.number.isRequired,
     noSupport: PropTypes.number.isRequired,
     noTeacherOpp: PropTypes.number.isRequired
@@ -79,32 +76,24 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
                   <Grid container direction="row">
                     <Grid item xs={1}>
                       <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="purple" src={PieSliceChildACImage} height="95%"/>
+                        <Grid item style={{height:"50%"}}>
+                          <img alt="yellow" src={PieSliceChildSequentialImage} height="95%"/>
                         </Grid>
-                        <Grid item style={{height:"33%"}}>
+                        <Grid item style={{height:"50%"}}>
                           <img alt="red" src={PieSliceChildNonImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="orange" src={PieSliceChildNoOppImage} height="95%"/>
                         </Grid>
                       </Grid>
                     </Grid>
                     <Grid item xs={11}>
                       <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                        <Grid item style={{height:"33%"}}>
+                        <Grid item style={{height:"50%"}}>
                           <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Engaged in associative and cooperative interactions.
+                            Did sequential activities.
                           </Typography>
                         </Grid>
-                        <Grid item style={{height:"33%"}}>
+                        <Grid item style={{height:"50%"}}>
                           <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Played in the same area but did not interact.
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Played alone (had no opportunity for interaction).
+                            Did non-sequential activities.
                           </Typography>
                         </Grid>
                       </Grid>
@@ -112,10 +101,9 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
                   </Grid>
                 </Grid>
               </Grid>
-              <ChildBehaviorsPie
-                ac={this.props.ac}
-                noAc={this.props.noAc}
-                noChildOpp={this.props.noChildOpp}
+              <ChildPieSummary
+                sequential={this.props.sequential}
+                notSequential={this.props.notSequential}
               />
             </Grid>
           </div>
@@ -147,12 +135,12 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
                       <Grid container direction="column" justify="center" style={{height:'100%'}}>
                         <Grid item style={{height:"33%"}}>
                           <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Supported children&apos;s associative and cooperative interactions.
+                            Supported children&apos;s sequential activities.
                           </Typography>
                         </Grid>
                         <Grid item style={{height:"33%"}}>
                           <Typography variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                            Was present in the center but did not support associative and cooperative interactions.
+                            Was present in the center but did not support sequential activities.
                           </Typography>
                         </Grid>
                         <Grid item style={{height:"33%"}}>
@@ -165,7 +153,7 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
                   </Grid>
                 </Grid>
               </Grid>
-              <TeacherBehaviorsPie
+              <TeacherPieSummary
                 support={this.props.support}
                 noSupport={this.props.noSupport}
                 noTeacherOpp={this.props.noTeacherOpp}
@@ -174,11 +162,11 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
           </div>
         </Slider>
         <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
-          Total Center Observations: {this.props.ac + this.props.noAc + this.props.noChildOpp}
+          Total Center Observations: {this.props.sequential + this.props.notSequential}
         </Typography>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(ChildTeacherBehaviorPieSlider);
+export default withStyles(styles)(SummarySlider);

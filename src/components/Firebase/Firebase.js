@@ -429,9 +429,8 @@ class Firebase {
     return this.sessionRef
       .collection("entries")
       .add({
-        Checked: mEntry.checked.slice(1),
+        Checked: mEntry.checked,
         PeopleType: mEntry.people,
-        seqType: mEntry.type,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
@@ -761,7 +760,7 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error("Error occurred getting sequential details: ", error)
@@ -798,7 +797,7 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error(
@@ -837,7 +836,7 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error(
@@ -901,11 +900,11 @@ class Firebase {
       );
   };
 
-  fetchTeacherSeqTrend = async function(sessionId) {
+  fetchTeacherSeqTrend = async function(teacherId) {
     const getTeacherSeqTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherSeqTrend"
     );
-    return getTeacherSeqTrendFirebaseFunction({ sessionId: sessionId })
+    return getTeacherSeqTrendFirebaseFunction({ teacherId: teacherId })
       .then(
         result =>
           // Read result of the Cloud Function.
