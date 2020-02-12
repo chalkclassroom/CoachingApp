@@ -245,7 +245,7 @@ class CenterMenuMath extends React.Component {
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: "AC"
+      type: "math"
     };
     this.props.firebase.handleSession(mEntry);
   }
