@@ -5,10 +5,10 @@ import * as Constants from "../../../constants";
 
 
 interface Props {
-  sequential1: number,
-  sequential2: number,
-  sequential3: number,
-  sequential4: number
+  math1: number,
+  math2: number,
+  math3: number,
+  math4: number
 }
 
 /**
@@ -25,10 +25,10 @@ class ChildBarDetails extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    sequential1: PropTypes.number.isRequired,
-    sequential2: PropTypes.number.isRequired,
-    sequential3: PropTypes.number.isRequired,
-    sequential4: PropTypes.number.isRequired
+    math1: PropTypes.number.isRequired,
+    math2: PropTypes.number.isRequired,
+    math3: PropTypes.number.isRequired,
+    math4: PropTypes.number.isRequired
   };
 
   /**
@@ -38,16 +38,16 @@ class ChildBarDetails extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const childBehaviorsData = {
       labels: [
-        ["Using materials in a step-by-step", "predictable way"],
-        ["Drawing recognizable images or", "writing names or messages", "(letters or letter-like forms)"],
-        ["Playing a game with set rules", "and/or taking turns"],
-        ["Speaking or acting according to", "a pretend scenario that", "follows a predictable plot"]
+        "Counting and Numbers",
+        "Shapes and Spatial Reasoning",
+        "Patterns",
+        "Measurement and Data"
       ],
       datasets: [
         {
-          data: [this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4],
-          backgroundColor: [Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor],
-          hoverBackgroundColor: [Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor]
+          data: [this.props.math1, this.props.math2, this.props.math3, this.props.math4],
+          backgroundColor: [Constants.MathColor, Constants.MathColor, Constants.MathColor, Constants.MathColor],
+          hoverBackgroundColor: [Constants.MathColor, Constants.MathColor, Constants.MathColor, Constants.MathColor]
         }
       ]
     };

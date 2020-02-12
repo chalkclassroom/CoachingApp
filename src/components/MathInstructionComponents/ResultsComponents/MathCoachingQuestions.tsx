@@ -139,7 +139,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
         <Grid container direction="column" style={{marginTop: "1vh"}}>
           {this.state.categoryView === "drawingAndWriting" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Sequential.DrawingAndWriting}
+              questions={Constants.CoachingQuestions.Transition.WaitingQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
@@ -148,7 +148,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
             />
           ) : this.state.categoryView === "games" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Sequential.GamesAndPretendPlay}
+              questions={Constants.CoachingQuestions.Transition.WaitingQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
@@ -157,7 +157,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
             />
           ) : this.state.categoryView === "teacherSupport" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Sequential.TeacherSupport}
+              questions={Constants.CoachingQuestions.Transition.WaitingQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}

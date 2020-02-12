@@ -782,6 +782,20 @@ class Firebase {
       );
   };
 
+  fetchMathDetails = async function(sessionId) {
+    const getMathDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcMathDetails"
+    );
+    return getMathDetailsFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting math details: ", error)
+      );
+  };
+
   fetchChildACSummary = async function(sessionId) {
     const getChildACSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcChildACSummary"
@@ -819,6 +833,20 @@ class Firebase {
           "Error occurred getting child Sequential summary: ",
           error
         )
+      );
+  };
+
+  fetchChildMathSummary = async function(sessionId) {
+    const getChildMathSummaryFirebaseFunction = this.functions.httpsCallable(
+      "funcChildMathSummary"
+    );
+    return getChildMathSummaryFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting child math summary: ", error)
       );
   };
 
@@ -861,6 +889,21 @@ class Firebase {
       );
   };
 
+  fetchTeacherMathSummary = async function(sessionId) {
+    const getTeacherMathSummaryFirebaseFunction = this.functions.httpsCallable(
+      "funcTeacherMathSummary"
+    );
+    return getTeacherMathSummaryFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting teacher math summary: ", error)
+      );
+  };
+
+
   fetchChildACTrend = async function(teacherId) {
     const getChildACTrendFirebaseFunction = this.functions.httpsCallable(
       "funcChildACTrend"
@@ -897,6 +940,21 @@ class Firebase {
       );
   };
 
+  fetchChildMathTrend = async function(teacherId) {
+    const getChildMathTrendFirebaseFunction = this.functions.httpsCallable(
+      "funcChildMathTrend"
+    );
+    console.log('fetchChildMathTrend from firebase executed');
+    return getChildMathTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        result =>
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting child math trend: ", error)
+      );
+  };
+
   fetchTeacherACTrend = async function(teacherId) {
     const getTeacherACTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherACTrend"
@@ -929,6 +987,20 @@ class Firebase {
           result.data[0]
       )
       .catch(error => console.error("Error occurred getting teacher sequential trend: ", error))
+  };
+
+  fetchTeacherMathTrend = async function(teacherId) {
+    const getTeacherMathTrendFirebaseFunction = this.functions.httpsCallable(
+      "funcTeacherMathTrend"
+    );
+    return getTeacherMathTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        result =>
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting teacher math trend: ", error)
+      );
   };
 
   createActionPlan = async function(teacherId, sessionId) {

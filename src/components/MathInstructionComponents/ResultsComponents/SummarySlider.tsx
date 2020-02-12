@@ -7,8 +7,8 @@ import ChildPieSummary from "./ChildPieSummary";
 import TeacherPieSummary from "./TeacherPieSummary";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import PieSliceChildSequentialImage from "../../../assets/images/PieSliceChildSequentialImage.svg";
-import PieSliceChildNonImage from "../../../assets/images/PieSliceChildNonImage.svg";
+// import PieSliceChildSequentialImage from "../../../assets/images/PieSliceChildSequentialImage.svg";
+import PieSliceChildACImage from "../../../assets/images/PieSliceChildACImage.svg";
 import PieSliceTeacherSupportImage from "../../../assets/images/PieSliceTeacherSupportImage.svg";
 import PieSliceTeacherNoSupportImage from "../../../assets/images/PieSliceTeacherNoSupportImage.svg";
 import PieSliceTeacherNoOppImage from "../../../assets/images/PieSliceTeacherNoOppImage.svg";
@@ -23,8 +23,8 @@ const styles: object = {
 }
 
 interface Props {
-  sequential: number,
-  notSequential: number,
+  math: number,
+  notMath: number,
   support: number,
   noSupport: number,
   noTeacherOpp: number,
@@ -41,8 +41,8 @@ interface Props {
 class SummarySlider extends React.Component<Props, {}> {
   
   static propTypes = {
-    sequential: PropTypes.number.isRequired,
-    notSequential: PropTypes.number.isRequired,
+    math: PropTypes.number.isRequired,
+    notMath: PropTypes.number.isRequired,
     support: PropTypes.number.isRequired,
     noSupport: PropTypes.number.isRequired,
     noTeacherOpp: PropTypes.number.isRequired
@@ -77,10 +77,10 @@ class SummarySlider extends React.Component<Props, {}> {
                     <Grid item xs={1}>
                       <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
                         <Grid item style={{height:"50%"}}>
-                          <img alt="yellow" src={PieSliceChildSequentialImage} height="95%"/>
+                          <img alt="yellow" src={PieSliceChildACImage} height="95%"/>
                         </Grid>
                         <Grid item style={{height:"50%"}}>
-                          <img alt="red" src={PieSliceChildNonImage} height="95%"/>
+                          <img alt="red" src={PieSliceChildACImage} height="95%"/>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -88,12 +88,12 @@ class SummarySlider extends React.Component<Props, {}> {
                       <Grid container direction="column" justify="center" style={{height:'100%'}}>
                         <Grid item style={{height:"50%"}}>
                           <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Did sequential activities.
+                            Did math.
                           </Typography>
                         </Grid>
                         <Grid item style={{height:"50%"}}>
                           <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Did non-sequential activities.
+                            Did other activities.
                           </Typography>
                         </Grid>
                       </Grid>
@@ -102,8 +102,8 @@ class SummarySlider extends React.Component<Props, {}> {
                 </Grid>
               </Grid>
               <ChildPieSummary
-                sequential={this.props.sequential}
-                notSequential={this.props.notSequential}
+                math={this.props.math}
+                notMath={this.props.notMath}
               />
             </Grid>
           </div>
@@ -135,12 +135,12 @@ class SummarySlider extends React.Component<Props, {}> {
                       <Grid container direction="column" justify="center" style={{height:'100%'}}>
                         <Grid item style={{height:"33%"}}>
                           <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Supported children&apos;s sequential activities.
+                            Supported children&apos;s math learning.
                           </Typography>
                         </Grid>
                         <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                            Was present in the center but did not support sequential activities.
+                          <Typography variant="subtitle1" className={classes.comparisonText}>
+                            Was present in the center but did not support math learning.
                           </Typography>
                         </Grid>
                         <Grid item style={{height:"33%"}}>
@@ -162,7 +162,7 @@ class SummarySlider extends React.Component<Props, {}> {
           </div>
         </Slider>
         <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
-          Total Center Observations: {this.props.sequential + this.props.notSequential}
+          Total Center Observations: {this.props.math + this.props.notMath}
         </Typography>
       </div>
     );

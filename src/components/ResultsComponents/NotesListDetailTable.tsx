@@ -55,7 +55,7 @@ class NotesListDetailTable extends React.Component<Props, {}> {
       color = Constants.TransitionColor
     : this.props.magic8 === "Classroom Climate" ?
       color = Constants.ClimateColor
-    : this.props.magic8 === "Math" ?
+    : this.props.magic8 === "Math Instruction" ?
       color = Constants.MathColor
     : this.props.magic8 === "Level of Engagement" ?
       color = Constants.EngagementColor

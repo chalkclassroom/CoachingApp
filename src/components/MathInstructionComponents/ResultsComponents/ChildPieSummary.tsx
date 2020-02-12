@@ -4,8 +4,8 @@ import { Pie } from "react-chartjs-2";
 import * as Constants from '../../../constants';
 
 interface Props {
-  sequential: number,
-  notSequential: number,
+  math: number,
+  notMath: number,
 }
 
 /**
@@ -22,8 +22,8 @@ class ChildPieSummary extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    sequential: PropTypes.number.isRequired,
-    notSequential: PropTypes.number.isRequired,
+    math: PropTypes.number.isRequired,
+    notMath: PropTypes.number.isRequired,
   };
 
   /**
@@ -33,14 +33,14 @@ class ChildPieSummary extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const childBehaviorsData = {
       labels: [
-        "Sequential Activities",
-        "Non-Sequential Activities",
+        "Math",
+        "Other Activity",
       ],
       datasets: [
         {
-          data: [this.props.sequential, this.props.notSequential],
-          backgroundColor: [Constants.SequentialColor, "#ec2409"],
-          hoverBackgroundColor: [Constants.SequentialColor, "#ec2409"]
+          data: [this.props.math, this.props.notMath],
+          backgroundColor: [Constants.MathColor, Constants.RedGraphColor],
+          hoverBackgroundColor: [Constants.MathColor, Constants.RedGraphColor]
         }
       ]
     };

@@ -142,9 +142,9 @@ class CenterRatingChecklistMath extends React.Component {
     }
     const { teacherChecked } = this.state;
     const newChecked = [];
-    if (((teacherChecked.includes(9) && value != 9) || 
+    if (((teacherChecked.includes(10) && value != 10) || 
     (teacherChecked.includes(6) || teacherChecked.includes(7) ||
-    teacherChecked.includes(8)) && value === 9)) {
+    teacherChecked.includes(8) || teacherChecked.includes(9)) && value === 10)) {
       newChecked.splice(0, newChecked.length);
       newChecked.push(value);
     } else {
@@ -184,7 +184,7 @@ class CenterRatingChecklistMath extends React.Component {
 
       const { teacherChecked } = this.state;
       const newTeacherChecked = [...teacherChecked];
-      for (let i = 6; i <= 9; i++) {
+      for (let i = 6; i <= 10; i++) {
         // If there are teacher ratings checked, remove them
         if (teacherChecked.includes(i)) {
           const currentIndex = teacherChecked.indexOf(i);
@@ -447,8 +447,23 @@ class CenterRatingChecklistMath extends React.Component {
                         >
                           <Checkbox
                             checked={
-                              !this.childDisabled() &&
+                              !this.teacherDisabled() &&
                               this.state.teacherChecked.includes(9)
+                            }
+                            disabled={this.teacherDisabled()}
+                          />
+                          <ListItemText>
+                            <b>Doing</b> math with children
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleTeacherToggle(10)}
+                          disabled={this.teacherDisabled()}
+                        >
+                          <Checkbox
+                            checked={
+                              !this.childDisabled() &&
+                              this.state.teacherChecked.includes(10)
                             }
                             disabled={this.teacherDisabled()}
                           />

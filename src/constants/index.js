@@ -8,6 +8,7 @@ import {
 import { red } from "@material-ui/core/es/colors";
 
 // Colors
+export const AppBarColor = "#459aeb";
 export const TransitionColor = '#094492';
 export const ClimateColor = '#0988ec';
 export const MathColor = '#e55529';
@@ -16,6 +17,7 @@ export const InstructionColor = '#009365';
 export const ListeningColor = '#4fd9b3';
 export const SequentialColor = '#ffd300';
 export const ACColor = '#6f39c4';
+export const RedGraphColor = "#ec2409";
 
 export const TransitionTypeColors = {
   lineColor: lightGreen[300],

@@ -30,23 +30,23 @@ interface Style {
 }
 
 interface State {
-  sequential: number,
-  notSequential: number,
+  math: number,
+  notMath: number,
   support: number,
   noSupport: number,
   noTeacherOpp: number,
   sessionId: string,
-  sequential1: number,
-  sequential2: number,
-  sequential3: number,
-  sequential4: number,
+  math1: number,
+  math2: number,
+  math3: number,
+  math4: number,
   teacher1: number,
   teacher2: number,
   teacher3: number,
   teacher4: number,
   trendsDates: Array<Array<string>>,
-  trendsNotSequential: Array<number>,
-  trendsSequential: Array<number>,
+  trendsMath: Array<number>,
+  trendsNotMath: Array<number>,
   trendsNoTeacherOpp: Array<number>,
   trendsNoSupport: Array<number>,
   trendsSupport: Array<number>,
@@ -56,9 +56,9 @@ interface State {
 
 /**
  * math results
- * @class MathResultsPage
+ * @class MathInstructionResultsPage
  */
-class MathResultsPage extends React.Component<Props, State> {
+class MathInstructionResultsPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
@@ -66,23 +66,23 @@ class MathResultsPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      sequential: 0,
-      notSequential: 0,
+      math: 0,
+      notMath: 0,
       support: 0,
       noSupport: 0,
       noTeacherOpp: 0,
       sessionId: '',
-      sequential1: 0,
-      sequential2: 0,
-      sequential3: 0,
-      sequential4: 0,
+      math1: 0,
+      math2: 0,
+      math3: 0,
+      math4: 0,
       teacher1: 0,
       teacher2: 0,
       teacher3: 0,
       teacher4: 0,
       trendsDates: [],
-      trendsNotSequential: [],
-      trendsSequential: [],
+      trendsMath: [],
+      trendsNotMath: [],
       trendsNoTeacherOpp: [],
       trendsNoSupport: [],
       trendsSupport: [],
@@ -132,23 +132,23 @@ class MathResultsPage extends React.Component<Props, State> {
   handleChildTrendsFetch = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<Array<string>> = [];
-    const notSequentialArray: Array<number> = [];
-    const sequentialArray: Array<number> = [];
-    firebase.fetchChildSeqTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, sequential: number, notSequential: number}>) => {
+    const mathArray: Array<number> = [];
+    const notMathArray: Array<number> = [];
+    firebase.fetchChildMathTrend(teacherId)
+    .then((dataSet: Array<{startDate: {value: string}, math: number, notMath: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        notSequentialArray.push(Math.floor((data.notSequential / (data.notSequential + data.sequential)) * 100));
-        sequentialArray.push(Math.floor((data.sequential / (data.notSequential + data.sequential)) * 100));
+        mathArray.push(Math.floor((data.math / (data.math + data.notMath)) * 100));
+        notMathArray.push(Math.floor((data.notMath / (data.math + data.notMath)) * 100));
       });
 
       this.setState({
         trendsDates: dateArray,
-        trendsNotSequential: notSequentialArray,
-        trendsSequential: sequentialArray
-      });
+        trendsMath: mathArray,
+        trendsNotMath: notMathArray
+      }, () => console.log('math trends: ', this.state.trendsMath, this.state.trendsNotMath));
     });
   };
 
@@ -158,23 +158,23 @@ class MathResultsPage extends React.Component<Props, State> {
   handleTeacherTrendsFetch = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<Array<string>> = [];
-    const noSupportArray: Array<number> = [];
     const supportArray: Array<number> = [];
+    const noSupportArray: Array<number> = [];
     const noOppArray: Array<number> = [];
-    firebase.fetchTeacherSeqTrend(teacherId)
+    firebase.fetchTeacherMathTrend(teacherId)
     .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        noSupportArray.push(Math.floor((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
         supportArray.push(Math.floor((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        noSupportArray.push(Math.floor((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
         noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
       });
       this.setState({
         trendsDates: dateArray,
-        trendsNoSupport: noSupportArray,
         trendsSupport: supportArray,
+        trendsNoSupport: noSupportArray,
         trendsNoTeacherOpp: noOppArray
       });
     });
@@ -196,20 +196,20 @@ class MathResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Non-Sequential Activities",
+          label: "Non-Math Activities",
           backgroundColor: '#ec2409',
           borderColor: '#ec2409',
           fill: false,
           lineTension: 0,
-          data: this.state.trendsNotSequential
+          data: this.state.trendsNotMath
         },
         {
-          label: "Sequential Activities",
-          backgroundColor: Constants.SequentialColor,
-          borderColor: Constants.SequentialColor,
+          label: "Math",
+          backgroundColor: Constants.MathColor,
+          borderColor: Constants.MathColor,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsSequential
+          data: this.state.trendsMath
         }
       ]
     };
@@ -231,7 +231,7 @@ class MathResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "No Opportunity",
+          label: "Teacher Not at Center",
           backgroundColor: "#E99C2E",
           borderColor: "#E99C2E",
           fill: false,
@@ -240,16 +240,16 @@ class MathResultsPage extends React.Component<Props, State> {
         },
         {
           label: "No Support",
-          backgroundColor: "#ec2409",
-          borderColor: "#ec2409",
+          backgroundColor: Constants.RedGraphColor,
+          borderColor: Constants.RedGraphColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoSupport
         },
         {
           label: "Teacher Support",
-          backgroundColor: "#459aeb",
-          borderColor: "#459aeb",
+          backgroundColor: Constants.AppBarColor,
+          borderColor: Constants.AppBarColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsSupport
@@ -283,35 +283,35 @@ class MathResultsPage extends React.Component<Props, State> {
         }).catch(() => {
           console.log('unable to retrieve action plan')
         })
-        firebase.fetchChildSeqSummary(this.state.sessionId).then((summary: {notSequential: number, sequential: number}) => {
+        firebase.fetchChildMathSummary(this.state.sessionId).then((summary: {math: number, notMath: number}) => {
           this.setState({
-            notSequential: summary.notSequential,
-            sequential: summary.sequential,
+            math: summary.math,
+            notMath: summary.notMath,
           });
         });
-        firebase.fetchTeacherSeqSummary(this.state.sessionId).then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
+        firebase.fetchTeacherMathSummary(this.state.sessionId).then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
           this.setState({
             noTeacherOpp: summary.noOpportunity,
             noSupport: summary.noSupport,
             support: summary.support,
           });
         });
-        firebase.fetchSeqDetails(this.state.sessionId)
+        firebase.fetchMathDetails(this.state.sessionId)
         .then((summary: {
-          sequential1: number,
-          sequential2: number,
-          sequential3: number,
-          sequential4: number,
+          math1: number,
+          math2: number,
+          math3: number,
+          math4: number,
           teacher1: number,
           teacher2: number,
           teacher3: number,
           teacher4: number
         }) => {
           this.setState({
-            sequential1: summary.sequential1,
-            sequential2: summary.sequential2,
-            sequential3: summary.sequential3,
-            sequential4: summary.sequential4,
+            math1: summary.math1,
+            math2: summary.math2,
+            math3: summary.math3,
+            math4: summary.math4,
             teacher1: summary.teacher1,
             teacher2: summary.teacher2,
             teacher3: summary.teacher3,
@@ -341,16 +341,16 @@ class MathResultsPage extends React.Component<Props, State> {
           handleTrendsFetch={this.handleTrendsFetching}
           observationType="math"
           summary={
-            {/* <SummarySlider
+            <SummarySlider
               math={this.state.math}
               notMath={this.state.notMath}
               support={this.state.support}
               noSupport={this.state.noSupport}
               noTeacherOpp={this.state.noTeacherOpp}
-            /> */}
+            />
           }
           details={
-            {/* <DetailsSlider
+            <DetailsSlider
               math1={this.state.math1}
               math2={this.state.math2}
               math3={this.state.math3}
@@ -359,7 +359,7 @@ class MathResultsPage extends React.Component<Props, State> {
               teacher2={this.state.teacher2}
               teacher3={this.state.teacher3}
               teacher4={this.state.teacher4}
-            /> */}
+            />
           }
           trendsGraph={
             <TrendsSlider
@@ -381,5 +381,5 @@ class MathResultsPage extends React.Component<Props, State> {
 }
 
 
-MathResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(MathResultsPage);
+MathInstructionResultsPage.contextType = FirebaseContext;
+export default withStyles(styles)(MathInstructionResultsPage);

@@ -16,10 +16,10 @@ const styles: object = {
 }
 
 interface Props {
-  sequential1: number,
-  sequential2: number,
-  sequential3: number,
-  sequential4: number,
+  math1: number,
+  math2: number,
+  math3: number,
+  math4: number,
   teacher1: number,
   teacher2: number,
   teacher3: number,
@@ -37,10 +37,10 @@ interface Props {
 class DetailsSlider extends React.Component<Props, {}> {
   
   static propTypes = {
-    sequential1: PropTypes.number.isRequired,
-    sequential2: PropTypes.number.isRequired,
-    sequential3: PropTypes.number.isRequired,
-    sequential4: PropTypes.number.isRequired,
+    math1: PropTypes.number.isRequired,
+    math2: PropTypes.number.isRequired,
+    math3: PropTypes.number.isRequired,
+    math4: PropTypes.number.isRequired,
     teacher1: PropTypes.number.isRequired,
     teacher2: PropTypes.number.isRequired,
     teacher3: PropTypes.number.isRequired,
@@ -74,12 +74,17 @@ class DetailsSlider extends React.Component<Props, {}> {
                     <Grid container direction="column" justify="center" alignItems="flex-start" style={{height:'100%'}}>
                       <Grid item style={{height:"33%", paddingBottom: '2em'}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
-                          Which behaviors did children do more often?
+                          What types of math did children do during the observation?
+                        </Typography>
+                      </Grid>
+                      <Grid item style={{height:"33%", paddingBottom: '2em'}}>
+                        <Typography variant="subtitle1" className={classes.questionText}>
+                          Did they do one type of math more often than other types?
                         </Typography>
                       </Grid>
                       <Grid item style={{height:"33%"}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
-                          Which behaviors did children do less often?
+                          Did they do one type of math less often than other types?
                         </Typography>
                       </Grid>
                     </Grid>
@@ -88,10 +93,10 @@ class DetailsSlider extends React.Component<Props, {}> {
               </Grid>
             </Grid>
             <ChildBarDetails
-              sequential1={this.props.sequential1}
-              sequential2={this.props.sequential2}
-              sequential3={this.props.sequential3}
-              sequential4={this.props.sequential4}
+              math1={this.props.math1}
+              math2={this.props.math2}
+              math3={this.props.math3}
+              math4={this.props.math4}
             />
           </Grid>
         </div>
@@ -107,12 +112,17 @@ class DetailsSlider extends React.Component<Props, {}> {
                     <Grid container direction="column" justify="center" alignItems="flex-start" style={{height:'100%'}}>
                       <Grid item style={{height:"33%", paddingBottom: '2em'}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
-                          Was there a strategy the teacher used more often to support children&apos;s sequential activities?
+                          What behaviors did the teacher use during the observation?
                         </Typography>
                       </Grid>
-                      <Grid item style={{height:"33%", paddingTop: '0.5em'}}>
+                      <Grid item style={{height:"33%", paddingBottom: '2em'}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
-                          Was there a strategy the teacher used less often?
+                          Did the teacher do one type of behavior more often than other behaviors?
+                        </Typography>
+                      </Grid>
+                      <Grid item style={{height:"33%"}}>
+                        <Typography variant="subtitle1" className={classes.questionText}>
+                          Did the teacher do one behavior less often than other behaviors?
                         </Typography>
                       </Grid>
                     </Grid>

@@ -174,7 +174,7 @@ class ResultsDashboard extends React.Component {
         icon: ClassroomClimateIconImage,
         theme: ClimateTheme
       })
-    } else if (this.props.magic8 === "Math") {
+    } else if (this.props.magic8 === "Math Instruction") {
       this.setState({
         icon: MathIconImage,
         theme: MathTheme
