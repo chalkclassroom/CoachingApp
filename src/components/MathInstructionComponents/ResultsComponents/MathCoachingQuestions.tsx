@@ -39,19 +39,35 @@ class MathCoachingQuestions extends React.Component<{}, State> {
     }
   }
 
-  drawingWritingClick = (): void => {
-    if (this.state.categoryView !== "drawingAndWriting") {
+  countingClick = (): void => {
+    if (this.state.categoryView !== "counting") {
       this.setState({
-        categoryView: "drawingAndWriting",
+        categoryView: "counting",
         openPanel: null
       })
     }
   }
 
-  gamesClick = (): void => {
-    if (this.state.categoryView !== "games") {
+  measurementClick = (): void => {
+    if (this.state.categoryView !== "measurement") {
       this.setState({
-        categoryView: "games",
+        categoryView: "measurement",
+        openPanel: null
+      })
+    }
+  }
+  patternsClick = (): void => {
+    if (this.state.categoryView !== "patterns") {
+      this.setState({
+        categoryView: "patterns",
+        openPanel: null
+      })
+    }
+  }
+  shapesClick = (): void => {
+    if (this.state.categoryView !== "shapes") {
+      this.setState({
+        categoryView: "shapes",
         openPanel: null
       })
     }
@@ -96,13 +112,13 @@ class MathCoachingQuestions extends React.Component<{}, State> {
           <Grid item>
             <MuiThemeProvider theme={MathTheme}>
               <Button 
-                onClick={this.drawingWritingClick}
+                onClick={this.countingClick}
                 variant="contained"
                 color="primary"
-                style={{width:'10em', height: '10em'}}
+                style={{width:'8em', height: '8em'}}
               >
                 <Typography>
-                  Drawing and Writing
+                  Counting and Numbers
                 </Typography>
               </Button >
             </MuiThemeProvider>
@@ -110,13 +126,41 @@ class MathCoachingQuestions extends React.Component<{}, State> {
           <Grid item>
             <MuiThemeProvider theme={MathTheme}>
               <Button
-                onClick={this.gamesClick}
+                onClick={this.measurementClick}
                 variant="contained"
                 color="primary"
-                style={{width:'10em', height: '10em'}}
+                style={{width:'8em', height: '8em'}}
               >
                 <Typography style={{color: 'black'}}>
-                  Games and Pretend Play
+                  Measurement and Data
+                </Typography>
+              </Button>
+            </MuiThemeProvider>
+          </Grid>
+          <Grid item>
+            <MuiThemeProvider theme={MathTheme}>
+              <Button
+                onClick={this.patternsClick}
+                variant="contained"
+                color="primary"
+                style={{width:'8em', height: '8em'}}
+              >
+                <Typography style={{color: 'black'}}>
+                  Patterns
+                </Typography>
+              </Button>
+            </MuiThemeProvider>
+          </Grid>
+          <Grid item>
+            <MuiThemeProvider theme={MathTheme}>
+              <Button
+                onClick={this.shapesClick}
+                variant="contained"
+                color="primary"
+                style={{width:'8em', height: '8em'}}
+              >
+                <Typography style={{color: 'black'}}>
+                  Shapes and Spatial Reasoning
                 </Typography>
               </Button>
             </MuiThemeProvider>
@@ -127,28 +171,46 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 onClick={this.teacherSupportClick}
                 variant="contained"
                 color="primary"
-                style={{width:'10em', height: '10em'}}
+                style={{width:'8em', height: '8em'}}
               >
                 <Typography>
-                  Teacher Support for Sequential Activities
+                  Teacher Support for Math
                 </Typography>
               </Button>
             </MuiThemeProvider>
           </Grid>
         </Grid>
         <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "drawingAndWriting" ? (
+          {this.state.categoryView === "counting" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Transition.WaitingQuestions}
+              questions={Constants.CoachingQuestions.Math.CountingAndNumbers}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
               color={Constants.MathColor}
             />
-          ) : this.state.categoryView === "games" ? (
+          ) : this.state.categoryView === "measurement" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Transition.WaitingQuestions}
+              questions={Constants.CoachingQuestions.Math.MeasurementAndData}
+              openPanel={this.state.openPanel}
+              handlePanelChange={this.handlePanelChange}
+              addedToPrep={this.state.addedToPrep}
+              handleAddToPlan={this.handleAddToPlan}
+              color={Constants.MathColor}
+            />
+          ) : this.state.categoryView === "patterns" ? (
+            <DataQuestions
+              questions={Constants.CoachingQuestions.Math.Patterns}
+              openPanel={this.state.openPanel}
+              handlePanelChange={this.handlePanelChange}
+              addedToPrep={this.state.addedToPrep}
+              handleAddToPlan={this.handleAddToPlan}
+              color={Constants.MathColor}
+            />
+          ) : this.state.categoryView === "shapes" ? (
+            <DataQuestions
+              questions={Constants.CoachingQuestions.Math.ShapesAndSpatialReasoning}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
@@ -157,7 +219,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
             />
           ) : this.state.categoryView === "teacherSupport" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Transition.WaitingQuestions}
+              questions={Constants.CoachingQuestions.Math.TeacherSupport}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}

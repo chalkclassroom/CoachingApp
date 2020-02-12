@@ -458,6 +458,238 @@ export const CoachingQuestions = {
       },
     ]
   },
+  'Math' : {
+    'CountingAndNumbers': [
+      {
+        'name': 'MathPanel1A',
+        'title': 'Math Curriculum and Standards',
+        'text': [
+          'Which resources are the most helpful for planning math activities?',
+          'Which resources are the most helpful for describing what math ' +
+          'concepts children are supposed to learn about in preschool?',
+        ]
+      },
+      {
+        'name': 'MathPanel1B',
+        'title': 'Materials',
+        'text': [
+          'Talk about the variety of math materials at each center in the classroom.',
+          'How do children use math materials--independently, in small groups, ' +
+          'with teacher support?'
+        ]
+      },
+      {
+        'name': 'MathPanel1C',
+        'title': 'Counting Collections',
+        'text': [
+          'Talk about opportunities that children have for counting collections ' +
+          'of objects.', 
+          'How does counting different sets of objects help children understand ' +
+          'quantity?',
+          'How can observing children\'s counting strategies help you as the ' +
+          'teacher challenge them to use more advanced strategies?'
+        ]
+      },
+      {
+        'name': 'MathPanel1D',
+        'title': 'Comparing Quantities',
+        'text': [
+          'Talk about how children compare two or more collections or sets of objects.',
+          'What are some effective methods and activities for getting children to ' + 
+          'talk about their comparisons and to use math vocabulary?',
+        ]
+      },
+      {
+        'name': 'MathPanel1E',
+        'title': 'Connecting Numerals to Counted Objects',
+        'text': [
+          'What are some activities and materials that help children understand ' +
+          'written numerals?'
+        ]
+      },
+    ],
+    'MeasurementAndData': [
+      {
+        'name': 'MathPanel2A',
+        'title': 'Size, Length, and Weight',
+        'text': [
+          'Talk about the different ways children can practice measuring ' +
+          'skills in the classroom. Are there materials for measuring ' +
+          'size, length, and weight?',
+          'How do children use non-standard tools (e.g., cubes, plastic ' +
+          'chains, yarn) and standard tools (e.g., rulers, balance scales, ' +
+          'measuring cups) to measure materials?',
+          'When do children talk most about comparing and measuring things? ' +
+          'How can you as the teacher build on their curiosity?'
+        ]
+      },
+      {
+        'name': 'MathPanel2B',
+        'title': 'Estimating',
+        'text': [
+          'Talk about the opportunities that children have for estimating ' +
+          'measurement (e.g., making an informed guess about an object\'s ' +
+          'length or weight).',
+          'What activities might motivate children to estimate measurements? ' +
+          'Are they curious to see if their estimations are close to ' +
+          'measurements using standard tools?'
+        ]
+      },
+      {
+        'name': 'MathPanel2C',
+        'title': 'Understanding Time',
+        'text': [
+          'How do children show that they are beginning to understand ' +
+          'concepts about time?', 
+          'What materials support children\'s thinking about time, such as ' +
+          'visual schedules or sand timers? How do you use these?',
+        ]
+      },
+      {
+        'name': 'MathPanel2D',
+        'title': 'Working with Data',
+        'text': [
+          'What types of data representations, or graphs (that use physical ' +
+          'objects, pictures, and/or symbols) do children interact with ' + 
+          'in the classroom?',
+          'What kinds of opportunities do children have for coming up with ' + 
+          'their own questions, collecting data, and making sense of the data?',
+        ]
+      }
+    ],
+    'Patterns': [
+      {
+        'name': 'MathPanel3A',
+        'title': 'Recognizing Patterns',
+        'text': [
+          'Talk about the different ways that children notice patterns ' +
+          'in their school environment (music, clapping, blocks)?',
+          'What books in your library might support children\'s pattern ' +
+          'recognition?'
+        ]
+      },
+      {
+        'name': 'MathPanel3B',
+        'title': 'Creating Patterns',
+        'text': [
+          'What materials encourage children to create their own patterns? ' +
+          'How so?',
+          'What kinds of support do children need to begin creating patterns?'
+        ]
+      },
+      {
+        'name': 'MathPanel3C',
+        'title': 'Extending Patterns',
+        'text': [
+          'What are some strategies for challenging children to extend ' +
+          'beyond ABAB patterns, such as translating patterns from one ' +
+          'material to another?',
+          'What kinds of experiences do children have with "growing ' +
+          'patterns," or patterns that grow by a specific amount (e.g., ' +
+          'a series of towers that grow by 2 blocks each time)?'
+        ]
+      },
+    ],
+    'ShapesAndSpatialReasoning': [
+      {
+        'name': 'MathPanel4A',
+        'title': 'Identifying Shapes',
+        'text': [
+          'Talk about the ways that children notice and identify shapes ' +
+          'using classroom materials.',
+          'What are some good activities for helping children understand ' +
+          'the unique characteristics of different shapes (e.g., all ' +
+          'triangles have 3 sides).'
+        ]
+      },
+      {
+        'name': 'MathPanel4B',
+        'title': 'Manipulating Shapes',
+        'text': [
+          'What types of materials encourage children to build and take ' +
+          'apart shapes?',
+          'What have you noticed about children\'s learning when they ' +
+          'construct their own shapes versus when they identify existing ' +
+          'shapes?'
+        ]
+      },
+      {
+        'name': 'MathPanel4C',
+        'title': 'Using Positional Words',
+        'text': [
+          'Talk about strategies for modeling positional words in your ' +
+          'conversations with children.',
+          'How might books, physical activities, and giving directions ' +
+          'provide opportunities for teaching positional words?'
+        ]
+      },
+      {
+        'name': 'MathPanel4D',
+        'title': 'Working with Maps',
+        'text': [
+          'How might children begin to use simple maps (e.g., looking ' +
+          'at a map of their playground or classroom)?',
+          'What are some ways that maps could be used to enhance ' +
+          'children\'s play (e.g., drawing a diagram of a block structure ' +
+          'they plan to build)?'
+        ]
+      },
+    ],
+    'TeacherSupport': [
+      {
+        'name': 'MathPanel5A',
+        'title': 'Using Math Vocabulary',
+        'text': [
+          'Talk about the benefits of using math vocabulary during ' +
+          'interactions with children.',
+          'What types of activities and interactions encourage children ' +
+          'to use math vocabulary?'
+        ]
+      },
+      {
+        'name': 'MathPanel5B',
+        'title': 'Asking Questions About Math',
+        'text': [
+          'When do you ask questions to check for children\'s understanding? ' +
+          'How does it help your teaching?',
+          'What kinds of questions help children explain their thinking ' +
+          '(e.g., "Why do you think...?") How do they respond?'
+        ]
+      },
+      {
+        'name': 'MathPanel5C',
+        'title': 'Demonstrating Math Concepts',
+        'text': [
+          'What math concepts or skills are helpful for you as the teacher ' +
+          'to demonstrate or model for children?',
+          'What are some important things to consider before demonstrating ' +
+          'math to children, including what to say as you model, types of ' +
+          'materials, and group size, etc.?'
+        ]
+      },
+      {
+        'name': 'MathPanel5D',
+        'title': 'Building on Children\'s Play',
+        'text': [
+          'Talk about the benefits of using children\'s play to teach math ' +
+          'concepts.',
+          'Think about children\'s favorite center activities and brainstorm ' +
+          'ways to highlight math concepts in ways that enriches their play.'
+        ]
+      },
+      {
+        'name': 'MathPanel5E',
+        'title': 'Planning for Math',
+        'text': [
+          'Talk about how you plan for math activities. What questions do you ' +
+          'think about before teaching (e.g., What do children already know)?',
+          'What supports benefit dual language learners? What roles do ' +
+          'gesture, physical actions, home language, and family partnerships ' +
+          'play in your math instruction?'
+        ]
+      },
+    ],
+  },
   'AC': {
     'Associative': [
       {
