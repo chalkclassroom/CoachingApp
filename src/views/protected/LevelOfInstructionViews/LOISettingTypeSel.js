@@ -12,10 +12,9 @@ import styled from 'styled-components';
 import { spacing, typography, palette } from '@material-ui/system';
 import { connect } from 'react-redux';
 import { addNewCenter, incrementCenterCount } from '../../../state/actions/math-instruction';
+//import CapitalizedText from "./CapitalizedText";
 
 // TODO: X in top right corner, press and hold to remove/edit the center.
-
-const Box = styled.div`${palette}${spacing}${typography}`;
 
 // const style = {
 //     '@media only screen and (max-width:768px) and (orientation:portrait)': {
@@ -48,15 +47,21 @@ const styles = (theme) => ({
 	},
 
 	root: {
+		borderWidth: 1,
+		borderColor: '#000',
 		border: 0,
 		borderRadius: 3,
 		color: '#fff !important',
 		height: 48,
-		width:'100%',
+		width: '100%',
 		// padding: '0 80%',
 		borderRadius: '3px',
 		// marginLeft: "-95%",
 		marginTop: '35%',
+		textTransform: 'Capitalize',
+		fontWeight:'700',
+		fontSize:'30',
+		fontFamily: "Arimo",
 		// position: "relative",
 		// left: "-14rem",
 		// top:" 0.5rem",
@@ -69,9 +74,12 @@ const styles = (theme) => ({
 		textAlign: 'center',
 		display: 'flex',
 		flexDirection: 'column',
-		// fontFamily: "Arimo",
+	    fontFamily: "Arimo",
 		color: '#fff !important',
-		zIndex: '99'
+		zIndex: '99',
+		textTransform: 'Capitalize',
+		fontWeight:'700',
+		fontSize:'30'
 
 		// position: "absolute"
 
@@ -147,7 +155,12 @@ class CenterChecklist extends React.Component {
 									backgroundColor: '#27B78FFF',
 									width: 200,
 									height: 200,
-									color: 'white'
+									color: 'white',
+									textTransform: 'Capitalize',
+									fontWeight:'700',
+									fontSize:'30',
+									fontFamily: "Arimo",
+
 								}}
 							>
 								Whole Group
@@ -170,7 +183,13 @@ class CenterChecklist extends React.Component {
 									backgroundColor: '#27B78FFF',
 									width: 200,
 									height: 200,
-									color: 'white'
+									color: 'white',
+									textTransform: 'Capitalize',
+									fontWeight:'700',
+									fontSize:'30',
+									fontFamily: "Arimo",
+
+
 								}}
 							>
 								Centers/Small Group
@@ -305,11 +324,8 @@ class LOISettingTypeSel extends React.Component {
 								</Grid>
 							</Grid> */}
 
-
-
 							<Grid justify="flex-start" alignItems="center" direction="row">
 								<Grid container spacing={0} direction="row" alignItems="center">
-									
 									<Grid container xs={12} container direction={'row'}>
 										<Grid
 											container
@@ -325,11 +341,13 @@ class LOISettingTypeSel extends React.Component {
 												//onClick={() => this.handleButtonChange('wholeGroup')}
 												// classes={{ root: classes.button }}//, label: classes.label
 												className={classes.button}
-												style={{ backgroundColor: '#38761dff',
-												width: 200,
-												height: 200 }} //,{ zIndex: 100 }
+												style={{
+													backgroundColor: '#38761dff',
+													width: 200,
+													height: 200
+												}} //,{ zIndex: 100 }
 											>
-											Ask High-Level Question
+												Ask High-Level Question
 											</Fab>
 										</Grid>
 
@@ -344,8 +362,9 @@ class LOISettingTypeSel extends React.Component {
 												disabled
 												style={{ backgroundColor: '#6aa84fff', color: '#fff!important' }}
 												className={classes.root}
+												variant={outline-secondary}
 											>
-													Inferential Instruction
+												Inferential Instruction
 											</Button>
 										</Grid>
 										<Grid
@@ -361,9 +380,11 @@ class LOISettingTypeSel extends React.Component {
 											<Fab
 												//	onClick={() => this.handleButtonChange('centersOrSmall')}
 												classes={{ root: classes.button }} //, label: classes.label
-												style={{ backgroundColor: '#38761dff',
-												width: 200,
-												height: 200 }}
+												style={{
+													backgroundColor: '#38761dff',
+													width: 200,
+													height: 200
+												}}
 											>
 												Follow-up on Children’s Responses
 											</Fab>
@@ -372,83 +393,84 @@ class LOISettingTypeSel extends React.Component {
 								</Grid>
 							</Grid>
 
+							<Grid container xs={12} container direction={'row'}>
+								<Grid
+									container
+									alignItems="flex-start"
+									item
+									xl={4}
+									md={4}
+									sm={4}
+									xs={12}
+									style={{ fontFamily: 'Arimo' }}
+								/>
+
+								<Grid
+									container
+									alignItems="center"
+									justify="center"
+									item
+									md={4}
+									style={{ fontFamily: 'Arimo' }}
+									alignItems="center"
+								>
+									<div width={100} height={100} style={{ fontSize: '80px' }}>
+										0
+									</div>
+								</Grid>
+
+								<Grid
+									container
+									alignItems="flex-start"
+									item
+									xl={4}
+									md={4}
+									sm={4}
+									xs={12}
+									style={{ fontFamily: 'Arimo' }}
+								/>
+							</Grid>
 
 							<Grid container xs={12} container direction={'row'}>
-							<Grid
-								container
-								alignItems="flex-start"
-								item
-								xl={4}
-								md={4}
-								sm={4}
-								xs={12}
-								style={{ fontFamily: 'Arimo' }}
-							/>
+								<Grid
+									container
+									alignItems="flex-start"
+									item
+									xl={4}
+									md={4}
+									sm={4}
+									xs={12}
+									style={{ fontFamily: 'Arimo' }}
+								/>
 
-							<Grid
-								container
-								alignItems="center"
-								justify="center"
-								item
-								md={4}
-								style={{ fontFamily: 'Arimo' }}
-								alignItems="center"
-							>
-								<div  width={100} height={100} style={{fontSize:'80px'}}>
-									0</div>
-							</Grid>
+								<Grid
+									container
+									alignItems="center"
+									justify="center"
+									item
+									md={4}
+									style={{ fontFamily: 'Arimo' }}
+									alignItems="center"
+								>
+									<Button>
+										<ReplySharpIcon style={{ fontSize: '80px' }} width={100} height={100} />
+									</Button>
+								</Grid>
 
-							<Grid
-								container
-								alignItems="flex-start"
-								item
-								xl={4}
-								md={4}
-								sm={4}
-								xs={12}
-								style={{ fontFamily: 'Arimo' }}
-							/>
-							</Grid>
-
-							<Grid container xs={12} container direction={'row'}>
-							<Grid
-								container
-								alignItems="flex-start"
-								item
-								xl={4}
-								md={4}
-								sm={4}
-								xs={12}
-								style={{ fontFamily: 'Arimo' }}
-							/>
-
-							<Grid
-								container
-								alignItems="center"
-								justify="center"
-								item
-								md={4}
-								style={{ fontFamily: 'Arimo' }}
-								alignItems="center"
-							>
-								<ReplySharpIcon  style={{fontSize:'80px'}} width={100} height={100} />
-							</Grid>
-
-							<Grid
-								container
-								alignItems="flex-start"
-								item
-								xl={4}
-								md={4}
-								sm={4}
-								xs={12}
-								style={{ fontFamily: 'Arimo' }}
-							/>
+								<Grid
+									container
+									alignItems="flex-start"
+									item
+									xl={4}
+									md={4}
+									sm={4}
+									xs={12}
+									style={{ fontFamily: 'Arimo' }}
+								/>
 							</Grid>
 
 							<Grid justify="flex-start" alignItems="center" direction="row">
 								<Grid container spacing={0} direction="row" alignItems="center">
-									
 									<Grid container xs={12} container direction={'row'}>
 										<Grid
 											container
@@ -464,9 +486,11 @@ class LOISettingTypeSel extends React.Component {
 												//onClick={() => this.handleButtonChange('wholeGroup')}
 												// classes={{ root: classes.button }}//, label: classes.label
 												className={classes.button}
-												style={{ backgroundColor: '#1155ccff',
-												width: 200,
-												height: 200 }} //,{ zIndex: 100 }
+												style={{
+													backgroundColor: '#1155ccff',
+													width: 200,
+													height: 200
+												}} //,{ zIndex: 100 }
 											>
 												Ask Low-Level Question
 											</Fab>
@@ -500,9 +524,11 @@ class LOISettingTypeSel extends React.Component {
 											<Fab
 												//	onClick={() => this.handleButtonChange('centersOrSmall')}
 												classes={{ root: classes.button }} //, label: classes.label
-												style={{ backgroundColor: '#1155ccff',
-												width: 200,
-												height: 200 }}
+												style={{
+													backgroundColor: '#1155ccff',
+													width: 200,
+													height: 200
+												}}
 											>
 												Teach Specific Skills
 											</Fab>
