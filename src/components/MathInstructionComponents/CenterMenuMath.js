@@ -7,7 +7,6 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import ReplySharpIcon from '@material-ui/icons/ReplySharp';
-
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -31,18 +30,50 @@ import { toggleLOISettingType } from '../../state/actions/level-of-instruction';
 
 const Box = styled.div`${palette}${spacing}${typography}`;
 
+
+// const style = {
+//     '@media only screen and (max-width:768px) and (orientation:portrait)': {
+
+//   root: {
+//     position: "relative!important",
+//     left: "-10rem!important",
+//     top:" 1.5rem!important",
+//     padding: "0 216px!important",
+//   }
+//   }
+// }
+
 const styles = (theme) => ({
+ /*  '@media only screen and (max-width:768px)': {
+		root: {
+      position: "relative!important",
+      left: "-10rem!important",
+      top:" 1.5rem!important",
+      padding: "0 216px!important",
+    }
+  }, */
+  '@media only screen and (max-width:834px) and (orientation:portrait)': {
+    // strip: {
+    //   position: "relative!important",
+    //   left: "-10rem!important",
+    //   top:" 1.5rem!important",
+    //   padding: "0 216px!important",
+    // }
+	},
+
   root: {
     border: 0,
     borderRadius: 3,
     color: "#fff !important",
     height: 48,
-    padding: "0 264px",
+    padding: "0 80%",
     borderRadius:"3px",
     // marginLeft: "-95%",
-    marginTop: "23%",
-  // position: "absolute",
-
+    marginTop: "28%",
+  // position: "relative",
+  // left: "-14rem",
+  // top:" 0.5rem",
+marginLeft: "-10%",
 
   },
   button: {
@@ -358,8 +389,8 @@ class CenterMenuMath extends React.Component {
                   <Grid item xs={3}>
                     <Grid
                       container
-                      alignItems={"center"}
-                      justify={"center"}
+                      alignItems={"right"}
+                      justify={"right"}
                       direction={"column"}
                     >
                       {/* <div style={{ margin: 20 }} /> */}
@@ -373,8 +404,9 @@ class CenterMenuMath extends React.Component {
                     </Grid>
               </Grid>
                   <Grid container xs={9}  container direction={'row'} >
+                  <Grid container alignItems="flex-start" item xl={4} md={4} sm={4} xs={4} style={{ fontFamily: 'Arimo' }}></Grid>
 
-                   <Grid container alignItems="flex-start" item xl={3} md={3} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
+                   <Grid container alignItems="flex-start" item xl={1} md={2} sm={2} xs={2} style={{ fontFamily: 'Arimo' }}>
 					<Fab
 						//onClick={() => this.handleButtonChange('wholeGroup')}
            // classes={{ root: classes.button }}//, label: classes.label
@@ -389,14 +421,15 @@ class CenterMenuMath extends React.Component {
           <Grid container alignItems="flex-start" item md={2} style={{ fontFamily: 'Arimo' }}>
 
          
-          {/* <Box bgcolor="#6aa84fff" color="white" fontFamily= "Arimo"  p={1}>Inferential Instruction</Box>  */}
-          <Button disabled          
+           <Button disabled          
                   style={{ backgroundColor: "#6aa84fff",color: "#fff!important"}}
                   className={classes.root}>
-                    Inferential Instruction
-          </Button>
+                     Inferential Instruction
+          </Button> 
+         
+
           </Grid>
-          <Grid container alignItems="flex-start" item xl={7} md={7} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
+          <Grid container alignItems="flex-start" item xl={1} md={2} sm={2} xs={2} style={{ fontFamily: 'Arimo' }}>
 					<Fab
 					//	onClick={() => this.handleButtonChange('centersOrSmall')}
           classes={{ root: classes.button }}//, label: classes.label
@@ -405,6 +438,7 @@ class CenterMenuMath extends React.Component {
           Follow-up on Children’s Responses
 					</Fab>
 			 	 </Grid>
+          <Grid container alignItems="flex-start" item xl={4} md={4} sm={4} xs={4} style={{ fontFamily: 'Arimo' }}></Grid>
 
         <Grid container alignItems="flex-start" item xl={3} md={3} sm={12} xs={12} style={{ fontFamily: 'Arimo' }}>
 					
