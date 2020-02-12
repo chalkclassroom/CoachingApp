@@ -4,13 +4,85 @@ import ChooseIntent from '../../../components/MesssagingComponents/ChooseIntent'
 import EmailBody from '../../../components/MesssagingComponents/EmailBody';
 import RecipientAddress from '../../../components/MesssagingComponents/RecipientAddress';
 import SubmitButton from '../../../components/MesssagingComponents/SubmitButton';
-import './Messaging.css';
+import AppBar from '../../../components/AppBar.js'
+import FirebaseContext from '../../../components/Firebase/FirebaseContext'; 
 
-type MessagingViewProps = {
-    
-}
+/*const styles = {
+	gridContainer: {
+		display: 'grid',
+		gridTemplateColumns: 'none',
+		gridGap: '0px',
+	},
+	appbar: {
+		gridColumn: '1 / span 4',
+		gridRow: '1',		
+	},
+	intent: {
+		gridRow: '2 / span 4',
+		gridColumn: '1',
+	},
+	recipient: {
+		gridColumn: '2 / span 4',
+		gridRow: '2', 
+	},
+	emailbody: {
+		gridRow: '3 / span 4',
+		gridColumn: '2 / span 4',
+	}
+};*/
 
-const drawerWidth = 240;
+/*
+const appbar = {
+	gridArea: 'appbar',
+};
+const intent = {
+	gridArea: 'intent',
+};
+const recipient = {
+	gridArea: 'recipient',
+};
+const emailbody = {
+	gridArea: 'emailbody',
+};
+const gridContainer = {
+	gridTemplateAreas: `
+			'appbar appbar appbar appbar'
+			'intent recipient recipient recipient'
+			'intent emailbody emailbody emailbody'	
+			'intent emailbody emailbody emailbody'
+		`
+};
+*/
+
+const gridContainer = {
+	display: 'grid',
+	gridTemplateColumns: 'auto 1fr',
+	gridTemplateRows: 'auto 15% 1fr',
+	gridGap: '0.1em',
+};
+
+const appbar = {
+		gridColumn: '1 / span 4',
+		gridRow: '1',		
+	};
+const intent = {
+		gridRow: '2 / span 3',
+		gridColumn: '1',
+	};
+const recipient = {
+		gridColumn: '2 / span 4',
+		gridRow: '2 / 2', 
+	};
+const emailbody = {
+		gridRow: '3 / span 4',
+		gridColumn: '2 / span 4',
+};
+
+const submit = {
+    position: 'fixed',
+    bottom: '50px',
+    right: '16px',
+};
 
 const MessagingView: React.FC<MessagingViewProps> = () => {
     // const [intent, setIntent] = useState(DEFAULT);
@@ -30,25 +102,54 @@ const MessagingView: React.FC<MessagingViewProps> = () => {
     Katherine
     </div>;
 
+/*
     return (
-        <div className="grid-container">
-            <div className='intent'>
+        <div style={gridContainer}>
+	    <FirebaseContext.Consumer style={appbar}>
+	    	{firebase => <AppBar firebase={firebase} />}
+	    </FirebaseContext.Consumer>
+            <div style={intent}>
               <ChooseIntent />
             </div>
-            <div className='non-intent'>
-              <div className='recipient'>
+            <div>
+              <div style={recipient}>
                 <RecipientAddress />
               </div>
-              {/* <main style={{marginTop: `80px`, marginLeft: drawerWidth}}> */}
-              <div className='emailbody'>
+              {/* <main style={{marginTop: `80px`, marginLeft: drawerWidth}}> }
+              <div style={emailbody}>
                 <EmailBody emailText={emailContent} emailTextRef={textRef} />
               </div>
-              {/* </main> */}
-              {/* <div style={{position: "fixed", bottom: "16px", right: "16px"}}> */}
+              {/* </main> }
+              {/* <div style={{position: "fixed", bottom: "16px", right: "16px"}}> }
               <div className='submit'>
                 <SubmitButton sendMail={(): void => console.log('hello')}/>
               </div>
           </div>
+        </div>
+    );
+*/
+    return (
+        <div style={gridContainer}>
+	    <div style={appbar}>
+	    <FirebaseContext.Consumer>
+	    	{firebase => <AppBar firebase={firebase} />}
+	    </FirebaseContext.Consumer>
+	    </div>
+            <div style={intent}>
+              <ChooseIntent />
+            </div>
+              <div style={recipient}>
+                <RecipientAddress />
+              </div>
+              {/* <main style={{marginTop: `80px`, marginLeft: drawerWidth}}> */}
+              <div style={emailbody}>
+                <EmailBody emailText={emailContent} emailTextRef={textRef} />
+              </div>
+              {/* </main> */}
+              {/* <div style={{position: "fixed", bottom: "16px", right: "16px"}}> */}
+              <div style={submit}>
+                <SubmitButton sendMail={(): void => console.log('hello')}/>
+              </div>
         </div>
     );
 }

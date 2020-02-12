@@ -2,31 +2,61 @@
 // Based on the intent, the EmailBody component fills up with rendered HTML.
 
 import React from 'react';
-import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
+import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-
-const drawerWidth = 240;
-
-const ChooseIntent: React.FC<{}> = () => {
-return (<Drawer
-        style={{width: drawerWidth, flexShrink: 0,}}
+/*
+ style={{width: drawerWidth, flexShrink: 0,}}
           variant="permanent"
           anchor="left"
-        >
-          <div style={{width: drawerWidth}} />
           <Divider />
-          <List>
+        
+*/
+/*
+const useStyles = makeStyles({
+	paper: {
+		top: 'auto',
+	}
+});
+const st = useStyles;
+
+<Drawer
+BackdropProps={{invisible: true}}
+ style={{width: drawerWidth, top: 'auto', paper: paperStyle}}
+classes={{paper: st.paper}}
+          variant="permanent"
+              >
+                </Drawer>
+const useStyles = makeStyles(theme => ({
+  root: {
+    width: drawerWidth,
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+*/
+
+const drawerWidth = `12em`;
+
+const ChooseIntent: React.FC<{}> = () => {
+	
+	return (<List style={{width: drawerWidth, height: '80vh'}}>
             {['Custom', 'Thank you', 'Feedback', 'Action Plan'].map((text, index) => (
               <ListItem button key={text}>
+		<ListItemAvatar>
+			<Avatar>
+				<AccountCircleIcon />
+			</Avatar>
+		</ListItemAvatar>
                 <ListItemText primary={text} />
               </ListItem>
             ))}
-          </List>
-        </Drawer>);
+          </List>);
 }
 
 export default ChooseIntent;

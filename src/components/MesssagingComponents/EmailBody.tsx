@@ -13,7 +13,7 @@ type EmailBodyProps = {
 
 const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
     return (
-        <Paper >
+        <Paper style={{height: '80vh'}}>
             <div contentEditable={true} ref={props.emailTextRef}>
                 {props.emailText}
             </div>
