@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import InstructionCounter from './InstructionCounter';
+import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 
 const styles = (theme) => ({
 
@@ -45,10 +46,6 @@ const styles = (theme) => ({
 		textTransform: 'Capitalize',
 		fontWeight:'700',
 		fontSize:'30'
-
-		// position: "absolute"
-
-		//backgroundColor: '#27B78FFF'
 	},
 	grow: {
 		flexgrow: 1
@@ -61,28 +58,25 @@ class SettingScreen extends React.Component {
 	// }
 	state = {
 		clicked: null
-		//settingtype: []
 	};
 
 	/**
-   * @param {string} settingtype
+   * @param {string} settingType
    */
-	handleButtonChange = (settingtype) => {
-		this.props.toggleLOISettingType(settingtype)
-		// this.props.toggleLOISettingType('datais')
-		this.setState({
-			clicked: settingtype
-		});
+	handleButtonChange = (settingType) => {
+		this.props.toggleLOISettingType(settingType)
+		this.setState({ selected: settingType });
+
 		this.props.switchToInstructionScreen();
 
 	};
 
 	/**
-   * @param {string} settingtype
+   * @param {string} settingType
    */
 
-	handleSettingBtnClick = (settingtype) => {
-	this.props.toggleLOISettingType(settingtype);
+	handleSettingBtnClick = (settingType) => {
+	this.props.toggleLOISettingType(settingType);
 	this.props.switchToInstructionScreen();
 	};
 
@@ -99,13 +93,10 @@ class SettingScreen extends React.Component {
 						justify="center"
 						style={{ padding: '10px', fontFamily: 'Arimo', fontSize: '50px', fontWeight: 'bold' }}
 					>
-					  What is the activity setting?
+					 What is the activity setting?
 					</Typography>
 				</Grid>
 				<Grid container style={{ marginTop: '25%' }}>
-					{/* <Grid item xs={3}>
-						<Grid container alignItems={'center'} justify={'center'} direction={'row'} />
-					</Grid> */}
 
 					<Grid container alignItems="flex-start" direction={'row'} style={{ fontFamily: 'Arimo' }}>
 						<Grid
@@ -119,7 +110,7 @@ class SettingScreen extends React.Component {
 							style={{ fontFamily: 'Arimo' }}
 						>
 							<Fab
-								onClick={e =>{this.handleButtonChange('wholeGroup')}}
+								onClick={e =>{this.handleButtonChange('Whole group')}}
 								//	classes={{ root: classes.button }}//, label: classes.label
 								style={{
 									backgroundColor: '#27B78FFF',
@@ -147,8 +138,7 @@ class SettingScreen extends React.Component {
 							style={{ fontFamily: 'Arimo' }}
 						>
 							<Fab
-								onClick={() => this.handleButtonChange('centersOrSmall')}
-								//classes={{ root: classes.button }}//, label: classes.label
+								onClick={() => this.handleButtonChange('Centers/Small Group')}
 								style={{
 									backgroundColor: '#27B78FFF',
 									width: 200,
@@ -190,24 +180,29 @@ class LOISettingTypeSel extends React.Component {
 			teacher: this.props.teacherId,
 			observedBy: this.props.firebase.auth.currentUser.uid,
 			type: 'Level',
-		//	LOISetting: this.props.state.settingtype
+			setting: 'Whole Group',
+			//setting: this.state.clicked
+		    //setting: this.props.settingType
 		};
-		this.props.firebase.handleSession(mEntry);
+
+		this.props.firebase.handleLOISession(mEntry);
 	}
 
 	state = {
 		addDialog: false,
+		selected: undefined,
 		status: SETTING_SCREEN,
-	//	currentCenter: undefined,
-	//	totalVisitCount: 0
 	};
 
 	switchToSettingScreen = () => {
 		this.setState({ status: SETTING_SCREEN });
+		this.setState({selected: settingType});
+
 	};
 
 	switchToInstructionScreen = () => {
 		this.setState({ status: INS_SCREEN });
+		this.setState({selected: settingType});
 	//	this.props.onStatusChange(true);
 	};
 
@@ -219,10 +214,13 @@ class LOISettingTypeSel extends React.Component {
 		switch (this.state.status) {
 			case INS_SCREEN:
 					return (
+					
 						<InstructionCounter
-						currentSetting={this.state.settingType}
+						selected={this.state.selected}
+						//teacherIdn={this.props.location.state.teacher.id}
 						firebase={this.props.firebase}
 					  />
+					
 					);
 					
 			case SETTING_SCREEN:
@@ -243,20 +241,17 @@ class LOISettingTypeSel extends React.Component {
 
  const mapStateToProps = (state) => {
 	return {
-		whatSetting: state.settingType
+		currentSetting: state.settingType,
+		teacherIdn: state.teacherId
 	};
 };
  
  LOISettingTypeSel.propTypes = {
 	classes: PropTypes.object.isRequired,
+	teacherId: PropTypes.string.isRequired,
 	toggleLOISettingType: PropTypes.func.isRequired
 }; 
 
 export default withStyles(styles)(
 	connect(  mapStateToProps, { toggleLOISettingType } )(LOISettingTypeSel,SettingScreen)
 );
-// export default withStyles(styles)(
-// 	connect(mapStateToProps, { toggleLOISettingType })(
-// 		LOISettingTypeSel,SettingScreen
-// 	)
-//   );

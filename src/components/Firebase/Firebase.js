@@ -397,8 +397,21 @@ class Firebase {
         start: firebase.firestore.FieldValue.serverTimestamp(),
         teacher: "/user/" + mEntry.teacher,
         end: firebase.firestore.FieldValue.serverTimestamp(),
+        type: mEntry.type
+      })
+      .catch(error => console.error("Error setting session ref: ", error));
+  };
+
+  handleLOISession = async function(mEntry) {
+    this.sessionRef = this.db.collection("observations").doc();
+    this.sessionRef
+      .set({
+        observedBy: "/user/" + mEntry.observedBy,
+        start: firebase.firestore.FieldValue.serverTimestamp(),
+        teacher: "/user/" + mEntry.teacher,
+        end: firebase.firestore.FieldValue.serverTimestamp(),
         type: mEntry.type,
-        LOISetting: mEntry.settingType,
+        setting: mEntry.setting
       })
       .catch(error => console.error("Error setting session ref: ", error));
   };

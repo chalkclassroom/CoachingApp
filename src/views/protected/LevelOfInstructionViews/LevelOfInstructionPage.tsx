@@ -67,8 +67,7 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
 
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
-		location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string }) }) })
-			.isRequired
+		location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string }) }) }).isRequired
 	};
 
 	/**

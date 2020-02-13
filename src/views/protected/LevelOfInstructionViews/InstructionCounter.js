@@ -3,12 +3,9 @@ import PropTypes from 'prop-types';
 import { Fab } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { toggleLOISettingType } from '../../../state/actions/level-of-instruction';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import ReplySharpIcon from '@material-ui/icons/ReplySharp';
-import TextField from '@material-ui/core/TextField';
-
 import { connect } from 'react-redux';
 import { pushOntoLoiStack, popOffLoiStack  } from '../../../state/actions/level-of-instruction';
 
@@ -59,7 +56,7 @@ const styles = (theme) => ({
 });
 
 
-// interface Props {
+// interface Props {G
 // 	teacherId: string,
 // 	firebase: {
 // 	  auth: {
@@ -80,25 +77,26 @@ class InstructionCounter extends React.Component {
 	constructor(props) {
 		super(props);
 		const mEntry = {
-			teacher: this.props.teacherId,
+			teacher: this.props.teacher,
 			observedBy: this.props.firebase.auth.currentUser.uid,
-			type: 'Level'
+			//type: this.currentSetting,
+			setting: "Whole Group",
+			type: "Level"
+
 		};
-		this.props.firebase.handleSession(mEntry);
+		this.props.firebase.handleLOISession(mEntry);
 	}
 
-	state = {
+	 state = {
 		addDialog: false,
-	//	status: CENTER_CHECKLIST,
-	//	currentCenter: undefined,
 		totalVisitCount: 0
-	};
+	}; 
 
-	handlePushFire = (type) => {
+	handlePushFire = (insType) => {
 		const mEntry = {
-			InstructionResponse: type,
-		  // Type: this.props.climateType
-		  Type: "Level"
+			InstructionResponse: insType,
+			Type: "Level",
+			//setting: this.state.settingType
 		};
 		this.props.firebase.handlePushInstruction(mEntry);
 		this.props.pushOntoLoiStack(mEntry);
@@ -107,31 +105,14 @@ class InstructionCounter extends React.Component {
 	  handleUndo = () => {
 		if (this.props.totalVisitCount > 0) {
 		  this.props.popOffLoiStack();
-		  // <<<<<<< Updated upstream
 		  const mEntry = {
 			InstructionResponse: "UNDO",
 			Type: "UNDO"
 		  };
 		  this.props.firebase.handlePushInstruction(mEntry);
+		  
 		}
 	  };
-
-	handleClickOpen = () => {
-		this.setState({ addDialog: true });
-	};
-
-	handleClose = () => {
-		this.setState({ addDialog: false });
-	};
-
-	switchToCenterChecklist = () => {
-		this.setState({ status: CENTER_CHECKLIST });
-	};
-
-	switchToCenterMenu = () => {
-		this.setState({ status: CENTER_MENU });
-		// this.props.onStatusChange(true);
-	};
 
 	render() {
 		const { classes } = this.props;
@@ -193,7 +174,7 @@ class InstructionCounter extends React.Component {
 											style={{ fontFamily: 'Arimo' }}
 										>
 											<Fab
-													onClick={() => this.handlePushFire('Follow-up on Children’s Responses')}
+												onClick={() => this.handlePushFire('Follow-up on Children’s Responses')}
 												classes={{ root: classes.button }} //, label: classes.label
 												style={{
 													backgroundColor: '#38761dff',
@@ -362,14 +343,16 @@ class InstructionCounter extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		centers: state.settingType,
-		 totalVisitCount: state.instructionstackstate.instructionStack.length
+		currentSetting: state.settingType,
+		totalVisitCount: state.instructionstackstate.instructionStack.length
 	};
 };
 
-// InstructionCounter.propTypes = {
-// 	onStatusChange: PropTypes.func.isRequired
-// };
+InstructionCounter.propTypes = {
+	classes: PropTypes.object.isRequired,
+	teacherIdn: PropTypes.string.isRequired,
+	toggleLOISettingType: PropTypes.func.isRequired
+}; 
 
 export default withStyles(styles)(
 	connect(mapStateToProps, { toggleLOISettingType,pushOntoLoiStack, popOffLoiStack })(InstructionCounter)

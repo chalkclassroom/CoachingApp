@@ -12,9 +12,9 @@ export const SELECT_LOI_SETTING = "setting_type";
 //   loiType
 // });
 
-export const toggleLOISettingType = settingtype => ({
+export const toggleLOISettingType = settingType => ({
   type: SELECT_LOI_SETTING,
-  settingtype 
+  settingType 
 });
 
 export const pushOntoLoiStack = entry => ({
@@ -22,7 +22,6 @@ export const pushOntoLoiStack = entry => ({
   entry: {
     timestamp: Date.now(),
     observation: entry.observation
-    // loiType: entry.loiType
   }
 });
 
