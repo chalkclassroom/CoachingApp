@@ -40,8 +40,9 @@ const submit = {
 const MessagingView: React.FC<MessagingViewProps> = () => {
     const [intent, setIntent] = useState("Thank You");
     const textRef = useRef();
+    const [selectedOption, setSelectedOption] = useState(null);
     const sendMailButton = () => {
-	    alert("Sending about " + intent + " or in more detail: " + textRef.current.textContent);
+	    alert("Sending about " + intent + " or in more detail: " + textRef.current.textContent + " to " + selectedOption.label);
     };
 
     const thankYou: JSX.Element = <div style={{padding: "5em"}}>
@@ -120,7 +121,7 @@ const MessagingView: React.FC<MessagingViewProps> = () => {
               <ChooseIntent changeIntent={setIntent}/>
             </div>
               <div style={recipient}>
-                <RecipientAddress />
+                <RecipientAddress selectedOption={selectedOption} setOption={setSelectedOption}/>
               </div>
               <div style={emailbody}>
 		      <EmailBody emailText={getEmailText()} emailTextRef={textRef} />

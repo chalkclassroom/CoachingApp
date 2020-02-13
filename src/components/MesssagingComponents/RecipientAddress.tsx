@@ -1,6 +1,6 @@
 // A simple To: bar to input email address of the recipient
 // Connected to database to show the list of the teachers the user can send to
-import React from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
  import Select from 'react-select';
@@ -11,6 +11,7 @@ const options = [
   { value: 'daniel@yahoo.com', label: 'Daniel' },
 ];
 
+/*
 class RecipentAddress extends React.Component {
   state = {
     selectedOption: null,
@@ -32,6 +33,23 @@ class RecipentAddress extends React.Component {
       />
     );
   }
+}
+ */
+
+const RecipentAddress: React.FC<{selectedOption: any, setOption: any}> = (props: {selectedOption: any, setOption: any}) => {
+
+  const handleChange = newSelectedOption => {
+    props.setOption(newSelectedOption);
+    console.log(`Option selected:`, props.selectedOption);
+  };
+  
+    return (
+      <Select
+        value={props.selectedOption}
+        onChange={handleChange}
+        options={options}
+      />
+    );
 }
 
 export default RecipentAddress;
