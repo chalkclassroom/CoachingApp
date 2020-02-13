@@ -9,6 +9,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import EditImage from '../assets/images/EditImage.svg';
 import SaveImage from '../assets/images/SaveImage.svg';
 import CloseImage from '../assets/images/CloseImage.svg';
+import YesNoDialog from "./Shared/YesNoDialog";
 
 const styles: object = {
   textField: {
@@ -48,7 +49,9 @@ interface State {
   editMode: boolean,
   actionPlanExists: boolean,
   actionPlanId: string,
-  createMode: boolean
+  createMode: boolean,
+  saved: boolean,
+  saveModal: boolean
 }
 
 interface Style {
@@ -76,7 +79,9 @@ class ActionPlanForm extends React.Component<Props, State> {
       editMode: false,
       actionPlanExists: this.props.actionPlanExists,
       actionPlanId: '',
-      createMode: false
+      createMode: false,
+      saved: false,
+      saveModal: false
     }
   }
 
@@ -214,6 +219,7 @@ class ActionPlanForm extends React.Component<Props, State> {
       this.props.firebase.saveActionStep(this.state.actionPlanId, index.toString(), value.step, value.materials, value.person, value.timeline)
         .then(() => {
           console.log("action step ", index, " saved");
+          this.setState({ saved: true })
         })
         .catch(() => {
           console.log("error in saving action step ", index);
@@ -226,8 +232,16 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @return {void}
    */
   handleSaveAndClose = (): void => {
-    this.handleSave();
-    this.props.handleClose();
+    if (this.state.saved) {
+      this.props.handleClose();
+    } else {
+      this.setState({
+        saveModal: true
+      })
+    }
+    
+    // this.handleSave();
+    // this.props.handleClose();
   }
 
   /** lifecycle method invoked after component mounts */
@@ -284,6 +298,20 @@ class ActionPlanForm extends React.Component<Props, State> {
     return (
       <div>
         {this.props.actionPlanExists || this.state.createMode ? 
+          this.state.saveModal ? (
+            <YesNoDialog
+              buttonText={"Skip Rating"}
+              buttonVariant={"contained"}
+              buttonColor={"#e55529"}
+              buttonWidth={"170px"}
+              backgroundColor={"#fff"}
+              buttonMargin={10}
+              dialogTitle={`Are you sure you want to skip this rating? This option should only be used in exceptional circumstances.`}
+              // onAccept={this.props.handleRatingConfirmation}
+              onAcceptParams={0}
+              shouldOpen={true}
+            />
+          ) :
           <Grid
             container
             direction="column"
