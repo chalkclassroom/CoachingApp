@@ -10,44 +10,12 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-/*
- style={{width: drawerWidth, flexShrink: 0,}}
-          variant="permanent"
-          anchor="left"
-          <Divider />
-        
-*/
-/*
-const useStyles = makeStyles({
-	paper: {
-		top: 'auto',
-	}
-});
-const st = useStyles;
-
-<Drawer
-BackdropProps={{invisible: true}}
- style={{width: drawerWidth, top: 'auto', paper: paperStyle}}
-classes={{paper: st.paper}}
-          variant="permanent"
-              >
-                </Drawer>
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: drawerWidth,
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-*/
-
 const drawerWidth = `12em`;
 
-const ChooseIntent: React.FC<{}> = () => {
-	
+const ChooseIntent: React.FC<{changeIntent: any}> = (props: {changeIntent: any}) => {
 	return (<List style={{width: drawerWidth, height: '80vh'}}>
-            {['Custom', 'Thank you', 'Feedback', 'Action Plan'].map((text, index) => (
-              <ListItem button key={text}>
+            {['Custom', 'Thank You', 'Feedback', 'Action Plan'].map((text, index) => (
+		    <ListItem button key={text} onClick={() => props.changeIntent(text)}>
 		<ListItemAvatar>
 			<Avatar>
 				<AccountCircleIcon />

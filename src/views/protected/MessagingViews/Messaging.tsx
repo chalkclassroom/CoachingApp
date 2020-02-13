@@ -7,53 +7,6 @@ import SubmitButton from '../../../components/MesssagingComponents/SubmitButton'
 import AppBar from '../../../components/AppBar.js'
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'; 
 
-/*const styles = {
-	gridContainer: {
-		display: 'grid',
-		gridTemplateColumns: 'none',
-		gridGap: '0px',
-	},
-	appbar: {
-		gridColumn: '1 / span 4',
-		gridRow: '1',		
-	},
-	intent: {
-		gridRow: '2 / span 4',
-		gridColumn: '1',
-	},
-	recipient: {
-		gridColumn: '2 / span 4',
-		gridRow: '2', 
-	},
-	emailbody: {
-		gridRow: '3 / span 4',
-		gridColumn: '2 / span 4',
-	}
-};*/
-
-/*
-const appbar = {
-	gridArea: 'appbar',
-};
-const intent = {
-	gridArea: 'intent',
-};
-const recipient = {
-	gridArea: 'recipient',
-};
-const emailbody = {
-	gridArea: 'emailbody',
-};
-const gridContainer = {
-	gridTemplateAreas: `
-			'appbar appbar appbar appbar'
-			'intent recipient recipient recipient'
-			'intent emailbody emailbody emailbody'	
-			'intent emailbody emailbody emailbody'
-		`
-};
-*/
-
 const gridContainer = {
 	display: 'grid',
 	gridTemplateColumns: 'auto 1fr',
@@ -65,7 +18,7 @@ const appbar = {
 		gridColumn: '1 / span 4',
 		gridRow: '1',		
 };
-const intent = {
+const intentClass = {
 		gridRow: '2 / span 3',
 		gridColumn: '1',
 };
@@ -85,11 +38,13 @@ const submit = {
 };
 
 const MessagingView: React.FC<MessagingViewProps> = () => {
-    //const [intent, setIntent] = useState("thank_you");
+    const [intent, setIntent] = useState("Thank You");
     const textRef = useRef();
-    //const sendMail = () => {}
+    const sendMailButton = () => {
+	    alert("Sending about " + intent + " or in more detail: " + textRef.current.textContent);
+    };
 
-    const emailContent: JSX.Element = <div style={{fontFamily: "Raleway, Arial", padding: "5em"}}>
+    const thankYou: JSX.Element = <div style={{padding: "5em"}}>
     <h4>Hi Mingli,</h4>
     Thanks for meeting today and creating this action plan. I think it looks great, and I look forward to working on these goals with you!
     <br />
@@ -102,32 +57,58 @@ const MessagingView: React.FC<MessagingViewProps> = () => {
     Katherine
     </div>;
 
-/*
-    return (
-        <div style={gridContainer}>
-	    <FirebaseContext.Consumer style={appbar}>
-	    	{firebase => <AppBar firebase={firebase} />}
-	    </FirebaseContext.Consumer>
-            <div style={intent}>
-              <ChooseIntent />
-            </div>
-            <div>
-              <div style={recipient}>
-                <RecipientAddress />
-              </div>
-              {/* <main style={{marginTop: `80px`, marginLeft: drawerWidth}}> }
-              <div style={emailbody}>
-                <EmailBody emailText={emailContent} emailTextRef={textRef} />
-              </div>
-              {/* </main> }
-              {/* <div style={{position: "fixed", bottom: "16px", right: "16px"}}> }
-              <div className='submit'>
-                <SubmitButton sendMail={(): void => console.log('hello')}/>
-              </div>
-          </div>
-        </div>
-    );
-*/
+    const custom: JSX.Element = <div style={{padding: "5em"}}>
+    <h4>Hi Andrew,</h4>
+    Wololo!
+    <br />
+    Please reach out with questions or ideas anytime.
+    <br />
+    <br />
+    Best,
+    <br />
+    <br />
+    Katherine
+    </div>;
+
+    const feedback: JSX.Element = <div style={{padding: "5em"}}>
+    <h4>Hi Jason,</h4>
+    Thanks for telling me in advance. All the best for the career fair!
+    <br />
+    Please reach out with questions or ideas anytime.
+    <br />
+    <br />
+    Best,
+    <br />
+    <br />
+    Katherine
+    </div>;
+ 
+    const actionPlan: JSX.Element = <div style={{padding: "5em"}}>
+    <h4>Hi Baibhav,</h4>
+    Thanks for sending the action plan! I will reply after checking it out.
+    <br />
+    Please reach out with questions or ideas anytime.
+    <br />
+    <br />
+    Best,
+    <br />
+    <br />
+    Katherine
+    </div>;   
+
+    const getEmailText = () => {
+			if(intent === "Thank You") {
+				return thankYou;
+			} else if (intent === "Action Plan"){
+				return actionPlan;
+			} else if (intent === "Custom") {
+				return custom;
+			} else if (intent === "Feedback") {
+				return feedback;
+			} else {
+				return <h1>lmao</h1>;
+			}
+		};
     return (
         <div style={gridContainer}>
 	    <div style={appbar}>
@@ -135,20 +116,17 @@ const MessagingView: React.FC<MessagingViewProps> = () => {
 	    	{firebase => <AppBar firebase={firebase} />}
 	    </FirebaseContext.Consumer>
 	    </div>
-            <div style={intent}>
-              <ChooseIntent />
+            <div style={intentClass}>
+              <ChooseIntent changeIntent={setIntent}/>
             </div>
               <div style={recipient}>
                 <RecipientAddress />
               </div>
-              {/* <main style={{marginTop: `80px`, marginLeft: drawerWidth}}> */}
               <div style={emailbody}>
-                <EmailBody emailText={emailContent} emailTextRef={textRef} />
+		      <EmailBody emailText={getEmailText()} emailTextRef={textRef} />
               </div>
-              {/* </main> */}
-              {/* <div style={{position: "fixed", bottom: "16px", right: "16px"}}> */}
               <div style={submit}>
-                <SubmitButton sendMail={(): void => console.log('hello')}/>
+                <SubmitButton sendMail={sendMailButton}/>
               </div>
         </div>
     );

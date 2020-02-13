@@ -9,8 +9,6 @@ type EmailBodyProps = {
     emailTextRef: React.MutableRefObject<HTMLDivElement>
 }
 
-// const drawerWidth = 240;
-
 const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
     return (
         <Paper style={{height: '80vh'}}>
