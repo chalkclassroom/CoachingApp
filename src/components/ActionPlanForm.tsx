@@ -10,6 +10,9 @@ import EditImage from '../assets/images/EditImage.svg';
 import SaveImage from '../assets/images/SaveImage.svg';
 import CloseImage from '../assets/images/CloseImage.svg';
 import YesNoDialog from "./Shared/YesNoDialog";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const styles: object = {
   textField: {
@@ -299,18 +302,24 @@ class ActionPlanForm extends React.Component<Props, State> {
       <div>
         {this.props.actionPlanExists || this.state.createMode ? 
           this.state.saveModal ? (
-            <YesNoDialog
-              buttonText={"Skip Rating"}
-              buttonVariant={"contained"}
-              buttonColor={"#e55529"}
-              buttonWidth={"170px"}
-              backgroundColor={"#fff"}
-              buttonMargin={10}
-              dialogTitle={`Are you sure you want to skip this rating? This option should only be used in exceptional circumstances.`}
-              // onAccept={this.props.handleRatingConfirmation}
-              onAcceptParams={0}
-              shouldOpen={true}
-            />
+            <Dialog
+              open={this.state.saveModal}
+              // onClose={this.handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title" style={{fontFamily: 'Arimo'}}>
+                Do you want to close the action plan? You have not saved your changes.
+              </DialogTitle>
+              <DialogActions>
+                <Button color="primary" style={{fontFamily: 'Arimo'}}>
+                  No
+                </Button>
+                <Button color="primary" style={{fontFamily: 'Arimo'}} autoFocus>
+                  Yes
+                </Button>
+              </DialogActions>
+            </Dialog>
           ) :
           <Grid
             container
