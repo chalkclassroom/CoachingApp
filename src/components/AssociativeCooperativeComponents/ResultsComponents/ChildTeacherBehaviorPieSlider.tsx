@@ -9,10 +9,9 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import PieSliceChildACImage from "../../../assets/images/PieSliceChildACImage.svg";
 import PieSliceChildNonImage from "../../../assets/images/PieSliceChildNonImage.svg";
-import PieSliceChildNoOppImage from "../../../assets/images/PieSliceChildNoOppImage.svg";
+import PieSliceNoOppImage from "../../../assets/images/PieSliceNoOppImage.svg";
 import PieSliceTeacherSupportImage from "../../../assets/images/PieSliceTeacherSupportImage.svg";
 import PieSliceTeacherNoSupportImage from "../../../assets/images/PieSliceTeacherNoSupportImage.svg";
-import PieSliceTeacherNoOppImage from "../../../assets/images/PieSliceTeacherNoOppImage.svg";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles: object = {
@@ -86,7 +85,7 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
                           <img alt="red" src={PieSliceChildNonImage} height="95%"/>
                         </Grid>
                         <Grid item style={{height:"33%"}}>
-                          <img alt="orange" src={PieSliceChildNoOppImage} height="95%"/>
+                          <img alt="orange" src={PieSliceNoOppImage} height="95%"/>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -139,7 +138,7 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
                           <img alt="red" src={PieSliceTeacherNoSupportImage} height="95%"/>
                         </Grid>
                         <Grid item style={{height:"33%"}}>
-                          <img alt="orange" src={PieSliceTeacherNoOppImage} height="95%"/>
+                          <img alt="orange" src={PieSliceNoOppImage} height="95%"/>
                         </Grid>
                       </Grid>
                     </Grid>

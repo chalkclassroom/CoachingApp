@@ -197,6 +197,10 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     });
   };
 
+  /**
+   * specifies formatting for child trends
+   * @return {object}
+   */
   handleTrendsChildFormatData = (): {
       labels: Array<Array<string>>,
       datasets: Array<{
@@ -213,8 +217,8 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       datasets: [
         {
           label: "No Opportunity",
-          backgroundColor: "#E99C2E",
-          borderColor: "#E99C2E",
+          backgroundColor: Constants.NotPresentColor,
+          borderColor: Constants.NotPresentColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoChildOpp
@@ -239,6 +243,10 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     };
   };
 
+  /**
+   * specifies formatting for teacher trends
+   * @return {object}
+   */
   handleTrendsTeacherFormatData = (): {
     labels: Array<Array<string>>,
     datasets: Array<{
@@ -254,25 +262,25 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "No Opportunity",
-          backgroundColor: "#E99C2E",
-          borderColor: "#E99C2E",
+          label: "Teacher Not at Center",
+          backgroundColor: Constants.NotPresentColor,
+          borderColor: Constants.NotPresentColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoTeacherOpp
         },
         {
           label: "No Support",
-          backgroundColor: "#ec2409",
-          borderColor: "#ec2409",
+          backgroundColor: Constants.RedGraphColor,
+          borderColor: Constants.RedGraphColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoSupport
         },
         {
           label: "Teacher Support",
-          backgroundColor: "#459aeb",
-          borderColor: "#459aeb",
+          backgroundColor: Constants.AppBarColor,
+          borderColor: Constants.AppBarColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsSupport

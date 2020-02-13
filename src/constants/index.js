@@ -18,6 +18,7 @@ export const ListeningColor = '#4fd9b3';
 export const SequentialColor = '#ffd300';
 export const ACColor = '#6f39c4';
 export const RedGraphColor = "#ec2409";
+export const NotPresentColor = "#bababa";
 
 export const TransitionTypeColors = {
   lineColor: lightGreen[300],
