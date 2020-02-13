@@ -11,7 +11,7 @@ import Typography from "@material-ui/core/Typography/Typography";
 import PieSliceChildACImage from "../../../assets/images/PieSliceChildACImage.svg";
 import PieSliceTeacherSupportImage from "../../../assets/images/PieSliceTeacherSupportImage.svg";
 import PieSliceTeacherNoSupportImage from "../../../assets/images/PieSliceTeacherNoSupportImage.svg";
-import PieSliceTeacherNoOppImage from "../../../assets/images/PieSliceTeacherNoOppImage.svg";
+import PieSliceNoOppImage from "../../../assets/images/PieSliceNoOppImage.svg";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles: object = {
@@ -127,7 +127,7 @@ class SummarySlider extends React.Component<Props, {}> {
                           <img alt="red" src={PieSliceTeacherNoSupportImage} height="95%"/>
                         </Grid>
                         <Grid item style={{height:"33%"}}>
-                          <img alt="orange" src={PieSliceTeacherNoOppImage} height="95%"/>
+                          <img alt="orange" src={PieSliceNoOppImage} height="95%"/>
                         </Grid>
                       </Grid>
                     </Grid>

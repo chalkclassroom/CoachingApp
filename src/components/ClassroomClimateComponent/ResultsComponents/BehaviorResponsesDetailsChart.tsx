@@ -56,7 +56,9 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: Math.max(this.props.disapprovalBehaviorCount, this.props.redirectionsBehaviorCount, this.props.nonspecificBehaviorCount, this.props.specificBehaviorCount),
+                  max: (Math.max(this.props.disapprovalBehaviorCount, this.props.redirectionsBehaviorCount, this.props.nonspecificBehaviorCount, this.props.specificBehaviorCount) > 20) ?
+                    Math.max(this.props.disapprovalBehaviorCount, this.props.redirectionsBehaviorCount, this.props.nonspecificBehaviorCount, this.props.specificBehaviorCount) : 
+                      20,
                   fontSize: 16,
                   stepSize: 1
                 },

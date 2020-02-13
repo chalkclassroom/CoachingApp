@@ -133,7 +133,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Disapproval",
+          label: "Redirection/Disapproval",
           data: this.state.trendsNeg,
           backgroundColor: "#ec2409",
           borderColor: "#ec2409",
@@ -141,7 +141,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           lineTension: 0,
         },
         {
-          label: "Positive",
+          label: "Specific/General Approval",
           data: this.state.trendsPos,
           backgroundColor: "#0988ec",
           borderColor: "#0988ec",

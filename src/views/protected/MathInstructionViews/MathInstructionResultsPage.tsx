@@ -180,7 +180,10 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     });
   };
 
-  /** specifies formatting for child trends */
+  /**
+   * specifies formatting for child trends
+   * @return {object}
+   */
   handleTrendsChildFormatData = (): {
       labels: Array<Array<string>>,
       datasets: Array<{
@@ -215,7 +218,10 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     };
   };
 
-  /** specifies formatting for teacher trends */
+  /**
+   * specifies formatting for teacher trends
+   * @return {object}
+   */
   handleTrendsTeacherFormatData = (): {
     labels: Array<Array<string>>,
     datasets: Array<{
@@ -232,8 +238,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       datasets: [
         {
           label: "Teacher Not at Center",
-          backgroundColor: "#E99C2E",
-          borderColor: "#E99C2E",
+          backgroundColor: Constants.NotPresentColor,
+          borderColor: Constants.NotPresentColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoTeacherOpp

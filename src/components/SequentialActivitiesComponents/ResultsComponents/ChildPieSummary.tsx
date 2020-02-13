@@ -39,8 +39,8 @@ class ChildPieSummary extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.sequential, this.props.notSequential],
-          backgroundColor: [Constants.SequentialColor, "#ec2409"],
-          hoverBackgroundColor: [Constants.SequentialColor, "#ec2409"]
+          backgroundColor: [Constants.SequentialColor, Constants.RedGraphColor],
+          hoverBackgroundColor: [Constants.SequentialColor, Constants.RedGraphColor]
         }
       ]
     };
