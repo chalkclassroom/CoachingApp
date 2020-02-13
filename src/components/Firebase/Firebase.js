@@ -397,7 +397,8 @@ class Firebase {
         start: firebase.firestore.FieldValue.serverTimestamp(),
         teacher: "/user/" + mEntry.teacher,
         end: firebase.firestore.FieldValue.serverTimestamp(),
-        type: mEntry.type
+        type: mEntry.type,
+        LOISetting: mEntry.settingType,
       })
       .catch(error => console.error("Error setting session ref: ", error));
   };

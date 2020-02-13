@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
-import Notes from '../../../components/Notes';
 import { connect } from 'react-redux';
 import { toggleLOISettingType } from '../../../state/actions/level-of-instruction';
 import LOISettingTypeSel from './LOISettingTypeSel';
@@ -36,7 +35,7 @@ interface State {
 }
 
 /**
- * transition time observation tool
+ * Level Of Instruction Tool
  * @class LevelOfInstructionPage
  */
 class LevelOfInstructionPage extends React.Component<Props, State> {
@@ -65,35 +64,6 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
 		this.setState({ settingType: type });
 	};
 
-	/**
-   * @param {boolean} open
-   */
-	handleRecsModal = (open: boolean): void => {
-		if (open) {
-			this.setState({ recs: true });
-		} else {
-			this.setState({ recs: false });
-		}
-	};
-
-	handleEndTransition = (): void => {
-		this.setState({ settingType: null });
-	};
-
-	/**
-   * @param {boolean} open
-   */
-	handleNotes = (open: boolean): void => {
-		if (open) {
-			this.setState({ notes: true });
-		} else {
-			this.setState({ notes: false });
-		}
-	};
-
-	handleClickAwayHelp = (): void => {
-		this.setState({ help: false });
-	};
 
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
@@ -141,4 +111,4 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
 	}
 }
 
-export default connect(null, toggleLOISettingType)(withStyles(styles)(LevelOfInstructionPage));
+export default connect(toggleLOISettingType)(withStyles(styles)(LevelOfInstructionPage));

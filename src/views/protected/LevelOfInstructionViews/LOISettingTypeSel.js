@@ -1,50 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { Fab } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { toggleLOISettingType } from '../../../state/actions/level-of-instruction';
+import  {toggleLOISettingType,test}  from '../../../state/actions/level-of-instruction';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import ReplySharpIcon from '@material-ui/icons/ReplySharp';
-import TextField from '@material-ui/core/TextField';
-import styled from 'styled-components';
-import { spacing, typography, palette } from '@material-ui/system';
 import { connect } from 'react-redux';
-import { addNewCenter, incrementCenterCount } from '../../../state/actions/math-instruction';
-//import CapitalizedText from "./CapitalizedText";
-
-// TODO: X in top right corner, press and hold to remove/edit the center.
-
-// const style = {
-//     '@media only screen and (max-width:768px) and (orientation:portrait)': {
-
-//   root: {
-//     position: "relative!important",
-//     left: "-10rem!important",
-//     top:" 1.5rem!important",
-//     padding: "0 216px!important",
-//   }
-//   }
-// }
+import InstructionCounter from './InstructionCounter';
 
 const styles = (theme) => ({
-	/*  '@media only screen and (max-width:768px)': {
-		root: {
-      position: "relative!important",
-      left: "-10rem!important",
-      top:" 1.5rem!important",
-      padding: "0 216px!important",
-    }
-  }, */
-	'@media only screen and (max-width:834px) and (orientation:portrait)': {
-		// strip: {
-		//   position: "relative!important",
-		//   left: "-10rem!important",
-		//   top:" 1.5rem!important",
-		//   padding: "0 216px!important",
-		// }
-	},
 
 	root: {
 		borderWidth: 1,
@@ -62,6 +26,7 @@ const styles = (theme) => ({
 		fontWeight:'700',
 		fontSize:'30',
 		fontFamily: "Arimo",
+
 		// position: "relative",
 		// left: "-14rem",
 		// top:" 0.5rem",
@@ -86,42 +51,47 @@ const styles = (theme) => ({
 		//backgroundColor: '#27B78FFF'
 	},
 	grow: {
-		flexGrow: 1
+		flexgrow: 1
 	}
 });
 
-class CenterChecklist extends React.Component {
+class SettingScreen extends React.Component {
+	// constructor(props){
+	// 	super(props)
+	// }
 	state = {
-		checked: [],
-		settingtype: []
+		clicked: null
+		//settingtype: []
 	};
 
 	/**
    * @param {string} settingtype
    */
 	handleButtonChange = (settingtype) => {
-		this.props.toggleLOISettingType(settingtype);
+		this.props.toggleLOISettingType(settingtype)
+		// this.props.toggleLOISettingType('datais')
 		this.setState({
-			selected: settingtype
+			clicked: settingtype
 		});
+		this.props.switchToInstructionScreen();
+
 	};
 
-	handleDone = (settingtype) => {
-		this.state.checked.forEach((checked) => {
-			this.props.toggleLOISettingType(settingtype);
-		});
-		this.props.switchToCenterMenu();
+	/**
+   * @param {string} settingtype
+   */
+
+	handleSettingBtnClick = (settingtype) => {
+	this.props.toggleLOISettingType(settingtype);
+	this.props.switchToInstructionScreen();
 	};
 
 	render() {
-		const { classes } = this.props;
 
 		return (
 			<div alignItems="flex-start">
 				<Grid alignItems="flex-start" item xs={12}>
-					{/*                  <Grid container direction="co
-						lumn" alignItems="center">
- */}{' '}
+
 					<Typography
 						alignItems="flex-start"
 						component="h4"
@@ -129,7 +99,7 @@ class CenterChecklist extends React.Component {
 						justify="center"
 						style={{ padding: '10px', fontFamily: 'Arimo', fontSize: '50px', fontWeight: 'bold' }}
 					>
-						What is the activity setting?
+					  What is the activity setting?
 					</Typography>
 				</Grid>
 				<Grid container style={{ marginTop: '25%' }}>
@@ -149,7 +119,7 @@ class CenterChecklist extends React.Component {
 							style={{ fontFamily: 'Arimo' }}
 						>
 							<Fab
-								onClick={() => this.handleDone('wholeGroup')}
+								onClick={e =>{this.handleButtonChange('wholeGroup')}}
 								//	classes={{ root: classes.button }}//, label: classes.label
 								style={{
 									backgroundColor: '#27B78FFF',
@@ -177,7 +147,7 @@ class CenterChecklist extends React.Component {
 							style={{ fontFamily: 'Arimo' }}
 						>
 							<Fab
-								onClick={() => this.handleDone('centersOrSmall')}
+								onClick={() => this.handleButtonChange('centersOrSmall')}
 								//classes={{ root: classes.button }}//, label: classes.label
 								style={{
 									backgroundColor: '#27B78FFF',
@@ -204,9 +174,14 @@ class CenterChecklist extends React.Component {
 		);
 	}
 }
+const SETTING_SCREEN = 0;
+//const INSTRUCTION_COUNTER =1;
+const INS_SCREEN =1;
 
-const CENTER_CHECKLIST = 0;
-const CENTER_MENU = 1;
+/**
+ * LOI Setting Type buttons
+ * @class LOISettingTypeSel
+ */
 
 class LOISettingTypeSel extends React.Component {
 	constructor(props) {
@@ -214,331 +189,51 @@ class LOISettingTypeSel extends React.Component {
 		const mEntry = {
 			teacher: this.props.teacherId,
 			observedBy: this.props.firebase.auth.currentUser.uid,
-			type: 'Math'
+			type: 'Level',
+		//	LOISetting: this.props.state.settingtype
 		};
 		this.props.firebase.handleSession(mEntry);
 	}
 
 	state = {
 		addDialog: false,
-		status: CENTER_CHECKLIST,
-		currentCenter: undefined,
-		totalVisitCount: 0
+		status: SETTING_SCREEN,
+	//	currentCenter: undefined,
+	//	totalVisitCount: 0
 	};
 
-	handleClickOpen = () => {
-		this.setState({ addDialog: true });
+	switchToSettingScreen = () => {
+		this.setState({ status: SETTING_SCREEN });
 	};
 
-	handleClose = () => {
-		this.setState({ addDialog: false });
+	switchToInstructionScreen = () => {
+		this.setState({ status: INS_SCREEN });
+	//	this.props.onStatusChange(true);
 	};
 
-	switchToCenterChecklist = () => {
-		this.setState({ status: CENTER_CHECKLIST });
-	};
 
-	switchToCenterMenu = () => {
-		this.setState({ status: CENTER_MENU });
-		this.props.onStatusChange(true);
-	};
 
 	render() {
 		const { classes } = this.props;
 
 		switch (this.state.status) {
-			case CENTER_CHECKLIST:
+			case INS_SCREEN:
+					return (
+						<InstructionCounter
+						currentSetting={this.state.settingType}
+						firebase={this.props.firebase}
+					  />
+					);
+					
+			case SETTING_SCREEN:
 				return (
-					<CenterChecklist
-						switchToCenterMenu={this.switchToCenterMenu}
-						addCenter={this.props.toggleLOISettingType}
+					<SettingScreen
+						switchToInstructionScreen={this.switchToInstructionScreen}
+						toggleLOISettingType={this.props.toggleLOISettingType}
 					/>
 				);
-			case CENTER_MENU:
-				return (
-					<div>
-						<Grid justify="center" alignItems="stretch" direction="row" style={{ margin: 10 }}>
-							{/* <Grid justify="flex-start" alignItems="center" direction="row">
-								<Grid container spacing={0} direction="row" alignItems="center">
-									
-								<Grid container xs={12} container direction={'row'}>
-										<Grid
-											container
-											alignItems="flex-start"
-											item
-											xl={4}
-											md={4}
-											sm={4}
-											xs={12}
-											style={{ fontFamily: 'Arimo' }}
-										>
-											<Fab
-												//onClick={() => this.handleButtonChange('wholeGroup')}
-												// classes={{ root: classes.button }}//, label: classes.label
-												className={classes.button}
-												style={{ backgroundColor: '#38761dff',
-												width: 200,
-												height: 180 }}
-											>
-												Ask High-Level Question
-											</Fab>
-										</Grid>
 
-										<Grid
-											container
-											alignItems="flex-start"
-											item
-											md={4}
-											style={{ fontFamily: 'Arimo' }}
-										>
-											<Button
-												disabled
-												style={{ backgroundColor: '#6aa84fff',  color: '#fff!important' }}
-												className={classes.root}
-											>
-												Inferential Instruction
-											</Button>
-										</Grid>
-										<Grid
-										
-											container
-											alignItems="flex-start"
-											item
-											xl={4}
-											md={4}
-											sm={4}
-											xs={12}
-											style={{ fontFamily: 'Arimo',marginLeft:'10px' }}
-										>
-											<Fab
-												//	onClick={() => this.handleButtonChange('centersOrSmall')}
-												classes={{ root: classes.button }} //, label: classes.label
-												style={{ backgroundColor: '#38761dff',
-												width: 200,
-												height: 180 }}
-											>
-												Follow-up on Children’s Responses
-											</Fab>
-										</Grid>
-									</Grid>
-								</Grid>
-							</Grid> */}
-
-							<Grid justify="flex-start" alignItems="center" direction="row">
-								<Grid container spacing={0} direction="row" alignItems="center">
-									<Grid container xs={12} container direction={'row'}>
-										<Grid
-											container
-											alignItems="flex-start"
-											item
-											xl={4}
-											md={4}
-											sm={4}
-											xs={4}
-											style={{ fontFamily: 'Arimo' }}
-										>
-											<Fab
-												//onClick={() => this.handleButtonChange('wholeGroup')}
-												// classes={{ root: classes.button }}//, label: classes.label
-												className={classes.button}
-												style={{
-													backgroundColor: '#38761dff',
-													width: 200,
-													height: 200
-												}} //,{ zIndex: 100 }
-											>
-												Ask High-Level Question
-											</Fab>
-										</Grid>
-
-										<Grid
-											container
-											alignItems="flex-start"
-											item
-											md={4}
-											style={{ fontFamily: 'Arimo' }}
-										>
-											<Button
-												disabled
-												style={{ backgroundColor: '#6aa84fff', color: '#fff!important' }}
-												className={classes.root}
-												variant={outline-secondary}
-											>
-												Inferential Instruction
-											</Button>
-										</Grid>
-										<Grid
-											container
-											alignItems="flex-start"
-											item
-											xl={4}
-											md={4}
-											sm={4}
-											xs={4}
-											style={{ fontFamily: 'Arimo' }}
-										>
-											<Fab
-												//	onClick={() => this.handleButtonChange('centersOrSmall')}
-												classes={{ root: classes.button }} //, label: classes.label
-												style={{
-													backgroundColor: '#38761dff',
-													width: 200,
-													height: 200
-												}}
-											>
-												Follow-up on Children’s Responses
-											</Fab>
-										</Grid>
-									</Grid>
-								</Grid>
-							</Grid>
-
-							<Grid container xs={12} container direction={'row'}>
-								<Grid
-									container
-									alignItems="flex-start"
-									item
-									xl={4}
-									md={4}
-									sm={4}
-									xs={12}
-									style={{ fontFamily: 'Arimo' }}
-								/>
-
-								<Grid
-									container
-									alignItems="center"
-									justify="center"
-									item
-									md={4}
-									style={{ fontFamily: 'Arimo' }}
-									alignItems="center"
-								>
-									<div width={100} height={100} style={{ fontSize: '80px' }}>
-										0
-									</div>
-								</Grid>
-
-								<Grid
-									container
-									alignItems="flex-start"
-									item
-									xl={4}
-									md={4}
-									sm={4}
-									xs={12}
-									style={{ fontFamily: 'Arimo' }}
-								/>
-							</Grid>
-
-							<Grid container xs={12} container direction={'row'}>
-								<Grid
-									container
-									alignItems="flex-start"
-									item
-									xl={4}
-									md={4}
-									sm={4}
-									xs={12}
-									style={{ fontFamily: 'Arimo' }}
-								/>
-
-								<Grid
-									container
-									alignItems="center"
-									justify="center"
-									item
-									md={4}
-									style={{ fontFamily: 'Arimo' }}
-									alignItems="center"
-								>
-									<Button>
-										<ReplySharpIcon style={{ fontSize: '80px' }} width={100} height={100} />
-									</Button>
-								</Grid>
-
-								<Grid
-									container
-									alignItems="flex-start"
-									item
-									xl={4}
-									md={4}
-									sm={4}
-									xs={12}
-									style={{ fontFamily: 'Arimo' }}
-								/>
-							</Grid>
-
-							<Grid justify="flex-start" alignItems="center" direction="row">
-								<Grid container spacing={0} direction="row" alignItems="center">
-									<Grid container xs={12} container direction={'row'}>
-										<Grid
-											container
-											alignItems="flex-start"
-											item
-											xl={4}
-											md={4}
-											sm={4}
-											xs={4}
-											style={{ fontFamily: 'Arimo' }}
-										>
-											<Fab
-												//onClick={() => this.handleButtonChange('wholeGroup')}
-												// classes={{ root: classes.button }}//, label: classes.label
-												className={classes.button}
-												style={{
-													backgroundColor: '#1155ccff',
-													width: 200,
-													height: 200
-												}} //,{ zIndex: 100 }
-											>
-												Ask Low-Level Question
-											</Fab>
-										</Grid>
-
-										<Grid
-											container
-											alignItems="flex-start"
-											item
-											md={4}
-											style={{ fontFamily: 'Arimo' }}
-										>
-											<Button
-												disabled
-												style={{ backgroundColor: '#6d9eebff', color: '#fff!important' }}
-												className={classes.root}
-											>
-												Basic Skills Instruction
-											</Button>
-										</Grid>
-										<Grid
-											container
-											alignItems="flex-start"
-											item
-											xl={4}
-											md={4}
-											sm={4}
-											xs={4}
-											style={{ fontFamily: 'Arimo' }}
-										>
-											<Fab
-												//	onClick={() => this.handleButtonChange('centersOrSmall')}
-												classes={{ root: classes.button }} //, label: classes.label
-												style={{
-													backgroundColor: '#1155ccff',
-													width: 200,
-													height: 200
-												}}
-											>
-												Teach Specific Skills
-											</Fab>
-										</Grid>
-									</Grid>
-								</Grid>
-							</Grid>
-						</Grid>
-					</div>
-				);
+			
 
 			default:
 				return <div>Unknown status value!!!</div>;
@@ -546,16 +241,22 @@ class LOISettingTypeSel extends React.Component {
 	}
 }
 
-const mapStateToProps = (state) => {
+ const mapStateToProps = (state) => {
 	return {
-		centers: state.settingType
+		whatSetting: state.settingType
 	};
 };
-
-LOISettingTypeSel.propTypes = {
-	onStatusChange: PropTypes.func.isRequired
-};
+ 
+ LOISettingTypeSel.propTypes = {
+	classes: PropTypes.object.isRequired,
+	toggleLOISettingType: PropTypes.func.isRequired
+}; 
 
 export default withStyles(styles)(
-	connect(mapStateToProps, { toggleLOISettingType, incrementCenterCount })(LOISettingTypeSel)
+	connect(  mapStateToProps, { toggleLOISettingType } )(LOISettingTypeSel,SettingScreen)
 );
+// export default withStyles(styles)(
+// 	connect(mapStateToProps, { toggleLOISettingType })(
+// 		LOISettingTypeSel,SettingScreen
+// 	)
+//   );
