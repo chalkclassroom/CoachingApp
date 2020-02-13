@@ -58,21 +58,21 @@ const gridContainer = {
 	display: 'grid',
 	gridTemplateColumns: 'auto 1fr',
 	gridTemplateRows: 'auto 15% 1fr',
-	gridGap: '0.1em',
+	gridGap: '0.2em',
 };
 
 const appbar = {
 		gridColumn: '1 / span 4',
 		gridRow: '1',		
-	};
+};
 const intent = {
 		gridRow: '2 / span 3',
 		gridColumn: '1',
-	};
+};
 const recipient = {
 		gridColumn: '2 / span 4',
 		gridRow: '2 / 2', 
-	};
+};
 const emailbody = {
 		gridRow: '3 / span 4',
 		gridColumn: '2 / span 4',
@@ -80,16 +80,16 @@ const emailbody = {
 
 const submit = {
     position: 'fixed',
-    bottom: '50px',
-    right: '16px',
+    bottom: '4em',
+    right: '1em',
 };
 
 const MessagingView: React.FC<MessagingViewProps> = () => {
-    // const [intent, setIntent] = useState(DEFAULT);
+    //const [intent, setIntent] = useState("thank_you");
     const textRef = useRef();
-    // const sendMail = () => {}
+    //const sendMail = () => {}
 
-    const emailContent: JSX.Element = <div style={{fontFamily: "Raleway, Arial"}}>
+    const emailContent: JSX.Element = <div style={{fontFamily: "Raleway, Arial", padding: "5em"}}>
     <h4>Hi Mingli,</h4>
     Thanks for meeting today and creating this action plan. I think it looks great, and I look forward to working on these goals with you!
     <br />
