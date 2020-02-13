@@ -102,7 +102,7 @@ const MessagingView: React.FC<MessagingViewProps> = () => {
 				return thankYou;
 			} else if (intent === "Action Plan"){
 				return actionPlan;
-			} else if (intent === "Custom") {
+			} else if (intent === "New Message") {
 				return custom;
 			} else if (intent === "Feedback") {
 				return feedback;

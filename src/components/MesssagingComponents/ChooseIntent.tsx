@@ -9,15 +9,32 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import actionPlanIcon from '../../assets/icons/talk.svg';
+import feedbackIcon from '../../assets/icons/check-mark.svg';
+import newMessageIcon from '../../assets/icons/files-and-folders.svg';
+import thankYouIcon from '../../assets/icons/chat-bubbles.svg';
+const drawerWidth = `15em`;
 
-const drawerWidth = `12em`;
+const getIcon = (text: string) => {
+	if(text === "Thank You") {
+		return thankYouIcon;
+	} else if (text === "Feedback") {
+		return feedbackIcon;
+	} else if (text === "Action Plan") {
+		return actionPlanIcon;
+	} else if (text === "New Message") {
+		return newMessageIcon;
+	} else {
+		return null;
+	}
+};
 
 const ChooseIntent: React.FC<{changeIntent: any}> = (props: {changeIntent: any}) => {
 	return (<List style={{width: drawerWidth, height: '80vh'}}>
             {['Thank You', 'Feedback', 'Action Plan', 'New Message'].map((text, index) => (
 		    <ListItem button key={text} onClick={() => props.changeIntent(text)}>
 		<ListItemAvatar>
-			<Avatar>
+			<Avatar src={getIcon(text)}>
 				<AccountCircleIcon />
 			</Avatar>
 		</ListItemAvatar>
