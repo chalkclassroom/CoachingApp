@@ -14,7 +14,7 @@ const drawerWidth = `12em`;
 
 const ChooseIntent: React.FC<{changeIntent: any}> = (props: {changeIntent: any}) => {
 	return (<List style={{width: drawerWidth, height: '80vh'}}>
-            {['Custom', 'Thank You', 'Feedback', 'Action Plan'].map((text, index) => (
+            {['Thank You', 'Feedback', 'Action Plan', 'New Message'].map((text, index) => (
 		    <ListItem button key={text} onClick={() => props.changeIntent(text)}>
 		<ListItemAvatar>
 			<Avatar>
