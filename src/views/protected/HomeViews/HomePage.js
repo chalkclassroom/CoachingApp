@@ -95,7 +95,7 @@ class HomePage extends React.Component {
           style={{ padding: 40 }}
         >
           <Typography component={"h3"} variant={"h3"} align={"center"}>
-            Welcom harsha, {this.state.coachName}!
+            Welcome, {this.state.coachName}!
           </Typography>
           <Grid
             container
