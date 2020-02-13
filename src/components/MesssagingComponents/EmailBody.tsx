@@ -9,11 +9,9 @@ type EmailBodyProps = {
     emailTextRef: React.MutableRefObject<HTMLDivElement>
 }
 
-// const drawerWidth = 240;
-
 const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
     return (
-        <Paper >
+        <Paper style={{height: '80vh'}}>
             <div contentEditable={true} ref={props.emailTextRef}>
                 {props.emailText}
             </div>
