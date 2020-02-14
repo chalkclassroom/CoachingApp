@@ -21,9 +21,6 @@ const styles: object = {
   },
   expansionPanelText: {
     variant: "body2"
-  },
-  addButton: {
-    fill: "#094492"
   }
 };
 
@@ -31,7 +28,6 @@ interface Style {
   expansionPanel: string,
   expansionPanelTitle: string,
   expansionPanelText: string,
-  addButton: string
 }
 
 interface Props {
@@ -40,7 +36,8 @@ interface Props {
   openPanel: string,
   handlePanelChange(panel: string): void,
   addedToPrep: Array<string>,
-  handleAddToPlan(panel: string): void 
+  handleAddToPlan(panel: string): void,
+  color: string
 }
 
 /**
@@ -110,7 +107,7 @@ class DataQuestions extends React.Component<Props, {}> {
                       <Button
                         onClick={this.props.handleAddToPlan.bind(this, item.name)}
                       >
-                        <AddCircleIcon className={classes.addButton} />
+                        <AddCircleIcon style={{fill: this.props.color}} />
                       </Button>
                     </Grid>
                   </Grid>

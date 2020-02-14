@@ -23,7 +23,7 @@ const styles = {
     backgroundColor: "#ffffff",
     display: "flex",
     flexDirection: "column",
-    fontFamily: "Arimo"
+    fontFamily: 'Arimo'
   },
   grow: {
     flexGrow: 1
@@ -38,12 +38,18 @@ const TeacherChildEnum = {
 const RATING_INTERVAL = 60000;
 const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
+/**
+ * Center Rating Checklist for Math
+ * @class CenterRatingChecklistMath
+ * @return {void}
+ */
 class CenterRatingChecklistMath extends React.Component {
   state = {
     auth: true,
     anchorEl: null,
     ratings: [],
-    checked: [0],
+    childChecked: [],
+    teacherChecked: [],
     people: undefined,
     time: RATING_INTERVAL,
     timeUpOpen: false,
@@ -97,41 +103,62 @@ class CenterRatingChecklistMath extends React.Component {
       this.setState({ peopleWarning: true });
     } else {
       const mEntry = {
-        checked: this.state.checked,
+        checked: [...this.state.childChecked, ...this.state.teacherChecked],
         people: this.state.people
-        // acType: this.state.acType
       };
-      // <<<<<<< HEAD
-      // =======
       this.props.firebase.handlePushMath(mEntry);
-      // >>>>>>> 7416dfe9eba94b55b62425799cbd308062bc27b4
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();
     }
   };
 
-  handleToggle = value => () => {
-    // Prevents updating state of checkbox when disabled
-    if (
-      (value <= 5 && this.childDisabled()) ||
-      (value >= 6 && this.teacherDisabled())
-    ) {
+  handleChildToggle = value => () => {
+    if (value <=5 && this.childDisabled()) {
       return;
     }
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
+    const { childChecked } = this.state;
+    const newChecked = [];
+    if (((childChecked.includes(5) && value != 5) || 
+    (childChecked.includes(1) || childChecked.includes(2) ||
+    childChecked.includes(3) || childChecked.includes(4)) && value === 5)) {
+      newChecked.splice(0, newChecked.length);
       newChecked.push(value);
     } else {
-      newChecked.splice(currentIndex, 1);
-    }
+      newChecked.push(...childChecked);
+      const currentIndex = childChecked.indexOf(value);
 
-    this.setState({
-      checked: newChecked
-    });
-  };
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
+      
+    }
+    this.setState({childChecked: newChecked});
+  }
+
+  handleTeacherToggle = value => () => {
+    if (value >=6 && this.teacherDisabled()) {
+      return;
+    }
+    const { teacherChecked } = this.state;
+    const newChecked = [];
+    if (((teacherChecked.includes(10) && value != 10) || 
+    (teacherChecked.includes(6) || teacherChecked.includes(7) ||
+    teacherChecked.includes(8) || teacherChecked.includes(9)) && value === 10)) {
+      newChecked.splice(0, newChecked.length);
+      newChecked.push(value);
+    } else {
+      newChecked.push(...teacherChecked);
+      const currentIndex = teacherChecked.indexOf(value);
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
+    }
+    this.setState({teacherChecked: newChecked});
+  }
 
   childDisabled = () => {
     return (
@@ -149,17 +176,6 @@ class CenterRatingChecklistMath extends React.Component {
   handleTeacherClick = () => {
     if (this.state.people !== TeacherChildEnum.TEACHER_PRESENT) {
       this.setState({ people: TeacherChildEnum.TEACHER_PRESENT });
-
-      const { checked } = this.state;
-      const newChecked = [...checked];
-      for (let i = 5; i <= 8; i++) {
-        // If there are teacher ratings checked, remove them
-        if (checked.includes(i)) {
-          const currentIndex = checked.indexOf(i);
-          newChecked.splice(currentIndex);
-        }
-      }
-      this.setState({ checked: newChecked });
     }
   };
 
@@ -167,19 +183,23 @@ class CenterRatingChecklistMath extends React.Component {
     if (this.state.people !== TeacherChildEnum.NO_TEACHER) {
       this.setState({ people: TeacherChildEnum.NO_TEACHER });
 
-      const { checked } = this.state;
-      const newChecked = [...checked];
-      for (let i = 5; i <= 8; i++) {
+      const { teacherChecked } = this.state;
+      const newTeacherChecked = [...teacherChecked];
+      for (let i = 6; i <= 10; i++) {
         // If there are teacher ratings checked, remove them
-        if (checked.includes(i)) {
-          const currentIndex = checked.indexOf(i);
-          newChecked.splice(currentIndex);
+        if (teacherChecked.includes(i)) {
+          const currentIndex = teacherChecked.indexOf(i);
+          newTeacherChecked.splice(currentIndex);
         }
       }
-      this.setState({ checked: newChecked });
+      this.setState({ teacherChecked: newTeacherChecked });
     }
   };
  
+  /**
+   * render function
+   * @return {ReactNode}
+   */
   render() {
     return (
       <div className={this.props.classes.root}>
@@ -189,11 +209,11 @@ class CenterRatingChecklistMath extends React.Component {
           aria-labelledby="simple-dialog-title"
         >
           <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
-            Don't forget to circulate!
+            Don&apos;t forget to circulate!
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
-              You've been at the {this.props.currentCenter} center for 1 minute.
+              You&apos;ve been at the {this.props.currentCenter} center for 1 minute.
             </DialogContentText>
           </DialogContent>
         </Dialog>
@@ -202,9 +222,9 @@ class CenterRatingChecklistMath extends React.Component {
           onClose={this.handlePeopleWarningClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title"  style={{fontFamily: 'Arimo'}}>Wait!</DialogTitle>
+          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>Wait!</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description"  style={{fontFamily: 'Arimo'}}>
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
               Please select if the teachers is present at the center or not
               before submitting your rating.
             </DialogContentText>
@@ -237,18 +257,18 @@ class CenterRatingChecklistMath extends React.Component {
             <Grid item xs={9}>
               <Grid>
                 <div style={{ margin: 10 }} />
-                <Button size={"small"} onClick={this.handleBackButton}  style={{fontFamily: 'Arimo'}}>
+                <Button size={"small"} onClick={this.handleBackButton} style={{fontFamily: 'Arimo'}}>
                   <KeyboardArrowLeft />
                   Back
                 </Button>
               </Grid>
               <Grid container alignItems="center" direction="column" xs={12}>
-                <Typography variant="h4" gutterBottom  style={{fontFamily: 'Arimo'}}>
+                <Typography variant="h4" gutterBottom style={{fontFamily: 'Arimo'}}>
                   {this.props.currentCenter[0].toUpperCase() +
                     this.props.currentCenter.substr(1)}
                 </Typography>
                 <div style={{ height: 20 }} />
-                <Typography variant={"subtitle2"} gutterBottom  style={{fontFamily: 'Arimo'}}>
+                <Typography variant={"subtitle2"} gutterBottom style={{fontFamily: 'Arimo'}}>
                   Please select if teacher is present or not at the
                   center:
                 </Typography>
@@ -293,154 +313,167 @@ class CenterRatingChecklistMath extends React.Component {
                   <Grid item
                    xs={6}>
                     <Card>
-                      <Typography variant="h6" align={"center"}>
+                      <Typography variant="h6" align={"center"} style={{fontFamily: 'Arimo'}}>
                         Child Behaviors
                       </Typography>
                       <List>
                         <ListItem
-                          onClick={this.handleToggle(1)}
+                          onClick={this.handleChildToggle(1)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(1)
+                              this.state.childChecked.includes(1)
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                              <b>Counting and Numbers</b> 
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(2)}
+                          onClick={this.handleChildToggle(2)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(2)
+                              this.state.childChecked.includes(2)
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                              <b>Shapes and Spatial reasoning</b>  
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(3)}
+                          onClick={this.handleChildToggle(3)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(3)
+                              this.state.childChecked.includes(3)
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                           <b>Patterns</b>  
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(4)}
+                          onClick={this.handleChildToggle(4)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(4)
+                              this.state.childChecked.includes(4)
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             <b>Measurement and Data</b>
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(5)}
+                          onClick={this.handleChildToggle(5)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(5)
+                              this.state.childChecked.includes(5)
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>None</ListItemText>
+                          <ListItemText disableTypography>None</ListItemText>
                         </ListItem>
                       </List>
                     </Card>
                   </Grid>
                   <Grid item xs={6}>
                     <Card>
-                      <Typography variant="h6" align={"center"}>
+                      <Typography variant="h6" align={"center"} style={{fontFamily: 'Arimo'}}>
                         Teacher Behaviors
                       </Typography>
                       <List>
                         <ListItem
-                          onClick={this.handleToggle(6)}
+                          onClick={this.handleTeacherToggle(6)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(6)
+                              this.state.teacherChecked.includes(6)
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
-                         Using <b>math vocabulary</b> 
+                          <ListItemText disableTypography>
+                            Using <b>math vocabulary</b> 
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(7)}
+                          onClick={this.handleTeacherToggle(7)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(7)
+                              this.state.teacherChecked.includes(7)
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
-                          <b> Asking questions {" "}</b> about math concepts
+                          <ListItemText disableTypography>
+                            <b>Asking questions {" "}</b> about math concepts
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(8)}
+                          onClick={this.handleTeacherToggle(8)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(8)
+                              this.state.teacherChecked.includes(8)
                             }
                             disabled={this.teacherDisabled()}
                           />
-                      
-                          <ListItemText>
-    
+                          <ListItemText disableTypography>
                             <b>Demonstrating</b> math concepts
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(9)}
+                          onClick={this.handleTeacherToggle(9)}
+                          disabled={this.teacherDisabled()}
+                        >
+                          <Checkbox
+                            checked={
+                              !this.teacherDisabled() &&
+                              this.state.teacherChecked.includes(9)
+                            }
+                            disabled={this.teacherDisabled()}
+                          />
+                          <ListItemText disableTypography>
+                            Helping children use math
+                            to <b>problem solve</b>
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleTeacherToggle(10)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(9)
+                              this.state.teacherChecked.includes(10)
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>None</ListItemText>
+                          <ListItemText disableTypography>None</ListItemText>
                         </ListItem>
                       </List>
-                      
                     </Card>
                   </Grid>
                 </Grid>

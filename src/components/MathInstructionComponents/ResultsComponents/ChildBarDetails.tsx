@@ -5,18 +5,18 @@ import * as Constants from "../../../constants";
 
 
 interface Props {
-  ac1: number,
-  ac2: number,
-  ac3: number,
-  ac4: number
+  math1: number,
+  math2: number,
+  math3: number,
+  math4: number
 }
 
 /**
- * Horizontal Bar Graph for Associative&Cooperative Child Behaviors
- * @class ChildBehaviorsDetailsHorizontalBar
+ * Horizontal Bar Graph for Math Child Behaviors
+ * @class ChildBarDetails
  * @return {void}
  */
-class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
+class ChildBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -25,10 +25,10 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    ac1: PropTypes.number.isRequired,
-    ac2: PropTypes.number.isRequired,
-    ac3: PropTypes.number.isRequired,
-    ac4: PropTypes.number.isRequired
+    math1: PropTypes.number.isRequired,
+    math2: PropTypes.number.isRequired,
+    math3: PropTypes.number.isRequired,
+    math4: PropTypes.number.isRequired
   };
 
   /**
@@ -38,16 +38,16 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const childBehaviorsData = {
       labels: [
-        ["Participating in a conversation", "about a shared activity"],
-        ["Engaging in an open-ended", "activity without clear", "roles or order"],
-        ["Following formal rules of a", "game and/or taking turns"],
-        ["Doing an activity together", "that has a predetermined", "sequence"]
+        "Counting and Numbers",
+        "Shapes and Spatial Reasoning",
+        "Patterns",
+        "Measurement and Data"
       ],
       datasets: [
         {
-          data: [this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4],
-          backgroundColor: ["#c5afe7", "#c5afe7", Constants.ACColor, Constants.ACColor],
-          hoverBackgroundColor: ["#c5afe7", "#c5afe7", Constants.ACColor, Constants.ACColor]
+          data: [this.props.math1, this.props.math2, this.props.math3, this.props.math4],
+          backgroundColor: [Constants.MathColor, Constants.MathColor, Constants.MathColor, Constants.MathColor],
+          hoverBackgroundColor: [Constants.MathColor, Constants.MathColor, Constants.MathColor, Constants.MathColor]
         }
       ]
     };
@@ -62,8 +62,8 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
                 ticks: {
                   min: 0,
                   max:
-                    (Math.max(this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4) > 20) ? 
-                    Math.max(this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4) : 20,
+                    (Math.max(this.props.math1, this.props.math2, this.props.math3, this.props.math4) > 20) ? 
+                    Math.max(this.props.math1, this.props.math2, this.props.math3, this.props.math4) : 20,
                   fontSize: 16,
                   fontColor: 'black'
                 },
@@ -105,4 +105,4 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
 }
 
 
-export default ChildBehaviorsDetailsHorizontalBar;
+export default ChildBarDetails;

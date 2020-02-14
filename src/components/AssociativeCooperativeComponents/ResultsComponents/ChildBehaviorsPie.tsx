@@ -1,11 +1,12 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
+import * as Constants from "../../../constants";
 
 interface Props {
-  acTime: number,
-  noAcTime: number,
-  noOppTime: number
+  ac: number,
+  noAc: number,
+  noChildOpp: number
 }
 
 /**
@@ -22,29 +23,27 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    acTime: PropTypes.number.isRequired,
-    noAcTime: PropTypes.number.isRequired,
-    noOppTime: PropTypes.number.isRequired,
+    ac: PropTypes.number.isRequired,
+    noAc: PropTypes.number.isRequired,
+    noChildOpp: PropTypes.number.isRequired,
   };
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
-    // const { classes } = this.props;
-
+  render(): React.ReactNode {
     const childBehaviorsData = {
       labels: [
         "Assoc./Coop. Interaction",
         "No Assoc./Coop. Interaction",
-        "No Opportunity"
+        "1 Child at Center"
       ],
       datasets: [
         {
-          data: [this.props.acTime, this.props.noAcTime, this.props.noOppTime],
-          backgroundColor: ["#6F39C4", "#E99C2E", "#E55529"],
-          hoverBackgroundColor: ["#6F39C4", "#E99C2E", "#E55529"]
+          data: [this.props.ac, this.props.noAc, this.props.noChildOpp],
+          backgroundColor: [Constants.ACColor, Constants.RedGraphColor, Constants.NotPresentColor],
+          hoverBackgroundColor: [Constants.ACColor, Constants.RedGraphColor, Constants.NotPresentColor]
         }
       ]
     };
@@ -56,7 +55,7 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
-                data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }) {
+                data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const meta = dataset._meta[Object.keys(dataset._meta)[0]];
                 const total = meta.total;
@@ -66,15 +65,26 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
                 );
                 return currentValue + " (" + percentage + "%)";
               },
-              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }) {
+              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
                 return data.labels[tooltipItem[0].index];
               }
             },
             bodyFontSize: 16
+          },
+          legend: {
+            display: false,
+            position: 'bottom'
+          },
+          plugins: {
+            datalabels: {
+              color: 'white',
+              font: {
+                size: 20
+              }
+            }
           }
         }}
-        width={650}
-        height={400}
+        width={260}
       />
     );
   }

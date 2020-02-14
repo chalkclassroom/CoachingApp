@@ -22,7 +22,8 @@ const styles: object = {
 };
 
 interface Props {
-  classes: Style
+  classes: Style,
+  location: { state: { teacher: { id: string }}}
 }
 
 interface Style {
@@ -98,6 +99,7 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
           <FirebaseContext.Consumer>
             {(firebase: object) => (
               <CenterMenuSequentialActivities
+                teacherId={this.props.location.state.teacher.id}
                 firebase={firebase}
                 onStatusChange={this.handleCompleteButton}
               />

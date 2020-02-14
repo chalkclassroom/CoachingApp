@@ -140,11 +140,11 @@ interface Props {
 }
 
 /**
- * Swipe View for Child and Teacher Associative&Cooperative Trends Graphs
- * @class ChildTeacherBehaviorTrendsSlider
+ * Swipe View for Child and Teacher Math Trends Graphs
+ * @class TrendsSlider
  * @return {void}
  */
-class ChildTeacherBehaviorTrendsSlider extends React.Component<Props, {}> {
+class TrendsSlider extends React.Component<Props, {}> {
   
   static propTypes = {
     childData: PropTypes.func.isRequired,
@@ -196,4 +196,4 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component<Props, {}> {
   }
 }
 
-export default ChildTeacherBehaviorTrendsSlider;
+export default TrendsSlider;

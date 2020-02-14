@@ -1,27 +1,10 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import MenuItem from "@material-ui/core/MenuItem";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button/Button";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton/IconButton";
-import ClassroomClimateIconImage from "../../../assets/images/ClassroomClimateIconImage.svg";
-import GenerateReportImage from "../../../assets/images/GenerateReportImage.svg";
 import { withStyles } from "@material-ui/core/styles";
-// import spreadsheetData from "../../../SPREADSHEET_SECRETS";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import AppBar from "../../../components/AppBar";
-import Typography from "@material-ui/core/Typography/Typography";
-// import { ImmortalDB } from "immortal-db";
 import * as moment from "moment";
-import NotesListDetailTable from "../../../components/ResultsComponents/NotesListDetailTable.tsx";
-import BehaviorCounterResults from "../../../components/ResultsComponents/BehaviorCounterResults.js";
-import AverageToneRating from "../../../components/ResultsComponents/AverageToneRating.js";
 import ClimateTrendsGraph from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateTrendsGraph.tsx";
 import ResultsLayout from '../../../components/ResultsLayout';
-import BehaviorResponsesSummaryChart from "../../../components/ClassroomClimateComponent/ResultsComponents/BehaviorResponsesSummaryChart";
 import BehaviorResponsesDetailsChart from "../../../components/ClassroomClimateComponent/ResultsComponents/BehaviorResponsesDetailsChart";
 import ClimateCoachingQuestions from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateCoachingQuestions";
 import ClimateSummarySlider from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateSummarySlider";
@@ -150,7 +133,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Disapproval",
+          label: "Redirection/Disapproval",
           data: this.state.trendsNeg,
           backgroundColor: "#ec2409",
           borderColor: "#ec2409",
@@ -158,7 +141,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           lineTension: 0,
         },
         {
-          label: "Positive",
+          label: "Specific/General Approval",
           data: this.state.trendsPos,
           backgroundColor: "#0988ec",
           borderColor: "#0988ec",

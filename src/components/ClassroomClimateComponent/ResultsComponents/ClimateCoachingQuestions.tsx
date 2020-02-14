@@ -27,7 +27,14 @@ interface State {
   addedToPrep: Array<string>
 }
 
+/**
+ * data reflection question layout for classroom climate
+ * @class ClimateCoachingQuestions
+ */
 class ClimateCoachingQuestions extends React.Component<Props, State> {
+  /**
+   * @param {Props} props
+   */
   constructor(props: Props) {
     super(props);
 
@@ -38,7 +45,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
     }
   }
 
-  approvalsClick = () => {
+  approvalsClick = (): void => {
     if (this.state.categoryView !== "approvals") {
       this.setState({
         categoryView: "approvals",
@@ -47,7 +54,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
     }
   }
 
-  redirectionsClick = () => {
+  redirectionsClick = (): void => {
     if (this.state.categoryView !== "redirections") {
       this.setState({
         categoryView: "redirections",
@@ -56,7 +63,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
     }
   }
 
-  disapprovalsClick = () => {
+  disapprovalsClick = (): void => {
     if (this.state.categoryView !== "disapprovals") {
       this.setState({
         categoryView: "disapprovals",
@@ -68,7 +75,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
   /**
    * @param {string} panel
    */
-  handlePanelChange = (panel: string) => {
+  handlePanelChange = (panel: string): void => {
     if (this.state.openPanel === panel) {
       this.setState({ openPanel: '' });
     } else {
@@ -79,13 +86,16 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
   /**
    * @param {string} panel
    */
-  handleAddToPlan = (panel: string) => {
+  handleAddToPlan = (panel: string): void => {
     if (!this.state.addedToPrep.includes(panel)) {
       this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
     }
   };
 
-  render() {
+  /**
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
     const { classes } = this.props;
     return(
       <Grid container direction="column">
@@ -108,7 +118,6 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
           </Grid>
           <Grid item>
             <Button
-              // style={this.state.categoryView === "childrenWaiting" ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}
               onClick={this.disapprovalsClick}
             >
               <NotInterestedIcon fill="#ec2409" />
@@ -118,8 +127,6 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh", fontFamily: "Arimo"}}>
           <Grid
             item xs={2}
-            // className = {classes.buttonText}
-            // style={{fontWeight: this.state.categoryView === "line" ? "bold" : "normal"}}
           >
             Behavior Approvals
           </Grid>
@@ -146,6 +153,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.ClimateColor}
             />
           ) : this.state.categoryView === "redirections" ? (
             <DataQuestions
@@ -154,6 +162,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.ClimateColor}
             />
           ) : this.state.categoryView === "disapprovals" ? (
             <DataQuestions
@@ -162,6 +171,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.ClimateColor}
             />
           ) : <div/>}
         </Grid>

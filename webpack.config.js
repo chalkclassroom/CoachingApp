@@ -5,7 +5,6 @@ const webpackMerge = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const modeConfiguration = mode => require(`./build-utils/webpack.${mode}`)(mode);
-
 module.exports = (env, argv) => {
     console.log(`mode is: ${argv.mode}`);
 

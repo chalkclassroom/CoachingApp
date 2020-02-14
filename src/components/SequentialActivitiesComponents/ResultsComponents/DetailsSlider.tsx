@@ -3,8 +3,8 @@ import * as PropTypes from "prop-types";
 import Slider from "react-slick";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import ChildBehaviorsDetailsHorizontalBar from "./ChildBehaviorsDetailsHorizontalBar";
-import TeacherBehaviorsDetailsHorizontalBar from "./TeacherBehaviorsDetailsHorizontalBar";
+import ChildBarDetails from "./ChildBarDetails";
+import TeacherBarDetails from "./TeacherBarDetails";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles: object = {
@@ -16,10 +16,10 @@ const styles: object = {
 }
 
 interface Props {
-  ac1: number,
-  ac2: number,
-  ac3: number,
-  ac4: number,
+  sequential1: number,
+  sequential2: number,
+  sequential3: number,
+  sequential4: number,
   teacher1: number,
   teacher2: number,
   teacher3: number,
@@ -30,17 +30,17 @@ interface Props {
 }
 
 /**
- * Swipe View for Child and Teacher Associative&Cooperative Bar Charts
- * @class ChildTeacherBehaviorDetailsSlider
+ * Swipe View for Child and Teacher Sequential Activities Bar Charts
+ * @class DetailsSlider
  * @return {void}
  */
-class ChildTeacherBehaviorDetailsSlider extends React.Component<Props, {}> {
+class DetailsSlider extends React.Component<Props, {}> {
   
   static propTypes = {
-    ac1: PropTypes.number.isRequired,
-    ac2: PropTypes.number.isRequired,
-    ac3: PropTypes.number.isRequired,
-    ac4: PropTypes.number.isRequired,
+    sequential1: PropTypes.number.isRequired,
+    sequential2: PropTypes.number.isRequired,
+    sequential3: PropTypes.number.isRequired,
+    sequential4: PropTypes.number.isRequired,
     teacher1: PropTypes.number.isRequired,
     teacher2: PropTypes.number.isRequired,
     teacher3: PropTypes.number.isRequired,
@@ -71,14 +71,7 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component<Props, {}> {
               <Grid item style={{width: '100%'}}>
                 <Grid container direction="row">
                   <Grid item xs={11}>
-                    <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                      <Grid item style={{height:"33%", paddingBottom: '2em'}}>
-                        <Typography variant="subtitle1" className={classes.questionText}>
-                          Were the children engaged in {" "}
-                          <span style={{color: "#c5afe7", fontWeight: 'bold'}}>associative interactions</span> {" "}
-                          or <span style={{color: "#6f39c4", fontWeight: 'bold'}}>cooperative interactions</span> more often?
-                        </Typography>
-                      </Grid>
+                    <Grid container direction="column" justify="center" alignItems="flex-start" style={{height:'100%'}}>
                       <Grid item style={{height:"33%", paddingBottom: '2em'}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
                           Which behaviors did children do more often?
@@ -94,11 +87,11 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component<Props, {}> {
                 </Grid>
               </Grid>
             </Grid>
-            <ChildBehaviorsDetailsHorizontalBar
-              ac1={this.props.ac1}
-              ac2={this.props.ac2}
-              ac3={this.props.ac3}
-              ac4={this.props.ac4}
+            <ChildBarDetails
+              sequential1={this.props.sequential1}
+              sequential2={this.props.sequential2}
+              sequential3={this.props.sequential3}
+              sequential4={this.props.sequential4}
             />
           </Grid>
         </div>
@@ -111,24 +104,23 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component<Props, {}> {
               <Grid item style={{width: '100%'}}>
                 <Grid container direction="row">
                   <Grid item xs={11}>
-                    <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                    <Grid container direction="column" justify="center" alignItems="flex-start" style={{height:'100%'}}>
                       <Grid item style={{height:"33%", paddingBottom: '2em'}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
-                          Was there a strategy the teacher used more often to support children&apos;s interactions?
+                          Was there a strategy the teacher used more often to support children&apos;s sequential activities?
                         </Typography>
                       </Grid>
-                      <Grid item style={{height:"33%", paddingBottom: '2em'}}>
+                      <Grid item style={{height:"33%", paddingTop: '0.5em'}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
                           Was there a strategy the teacher used less often?
                         </Typography>
                       </Grid>
-                      <Grid item style={{height:"33%"}} />
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            <TeacherBehaviorsDetailsHorizontalBar
+            <TeacherBarDetails
               teacher1={this.props.teacher1}
               teacher2={this.props.teacher2}
               teacher3={this.props.teacher3}
@@ -142,4 +134,4 @@ class ChildTeacherBehaviorDetailsSlider extends React.Component<Props, {}> {
 }
 
 
-export default withStyles(styles)(ChildTeacherBehaviorDetailsSlider);
+export default withStyles(styles)(DetailsSlider);

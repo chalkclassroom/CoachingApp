@@ -1,20 +1,19 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
-import * as Constants from "../../../constants";
+import * as Constants from '../../../constants';
 
 interface Props {
-  noSupport: number,
-  support: number,
-  noTeacherOpp: number
+  math: number,
+  notMath: number,
 }
 
 /**
- * Pie Chart for Associative&Cooperative Teacher Behaviors
- * @class TeacherBehaviorsPie
+ * Pie Chart for Math Child Behaviors
+ * @class ChildPieSummary
  * @return {void}
  */
-class TeacherBehaviorsPie extends React.Component<Props, {}> {
+class ChildPieSummary extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -23,39 +22,37 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    noSupport: PropTypes.number.isRequired,
-    support: PropTypes.number.isRequired,
-    noTeacherOpp: PropTypes.number.isRequired
-  }
+    math: PropTypes.number.isRequired,
+    notMath: PropTypes.number.isRequired,
+  };
 
   /**
    * render function
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const teacherBehaviorsData = {
+    const childBehaviorsData = {
       labels: [
-        "Teacher Support for Assoc./Coop. Interactions",
-        "Teacher Present, No Support",
-        "Teacher Not at Center"
+        "Math",
+        "Other Activity",
       ],
       datasets: [
         {
-          data: [this.props.support, this.props.noSupport, this.props.noTeacherOpp],
-          backgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, Constants.NotPresentColor],
-          hoverBackgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, Constants.NotPresentColor]
+          data: [this.props.math, this.props.notMath],
+          backgroundColor: [Constants.MathColor, Constants.RedGraphColor],
+          hoverBackgroundColor: [Constants.MathColor, Constants.RedGraphColor]
         }
       ]
     };
 
     return (
       <Pie
-        data={teacherBehaviorsData}
+        data={childBehaviorsData}
         options={{
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
-                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
+                data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const meta = dataset._meta[Object.keys(dataset._meta)[0]];
                 const total = meta.total;
@@ -84,10 +81,10 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
             }
           }
         }}
-        width = {260}
+        width={260}
       />
     );
   }
 }
 
-export default TeacherBehaviorsPie;
+export default ChildPieSummary;

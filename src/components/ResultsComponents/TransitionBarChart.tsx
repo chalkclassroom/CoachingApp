@@ -111,7 +111,17 @@ class TransitionBarChart extends React.Component<Props, {}> {
           },
           tooltips: {
             mode: 'index',
-            intersect: false
+            intersect: false,
+            callbacks: {
+              label: function(
+                  tooltipItem: {xLabel: number, yLabel: string, label: string, index: number, datasetIndex: number, x: number, y: number},
+                  data: {labels: Array<string>, datasets: Array<any>}
+              ): string {
+                const dataset = data.datasets[tooltipItem.datasetIndex];
+                const currentValue = dataset.data[tooltipItem.index];
+                return (Math.floor(currentValue) + 'm ' + Math.floor((currentValue % 1) * 60) + 's');
+              }
+            }
           },
           legend: {
             display: false,
@@ -136,8 +146,8 @@ class TransitionBarChart extends React.Component<Props, {}> {
             }
           }
         }}
-        // width={650}
-        // height={400}
+        width={650}
+        height={300}
       />
     );
   }
