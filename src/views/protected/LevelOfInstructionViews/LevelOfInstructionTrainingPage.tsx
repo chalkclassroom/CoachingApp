@@ -281,7 +281,7 @@ class LevelOfInstructionTrainingPage extends React.Component<Props, State> {
 						{view === ViewEnum.CONCEPTS ? (
 							<TrainingVideo
 								videoUrl={
-									'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/CC%20Concepts%207-17-19.mp4?alt=media&token=2375a7d2-3c6e-4eec-a9c0-a29214db9cdf'
+									'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Level_of_Instruction_Training_Video.mp4?alt=media&token=32d2fde3-3979-4c5f-9bf4-556a6f2c5e8a'
 								}
 							/>
 						) : view === ViewEnum.DEFINITIONS ? (
