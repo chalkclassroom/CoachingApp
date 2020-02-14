@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as Constants from '../../../constants/index';
 import Button from '@material-ui/core/Button/Button';
-import InstructionIconImage from "../../../assets/images/InstructionIconImage.svg";
+import InstructionIconImage from '../../../assets/images/InstructionIconImage.svg';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '../../../components/AppBar';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
