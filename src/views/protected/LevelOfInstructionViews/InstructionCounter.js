@@ -46,10 +46,10 @@ const styles = (theme) => ({
 		fontSize: '30'
 		// position: "absolute"
 		//backgroundColor: '#27B78FFF'
-	},
-	grow: {
-		flexGrow: 1
 	}
+	/* grow: {
+		flexGrow: 1
+	} */
 });
 
 class InstructionCounter extends React.Component {

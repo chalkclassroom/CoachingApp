@@ -17,15 +17,14 @@ const styles = (theme) => ({
 		color: '#fff !important',
 		height: 48,
 		width: '100%',
-		// padding: '0 80%',
 		borderRadius: '3px',
-		// marginLeft: "-95%",
 		marginTop: '35%',
 		textTransform: 'Capitalize',
 		fontWeight: '700',
 		fontSize: '30',
 		fontFamily: 'Arimo'
-
+		// marginLeft: "-95%",
+		// padding: '0 80%',
 		// position: "relative",
 		// left: "-14rem",
 		// top:" 0.5rem",
@@ -44,10 +43,10 @@ const styles = (theme) => ({
 		textTransform: 'Capitalize',
 		fontWeight: '700',
 		fontSize: '30'
-	},
-	grow: {
-		flexgrow: 1
 	}
+	/* 	grow: {
+		flexgrow: 1
+	} */
 });
 
 class SettingScreen extends React.Component {
@@ -58,15 +57,7 @@ class SettingScreen extends React.Component {
    */
 	handleButtonChange = (settingType) => {
 		this.props.toggleLOISettingType(settingType);
-		this.setState({ selected: settingType });
-		this.props.switchToInstructionScreen();
-	};
-
-	/**
-   * @param {string} settingType
-   */
-	handleSettingBtnClick = (settingType) => {
-		this.props.toggleLOISettingType(settingType);
+		//this.setState({ selected: settingType });
 		this.props.switchToInstructionScreen();
 	};
 
@@ -156,17 +147,17 @@ const INS_SCREEN = 1;
  */
 
 class LOISettingTypeSel extends React.Component {
-	constructor(props) {
+	/* 	constructor(props) {
 		super(props);
 		const mEntry = {
 			teacher: this.props.teacherId,
 			observedBy: this.props.firebase.auth.currentUser.uid,
 			type: 'Level',
-			setting: this.props.currentSetting
+			setting: this.props.currentSetting,
 		};
 
 		this.props.firebase.handleLOISession(mEntry);
-	}
+	} */
 
 	state = {
 		addDialog: false,
@@ -177,17 +168,14 @@ class LOISettingTypeSel extends React.Component {
 
 	switchToSettingScreen = () => {
 		this.setState({ status: SETTING_SCREEN });
-		this.setState({ selected: settingType });
 	};
 
 	switchToInstructionScreen = () => {
 		this.setState({ status: INS_SCREEN });
-		this.setState({ selected: settingType });
+		//this.setState({ selected: settingType });
 	};
 
 	render() {
-		const { classes } = this.props;
-
 		switch (this.state.status) {
 			case INS_SCREEN:
 				return (
