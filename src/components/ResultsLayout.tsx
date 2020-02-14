@@ -392,6 +392,7 @@ class ResultsLayout extends React.Component<Props, State> {
                           readOnly={true}
                           actionPlanExists={this.props.actionPlanExists}
                           editMode={this.state.actionPlanEditMode}
+                          magic8={this.props.magic8}
                         />}
                       </FirebaseContext.Consumer>
                       {this.state.actionPlanEditMode ? (
