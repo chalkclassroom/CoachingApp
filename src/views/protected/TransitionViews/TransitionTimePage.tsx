@@ -14,6 +14,7 @@ import { resetTransitionTime } from "../../../state/actions/transition-time";
 // import TransitionTimeRecs from "./TransitionTimeRecs";
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
+import * as Constants from "../../../constants";
 
 const styles: object = {
   root: {
@@ -163,7 +164,7 @@ class TransitionTimePage extends React.Component<Props, State> {
               >
                 <Dashboard
                   magic8="Transition Time"
-                  color="#094492"
+                  color={Constants.TransitionColor}
                   infoDisplay={<TransitionLog />}
                   infoPlacement="center"
                   completeObservation={true}
