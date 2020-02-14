@@ -4,17 +4,17 @@ import { Pie } from "react-chartjs-2";
 import * as Constants from "../../../constants";
 
 interface Props {
-  noSupport: number,
   support: number,
+  noSupport: number,
   noTeacherOpp: number
 }
 
 /**
- * Pie Chart for Associative&Cooperative Teacher Behaviors
- * @class TeacherBehaviorsPie
+ * Pie Chart for Math Teacher Behaviors
+ * @class TeacherPieSummary
  * @return {void}
  */
-class TeacherBehaviorsPie extends React.Component<Props, {}> {
+class TeacherPieSummary extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -23,8 +23,8 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    noSupport: PropTypes.number.isRequired,
     support: PropTypes.number.isRequired,
+    noSupport: PropTypes.number.isRequired,
     noTeacherOpp: PropTypes.number.isRequired
   }
 
@@ -35,7 +35,7 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const teacherBehaviorsData = {
       labels: [
-        "Teacher Support for Assoc./Coop. Interactions",
+        "Teacher Support for Math",
         "Teacher Present, No Support",
         "Teacher Not at Center"
       ],
@@ -90,4 +90,4 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
   }
 }
 
-export default TeacherBehaviorsPie;
+export default TeacherPieSummary;

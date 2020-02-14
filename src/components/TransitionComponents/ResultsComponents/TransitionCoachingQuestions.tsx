@@ -361,6 +361,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "traveling" ? (
             <DataQuestions
@@ -369,6 +370,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "childrenWaiting" ? (
             <DataQuestions
@@ -377,6 +379,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "routines" ? (
             <DataQuestions
@@ -385,6 +388,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "behavior" ? (
             <DataQuestions
@@ -393,6 +397,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPrep={this.state.addedToPrep}
               handleAddToPlan={this.handleAddToPlan}
+              color={Constants.TransitionColor}
             />
           ) : <div/>}
         </Grid>

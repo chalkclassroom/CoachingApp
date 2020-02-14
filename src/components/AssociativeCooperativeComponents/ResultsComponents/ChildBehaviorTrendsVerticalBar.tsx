@@ -3,40 +3,6 @@ import * as PropTypes from "prop-types";
 import { Line } from "react-chartjs-2";
 
 /**
- * specifies data sets (and formatting) for the child behaviors details horizontal bar
- * @type {{datasets: *[], labels: string[][]}}
- */
-/* const childBehaviorsData = {
-  labels: ["August 19, 2018", "September 30, 2018", "October 22, 2018"],
-  datasets: [
-    {
-      label: "No Opportunity",
-      backgroundColor: "#F44336",
-      borderColor: "#F44336",
-      fill: false,
-      lineTension: 0,
-      data: [32, 27, 29]
-    },
-    {
-      label: "No Assoc./Coop. Interaction",
-      backgroundColor: "#E99C2E",
-      borderColor: "#E99C2E",
-      fill: false,
-      lineTension: 0,
-      data: [12, 14, 19]
-    },
-    {
-      label: "Associative and/or Cooperative",
-      backgroundColor: "#6F39C4",
-      borderColor: "#6F39C4",
-      fill: false,
-      lineTension: 0,
-      data: [14, 20, 29]
-    }
-  ]
-}; */
-
-/**
  * formatting for A&C child behavior trends graph, including title and scales for the axes
  * @type {{showScale: boolean, pointDot: boolean, scales: {yAxes: {ticks: {min: number, max: number, callback: (function(*): string), beginAtZero: boolean}, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[], xAxes: {display: boolean, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[]}, title: {display: boolean, fontSize: number, text: string, fontStyle: string}, showLines: boolean}}
  */
@@ -44,12 +10,6 @@ const ChildBehaviorTrendsOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
-  // title: {
-  //     display: true,
-  //     text: 'Transition Time Trends',
-  //     fontSize: 20,
-  //     fontStyle: 'bold'
-  // },
   tooltips: {
     mode: "index",
     intersect: false
@@ -75,7 +35,7 @@ const ChildBehaviorTrendsOptions = {
           beginAtZero: true,
           min: 0,
           max: 100,
-          callback: function(value: number) {
+          callback: function(value: number): string {
             return value + "%";
           }
         },
@@ -92,7 +52,7 @@ const ChildBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value: number) {
+      formatter: function(value: number): string {
         return value + "%";
       }
     }
@@ -114,11 +74,9 @@ class ChildBehaviorTrendsVerticalBar extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
-    // const { classes } = this.props;
-
+  render(): React.ReactNode {
     return (
       <Line
         data={this.props.data}
@@ -131,7 +89,6 @@ class ChildBehaviorTrendsVerticalBar extends React.Component<Props, {}> {
 }
 
 ChildBehaviorTrendsVerticalBar.propTypes = {
-  // classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired
 };
 

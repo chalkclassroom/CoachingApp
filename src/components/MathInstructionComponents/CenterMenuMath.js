@@ -51,7 +51,8 @@ const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
         maxWidth: 150,
         whiteSpace: "normal",
         wordWrap: "break-word",
-        backgroundColor: `hsl(14, 78%, ${hsl}%`//hsl code to red/orange-math
+        backgroundColor: `hsl(14, 78%, ${hsl}%`,//hsl code to red/orange-math
+        fontFamily: 'Arimo'
       }}
       onClick={onClick}
     >
@@ -120,11 +121,11 @@ class CenterChecklist extends React.Component {
             component="h4"
             variant="h4"
             align="center"
-            style={{ padding: "10px" }}
+            style={{ padding: "10px", fontFamily: 'Arimo' }}
           >
             Which centers are open?
           </Typography>
-          <Typography>
+          <Typography style={{fontFamily: 'Arimo'}}>
             You will have the opportunity to add additional centers if the ones
             in your classroom are not listed here.
           </Typography>
@@ -151,8 +152,9 @@ class CenterChecklist extends React.Component {
                       disableRipple
                     />
                     <ListItemText
-                      primary={value}
-                      style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+                      primary={<Typography variant="h6" style={{fontFamily: "Arimo"}}>{value}</Typography>}
+                      disableTypography
+                      style={{ whiteSpace: "normal", wordWrap: "break-word", fontFamily: 'Arimo' }}
                     />
                   </ListItem>
                 ))}
@@ -175,8 +177,9 @@ class CenterChecklist extends React.Component {
                       disableRipple
                     />
                     <ListItemText
-                      primary={value}
-                      style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+                      primary={<Typography variant="h6" style={{fontFamily: "Arimo"}}>{value}</Typography>}
+                      disableTypography
+                      style={{ whiteSpace: "normal", wordWrap: "break-word", fontFamily: 'Arimo' }}
                     />
                   </ListItem>
                 ))}
@@ -187,6 +190,7 @@ class CenterChecklist extends React.Component {
             variant="contained"
             color="secondary"
             onClick={this.handleDone}
+            style={{ fontFamily: 'Arimo' }}
           >
             Done
           </Button>
@@ -204,9 +208,9 @@ class NewCenterDialog extends React.Component {
         onClose={this.props.handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Add a New Center</DialogTitle>
+        <DialogTitle id="form-dialog-title" style={{fontFamily: 'Arimo'}}>Add a New Center</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText style={{fontFamily: 'Arimo'}}>
             Please enter the name of the new center.
           </DialogContentText>
           <TextField
@@ -220,12 +224,13 @@ class NewCenterDialog extends React.Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.handleClose} color="primary">
+          <Button onClick={this.props.handleClose} color="primary" style={{fontFamily: 'Arimo'}}>
             Cancel
           </Button>
           <Button
             onClick={() => this.props.handleSubmit(this.centerName.value)}
             color="primary"
+            style={{fontFamily: 'Arimo'}}
           >
             Add Center
           </Button>
@@ -245,7 +250,7 @@ class CenterMenuMath extends React.Component {
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: "AC"
+      type: "math"
     };
     this.props.firebase.handleSession(mEntry);
   }
@@ -368,7 +373,8 @@ class CenterMenuMath extends React.Component {
                           maxHeight: 150,
                           minWidth: 150,
                           maxWidth: 150,
-                          backgroundColor: grey[400]
+                          backgroundColor: grey[400],
+                          fontFamily: 'Arimo'
                         }}
                         onClick={this.handleClickOpen}
                       >

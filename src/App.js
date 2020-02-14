@@ -19,9 +19,9 @@ import {
   withStyles
 } from "@material-ui/core/styles";
 import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage.tsx";
-import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage";
+import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage.tsx";
 import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage.tsx";
-import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage";
+import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage.tsx";
 import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage.tsx";
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage.tsx";
 import LevelOfInstructionTrainingPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage.tsx";
@@ -30,6 +30,7 @@ import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivi
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
 import MathInstructionTrainingPage from "./views/protected/MathInstructionViews/MathInstructionTrainingPage.tsx";
 import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage"; 
+import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
@@ -200,6 +201,11 @@ class App extends Component {
               auth={this.state.auth}
               path="/MathInstruction"
               component={MathInstructionPage}
+            />  
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstructionResults"
+              component={MathInstructionResultsPage}
             />  
             <PrivateRoute
               auth={this.state.auth}

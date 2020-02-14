@@ -11,10 +11,10 @@ interface Props {
 
 /**
  * Pie Chart for Associative&Cooperative Teacher Behaviors
- * @class TeacherBehaviorsPie
+ * @class TeacherPieSummary
  * @return {void}
  */
-class TeacherBehaviorsPie extends React.Component<Props, {}> {
+class TeacherPieSummary extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -90,4 +90,4 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
   }
 }
 
-export default TeacherBehaviorsPie;
+export default TeacherPieSummary;

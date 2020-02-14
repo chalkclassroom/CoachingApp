@@ -162,6 +162,7 @@ class ResultsDashboard extends React.Component {
 		};
 	}
 
+<<<<<<< HEAD
 	componentDidMount = () => {
 		if (this.props.magic8 === 'Transition Time') {
 			this.setState({
@@ -205,6 +206,51 @@ class ResultsDashboard extends React.Component {
 			});
 		}
 	};
+=======
+  componentDidMount = () => {
+    if (this.props.magic8 === "Transition Time") {
+      this.setState({
+        icon: TransitionTimeIconImage,
+        theme: TransitionTheme
+      });
+    } else if (this.props.magic8 === "Classroom Climate") {
+      this.setState({
+        icon: ClassroomClimateIconImage,
+        theme: ClimateTheme
+      })
+    } else if (this.props.magic8 === "Math Instruction") {
+      this.setState({
+        icon: MathIconImage,
+        theme: MathTheme
+      })
+    } else if (this.props.magic8 === "Level of Engagement") {
+      this.setState({
+        icon: EngagementIconImage,
+        theme: EngagementTheme
+      })
+    } else if (this.props.magic8 === "Level of Instruction") {
+      this.setState({
+        icon: InstructionIconImage,
+        theme: InstructionTheme
+      })
+    } else if (this.props.magic8 === "Listening to Children") {
+      this.setState({
+        icon: ListeningIconImage,
+        theme: ListeningTheme
+      })
+    } else if (this.props.magic8 === "Sequential Activities") {
+      this.setState({
+        icon: SequentialIconImage,
+        theme: SequentialTheme
+      })
+    } else {
+      this.setState({
+        icon: AssocCoopIconImage,
+        theme: ACTheme
+      })
+    }
+  };
+>>>>>>> bfd22c05763e2bdefd25480f45fb620768cea133
 
 	/**
    * render function
