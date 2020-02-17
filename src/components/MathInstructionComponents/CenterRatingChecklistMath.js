@@ -16,6 +16,7 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
+import * as Constants from "../../constants";
 
 const styles = {
   root: {
@@ -247,8 +248,8 @@ class CenterRatingChecklistMath extends React.Component {
                 {/* <div style={{ margin: 20 }} /> */}
                 <Dashboard
                   magic8="Math Instruction"
-                  color="#E55529"
-                  infoDisplay={<Countdown color="#E55529" timerTime={60000} />}
+                  color={Constants.MathColor}
+                  infoDisplay={<Countdown color={Constants.MathColor} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />
