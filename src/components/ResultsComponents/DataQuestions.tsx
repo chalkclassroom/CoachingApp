@@ -66,9 +66,9 @@ class DataQuestions extends React.Component<Props, {}> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render():React.ReactNode {
     const { classes } = this.props;
     return (
       <div>
@@ -105,7 +105,7 @@ class DataQuestions extends React.Component<Props, {}> {
                     </Grid>
                     <Grid item xs={1}>
                       <Button
-                        onClick={this.props.handleAddToPlan.bind(this, item.name)}
+                        onClick={this.props.handleAddToPlan.bind(this, item.name, index)}
                       >
                         <AddCircleIcon style={{fill: this.props.color}} />
                       </Button>

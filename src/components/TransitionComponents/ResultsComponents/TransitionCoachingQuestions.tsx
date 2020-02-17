@@ -168,7 +168,7 @@ interface Props {
 interface State {
   categoryView: string,
   openPanel: string,
-  addedToPrep: Array<string>
+  addedToPrep: Array<{panel: string, number: number}>
 }
 
 /**
@@ -248,11 +248,13 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
   };
 
   /**
-   * @param {string} panel
+   * checks if question has already been added and if not, adds it
+   * @param {string} panelTitle
+   * @param {number} index
    */
-  handleAddToPlan = (panel: string): void => {
-    if (!this.state.addedToPrep.includes(panel)) {
-      this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
+  handleAddToPlan = (panelTitle: string, index: number): void => {
+    if (!this.state.addedToPrep.includes({panel: panelTitle, number: index})) {
+      this.setState({ addedToPrep: [...this.state.addedToPrep, {panel: panelTitle, number: index}] });
     }
   };
 
@@ -264,6 +266,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     const { classes } = this.props;
     return(
       <Grid container direction="column">
+        {console.log('questions: ', this.state.addedToPrep)}
+        {console.log(this.state.addedToPrep.includes({panel: "TransitionPanel1A", number: 1}))}
         <Grid container direction="row" justify="center" alignItems="center">
           <Typography variant="subtitle2" style={{fontFamily: 'Arimo'}}>
             In which type of transition did children spend the most amount of time?

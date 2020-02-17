@@ -12,6 +12,9 @@ const config = {
   measurementId: "G-S797QZ8L3N"
 };
 
+/**
+ * defines functions to get and set data in cloud firestore
+ */
 class Firebase {
   constructor() {
     if (!firebase.apps.length) {
@@ -1084,7 +1087,7 @@ class Firebase {
             id: doc.id,
             goal: doc.data().goal,
             benefit: doc.data().benefit,
-            date: doc.data().date
+            date: doc.data().dateCreated
           })
         );
         return idArr;
@@ -1142,6 +1145,72 @@ class Firebase {
     .catch((error) => {
       console.error("Error updating action plan: ", error);
     })
+  }
+
+  /**
+   * creates conference plan in cloud firestore
+   * @param {string} teacherId
+   * @param {string} sessionId
+   * @param {string} magic8
+   */
+  createConferencePlan = async function(teacherId, sessionId, magic8) {
+    const data = Object.assign(
+      {},
+      {
+        sessionId: sessionId,
+        coach: this.auth.currentUser.uid,
+        teacher: teacherId,
+        tool: magic8,
+        dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+        feedback: '',
+        questions: [],
+        notes: ''
+      }
+    );
+    const conferencePlansRef = firebase.firestore().collection('conferencePlans').doc();
+    conferencePlansRef.set(data).then(() => {
+      /* const actionStepsRef = actionPlansRef.collection("actionSteps").doc('0');
+      actionStepsRef.set({
+        materials: '',
+        person: '',
+        step: '',
+        // timeline: firebase.firestore.FieldValue.serverTimestamp()
+        timeline: ''
+      }).then(() => {
+        console.log('action steps created');
+      }).catch(() => {
+        console.log('error creating action steps');
+      }) */
+      console.log('conference plan created');
+    }).catch(() => {
+      console.log('error creating action plan');
+    })
+  }
+
+  /**
+   * gets data in conference plan
+   * @param {string} sessionId
+   */
+  getConferencePlan = async function(sessionId) {
+    this.sessionRef = this.db.collection("conferencePlans")
+      .where("sessionId", "==", sessionId)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            feedback: doc.data().feedback,
+            questions: doc.data().questions,
+            notes: doc.data().notes,
+            date: doc.data().dateCreated
+          })
+        );
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve conference plan')
+      })
   }
 
 }

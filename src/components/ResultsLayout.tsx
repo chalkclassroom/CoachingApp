@@ -17,6 +17,7 @@ import "chartjs-plugin-datalabels";
 import ResultsDashboard from './ResultsDashboard';
 import ActionPlanForm from './ActionPlanForm';
 import ActionPlanModal from './ActionPlanModal';
+import ConferencePlanForm from './ConferencePlanForm';
 
 const styles: object = {
   root: {
@@ -316,6 +317,14 @@ class ResultsLayout extends React.Component<Props, State> {
                 </div>
               ) : this.state.view === ViewEnum.COACH_PREP ? (
                 <div className={classes.resultsContent}>
+                  <FirebaseContext.Consumer>
+                    {(firebase: object) => <ConferencePlanForm 
+                      conferencePlanExists={true}
+                      firebase={firebase}
+                      teacherFirstName={this.props.teacherFirstName}
+                      teacherLastName={this.props.teacherLastName}
+                    />}
+                  </FirebaseContext.Consumer>
                   {/* <Grid>
                     <Card className={classes.coachPrepCard} style={{height: "30vh"}}>
                       <CardContent>
