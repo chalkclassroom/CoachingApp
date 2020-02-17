@@ -118,7 +118,7 @@ class TransitionTimer extends React.Component {
             text={this.state.time === 0 ? "0:00" : ms(this.state.time)}
             initialAnimation={false}
             styles={{
-              path: { stroke: "#19468D" },
+              path: { stroke: Constants.TransitionColor },
               text: { fill: "white", fontSize: "16px" },
               background: { fill: Constants.TransitionColor }
             }}
