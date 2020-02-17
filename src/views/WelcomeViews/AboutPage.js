@@ -1052,7 +1052,6 @@ class AboutPage extends React.Component {
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-
         {this.headerGraphic(this.props)}
         {this.foundationsComponent(this.props)}
         {this.dataComponent(this.props)}
@@ -1068,5 +1067,4 @@ AboutPage.propTypes = {
 
 // const AboutwRouter = withRouter(About)
 // export default withStyles(styles)(AboutwRouter);
-
 export default withRouter(connect()(withStyles(styles)(AboutPage)));

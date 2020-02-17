@@ -207,6 +207,15 @@ class AppBar extends React.Component {
                 <div color="inherit" className={classes.grow}/>
                 <Router>
                   <div>
+                  <Link to="/story" className={classes.link}>
+                      <Button
+                        color="secondary"
+                        className={classes.menuButton}
+                        onClick={() => this.props.history.push("/story")}
+                      >
+                        Our Story
+                      </Button>
+                    </Link>
                     <Link to="/" className={classes.link}>
                       <Button
                         color="secondary"
@@ -225,7 +234,7 @@ class AppBar extends React.Component {
                         Team
                       </Button>
                     </Link>
-                    {/* <Link to="/about" className={classes.link}>
+                   {/*  <Link to="/about" className={classes.link}>
                       <Button
                         color="secondary"
                         className={classes.menuButton}
