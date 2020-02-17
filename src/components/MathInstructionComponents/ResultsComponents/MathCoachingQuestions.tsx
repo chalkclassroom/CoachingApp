@@ -117,7 +117,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
-                <Typography>
+                <Typography style={{color: 'white'}}>
                   Counting and Numbers
                 </Typography>
               </Button >
@@ -131,7 +131,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
-                <Typography style={{color: 'black'}}>
+                <Typography style={{color: 'white'}}>
                   Measurement and Data
                 </Typography>
               </Button>
@@ -145,7 +145,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
-                <Typography style={{color: 'black'}}>
+                <Typography style={{color: 'white'}}>
                   Patterns
                 </Typography>
               </Button>
@@ -159,7 +159,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
-                <Typography style={{color: 'black'}}>
+                <Typography style={{color: 'white'}}>
                   Shapes and Spatial Reasoning
                 </Typography>
               </Button>
@@ -173,7 +173,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
-                <Typography>
+                <Typography style={{color: 'white'}}>
                   Teacher Support for Math
                 </Typography>
               </Button>
