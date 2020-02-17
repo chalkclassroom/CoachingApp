@@ -332,9 +332,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        {console.log("transition: ", this.state.transitionTime)}
-        {console.log("learning activity: ", this.state.learningActivityTime)}
-        {console.log("session total: ", this.state.sessionTotal)}
         <ResultsLayout
           teacherId={this.props.location.state.teacher.id}
           magic8="Transition Time"
