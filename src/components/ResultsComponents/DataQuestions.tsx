@@ -35,8 +35,8 @@ interface Props {
   questions: Array<{name: string, title: string, text: Array<string>}>,
   openPanel: string,
   handlePanelChange(panel: string): void,
-  addedToPrep: Array<string>,
-  handleAddToPlan(panel: string): void,
+  addedToPlan: Array<{panel: string, index: number, question: string}>,
+  handleAddToPlan(panelTitle: string, index: number, question: string): void,
   color: string
 }
 
@@ -60,7 +60,7 @@ class DataQuestions extends React.Component<Props, {}> {
       text: PropTypes.array})).isRequired,
     openPanel: PropTypes.string,
     handlePanelChange: PropTypes.func.isRequired,
-    addedToPrep: PropTypes.array.isRequired,
+    addedToPlan: PropTypes.array.isRequired,
     handleAddToPlan: PropTypes.func.isRequired
   };
 
@@ -83,7 +83,7 @@ class DataQuestions extends React.Component<Props, {}> {
               <Typography
                 className={classes.expansionPanelTitle}
                 style={{
-                  textDecoration: this.props.addedToPrep.includes(item.name)
+                  textDecoration: this.props.addedToPlan.includes({panel: item.name, number: index})
                     ? "underline"
                     : null,
                   fontFamily: "Arimo"
@@ -94,18 +94,18 @@ class DataQuestions extends React.Component<Props, {}> {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Grid container direction="column">
-                {item.text.map((questions, index) => (
+                {item.text.map((question, index) => (
                   <Grid container direction="row" key={index}>
                     <Grid item xs={10}>
                       <div className={classes.expansionPanelText}>
                         <ul style={{fontFamily: "Arimo"}}>
-                          {questions}
+                          {question}
                         </ul>
                       </div>
                     </Grid>
                     <Grid item xs={1}>
                       <Button
-                        onClick={this.props.handleAddToPlan.bind(this, item.name, index)}
+                        onClick={this.props.handleAddToPlan.bind(this, item.name, index, question)}
                       >
                         <AddCircleIcon style={{fill: this.props.color}} />
                       </Button>

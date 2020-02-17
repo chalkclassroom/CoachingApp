@@ -70,10 +70,11 @@ interface Props {
   changeSessionId: any,
   sessionId: string,
   questions: React.ReactNode,
+  chosenQuestions: Array<{panel: string, number: number}>,
   notes: Array<{timestamp: Date, content: string}>,
   teacherFirstName: string,
   teacherLastName: string,
-  actionPlanExists: boolean
+  actionPlanExists: boolean,
 }
 
 interface Style {
@@ -323,6 +324,7 @@ class ResultsLayout extends React.Component<Props, State> {
                       firebase={firebase}
                       teacherFirstName={this.props.teacherFirstName}
                       teacherLastName={this.props.teacherLastName}
+                      chosenQuestions={this.props.chosenQuestions}
                     />}
                   </FirebaseContext.Consumer>
                   {/* <Grid>

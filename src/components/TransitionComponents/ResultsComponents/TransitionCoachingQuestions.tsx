@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { withStyles, createMuiTheme } from "@material-ui/core/styles";
+import { withStyles, createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants';
 import {
   lightGreen,
@@ -162,7 +162,9 @@ interface Props {
         }
       }
     }
-  }
+  },
+  handleAddToPlan(panelTitle: string, index: number): void,
+  addedToPlan: Array<{panel: string, number: number, question: string}>
 }
 
 interface State {
@@ -248,17 +250,6 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
   };
 
   /**
-   * checks if question has already been added and if not, adds it
-   * @param {string} panelTitle
-   * @param {number} index
-   */
-  handleAddToPlan = (panelTitle: string, index: number): void => {
-    if (!this.state.addedToPrep.includes({panel: panelTitle, number: index})) {
-      this.setState({ addedToPrep: [...this.state.addedToPrep, {panel: panelTitle, number: index}] });
-    }
-  };
-
-  /**
    * render function
    * @return {ReactNode}
    */
@@ -266,8 +257,6 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     const { classes } = this.props;
     return(
       <Grid container direction="column">
-        {console.log('questions: ', this.state.addedToPrep)}
-        {console.log(this.state.addedToPrep.includes({panel: "TransitionPanel1A", number: 1}))}
         <Grid container direction="row" justify="center" alignItems="center">
           <Typography variant="subtitle2" style={{fontFamily: 'Arimo'}}>
             In which type of transition did children spend the most amount of time?
@@ -363,8 +352,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               questions={Constants.CoachingQuestions.Transition.LineQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "traveling" ? (
@@ -372,8 +361,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               questions={Constants.CoachingQuestions.Transition.TravelingQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "childrenWaiting" ? (
@@ -381,8 +370,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               questions={Constants.CoachingQuestions.Transition.WaitingQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "routines" ? (
@@ -390,8 +379,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               questions={Constants.CoachingQuestions.Transition.RoutinesQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "behavior" ? (
@@ -399,8 +388,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               questions={Constants.CoachingQuestions.Transition.BehaviorQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
               color={Constants.TransitionColor}
             />
           ) : <div/>}

@@ -48,7 +48,8 @@ interface State {
   transitionTime: number,
   sessionTotal: number,
   learningActivityTime: number,
-  actionPlanExists: boolean
+  actionPlanExists: boolean,
+  addedToPlan: Array<{panel: string, number: number, question: string}>
 }
 
 /**
@@ -83,7 +84,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
       transitionTime: 0,
       sessionTotal: 0,
       learningActivityTime: 0,
-      actionPlanExists: false
+      actionPlanExists: false,
+      addedToPlan: []
     };
   }
 
@@ -319,6 +321,22 @@ class TransitionResultsPage extends React.Component<Props, State> {
       });
   })};
 
+  /**
+   * checks if question has already been added and if not, adds it
+   * @param {string} panelTitle
+   * @param {number} index
+   */
+  handleAddToPlan = (panelTitle: string, index: number, question: string): void => {
+    const itemIndex = this.state.addedToPlan.findIndex(e => e.panel === panelTitle && e.number === index);
+    if (itemIndex === -1) {
+      this.setState({ addedToPlan: [...this.state.addedToPlan, {panel: panelTitle, number: index, question: question}] });
+    } else {
+      const newArray = [...this.state.addedToPlan];
+      newArray.splice(itemIndex, 1);
+      this.setState({ addedToPlan: newArray });
+    }
+  };
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
@@ -374,7 +392,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
           notes={this.state.notes}
-          questions={<TransitionCoachingQuestions />}
+          questions={<TransitionCoachingQuestions handleAddToPlan={this.handleAddToPlan} addedToPlan={this.state.addedToPlan}/>}
+          chosenQuestions = {this.state.addedToPlan}
           teacherFirstName={this.props.location.state.teacher.firstName}
           teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}

@@ -43,6 +43,7 @@ interface Props {
   handleClose?(): void,
   conferencePlanExists: boolean,
   editMode: boolean,
+  chosenQuestions: Array<{panel: string, number: number, question: string}>
 }
 
 interface State {
@@ -348,6 +349,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
     handleClose: PropTypes.func,
     conferencePlanExists: PropTypes.bool.isRequired,
     editMode: PropTypes.bool.isRequired,
+    chosenQuestions: PropTypes.array.isRequired,
   };
 
   /**
@@ -460,6 +462,14 @@ class ConferencePlanForm extends React.Component<Props, State> {
                 InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
                 style={{border: '2px solid #094492'}}
               />
+            </Grid>
+            <Grid item xs={12} style={{width: "100%", paddingBottom: '0.1em'}}>
+              {this.props.chosenQuestions.map((value, index) => {
+                return (
+                <Typography key={index}>
+                  {value.question}
+                </Typography>);
+              })}
             </Grid>
             <Grid item xs={12} style={{width: "100%", paddingBottom: '0.1em'}}>
               <TextField
