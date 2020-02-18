@@ -216,11 +216,11 @@ class AppBar extends React.Component {
                         Our Story
                       </Button>
                     </Link>
-                    <Link to="/" className={classes.link}>
+                    <Link to="/story" className={classes.link}>
                       <Button
                         color="secondary"
                         className={classes.menuButton}
-                        onClick={() => this.props.history.push("/")}
+                        onClick={() => this.props.history.push("/story")}
                       >
                         Homepage
                       </Button>

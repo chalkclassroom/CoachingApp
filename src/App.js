@@ -30,6 +30,7 @@ import MathInstructionTrainingPage from "./views/protected/MathInstructionViews/
 import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage"; 
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
 import AboutPage from "./views/WelcomeViews/AboutPage";
+import OurStory from "./views/WelcomeViews/OurStory";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import LogRocket from 'logrocket';
@@ -169,6 +170,11 @@ class App extends Component {
               auth={this.state.auth || !this.state.auth}
               path="/about"
               component={AboutPage}
+            />
+             <PrivateRoute
+              auth={this.state.auth}
+              path="/story"
+              component={OurStory}
             />
             <PrivateRoute
               auth={this.state.auth || !this.state.auth}
