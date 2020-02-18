@@ -172,7 +172,7 @@ class App extends Component {
               component={AboutPage}
             />
              <PrivateRoute
-              auth={this.state.auth}
+              auth={this.state.auth || !this.state.auth}
               path="/story"
               component={OurStory}
             />
