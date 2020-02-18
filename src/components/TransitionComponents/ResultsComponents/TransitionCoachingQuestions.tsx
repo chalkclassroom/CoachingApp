@@ -163,7 +163,7 @@ interface Props {
       }
     }
   },
-  handleAddToPlan(panelTitle: string, index: number): void,
+  handleAddToPlan(panelTitle: string, index: number, question: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>
 }
 

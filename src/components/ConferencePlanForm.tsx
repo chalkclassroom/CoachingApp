@@ -39,10 +39,10 @@ interface Props {
   teacherId: string,
   sessionId: string,
   readOnly: boolean,
-  handleEditActionPlan(): void,
+  // handleEditActionPlan(): void,
   handleClose?(): void,
   conferencePlanExists: boolean,
-  editMode: boolean,
+  //editMode: boolean,
   chosenQuestions: Array<{panel: string, number: number, question: string}>
 }
 
@@ -321,9 +321,9 @@ class ConferencePlanForm extends React.Component<Props, State> {
         createMode: false
       })
     }
-    if (this.props.editMode != prevProps.editMode) {
+    /* if (this.props.editMode != prevProps.editMode) {
       this.getConferencePlan();
-    }
+    } */
     if (this.state.conferencePlanExists != prevState.conferencePlanExists) {
       this.getConferencePlan();
     }
@@ -345,10 +345,10 @@ class ConferencePlanForm extends React.Component<Props, State> {
     teacherId: PropTypes.string.isRequired,
     sessionId: PropTypes.string.isRequired,
     readOnly: PropTypes.bool.isRequired,
-    handleEditActionPlan: PropTypes.func.isRequired,
+    // handleEditActionPlan: PropTypes.func.isRequired,
     handleClose: PropTypes.func,
     conferencePlanExists: PropTypes.bool.isRequired,
-    editMode: PropTypes.bool.isRequired,
+    // editMode: PropTypes.bool.isRequired,
     chosenQuestions: PropTypes.array.isRequired,
   };
 
@@ -434,7 +434,8 @@ class ConferencePlanForm extends React.Component<Props, State> {
                 </Grid>
                 <Grid item xs={4}>
                   <Grid container direction="row" justify="flex-end">
-                    {this.state.date}
+                    {/* date value is an object */}
+                    {/* {this.state.date} */}
                   </Grid>
                 </Grid>
               </Grid>

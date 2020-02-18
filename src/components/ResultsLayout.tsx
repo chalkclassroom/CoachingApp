@@ -75,6 +75,7 @@ interface Props {
   teacherFirstName: string,
   teacherLastName: string,
   actionPlanExists: boolean,
+  conferencePlanExists: boolean
 }
 
 interface Style {
@@ -318,15 +319,26 @@ class ResultsLayout extends React.Component<Props, State> {
                 </div>
               ) : this.state.view === ViewEnum.COACH_PREP ? (
                 <div className={classes.resultsContent}>
-                  <FirebaseContext.Consumer>
-                    {(firebase: object) => <ConferencePlanForm 
-                      conferencePlanExists={true}
-                      firebase={firebase}
-                      teacherFirstName={this.props.teacherFirstName}
-                      teacherLastName={this.props.teacherLastName}
-                      chosenQuestions={this.props.chosenQuestions}
-                    />}
-                  </FirebaseContext.Consumer>
+                  {this.props.sessionId ? 
+                  (
+                    <FirebaseContext.Consumer>
+                      {(firebase: object) => <ConferencePlanForm 
+                        conferencePlanExists={this.props.conferencePlanExists}
+                        firebase={firebase}
+                        teacherFirstName={this.props.teacherFirstName}
+                        teacherLastName={this.props.teacherLastName}
+                        chosenQuestions={this.props.chosenQuestions}
+                        teacherId={this.props.teacherId}
+                        sessionId={this.props.sessionId}
+                        magic8={this.props.magic8}
+                        readOnly={true}
+                      />}
+                    </FirebaseContext.Consumer>
+                  ) : (
+                    <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
+                      Please choose a date from the dropdown menu.
+                    </Typography>
+                  )}
                   {/* <Grid>
                     <Card className={classes.coachPrepCard} style={{height: "30vh"}}>
                       <CardContent>

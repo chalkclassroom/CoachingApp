@@ -49,6 +49,7 @@ interface State {
   sessionTotal: number,
   learningActivityTime: number,
   actionPlanExists: boolean,
+  conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>
 }
 
@@ -85,6 +86,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
       sessionTotal: 0,
       learningActivityTime: 0,
       actionPlanExists: false,
+      conferencePlanExists: false,
       addedToPlan: []
     };
   }
@@ -297,6 +299,23 @@ class TransitionResultsPage extends React.Component<Props, State> {
         console.log('unable to retrieve action plan')
       })
 
+      firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+        {console.log('does conf plan exists? ', this.state.conferencePlanExists)}
+        {console.log('the data returned is ', conferencePlanData)}
+        if (conferencePlanData[0]) {
+          console.log('conferenceplan data: ', conferencePlanData)
+          this.setState({
+            conferencePlanExists: true
+          })
+        } else {
+          this.setState({
+            conferencePlanExists: false
+          })
+        }
+      }).catch(() => {
+        console.log('unable to retrieve conference plan transition results page')
+      })
+
       /* firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
         this.setState({
           sessionLine: Math.round(((type[0].line/type[0].total)*100)),
@@ -397,6 +416,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
           teacherFirstName={this.props.location.state.teacher.firstName}
           teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
+          conferencePlanExists={this.state.conferencePlanExists}
         />
       </div>
     );

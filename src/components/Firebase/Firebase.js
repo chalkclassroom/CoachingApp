@@ -1183,7 +1183,7 @@ class Firebase {
       }) */
       console.log('conference plan created');
     }).catch(() => {
-      console.log('error creating action plan');
+      console.log('error creating conference plan');
     })
   }
 
