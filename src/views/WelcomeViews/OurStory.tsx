@@ -1,43 +1,42 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import AppBar from '../../components/AppBar';
-import FirebaseContext from '../../components/Firebase/FirebaseContext.js';
-import Grid from '@material-ui/core/Grid/Grid';
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import AppBar from "../../components/AppBar";
+import FirebaseContext from "../../components/Firebase/FirebaseContext.js";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography/Typography";
+import LogoImage from "../../assets/images/LogoImage.svg";
+import PieChartImage from "../../assets/images/PieChartImage.svg";
+import HighFiveImage from "../../assets/images/HighFiveImage.svg";
+import BookImage from "../../assets/images/BookImage.svg";
+import FeedbackImage from "../../assets/images/FeedbackImage.svg";
+import MedalImage from "../../assets/images/MedalImage.svg";
+import LightbulbImage from "../../assets/images/LightbulbImage.svg";
+import BoxImage from "../../assets/images/BoxImage.svg";
+import SchoolImage from "../../assets/images/SchoolImage.svg";
+import ProblemOrangeImage from "../../assets/images/ProblemOrangeImage.svg";
+import LightbulbYellowImpactImage from "../../assets/images/LightbulbYellowImpactImage.svg";
+import PilotProgramImage from "../../assets/images/PilotProgramImage.svg";
+import EventsImage from "../../assets/images/EventsImage.svg";
+import SearchEngineImage from "../../assets/images/SearchEngineImage.svg";
+import MNPSLogoImage from "../../assets/images/MNPSLogoImage.jpg";
+import AbtLogoImage from "../../assets/images/AbtLogoImage.png";
+import PreschoolPromiseLogoImage from "../../assets/images/PreschoolPromiseLogoImage.jpg";
+import UDaytonLogoImage from "../../assets/images/UDaytonLogoImage.jpg";
+import UnitedWayLogoImage from "../../assets/images/UnitedWayLogoImage.jpg";
+import VanderbiltPeabodyLogoImage from "../../assets/images/VanderbiltPeabodyLogoImage.png";
+import WondryLogoImage from "../../assets/images/WondryLogoImage.png";
+import InvolveDetail from "../../components/StoryPageComponents/InvolveDetail.tsx";
+import ArrowDetail from "../../components/StoryPageComponents/ArrowDetail.tsx";
+import BlueBarDetail from "../../components/StoryPageComponents/BlueBarDetail.tsx";
+import TextField from "@material-ui/core/TextField";
+import Fab from "@material-ui/core/Fab";
+import UpcomingEventsModal from "../../components/LandingPageComponents/UpcomingEventsModal.tsx";
+import PilotModal from "../../components/StoryPageComponents/PilotModal.tsx";
+import DemoModal from "../../components/StoryPageComponents/DemoModal.tsx";
+import { ClickAwayListener } from "@material-ui/core/es";
 
-import LogoImage from '../../assets/images/LogoImage.svg';
-import PieChartImage from '../../assets/images/PieChartImage.svg';
-import HighFiveImage from '../../assets/images/HighFiveImage.svg';
-import BookImage from '../../assets/images/BookImage.svg';
-import FeedbackImage from '../../assets/images/FeedbackImage.svg';
-import MedalImage from '../../assets/images/MedalImage.svg';
-import LightbulbImage from '../../assets/images/LightbulbImage.svg';
-import BoxImage from '../../assets/images/BoxImage.svg';
-import SchoolImage from '../../assets/images/SchoolImage.svg';
-import ProblemOrangeImage from '../../assets/images/ProblemOrangeImage.svg';
-import LightbulbYellowImpactImage from '../../assets/images/LightbulbYellowImpactImage.svg';
-import PilotProgramImage from '../../assets/images/PilotProgramImage.svg';
-import EventsImage from '../../assets/images/EventsImage.svg';
-import SearchEngineImage from '../../assets/images/SearchEngineImage.svg';
-import MNPSLogoImage from '../../assets/images/MNPSLogoImage.jpg';
-import AbtLogoImage from '../../assets/images/AbtLogoImage.png';
-import PreschoolPromiseLogoImage from '../../assets/images/PreschoolPromiseLogoImage.jpg';
-import UDaytonLogoImage from '../../assets/images/UDaytonLogoImage.jpg';
-import UnitedWayLogoImage from '../../assets/images/UnitedWayLogoImage.jpg';
-import VanderbiltPeabodyLogoImage from '../../assets/images/VanderbiltPeabodyLogoImage.png';
-import WondryLogoImage from '../../assets/images/WondryLogoImage.png';
-import Typography from '@material-ui/core/Typography/Typography';
-import InvolveDetail from '../../components/StoryPageComponents/InvolveDetail.tsx';
-import ArrowDetail from '../../components/StoryPageComponents/ArrowDetail.tsx';
-import BlueBarDetail from '../../components/StoryPageComponents/BlueBarDetail.tsx';
-import TextField from '@material-ui/core/TextField';
-import Fab from '@material-ui/core/Fab';
-import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.tsx';
-import PilotModal from '../../components/StoryPageComponents/PilotModal.tsx';
-import DemoModal from '../../components/StoryPageComponents/DemoModal.tsx';
-import { ClickAwayListener } from '@material-ui/core/es';
-
-const styles = {
+const styles: object = {
 	root: {
 		backgroundColor: '#ffffff'
 	},
@@ -220,20 +219,38 @@ const styles = {
 	}
 };
 
+
+interface Props {
+	classes: Style
+  };
+  
+  interface Style {
+	root: string,
+	mobileRoot: string,
+	titleText: string,
+	'@media (max-width: 700px)': string,
+	'@media (min-width: 701px)': string
+  }
+  
+  interface State {
+	events: boolean,
+	pilotModal: boolean,
+	demo: boolean,
+	email: string
+	emailAdded: boolean,
+	errors: boolean,
+	emailError: string  };
+
 /**
  * Our Story
  * @class OurStory
  */
-class OurStory extends React.Component {
-	/** 
-   * @param {Props} props
-   * @return {ReactElement}
-   */
+class OurStory extends React.Component<Props, State> {
 	/**
    * @param {Props} props 
    */
-	constructor(props) {
-		super(props);
+  constructor(props: Props) {
+	super(props);
 
 		this.state = {
 			events: false,
@@ -337,6 +354,11 @@ class OurStory extends React.Component {
 		this.validateState(name, event.target.value);
 	};
 
+	public static propTypes = {
+		classes: PropTypes.object.isRequired
+	  };
+	
+
 	/**
    * render function
    * @return {ReactElement}
@@ -378,7 +400,7 @@ class OurStory extends React.Component {
 									associated with positive Pre-K teaching outcomes. In order to empower coaches and
 									teachers to improve classroom practices, we designed an online tool that enables
 									coaches to monitor classroom behaviors and to create strategies for teachers to
-									provide children with high quality learning experiences.  GRP PICTURE
+									provide children with high quality learning experiences.  SOONER GROUP PICTURE
 								</Typography>
 							</Grid>
 							<Grid item xs={10} />
