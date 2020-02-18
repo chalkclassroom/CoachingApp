@@ -4,9 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import { withStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-
 
 const styles: object = {
   button: {
@@ -14,30 +11,19 @@ const styles: object = {
     backgroundColor: '#459aeb',
     fontSize: 14,
     fontFamily: 'Arimo',
-    letterSpacing: '0.03em'
+    letterSpacing: '0.03em',
+    textTransform: 'capitalize'
   },
   titleText: {
-    fontSize: 30,
-    color: '#000000',
-    fontFamily: 'Arimo',
-    fontWeight: 'bold'
+    fontSize: 22,
+    color: '#2f4b65',
+    paddingRight: '20%',
+    fontFamily: 'Arimo'
   },
-  rounded: {
-    backgroundColor: '#86CCFF',
-    height:200,
-    width:200
-  },
-  vertical: {
-    borderLeft: '15px solid #86CCFF',
-    //backgroundColor: '#86CCFF',
-    height: '5em',
-    marginLeft: '2.1em'
-  },
-  
   bodyText: {
-    fontSize: 24,
-    color: '#000000',
-    display: 'flex',
+    fontSize: 18,
+    color: '#2f4b65',
+    paddingRight: '20%',
     fontFamily: 'Arimo'
   },
   "@media (max-width: 700px)": {
@@ -64,18 +50,18 @@ interface Style {
 
 interface Props {
   classes: Style,
-/*   iconAlt: string,
-  icon: string,
-  title: string,
+  iconAlt1: string,
+  icon1: string,
+  title1: string,
   iconAlt2: string,
   icon2: string,
   title2: string,
-  text: string,
+  text1: string,
   text2: string,
-  button: string,
+  button1: string,
   button2: string,
-  onClick(): void,
-  onClick2(): void, */
+  onClick1(): void,
+  onClick2(): void,
   iconAlt: string,
   icon: string,
   title: string,
@@ -87,7 +73,7 @@ interface Props {
 /**
  * formatting for details on landing page
  */
-class ArrowDetail extends React.Component<Props, {}> {
+class InvolveDetail extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -97,18 +83,18 @@ class ArrowDetail extends React.Component<Props, {}> {
 
   static propTypes = {
     classes: PropTypes.object,
-    /* iconAlt: PropTypes.string,
-    icon: PropTypes.string,
-    title: PropTypes.string,
+    iconAlt1: PropTypes.string,
+    icon1: PropTypes.string,
+    title1: PropTypes.string,
     iconAlt2: PropTypes.string,
     icon2: PropTypes.string,
     title2: PropTypes.string,
-    text: PropTypes.string,
+    text1: PropTypes.string,
     text2: PropTypes.string,
-    button: PropTypes.string,
+    button1: PropTypes.string,
     button2: PropTypes.string,
-    onClick: PropTypes.func,
-    onClick2: PropTypes.func, */
+    onClick1: PropTypes.func,
+    onClick2: PropTypes.func,
     iconAlt: PropTypes.string,
     icon: PropTypes.string,
     title: PropTypes.string,
@@ -126,51 +112,72 @@ class ArrowDetail extends React.Component<Props, {}> {
     return(
       <div>
       <div className={classes.root}>
-      <Grid container direction="column">
-        <Grid item>
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={3}>
-              <Grid container direction="row" justify="flex-end" alignItems="flex-start" style={{height: '100%'}}>
-              <div className={classes.vertical} style={{paddingRight: 45}} />
-              <Avatar variant="circle" className={classes.rounded}>
-              <img alt={this.props.iconAlt} src={this.props.icon} height={100} width={100} style={{paddingRight: 0}}/>
-              </Avatar>
+        <Grid container direction="column">
+          <Grid item>
+            <Grid container direction="row" alignItems="center">
+              <Grid item xs={1} />
+              <Grid item xs={1}>
+                <Grid container direction="row" justify="flex-end" alignItems="flex-start" style={{height: '100%'}}>
+                  <img alt={this.props.iconAlt1} src={this.props.icon1} height={100} width={100} style={{paddingRight: 10}}/>
+                </Grid>
               </Grid>
-            
-
-            </Grid>
-            <Grid item xs={9} style={{paddingLeft: '1em', paddingRight: '1em'}}>
-              <Typography className={classes.titleText}>
-                {this.props.title}
-              </Typography>
+              <Grid item xs={4}>
+                <Typography className={classes.titleText}>
+                  {this.props.title1}
+                </Typography>
+              </Grid>
+              <Grid item xs={1}>
+                <Grid container direction="row" justify="flex-end" alignContent="center" style={{height: '100%'}}>
+                  <img alt={this.props.iconAlt2} src={this.props.icon2} height={100} width={100} style={{paddingRight: 10}}/>
+                </Grid>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography className={classes.titleText}>
+                  {this.props.title2}
+                </Typography>
+              </Grid>
+              <Grid item xs={1} />
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item style={{paddingTop: '1em'}}>
-          <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-            <Grid item xs={3} />
-            <Grid item xs={9} style={{paddingLeft: '1em', paddingRight: '1em'}}>
-              <Typography className={classes.bodyText}>
-                {this.props.text}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-        {this.props.button ? (
-          <Grid item style={{paddingTop: '1em', paddingBottom: '2em'}}>
+          <Grid item style={{paddingTop: '1em'}}>
             <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-              <Grid item xs={4} />
-              <Grid item xs={8}>
-                <Fab variant="extended" onClick={this.props.onClick} className={classes.button}>
-                  <strong>{this.props.button}</strong>
-                </Fab>
+              <Grid item xs={2} />
+              <Grid item xs={4}>
+                <Typography className={classes.bodyText}>
+                  {this.props.text1}
+                </Typography>
               </Grid>
+              <Grid item xs={1} />
+              <Grid item xs={4}>
+                <Typography className={classes.bodyText}>
+                  {this.props.text2}
+                </Typography>
+              </Grid>
+              <Grid item xs={1} />
             </Grid>
           </Grid>
-        ) : (
-          null
-        )}
-      </Grid>
+          {this.props.button1 || this.props.button2 ? (
+            <Grid item style={{paddingTop: '1em'}}>
+              <Grid container direction="row" justify="flex-start" alignItems="flex-start">
+                <Grid item xs={2} />
+                <Grid item xs={4}>
+                  <Fab variant="extended" onClick={this.props.onClick1} className={classes.button}>
+                    <strong>{this.props.button1}</strong>
+                  </Fab>
+                </Grid>
+                <Grid item xs={1} />
+                <Grid item xs={4}>
+                  <Fab variant="extended" onClick={this.props.onClick2} className={classes.button}>
+                    <strong>{this.props.button2}</strong>
+                  </Fab>
+                </Grid>
+                <Grid item xs={1} />
+              </Grid>
+            </Grid>
+          ) : (
+            null
+          )}
+        </Grid>
       </div>
       <div className={classes.mobileRoot}>
       <Grid container direction="column">
@@ -219,4 +226,4 @@ class ArrowDetail extends React.Component<Props, {}> {
   }
 }
 
-export default withStyles(styles)(ArrowDetail);
+export default withStyles(styles)(InvolveDetail);

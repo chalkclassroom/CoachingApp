@@ -20,10 +20,11 @@ const styles: object = {
     fontFamily: 'Arimo'
   },
   bodyText: {
-    fontSize: 18,
-    color: '#2f4b65',
+    fontSize: 24,
+    color: '#000000',
     paddingRight: '20%',
-    fontFamily: 'Arimo'
+    fontFamily: 'Arimo',
+    textDecoration: 'underline'
   },
   "@media (max-width: 700px)": {
     root: {

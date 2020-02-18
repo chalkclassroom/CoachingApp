@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import AppBar from '../../components/AppBar';
 import FirebaseContext from '../../components/Firebase/FirebaseContext.js';
 import Grid from '@material-ui/core/Grid/Grid';
+
 import LogoImage from '../../assets/images/LogoImage.svg';
 import PieChartImage from '../../assets/images/PieChartImage.svg';
 import HighFiveImage from '../../assets/images/HighFiveImage.svg';
@@ -26,17 +27,14 @@ import UnitedWayLogoImage from '../../assets/images/UnitedWayLogoImage.jpg';
 import VanderbiltPeabodyLogoImage from '../../assets/images/VanderbiltPeabodyLogoImage.png';
 import WondryLogoImage from '../../assets/images/WondryLogoImage.png';
 import Typography from '@material-ui/core/Typography/Typography';
-import LandingDetail from '../../components/LandingPageComponents/LandingDetail.tsx';
+import InvolveDetail from '../../components/StoryPageComponents/InvolveDetail.tsx';
 import ArrowDetail from '../../components/StoryPageComponents/ArrowDetail.tsx';
 import BlueBarDetail from '../../components/StoryPageComponents/BlueBarDetail.tsx';
-
-import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard.tsx';
-import Impact from '../../components/LandingPageComponents/Impact.tsx';
 import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
 import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.tsx';
-import PilotModal from '../../components/LandingPageComponents/PilotModal.tsx';
-import DemoModal from '../../components/LandingPageComponents/DemoModal.tsx';
+import PilotModal from '../../components/StoryPageComponents/PilotModal.tsx';
+import DemoModal from '../../components/StoryPageComponents/DemoModal.tsx';
 import { ClickAwayListener } from '@material-ui/core/es';
 
 const styles = {
@@ -97,6 +95,34 @@ const styles = {
 		fontSize: 42,
 		textAlign: 'center'
 	},
+	pageTitle: {
+		fontFamily: 'Arimo',
+		fontSize: 55,
+		fontWeight: 800,
+		color: '#0988EC',
+		textAlign: 'center'
+	},
+	missionTitle: {
+		fontFamily: 'Arimo',
+		fontSize: 30,
+		fontWeight: 900,
+		color: '#0988EC',
+		textAlign: 'center'
+	},
+	missionBody: {
+		fontFamily: 'Arimo',
+		fontSize: 25,
+		fontWeight: 800,
+		color: '#000000',
+		textAlign: 'center'
+	},
+	ReadMoreTitle: {
+		color: '#094492',
+		fontSize: 35,
+		fontFamily: 'Arimo',
+		textAlign: 'center',
+		fontStyle: 'normal'
+	},
 	getInvolvedTitle: {
 		color: '#2F4B65',
 		fontSize: 42,
@@ -110,14 +136,16 @@ const styles = {
 		paddingTop: 30,
 		fontFamily: 'Arimo',
 		fontWeight: 'bold'
-	},
+		},
 	textField: {
 		backgroundColor: 'white',
-		borderRadius: 10,
+		borderRadius: 75,
+		paddingTop: 5,
 		textAlign: 'center',
+		fontStyle: 'italic',
 		width: '90%',
 		fontFamily: 'Arimo'
-	},
+	  },
 	mailingListButton: {
 		color: '#ffffff',
 		backgroundColor: '#459aeb',
@@ -144,6 +172,18 @@ const styles = {
 		sectionTitle: {
 			fontSize: 32
 		},
+		pageTitle: {
+			fontSize: '45'
+		},
+		missionTitle: {
+			fontSize: '20'
+		},
+		missionBody: {
+			fontSize: '15'
+		},
+		ReadMoreTitle: {
+			fontSize: 25
+		},
 		getInvolvedTitle: {
 			textAlign: 'center'
 		},
@@ -155,6 +195,7 @@ const styles = {
 		},
 		mailingListButton: {
 			paddingTop: '1em',
+			textTransform: 'capitalize',
 			paddingBottom: '1em'
 		}
 	},
@@ -326,23 +367,24 @@ class OurStory extends React.Component {
 							className={classes.section}
 						>
 							<Grid item style={{ padding: 20 }}>
-								<Typography className={classes.sectionTitle}>
-									<strong>Our Story</strong></Typography>
-									<Typography className={classes.sectionTitle}>	<strong>CHALK's MISSION</strong>
-									
-
+								<Typography className={classes.pageTitle}>
+									<strong>OUR STORY</strong>
 								</Typography>
-								<Typography>
-								The Chalk Coaching Tool integrates 8 research-backed clusters of classroom practices associated with positive Pre-K teaching outcomes. In order to empower coaches and teachers to improve classroom practices, we designed an online tool that enables coaches to monitor classroom behaviors and to create strategies for teachers to provide children with high quality learning experiences.
-								GROUP PICTURE
+								<Typography className={classes.missionTitle}>
+									<strong>CHALK's MISSION</strong>
+								</Typography>
+								<Typography className={classes.missionBody}>
+									The Chalk Coaching Tool integrates 8 research-backed clusters of classroom practices
+									associated with positive Pre-K teaching outcomes. In order to empower coaches and
+									teachers to improve classroom practices, we designed an online tool that enables
+									coaches to monitor classroom behaviors and to create strategies for teachers to
+									provide children with high quality learning experiences.  GRP PICTURE
 								</Typography>
 							</Grid>
 							<Grid item xs={10} />
 							<Grid item xs={1} />
 						</Grid>
-						<Grid
-							item style={{ paddingTop: '1em' }}
-						>
+						<Grid item style={{ paddingTop: '1em' }}>
 							<Grid container /* direction="row" */>
 								<Grid item xs={12}>
 									<ArrowDetail
@@ -357,9 +399,7 @@ class OurStory extends React.Component {
 								</Grid>
 							</Grid>
 						</Grid>
-						<Grid
-							item style={{ paddingTop: '1em' }}
-						>
+						<Grid item style={{ paddingTop: '1em' }}>
 							<Grid container /* direction="row" */>
 								<Grid item xs={12}>
 									<ArrowDetail
@@ -390,10 +430,7 @@ class OurStory extends React.Component {
 								</Grid>
 							</Grid>
 						</Grid>
-						<Grid
-							item
-							style={{ paddingTop: '1em', paddingBottom: '1em' }}
-						>
+						<Grid item style={{ paddingTop: '1em', paddingBottom: '1em' }}>
 							<Grid container /* direction="row" */>
 								<Grid item xs={12}>
 									<ArrowDetail
@@ -409,10 +446,7 @@ class OurStory extends React.Component {
 								</Grid>
 							</Grid>
 						</Grid>
-						<Grid
-							item
-							style={{ paddingTop: '1em', paddingBottom: '1em' }}
-						>
+						<Grid item style={{ paddingTop: '1em', paddingBottom: '1em' }}>
 							<Grid container /* direction="row" */>
 								<Grid item xs={12}>
 									<ArrowDetail
@@ -446,19 +480,18 @@ class OurStory extends React.Component {
 								style={{ paddingBottom: '1em' }}
 							>
 								<Grid item xs={1} />
-								<Grid item xs={10} component={Typography} className={classes.getInvolvedTitle}>
+								<Grid item xs={10} component={Typography} className={classes.ReadMoreTitle}>
 									<strong>Read more about research here:</strong>
 								</Grid>
 							</Grid>
 						</Grid>
 						<Grid item>
-								<Grid container direction="column">
-							<Grid item xs={12}>
-								<BlueBarDetail text="Data-Driven Improvement in Pre-kindergarten Classrooms: Report From a Partnership in an Urban District" />
+							<Grid container direction="column">
+								<Grid item xs={12}>
+									<BlueBarDetail text="Data-Driven Improvement in Pre-kindergarten Classrooms: Report From a Partnership in an Urban District" />
+								</Grid>
 							</Grid>
 						</Grid>
-					</Grid>
- 
 					</Grid>
 					{/* end */}
 					<Grid
@@ -479,7 +512,7 @@ class OurStory extends React.Component {
 							>
 								<Grid item xs={2} />
 								<Grid item xs={10} component={Typography} className={classes.getInvolvedTitle}>
-									<strong>GET INVOLVED</strong>
+									<strong>OR GET INVOLVED</strong>
 								</Grid>
 							</Grid>
 						</Grid>
@@ -487,23 +520,23 @@ class OurStory extends React.Component {
 						<Grid item>
 							<Grid container direction="row">
 								<Grid item xs={12}>
-								<LandingDetail
-                      icon1={PilotProgramImage}
-                      iconAlt1="Participation"
-                      title1="Participate in our pilot program!"
-                      text1="If you are interested in piloting our tool,
+									<InvolveDetail
+										icon1={PilotProgramImage}
+										iconAlt1="Participation"
+										title1="Participate in our pilot program!"
+										text1="If you are interested in piloting our tool,
                         we would love your feedback so we can make CHALK
                         the best it can be!"
-                      button1="Fill out form"
-                      onClick1={this.handlePilotButton}
-                      icon2={EventsImage}
-                      iconAlt2="People"
-                      title2="Join us at our upcoming events!"
-                      text2="We give frequent presentations and demonstrations
+										button1="Fill out form"
+										onClick1={this.handlePilotButton}
+										icon2={EventsImage}
+										iconAlt2="People"
+										title2="Join us at our upcoming events!"
+										text2="We give frequent presentations and demonstrations
                         of CHALK. See a list of these events here!"
-                      button2="View our events"
-                      onClick2={this.handleEventsButton}
-                    />
+										button2="View our events"
+										onClick2={this.handleEventsButton}
+									/>
 								</Grid>
 							</Grid>
 						</Grid>
@@ -526,7 +559,7 @@ class OurStory extends React.Component {
 									</Grid>
 									<Grid item xs={4}>
 										<Grid container direction="row" justify="flex-end" alignItems="center">
-											<TextField
+											<TextField											
 												label="Enter your email here"
 												margin="normal"
 												value={this.state.email}
@@ -557,7 +590,6 @@ class OurStory extends React.Component {
 								</Grid>
 							)}
 						</Grid>
-
 					</Grid>
 				</div>
 				{/*  <div className={classes.mobileRoot}>
@@ -721,7 +753,7 @@ class OurStory extends React.Component {
                 </Typography>
               </Grid>
               <Grid item style={{paddingTop: '2em'}}>
-                <LandingDetail
+                <InvolveDetail
                   icon1={HighFiveImage}
                   iconAlt1="High Five"
                   title1="Empowering Teachers and Coaches"
@@ -731,7 +763,7 @@ class OurStory extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingTop: '3em'}}>
-                <LandingDetail
+                <InvolveDetail
                   icon1={BookImage}
                   iconAlt1="Book"
                   title1="Grounded in Rigorous Research"
@@ -741,7 +773,7 @@ class OurStory extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingTop: '3em'}}>
-                <LandingDetail
+                <InvolveDetail
                   icon1={FeedbackImage}
                   iconAlt1="Feedback"
                   title1="Individualized and Timely Feedback"
@@ -751,7 +783,7 @@ class OurStory extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingTop: '3em'}}>
-                <LandingDetail
+                <InvolveDetail
                   icon1={MedalImage}
                   iconAlt1="Medal"
                   title1="Target Key Classroom Practices"
@@ -761,7 +793,7 @@ class OurStory extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingTop: '3em'}}>
-                <LandingDetail
+                <InvolveDetail
                   icon1={LightbulbImage}
                   iconAlt1="Lightbulb"
                   title1="Emphasis on Teacher Learning"
@@ -771,7 +803,7 @@ class OurStory extends React.Component {
                 />
               </Grid>
               <Grid item style={{paddingTop: '3em', paddingBottom: '2em'}}>
-                <LandingDetail
+                <InvolveDetail
                   icon1={BoxImage}
                   iconAlt1="Box"
                   title1="Works Across Any Curriculum"
@@ -797,7 +829,7 @@ class OurStory extends React.Component {
                 </Grid>
               </Grid>
               <Grid item>
-                <LandingDetail
+                <InvolveDetail
                   icon1={PilotProgramImage}
                   iconAlt1="Participation"
                   title1="Participate in our pilot program!"
@@ -809,7 +841,7 @@ class OurStory extends React.Component {
                 />
               </Grid>
               <Grid item>
-                <LandingDetail
+                <InvolveDetail
                   icon1={EventsImage}
                   iconAlt1="People"
                   title1="Join us at our upcoming events!"
@@ -896,7 +928,7 @@ class OurStory extends React.Component {
             </Grid>
           </Grid>
         </div>*/}
-</div>
+			</div>
 		);
 	}
 }
