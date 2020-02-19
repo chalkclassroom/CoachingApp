@@ -23,7 +23,7 @@ const styles: object = {
   bodyText: {
     fontSize: 18,
     color: '#2f4b65',
-    paddingRight: '20%',
+//    textAlign: 'center',
     fontFamily: 'Arimo'
   },
   "@media (max-width: 700px)": {

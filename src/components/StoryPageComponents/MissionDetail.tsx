@@ -4,6 +4,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import { withStyles } from "@material-ui/core/styles";
+import Avatar from "@material-ui/core/Avatar";
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+
 
 const styles: object = {
   button: {
@@ -14,20 +17,28 @@ const styles: object = {
     letterSpacing: '0.03em'
   },
   titleText: {
-    fontSize: 22,
-    color: '#2f4b65',
-    paddingRight: '20%',
-    fontFamily: 'Arimo'
+    fontSize: 30,
+    color: '#000000',
+    fontFamily: 'Arimo',
+    fontWeight: 'bold'
   },
+  rounded: {
+    backgroundColor: '#86CCFF',
+    height:200,
+    width:200
+  },
+  vertical: {
+    borderLeft: '15px solid #86CCFF',
+    //backgroundColor: '#86CCFF',
+    height: '5em',
+    marginLeft: '2.1em'
+  },
+  
   bodyText: {
     fontSize: 24,
-    color: '#000000',
-    paddingRight: '20%',
-    fontFamily: 'Arimo',
-    textDecoration: 'underline',
-		marginTop:'0px',
-		marginBottom:'100px'
-
+    color: 'red',
+    display: 'flex',
+    fontFamily: 'Arimo'
   },
   "@media (max-width: 700px)": {
     root: {
@@ -65,18 +76,18 @@ interface Props {
   button2: string,
   onClick(): void,
   onClick2(): void, */
-  //iconAlt: string,
-  //icon: string,
+ /*  iconAlt: string,
+  icon: string, */
   title: string,
-  text: string,
-  button: string,
-  onClick(): void
+ /*  text: string,
+  button: string, */
+/*   onClick(): void */
 }
 
 /**
  * formatting for details on landing page
  */
-class BlueBarDetail extends React.Component<Props, {}> {
+class MissionDetail extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -98,12 +109,12 @@ class BlueBarDetail extends React.Component<Props, {}> {
     button2: PropTypes.string,
     onClick: PropTypes.func,
     onClick2: PropTypes.func, */
-    //iconAlt: PropTypes.string,
-    //icon: PropTypes.string,
-    title: PropTypes.string,
+  /*   iconAlt: PropTypes.string,
+    icon: PropTypes.string,
+    title: PropTypes.string, */
     text: PropTypes.string,
-    button: PropTypes.string,
-    onClick: PropTypes.func
+/*     button: PropTypes.string,
+    onClick: PropTypes.func */
   }
 
   /**
@@ -116,52 +127,23 @@ class BlueBarDetail extends React.Component<Props, {}> {
       <div>
       <div className={classes.root}>
       <Grid container direction="column">
-        <Grid item>
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={9} style={{paddingLeft: '1em', paddingRight: '1em'}}>
-              <Typography className={classes.titleText}>
-                {this.props.title}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
+        
         <Grid item style={{paddingTop: '1em'}}>
           <Grid container direction="row" justify="flex-start" alignItems="flex-start">
             <Grid item xs={2} />
-            <Grid item xs={12} style={{paddingLeft: '1em', paddingRight: '1em'}}>
+            <Grid item xs={10} style={{paddingLeft: '1em', paddingRight: '1em'}}>
               <Typography className={classes.bodyText}>
                 {this.props.text}
               </Typography>
             </Grid>
           </Grid>
         </Grid>
-        {this.props.button ? (
-          <Grid item style={{paddingTop: '1em', paddingBottom: '2em'}}>
-            <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-              <Grid item xs={4} />
-              <Grid item xs={8}>
-                <Fab variant="extended" onClick={this.props.onClick} className={classes.button}>
-                  <strong>{this.props.button}</strong>
-                </Fab>
-              </Grid>
-            </Grid>
-          </Grid>
-        ) : (
-          null
-        )}
+       
       </Grid>
       </div>
       <div className={classes.mobileRoot}>
       <Grid container direction="column">
-        <Grid item>
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={9} style={{paddingLeft: '1em', paddingRight: '1em'}}>
-              <Typography className={classes.titleText}>
-                {this.props.title}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
+        
         <Grid item style={{paddingTop: '1em'}}>
           <Grid container direction="row" justify="flex-start" alignItems="flex-start">
             <Grid item xs={3} />
@@ -172,20 +154,7 @@ class BlueBarDetail extends React.Component<Props, {}> {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.button ? (
-          <Grid item style={{paddingTop: '1em', paddingBottom: '2em'}}>
-            <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-              <Grid item xs={4} />
-              <Grid item xs={8}>
-                <Fab variant="extended" onClick={this.props.onClick} className={classes.button}>
-                  <strong>{this.props.button}</strong>
-                </Fab>
-              </Grid>
-            </Grid>
-          </Grid>
-        ) : (
-          null
-        )}
+      
       </Grid>
       </div>
       </div>
@@ -193,4 +162,4 @@ class BlueBarDetail extends React.Component<Props, {}> {
   }
 }
 
-export default withStyles(styles)(BlueBarDetail);
+export default withStyles(styles)(MissionDetail);

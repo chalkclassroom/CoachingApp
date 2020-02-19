@@ -4,6 +4,7 @@ import AppBar from "../../components/AppBar";
 import FirebaseContext from "../../components/Firebase/FirebaseContext.js";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card"
 import Typography from "@material-ui/core/Typography/Typography";
 import LogoImage from "../../assets/images/LogoImage.svg";
 import PieChartImage from "../../assets/images/PieChartImage.svg";
@@ -29,12 +30,15 @@ import WondryLogoImage from "../../assets/images/WondryLogoImage.png";
 import InvolveDetail from "../../components/StoryPageComponents/InvolveDetail.tsx";
 import ArrowDetail from "../../components/StoryPageComponents/ArrowDetail.tsx";
 import BlueBarDetail from "../../components/StoryPageComponents/BlueBarDetail.tsx";
+import MissionDetail from "../../components/StoryPageComponents/MissionDetail.tsx";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import UpcomingEventsModal from "../../components/LandingPageComponents/UpcomingEventsModal.tsx";
 import PilotModal from "../../components/StoryPageComponents/PilotModal.tsx";
 import DemoModal from "../../components/StoryPageComponents/DemoModal.tsx";
 import { ClickAwayListener } from "@material-ui/core/es";
+import ChalkGroupImage from "../../assets/images/ChalkGroupImage.jpg";
+
 
 const styles: object = {
 	root: {
@@ -43,6 +47,19 @@ const styles: object = {
 	mobileRoot: {
 		backgroundColor: '#ffffff'
 	},
+	  groupImage: {
+		width: "100%",
+		borderRadius: "50px",
+		marginTop:'0px',
+		marginBottom:'80px',
+       // height: '458px'
+	  },
+	  cardSize: {
+		maxWidth: 994,
+	  },
+	  cardMedia: {
+		height: 500,
+	  },
 	chalkTitle: {
 		fontFamily: 'Arimo',
 		fontSize: 'calc(16px + (80 - 16) * ((100vw - 300px) / (1600 - 300)))',
@@ -97,37 +114,49 @@ const styles: object = {
 	pageTitle: {
 		fontFamily: 'Arimo',
 		fontSize: 55,
-		fontWeight: 800,
 		color: '#0988EC',
-		textAlign: 'center'
+		textAlign: 'center',
+		letterSpacing:'8px',
+		fontWeight:600,
+		marginTop:'50px',
 	},
 	missionTitle: {
 		fontFamily: 'Arimo',
 		fontSize: 30,
 		fontWeight: 900,
 		color: '#0988EC',
-		textAlign: 'center'
+		textAlign: 'center',
+		marginTop:'20px',
+		marginBottom:'20px'
 	},
 	missionBody: {
 		fontFamily: 'Arimo',
-		fontSize: 25,
-		fontWeight: 800,
-		color: '#000000',
-		textAlign: 'center'
+		fontSize: 24,
+		textAlign:'justify',
+		color: '#000',
+		display: 'flex',
+		marginTop:'0px',
+		marginBottom:'40px'
 	},
 	ReadMoreTitle: {
 		color: '#094492',
 		fontSize: 35,
 		fontFamily: 'Arimo',
 		textAlign: 'center',
-		fontStyle: 'normal'
+		fontStyle: 'normal',
+		letterSpacing:'8px',
+		marginTop:'40px',
+		marginBottom:'20px'
 	},
 	getInvolvedTitle: {
 		color: '#2F4B65',
 		fontSize: 42,
 		paddingTop: 20,
 		width: '100%',
-		fontFamily: 'Arimo'
+		fontFamily: 'Arimo',
+		letterSpacing:'4px',
+		marginTop:'20px',
+		marginBottom:'20px'
 	},
 	mailingListText: {
 		color: '#2f4b65',
@@ -162,9 +191,29 @@ const styles: object = {
 		largeRoot: {
 			display: 'none'
 		},
+		vertical: {
+			borderLeft: '15px solid #86CCFF',
+			height: '10em',
+		marginLeft: '4.5em',
+		
+	  },
+	  groupImage: {
+		width: "60%",
+		borderRadius: "50px",
+		marginTop:'0px',
+		marginBottom:'40px',
+       // height: '458px'
+	  },
 		chalkTitle: {
-			fontSize: 'calc(24px + (50 - 24) * ((100vw - 300px) / (700 - 300)))'
+			fontSize: 'calc(24px + (50 - 24) * ((100vw - 300px) / (700 - 300)))',
+			// letterSpacing:8,
+			// fontWeight:600
 		},
+		// chalkTitle1: {
+		// 	fontSize: 'calc(24px + (50 - 24) * ((100vw - 300px) / (700 - 300)))',
+		// 	letterSpacing:"8px",
+		// 	fontWeight:600
+		// },
 		tagline: {
 			fontSize: 'calc(14px + (24 - 14) * ((100vw - 300px) / (700 - 300)))'
 		},
@@ -172,13 +221,22 @@ const styles: object = {
 			fontSize: 32
 		},
 		pageTitle: {
-			fontSize: '45'
+			fontSize: '45',
+			letterSpacing:'2em',
+			fontWeight:600
 		},
 		missionTitle: {
-			fontSize: '20'
+			fontSize: '20',
+			marginTop:'20px',
+			marginBottom:'20px'
 		},
 		missionBody: {
-			fontSize: '15'
+			fontSize: 20,
+			color: '#000',
+			display: 'flex',
+			fontFamily: 'Arimo',
+			marginTop:'20px',
+			marginBottom:'40px'
 		},
 		ReadMoreTitle: {
 			fontSize: 25
@@ -390,24 +448,63 @@ class OurStory extends React.Component<Props, State> {
 						>
 							<Grid item style={{ padding: 20 }}>
 								<Typography className={classes.pageTitle}>
-									<strong>OUR STORY</strong>
+									OUR STORY
 								</Typography>
 								<Typography className={classes.missionTitle}>
-									<strong>CHALK's MISSION</strong>
-								</Typography>
-								<Typography className={classes.missionBody}>
+									<strong>CHALK'S MISSION</strong>
+								</Typography>							
+		<Grid container spacing={3}>
+        <Grid item xs>
+        </Grid>
+        <Grid item xs={6}  style={{paddingLeft: '1em', paddingRight: '1em'}}>
+         	<Typography  className={classes.missionBody}>
 									The Chalk Coaching Tool integrates 8 research-backed clusters of classroom practices
 									associated with positive Pre-K teaching outcomes. In order to empower coaches and
 									teachers to improve classroom practices, we designed an online tool that enables
 									coaches to monitor classroom behaviors and to create strategies for teachers to
-									provide children with high quality learning experiences.  SOONER GROUP PICTURE
+									provide children with high quality learning experiences. 
 								</Typography>
+        </Grid>
+
+        <Grid item xs>
+        </Grid>
+      </Grid>
+	  <Grid container spacing={3}>
+        <Grid item xs>
+        </Grid>
+        <Grid item xs={6} >
+		<img className={classes.groupImage}
+             src={ChalkGroupImage}
+             alt="Chalk Team Group Picture"
+         />
+        </Grid>
+        <Grid item xs>
+        </Grid>
+      </Grid>
+
+{/* 								<Grid container direction="row" justify="flex-start" alignItems="flex-start">
+            <Grid  xl={2}
+									md={2}
+									sm={2}
+									xs={2}  />
+            <Grid item xl={10} md={10}
+									sm={10}
+									xs={10} style={{paddingLeft: '1em', paddingRight: '1em'}}>
+			
+            </Grid>
+		
+          </Grid>
+					 */}		
+								
 							</Grid>
 							<Grid item xs={10} />
 							<Grid item xs={1} />
 						</Grid>
-						<Grid item style={{ paddingTop: '1em' }}>
-							<Grid container /* direction="row" */>
+
+						
+					
+						<Grid item >
+							<Grid container direction="row">
 								<Grid item xs={12}>
 									<ArrowDetail
 										icon={BookImage}
@@ -421,8 +518,8 @@ class OurStory extends React.Component<Props, State> {
 								</Grid>
 							</Grid>
 						</Grid>
-						<Grid item style={{ paddingTop: '1em' }}>
-							<Grid container /* direction="row" */>
+						<Grid item >
+							<Grid container  direction="row">
 								<Grid item xs={12}>
 									<ArrowDetail
 										icon={SearchEngineImage}
@@ -439,7 +536,7 @@ class OurStory extends React.Component<Props, State> {
 							item
 							// style={{ paddingTop: '1em', paddingBottom: '1em' }}
 						>
-							<Grid container /* direction="row" */>
+							<Grid container  direction="row" >
 								<Grid item xs={12}>
 									<ArrowDetail
 										icon={MedalImage}
@@ -452,8 +549,8 @@ class OurStory extends React.Component<Props, State> {
 								</Grid>
 							</Grid>
 						</Grid>
-						<Grid item style={{ paddingTop: '1em', paddingBottom: '1em' }}>
-							<Grid container /* direction="row" */>
+						<Grid item>
+							<Grid container  direction="row" >
 								<Grid item xs={12}>
 									<ArrowDetail
 										icon={LightbulbImage}
@@ -468,21 +565,45 @@ class OurStory extends React.Component<Props, State> {
 								</Grid>
 							</Grid>
 						</Grid>
-						<Grid item style={{ paddingTop: '1em', paddingBottom: '1em' }}>
-							<Grid container /* direction="row" */>
+						<Grid item >
+							<Grid container direction="row" >
 								<Grid item xs={12}>
 									<ArrowDetail
-										icon={HighFiveImage}
-										iconAlt="High Five"
+										icon={PilotProgramImage}
+										iconAlt="Participation"
 										title="Empowering Teachers and Coaches"
 										text="CHALK is focused on empowering coaches and transforming classroom experiences. 
                        To achieve this goal, we challenged an interdisciplinary team of coaches, teachers, principals, policy makers, researchers and other stakeholders to bring their unique expertise and perspectives to the table.
                         Finally, we are bringing the vision for the CHALK to life."
 									/>
+									
 								</Grid>
 							</Grid>
 						</Grid>
+{/* 						 <div className={classes.vertical} style={{ paddingLeft: "10px", marginBottom:'50px' }} /> 
+ */}						<Grid container direction="row" >
+								<Grid  xs={3}>
+						<Grid
+										container
+										 direction="row"
+										 justify="flex-end"
+										alignItems="flex-start"
+										style={{ height: '100%' }}
+									>
+                    
+                    {/*   <div  style={{    width: 0, height: '0',  borderLeft: '25px solid transparent',
+      borderRight: '25px solid transparent',
+      borderTop: '50px solid #86CCFF', marginRight: '45px',
+	  marginBottom: '50px' }} /> */}
+                    
+									</Grid>
+									</Grid>
+									<Grid xs={9}>
+								
+								</Grid>
+									</Grid>
 					</Grid>
+				
 
 					{/* //rajeev */}
 					<Grid
@@ -503,7 +624,7 @@ class OurStory extends React.Component<Props, State> {
 							>
 								<Grid item xs={1} />
 								<Grid item xs={10} component={Typography} className={classes.ReadMoreTitle}>
-									<strong>Read more about research here:</strong>
+									<strong>Read more about our research here:</strong>
 								</Grid>
 							</Grid>
 						</Grid>
@@ -533,9 +654,11 @@ class OurStory extends React.Component<Props, State> {
 								style={{ paddingBottom: '1em' }}
 							>
 								<Grid item xs={2} />
-								<Grid item xs={10} component={Typography} className={classes.getInvolvedTitle}>
+
+								<Grid item /* xs={10} */ xs={12} sm={6} component={Typography} className={classes.getInvolvedTitle}>
 									<strong>OR GET INVOLVED</strong>
 								</Grid>
+
 							</Grid>
 						</Grid>
 
@@ -572,15 +695,26 @@ class OurStory extends React.Component<Props, State> {
 									</Grid>
 								</Grid>
 							) : (
-								<Grid container direction="row" justify="flex-start" alignItems="center">
-									<Grid item xs={1} />
-									<Grid item xs={4}>
+								<Grid container direction="row" justify="flex-end" alignItems="center">
+									  <Grid item  xl={3}
+									md={3}
+									sm={3}
+									xs={3}  />
+									<Grid item   xl={3}
+									md={3}
+									sm={3}
+									xs={3} >
 										<Typography className={classes.mailingListText}>
 											Stay informed with our mailing list!
 										</Typography>
 									</Grid>
-									<Grid item xs={4}>
-										<Grid container direction="row" justify="flex-end" alignItems="center">
+									<Grid item direction="row"
+									 xl={6}
+									md={6}
+									sm={6}
+									xs={6}   alignItems="center">
+									<div style={{flexDirection:'row',display:'flex'}}>
+										<div style={{width:'50%',}}>
 											<TextField											
 												label="Enter your email here"
 												margin="normal"
@@ -596,10 +730,26 @@ class OurStory extends React.Component<Props, State> {
 												}}
 												className={classes.textField}
 											/>
-										</Grid>
-									</Grid>
-									<Grid item xs={3}>
-										<Grid container direction="row" justify="center" alignItems="center">
+											
+										</div>
+										<div style={{justifyContent: 'flex-start', marginLeft: '-116px', marginTop: '16px'}}>
+											<Fab
+												variant="extended"
+												onClick={this.handleSubmit}
+												className={classes.mailingListButton} style={{ height: '58px'}}
+											>
+												<strong>Join mailing list</strong>
+											</Fab>
+											</div>
+											</div>
+								</Grid>
+									
+									
+									{/* <Grid item xl={3}
+									md={3}
+									sm={3}
+									xs={3}> */}
+										{/* <Grid container direction="row" justify="flex-start" alignItems="center">
 											<Fab
 												variant="extended"
 												onClick={this.handleSubmit}
@@ -607,8 +757,9 @@ class OurStory extends React.Component<Props, State> {
 											>
 												<strong>Join mailing list</strong>
 											</Fab>
-										</Grid>
-									</Grid>
+										</Grid> */}
+									{/* </Grid> */}
+									
 								</Grid>
 							)}
 						</Grid>
