@@ -35,8 +35,9 @@ interface Props {
   questions: Array<{name: string, title: string, text: Array<string>}>,
   openPanel: string,
   handlePanelChange(panel: string): void,
-  addedToPlan: Array<{panel: string, index: number, question: string}>,
-  handleAddToPlan(panelTitle: string, index: number, question: string): void,
+  addedToPlan: Array<{panel: string, number: number, question: string}>,
+  handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string): void,
+  sessionId: string,
   color: string
 }
 
@@ -61,7 +62,9 @@ class DataQuestions extends React.Component<Props, {}> {
     openPanel: PropTypes.string,
     handlePanelChange: PropTypes.func.isRequired,
     addedToPlan: PropTypes.array.isRequired,
-    handleAddToPlan: PropTypes.func.isRequired
+    handleAddToPlan: PropTypes.func.isRequired,
+    sessionId: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired
   };
 
   /**
@@ -105,7 +108,7 @@ class DataQuestions extends React.Component<Props, {}> {
                     </Grid>
                     <Grid item xs={1}>
                       <Button
-                        onClick={this.props.handleAddToPlan.bind(this, item.name, index, question)}
+                        onClick={this.props.handleAddToPlan.bind(this, item.name, index, question, this.props.sessionId)}
                       >
                         <AddCircleIcon style={{fill: this.props.color}} />
                       </Button>

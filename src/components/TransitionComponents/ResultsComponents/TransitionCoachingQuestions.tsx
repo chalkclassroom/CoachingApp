@@ -163,8 +163,9 @@ interface Props {
       }
     }
   },
-  handleAddToPlan(panelTitle: string, index: number, question: string): void,
-  addedToPlan: Array<{panel: string, number: number, question: string}>
+  handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string): void,
+  addedToPlan: Array<{panel: string, number: number, question: string}>,
+  sessionId: string
 }
 
 interface State {
@@ -354,6 +355,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
               handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "traveling" ? (
@@ -363,6 +365,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
               handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "childrenWaiting" ? (
@@ -372,6 +375,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
               handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "routines" ? (
@@ -381,6 +385,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
               handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "behavior" ? (
@@ -390,6 +395,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
               handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
               color={Constants.TransitionColor}
             />
           ) : <div/>}

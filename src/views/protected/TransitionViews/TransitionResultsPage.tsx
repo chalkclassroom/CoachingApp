@@ -344,8 +344,11 @@ class TransitionResultsPage extends React.Component<Props, State> {
    * checks if question has already been added and if not, adds it
    * @param {string} panelTitle
    * @param {number} index
+   * @param {string} question
+   * @param {string} sessionId
    */
-  handleAddToPlan = (panelTitle: string, index: number, question: string): void => {
+  handleAddToPlan = (panelTitle: string, index: number, question: string, sessionId: string): void => {
+    const firebase = this.context;
     const itemIndex = this.state.addedToPlan.findIndex(e => e.panel === panelTitle && e.number === index);
     if (itemIndex === -1) {
       this.setState({ addedToPlan: [...this.state.addedToPlan, {panel: panelTitle, number: index, question: question}] });
@@ -354,6 +357,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
       newArray.splice(itemIndex, 1);
       this.setState({ addedToPlan: newArray });
     }
+    console.log('handle add to plan session id is: ', sessionId);
+    firebase.saveConferencePlanQuestion(sessionId, question);
   };
 
   static propTypes = {
@@ -367,6 +372,11 @@ class TransitionResultsPage extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
+    const chosenQuestions = this.state.addedToPlan.map((value) => {
+      return(
+        value.question
+      )
+    })
     return (
       <div className={classes.root}>
         <ResultsLayout
@@ -411,8 +421,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
           notes={this.state.notes}
-          questions={<TransitionCoachingQuestions handleAddToPlan={this.handleAddToPlan} addedToPlan={this.state.addedToPlan}/>}
-          chosenQuestions = {this.state.addedToPlan}
+          questions={<TransitionCoachingQuestions handleAddToPlan={this.handleAddToPlan} addedToPlan={this.state.addedToPlan} sessionId={this.state.sessionId} />}
+          chosenQuestions = {chosenQuestions}
           teacherFirstName={this.props.location.state.teacher.firstName}
           teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}

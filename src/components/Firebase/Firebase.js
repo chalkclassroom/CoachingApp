@@ -1202,6 +1202,7 @@ class Firebase {
             id: doc.id,
             feedback: doc.data().feedback,
             questions: doc.data().questions,
+            addedQuestions: doc.data().addedQuestions,
             notes: doc.data().notes,
             date: doc.data().dateCreated
           })
@@ -1211,6 +1212,49 @@ class Firebase {
       .catch(() => {
         console.log( 'unable to retrieve conference plan')
       })
+  }
+
+  /**
+   * @param {string} conferencePlanId
+   * @param {Array<string>} feedback
+   * @param {Array<string>} questions
+   * @param {Array<string>} addedQuestions
+   * @param {Array<string>} notes
+   */
+  saveConferencePlan = async function(conferencePlanId, feedback, questions, addedQuestions, notes) {
+    const conferencePlanRef = this.db.collection("conferencePlans").doc(conferencePlanId);
+    return conferencePlanRef.update({
+      feedback: feedback,
+      questions: questions,
+      addedQuestions: addedQuestions,
+      notes: notes
+    })
+    .then(() => {
+      console.log("Action plan updated successfully!");
+    })
+    .catch((error) => {
+      console.error("Error updating action plan: ", error);
+    })
+  }
+
+  /**
+   * @param {string} sessionId
+   * @param {string} questionText
+   */
+  saveConferencePlanQuestion = async function(sessionId, questionText) {
+    const conferencePlanRef = this.db.collection("conferencePlans").where("sessionId", "==", sessionId);
+    conferencePlanRef.get().then(querySnapshot => {
+      const conferencePlanId = [];
+      querySnapshot.forEach(doc =>
+        conferencePlanId.push(doc.id)
+      );
+      return this.db.collection("conferencePlans").doc(conferencePlanId[0]).update({
+        addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText)
+      })
+    })
+    /* return conferencePlanRef.update({
+      addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText)
+    }) */
   }
 
 }
