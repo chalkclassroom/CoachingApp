@@ -109,7 +109,7 @@ const styles = {
  */
 class Dashboard extends React.Component {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props) {
     super(props);
@@ -130,10 +130,6 @@ class Dashboard extends React.Component {
       lookForsIcon: null,
       notesIcon: null
     };
-    // Assigning for scope
-    this.resetTransitionTime = resetTransitionTime;
-    this.emptyClimateStack = emptyClimateStack;
-    this.deleteAllCenters = deleteAllCenters;
   }
 
   /** lifecycle method invoked after component mounts */
@@ -322,15 +318,15 @@ class Dashboard extends React.Component {
                       shouldOpen={true}
                       onAccept={() => {
                         magic8 === "Classroom Climate"
-                          ? this.emptyClimateStack()
+                          ? this.props.emptyClimateStack()
                           : magic8 === "Transition Time"
-                          ? this.resetTransitionTime()
-                          : this.deleteAllCenters();
-                        this.props.history.push({
-                          pathname: "/Home",
-                          state: this.props.history.state
-                        });
-                        firebase.endSession();
+                          ? this.props.resetTransitionTime()
+                          : this.props.deleteAllCenters();
+                          this.props.history.push({
+                            pathname: "/Home",
+                            state: this.props.history.state
+                          });
+                          firebase.endSession();
                       }}
                     />
                   )}
@@ -361,7 +357,14 @@ Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   infoPlacement: PropTypes.string.isRequired,
-  completeObservation: PropTypes.bool.isRequired
+  completeObservation: PropTypes.bool.isRequired,
+  // These Are mapped from Redux into Props
+  resetTransitionTime: PropTypes.func.isRequired,
+  emptyClimateStack: PropTypes.func.isRequired,
+  deleteAllCenters: PropTypes.func.isRequired
 };
 
-export default withRouter(connect()(withStyles(styles)(Dashboard)));
+export default withRouter(connect(
+    null,
+    { resetTransitionTime, emptyClimateStack, deleteAllCenters }
+)(withStyles(styles)(Dashboard)));
