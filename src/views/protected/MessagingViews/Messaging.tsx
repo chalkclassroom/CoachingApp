@@ -1,11 +1,28 @@
 // View where Messaging Components are composed to make the final view
 import React, { useState, useRef } from 'react';
+import sgMail from '@sendgrid/mail'; 
 import ChooseIntent from '../../../components/MesssagingComponents/ChooseIntent';
 import EmailBody from '../../../components/MesssagingComponents/EmailBody';
 import RecipientAddress from '../../../components/MesssagingComponents/RecipientAddress';
 import SubmitButton from '../../../components/MesssagingComponents/SubmitButton';
 import AppBar from '../../../components/AppBar.js'
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'; 
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+/*
+  TODO:
+    - choose intent on left and email above
+    - alert if one of them not done
+    - fix the icons
+    - better way of storing the emails
+    - incorporating the styled email templates
+    - changing the bottom part of the email doesn't make it refresh
+    - sent successfully or failed popup
+    - interface with firebase get the current user's email id
+    - selectOption is one value older
+    - write tests
+*/
 
 const gridContainer = {
 	display: 'grid',
@@ -42,7 +59,14 @@ const MessagingView: React.FC<MessagingViewProps> = () => {
     const textRef = useRef();
     const [selectedOption, setSelectedOption] = useState(null);
     const sendMailButton = () => {
-	    alert("Sending about " + intent + " or in more detail: " + textRef.current.textContent + " to " + selectedOption.label);
+ 	const msg = {
+		to: selectedOption.value,
+		from: 'meprovidence@gmail.com',
+  		subject: intent,
+  		text: textRef.current.textContent,
+		html: textRef.current.innerHTML,
+	};
+	console.log(selectedOption.value + ' - ' + intent + ' ~ ' + textRef.current.innerHTML + ' ` ' + sgMail.send(msg));
     };
 
     const thankYou: JSX.Element = <div style={{padding: "5em"}}>
@@ -121,7 +145,9 @@ const MessagingView: React.FC<MessagingViewProps> = () => {
               <ChooseIntent changeIntent={setIntent}/>
             </div>
               <div style={recipient}>
-                <RecipientAddress selectedOption={selectedOption} setOption={setSelectedOption}/>
+	      	<FirebaseContext.Consumer>
+			{firebase => <RecipientAddress selectedOption={selectedOption} setOption={setSelectedOption} firebase={firebase}/>}
+		</FirebaseContext.Consumer>
               </div>
               <div style={emailbody}>
 		      <EmailBody emailText={getEmailText()} emailTextRef={textRef} />
