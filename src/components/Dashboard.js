@@ -40,6 +40,7 @@ import { emptyClimateStack } from "../state/actions/classroom-climate";
 import { deleteAllCenters } from "../state/actions/associative-cooperative";
 import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
+import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp'
 
 const styles = {
   card: {
@@ -109,7 +110,7 @@ const styles = {
  */
 class Dashboard extends React.Component {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props) {
     super(props);
@@ -156,7 +157,7 @@ class Dashboard extends React.Component {
           lookForsIcon: MathLookForsImage,
           notesIcon: MathNotesImage
         })
-      : this.props.magic8 === "Level of Engagement"
+      : this.props.magic8 === "Student Engagement"
       ? this.setState({
           icon: EngagementIconImage,
           lookForsIcon: EngagementLookForsImage,
@@ -232,6 +233,8 @@ class Dashboard extends React.Component {
                     return <AssocCoopHelp />;
                 case "Sequential Activities":
                     return <SequentialActivitiesHelp />;
+                case "Student Engagement":
+                  return <StudentEngagementHelp />;
                 default:
                   return <div />;
               }
