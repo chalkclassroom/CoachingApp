@@ -7,6 +7,14 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import { connect } from "react-redux";
+import {
+  lightGreen,
+  deepOrange,
+  orange,
+  blue,
+  indigo
+} from "@material-ui/core/colors";
+import { red } from "@material-ui/core/es/colors";
 
 const styles = theme => ({
   root: {
@@ -18,11 +26,28 @@ const styles = theme => ({
   }
 });
 
+const getHexFromType = type => {
+  switch (type) {
+    case "waiting":
+      return lightGreen[300];
+    case "traveling":
+      return orange[400];
+    case "child waiting":
+      return deepOrange[400];
+    case "classroom routines":
+      return blue[300];
+    case "behavior management disruption":
+      return red["A200"];
+    case "other":
+      return indigo["A200"];
+  }
+}
+
 const TransitionLog = ({ entries, classes }) => {
   return (
     <div>
-      <Paper className={classes.root} elevation={1}>
-        <Typography variant="h5" component="h3">
+      <Paper className={classes.root} elevation={0}>
+        <Typography variant="h5" component="h3" align="center" style={{fontFamily: 'Arimo'}}>
           Recent Transitions
         </Typography>
         <Divider />
@@ -37,7 +62,9 @@ const TransitionLog = ({ entries, classes }) => {
         >
           <List
             style={{
-              display: "flex"
+              display: "flex",
+              flexDirection: "column",
+              fontFamily: 'Arimo'
             }}
           >
             {entries.map((entry, index) => (
@@ -45,7 +72,8 @@ const TransitionLog = ({ entries, classes }) => {
                 <Divider />
                 <ListItem
                   style={{
-                    backgroundColor: "#759FE5"
+                    backgroundColor: getHexFromType(entry.transitionType),
+                    color: 'white'
                   }}
                 >
                   {new Date(entry.end).toLocaleTimeString([], {
@@ -53,9 +81,8 @@ const TransitionLog = ({ entries, classes }) => {
                     minute: "numeric"
                   })}
                   <br />
-                  Duration: {entry.duration}
+                  {entry.duration}
                   <br />
-                  {/* Type:{entry.transitionType === 'inside' ? "Inside Classroom" : "Outside Classroom"} */}
                 </ListItem>
               </React.Fragment>
             ))}

@@ -6,6 +6,7 @@ import climateTypeState from "./reducers/climate-type-state";
 import sequentialCenterState from "./reducers/sequential-center-state";
 import transitionLogState from "./reducers/transition-log-state";
 import transitionTypeState from "./reducers/transition-type-state";
+import mathCentersState from "./reducers/math-instruction-state";
 
 export default combineReducers({
   associativeCenterState,
@@ -14,5 +15,7 @@ export default combineReducers({
   climateTypeState,
   sequentialCenterState,
   transitionLogState,
-  transitionTypeState
+  transitionTypeState,
+  mathCentersState
+
 });

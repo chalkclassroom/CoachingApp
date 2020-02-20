@@ -48,7 +48,11 @@ const transitionTrendOptions = {
           labelString: "Date & Total Time in Transition",
           // fontStyle: "bold",
           fontSize: 18,
-          fontColor: 'black'
+          fontColor: 'black',
+          fontFamily: 'Arimo'
+        },
+        ticks: {
+
         }
       }
     ],
@@ -67,7 +71,8 @@ const transitionTrendOptions = {
           labelString: "Percentage of Time Spent in Transition",
           // fontStyle: "bold",
           fontSize: 18,
-          fontColor: 'black'
+          fontColor: 'black',
+          fontFamily: 'Arimo'
         }
       }
     ]
@@ -105,8 +110,8 @@ class TransitionTrendsGraph extends React.Component<Props, {}> {
       <Line
         data={this.props.data}
         options={transitionTrendOptions}
-        width={650}
-        height={400}
+        width={600}
+        height={350}
       />
     );
   }

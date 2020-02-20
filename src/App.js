@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import "./App.css";
 import WelcomePage from "./views/WelcomeViews/WelcomePage.tsx";
 import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage";
-import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage";
+import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage.tsx";
 import Magic8MenuPage from "./views/protected/Magic8MenuPage";
 import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage.tsx";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
@@ -18,21 +18,23 @@ import {
   MuiThemeProvider,
   withStyles
 } from "@material-ui/core/styles";
-import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage";
-import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage";
+import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage.tsx";
+import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage.tsx";
 import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage.tsx";
-import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage";
-import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage";
+import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage.tsx";
+import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage.tsx";
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
+import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage"; 
+import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
-import MessagingView from "./views/protected/MessagingViews/Messaging.tsx";
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import ReactGA from 'react-ga';
+import MessagingView from "./views/protected/MessagingViews/Messaging.tsx";
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -146,7 +148,7 @@ class App extends Component {
       <BrowserRouter>
         <MuiThemeProvider theme={styles}>
           <Switch>
-            <Route exact path="/" component={MessagingView} />
+            <Route exact path="/" component={HomePage} />
             <Route exact path="/forgot" component={ForgotPasswordPage} />
             <PrivateRoute
               auth={this.state.auth}
@@ -175,7 +177,7 @@ class App extends Component {
             />
             <PrivateRoute
               auth={this.state.auth}
-              path="/Messages"
+              path="/Messaging"
               component={MessagingView}
             />
             <PrivateRoute
@@ -198,6 +200,16 @@ class App extends Component {
               path="/AssociativeCooperativeInteractionsResults"
               component={AssociativeCooperativeInteractionsResultsPage}
             />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstruction"
+              component={MathInstructionPage}
+            />  
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstructionResults"
+              component={MathInstructionResultsPage}
+            />  
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivities"

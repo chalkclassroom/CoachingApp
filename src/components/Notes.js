@@ -149,7 +149,7 @@ class Notes extends React.Component {
             alignItems="center"
           >
             <Grid container item xs={11}>
-              <DialogTitle onClose={this.handleClose}>
+              <DialogTitle onClose={this.handleClose} style={{fontFamily: 'Arimo'}}>
                 {this.props.text}
               </DialogTitle>
             </Grid>
@@ -193,6 +193,7 @@ class Notes extends React.Component {
                           xs={12}
                           alignItems={"center"}
                           justify={"center"}
+                          style={{fontFamily: 'Arimo'}}
                         >
                           Time
                         </Grid>
@@ -217,6 +218,7 @@ class Notes extends React.Component {
                           xs={12}
                           alignItems={"center"}
                           justify={"center"}
+                          style={{fontFamily: 'Arimo'}}
                         >
                           Notes
                         </Grid>
@@ -242,6 +244,7 @@ class Notes extends React.Component {
                               xs={12}
                               alignItems={"center"}
                               justify={"center"}
+                              style={{fontFamily: 'Arimo'}}
                             >
                               {/* <em>{moment(note.timestamp.toDate()).format("MMM Do YY HH:mm A")}</em>*/}
                               {note.timestamp}
@@ -262,6 +265,7 @@ class Notes extends React.Component {
                               xs={12}
                               alignItems={"center"}
                               justify={"center"}
+                              style={{fontFamily: 'Arimo'}}
                             >
                               {note.content}
                             </Grid>
@@ -299,6 +303,8 @@ class Notes extends React.Component {
                     style={{ width: "95%" }}
                     onChange={this.handleChange}
                     value={this.state.newNote}
+                    InputProps={{style: {fontFamily: 'Arimo'}}}
+                    InputLabelProps={{style: {fontFamily: 'Arimo'}}}
                   />
                 </Grid>
                 <Grid container item xs={1}>
