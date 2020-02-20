@@ -364,6 +364,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
    * @param {number} index
    * @param {string} question
    * @param {string} sessionId
+   * @param {string} teacherId
+   * @param {string} magic8
    */
   handleAddToPlan = (panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void => {
     const firebase = this.context;

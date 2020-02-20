@@ -11,7 +11,7 @@ import ConferencePlanForm from './ConferencePlanForm';
 function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
-    top: `50%`,
+    top: `52%`,
     left: `62.5%`,
     transform: `translate(-50%, -50%)`,
   } as React.CSSProperties;
@@ -21,7 +21,7 @@ const styles: object = {
   paper: {
     position: "absolute",
     width: "60%",
-    height: "70%",
+    height: "75%",
     backgroundColor: 'white',
     padding: '2em',
     borderRadius: 8,

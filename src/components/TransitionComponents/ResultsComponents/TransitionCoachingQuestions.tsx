@@ -173,7 +173,6 @@ interface Props {
 interface State {
   categoryView: string,
   openPanel: string,
-  addedToPrep: Array<{panel: string, number: number}>
 }
 
 /**
@@ -187,7 +186,6 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     this.state = {
       categoryView: '',
       openPanel: '',
-      addedToPrep: []
     }
   }
   
