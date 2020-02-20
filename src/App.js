@@ -31,10 +31,10 @@ import MathInstructionResultsPage from "./views/protected/MathInstructionViews/M
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
-import MessagingView from "./views/protected/MessagingViews/Messaging.tsx";
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import ReactGA from 'react-ga';
+import MessagingView from "./views/protected/MessagingViews/Messaging.tsx";
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -148,7 +148,7 @@ class App extends Component {
       <BrowserRouter>
         <MuiThemeProvider theme={styles}>
           <Switch>
-            <Route exact path="/" component={MessagingView} />
+            <Route exact path="/" component={HomePage} />
             <Route exact path="/forgot" component={ForgotPasswordPage} />
             <PrivateRoute
               auth={this.state.auth}
@@ -177,7 +177,7 @@ class App extends Component {
             />
             <PrivateRoute
               auth={this.state.auth}
-              path="/Messages"
+              path="/Messaging"
               component={MessagingView}
             />
             <PrivateRoute

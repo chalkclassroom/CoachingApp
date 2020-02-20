@@ -13,6 +13,7 @@ import MessagesImage from "../../../assets/images/MessagesImage.svg";
 import TeacherModal from "./TeacherModal.tsx";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { withRouter } from "react-router-dom";
+import MessagingView from "../MessagingViews/Messaging.tsx";
 
 const styles = {
   root: {
@@ -183,13 +184,14 @@ class HomePage extends React.Component {
                   alignItems="center"
                   direction="column"
                   justify="flex-start"
+                  onClick={() => this.props.history.push("/Messaging")}
                 >
                   <Grid item>
                     <img src={MessagesImage} className={classes.image} />
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2">
-                      Messages
+                      Messaging
                     </Typography>
                   </Grid>
                 </Grid>
