@@ -3,40 +3,22 @@
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
- import Select from 'react-select';
+import Select from 'react-select';
 
+/*
 const options = [
   { value: 'johnsmith@vanderbilt.edu', label: 'John Smith' },
   { value: 'craig@test.com', label: 'Craig' },
   { value: 'daniel@yahoo.com', label: 'Daniel' },
 ];
+*/
 
-/*
-class RecipentAddress extends React.Component {
-  state = {
-    selectedOption: null,
-  };
-  handleChange = selectedOption => {
-    this.setState(
-      { selectedOption },
-      () => console.log(`Option selected:`, this.state.selectedOption)
-    );
-  };
-  render() {
-    const { selectedOption } = this.state;
+const RecipentAddress: React.FC<{selectedOption: any, setOption: any, firebase: any}> = (props: {selectedOption: any, setOption: any, firebase: any}) => {
 
-    return (
-      <Select
-        value={selectedOption}
-        onChange={this.handleChange}
-        options={options}
-      />
-    );
-  }
-}
- */
+  const [teacherList, setTeacherList] = useState(null)
+  props.firebase.getFullTeacherList().then(teacherList =>
+    teacherList.map(teacher => {return{value: teacher.email, label: teacher.firstName+teacher.lastName}})).then(options => setTeacherList(options));
 
-const RecipentAddress: React.FC<{selectedOption: any, setOption: any}> = (props: {selectedOption: any, setOption: any}) => {
 
   const handleChange = newSelectedOption => {
     props.setOption(newSelectedOption);
@@ -47,7 +29,7 @@ const RecipentAddress: React.FC<{selectedOption: any, setOption: any}> = (props:
       <Select
         value={props.selectedOption}
         onChange={handleChange}
-        options={options}
+        options={teacherList}
       />
     );
 }
