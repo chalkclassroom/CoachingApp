@@ -14,7 +14,8 @@ const styles: object = {
     height: "225px"
   },
   timeText: {
-    textAlign: "center"
+    textAlign: "center",
+    fontFamily: 'Arimo'
   }
 };
 

@@ -39,7 +39,7 @@ const styles = theme => ({
 });
 
 const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
-  const hsl = Math.max(82 - 4 * visitCount, 54);
+  const hsl = Math.max(82 - 4 * visitCount, 30);
 
   return (
     <Button
@@ -52,7 +52,9 @@ const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
         whiteSpace: "normal",
         wordWrap: "break-word",
         backgroundColor: `hsl(49.6, 100%, ${hsl}%`,
-        color: "#000000"
+        color: "#000000",
+        fontFamily: "Arimo",
+        fontSize: 18
       }}
       onClick={onClick}
     >
@@ -133,13 +135,13 @@ class CenterChecklist extends React.Component {
             component="h4"
             variant="h4"
             align="center"
-            style={{ padding: "10px" }}
+            style={{ padding: "10px", fontFamily: "Arimo" }}
           >
             Which centers are open?
           </Typography>
-          <Typography>
-            You will have the opportunity to add additional centers if the ones
-            in your classroom are not listed here.
+          <Typography variant="h5" align="center" style={{fontFamily: "Arimo", padding: 10}}>
+            You will have the opportunity to add additional centers <br />
+            if the ones in your classroom are not listed here.
           </Typography>
           <Grid
             container
@@ -164,8 +166,9 @@ class CenterChecklist extends React.Component {
                       disableRipple
                     />
                     <ListItemText
-                      primary={value}
-                      style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+                      primary={<Typography variant="h6" style={{fontFamily: "Arimo"}}>{value}</Typography>}
+                      disableTypography
+                      style={{ whiteSpace: "normal", wordWrap: "break-word", fontFamily: "Arimo" }}
                     />
                   </ListItem>
                 ))}
@@ -188,8 +191,9 @@ class CenterChecklist extends React.Component {
                       disableRipple
                     />
                     <ListItemText
-                      primary={value}
-                      style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+                      primary={<Typography variant="h6" style={{fontFamily: "Arimo"}}>{value}</Typography>}
+                      disableTypography
+                      style={{ whiteSpace: "normal", wordWrap: "break-word", fontFamily: "Arimo" }}
                     />
                   </ListItem>
                 ))}
@@ -200,6 +204,7 @@ class CenterChecklist extends React.Component {
             variant="contained"
             color="secondary"
             onClick={this.handleDone}
+            style={{fontFamily: "Arimo", fontSize: 18}}
           >
             Done
           </Button>
@@ -225,38 +230,42 @@ class NewCenterDialog extends React.Component {
    */
   render() {
     return (
-      <Dialog
-        open={this.props.open}
-        onClose={this.props.handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">Add a New Center</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please enter the name of the new center.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            inputRef={cn => (this.centerName = cn)}
-            margin="dense"
-            id="center-name"
-            label="Center Name"
-            type="text"
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.props.handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button
-            onClick={() => this.props.handleSubmit(this.centerName.value)}
-            color="primary"
-          >
-            Add Center
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <div>
+        <Dialog
+          open={this.props.open}
+          onClose={this.props.handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title" style={{fontFamily: "Arimo"}}>Add a New Center</DialogTitle>
+          <DialogContent>
+            <DialogContentText style={{fontFamily: "Arimo"}}>
+              Please enter the name of the new center.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              inputRef={cn => (this.centerName = cn)}
+              margin="dense"
+              id="center-name"
+              label="Center Name"
+              type="text"
+              fullWidth
+              style={{fontFamily: "Arimo"}}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.props.handleClose} color="primary" style={{fontFamily: "Arimo"}}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => this.props.handleSubmit(this.centerName.value)}
+              color="primary"
+              style={{fontFamily: "Arimo"}}
+            >
+              Add Center
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     );
   }
 }
@@ -284,7 +293,7 @@ class CenterMenuSequentialActivities extends React.Component {
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: "AC"
+      type: "sequential"
     };
     this.props.firebase.handleSession(mEntry);
   }
@@ -420,7 +429,9 @@ class CenterMenuSequentialActivities extends React.Component {
                           maxHeight: 150,
                           minWidth: 150,
                           maxWidth: 150,
-                          backgroundColor: grey[400]
+                          backgroundColor: grey[400],
+                          fontFamily: "Arimo",
+                          fontSize: 18
                         }}
                         onClick={this.handleClickOpen}
                       >

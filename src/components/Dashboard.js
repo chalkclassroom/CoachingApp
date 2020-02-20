@@ -11,9 +11,9 @@ import InstructionIconImage from "../assets/images/InstructionIconImage.svg";
 import ListeningIconImage from "../assets/images/ListeningIconImage.svg";
 import SequentialIconImage from "../assets/images/SequentialIconImage.svg";
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg";
-import TransitionNotesImage from "../assets/images/TransitionNotesImage.svg";
+import TransitionTimeNotesImage from "../assets/images/TransitionTimeNotesImage.svg";
 import ClassroomClimateNotesImage from "../assets/images/ClassroomClimateNotesImage.svg";
-import MathNotesImage from "../assets/images/MathNotesImage.svg";
+import MathInstructionNotesImage from "../assets/images/MathInstructionNotesImage.svg";
 import EngagementNotesImage from "../assets/images/EngagementNotesImage.svg";
 import InstructionNotesImage from "../assets/images/InstructionNotesImage.svg";
 import ListeningNotesImage from "../assets/images/ListeningNotesImage.svg";
@@ -21,7 +21,7 @@ import SequentialNotesImage from "../assets/images/SequentialNotesImage.svg";
 import AssocCoopNotesImage from "../assets/images/AssocCoopNotesImage.svg";
 import TransitionTimeLookForsImage from "../assets/images/TransitionTimeLookForsImage.svg";
 import ClassroomClimateLookForsImage from "../assets/images/ClassroomClimateLookForsImage.svg";
-import MathLookForsImage from "../assets/images/MathLookForsImage.svg";
+import MathInstructionLookForsImage from "../assets/images/MathInstructionLookForsImage.svg";
 import EngagementLookForsImage from "../assets/images/EngagementLookForsImage.svg";
 import InstructionLookForsImage from "../assets/images/InstructionLookForsImage.svg";
 import ListeningLookForsImage from "../assets/images/ListeningLookForsImage.svg";
@@ -32,6 +32,8 @@ import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from "@material-ui/core/es";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
+import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
@@ -91,10 +93,12 @@ const styles = {
     borderWidth: "2px",
     fontSize: "15px",
     alignSelf: "flex-end",
-    marginTop: "auto"
+    marginTop: "auto",
+    fontFamily: "Arimo"
   },
   gridTopMargin: {
-    marginTop: "5px"
+    marginTop: "5px",
+    fontFamily: "Arimo"
   }
 };
 
@@ -138,7 +142,7 @@ class Dashboard extends React.Component {
       ? this.setState({
           icon: TransitionTimeIconImage,
           lookForsIcon: TransitionTimeLookForsImage,
-          notesIcon: TransitionNotesImage
+          notesIcon: TransitionTimeNotesImage
         })
       : this.props.magic8 === "Classroom Climate"
       ? this.setState({
@@ -146,11 +150,11 @@ class Dashboard extends React.Component {
           lookForsIcon: ClassroomClimateLookForsImage,
           notesIcon: ClassroomClimateNotesImage
         })
-      : this.props.magic8 === "Math"
+      : this.props.magic8 === "Math Instruction"
       ? this.setState({
           icon: MathIconImage,
-          lookForsIcon: MathLookForsImage,
-          notesIcon: MathNotesImage
+          lookForsIcon: MathInstructionLookForsImage,
+          notesIcon: MathInstructionNotesImage
         })
       : this.props.magic8 === "Level of Engagement"
       ? this.setState({
@@ -224,6 +228,10 @@ class Dashboard extends React.Component {
                   return <TransitionTimeHelp />;
                 case "Classroom Climate":
                   return <ClassroomClimateHelp />;
+                case "Associative and Cooperative":
+                    return <AssocCoopHelp />;
+                case "Sequential Activities":
+                    return <SequentialActivitiesHelp />;
                 default:
                   return <div />;
               }

@@ -34,7 +34,8 @@ const styles = {
     backgroundColor: "#ffffff",
     display: "flex",
     minHeight: "100vh",
-    flexDirection: "column"
+    flexDirection: "column",
+    overflow: 'hidden'
   },
   grow: {
     flexGrow: 1

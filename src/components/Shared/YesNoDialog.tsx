@@ -20,7 +20,6 @@ interface Props {
   buttonText: string | React.ReactElement,
   buttonVariant: string,
   buttonColor: string,
-  buttonAriaLabel: string,
   backgroundColor: string,
   buttonWidth: string,
   buttonMargin: number,
@@ -46,7 +45,7 @@ class YesNoDialog extends React.Component<Props, State> {
       If this is false, then the dialog won't open. For example, if there is no transition currently being measured,
       then cancelling the transition should result in a no-op.
       MISC:
-      buttonVariant, buttonColor, buttonAriaLabel: use these to format the button to your liking.
+      buttonVariant, buttonColor: use these to format the button to your liking.
     */
 
   state = {
@@ -82,7 +81,6 @@ class YesNoDialog extends React.Component<Props, State> {
     ]),
     buttonVariant: PropTypes.string.isRequired,
     buttonColor: PropTypes.string,
-    buttonAriaLabel: PropTypes.string,
     backgroundColor: PropTypes.string,
     buttonWidth: PropTypes.string,
     buttonMargin: PropTypes.number,
@@ -102,13 +100,13 @@ class YesNoDialog extends React.Component<Props, State> {
           onClick={this.handleClickOpen}
           variant={this.props.buttonVariant}
           color={this.props.buttonColor}
-          aria-label={this.props.buttonAriaLabel}
           style={{
             color: this.props.buttonColor,
             backgroundColor: this.props.backgroundColor,
             borderColor: this.props.buttonColor,
             width: this.props.buttonWidth,
-            margin: this.props.buttonMargin
+            margin: this.props.buttonMargin,
+            fontFamily: 'Arimo'
           }}
           className={classes.button}
         >
@@ -120,14 +118,14 @@ class YesNoDialog extends React.Component<Props, State> {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">
+          <DialogTitle id="alert-dialog-title" style={{fontFamily: 'Arimo'}}>
             {this.props.dialogTitle}
           </DialogTitle>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
+            <Button onClick={this.handleClose} color="primary" style={{fontFamily: 'Arimo'}}>
               No
             </Button>
-            <Button onClick={this.handleAccept} color="primary" autoFocus>
+            <Button onClick={this.handleAccept} color="primary" style={{fontFamily: 'Arimo'}} autoFocus>
               Yes
             </Button>
           </DialogActions>

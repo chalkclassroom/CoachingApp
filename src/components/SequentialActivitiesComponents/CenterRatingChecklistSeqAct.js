@@ -24,18 +24,18 @@ const styles = {
     flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    paddingTop: '2%',
+    fontFamily: 'Arimo'
   },
   grow: {
     flexGrow: 1
   }
 };
 
-const TeacherChildEnum = {
-  CHILD_1: 1,
-  CHILD_2: 2,
-  CHILD_1_TEACHER: 3,
-  CHILD_2_TEACHER: 4
+const TeacherEnum = {
+  NO_TEACHER: 1,
+  TEACHER: 2,
 };
 
 const RATING_INTERVAL = 60000;
@@ -49,7 +49,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
     auth: true,
     anchorEl: null,
     ratings: [],
-    checked: [0],
+    childChecked: [],
+    teacherChecked: [],
     people: undefined,
     time: RATING_INTERVAL,
     timeUpOpen: false,
@@ -103,42 +104,68 @@ class CenterRatingChecklistSeqAct extends React.Component {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
-      /* const mEntry = {
-        checked: this.state.checked,
+      const mEntry = {
+        checked: [...this.state.childChecked, ...this.state.teacherChecked],
         people: this.state.people
-      }; */
+      };
+
+      this.props.firebase.handlePushSequential(mEntry);
 
       this.props.finishVisit(this.props.currentCenter);
       this.props.toggleScreen();
     }
   };
 
-  /**
-   * @param {value} value
-   * @return {void}
-   */
-  handleToggle = value => () => {
-    // Prevents updating state of checkbox when disabled
-    if (
-      (value <= 5 && this.childDisabled()) ||
-      (value >= 6 && this.teacherDisabled())
-    ) {
+  handleChildToggle = value => () => {
+    if (value <=5 && this.childDisabled()) {
       return;
     }
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
+    const { childChecked } = this.state;
+    const newChecked = [];
+    if (((childChecked.includes(5) && value != 5) || 
+    (childChecked.includes(1) || childChecked.includes(2) ||
+    childChecked.includes(3) || childChecked.includes(4)) && value === 5)) {
+      newChecked.splice(0, newChecked.length);
       newChecked.push(value);
     } else {
-      newChecked.splice(currentIndex, 1);
-    }
+      newChecked.push(...childChecked);
+      const currentIndex = childChecked.indexOf(value);
 
-    this.setState({
-      checked: newChecked
-    });
-  };
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
+      
+    }
+    this.setState({childChecked: newChecked});
+  }
+
+  handleTeacherToggle = value => () => {
+    if (value >=6 && this.teacherDisabled()) {
+      console.log('is this even possible');
+      return;
+    }
+    const { teacherChecked } = this.state;
+    const newChecked = [];
+    if (((teacherChecked.includes(10) && value != 10) || 
+    (teacherChecked.includes(6) || teacherChecked.includes(7) ||
+    teacherChecked.includes(8) || teacherChecked.includes(9)) && value === 10)) {
+      newChecked.splice(0, newChecked.length);
+      newChecked.push(value);
+    } else {
+      newChecked.push(...teacherChecked);
+      const currentIndex = teacherChecked.indexOf(value);
+
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
+      
+    }
+    this.setState({teacherChecked: newChecked});
+  }
 
   childDisabled = () => {
     return this.state.people === undefined;
@@ -146,61 +173,37 @@ class CenterRatingChecklistSeqAct extends React.Component {
 
   teacherDisabled = () => {
     return (
-      this.state.people === TeacherChildEnum.CHILD_1 ||
-      this.state.people === TeacherChildEnum.CHILD_2 ||
+      this.state.people === TeacherEnum.NO_TEACHER ||
       this.state.people === undefined
     );
   };
 
-  handleChild1Click = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_1) {
-      this.setState({ people: TeacherChildEnum.CHILD_1 });
+  handleNoTeacherClick = () => {
+    if (this.state.people !== TeacherEnum.NO_TEACHER) {
+      this.setState({ people: TeacherEnum.NO_TEACHER });
 
-      const { checked } = this.state;
-      const newChecked = [...checked];
-      for (let i = 5; i <= 8; i++) {
+      const { teacherChecked } = this.state;
+      const newTeacherChecked = [...teacherChecked];
+      for (let i = 6; i <= 10; i++) {
         // If there are teacher ratings checked, remove them
-        if (checked.includes(i)) {
-          const currentIndex = checked.indexOf(i);
-          newChecked.splice(currentIndex);
+        if (teacherChecked.includes(i)) {
+          const currentIndex = teacherChecked.indexOf(i);
+          newTeacherChecked.splice(currentIndex);
         }
       }
-      this.setState({ checked: newChecked });
+      this.setState({ teacherChecked: newTeacherChecked });
     }
   };
 
-  handleChild2Click = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_2) {
-      this.setState({ people: TeacherChildEnum.CHILD_2 });
-
-      const { checked } = this.state;
-      const newChecked = [...checked];
-      for (let i = 5; i <= 8; i++) {
-        // If there are teacher ratings checked, remove them
-        if (checked.includes(i)) {
-          const currentIndex = checked.indexOf(i);
-          newChecked.splice(currentIndex);
-        }
-      }
-      this.setState({ checked: newChecked });
-    }
-  };
-
-  handleChild1TeacherClick = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_1_TEACHER) {
-      this.setState({ people: TeacherChildEnum.CHILD_1_TEACHER });
-    }
-  };
-
-  handleChild2TeacherClick = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_2_TEACHER) {
-      this.setState({ people: TeacherChildEnum.CHILD_2_TEACHER });
+  handleTeacherClick = () => {
+    if (this.state.people !== TeacherEnum.TEACHER) {
+      this.setState({ people: TeacherEnum.TEACHER });
     }
   };
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
   render() {
     return (
@@ -210,11 +213,11 @@ class CenterRatingChecklistSeqAct extends React.Component {
           onClose={this.handleTimeUpClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title">
+          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
             Don&apos;t forget to circulate!
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
               You&apos;ve been at the {this.props.currentCenter} center for 1 minute.
             </DialogContentText>
           </DialogContent>
@@ -224,9 +227,9 @@ class CenterRatingChecklistSeqAct extends React.Component {
           onClose={this.handlePeopleWarningClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title">Wait!</DialogTitle>
+          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>Wait!</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
               Please select the number of children and teachers at the center
               before submitting your rating.
             </DialogContentText>
@@ -258,7 +261,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
             <Grid item xs={9}>
               <Grid>
                 <div style={{ margin: 10 }} />
-                <Button size={"small"} onClick={this.handleBackButton}>
+                <Button size={"small"} onClick={this.handleBackButton} style={{fontFamily: 'Arimo'}}>
                   <KeyboardArrowLeft />
                   Back
                 </Button>
@@ -269,9 +272,8 @@ class CenterRatingChecklistSeqAct extends React.Component {
                     this.props.currentCenter.substr(1)}
                 </Typography>
                 <div style={{ height: 20 }} />
-                <Typography variant={"subtitle2"} gutterBottom>
-                  Please select the number of children and teachers at the
-                  center:
+                <Typography variant={"subtitle1"} gutterBottom style={{fontFamily: 'Arimo'}}>
+                  Please indicate who is present at the center:
                 </Typography>
                 <Grid
                   container
@@ -281,54 +283,30 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 >
                   <Grid item>
                     <Button
-                      onClick={this.handleChild1Click}
+                      onClick={this.handleNoTeacherClick}
                       size="small"
                       variant={
-                        this.state.people === TeacherChildEnum.CHILD_1
+                        this.state.people === TeacherEnum.NO_TEACHER
                           ? "contained"
                           : "outlined"
                       }
+                      style={{fontFamily: "Arimo"}}
                     >
-                      1 child
+                      No Teacher
                     </Button>
                   </Grid>
                   <Grid item>
                     <Button
-                      onClick={this.handleChild2Click}
+                      onClick={this.handleTeacherClick}
                       size="small"
                       variant={
-                        this.state.people === TeacherChildEnum.CHILD_2
+                        this.state.people === TeacherEnum.TEACHER
                           ? "contained"
                           : "outlined"
                       }
+                      style={{fontFamily: "Arimo"}}
                     >
-                      2+ children without teacher
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={this.handleChild1TeacherClick}
-                      size="small"
-                      variant={
-                        this.state.people === TeacherChildEnum.CHILD_1_TEACHER
-                          ? "contained"
-                          : "outlined"
-                      }
-                    >
-                      1 child with teacher
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={this.handleChild2TeacherClick}
-                      size="small"
-                      variant={
-                        this.state.people === TeacherChildEnum.CHILD_2_TEACHER
-                          ? "contained"
-                          : "outlined"
-                      }
-                    >
-                      2+ children with teacher
+                      Teacher Present
                     </Button>
                   </Grid>
                 </Grid>
@@ -341,113 +319,100 @@ class CenterRatingChecklistSeqAct extends React.Component {
                       </Typography>
                       <List>
                         <ListItem
-                          onClick={this.handleToggle(1)}
+                          onClick={this.handleChildToggle(1)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(1)
+                              this.state.childChecked.includes(1)
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
-                            Using regular objects or sequential materials in a{" "}
+                          <ListItemText
+                            disableTypography
+                            style={{fontSize: 16}}
+                          >
+                            Using materials in a{" "}
                             <b>step-by-step, predictable way</b>
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(2)}
+                          onClick={this.handleChildToggle(2)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(2)
+                              this.state.childChecked.includes(2)
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
-                            <b>Drawing</b> meaningful images or <b>writing</b>{" "}
-                            names or meaningful messages
+                          <ListItemText
+                            disableTypography
+                            style={{ fontSize: 16}}
+                          >
+                            <b>Drawing</b> recognizable images or <b>writing</b>{" "}
+                            names or messages (letters or letter-like forms)
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(3)}
+                          onClick={this.handleChildToggle(3)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(3)
+                              this.state.childChecked.includes(3)
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
-                            Following <b>formal rules of a game</b> and/or
-                            taking turns
+                          <ListItemText
+                            disableTypography
+                            style={{fontSize: 16}}
+                          >
+                            Playing a game with <b>set rules</b> and/or {" "}
+                            <b>taking turns</b>
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(4)}
+                          onClick={this.handleChildToggle(4)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(4)
+                              this.state.childChecked.includes(4)
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText
+                            disableTypography
+                            style={{fontSize: 16}}
+                          >
                             Speaking or acting according to a{" "}
-                            <b>predetermined scenario</b>
+                            <b>pretend scenario</b> that follows a
+                            predictable plot
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(5)}
+                          onClick={this.handleChildToggle(5)}
                           disabled={this.childDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.childDisabled() &&
-                              this.state.checked.includes(5)
+                              this.state.childChecked.includes(5)
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>None</ListItemText>
-                        </ListItem>
-                        {/* <ListItem
-                          onClick={this.handleToggle(6)}
-                          disabled={this.childDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.childDisabled() &&
-                              this.state.checked.indexOf(6) !== -1
-                            }
-                            disabled={this.childDisabled()}
-                          />
-                          <ListItemText>
-                            Speaking or acting according to a{" "}
-                            <b>predetermined scenario</b>
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleToggle(7)}
-                          disabled={this.childDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.childDisabled() &&
-                              this.state.checked.indexOf(7) !== -1
-                            }
-                            disabled={this.childDisabled()}
-                          />
-                          <ListItemText>
+                          <ListItemText
+                            disableTypography
+                            style={{fontSize: 16}}
+                          >
                             None
                           </ListItemText>
-                        </ListItem> */}
+                        </ListItem>
                       </List>
                     </Card>
                   </Grid>
@@ -458,79 +423,98 @@ class CenterRatingChecklistSeqAct extends React.Component {
                       </Typography>
                       <List>
                         <ListItem
-                          onClick={this.handleToggle(6)}
+                          onClick={this.handleTeacherToggle(6)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(6)
+                              this.state.teacherChecked.includes(6)
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
-                            <b>Encouraging</b> sequential use of materials
+                          <ListItemText
+                            disableTypography
+                            style={{fontSize: 16}}
+                          >
+                            <b>Helping</b> children do sequential activities
+                            with manipulatives or toys
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(7)}
+                          onClick={this.handleTeacherToggle(7)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(7)
+                              this.state.teacherChecked.includes(7)
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText
+                            disableTypography
+                            style={{fontSize: 16}}
+                          >
+                            Supporting children as they <b>draw</b> images
+                            or <b>write</b> messages
+                          </ListItemText>
+                        </ListItem>
+                        <ListItem
+                          onClick={this.handleTeacherToggle(8)}
+                          disabled={this.teacherDisabled()}
+                        >
+                          <Checkbox
+                            checked={
+                              !this.teacherDisabled() &&
+                              this.state.teacherChecked.includes(8)
+                            }
+                            disabled={this.teacherDisabled()}
+                          />
+                          <ListItemText
+                            disableTypography
+                            style={{fontSize: 16}}
+                          >
                             <b>Demonstrating the steps</b> to an activity
+                            or game
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(8)}
+                          onClick={this.handleTeacherToggle(9)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(8)
+                              this.state.teacherChecked.includes(9)
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
-                            Helping children <b>act out</b> a dramatic play{" "}
-                            scenario or book
+                          <ListItemText
+                            disableTypography
+                            style={{fontSize: 16}}
+                          >
+                            Supporting children as they <b>act out</b> 
+                            {" "} a dramatic play scenario or book
                           </ListItemText>
                         </ListItem>
                         <ListItem
-                          onClick={this.handleToggle(9)}
+                          onClick={this.handleTeacherToggle(10)}
                           disabled={this.teacherDisabled()}
                         >
                           <Checkbox
                             checked={
                               !this.teacherDisabled() &&
-                              this.state.checked.includes(9)
+                              this.state.teacherChecked.includes(10)
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
-                            Supporting children&apos;s <b>drawing</b> of an image or{" "}
-                            <b>writing</b> a message
+                          <ListItemText
+                            disableTypography
+                            style={{fontSize: 16}}
+                          >
+                            None
                           </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleToggle(10)}
-                          disabled={this.teacherDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.teacherDisabled() &&
-                              this.state.checked.includes(10)
-                            }
-                            disabled={this.teacherDisabled()}
-                          />
-                          <ListItemText>None</ListItemText>
                         </ListItem>
                       </List>
                     </Card>
@@ -546,7 +530,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                     variant="contained"
                     color={"secondary"}
                     onClick={this.handleSubmit}
-                    style={{ marginTop: 20 }}
+                    style={{ marginTop: 20, fontFamily: 'Arimo', fontSize: 18}}
                   >
                     Submit
                   </Button>
