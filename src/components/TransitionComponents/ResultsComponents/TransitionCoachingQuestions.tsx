@@ -163,9 +163,11 @@ interface Props {
       }
     }
   },
-  handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string): void,
+  handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
+  teacherId: string,
+  magic8: string
 }
 
 interface State {
@@ -356,6 +358,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               addedToPlan={this.props.addedToPlan}
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "traveling" ? (
@@ -366,6 +370,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               addedToPlan={this.props.addedToPlan}
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "childrenWaiting" ? (
@@ -376,6 +382,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               addedToPlan={this.props.addedToPlan}
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "routines" ? (
@@ -386,6 +394,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               addedToPlan={this.props.addedToPlan}
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "behavior" ? (
@@ -396,6 +406,8 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               addedToPlan={this.props.addedToPlan}
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.TransitionColor}
             />
           ) : <div/>}

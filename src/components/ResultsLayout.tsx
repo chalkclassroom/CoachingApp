@@ -70,6 +70,7 @@ interface Props {
   trendsGraph: React.ReactNode,
   changeSessionId: any,
   sessionId: string,
+  sessionDates: Array<any>,
   questions: React.ReactNode,
   chosenQuestions: Array<string>,
   notes: Array<{timestamp: Date, content: string}>,
@@ -93,7 +94,7 @@ interface State {
   view: number,
   tabValue: number,
   // notes: Array<object>,
-  sessionDates: Array<string>,
+  // sessionDates: Array<string>,
   actionPlanEditMode: boolean,
   conferencePlanEditMode: boolean,
   // actionPlanExists: boolean
@@ -116,7 +117,7 @@ class ResultsLayout extends React.Component<Props, State> {
       view: ViewEnum.DATA,
       tabValue: 0,
       // notes: [],
-      sessionDates: [],
+      // sessionDates: [],
       actionPlanEditMode: false,
       conferencePlanEditMode: false,
       // actionPlanExists: false,
@@ -181,7 +182,7 @@ class ResultsLayout extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  /* handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
     firebase.fetchSessionDates(teacherId, this.props.observationType).then((dates: Array<string>) =>
       this.setState({
@@ -189,7 +190,7 @@ class ResultsLayout extends React.Component<Props, State> {
       })
     );
     console.log('date fetching was called');
-  };
+  }; */
 
   handleEditActionPlan = (): void => {
     this.setState({
@@ -218,7 +219,7 @@ class ResultsLayout extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     const firebase = this.context;
-    this.handleDateFetching(this.props.teacherId);
+    // this.handleDateFetching(this.props.teacherId);
     this.props.handleTrendsFetch(this.props.teacherId);
     /* const actionPlanExists = firebase.findActionPlan(this.props.sessionId);
     if (actionPlanExists) {
@@ -260,7 +261,7 @@ class ResultsLayout extends React.Component<Props, State> {
                 viewEnum={ViewEnum}
                 sessionId={this.props.sessionId}
                 changeSessionId={this.props.changeSessionId}
-                sessionDates={this.state.sessionDates}
+                sessionDates={this.props.sessionDates}
               />
             </Grid>
           </Grid>
@@ -349,7 +350,6 @@ class ResultsLayout extends React.Component<Props, State> {
                           teacherId={this.props.teacherId}
                           sessionId={this.props.sessionId}
                           magic8={this.props.magic8}
-                          readOnly={true}
                         />}
                       </FirebaseContext.Consumer>
                         {this.state.conferencePlanEditMode ? (

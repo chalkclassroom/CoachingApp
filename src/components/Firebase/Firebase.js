@@ -1162,9 +1162,10 @@ class Firebase {
         teacher: teacherId,
         tool: magic8,
         dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
-        feedback: '',
-        questions: [],
-        notes: ''
+        feedback: [''],
+        questions: [''],
+        addedQuestions: [],
+        notes: ['']
       }
     );
     const conferencePlansRef = firebase.firestore().collection('conferencePlans').doc();

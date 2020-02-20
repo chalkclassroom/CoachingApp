@@ -115,7 +115,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
     this.state = {
       feedback: [''],
       questions: [''],
-      addedQuestions: this.props.chosenQuestions ? this.props.chosenQuestions : [''],
+      addedQuestions: this.props.chosenQuestions ? this.props.chosenQuestions : [],
       notes: [''],
       date: '',
       actionSteps: '',
@@ -287,7 +287,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
           conferencePlanId: '',
           feedback: [''],
           questions: [''],
-          addedQuestions: [''],
+          addedQuestions: [],
           notes: [''],
           date: ''
         })
