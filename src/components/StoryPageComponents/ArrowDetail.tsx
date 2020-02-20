@@ -18,26 +18,45 @@ const styles: object = {
 		fontSize: 25,
 		color: '#000000',
 		fontFamily: 'Arimo',
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		width: '60%',
+		// marginTop:''
+		marginTop: '25px',
+		marginBottom: '22px'
 	},
 	rounded: {
 		backgroundColor: '#86CCFF',
-		height: 150,
-		width: 150
+		height: 90,
+		width: 90
 	},
-
+	vertical: {
+		borderLeft: '15px solid #86CCFF',
+		height: '50%',
+		marginLeft: '4.5em',
+	},
+	verticalOne: {
+		borderLeft: '15px solid #86CCFF',
+		height: '25%',
+		marginLeft: '4.5em',
+	},
 
 	bodyText: {
 		fontSize: 20,
 		color: '#000000',
-    display: 'flex',
-    textAlign:'justify',
-    fontFamily: 'Arimo',
-    width:'100%'
+		display: 'flex',
+		// textAlign: 'justify',
+		fontFamily: 'Arimo',
+		width: '100%'
 	},
 	'@media (max-width: 700px)': {
 		root: {
 			display: 'none'
+		},
+		vertical: {
+			borderLeft: '15px solid #86CCFF',
+			height: '25em',
+			marginLeft: '4.5em',
+			radius:'25%'
 		}
 	},
 	'@media (min-width: 701px)': {
@@ -122,25 +141,20 @@ class ArrowDetail extends React.Component<Props, {}> {
 			<div>
 				<div className={classes.root}>
 					<Grid container direction="column">
-
-
-          <Grid >
-							<Grid container direction="row" >
-								<Grid  xs={3}>
+						<Grid>
+							<Grid container direction="row">
+								<Grid xs={3}>
 									<Grid
 										container
-										 direction="row"
+										direction="row"
 										justify="flex-end"
 										alignItems="flex-start"
 										style={{ height: '100%' }}
 									>
-                    
-                 
-									</Grid>
+{/* 										<div className={classes.verticalOne} style={{ paddingLeft: '63px' }} />
+ */}									</Grid>
 								</Grid>
-								<Grid xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }}>
-								
-								</Grid>
+								<Grid xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }} />
 							</Grid>
 						</Grid>
 
@@ -149,28 +163,34 @@ class ArrowDetail extends React.Component<Props, {}> {
 								<Grid item xs={3}>
 									<Grid
 										container
-										 direction="row"
+										direction="row"
 										justify="flex-end"
 										alignItems="flex-start"
 										style={{ height: '100%' }}
 									>
-                    <div style={{marginLeft:"2rem"}}>
-                    
-                      <Avatar variant="circle" className={classes.rounded}>
-                        <img
-                          alt={this.props.iconAlt}
-                          src={this.props.icon}
-                          height={100}
-                          width={100}
-                          // style={{ paddingRight: 0 }}
-                        />
-                      </Avatar>
-                     </div>									
+										<div style={{ marginLeft: '2rem' }}>
+											<Avatar variant="circle" className={classes.rounded}>
+												<img
+													alt={this.props.iconAlt}
+													src={this.props.icon}
+													height={56}
+													width={56}
+													// style={{ paddingRight: 0 }}
+												/>
+											</Avatar>
+{/* 											<div className={classes.vertical} style={{ paddingLeft: 45 }} />
+ */}										</div>
 									</Grid>
 								</Grid>
-								<Grid item xs={6} justify="flex-start" alignItems="flex-end" style={{ paddingLeft: '1em', paddingRight: '1em' }}>
+								<Grid
+									item
+									xs={8}
+									justify="flex-start"
+									alignItems="flex-end"
+									style={{ paddingLeft: '7em' }}
+								>
 									<Typography className={classes.titleText}>{this.props.title}</Typography>
-                  <Typography className={classes.bodyText}>{this.props.text}</Typography>
+									<Typography className={classes.bodyText}>{this.props.text}</Typography>
 								</Grid>
 							</Grid>
 						</Grid>
@@ -183,7 +203,7 @@ class ArrowDetail extends React.Component<Props, {}> {
 							</Grid>
 						</Grid> */}
 						{this.props.button ? (
-							<Grid item >
+							<Grid item>
 								<Grid container direction="row" justify="flex-start" alignItems="flex-start">
 									<Grid item xs={4} />
 									<Grid item xs={8}>
@@ -213,20 +233,20 @@ class ArrowDetail extends React.Component<Props, {}> {
 								</Grid>
 								<Grid item xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }}>
 									<Typography className={classes.titleText}>{this.props.title}</Typography>
-                  <Typography className={classes.bodyText}>{this.props.text}</Typography>
+									<Typography className={classes.bodyText}>{this.props.text}</Typography>
 								</Grid>
 							</Grid>
 						</Grid>
-						{/* <Grid item style={{ paddingTop: '1em' }}>
+						<Grid item style={{ paddingTop: '1em' }}>
 							<Grid container direction="row" justify="flex-start" alignItems="flex-start">
 								<Grid item xs={3} />
 								<Grid item xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }}>
 									<Typography className={classes.bodyText}>{this.props.text}</Typography>
 								</Grid>
 							</Grid>
-						</Grid> */}
+						</Grid>
 						{this.props.button ? (
-							<Grid item >
+							<Grid item>
 								<Grid container direction="row" justify="flex-start" alignItems="flex-start">
 									<Grid item xs={4} />
 									<Grid item xs={8}>

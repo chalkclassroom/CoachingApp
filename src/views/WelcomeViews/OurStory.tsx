@@ -4,7 +4,6 @@ import AppBar from "../../components/AppBar";
 import FirebaseContext from "../../components/Firebase/FirebaseContext.js";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card"
 import Typography from "@material-ui/core/Typography/Typography";
 import LogoImage from "../../assets/images/LogoImage.svg";
 import PieChartImage from "../../assets/images/PieChartImage.svg";
@@ -44,6 +43,13 @@ const styles: object = {
 	root: {
 		backgroundColor: '#ffffff'
 	},
+	arrowVertical: {
+		 // margin: theme.spacing(1),
+		  borderRadius: 75,
+		  width: '0.5px',
+		  height: '190px',
+		  backgroundColor: '#ffffff',
+	  },
 	mobileRoot: {
 		backgroundColor: '#ffffff'
 	},
@@ -132,22 +138,49 @@ const styles: object = {
 	missionBody: {
 		fontFamily: 'Arimo',
 		fontSize: 24,
-		textAlign:'justify',
+		// textAlign:'justify',
 		color: '#000',
 		display: 'flex',
 		marginTop:'0px',
 		marginBottom:'40px'
 	},
-	ReadMoreTitle: {
+	arrowBody:{
+		fontSize: 20,
+		color: '#000000',
+		// textAlign: 'justify',
+		fontFamily: 'Arimo',
+		width: '70%'
+	},
+	'@media (max-width: 700px)': {
+		root: {
+			display: 'none'
+		},
+	},
+	'@media (min-width: 701px)': {
+		mobileRoot: {
+			display: 'none'
+		}
+	},
+	readMoreTitle: {
 		color: '#094492',
 		fontSize: 35,
 		fontFamily: 'Arimo',
 		textAlign: 'center',
-		fontStyle: 'normal',
+		fontWeight: 'Bold',
 		letterSpacing:'8px',
-		marginTop:'40px',
-		marginBottom:'20px'
+		marginTop:'20px',
+		marginBottom:'10px'
 	},
+	readMoreBody: {
+		fontSize: 24,
+		color: '#000000',
+		paddingRight: '20%',
+		fontFamily: 'Arimo',
+		marginTop:'0px',
+		marginLeft:'60px',
+		lineHeight: '33px',
+		marginBottom:'180px'
+	  },
 	getInvolvedTitle: {
 		color: '#2F4B65',
 		fontSize: 42,
@@ -181,9 +214,35 @@ const styles: object = {
 		fontFamily: 'Arimo',
 		letterSpacing: '0.03em'
 	},
+	arrowBar:{
+		width: '10px',
+		height: '1190px', 
+		position:'absolute',
+		backgroundColor: '#86CCFF' ,// ' #86CCFF',
+		display: 'inline-block',
+        marginTop: '-35px',
+		marginRight: '64px',
+		marginLeft: '-48px',
+		zIndex: 0
+	},
+	arrowCurve:{    
+	 width: '9.9px',
+	 height: '9.9px', 
+	 backgroundColor: '#86CCFF',  // '#86CCFF',
+	 borderRadius: '50%',
+	 // display: 'inline-block',
+	 marginBottom: '0',
+	 marginRight: '64px',
+	 marginLeft: '-48px',
+  	position:'absolute',
+	  marginTop: '-37px',
+	  zIndex: 5
+  },		
+
 	partnerLogo: {
 		maxWidth: 125
 	},
+	
 	'@media (max-width: 700px)': {
 		root: {
 			display: 'none'
@@ -201,7 +260,7 @@ const styles: object = {
 		width: "60%",
 		borderRadius: "50px",
 		marginTop:'0px',
-		marginBottom:'40px',
+		marginBottom:'20px',
        // height: '458px'
 	  },
 		chalkTitle: {
@@ -238,6 +297,11 @@ const styles: object = {
 			marginTop:'20px',
 			marginBottom:'40px'
 		},
+		missionBody1:{
+			fontSize: 20,
+			color: '#000',
+			fontFamily: 'Arimo'
+		},
 		ReadMoreTitle: {
 			fontSize: 25
 		},
@@ -256,7 +320,35 @@ const styles: object = {
 			paddingBottom: '1em'
 		}
 	},
+
 	'@media (min-width: 701px) and (max-width: 1279px)': {
+		arrowBar:{
+			width: '10px',
+			height: '2210px', 
+						   position:'absolute',
+						   backgroundColor: '#86CCFF' ,// ' #86CCFF',
+						   display: 'inline-block',
+						// marginBottom: '7px',
+						//   borderRadius: '15%',
+						   marginTop: '-35px',
+						   marginRight: '64px',
+						   marginLeft: '-48px',
+						   zIndex: 0
+		},
+		arrowCurve:{    
+			width: '9.9px',
+			 height: '9.9px', 
+		 backgroundColor: '#86CCFF',  // '#86CCFF',
+		 borderRadius: '50%',
+		 //display: 'inline-block',
+		 marginBottom: '0',
+		 marginRight: '64px',
+		 marginLeft: '-48px',
+	  	position:'absolute',
+		  marginTop: '-37px',
+		  zIndex: 5
+	
+	  },
 		mobileRoot: {
 			display: 'none'
 		},
@@ -423,6 +515,61 @@ class OurStory extends React.Component<Props, State> {
    */
 	render() {
 		const { classes } = this.props;
+		var data1 =
+		<Typography>
+			  <p className={classes.arrowBody} >
+		The foundation for CHALK began with two classroom observation research tools: 
+		the  <a target="_blank" href="">Child Observation in Preschool</a> and  <a target="_blank" href="">the Teacher Observation in Preschool.</a> 
+		These complex research tools have been used for over a decade to describe, measure, and evaluate hundreds
+		of early childhood classrooms over the course of multiple large evaluation projects.
+		 The COP measures observable child behaviorswhile the TOP measures observable aspects of Pre-K teachers’ classroom behaviors. 
+		 Together, they provide a comprehensive view of the instruction and classroom climate children experience during their school day. 
+		</p>
+	</Typography>
+			var data2 =
+			<Typography>
+			  <p className={classes.arrowBody} >
+		Over the course of a research partnership with a Southeastern school district, we developed a vision for Pre-K quality and
+		 determined what practices should be measured in classrooms that would provide us with standardized assessment of the quality 
+		 of the instructional practices being implemented in those classrooms. We chose specific practices that we found to be consistently
+		  predictive of children’s academic and self-regulatory gains. </p>
+		  <p className={classes.arrowBody} >
+     	 We carefully trained and certified observers to collect a wide variety of information about the participating classrooms across an entire
+	   school day at several points over the course of the school year throughout the four-year partnership. To promote rapid cycle continuous 
+	   quality improvement, data were analyzed and organized into reports given back to teachers and coaches within three weeks of each data 
+	   collection.		</p>
+
+		</Typography>
+					var data3 =
+					<Typography>
+					  <p className={classes.arrowBody} >
+					  Through this work, we identified 8 clusters of classroom practices that were<a target="_blank" href=""> associated with children’s gains across a number of domains.</a>
+					   Validation was conducted with groups of teachers, coaches and even into kindergarten.
+					   The idea of CHALK was eventually born out of a commitment to rigorous research designed to improve children’s early education. </p>
+				</Typography>
+					var data4 =
+					<Typography>
+					  <p className={classes.arrowBody} >
+					  Over the course of the partnership, schools began to focus their professional development on the CHALK practices.
+					   Instructional coaches worked with teachers to improve these practices, but some were much harder to improve than others. 
+					   Moreover, coaches were reliant on data collected by researchers rather than data they collected themselves. 
+					   We concluded that coaches need a tool that helps them connect what they see in the classroom with questions that help guide their coaching 
+					   conversations, in addition to concrete strategies for practice improvement. </p>
+				</Typography>
+					var data5=
+					<Typography>
+					  <p className={classes.arrowBody} >
+					  CHALK is focused on empowering coaches and transforming classroom experiences.
+					   To achieve this goal, we challenged an <a target="_blank" href="">interdisciplinary team</a>  of coaches, teachers, principals, policy makers, researchers 
+					   and other stakeholders to bring their unique expertise and perspectives to the table.
+					   Finally, we are bringing the vision for the CHALK to life.  </p>
+				</Typography>
+				var data6=
+				<Typography>
+				  <p className={classes.readMoreBody} >
+				<a target="_blank" href="">Data-Driven Improvement in Pre-kindergarten Classrooms: Report From a Partnership in an Urban District</a>
+				</p>
+				</Typography>
 		return (
 			<div>
 				<div className={classes.root}>
@@ -452,7 +599,10 @@ class OurStory extends React.Component<Props, State> {
 								</Typography>
 								<Typography className={classes.missionTitle}>
 									<strong>CHALK'S MISSION</strong>
-								</Typography>							
+								</Typography>	
+							
+
+
 		<Grid container spacing={3}>
         <Grid item xs>
         </Grid>
@@ -504,16 +654,36 @@ class OurStory extends React.Component<Props, State> {
 						
 					
 						<Grid item >
+						<Grid container direction="row" >
+								<Grid  xs={3}>
+						<Grid
+										container
+										 direction="row"
+										 justify="flex-end"
+										alignItems="flex-start"
+										style={{ height: '100%' }}
+									>
+ 
+									</Grid>
+									</Grid>
+									<Grid xs={9}>
+											
+					 
+					  <div  className={classes.arrowCurve}>
+							</div>
+								
+							<div  className={classes.arrowBar}>
+							</div>
+					       
+								</Grid>
+									</Grid>
 							<Grid container direction="row">
 								<Grid item xs={12}>
 									<ArrowDetail
 										icon={BookImage}
 										iconAlt="Book"
 										title="Setting the Research Foundation"
-										text="The foundation for CHALK began with two classroom observation research tools: the Child Observation in Preschool and  the Teacher Observation in Preschool.
-                       These complex research tools have been used for over a decade to describe, measure, and evaluate hundreds of early childhood classrooms over the course of multiple large evaluation projects.
-                        The COP measures observable child behaviors while the TOP measures observable aspects of Pre-K teachers’ classroom behaviors.
-                       Together, they provide a comprehensive view of the instruction and classroom climate children experience during their school day."
+										text={data1}
 									/>
 								</Grid>
 							</Grid>
@@ -525,9 +695,7 @@ class OurStory extends React.Component<Props, State> {
 										icon={SearchEngineImage}
 										iconAlt="Observe"
 										title="Performing Field Studies"
-										text="Over the course of a research partnership with a Southeastern school district, we developed a vision for Pre-K quality and determined what practices should be measured in classrooms that would provide us with standardized assessment of the quality of the instructional practices being implemented in those classrooms. We chose specific practices that we found to be consistently predictive of children’s academic and self-regulatory gains. 
-                      We carefully trained and certified observers to collect a wide variety of information about the participating classrooms across an entire school day at several points over the course of the school year throughout the four-year partnership. To promote rapid cycle continuous quality improvement, data were analyzed and organized into reports given back to teachers and coaches within three weeks of each data collection.
-                      "
+										text={data2}
 									/>
 								</Grid>
 							</Grid>
@@ -542,10 +710,8 @@ class OurStory extends React.Component<Props, State> {
 										icon={MedalImage}
 										iconAlt="Medal"
 										title="Identifying the CHALK Classroom Practices"
-										text="Through this work, we identified 8 clusters of classroom practices that were associated with children’s gains
-                       across a number of domains. Validation was conducted with groups of teachers, coaches and even into kindergarten. 
-                      The idea of CHALK was eventually born out of a commitment to rigorous research designed to improve children’s early education. "
-									/>
+										text={data3}
+										/>
 								</Grid>
 							</Grid>
 						</Grid>
@@ -556,11 +722,7 @@ class OurStory extends React.Component<Props, State> {
 										icon={LightbulbImage}
 										iconAlt="Lightbulb"
 										title="Creating our Vision"
-										text="Over the course of the partnership, schools began to focus their professional development on the CHALK practices.
-                       Instructional coaches worked with teachers to improve these practices, but some were much harder to improve than others.
-                       Moreover, coaches were reliant on data collected by researchers rather than data they collected themselves.
-                       We concluded that coaches need a tool that helps them connect what they see in the classroom with questions that help guide their coaching conversations,
-                        in addition to concrete strategies for practice improvement. "
+										text={data4 }
 									/>
 								</Grid>
 							</Grid>
@@ -571,17 +733,14 @@ class OurStory extends React.Component<Props, State> {
 									<ArrowDetail
 										icon={PilotProgramImage}
 										iconAlt="Participation"
-										title="Empowering Teachers and Coaches"
-										text="CHALK is focused on empowering coaches and transforming classroom experiences. 
-                       To achieve this goal, we challenged an interdisciplinary team of coaches, teachers, principals, policy makers, researchers and other stakeholders to bring their unique expertise and perspectives to the table.
-                        Finally, we are bringing the vision for the CHALK to life."
+										title="Forming our Team"
+										text={data5}
 									/>
 									
 								</Grid>
 							</Grid>
 						</Grid>
-{/* 						 <div className={classes.vertical} style={{ paddingLeft: "10px", marginBottom:'50px' }} /> 
- */}						<Grid container direction="row" >
+						<Grid container direction="row" >
 								<Grid  xs={3}>
 						<Grid
 										container
@@ -591,10 +750,15 @@ class OurStory extends React.Component<Props, State> {
 										style={{ height: '100%' }}
 									>
                     
-                    {/*   <div  style={{    width: 0, height: '0',  borderLeft: '25px solid transparent',
+                      <div  style={{    
+						  width: 0, 
+						  height: '0', 
+						 borderLeft: '25px solid transparent',
       borderRight: '25px solid transparent',
-      borderTop: '50px solid #86CCFF', marginRight: '45px',
-	  marginBottom: '50px' }} /> */}
+	  borderTop: '50px solid  #86CCFF',
+	  marginRight: '18px',
+	  marginBottom: '50px',
+	}} />
                     
 									</Grid>
 									</Grid>
@@ -604,8 +768,6 @@ class OurStory extends React.Component<Props, State> {
 									</Grid>
 					</Grid>
 				
-
-					{/* //rajeev */}
 					<Grid
 						container
 						direction="column"
@@ -623,7 +785,7 @@ class OurStory extends React.Component<Props, State> {
 								style={{ paddingBottom: '1em' }}
 							>
 								<Grid item xs={1} />
-								<Grid item xs={10} component={Typography} className={classes.ReadMoreTitle}>
+								<Grid item xs={10} component={Typography} className={classes.readMoreTitle}>
 									<strong>Read more about our research here:</strong>
 								</Grid>
 							</Grid>
@@ -631,7 +793,7 @@ class OurStory extends React.Component<Props, State> {
 						<Grid item>
 							<Grid container direction="column">
 								<Grid item xs={12}>
-									<BlueBarDetail text="Data-Driven Improvement in Pre-kindergarten Classrooms: Report From a Partnership in an Urban District" />
+									<BlueBarDetail text= {data6} />
 								</Grid>
 							</Grid>
 						</Grid>
@@ -653,9 +815,14 @@ class OurStory extends React.Component<Props, State> {
 								alignItems="flex-start"
 								style={{ paddingBottom: '1em' }}
 							>
-								<Grid item xs={2} />
+								<Grid item  xl={3}
+									md={3}
+									sm={3}
+									 />
 
-								<Grid item /* xs={10} */ xs={12} sm={6} component={Typography} className={classes.getInvolvedTitle}>
+								<Grid item xs={12} xl={6}
+									md={6}
+									sm={6} component={Typography} className={classes.getInvolvedTitle}>
 									<strong>OR GET INVOLVED</strong>
 								</Grid>
 
