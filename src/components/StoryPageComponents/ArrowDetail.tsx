@@ -20,44 +20,27 @@ const styles: object = {
 		fontFamily: 'Arimo',
 		fontWeight: 'bold',
 		width: '60%',
-		// marginTop:''
-		marginTop: '25px',
-		marginBottom: '22px'
+		marginTop: '10px',
+	//	marginBottom: '0px'
 	},
 	rounded: {
 		backgroundColor: '#86CCFF',
 		height: 90,
 		width: 90
 	},
-	vertical: {
-		borderLeft: '15px solid #86CCFF',
-		height: '50%',
-		marginLeft: '4.5em'
-	},
-	verticalOne: {
-		borderLeft: '15px solid #86CCFF',
-		height: '25%',
-		marginLeft: '4.5em'
-	},
-
 	bodyText: {
 		fontSize: 20,
 		color: '#000000',
-		display: 'flex',
+		// display: 'flex',
 		// textAlign: 'justify',
 		fontFamily: 'Arimo',
+		// lineHeight: '1.2px',
 		width: '100%'
 	},
 	'@media (max-width: 700px)': {
 		root: {
 			display: 'none'
 		},
-		vertical: {
-			borderLeft: '15px solid #86CCFF',
-			height: '25em',
-			marginLeft: '4.5em',
-			radius: '25%'
-		}
 	},
 	'@media (min-width: 701px)': {
 		mobileRoot: {
@@ -67,6 +50,7 @@ const styles: object = {
 };
 
 interface Style {
+	rounded: string;
 	root: string;
 	mobileRoot: string;
 	button: string;
@@ -127,8 +111,6 @@ class ArrowDetail extends React.Component<Props, {}> {
 										alignItems="flex-start"
 										style={{ height: '100%' }}
 									>
-										{/* 										<div className={classes.verticalOne} style={{ paddingLeft: '63px' }} />
- */}{' '}
 									</Grid>
 								</Grid>
 								<Grid xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }} />
@@ -155,8 +137,6 @@ class ArrowDetail extends React.Component<Props, {}> {
 													// style={{ paddingRight: 0 }}
 												/>
 											</Avatar>
-											{/* 											<div className={classes.vertical} style={{ paddingLeft: 45 }} />
- */}{' '}
 										</div>
 									</Grid>
 								</Grid>
@@ -199,7 +179,6 @@ class ArrowDetail extends React.Component<Props, {}> {
 										style={{ height: '100%' }}
 									>
 										<img alt={this.props.iconAlt} src={this.props.icon} width="70%" />
-										<div className={classes.vertical} style={{ paddingLeft: 45 }} />
 									</Grid>
 								</Grid>
 								<Grid item xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }}>

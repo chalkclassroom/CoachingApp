@@ -132,13 +132,9 @@ const styles: object = {
 		fontSize: 20,
 		color: '#000000',
 		// textAlign: 'justify',
+		lineHeight: 'normal',
 		fontFamily: 'Arimo',
 		width: '70%'
-	},
-	'@media (max-width: 700px)': {
-		root: {
-			display: 'none'
-		},
 	},
 	'@media (min-width: 701px)': {
 		mobileRoot: {
@@ -174,14 +170,17 @@ const styles: object = {
 		letterSpacing:'4px',
 		marginTop:'20px',
 		marginBottom:'20px',
-	marginLeft: '-26px'
+	    marginLeft: '-26px'
 	},
 	mailingListText: {
 		color: '#2f4b65',
 		fontSize: 22,
 		paddingTop: 30,
 		fontFamily: 'Arimo',
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		marginTop:'50px',
+		marginBottom:'50px',
+
 		},
 	textField: {
 		backgroundColor: 'white',
@@ -210,13 +209,13 @@ const styles: object = {
 	},
 	arrowBar:{
 		width: '10px',
-		height: '1190px', 
+		height: '1090px', 
 		position:'absolute',
-		backgroundColor: '#86CCFF' ,
+		backgroundColor: '#86CCFF', // '#86CCFF' ,
 		display: 'inline-block',
         marginTop: '-35px',
 		marginRight: '64px',
-		marginLeft: '-48px',
+		marginLeft: '-49px',
 		zIndex: 0
 	},
 	arrowDownBar:{
@@ -233,16 +232,16 @@ const styles: object = {
 	   // zIndex:0 // 0
 	},
 	arrowCurve:{    
-	    width: '9.9px',
-	    height: '9.9px', 
+	    width: '10px',
+	    height: '10px', 
 	    backgroundColor: '#86CCFF', 
 	    borderRadius: '50%',
 	 // display: 'inline-block',
 	    marginBottom: '0',
 	    marginRight: '64px',
-	    marginLeft: '-48px',
-     	position:'absolute',
-	    marginTop: '-37px',
+	    marginLeft: '-49px',
+		marginTop: '-37px',
+		position:'absolute',
 	    zIndex: 5
   },		
 
@@ -264,13 +263,6 @@ const styles: object = {
 		largeRoot: {
 			display: 'none'
 		},
-		vertical: {
-			borderLeft: '15px solid #86CCFF',
-			height: '10em',
-		    marginLeft: '4.5em',
-		
-	  },
-	 
 	  groupImage: {
 		width: "60%",
 		borderRadius: "50px",
@@ -322,7 +314,9 @@ const styles: object = {
 			paddingLeft: '1em',
 			paddingRight: '1em',
 			paddingTop: '2em',
-			fontSize: 18
+			fontSize: 18,
+			marginTop:'10px',
+			marginBottom:'10px',
 		},
 		mailingListButton: {
 			paddingTop: '1em',
@@ -334,7 +328,7 @@ const styles: object = {
 	'@media (min-width: 701px) and (max-width: 1279px)': {
 		arrowBar:{
 		width: '10px',
-		height: '1700px', 
+		height: '1790px', 
 		position:'absolute',
 		backgroundColor: '#86CCFF' ,// ' #86CCFF',
 		display: 'inline-block',
@@ -347,23 +341,23 @@ const styles: object = {
 		},
 	    arrowDownBar:{
 	    width: '10px',
-		height: '805px', 
+		height: '1400px', 
 		// position:'absolute',
 		backgroundColor: '#86CCFF' ,// ' #86CCFF',
 		display: 'inline-block',
 		// marginBottom: '7px',
-		//   borderRadius: '15%',
-		marginTop: '-800px',
-		marginRight: '-29px',
-		marginLeft: '-48px',
+		//  borderRadius: '15%',
+		marginTop: '-1400px',
+		marginRight: '-30px',
+		marginLeft: '-50px',
 		// zIndex:0 // 0
 		},		
 		arrowCurve:{    
-	    width: '9.9px',
-	    height: '9.9px', 
+	    width: '10px',
+	    height: '10px', 
 		backgroundColor: '#86CCFF',  // '#86CCFF',
 		borderRadius: '50%',
-		 //display: 'inline-block',
+		 // display: 'inline-block',
 		marginBottom: '0',
 		marginRight: '64px',
 		marginLeft: '-48px',
@@ -937,7 +931,7 @@ class OurStory extends React.Component<Props, State> {
 												onClick={this.handleSubmit}
 												className={classes.mailingListButton} style={{ height: '58px'}}
 											>
-												<strong>Join mailing list</strong>
+												<strong>Join our mailing list</strong>
 											</Fab>
 											</div>
 											</div>

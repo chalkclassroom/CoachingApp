@@ -19,13 +19,16 @@ const styles: object = {
 		color: '#2f4b65',
 		paddingRight: '20%',
 		fontFamily: 'Arimo',
-		fontWeight: 'Bold'
+		fontWeight: 'Bold',
+		marginTop:'-20px'
 	},
 	bodyText: {
 		fontSize: 18,
 		color: '#2f4b65',
 		//    textAlign: 'center',
-		fontFamily: 'Arimo'
+		fontFamily: 'Arimo',
+		marginTop:'-25px'
+
 	},
 	'@media (max-width: 700px)': {
 		root: {
