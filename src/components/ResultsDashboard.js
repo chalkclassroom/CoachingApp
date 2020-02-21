@@ -134,13 +134,15 @@ const styles = {
   viewButtons: {
     minWidth: 150,
     textAlign: "center",
-    fontFamily: "Arimo"
+    fontFamily: "Arimo",
+    width: '20vw'
   },
   viewButtonsSelected: {
     minWidth: 150,
     textAlign: "center",
     color: "#fff",
-    fontFamily: "Arimo"
+    fontFamily: "Arimo",
+    width: '20vw'
   },
 };
 
@@ -291,7 +293,7 @@ class ResultsDashboard extends React.Component {
                   className={this.props.view === this.props.viewEnum.COACH_PREP ? classes.viewButtonsSelected : classes.viewButtons}
                   onClick={this.props.coachPrepClick}
                 >
-                  Coach Prep
+                  Conference Plan
                 </Button>
               </MuiThemeProvider>
             </Grid>
