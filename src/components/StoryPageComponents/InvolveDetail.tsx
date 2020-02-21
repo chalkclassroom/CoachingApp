@@ -25,9 +25,9 @@ const styles: object = {
 	bodyText: {
 		fontSize: 18,
 		color: '#2f4b65',
-		//    textAlign: 'center',
 		fontFamily: 'Arimo',
-		marginTop: '-25px'
+		marginTop: '-25px',
+		width: '55%'
 	},
 	'@media (max-width: 700px)': {
 		root: {
