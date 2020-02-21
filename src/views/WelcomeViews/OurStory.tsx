@@ -333,7 +333,7 @@ const styles: object = {
 		backgroundColor: '#86CCFF' ,// ' #86CCFF',
 		display: 'inline-block',
 		// marginBottom: '7px',
-		//   borderRadius: '15%',
+		// borderRadius: '15%',
 	    marginTop: '-35px',
 		marginRight: '64px',
 		marginLeft: '-48px',
@@ -430,8 +430,7 @@ interface Props {
  */
 class OurStory extends React.Component<Props, State> {
 	handleSubmit: (event: MouseEvent<HTMLElement, MouseEvent>) => void;
-	handleSubmit: (event: MouseEvent<HTMLElement, MouseEvent>) => void;
-	handleSubmit: (event: MouseEvent<HTMLElement, MouseEvent>) => void;
+	
 	/**
    * @param {Props} props 
    */

@@ -20,8 +20,8 @@ const styles: object = {
 		fontFamily: 'Arimo',
 		fontWeight: 'bold',
 		width: '60%',
-		marginTop: '10px',
-	//	marginBottom: '0px'
+		marginTop: '10px'
+		//	marginBottom: '0px'
 	},
 	rounded: {
 		backgroundColor: '#86CCFF',
@@ -40,7 +40,7 @@ const styles: object = {
 	'@media (max-width: 700px)': {
 		root: {
 			display: 'none'
-		},
+		}
 	},
 	'@media (min-width: 701px)': {
 		mobileRoot: {
@@ -110,8 +110,7 @@ class ArrowDetail extends React.Component<Props, {}> {
 										justify="flex-end"
 										alignItems="flex-start"
 										style={{ height: '100%' }}
-									>
-									</Grid>
+									/>
 								</Grid>
 								<Grid xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }} />
 							</Grid>

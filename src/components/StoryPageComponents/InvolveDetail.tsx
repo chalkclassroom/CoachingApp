@@ -20,15 +20,14 @@ const styles: object = {
 		paddingRight: '20%',
 		fontFamily: 'Arimo',
 		fontWeight: 'Bold',
-		marginTop:'-20px'
+		marginTop: '-20px'
 	},
 	bodyText: {
 		fontSize: 18,
 		color: '#2f4b65',
 		//    textAlign: 'center',
 		fontFamily: 'Arimo',
-		marginTop:'-25px'
-
+		marginTop: '-25px'
 	},
 	'@media (max-width: 700px)': {
 		root: {
