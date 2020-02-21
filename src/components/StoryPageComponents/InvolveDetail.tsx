@@ -18,8 +18,8 @@ const styles: object = {
 		fontSize: 22,
 		color: '#2f4b65',
 		paddingRight: '20%',
-    	fontFamily: 'Arimo',
-		fontWeight: 'Bold',
+		fontFamily: 'Arimo',
+		fontWeight: 'Bold'
 	},
 	bodyText: {
 		fontSize: 18,

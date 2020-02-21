@@ -158,22 +158,23 @@ const styles: object = {
 	readMoreBody: {
 		fontSize: 24,
 		color: '#000000',
-		paddingRight: '20%',
+		// paddingRight: '20%',
 		fontFamily: 'Arimo',
 		marginTop:'0px',
-		marginLeft:'60px',
+		// marginLeft:'60px',
 		lineHeight: '33px',
 		marginBottom:'180px'
 	  },
 	getInvolvedTitle: {
 		color: '#2F4B65',
-		fontSize: 42,
+		fontSize: 32,
 		paddingTop: 20,
 		width: '100%',
 		fontFamily: 'Arimo',
 		letterSpacing:'4px',
 		marginTop:'20px',
-		marginBottom:'20px'
+		marginBottom:'20px',
+	marginLeft: '-26px'
 	},
 	mailingListText: {
 		color: '#2f4b65',
@@ -198,33 +199,62 @@ const styles: object = {
 		fontFamily: 'Arimo',
 		letterSpacing: '0.03em'
 	},
+	arrowHead: {    
+		width: 0, 
+		height:0, 
+		borderLeft: '25px solid transparent',
+		borderRight: '25px solid transparent',
+		borderTop: '50px solid  #86CCFF',
+		marginRight: '18px',
+		marginBottom: '50px',
+	},
 	arrowBar:{
 		width: '10px',
 		height: '1190px', 
 		position:'absolute',
-		backgroundColor: '#86CCFF' ,// ' #86CCFF',
+		backgroundColor: '#86CCFF' ,
 		display: 'inline-block',
         marginTop: '-35px',
 		marginRight: '64px',
 		marginLeft: '-48px',
 		zIndex: 0
 	},
+	arrowDownBar:{
+		width: '10px',
+		height: '805px', 
+		// position:'absolute',
+		backgroundColor: '#86CCFF' ,// ' #86CCFF',
+		display: 'inline-block',
+		// marginBottom: '7px',
+		//   borderRadius: '15%',
+		marginTop: '-800px',
+		marginRight: '-29px',
+		marginLeft: '-48px',
+	   // zIndex:0 // 0
+	},
 	arrowCurve:{    
-	 width: '9.9px',
-	 height: '9.9px', 
-	 backgroundColor: '#86CCFF',  // '#86CCFF',
-	 borderRadius: '50%',
+	    width: '9.9px',
+	    height: '9.9px', 
+	    backgroundColor: '#86CCFF', 
+	    borderRadius: '50%',
 	 // display: 'inline-block',
-	 marginBottom: '0',
-	 marginRight: '64px',
-	 marginLeft: '-48px',
-  	position:'absolute',
-	  marginTop: '-37px',
-	  zIndex: 5
+	    marginBottom: '0',
+	    marginRight: '64px',
+	    marginLeft: '-48px',
+     	position:'absolute',
+	    marginTop: '-37px',
+	    zIndex: 5
   },		
 
 	partnerLogo: {
 		maxWidth: 125
+	},
+	'@media (min-width: 600px)': {
+		getInvolvedTitle: {
+			marginLeft: '-2px',
+		   fontfontSize: 25,
+		   // textAlign: 'center'
+	   },
 	},
 	
 	'@media (max-width: 700px)': {
@@ -237,9 +267,10 @@ const styles: object = {
 		vertical: {
 			borderLeft: '15px solid #86CCFF',
 			height: '10em',
-		marginLeft: '4.5em',
+		    marginLeft: '4.5em',
 		
 	  },
+	 
 	  groupImage: {
 		width: "60%",
 		borderRadius: "50px",
@@ -280,10 +311,12 @@ const styles: object = {
 			fontFamily: 'Arimo'
 		},
 		readMoreTitle: {
-			fontSize: 25
+			fontSize: 20
 		},
 		getInvolvedTitle: {
-			textAlign: 'center'
+			 marginLeft: 0,
+			fontfontSize: 25,
+			// textAlign: 'center'
 		},
 		mailingListText: {
 			paddingLeft: '1em',
@@ -300,30 +333,43 @@ const styles: object = {
 
 	'@media (min-width: 701px) and (max-width: 1279px)': {
 		arrowBar:{
-			width: '10px',
-			height: '2210px', 
-						   position:'absolute',
-						   backgroundColor: '#86CCFF' ,// ' #86CCFF',
-						   display: 'inline-block',
-						// marginBottom: '7px',
-						//   borderRadius: '15%',
-						   marginTop: '-35px',
-						   marginRight: '64px',
-						   marginLeft: '-48px',
-						   zIndex: 0
+		width: '10px',
+		height: '1700px', 
+		position:'absolute',
+		backgroundColor: '#86CCFF' ,// ' #86CCFF',
+		display: 'inline-block',
+		// marginBottom: '7px',
+		//   borderRadius: '15%',
+	    marginTop: '-35px',
+		marginRight: '64px',
+		marginLeft: '-48px',
+		zIndex: 0
 		},
+	    arrowDownBar:{
+	    width: '10px',
+		height: '805px', 
+		// position:'absolute',
+		backgroundColor: '#86CCFF' ,// ' #86CCFF',
+		display: 'inline-block',
+		// marginBottom: '7px',
+		//   borderRadius: '15%',
+		marginTop: '-800px',
+		marginRight: '-29px',
+		marginLeft: '-48px',
+		// zIndex:0 // 0
+		},		
 		arrowCurve:{    
-			width: '9.9px',
-			 height: '9.9px', 
-		 backgroundColor: '#86CCFF',  // '#86CCFF',
-		 borderRadius: '50%',
+	    width: '9.9px',
+	    height: '9.9px', 
+		backgroundColor: '#86CCFF',  // '#86CCFF',
+		borderRadius: '50%',
 		 //display: 'inline-block',
-		 marginBottom: '0',
-		 marginRight: '64px',
-		 marginLeft: '-48px',
+		marginBottom: '0',
+		marginRight: '64px',
+		marginLeft: '-48px',
 	  	position:'absolute',
-		  marginTop: '-37px',
-		  zIndex: 5
+		marginTop: '-37px',
+		zIndex: 5
 	
 	  },
 		mobileRoot: {
@@ -351,6 +397,20 @@ interface Props {
   };
   
   interface Style {
+	  groupImage: string;
+	  arrowHead: string;
+	  arrowDownBar: string;
+	  missionBody: string;
+	  arrowBody: string;
+	  arrowBar: string;
+	  getInvolvedTitle: string;
+	  textField: string;
+	  mailingListButton: string;
+	  input: string;
+	  missionTitle: string;
+	  pageTitle: string;
+	  arrowCurve: string;
+	  mailingListText: string;
 	  readMoreBody: string;
 	  section: string;
 	  readMoreTitle: string;
@@ -375,6 +435,9 @@ interface Props {
  * @class OurStory
  */
 class OurStory extends React.Component<Props, State> {
+	handleSubmit: (event: MouseEvent<HTMLElement, MouseEvent>) => void;
+	handleSubmit: (event: MouseEvent<HTMLElement, MouseEvent>) => void;
+	handleSubmit: (event: MouseEvent<HTMLElement, MouseEvent>) => void;
 	/**
    * @param {Props} props 
    */
@@ -609,15 +672,11 @@ class OurStory extends React.Component<Props, State> {
         </Grid>
         <Grid item xs>
         </Grid>
-      </Grid>		
-								
+      </Grid>										
 							</Grid>
 							<Grid item xs={10} />
 							<Grid item xs={1} />
-						</Grid>
-
-						
-					
+						</Grid>					
 						<Grid item >
 						<Grid container direction="row" >
 								<Grid  xs={3}>
@@ -706,41 +765,30 @@ class OurStory extends React.Component<Props, State> {
 							</Grid>
 						</Grid>
 						<Grid container direction="row" >
-								<Grid  xs={3}>
-						<Grid
-										container
-										 direction="row"
+						<Grid  xs={3}>
+						<Grid  container direction="row"
 										 justify="flex-end"
-										alignItems="flex-start"
-										style={{ height: '100%' }}
-									>
-                    
-                      <div  style={{    
-						  width: 0, 
-						  height: '0', 
-						 borderLeft: '25px solid transparent',
-      borderRight: '25px solid transparent',
-	  borderTop: '50px solid  #86CCFF',
-	  marginRight: '18px',
-	  marginBottom: '50px',
-	}} />
-                    
-									</Grid>
-									</Grid>
-									<Grid xs={9}>
-								
-								</Grid>
-									</Grid>
-					</Grid>
+										 alignItems="flex-start"
+										 style={{ height: '100%' }}
+						>
+						<div  className={classes.arrowDownBar} />                   
+                        <div  className={classes.arrowHead} />
+						</Grid>
+						</Grid>
+
+						<Grid xs={9}>
+                        </Grid>
+						</Grid>
+					    </Grid>
 				
-					<Grid
+					    <Grid
 						container
 						direction="column"
 						justify="center"
 						alignItems="center"
 						style={{ backgroundColor: '#86CCFF' }}
 						className={classes.section}
-					>
+					     >
 						<Grid item style={{ width: '100%' }}>
 							<Grid
 								container
@@ -749,18 +797,34 @@ class OurStory extends React.Component<Props, State> {
 								alignItems="flex-start"
 								style={{ paddingBottom: '1em' }}
 							>
-								<Grid item xs={1} />
-								<Grid item xs={10} component={Typography} className={classes.readMoreTitle}>
+								<Grid container spacing={3}>
+        <Grid item xs>
+        </Grid>
+								<Grid item xs={6} component={Typography} className={classes.readMoreTitle}>
 									Read more about our research here:
 								</Grid>
+								<Grid item xs>
+        </Grid>
+		</Grid>
 							</Grid>
 						</Grid>
 						<Grid item>
-							<Grid container direction="column">
-								<Grid item xs={12}>
+
+
+						<Grid container spacing={3}>
+        <Grid item xs>
+        </Grid>
+
+							{/* <Grid container xs={6}> */}
+							
+								<Grid item xs={8}>
 									<BlueBarDetail text= {data6} />
 								</Grid>
-							</Grid>
+								
+							{/* </Grid> */}
+							<Grid item xs>
+        </Grid>
+		</Grid>
 						</Grid>
 					</Grid>
 					{/* end */}
@@ -780,14 +844,14 @@ class OurStory extends React.Component<Props, State> {
 								alignItems="flex-start"
 								style={{ paddingBottom: '1em' }}
 							>
-								<Grid item  xl={3}
-									md={3}
-									sm={3}
+								<Grid item  xs={1} xl={2}
+									md={2}
+									sm={1}
 									 />
 
-								<Grid item xs={12} xl={6}
-									md={6}
-									sm={6} component={Typography} className={classes.getInvolvedTitle}>
+								<Grid item xs={8} xl={8}
+									md={8}
+									sm={8} component={Typography} className={classes.getInvolvedTitle}>
 									<strong>OR GET INVOLVED</strong>
 								</Grid>
 
@@ -797,6 +861,9 @@ class OurStory extends React.Component<Props, State> {
 						<Grid item>
 							<Grid container direction="row">
 								<Grid item xs={12}>
+								{/* <div className={classes.getInvolvedTitle}>
+									<strong>OR GET INVOLVED</strong>
+								</div> */}
 									<InvolveDetail
 										icon1={PilotProgramImage}
 										iconAlt1="Participation"
@@ -811,7 +878,7 @@ class OurStory extends React.Component<Props, State> {
 										title2="Join us at our upcoming events!"
 										text2="We give frequent presentations and demonstrations
                         of CHALK. See a list of these events here!"
-										button2="View our events"
+										button2="View events"
 										onClick2={this.handleEventsButton}
 									/>
 								</Grid>
@@ -828,14 +895,14 @@ class OurStory extends React.Component<Props, State> {
 								</Grid>
 							) : (
 								<Grid container direction="row" justify="flex-end" alignItems="center">
-									  <Grid item  xl={3}
-									md={3}
-									sm={3}
-									xs={3}  />
-									<Grid item   xl={3}
-									md={3}
-									sm={3}
-									xs={3} >
+									  <Grid item  xl={2}
+									md={2}
+									sm={2}
+									xs={2}  />
+									<Grid item   xl={4}
+									md={4}
+									sm={4}
+									xs={4} >
 										<Typography className={classes.mailingListText}>
 											Stay informed with our mailing list!
 										</Typography>
@@ -844,9 +911,9 @@ class OurStory extends React.Component<Props, State> {
 									 xl={6}
 									md={6}
 									sm={6}
-									xs={6}   alignItems="center">
+									xs={6}  justify="center" alignItems="center">
 									<div style={{flexDirection:'row',display:'flex'}}>
-										<div style={{width:'50%',}}>
+										<div style={{width:'60%',marginLeft:'67px'}}>
 											<TextField											
 												label="Enter your email here"
 												margin="normal"
@@ -864,7 +931,7 @@ class OurStory extends React.Component<Props, State> {
 											/>
 											
 										</div>
-										<div style={{justifyContent: 'flex-start', marginLeft: '-116px', marginTop: '16px'}}>
+										<div style={{justifyContent: 'flex-start', marginLeft: '-85px', marginTop: '16px'}}>
 											<Fab
 												variant="extended"
 												onClick={this.handleSubmit}

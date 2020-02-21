@@ -32,12 +32,12 @@ const styles: object = {
 	vertical: {
 		borderLeft: '15px solid #86CCFF',
 		height: '50%',
-		marginLeft: '4.5em',
+		marginLeft: '4.5em'
 	},
 	verticalOne: {
 		borderLeft: '15px solid #86CCFF',
 		height: '25%',
-		marginLeft: '4.5em',
+		marginLeft: '4.5em'
 	},
 
 	bodyText: {
@@ -56,7 +56,7 @@ const styles: object = {
 			borderLeft: '15px solid #86CCFF',
 			height: '25em',
 			marginLeft: '4.5em',
-			radius:'25%'
+			radius: '25%'
 		}
 	},
 	'@media (min-width: 701px)': {
@@ -127,8 +127,9 @@ class ArrowDetail extends React.Component<Props, {}> {
 										alignItems="flex-start"
 										style={{ height: '100%' }}
 									>
-{/* 										<div className={classes.verticalOne} style={{ paddingLeft: '63px' }} />
- */}									</Grid>
+										{/* 										<div className={classes.verticalOne} style={{ paddingLeft: '63px' }} />
+ */}{' '}
+									</Grid>
 								</Grid>
 								<Grid xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }} />
 							</Grid>
@@ -154,8 +155,9 @@ class ArrowDetail extends React.Component<Props, {}> {
 													// style={{ paddingRight: 0 }}
 												/>
 											</Avatar>
-{/* 											<div className={classes.vertical} style={{ paddingLeft: 45 }} />
- */}										</div>
+											{/* 											<div className={classes.vertical} style={{ paddingLeft: 45 }} />
+ */}{' '}
+										</div>
 									</Grid>
 								</Grid>
 								<Grid
@@ -197,6 +199,7 @@ class ArrowDetail extends React.Component<Props, {}> {
 										style={{ height: '100%' }}
 									>
 										<img alt={this.props.iconAlt} src={this.props.icon} width="70%" />
+										<div className={classes.vertical} style={{ paddingLeft: 45 }} />
 									</Grid>
 								</Grid>
 								<Grid item xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }}>

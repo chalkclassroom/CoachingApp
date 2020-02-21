@@ -22,7 +22,7 @@ const styles: object = {
 	bodyText: {
 		fontSize: 24,
 		color: '#000000',
-		paddingRight: '20%',
+		// paddingRight: '20%',
 		fontFamily: 'Arimo',
 		textDecoration: 'underline',
 		marginTop: '0px'
@@ -96,7 +96,7 @@ class BlueBarDetail extends React.Component<Props, {}> {
 						</Grid>
 						<Grid item style={{ paddingTop: '1em' }}>
 							<Grid container direction="row" justify="flex-start" alignItems="flex-start">
-								<Grid item xs={2} />
+								{/* <Grid item xs={2} /> */}
 								<Grid item xs={12} style={{ paddingLeft: '1em', paddingRight: '1em' }}>
 									<Typography className={classes.bodyText}>{this.props.text}</Typography>
 								</Grid>
