@@ -52,20 +52,6 @@ interface Style {
 
 interface Props {
 	classes: Style;
-	/*   iconAlt: string,
-  icon: string,
-  title: string,
-  iconAlt2: string,
-  icon2: string,
-  title2: string,
-  text: string,
-  text2: string,
-  button: string,
-  button2: string,
-  onClick(): void,
-  onClick2(): void, */
-	//iconAlt: string,
-	//icon: string,
 	title: string;
 	text: string;
 	button: string;
@@ -73,7 +59,7 @@ interface Props {
 }
 
 /**
- * formatting for details on landing page
+ * formatting for details on our story page
  */
 class BlueBarDetail extends React.Component<Props, {}> {
 	/**
@@ -85,20 +71,6 @@ class BlueBarDetail extends React.Component<Props, {}> {
 
 	static propTypes = {
 		classes: PropTypes.object,
-		/* iconAlt: PropTypes.string,
-    icon: PropTypes.string,
-    title: PropTypes.string,
-    iconAlt2: PropTypes.string,
-    icon2: PropTypes.string,
-    title2: PropTypes.string,
-    text: PropTypes.string,
-    text2: PropTypes.string,
-    button: PropTypes.string,
-    button2: PropTypes.string,
-    onClick: PropTypes.func,
-    onClick2: PropTypes.func, */
-		//iconAlt: PropTypes.string,
-		//icon: PropTypes.string,
 		title: PropTypes.string,
 		text: PropTypes.string,
 		button: PropTypes.string,

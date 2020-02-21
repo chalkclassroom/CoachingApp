@@ -5,39 +5,23 @@ import FirebaseContext from "../../components/Firebase/FirebaseContext.js";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import LogoImage from "../../assets/images/LogoImage.svg";
-import PieChartImage from "../../assets/images/PieChartImage.svg";
-import HighFiveImage from "../../assets/images/HighFiveImage.svg";
 import BookImage from "../../assets/images/BookImage.svg";
 import FeedbackImage from "../../assets/images/FeedbackImage.svg";
 import MedalImage from "../../assets/images/MedalImage.svg";
 import LightbulbImage from "../../assets/images/LightbulbImage.svg";
-import BoxImage from "../../assets/images/BoxImage.svg";
-import SchoolImage from "../../assets/images/SchoolImage.svg";
-import ProblemOrangeImage from "../../assets/images/ProblemOrangeImage.svg";
-import LightbulbYellowImpactImage from "../../assets/images/LightbulbYellowImpactImage.svg";
 import PilotProgramImage from "../../assets/images/PilotProgramImage.svg";
 import EventsImage from "../../assets/images/EventsImage.svg";
 import SearchEngineImage from "../../assets/images/SearchEngineImage.svg";
-import MNPSLogoImage from "../../assets/images/MNPSLogoImage.jpg";
-import AbtLogoImage from "../../assets/images/AbtLogoImage.png";
-import PreschoolPromiseLogoImage from "../../assets/images/PreschoolPromiseLogoImage.jpg";
-import UDaytonLogoImage from "../../assets/images/UDaytonLogoImage.jpg";
-import UnitedWayLogoImage from "../../assets/images/UnitedWayLogoImage.jpg";
-import VanderbiltPeabodyLogoImage from "../../assets/images/VanderbiltPeabodyLogoImage.png";
-import WondryLogoImage from "../../assets/images/WondryLogoImage.png";
-import InvolveDetail from "../../components/StoryPageComponents/InvolveDetail.tsx";
-import ArrowDetail from "../../components/StoryPageComponents/ArrowDetail.tsx";
-import BlueBarDetail from "../../components/StoryPageComponents/BlueBarDetail.tsx";
-import MissionDetail from "../../components/StoryPageComponents/MissionDetail.tsx";
+import InvolveDetail from "../../components/StoryPageComponents/InvolveDetail";
+import ArrowDetail from "../../components/StoryPageComponents/ArrowDetail";
+import BlueBarDetail from "../../components/StoryPageComponents/BlueBarDetail";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
-import UpcomingEventsModal from "../../components/LandingPageComponents/UpcomingEventsModal.tsx";
-import PilotModal from "../../components/StoryPageComponents/PilotModal.tsx";
-import DemoModal from "../../components/StoryPageComponents/DemoModal.tsx";
+import UpcomingEventsModal from "../../components/StoryPageComponents/UpcomingEventsModal";
+import PilotModal from "../../components/StoryPageComponents/PilotModal";
+import DemoModal from "../../components/StoryPageComponents/DemoModal";
 import { ClickAwayListener } from "@material-ui/core/es";
 import ChalkGroupImage from "../../assets/images/ChalkGroupImage.jpg";
-
 
 const styles: object = {
 	root: {
@@ -166,7 +150,7 @@ const styles: object = {
 		fontSize: 35,
 		fontFamily: 'Arimo',
 		textAlign: 'center',
-		fontWeight: 'Bold',
+		fontWeight: 'bold',
 		letterSpacing:'8px',
 		marginTop:'20px',
 		marginBottom:'10px'
@@ -265,14 +249,7 @@ const styles: object = {
 	  },
 		chalkTitle: {
 			fontSize: 'calc(24px + (50 - 24) * ((100vw - 300px) / (700 - 300)))',
-			// letterSpacing:8,
-			// fontWeight:600
 		},
-		// chalkTitle1: {
-		// 	fontSize: 'calc(24px + (50 - 24) * ((100vw - 300px) / (700 - 300)))',
-		// 	letterSpacing:"8px",
-		// 	fontWeight:600
-		// },
 		tagline: {
 			fontSize: 'calc(14px + (24 - 14) * ((100vw - 300px) / (700 - 300)))'
 		},
@@ -302,7 +279,7 @@ const styles: object = {
 			color: '#000',
 			fontFamily: 'Arimo'
 		},
-		ReadMoreTitle: {
+		readMoreTitle: {
 			fontSize: 25
 		},
 		getInvolvedTitle: {
@@ -369,15 +346,17 @@ const styles: object = {
 	}
 };
 
-
 interface Props {
 	classes: Style
   };
   
   interface Style {
-	root: string,
-	mobileRoot: string,
-	titleText: string,
+	  readMoreBody: string;
+	  section: string;
+	  readMoreTitle: string;
+	  root: string,
+	  mobileRoot: string,
+	  titleText: string,
 	'@media (max-width: 700px)': string,
 	'@media (min-width: 701px)': string
   }
@@ -516,7 +495,7 @@ class OurStory extends React.Component<Props, State> {
 	render() {
 		const { classes } = this.props;
 		var data1 =
-		<Typography>
+	<Typography>
 			  <p className={classes.arrowBody} >
 		The foundation for CHALK began with two classroom observation research tools: 
 		the  <a target="_blank" href="">Child Observation in Preschool</a> and  <a target="_blank" href="">the Teacher Observation in Preschool.</a> 
@@ -527,7 +506,7 @@ class OurStory extends React.Component<Props, State> {
 		</p>
 	</Typography>
 			var data2 =
-			<Typography>
+	<Typography>
 			  <p className={classes.arrowBody} >
 		Over the course of a research partnership with a Southeastern school district, we developed a vision for Pre-K quality and
 		 determined what practices should be measured in classrooms that would provide us with standardized assessment of the quality 
@@ -541,12 +520,12 @@ class OurStory extends React.Component<Props, State> {
 
 		</Typography>
 					var data3 =
-					<Typography>
+		<Typography>
 					  <p className={classes.arrowBody} >
 					  Through this work, we identified 8 clusters of classroom practices that were<a target="_blank" href=""> associated with children’s gains across a number of domains.</a>
 					   Validation was conducted with groups of teachers, coaches and even into kindergarten.
 					   The idea of CHALK was eventually born out of a commitment to rigorous research designed to improve children’s early education. </p>
-				</Typography>
+		</Typography>
 					var data4 =
 					<Typography>
 					  <p className={classes.arrowBody} >
@@ -555,7 +534,7 @@ class OurStory extends React.Component<Props, State> {
 					   Moreover, coaches were reliant on data collected by researchers rather than data they collected themselves. 
 					   We concluded that coaches need a tool that helps them connect what they see in the classroom with questions that help guide their coaching 
 					   conversations, in addition to concrete strategies for practice improvement. </p>
-				</Typography>
+		</Typography>
 					var data5=
 					<Typography>
 					  <p className={classes.arrowBody} >
@@ -563,13 +542,13 @@ class OurStory extends React.Component<Props, State> {
 					   To achieve this goal, we challenged an <a target="_blank" href="">interdisciplinary team</a>  of coaches, teachers, principals, policy makers, researchers 
 					   and other stakeholders to bring their unique expertise and perspectives to the table.
 					   Finally, we are bringing the vision for the CHALK to life.  </p>
-				</Typography>
+		</Typography>
 				var data6=
-				<Typography>
+		<Typography>
 				  <p className={classes.readMoreBody} >
 				<a target="_blank" href="">Data-Driven Improvement in Pre-kindergarten Classrooms: Report From a Partnership in an Urban District</a>
 				</p>
-				</Typography>
+		</Typography>
 		return (
 			<div>
 				<div className={classes.root}>
@@ -630,21 +609,7 @@ class OurStory extends React.Component<Props, State> {
         </Grid>
         <Grid item xs>
         </Grid>
-      </Grid>
-
-{/* 								<Grid container direction="row" justify="flex-start" alignItems="flex-start">
-            <Grid  xl={2}
-									md={2}
-									sm={2}
-									xs={2}  />
-            <Grid item xl={10} md={10}
-									sm={10}
-									xs={10} style={{paddingLeft: '1em', paddingRight: '1em'}}>
-			
-            </Grid>
-		
-          </Grid>
-					 */}		
+      </Grid>		
 								
 							</Grid>
 							<Grid item xs={10} />
@@ -786,7 +751,7 @@ class OurStory extends React.Component<Props, State> {
 							>
 								<Grid item xs={1} />
 								<Grid item xs={10} component={Typography} className={classes.readMoreTitle}>
-									<strong>Read more about our research here:</strong>
+									Read more about our research here:
 								</Grid>
 							</Grid>
 						</Grid>
@@ -909,365 +874,12 @@ class OurStory extends React.Component<Props, State> {
 											</Fab>
 											</div>
 											</div>
-								</Grid>
-									
-									
-									{/* <Grid item xl={3}
-									md={3}
-									sm={3}
-									xs={3}> */}
-										{/* <Grid container direction="row" justify="flex-start" alignItems="center">
-											<Fab
-												variant="extended"
-												onClick={this.handleSubmit}
-												className={classes.mailingListButton}
-											>
-												<strong>Join mailing list</strong>
-											</Fab>
-										</Grid> */}
-									{/* </Grid> */}
-									
+								</Grid>									
 								</Grid>
 							)}
 						</Grid>
 					</Grid>
 				</div>
-				{/*  <div className={classes.mobileRoot}>
-          {this.state.events ? (
-            <ClickAwayListener onClickAway={this.handleClickAwayEvents}>
-              <UpcomingEventsModal />
-            </ClickAwayListener> 
-          ) : this.state.pilotModal ? (
-              <PilotModal handleClose={this.handleClose} firebase={this.props.firebase}/>
-          ) : this.state.demo ? (
-            <DemoModal handleClose={this.handleClose} />
-          ) : (
-            <div />
-          )}
-          <Grid container direction="column" justify="center" alignItems="center">
-            <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 10}}>
-              <img src={CoachLandingMobileImage} alt = "Coach and Teacher" width="100%" style={{postion: 'relative'}}/>
-              <Grid item xs={10} style={{position: 'absolute'}}>
-                <Grid container direction="row" justify="flex-start" alignItems="center">
-                  <Grid xs={8} style={{paddingTop: '0vh'}}>
-                    <Typography className={classes.chalkTitle}>
-                      <strong>C</strong>oaching to
-                    </Typography>
-                    <Typography className={classes.chalkTitle}>
-                      <strong>H</strong>elp
-                    </Typography>
-                    <Typography className={classes.chalkTitle}>
-                      <strong>A</strong>ctivate
-                    </Typography>
-                    <Typography className={classes.chalkTitle}>
-                      <strong>L</strong>earning for
-                    </Typography>
-                    <Typography className={classes.chalkTitle}>
-                      <strong>K</strong>ids
-                    </Typography>
-                    <Typography className={classes.tagline} style={{paddingTop: '9vh'}}>
-                      Empowering coaches and teachers
-                    </Typography>
-                    <Typography className={classes.tagline}>
-                      to use meaningful data
-                    </Typography>
-                    <Typography className={classes.tagline}>
-                      to benefit young children
-                    </Typography>
-                  </Grid>
-                  <Grid xs={4}>
-                    <Grid container direction="column" justify="center" alignItems="center" style={{width: '100%'}}>
-                      <Grid item alignItems="center">
-                        <img src={iPadImage} alt="tablet" width='100%'/>
-                      </Grid>
-                      <Grid item style={{paddingTop: '4vh'}}>
-                        <Fab onClick={this.handleDemoButton} variant="extended" className={classes.demoButton}> 
-                          <strong>SEE DEMO</strong>
-                        </Fab>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
-              <Grid item>
-                <Typography className={classes.sectionTitle}>
-                  Why <strong>CHALK?</strong>
-                </Typography>
-              </Grid>
-              <Grid item style={{paddingBottom: '3em', paddingTop: '2em', width:"90%"}}>
-                <Impact
-                  icon1={SchoolImage}
-                  color='#094492'
-                  title1="IMPACT"
-                  position="center"
-                  text1="Research shows that high-quality pre-k education supports
-                        children's early cognitive development and future achievement."
-                />
-              </Grid>
-              <Grid item style={{paddingBottom: '3em', width:"90%"}}>
-                <Impact
-                  icon1={ProblemOrangeImage}
-                  color='#E55529'
-                  title1="PROBLEM"
-                  position="center"
-                  text1="However, current tools to observe and track classroom 
-                        practices over time are difficult to use and time-consuming."
-                />
-              </Grid>
-              <Grid item style={{paddingBottom: '1em', width: '90%'}}>
-                <Impact
-                  icon1={LightbulbYellowImpactImage}
-                  color='#ffd300'
-                  title1="MISSION"
-                  position="flex-start"
-                  paddingTop='1em'
-                  text1={<div>
-                          CHALK&apos;s mission is to advance pre-k quality with an easy-to-use 
-                          tool for coaches and teachers that:
-                          <ul>
-                            <li>Focuses classroom observations on effective practices</li>
-                            <li>Links results to coaching strategies</li>
-                            <li>Accelerates professional growth through teacher-created action plans</li>
-                          </ul>
-                        </div>}
-                />
-              </Grid>
-            </Grid>
-            <Grid container direction="column" justify="center" alignItems="stretch" style={{backgroundColor: '#459aeb'}} className={classes.section}>
-              <Grid item style={{padding: 30}}>
-                <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
-                  <FeaturesCard
-                    icon1={LogoImage}
-                    altText="Owl Logo"
-                    title1="Key Classroom Practices"
-                    text1="Our tool focuses on key classroom practices that predict
-                          children's gains across multiple academic and self-regulation
-                          domains."
-                  />
-                </Grid>
-              </Grid>
-              <Grid item style={{paddingLeft: 30, paddingBottom: 30, paddingRight: 30}}>
-                <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
-                  <FeaturesCard
-                    icon1={SearchEngineImage}
-                    altText="Observe"
-                    title1="Observation Tools"
-                    text1="CHALK provides targeted observation tools that allow
-                          instructional coaches to easily track key classroom
-                          practices on their digital devices in real-time."
-                  />
-                </Grid>
-              </Grid>
-              <Grid item style={{paddingLeft: 30, paddingBottom: 30, paddingRight: 30}}>
-                <Grid container justify="center" alignItems="center" style={{height: '100%'}}>
-                  <FeaturesCard
-                    icon1={PieChartImage}
-                    altText="Pie Chart"
-                    title1="Visualized Data"
-                    text1="Our tool instantly transforms observation data into
-                          user-friendly visualizations for coaches and teachers
-                          to engage in data-driven coaching conversations for
-                          professional growth."
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid container direction="column" justify="center" alignItems = "center" className={classes.section} style={{backgroundColor: '#dbebfb'}}>
-              <Grid item style={{padding: 20}}>
-                <Typography className={classes.sectionTitle}>
-                  How <strong>CHALK</strong> Works
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <img src={CoachingCycleFullMobileImage} alt="Coaching Cycle" width="90%" style={{paddingBottom: 20}}/>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid container direction="column" justify="center" alignItems="center" className={classes.section}>
-              <Grid item style={{padding: 20}}>
-                <Typography className={classes.sectionTitle}>
-                  How <strong>CHALK</strong> empowers coaches and teachers
-                </Typography>
-              </Grid>
-              <Grid item style={{paddingTop: '2em'}}>
-                <InvolveDetail
-                  icon1={HighFiveImage}
-                  iconAlt1="High Five"
-                  title1="Empowering Teachers and Coaches"
-                  text1="Our tool encourages coaches and teachers to work together
-                  in setting data-driven goals to improve specifc classroom
-                  practices that benefit children."
-                />
-              </Grid>
-              <Grid item style={{paddingTop: '3em'}}>
-                <InvolveDetail
-                  icon1={BookImage}
-                  iconAlt1="Book"
-                  title1="Grounded in Rigorous Research"
-                  text1="Users are guided to observe targeted instructional practices that
-                  have predicted academic and self-regulation gains for children
-                  across hundreds of observations in early childhood classrooms."
-                />
-              </Grid>
-              <Grid item style={{paddingTop: '3em'}}>
-                <InvolveDetail
-                  icon1={FeedbackImage}
-                  iconAlt1="Feedback"
-                  title1="Individualized and Timely Feedback"
-                  text1="Data collected from classroom observations are
-                        instantly transformed into simple visualizations and 
-                        guidance for next steps."
-                />
-              </Grid>
-              <Grid item style={{paddingTop: '3em'}}>
-                <InvolveDetail
-                  icon1={MedalImage}
-                  iconAlt1="Medal"
-                  title1="Target Key Classroom Practices"
-                  text1="Our tool focuses on characteristics of the classroom 
-                        environment that have a direct, meaningful impact on 
-                        children's learning."
-                />
-              </Grid>
-              <Grid item style={{paddingTop: '3em'}}>
-                <InvolveDetail
-                  icon1={LightbulbImage}
-                  iconAlt1="Lightbulb"
-                  title1="Emphasis on Teacher Learning"
-                  text1="Teacher reflection and goal-setting in collaboration
-                    with responsive coaches builds a culture of learning
-                    and self efficacy."
-                />
-              </Grid>
-              <Grid item style={{paddingTop: '3em', paddingBottom: '2em'}}>
-                <InvolveDetail
-                  icon1={BoxImage}
-                  iconAlt1="Box"
-                  title1="Works Across Any Curriculum"
-                  text1="We focus on classroom practices that are 
-                    important across curricula so teachers and coaches 
-                    can apply this tool to any curriculum they use."
-                />
-              </Grid>
-            </Grid>
-            <Grid 
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              style={{backgroundColor: '#dbebfb'}}
-              className={classes.section}
-            >
-              <Grid item style={{width: '100%'}}>
-                <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: '1em'}}>
-                  <Grid item xs={12} component={Typography} className={classes.getInvolvedTitle}>
-                    <strong>GET INVOLVED</strong>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <InvolveDetail
-                  icon1={PilotProgramImage}
-                  iconAlt1="Participation"
-                  title1="Participate in our pilot program!"
-                  text1="If you are interested in piloting our tool,
-                    we would love your feedback so we can make CHALK
-                    the best it can be!"
-                  button="Fill out form"
-                  onClick={this.handlePilotButton}
-                />
-              </Grid>
-              <Grid item>
-                <InvolveDetail
-                  icon1={EventsImage}
-                  iconAlt1="People"
-                  title1="Join us at our upcoming events!"
-                  text1="We give frequent presentations and demonstrations
-                    of CHALK. See a list of these events here!"
-                  button="View our events"
-                  onClick={this.handleEventsButton}
-                />
-              </Grid>
-              <Grid item style={{width: '100%'}}>
-                {this.state.emailAdded ? (
-                  <Grid container direction="row" justify="center" alignItems="center">
-                    <Grid item xs={12}>
-                      <Typography className={classes.mailingListText} style={{textAlign: 'center', fontSize: 16}}>
-                        You have been added to our mailing list.
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                ) : (
-                  <Grid container direction="column" justify="flex-start" alignItems="center">
-                    <Grid item>
-                      <Typography className={classes.mailingListText}>
-                        Stay informed with our mailing list!
-                      </Typography>
-                    </Grid>
-                    <Grid item style={{width: '100%'}}>
-                      <Grid container direction="row" justify="center" alignItems="stretch">
-                      <TextField
-                        label="Enter your email here" //italic 
-                        margin="normal"
-                        value={this.state.email}
-                        onChange={this.handleChange('email')}
-                        helperText={this.state.emailError}
-                        InputLabelProps={{style: {color: '#dbdbdb', fontSize: 20, marginLeft: '0.5em'}}}
-                        InputProps={{classes: {input: classes.input}, disableUnderline: true}}
-                        className={classes.textField}
-                      />
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <Fab variant="extended" onClick={this.handleSubmit} className={classes.mailingListButton}>
-                        <strong>Join mailing list</strong>
-                      </Fab>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                )}
-              </Grid>
-            </Grid>
-            <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em'}} className={classes.section}>
-              <Grid item style={{width: '100%'}}>
-                <Grid container direction="row" justify="flex-start" alignItems="center">
-                  <Typography className={classes.partnersText}>
-                    Working closely with our partners to better education
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid item style={{width: '97%'}}>
-                <Grid container direction="row" justify="space-around" alignItems="center">
-                  <Grid item>
-                    <img src={MNPSLogoImage} alt="Metro Nashville Public Schools" className={classes.partnerLogo} />
-                  </Grid>
-                  <Grid item>
-                    <img src={UnitedWayLogoImage} alt="United Way" className={classes.partnerLogo} />
-                  </Grid>
-                  <Grid item>
-                    <img src={PreschoolPromiseLogoImage} alt="Preschool Promise" className={classes.partnerLogo} />
-                  </Grid>
-                  <Grid item>
-                    <img src={AbtLogoImage} alt="Abt Associates" className={classes.partnerLogo} />
-                  </Grid>
-                  <Grid item>
-                    <img src={WondryLogoImage} alt="The Wondry" className={classes.partnerLogo} />
-                  </Grid>
-                  <Grid item>
-                    <img src={VanderbiltPeabodyLogoImage} alt="Vanderbilt Peabody College" className={classes.partnerLogo} />
-                  </Grid>
-                  <Grid item style={{paddingTop: '1em'}}>
-                    <img src={UDaytonLogoImage} alt="University of Dayton" className={classes.partnerLogo} />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </div>*/}
 			</div>
 		);
 	}

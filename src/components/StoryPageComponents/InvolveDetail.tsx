@@ -18,7 +18,7 @@ const styles: object = {
 		fontSize: 22,
 		color: '#2f4b65',
 		paddingRight: '20%',
-    fontFamily: 'Arimo',
+    	fontFamily: 'Arimo',
 		fontWeight: 'Bold',
 	},
 	bodyText: {
@@ -72,7 +72,7 @@ interface Props {
 }
 
 /**
- * formatting for details on landing page
+ * formatting for details on our story page
  */
 class InvolveDetail extends React.Component<Props, {}> {
 	/**

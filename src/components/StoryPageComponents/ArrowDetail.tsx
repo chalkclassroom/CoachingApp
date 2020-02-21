@@ -78,18 +78,6 @@ interface Style {
 
 interface Props {
 	classes: Style;
-	/*   iconAlt: string,
-  icon: string,
-  title: string,
-  iconAlt2: string,
-  icon2: string,
-  title2: string,
-  text: string,
-  text2: string,
-  button: string,
-  button2: string,
-  onClick(): void,
-  onClick2(): void, */
 	iconAlt: string;
 	icon: string;
 	title: string;
@@ -99,7 +87,7 @@ interface Props {
 }
 
 /**
- * formatting for details on landing page
+ * formatting for details on our story page
  */
 class ArrowDetail extends React.Component<Props, {}> {
 	/**
@@ -111,18 +99,6 @@ class ArrowDetail extends React.Component<Props, {}> {
 
 	static propTypes = {
 		classes: PropTypes.object,
-		/* iconAlt: PropTypes.string,
-    icon: PropTypes.string,
-    title: PropTypes.string,
-    iconAlt2: PropTypes.string,
-    icon2: PropTypes.string,
-    title2: PropTypes.string,
-    text: PropTypes.string,
-    text2: PropTypes.string,
-    button: PropTypes.string,
-    button2: PropTypes.string,
-    onClick: PropTypes.func,
-    onClick2: PropTypes.func, */
 		iconAlt: PropTypes.string,
 		icon: PropTypes.string,
 		title: PropTypes.string,
@@ -194,14 +170,6 @@ class ArrowDetail extends React.Component<Props, {}> {
 								</Grid>
 							</Grid>
 						</Grid>
-						{/* <Grid item style={{ paddingTop: '5px' }}>
-							<Grid container direction="row" justify="flex-start" alignItems="flex-start">
-								<Grid item xs={3} />
-								<Grid item xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }}>
-									<Typography className={classes.bodyText}>{this.props.text}</Typography>
-								</Grid>
-							</Grid>
-						</Grid> */}
 						{this.props.button ? (
 							<Grid item>
 								<Grid container direction="row" justify="flex-start" alignItems="flex-start">
