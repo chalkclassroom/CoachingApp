@@ -74,6 +74,7 @@ const ACTheme = createMuiTheme({
 });
 
 const styles = {
+<<<<<<< HEAD
 	card: {
 		border: '3px solid #d9d9d9',
 		borderRadius: 10,
@@ -142,6 +143,78 @@ const styles = {
 		color: '#fff',
 		fontFamily: 'Arimo'
 	}
+=======
+  card: {
+    border: "3px solid #d9d9d9",
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    height: "100%",
+    boxShadow: "5px",
+    width: "100%",
+    flexDirection: "column",
+    alignItems: "center",
+    justify: "space-evenly",
+    display: "flex",
+    flex: "1",
+    flexWrap: "nowrap"
+  },
+  iconGrid: {
+    marginTop:"10px",
+    marginBottom:"5px"
+  },
+  icon: {
+    width: "100px",
+    height: "100px"
+  },
+  infoDisplayGrid: {
+    height: "41vh",
+    width:"90%",
+    marginLeft:"5px",
+    marginRight:"5px",
+    marginTop:"5px",
+    marginBottom:"5px",
+    display: "flex",
+    justifyItems: "center"
+  },
+  helpIcon: {
+    width: "60px"
+  },
+  completeGrid: {
+    marginTop: "5px",
+    marginBottom: "10px",
+    marginLeft: "10px",
+    marginRight: "10px",
+    alignContent: "flex-end",
+    display: "flex"
+  },
+  completeButton: {
+    color: "#d9d9d9",
+    borderColor: "#d9d9d9",
+    borderWidth: "2px",
+    fontSize: "15px",
+    alignSelf: "flex-end",
+    marginTop: "auto"
+  },
+  gridTopMargin: {
+    marginTop: "5px"
+  },
+  resultsButtons: {
+    marginTop: "2vh"
+  },
+  viewButtons: {
+    minWidth: 150,
+    textAlign: "center",
+    fontFamily: "Arimo",
+    width: '20vw'
+  },
+  viewButtonsSelected: {
+    minWidth: 150,
+    textAlign: "center",
+    color: "#fff",
+    fontFamily: "Arimo",
+    width: '20vw'
+  },
+>>>>>>> 0382aa88b77cea23df366a3c12ebeff45de6beef
 };
 
 /**
@@ -246,6 +319,7 @@ class ResultsDashboard extends React.Component {
 							</TextField>
 						</Grid>
 
+<<<<<<< HEAD
 						<Grid item className={classes.resultsButtons}>
 							<MuiThemeProvider theme={this.state.theme}>
 								<Button
@@ -352,6 +426,98 @@ class ResultsDashboard extends React.Component {
 			</div>
 		);
 	}
+=======
+            <Grid item className={classes.resultsButtons}>
+              <MuiThemeProvider theme={this.state.theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.DATA
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.DATA ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.dataClick}
+                >
+                  Data
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item className={classes.resultsButtons}>
+              <MuiThemeProvider theme={this.state.theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.QUESTIONS
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.QUESTIONS ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.questionsClick}
+                >
+                  Questions
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item className={classes.resultsButtons}>
+              <MuiThemeProvider theme={this.state.theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.COACH_PREP
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.COACH_PREP ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.coachPrepClick}
+                >
+                  Conference Plan
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item className={classes.resultsButtons}>
+              <MuiThemeProvider theme={this.state.theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.ACTION_PLAN
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.ACTION_PLAN ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.actionPlanClick}
+                >
+                  Action Plan
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item style={{marginTop: "7vh", marginBottom: "2vh"}}>
+              <MuiThemeProvider theme={this.state.theme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === this.props.viewEnum.NOTES
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === this.props.viewEnum.NOTES ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={this.props.notesClick}
+                >
+                  Notes
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+          </Grid>
+        </Card>
+      </div>
+    );
+  }
+>>>>>>> 0382aa88b77cea23df366a3c12ebeff45de6beef
 }
 
 ResultsDashboard.propTypes = {

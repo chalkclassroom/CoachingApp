@@ -17,6 +17,8 @@ import "chartjs-plugin-datalabels";
 import ResultsDashboard from './ResultsDashboard';
 import ActionPlanForm from './ActionPlanForm';
 import ActionPlanModal from './ActionPlanModal';
+import ConferencePlanForm from './ConferencePlanForm';
+import ConferencePlanModal from './ConferencePlanModal';
 
 const styles: object = {
   root: {
@@ -68,11 +70,14 @@ interface Props {
   trendsGraph: React.ReactNode,
   changeSessionId: any,
   sessionId: string,
+  sessionDates: Array<any>,
   questions: React.ReactNode,
+  chosenQuestions: Array<string>,
   notes: Array<{timestamp: Date, content: string}>,
   teacherFirstName: string,
   teacherLastName: string,
-  actionPlanExists: boolean
+  actionPlanExists: boolean,
+  conferencePlanExists: boolean
 }
 
 interface Style {
@@ -89,8 +94,9 @@ interface State {
   view: number,
   tabValue: number,
   // notes: Array<object>,
-  sessionDates: Array<string>,
+  // sessionDates: Array<string>,
   actionPlanEditMode: boolean,
+  conferencePlanEditMode: boolean,
   // actionPlanExists: boolean
   count: number
 }
@@ -111,8 +117,9 @@ class ResultsLayout extends React.Component<Props, State> {
       view: ViewEnum.DATA,
       tabValue: 0,
       // notes: [],
-      sessionDates: [],
+      // sessionDates: [],
       actionPlanEditMode: false,
+      conferencePlanEditMode: false,
       // actionPlanExists: false,
       count: 0
     }
@@ -175,7 +182,7 @@ class ResultsLayout extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  /* handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
     firebase.fetchSessionDates(teacherId, this.props.observationType).then((dates: Array<string>) =>
       this.setState({
@@ -183,7 +190,7 @@ class ResultsLayout extends React.Component<Props, State> {
       })
     );
     console.log('date fetching was called');
-  };
+  }; */
 
   handleEditActionPlan = (): void => {
     this.setState({
@@ -197,10 +204,22 @@ class ResultsLayout extends React.Component<Props, State> {
     })
   }
 
+  handleEditConferencePlan = (): void => {
+    this.setState({
+      conferencePlanEditMode: true
+    })
+  }
+
+  handleSaveAndCloseConferencePlan = (): void => {
+    this.setState({
+      conferencePlanEditMode: false
+    })
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     const firebase = this.context;
-    this.handleDateFetching(this.props.teacherId);
+    // this.handleDateFetching(this.props.teacherId);
     this.props.handleTrendsFetch(this.props.teacherId);
     /* const actionPlanExists = firebase.findActionPlan(this.props.sessionId);
     if (actionPlanExists) {
@@ -242,7 +261,7 @@ class ResultsLayout extends React.Component<Props, State> {
                 viewEnum={ViewEnum}
                 sessionId={this.props.sessionId}
                 changeSessionId={this.props.changeSessionId}
-                sessionDates={this.state.sessionDates}
+                sessionDates={this.props.sessionDates}
               />
             </Grid>
           </Grid>
@@ -316,6 +335,42 @@ class ResultsLayout extends React.Component<Props, State> {
                 </div>
               ) : this.state.view === ViewEnum.COACH_PREP ? (
                 <div className={classes.resultsContent}>
+                  {this.props.sessionId ? (
+                    <div>
+                      <FirebaseContext.Consumer>
+                        {(firebase: object) => <ConferencePlanForm 
+                          conferencePlanExists={this.props.conferencePlanExists}
+                          editMode={this.state.conferencePlanEditMode}
+                          firebase={firebase}
+                          teacherFirstName={this.props.teacherFirstName}
+                          teacherLastName={this.props.teacherLastName}
+                          chosenQuestions={this.props.chosenQuestions}
+                          handleEditConferencePlan={this.handleEditConferencePlan}
+                          readOnly={true}
+                          teacherId={this.props.teacherId}
+                          sessionId={this.props.sessionId}
+                          magic8={this.props.magic8}
+                        />}
+                      </FirebaseContext.Consumer>
+                        {this.state.conferencePlanEditMode ? (
+                          <FirebaseContext.Consumer>
+                            {(firebase: object) => <ConferencePlanModal 
+                              firebase={firebase}
+                              teacherFirstName={this.props.teacherFirstName}
+                              teacherLastName={this.props.teacherLastName}
+                              teacherId={this.props.teacherId}
+                              sessionId={this.props.sessionId}
+                              handleClose={this.handleSaveAndCloseConferencePlan}
+                              conferencePlanExists={true}
+                            />}
+                          </FirebaseContext.Consumer>
+                        ) : ( <div /> )}
+                      </div>
+                  ) : (
+                    <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
+                      Please choose a date from the dropdown menu.
+                    </Typography>
+                  )}
                   {/* <Grid>
                     <Card className={classes.coachPrepCard} style={{height: "30vh"}}>
                       <CardContent>
@@ -414,94 +469,6 @@ class ResultsLayout extends React.Component<Props, State> {
                       Please choose a date from the dropdown menu.
                     </Typography>
                   )}
-
-                  {/* {this.props.sessionId? (
-                    <FirebaseContext.Consumer>
-                      {(firebase: object) => <ActionPlanForm 
-                        firebase={firebase}
-                        teacherFirstName={this.props.teacherFirstName}
-                        teacherLastName={this.props.teacherLastName}
-                        teacherId={this.props.teacherId}
-                        sessionId={this.props.sessionId}
-                        handleEditActionPlan={this.handleEditActionPlan}
-                        // handleSaveAndClose={this.handleSaveAndCloseActionPlan}
-                        handleClose={null}
-                        disabled={true}
-                        actionPlanExists={this.props.actionPlanExists}
-                      />}
-                    </FirebaseContext.Consumer>
-                    this.state.actionPlanEditMode ? (
-                      <FirebaseContext.Consumer>
-                        {(firebase: object) => <ActionPlanModal 
-                          firebase={firebase}
-                          teacherFirstName={this.props.teacherFirstName}
-                          teacherLastName={this.props.teacherLastName}
-                          teacherId={this.props.teacherId}
-                          sessionId={this.props.sessionId}
-                          handleEditActionPlan={this.handleEditActionPlan}
-                          // handleSaveAndClose={this.handleSaveAndCloseActionPlan}
-                          disabled={false}
-                          actionPlanExists={this.props.actionPlanExists}
-                        />}
-                      </FirebaseContext.Consumer>
-                  ) : ( <div /> )
-                  } else {
-                    <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
-                      Please choose a date from the dropdown menu.
-                    </Typography>
-                  }})} */}
-                  {/* /*{this.props.sessionId ? (
-                     <FirebaseContext.Consumer>
-                      {(firebase: object) => <ActionPlanForm
-                        teacherFirstName={this.props.teacherFirstName}
-                        teacherLastName={this.props.teacherLastName}
-                        teacherId={this.props.teacherId}
-                        sessionId={this.props.sessionId}
-                        firebase={firebase}
-                      />}
-                    </FirebaseContext.Consumer> 
-                    this.props.actionPlanExists? (
-                     true ? (  
-                      this.state.actionPlanEditMode ? (
-                        <FirebaseContext.Consumer>
-                          {(firebase: object) => <ActionPlanModal 
-                            firebase={firebase}
-                            teacherFirstName={this.props.teacherFirstName}
-                            teacherLastName={this.props.teacherLastName}
-                            teacherId={this.props.teacherId}
-                            sessionId={this.props.sessionId}
-                            handleEditActionPlan={this.handleEditActionPlan}
-                            // handleSaveAndClose={this.handleSaveAndCloseActionPlan}
-                            disabled={false}
-                            actionPlanExists={this.props.actionPlanExists}
-                          />}
-                        </FirebaseContext.Consumer>
-                      ) : (
-                        <FirebaseContext.Consumer>
-                          {(firebase: object) => <ActionPlanForm 
-                            firebase={firebase}
-                            teacherFirstName={this.props.teacherFirstName}
-                            teacherLastName={this.props.teacherLastName}
-                            teacherId={this.props.teacherId}
-                            sessionId={this.props.sessionId}
-                            handleEditActionPlan={this.handleEditActionPlan}
-                            // handleSaveAndClose={this.handleSaveAndCloseActionPlan}
-                            handleClose={null}
-                            disabled={true}
-                            actionPlanExists={this.props.actionPlanExists}
-                          />}
-                        </FirebaseContext.Consumer>
-                      )
-                    ) : (
-                      <Button>
-                        create action plan
-                      </Button>
-                    )
-                  ) : (
-                    <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
-                      Please choose a date from the dropdown menu.
-                    </Typography>
-                  )} */}
                 </div>
               ) : null}
             </div>
