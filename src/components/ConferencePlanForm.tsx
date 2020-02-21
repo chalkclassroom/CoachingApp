@@ -13,6 +13,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Card from "@material-ui/core/Card";
+import moment from 'moment';
 import Backdrop from "@material-ui/core/Backdrop";
 
 const styles: object = {
@@ -61,7 +62,7 @@ interface Props {
         questions: Array<string>,
         addedQuestions: Array<string>,
         notes: Array<string>,
-        date: string}>>,
+        date: {seconds: number, nanoseconds: number}}>>,
     saveConferencePlan(conferencePlanId: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>): Promise<void>,
     getCoachFirstName(): Promise<string>,
     getCoachLastName(): Promise<string>
@@ -81,7 +82,7 @@ interface State {
   questions: Array<string>,
   addedQuestions: Array<string>,
   notes: Array<string>,
-  date: string,
+  date: Date,
   actionSteps: string,
   actionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}>,
   editMode: boolean,
@@ -118,7 +119,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
       questions: [''],
       addedQuestions: this.props.chosenQuestions ? this.props.chosenQuestions : [],
       notes: [''],
-      date: '',
+      date: new Date(),
       actionSteps: '',
       actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}],
       editMode: false,
@@ -271,8 +272,10 @@ class ConferencePlanForm extends React.Component<Props, State> {
 
   getConferencePlan = (): void => {
     this.props.firebase.getConferencePlan(this.props.sessionId)
-    .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
+    .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: {seconds: number, nanoseconds: number}}>) => {
       if (conferencePlanData[0]) {
+        const newDate = new Date(0);
+        newDate.setUTCSeconds(conferencePlanData[0].date.seconds);
         this.setState({
           conferencePlanExists: true,
           conferencePlanId: conferencePlanData[0].id,
@@ -280,8 +283,8 @@ class ConferencePlanForm extends React.Component<Props, State> {
           questions: conferencePlanData[0].questions,
           addedQuestions: conferencePlanData[0].addedQuestions,
           notes: conferencePlanData[0].notes,
-          date: conferencePlanData[0].date
-        })
+          date: newDate
+        }, () => {console.log('date is: ', this.state.date)})
       } else {
         this.setState({
           conferencePlanExists: false,
@@ -290,7 +293,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
           questions: [''],
           addedQuestions: [],
           notes: [''],
-          date: ''
+          date: new Date()
         })
       }
     })
@@ -516,6 +519,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                       <Grid container direction="row" justify="flex-end">
                         {/* date value is an object */}
                         {/* {this.state.date} */}
+                        {moment(this.state.date).format('MM/DD/YYYY')}
                       </Grid>
                     </Grid>
                   </Grid>
