@@ -173,8 +173,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
       datasets:  [
         {
           label: 'TOTAL',
-          backgroundColor: this.state.trendsTotalColor,
-          borderColor: this.state.trendsTotalColor,
+          backgroundColor: Constants.TransitionColor,
+          borderColor: Constants.TransitionColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsTotal,
@@ -332,9 +332,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        {console.log("transition: ", this.state.transitionTime)}
-        {console.log("learning activity: ", this.state.learningActivityTime)}
-        {console.log("session total: ", this.state.sessionTotal)}
         <ResultsLayout
           teacherId={this.props.location.state.teacher.id}
           magic8="Transition Time"

@@ -23,6 +23,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import PropTypes from "prop-types";
 import Dashboard from "../Dashboard";
 import TotalVisitCount from "../TotalVisitCount";
+import * as Constants from "../../constants";
 
 // TODO: X in top right corner, press and hold to remove/edit the center.
 
@@ -40,7 +41,7 @@ const styles = theme => ({
 });
 
 const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
-  const hsl = Math.max(82 - 4 * visitCount, 54);
+  const hsl = Math.max(70 - 4 * visitCount, 30);
   return (
     <Button
       variant="contained"
@@ -52,8 +53,9 @@ const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
         maxWidth: 150,
         whiteSpace: "normal",
         wordWrap: "break-word",
-        backgroundColor: `hsl(14, 78%, ${hsl}%`,//hsl code to red/orange-math
-        fontFamily: 'Arimo'
+        backgroundColor: `hsl(214.2, 88.4%, ${hsl}%`,//hsl code to red/orange-math
+        fontFamily: 'Arimo',
+        color: 'white'
       }}
       onClick={onClick}
     >
@@ -339,7 +341,7 @@ class CenterMenuMath extends React.Component {
                       {/* <div style={{ margin: 20 }} /> */}
                       <Dashboard
                         magic8="Math Instruction"
-                        color="#E55529"
+                        color={Constants.MathColor}
                         infoDisplay={
                           <TotalVisitCount count={this.state.totalVisitCount} />
                         }

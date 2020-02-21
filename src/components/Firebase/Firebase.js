@@ -356,6 +356,15 @@ class Firebase {
       .catch(error => console.error("Error getting cached document:", error));
   };
 
+  getCoachLastName = async function() {
+    return this.db
+      .collection("users")
+      .doc(this.auth.currentUser.uid)
+      .get()
+      .then(doc => doc.data().lastName)
+      .catch(error => console.error("Error getting cached document:", error));
+  };
+
   getAdminList = async function() {
     return this.db
       .collection("users")
@@ -1032,14 +1041,15 @@ class Firebase {
       );
   };
 
-  createActionPlan = async function(teacherId, sessionId) {
+  createActionPlan = async function(teacherId, sessionId, magic8) {
     const data = Object.assign(
       {},
       {
         sessionId: sessionId,
         coach: this.auth.currentUser.uid,
         teacher: teacherId,
-        date: new Date().toLocaleDateString(),
+        tool: magic8,
+        dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
         goal: '',
         benefit: ''
       }

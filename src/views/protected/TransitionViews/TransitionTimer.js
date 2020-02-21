@@ -115,87 +115,59 @@ class TransitionTimer extends React.Component {
    * render function
    * @return {ReactElement}
    */
-	render() {
-		setTimeout(() => {
-			this.setState({ percentage: this.state.isOn ? 100 : 0 });
-		}, 100);
+  render() {
+    setTimeout(() => {
+      this.setState({ percentage: this.state.isOn ? 100 : 0 });
+    }, 100);
 
-		return (
-			<MuiThemeProvider theme={theme}>
-				<div style={{ width: 400, fontFamily: 'Arimo' }}>
-					<CircularProgressbar
-						fill="#19468D"
-						background
-						percentage={this.state.percentage}
-						text={this.state.time === 0 ? '0:00' : ms(this.state.time)}
-						initialAnimation={false}
-						styles={{
-							path: { stroke: '#19468D' },
-							text: { fill: 'white', fontSize: '16px' },
-							background: { fill: Constants.TransitionColor }
-						}}
-					/>
-					<Grid container alignItems={'center'} justify={'space-around'} direction={'column'}>
-						<div style={{ margin: 2 }} />
-
-						{!this.props.typeSelected ? (
-							<Button
-								variant="contained"
-								color="red"
-								// disabled={!this.props.typeSelected}
-								aria-label="Start"
-								onClick={this.test}
-								style={{ fontFamily: 'Arimo' }}
-							>
-								Start new Transition
-							</Button>
-						) : null}
-
-						{this.props.typeSelected ? (
-							<Button
-								variant="contained"
-								color="primary"
-								//  disabled={!this.props.typeSelected}
-								aria-label="Start"
-								onClick={this.onStart}
-								style={{ fontFamily: 'Arimo' }}
-							>
-								{this.state.isOn ? 'End Transition' : 'Start new Transition'}
-							</Button>
-						) : null}
-
-						<div style={{ margin: 2 }} />
-						<YesNoDialog
-							buttonVariant={'outlined'}
-							buttonColor={'primary'}
-							buttonText={'Cancel Transition'}
-							dialogTitle={'Are you sure you want to cancel the current active transition?'}
-							onAccept={this.onCancel}
-							shouldOpen={this.state.isOn}
-						/>
-					</Grid>
-					<Dialog
-						open={this.state.opendialog}
-						onClose={this.handleClose}
-						aria-labelledby="alert-dialog-title"
-						aria-describedby="alert-dialog-description"
-					>
-						<DialogTitle id="alert-dialog-title" style={{ fontFamily: 'Arimo' }}>
-							Please select a transition type before you start a new transition.
-						</DialogTitle>
-						<DialogActions>
-							<Button onClick={this.handleClose} color="primary" style={{ fontFamily: 'Arimo' }}>
-								Ok
-							</Button>
-							{/* <Button onClick={this.handleAccept} color="primary" style={{fontFamily: 'Arimo'}} autoFocus>
-              Yes
-            </Button> */}
-						</DialogActions>
-					</Dialog>
-				</div>
-			</MuiThemeProvider>
-		);
-	}
+    return (
+      <MuiThemeProvider theme={theme}>
+        <div style={{ width: 400, fontFamily: 'Arimo' }}>
+          <CircularProgressbar
+            fill={Constants.TransitionColor}
+            background
+            percentage={this.state.percentage}
+            text={this.state.time === 0 ? "0:00" : ms(this.state.time)}
+            initialAnimation={false}
+            styles={{
+              path: { stroke: Constants.TransitionColor },
+              text: { fill: "white", fontSize: "16px" },
+              background: { fill: Constants.TransitionColor }
+            }}
+          />
+          <Grid
+            container
+            alignItems={"center"}
+            justify={"space-around"}
+            direction={"column"}
+          >
+            <div style={{ margin: 2 }} />
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!this.props.typeSelected}
+              aria-label="Start"
+              onClick={this.onStart}
+              style={{fontFamily: 'Arimo'}}
+            >
+              {this.state.isOn ? "End Transition" : "Start new Transition"}
+            </Button>
+            <div style={{ margin: 2 }} />
+            <YesNoDialog
+              buttonVariant={"outlined"}
+              buttonColor={"primary"}
+              buttonText={"Cancel Transition"}
+              dialogTitle={
+                "Are you sure you want to cancel the current active transition?"
+              }
+              onAccept={this.onCancel}
+              shouldOpen={this.state.isOn}
+            />
+          </Grid>
+        </div>
+      </MuiThemeProvider>
+    );
+  }
 }
 
 TransitionTimer.propTypes = {
