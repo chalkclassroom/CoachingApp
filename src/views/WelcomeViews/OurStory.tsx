@@ -133,7 +133,7 @@ const styles: object = {
 		fontSize: 20,
 		color: '#000000',
 		marginLeft: '-40px',
-    	lineHeight: '1.4px',
+    	lineHeight: 1.4,
 		fontFamily: 'Arimo',
 		width: '70%'
 	},
