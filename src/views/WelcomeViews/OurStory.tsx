@@ -40,8 +40,8 @@ const styles: object = {
 	  groupImage: {
 		width: "100%",
 		borderRadius: "50px",
-		marginTop:'0px',
-		marginBottom:'80px',
+		marginTop:'10px',
+		marginBottom:'70px',
        // height: '458px'
 	  },
 	  cardSize: {
@@ -109,6 +109,7 @@ const styles: object = {
 		letterSpacing:'8px',
 		fontWeight:600,
 		marginTop:'50px',
+		marginBottom: '40px'
 	},
 	missionTitle: {
 		fontFamily: 'Arimo',
@@ -123,10 +124,10 @@ const styles: object = {
 		fontFamily: 'Arimo',
 		fontSize: 24,
 		// textAlign:'justify',
-		color: '#000',
+	    color: '#000000',
 		display: 'flex',
-		marginTop:'0px',
-		marginBottom:'40px'
+		marginTop:'25px',
+		marginBottom:'25px'
 	},
 	arrowBody:{
 		fontSize: 20,
@@ -286,7 +287,7 @@ const styles: object = {
 		},
 		missionTitle: {
 			fontSize: '20',
-			marginTop:'20px',
+			marginTop:'40px',
 			marginBottom:'20px'
 		},
 		missionBody: {
