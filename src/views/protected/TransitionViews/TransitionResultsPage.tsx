@@ -96,7 +96,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     const teacherId = this.props.location.state.teacher.id;
     this.handleTrendsFetch(teacherId);
     this.handleDateFetching(teacherId);
@@ -285,9 +285,9 @@ class TransitionResultsPage extends React.Component<Props, State> {
   };
 
   /**
-   *
+   * retrieves summary, details, and notes data using the session id
    */
-  getData = () => {
+  getData = (): void => {
     const firebase = this.context;
     this.handleNotesFetching(this.state.sessionId);
 
@@ -318,11 +318,9 @@ class TransitionResultsPage extends React.Component<Props, State> {
       console.log('unable to retrieve action plan')
     })
 
-    firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
-      {console.log('does conf plan exists? ', this.state.conferencePlanExists)}
-      {console.log('the data returned is ', conferencePlanData)}
+    firebase.getConferencePlan(this.state.sessionId)
+    .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
-        console.log('conferenceplan data: ', conferencePlanData)
         this.setState({
           conferencePlanExists: true
         })
@@ -332,7 +330,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
         })
       }
     }).catch(() => {
-      console.log('unable to retrieve conference plan transition results page')
+      console.log('unable to retrieve conference plan')
     })
     firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
       this.setState({
@@ -377,7 +375,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
       newArray.splice(itemIndex, 1);
       this.setState({ addedToPlan: newArray });
     }
-    console.log('handle add to plan session id is: ', sessionId);
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {

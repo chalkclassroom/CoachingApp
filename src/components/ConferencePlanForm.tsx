@@ -14,7 +14,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Card from "@material-ui/core/Card";
 import moment from 'moment';
-import Backdrop from "@material-ui/core/Backdrop";
 
 const styles: object = {
   textField: {
@@ -284,7 +283,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
           addedQuestions: conferencePlanData[0].addedQuestions,
           notes: conferencePlanData[0].notes,
           date: newDate
-        }, () => {console.log('date is: ', this.state.date)})
+        })
       } else {
         this.setState({
           conferencePlanExists: false,
@@ -299,42 +298,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
     })
   }
 
-  /* getActionPlan = (): void => {
-    this.props.firebase.getActionPlan(this.props.sessionId)
-    .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
-      if (actionPlanData[0]) {
-        this.setState({
-          actionPlanExists: true,
-          actionPlanId: actionPlanData[0].id,
-          goal: actionPlanData[0].goal,
-          benefit: actionPlanData[0].benefit,
-          date: actionPlanData[0].date
-        });
-        const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
-        this.props.firebase.getActionSteps(actionPlanData[0].id).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
-          actionStepsData.forEach((value, index) => {
-            newActionStepsArray[index] = {step: value.step, materials: value.materials, person: value.person, timeline: value.timeline};
-          })
-        }).then(() => {
-          this.setState({
-            actionStepsArray: newActionStepsArray
-          }, () => {console.log('action steps array: ', this.state.actionStepsArray)});
-        })
-        .catch(() => {
-          console.log('error retrieving action steps');
-        });
-      } else {
-        this.setState({
-          actionPlanExists: false,
-          actionPlanId: '',
-          goal: '',
-          benefit: '',
-          actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}]
-        }, () => {console.log('action plan exists? ', this.state.actionPlanExists)})
-      }
-     })
-  } */
-
   /**
    * saves action plan by updating Cloud Firestore records
    * @return {void}
@@ -342,6 +305,9 @@ class ConferencePlanForm extends React.Component<Props, State> {
   handleSave = (): void => {
     this.props.firebase.saveConferencePlan(this.state.conferencePlanId, this.state.feedback, this.state.questions, this.state.addedQuestions, this.state.notes).then(() => {
       console.log("conference plan saved");
+      this.setState({
+        saved: true
+      })
     })
     .catch(() => {
       console.log("error with saving conference plan");
@@ -517,8 +483,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
                     </Grid>
                     <Grid item xs={4}>
                       <Grid container direction="row" justify="flex-end">
-                        {/* date value is an object */}
-                        {/* {this.state.date} */}
                         {moment(this.state.date).format('MM/DD/YYYY')}
                       </Grid>
                     </Grid>

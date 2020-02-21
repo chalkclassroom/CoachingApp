@@ -180,6 +180,9 @@ interface State {
  * @class TransitionCoachingQuestions
  */
 class TransitionCoachingQuestions extends React.Component<Props, State> {
+  /**
+   * @param {Props} props 
+   */
   constructor(props: Props) {
     super(props);
 

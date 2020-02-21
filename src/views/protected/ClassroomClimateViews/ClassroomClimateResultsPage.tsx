@@ -347,6 +347,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
               magic8={"Classroom Climate"}
             />
           }
+          chosenQuestions={chosenQuestions}
           teacherFirstName={this.props.location.state.teacher.firstName}
           teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
