@@ -131,7 +131,7 @@ const styles: object = {
 	arrowBody:{
 		fontSize: 20,
 		color: '#000000',
-		// textAlign: 'justify',
+		marginLeft: '-40px',
 		lineHeight: 'normal',
 		fontFamily: 'Arimo',
 		width: '70%'

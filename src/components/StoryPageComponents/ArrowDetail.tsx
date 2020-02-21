@@ -20,9 +20,9 @@ const styles: object = {
 		fontFamily: 'Arimo',
 		fontWeight: 'bold',
 		width: '60%',
-		marginTop: '10px'
-		//	marginBottom: '0px'
-	},
+		marginTop: '10px',
+		marginLeft: '-40px'
+		},
 	rounded: {
 		backgroundColor: '#86CCFF',
 		height: 90,
