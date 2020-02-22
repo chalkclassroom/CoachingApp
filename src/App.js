@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage.tsx";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
 import HomePage from "./views/protected/HomeViews/HomePage";
+import OurStory from "./views/WelcomeViews/OurStory";
 import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
@@ -168,6 +169,11 @@ class App extends Component {
               auth={this.state.auth || !this.state.auth}
               path="/about"
               component={AboutPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth || !this.state.auth}
+              path="/story"
+              component={OurStory}
             />
             <PrivateRoute
               auth={this.state.auth || !this.state.auth}

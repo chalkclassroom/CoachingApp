@@ -207,6 +207,15 @@ class AppBar extends React.Component {
                 <div color="inherit" className={classes.grow}/>
                 <Router>
                   <div>
+                  <Link to="/story" className={classes.link}>
+											<Button
+												color="secondary"
+												className={classes.menuButton}
+												onClick={() => this.props.history.push('/story')}
+											>
+												Our Story
+											</Button>
+										</Link>
                     <Link to="/" className={classes.link}>
                       <Button
                         color="secondary"
@@ -279,6 +288,19 @@ class AppBar extends React.Component {
                   </Grid>
                 </Grid>
                 <div color="inherit" className={classes.grow}/>
+                <Router>
+                  <div>
+                    <Link to="/story" className={classes.link}>
+                      <Button
+                        color="secondary"
+                        className={classes.menuButton}
+                        onClick={() => this.props.history.push("/story")}
+                      >
+                        our story
+                      </Button>
+                    </Link>
+                  </div>   
+                </Router>  
                 <Button
                   color="secondary"
                   onClick={this.handleLoginModal}
