@@ -220,13 +220,13 @@ const styles: object = {
 	},
 	arrowDownBar:{
 		width: '10px',
-		height: '805px', 
+		height: '890px', 
 		// position:'absolute',
 		backgroundColor: '#86CCFF' ,// ' #86CCFF',
 		display: 'inline-block',
 		// marginBottom: '7px',
-		//   borderRadius: '15%',
-		marginTop: '-800px',
+		// borderRadius: '15%',
+		marginTop: '-890px',
 		marginRight: '-29px',
 		marginLeft: '-48px',
 	   // zIndex:0 // 0
@@ -692,8 +692,9 @@ class OurStory extends React.Component<Props, State> {
 							<div  className={classes.arrowBar}>
 							</div>
 					       
-								</Grid>
-									</Grid>
+				        	</Grid>
+						</Grid>
+
 							<Grid container direction="row">
 								<Grid item xs={12}>
 									<ArrowDetail
@@ -705,7 +706,9 @@ class OurStory extends React.Component<Props, State> {
 								</Grid>
 							</Grid>
 						</Grid>
+
 						<Grid item >
+
 							<Grid container  direction="row">
 								<Grid item xs={12}>
 									<ArrowDetail
@@ -717,9 +720,9 @@ class OurStory extends React.Component<Props, State> {
 								</Grid>
 							</Grid>
 						</Grid>
+					
 						<Grid
 							item
-							// style={{ paddingTop: '1em', paddingBottom: '1em' }}
 						>
 							<Grid container  direction="row" >
 								<Grid item xs={12}>
@@ -744,6 +747,8 @@ class OurStory extends React.Component<Props, State> {
 								</Grid>
 							</Grid>
 						</Grid>
+					
+
 						<Grid item >
 							<Grid container direction="row" >
 								<Grid item xs={12}>
