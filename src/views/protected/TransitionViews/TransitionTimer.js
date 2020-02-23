@@ -148,7 +148,7 @@ class TransitionTimer extends React.Component {
 
 						{!this.props.typeSelected ? (
 							<Button
-								color="#e0e0e0"
+								color="#e0e0e0" // graycolor
 								variant="raised"
 								opacity="0.3"
 								// disabled={!this.props.typeSelected}
