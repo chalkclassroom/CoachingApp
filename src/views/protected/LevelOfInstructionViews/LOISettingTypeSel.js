@@ -7,8 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import InstructionCounter from './InstructionCounter';
-import FirebaseContext from '../../../components/Firebase/FirebaseContext';
-
 
 const styles = () => ({
 	root: {
@@ -24,7 +22,7 @@ const styles = () => ({
 		textTransform: 'Capitalize',
 		fontWeight: '700',
 		fontSize: '30',
-		fontFamily: 'Arimo',
+		fontFamily: 'Arimo'
 	},
 	button: {
 		margin: '-10px',
@@ -40,23 +38,17 @@ const styles = () => ({
 		fontWeight: '700',
 		fontSize: '30'
 	}
-	/* 	grow: {
-		flexgrow: 1
-	} */
 });
 
-class SettingScreen // extends React.Component {
-	// state = {};
-{
+class SettingScreen extends React.Component {
+	state = {};
 	/**
    * @param {string} settingType
    */
- 	handleButtonChange = (settingType) => {
+	handleButtonChange = (settingType) => {
 		this.props.toggleLOISettingType(settingType);
-		// this.setState({ selected: settingType });
 		this.props.switchToInstructionScreen();
-	}; 
-
+	};
 	render() {
 		return (
 			<div alignItems="flex-start">
@@ -87,7 +79,6 @@ class SettingScreen // extends React.Component {
 								onClick={() => {
 									this.handleButtonChange('Whole group');
 								}}
-								//	classes={{ root: classes.button }}//, label: classes.label
 								style={{
 									backgroundColor: '#27B78FFF',
 									width: 200,
@@ -146,15 +137,12 @@ const INS_SCREEN = 1;
 class LOISettingTypeSel extends React.Component {
 	constructor(props) {
 		super(props);
-
-		// const mEntry = {
-		// 	teacher: this.props.teacherId,
-		// 	observedBy: this.props.firebase.auth.currentUser.uid,
-		// 	type: 'Level',
-		// 	 setting: this.props.currentSetting
-		// };
-
-		// this.props.firebase.handleLOISession(mEntry);
+		const mEntry = {
+			teacher: this.props.teacherId,
+			observedBy: this.props.firebase.auth.currentUser.uid,
+			type: 'Level'
+		};
+		this.props.firebase.handleSession(mEntry);
 	}
 
 	state = {
@@ -162,78 +150,35 @@ class LOISettingTypeSel extends React.Component {
 		selected: '',
 		status: SETTING_SCREEN,
 		teacherIdCtr: this.props.teacherId,
-		settingtype: '',
-		grouptype: true,
-		instype: false
+		groupType: true,
+		instructionType: false
 	};
 
-	handleButtonChange = (settingType) => {
-		// this.props.toggleLOISettingType(settingType);
-		this.setState({ settingType: settingType });
-		this.pushSettingSelection(settingType);
-
-		// this.switchToInstructionScreen();Z
+	handleButtonChange = (settingValue) => {
+		this.setState({ settingType: settingValue });
+		this.pushSettingChoice(settingValue);
 	};
 
 	toggleLOISettingType = (settingtypeis) => {
 		console.log('the setting type is ', settingtypeis);
 	};
 
-	switchToSettingScreen = () => {
-		this.setState({ status: SETTING_SCREEN });
-	};
-
 	switchToInstructionScreen = () => {
 		this.setState({ status: INS_SCREEN });
-		this.setState({ selected: settingType });
 	};
 
-	pushSettingSelection = (settingType) => {
-		const mEntry = {
-			teacher: this.props.teacherId,
-			observedBy: this.props.firebase.auth.currentUser.uid,
-			type: 'Level',
-			setting: settingType
-		};
-		this.props.firebase.handleLOISession(mEntry);
+	pushSettingChoice = (settingType) => {
 		this.setState({
-			grouptype: false,
-			instype: true,
+			groupType: false,
+			instructionType: true,
 			selected: settingType
 		});
 	};
 
-	// switch (this.state.status) {
-	// 	case INS_SCREEN:
-	// 		return (
-	// 			<InstructionCounter
-	// 				selected={this.state.selected}
-	// 				teacherId={this.state.teacherIdCtr}
-	// 				firebase={this.props.firebase}
-	// 			/>
-	// 		);
-
-	// 	case SETTING_SCREEN:
-	// 		return (
-	// 			<SettingScreen
-	// 				switchToInstructionScreen={this.switchToInstructionScreen}
-	// 				toggleLOISettingType={this.props.toggleLOISettingType}
-	// 			/>
-	// 		);
-
-	// 	default:
-	// 		return <div>Unknown status value!!!</div>;
-	// }
-
-	//two buttions view
-
 	render() {
 		return (
 			<div>
-
-
-
-				{this.state.grouptype ? (
+				{this.state.groupType ? (
 					<div alignItems="flex-start">
 						<Grid alignItems="flex-start" item xs={12}>
 							<Typography
@@ -262,7 +207,6 @@ class LOISettingTypeSel extends React.Component {
 										onClick={() => {
 											this.handleButtonChange('Whole group');
 										}}
-										//	classes={{ root: classes.button }}//, label: classes.label
 										style={{
 											backgroundColor: '#27B78FFF',
 											width: 200,
@@ -307,7 +251,7 @@ class LOISettingTypeSel extends React.Component {
 						</Grid>
 					</div>
 				) : null}
-				{this.state.instype ? (
+				{this.state.instructionType ? (
 					<InstructionCounter
 						selected={this.state.selected}
 						teacherId={this.state.teacherIdCtr}
@@ -320,7 +264,7 @@ class LOISettingTypeSel extends React.Component {
 }
 const mapStateToProps = (state) => {
 	return {
-	//	currentSetting: state.LOIsettingTypeState.settingType,
+		currentSetting: state.LOIsettingTypeState.settingType,
 		teacherIdis: state.teacherIdCtr
 	};
 };

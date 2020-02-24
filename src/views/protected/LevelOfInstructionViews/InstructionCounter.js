@@ -1,4 +1,3 @@
-/* eslint-disable require-jsdoc */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Fab } from '@material-ui/core';
@@ -25,12 +24,6 @@ const styles = (theme) => ({
 		fontWeight: '700',
 		fontSize: '30',
 		fontFamily: 'Arimo'
-		// position: "relative",
-		// left: "-14rem",
-		// top:" 0.5rem",
-		// marginLeft: '-10%',
-		// padding: '0 80%',
-		// marginLeft: "-95%",
 	},
 	button: {
 		margin: '-10px',
@@ -45,16 +38,10 @@ const styles = (theme) => ({
 		textTransform: 'Capitalize',
 		fontWeight: '700',
 		fontSize: '30'
-		// position: "absolute"
-		// backgroundColor: '#27B78FFF'
 	}
-	/* grow: {
-		flexGrow: 1
-	} */
 });
 
 class InstructionCounter extends React.Component {
-	
 	constructor(props) {
 		super(props);
 		const mEntry = {
@@ -117,7 +104,7 @@ class InstructionCounter extends React.Component {
 											backgroundColor: '#38761dff',
 											width: 200,
 											height: 200
-										}} //,{ zIndex: 100 }
+										}} 
 									>
 										Ask High-Level Question
 									</Fab>
@@ -302,7 +289,7 @@ class InstructionCounter extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-	//	currentSetting: state.LOIsettingTypeState.settingType,
+		currentSetting: state.LOIsettingTypeState.settingType,
 		totalVisitCount: state.instructionstackstate.instructionStack.length
 	};
 };

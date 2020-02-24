@@ -30,7 +30,6 @@ interface State {
 	help: boolean;
 	notes: boolean;
 	recs: boolean;
-	settingType: string;
 	open: boolean;
 }
 
@@ -44,32 +43,23 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
    */
 	constructor(props: Props) {
 		super(props);
-
 		this.state = {
 			auth: true,
 			help: false,
 			notes: false,
 			recs: true,
-			settingType: null,
 			open: false
 		};
-
-		// this.handleTransitionType = this.handleTransitionType.bind(this);
 	}
 
 	/**
    * @param {string} type
    */
-	handleLOISettingType = (type: string): void => {		
-		this.setState({ settingType: type });
-	};
-
 	static propTypes = {
 		classes: PropTypes.object.isRequired,
 		location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string }) }) })
 			.isRequired
 	};
-
 	/**
    * render function
    * @return {ReactNode}
@@ -97,7 +87,6 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
 										<LOISettingTypeSel
 											teacherId={this.props.location.state.teacher.id}
 											firebase={firebase}
-											settingType={this.state.settingType}
 										/>
 									)}
 								</FirebaseContext.Consumer>
