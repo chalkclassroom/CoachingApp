@@ -98,13 +98,13 @@ class InstructionCounter extends React.Component {
 									style={{ fontFamily: 'Arimo' }}
 								>
 									<Fab
-										onClick={() => this.handlePushFire('Ask High-Level Question')}
+										onClick={() => this.handlePushFire('highLevel')}
 										className={classes.button}
 										style={{
 											backgroundColor: '#38761dff',
 											width: 200,
 											height: 200
-										}} 
+										}}
 									>
 										Ask High-Level Question
 									</Fab>
@@ -130,7 +130,7 @@ class InstructionCounter extends React.Component {
 									style={{ fontFamily: 'Arimo' }}
 								>
 									<Fab
-										onClick={() => this.handlePushFire('Follow-up on Children’s Responses')}
+										onClick={() => this.handlePushFire('followUp')}
 										classes={{ root: classes.button }} //, label: classes.label
 										style={{
 											backgroundColor: '#38761dff',
@@ -235,7 +235,7 @@ class InstructionCounter extends React.Component {
 									style={{ fontFamily: 'Arimo' }}
 								>
 									<Fab
-										onClick={() => this.handlePushFire('Ask Low-Level Question')}
+										onClick={() => this.handlePushFire('lowLevel')}
 										className={classes.button}
 										style={{
 											backgroundColor: '#1155ccff',
@@ -267,7 +267,7 @@ class InstructionCounter extends React.Component {
 									style={{ fontFamily: 'Arimo' }}
 								>
 									<Fab
-										onClick={() => this.handlePushFire('Teach Specific Skills')}
+										onClick={() => this.handlePushFire('specificSkill')}
 										classes={{ root: classes.button }}
 										style={{
 											backgroundColor: '#1155ccff',

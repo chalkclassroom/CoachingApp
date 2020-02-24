@@ -40,95 +40,6 @@ const styles = () => ({
 	}
 });
 
-class SettingScreen extends React.Component {
-	state = {};
-	/**
-   * @param {string} settingType
-   */
-	handleButtonChange = (settingType) => {
-		this.props.toggleLOISettingType(settingType);
-		this.props.switchToInstructionScreen();
-	};
-	render() {
-		return (
-			<div alignItems="flex-start">
-				<Grid alignItems="flex-start" item xs={12}>
-					<Typography
-						alignItems="flex-start"
-						component="h4"
-						variant="h4"
-						justify="center"
-						style={{ padding: '10px', fontFamily: 'Arimo', fontSize: '50px', fontWeight: 'bold' }}
-					>
-						What is the activity setting?
-					</Typography>
-				</Grid>
-				<Grid container style={{ marginTop: '25%' }}>
-					<Grid container alignItems="flex-start" direction={'row'} style={{ fontFamily: 'Arimo' }}>
-						<Grid
-							container
-							justify="center"
-							item
-							xl={6}
-							md={6}
-							sm={12}
-							xs={12}
-							style={{ fontFamily: 'Arimo' }}
-						>
-							<Fab
-								onClick={() => {
-									this.handleButtonChange('Whole group');
-								}}
-								style={{
-									backgroundColor: '#27B78FFF',
-									width: 200,
-									height: 200,
-									color: 'white',
-									textTransform: 'Capitalize',
-									fontWeight: '700',
-									fontSize: '30',
-									fontFamily: 'Arimo'
-								}}
-							>
-								Whole Group
-							</Fab>
-						</Grid>
-						<Grid
-							container
-							alignItems="flex-start"
-							item
-							xl={6}
-							md={6}
-							sm={12}
-							xs={12}
-							style={{ fontFamily: 'Arimo' }}
-						>
-							<Fab
-								onClick={() => this.handleButtonChange('Centers/Small Group')}
-								style={{
-									backgroundColor: '#27B78FFF',
-									width: 200,
-									height: 200,
-									color: 'white',
-									textTransform: 'Capitalize',
-									fontWeight: '700',
-									fontSize: '30',
-									fontFamily: 'Arimo'
-								}}
-							>
-								Centers/Small Group
-							</Fab>
-						</Grid>
-					</Grid>
-				</Grid>
-			</div>
-		);
-	}
-}
-
-const SETTING_SCREEN = 0;
-const INS_SCREEN = 1;
-
 /**
  * LOI Setting Type buttons
  * @class LOISettingTypeSel
@@ -148,7 +59,6 @@ class LOISettingTypeSel extends React.Component {
 	state = {
 		addDialog: false,
 		selected: '',
-		status: SETTING_SCREEN,
 		teacherIdCtr: this.props.teacherId,
 		groupType: true,
 		instructionType: false
@@ -157,14 +67,6 @@ class LOISettingTypeSel extends React.Component {
 	handleButtonChange = (settingValue) => {
 		this.setState({ settingType: settingValue });
 		this.pushSettingChoice(settingValue);
-	};
-
-	toggleLOISettingType = (settingtypeis) => {
-		console.log('the setting type is ', settingtypeis);
-	};
-
-	switchToInstructionScreen = () => {
-		this.setState({ status: INS_SCREEN });
 	};
 
 	pushSettingChoice = (settingType) => {
@@ -205,7 +107,7 @@ class LOISettingTypeSel extends React.Component {
 								>
 									<Fab
 										onClick={() => {
-											this.handleButtonChange('Whole group');
+											this.handleButtonChange('wholeGroup');
 										}}
 										style={{
 											backgroundColor: '#27B78FFF',
@@ -232,7 +134,7 @@ class LOISettingTypeSel extends React.Component {
 									style={{ fontFamily: 'Arimo' }}
 								>
 									<Fab
-										onClick={() => this.handleButtonChange('Centers/Small Group')}
+										onClick={() => this.handleButtonChange('centersSmall')}
 										style={{
 											backgroundColor: '#27B78FFF',
 											width: 200,
@@ -275,4 +177,4 @@ LOISettingTypeSel.propTypes = {
 	toggleLOISettingType: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(connect(mapStateToProps, { toggleLOISettingType })(LOISettingTypeSel, SettingScreen));
+export default withStyles(styles)(connect(mapStateToProps, { toggleLOISettingType })(LOISettingTypeSel));
