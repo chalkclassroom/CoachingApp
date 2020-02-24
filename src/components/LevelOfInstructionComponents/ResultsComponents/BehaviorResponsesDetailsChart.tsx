@@ -4,10 +4,10 @@ import {HorizontalBar} from 'react-chartjs-2';
 
 
 interface Props {
-  disapprovalBehaviorCount: number,
-  redirectionsBehaviorCount: number,
-  nonspecificBehaviorCount: number,
-  specificBehaviorCount: number,
+  highLevelQuesInsCount: number,
+  childResponseInsCount: number,
+  lowLevelQuesInsCount: number,
+  specificSkillInsCount: number,
 }
 
 /**
@@ -23,10 +23,10 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    disapprovalBehaviorCount: PropTypes.number.isRequired,
-    redirectionsBehaviorCount: PropTypes.number.isRequired,
-    nonspecificBehaviorCount: PropTypes.number.isRequired,
-    specificBehaviorCount: PropTypes.number.isRequired,
+    highLevelQuesInsCount: PropTypes.number.isRequired,
+    childResponseInsCount: PropTypes.number.isRequired,
+    lowLevelQuesInsCount: PropTypes.number.isRequired,
+    specificSkillInsCount: PropTypes.number.isRequired,
   }
 
   /**
@@ -34,30 +34,30 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const climateData = {
+    const instructionData = {
       labels: [
-        "Specific Approval",
-        "General Approval",
-        "Redirection", 
-        "Disapproval",
+        "Ask High-Level Question",
+        "Follow-up on Children’s Responses",
+        "Ask Low-LevelQuestion", 
+        "Teach Specific Skills",
       ],
       datasets: [{
-        data: [this.props.specificBehaviorCount, this.props.nonspecificBehaviorCount, this.props.redirectionsBehaviorCount, this.props.disapprovalBehaviorCount],
+        data: [this.props.highLevelQuesInsCount, this.props.lowLevelQuesInsCount, this.props.childResponseInsCount, this.props.specificSkillInsCount],
         backgroundColor: ["#0988ec", "#84C3F5", "#f37b6b", "#ec2409"],
         hoverBackgroundColor: ["#0988ec", "#84C3F5", "#f37b6b", "#ec2409"],
       }]
     };
     return(
       <HorizontalBar
-        data={climateData}
+        data={instructionData}
         options={{
           scales: {
             xAxes: [
               {
                 ticks: {
                   min: 0,
-                  max: (Math.max(this.props.disapprovalBehaviorCount, this.props.redirectionsBehaviorCount, this.props.nonspecificBehaviorCount, this.props.specificBehaviorCount) > 20) ?
-                    Math.max(this.props.disapprovalBehaviorCount, this.props.redirectionsBehaviorCount, this.props.nonspecificBehaviorCount, this.props.specificBehaviorCount) : 
+                  max: (Math.max(this.props.specificSkillInsCount, this.props.childResponseInsCount, this.props.lowLevelQuesInsCount, this.props.highLevelQuesInsCount) > 20) ?
+                    Math.max(this.props.specificSkillInsCount, this.props.childResponseInsCount, this.props.lowLevelQuesInsCount, this.props.highLevelQuesInsCount) : 
                       20,
                   fontSize: 16,
                   stepSize: 1

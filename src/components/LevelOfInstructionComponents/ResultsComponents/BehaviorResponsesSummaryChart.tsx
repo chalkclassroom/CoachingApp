@@ -32,12 +32,12 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
    */
   render() {
     const behaviorResponseData = {
-      labels: ["General/Specific Approvals", "Redirections/Disapprovals"],
+      labels: ["Inferential Instruction", "Basic Skills Instruction"],
       datasets: [
         {
           data: [this.props.positiveResponses, this.props.negativeResponses],
-          backgroundColor: [Constants.ClimateColor, "#ec2409"],
-          hoverBackgroundColor: [Constants.ClimateColor, "#ec2409"]
+          backgroundColor: [Constants.InstructionColor,"#1156cc"],
+          hoverBackgroundColor: [Constants.InstructionColor, "#6aa84f"]
         }
       ]
     };
@@ -75,7 +75,7 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
           },
           title: {
             display: true,
-            text: "Classroom Climate Summary",
+            text: "Level of Instruction Summary",
             fontSize: 20,
             fontStyle: "bold"
           },
