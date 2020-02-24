@@ -34,6 +34,7 @@ import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTim
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
+import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
@@ -228,8 +229,10 @@ class Dashboard extends React.Component {
                     return <AssocCoopHelp />;
                 case "Sequential Activities":
                     return <SequentialActivitiesHelp />;
+                case "Level of Instruction":
+                    return <LevelOfInstructionHelp/>;   
                 default:
-                  return <div />;
+                    return <div />;
               }
             })()}
           </ClickAwayListener>
