@@ -5,8 +5,8 @@ import {HorizontalBar} from 'react-chartjs-2';
 
 interface Props {
   highLevelQuesInsCount: number,
-  childResponseInsCount: number,
-  lowLevelQuesInsCount: number,
+  followUpInsCount: number,
+  lowLevelInsCount: number,
   specificSkillInsCount: number,
 }
 
@@ -24,8 +24,8 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
 
   static propTypes = {
     highLevelQuesInsCount: PropTypes.number.isRequired,
-    childResponseInsCount: PropTypes.number.isRequired,
-    lowLevelQuesInsCount: PropTypes.number.isRequired,
+    followUpInsCount: PropTypes.number.isRequired,
+    lowLevelInsCount: PropTypes.number.isRequired,
     specificSkillInsCount: PropTypes.number.isRequired,
   }
 
@@ -42,7 +42,10 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
         "Teach Specific Skills",
       ],
       datasets: [{
-        data: [this.props.highLevelQuesInsCount, this.props.lowLevelQuesInsCount, this.props.childResponseInsCount, this.props.specificSkillInsCount],
+        data: [this.props.highLevelQuesInsCount, this.props.lowLevelInsCount
+, this.props.followUpInsCount
+, this.props.specificSkillInsCount
+],
         backgroundColor: ["#0988ec", "#84C3F5", "#f37b6b", "#ec2409"],
         hoverBackgroundColor: ["#0988ec", "#84C3F5", "#f37b6b", "#ec2409"],
       }]
@@ -56,8 +59,14 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: (Math.max(this.props.specificSkillInsCount, this.props.childResponseInsCount, this.props.lowLevelQuesInsCount, this.props.highLevelQuesInsCount) > 20) ?
-                    Math.max(this.props.specificSkillInsCount, this.props.childResponseInsCount, this.props.lowLevelQuesInsCount, this.props.highLevelQuesInsCount) : 
+                  max: (Math.max(this.props.specificSkillInsCount
+, this.props.followUpInsCount
+, this.props.lowLevelInsCount
+, this.props.highLevelQuesInsCount) > 20) ?
+                    Math.max(this.props.specificSkillInsCount
+, this.props.followUpInsCount
+, this.props.lowLevelInsCount
+, this.props.highLevelQuesInsCount) : 
                       20,
                   fontSize: 16,
                   stepSize: 1
@@ -99,7 +108,7 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
           },
           title: {
             display: true,
-            text: "Classroom Climate Details",
+            text: "Level of Instruction",
             fontSize: 20,
             fontStyle: "bold"
           },
