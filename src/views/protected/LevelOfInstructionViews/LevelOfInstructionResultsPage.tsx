@@ -5,7 +5,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import BehaviorResponsesDetailsChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/BehaviorResponsesDetailsChart";
-import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionCoachingQuestions";
+import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstruction12CoachingQuestions";
 import LevelOfInstructionSummarySlider from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummarySlider";
 import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph.tsx";
 
