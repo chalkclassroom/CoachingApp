@@ -19,6 +19,7 @@ import ActionPlanForm from './ActionPlanForm';
 import ActionPlanModal from './ActionPlanModal';
 import ConferencePlanForm from './ConferencePlanForm';
 import ConferencePlanModal from './ConferencePlanModal';
+import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 
 const styles: object = {
   root: {
@@ -291,9 +292,8 @@ class ResultsLayout extends React.Component<Props, State> {
                             {this.props.summary}
                           </div>
                         ) : (
-                          <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
-                            Please choose a date from the dropdown menu.
-                          </Typography>
+                          
+                          <img src={CHALKLogoGIF} alt="Loading" />
                         )}
                       </div>
                       ) : this.state.tabValue === 1 ? (
