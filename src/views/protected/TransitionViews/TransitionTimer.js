@@ -25,18 +25,10 @@ const theme = createMuiTheme({
 	}
 });
 
-/**
 
- * transition timer
-
- * @class TransitionTimer
-
- */
 
 class TransitionTimer extends React.Component {
-	/**
-   * @param {Props} props 
-   */
+
 
 	constructor(props) {
 		super(props);
