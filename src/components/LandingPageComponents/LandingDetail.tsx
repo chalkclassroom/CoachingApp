@@ -11,19 +11,24 @@ const styles: object = {
     backgroundColor: '#459aeb',
     fontSize: 14,
     fontFamily: 'Arimo',
-    letterSpacing: '0.03em'
+    letterSpacing: '0.03em',
+    textTransform: 'capitalize'
   },
   titleText: {
     fontSize: 22,
     color: '#2f4b65',
     paddingRight: '20%',
-    fontFamily: 'Arimo'
+    fontFamily: 'Arimo',
+    fontWeight: 'Bold',
+		marginTop: '-20px'
   },
   bodyText: {
     fontSize: 18,
     color: '#2f4b65',
-    paddingRight: '20%',
-    fontFamily: 'Arimo'
+ //   paddingRight: '20%',
+    fontFamily: 'Arimo',
+    marginTop: '-25px',
+		width: '55%'
   },
   "@media (max-width: 700px)": {
     root: {
@@ -117,7 +122,7 @@ class LandingDetail extends React.Component<Props, {}> {
               <Grid item xs={1} />
               <Grid item xs={1}>
                 <Grid container direction="row" justify="flex-end" alignItems="flex-start" style={{height: '100%'}}>
-                  <img alt={this.props.iconAlt1} src={this.props.icon1} height={100} width={100} style={{paddingRight: 10}}/>
+                  <img alt={this.props.iconAlt1} src={this.props.icon1} height={55} width={55} style={{paddingRight: 10}}/>
                 </Grid>
               </Grid>
               <Grid item xs={4}>
@@ -127,7 +132,7 @@ class LandingDetail extends React.Component<Props, {}> {
               </Grid>
               <Grid item xs={1}>
                 <Grid container direction="row" justify="flex-end" alignContent="center" style={{height: '100%'}}>
-                  <img alt={this.props.iconAlt2} src={this.props.icon2} height={100} width={100} style={{paddingRight: 10}}/>
+                  <img alt={this.props.iconAlt2} src={this.props.icon2} height={55} width={55} style={{paddingRight: 10}}/>
                 </Grid>
               </Grid>
               <Grid item xs={4}>
@@ -140,14 +145,14 @@ class LandingDetail extends React.Component<Props, {}> {
           </Grid>
           <Grid item style={{paddingTop: '1em'}}>
             <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-              <Grid item xs={2} />
-              <Grid item xs={4}>
+              <Grid item xs={2} xl={2} lg={2} />
+              <Grid item xs={4} xl={4} lg={4} >
                 <Typography className={classes.bodyText}>
                   {this.props.text1}
                 </Typography>
               </Grid>
-              <Grid item xs={1} />
-              <Grid item xs={4}>
+              <Grid item xs={1} xl={1} lg={1} />
+              <Grid item xs={4} xl={4} lg={4} >
                 <Typography className={classes.bodyText}>
                   {this.props.text2}
                 </Typography>

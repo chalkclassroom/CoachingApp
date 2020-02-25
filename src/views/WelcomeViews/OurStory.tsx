@@ -17,6 +17,7 @@ import BlueBarDetail from "../../components/StoryPageComponents/BlueBarDetail";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import UpcomingEventsModal from "../../components/LandingPageComponents/UpcomingEventsModal";
+import LandingDetail from "../../components/LandingPageComponents/LandingDetail";
 import PilotModal from "../../components/LandingPageComponents/PilotModal";
 import DemoModal from "../../components/LandingPageComponents/DemoModal";
 import { ClickAwayListener } from "@material-ui/core/es";
@@ -184,7 +185,7 @@ const styles: object = {
 		},
 	textField: {
 		backgroundColor: 'white',
-		borderRadius: 75,
+		borderRadius: '24px',
 		paddingTop: 5,
 		textAlign: 'center',
 		fontStyle: 'italic',
@@ -196,7 +197,8 @@ const styles: object = {
 		backgroundColor: '#459aeb',
 		fontSize: 14,
 		fontFamily: 'Arimo',
-		letterSpacing: '0.03em'
+		letterSpacing: '0.03em',
+		textTransform: 'none',
 	},
 	arrowHead: {    
 		width: 0, 
@@ -429,7 +431,7 @@ interface Props {
  * @class OurStory
  */
 class OurStory extends React.Component<Props, State> {
-	handleSubmit: (event: MouseEvent<HTMLElement, MouseEvent>) => void;
+//	handleSubmit: (event: MouseEvent<HTMLElement, MouseEvent>) => void;
 	
 	/**
    * @param {Props} props 
@@ -491,7 +493,7 @@ class OurStory extends React.Component<Props, State> {
    * @param {string} name
    * @param {value} value
    */
-	validateState = (name, value) => {
+	validateState = (name: string, value: value) => {
 		switch (name) {
 			case 'email':
 				if (value.length === 0) {
@@ -521,7 +523,7 @@ class OurStory extends React.Component<Props, State> {
    * @param {string} email
    * @return {boolean}
    */
-	validateEmail = (email) => {
+	validateEmail = (email: string): boolean => {
 		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(String(email).toLowerCase());
 	};
@@ -532,7 +534,7 @@ class OurStory extends React.Component<Props, State> {
    * @param {event} event
    * @return {void}
    */
-	handleChange = (name) => (event) => {
+	handleChange = (name: string): void => (event) => {
 		this.setState({
 			[name]: event.target.value
 		});
@@ -548,62 +550,73 @@ class OurStory extends React.Component<Props, State> {
    * render function
    * @return {ReactElement}
    */
-	render() {
+	render(): ReactElement {
 		const { classes } = this.props;
-		var data1 =
+		  var data1 =
 	<Typography>
 			  <p className={classes.arrowBody} >
 		The foundation for CHALK began with two classroom observation research tools: 
-		the  <a target="_blank" href="">Child Observation in Preschool</a> and  <a target="_blank" href="">the Teacher Observation in Preschool.</a> 
-		These complex research tools have been used for over a decade to describe, measure, and evaluate hundreds
-		of early childhood classrooms over the course of multiple large evaluation projects.
-		 The COP measures observable child behaviorswhile the TOP measures observable aspects of Pre-K teachers’ classroom behaviors. 
-		 Together, they provide a comprehensive view of the instruction and classroom climate children experience during their school day. 
-		</p>
+		the  <a target="_blank" href="">Child Observation in Preschool</a> and  <a target="_blank" href="">
+		the Teacher Observation in Preschool.</a> These complex research tools have been used for over a 
+		decade to describe, measure, and evaluate hundredsof early childhood classrooms over the course of
+		 multiple large evaluation projects. The COP measures observable child behaviorswhile the TOP measures
+		observable aspects of Pre-K teachers’ classroom behaviors. Together, they provide a comprehensive view
+		 of the instruction and classroom climate children experience during their school day. 
+		    </p>
 	</Typography>
 			var data2 =
 	<Typography>
 			  <p className={classes.arrowBody} >
-		Over the course of a research partnership with a Southeastern school district, we developed a vision for Pre-K quality and
-		 determined what practices should be measured in classrooms that would provide us with standardized assessment of the quality 
-		 of the instructional practices being implemented in those classrooms. We chose specific practices that we found to be consistently
-		  predictive of children’s academic and self-regulatory gains. </p>
-		  <p className={classes.arrowBody} >
-     	 We carefully trained and certified observers to collect a wide variety of information about the participating classrooms across an entire
-	   school day at several points over the course of the school year throughout the four-year partnership. To promote rapid cycle continuous 
-	   quality improvement, data were analyzed and organized into reports given back to teachers and coaches within three weeks of each data 
-	   collection.		</p>
-
+		Over the course of a research partnership with a Southeastern school district, we developed a vision
+		for Pre-K quality and determined what practices should be measured in classrooms that would provide
+		us with standardized assessment of the quality of the instructional practices being implemented in
+		those classrooms. We chose specific practices that we found to be consistently predictive of 
+		children’s academic and self-regulatory gains.
+			  </p>
+		    <p className={classes.arrowBody} >
+     We carefully trained and certified observers to collect a wide variety of information about the
+		 participating classrooms across an entireschool day at several points over the course of the school
+		 year throughout the four-year partnership. To promote rapid cycle continuous quality improvement, 
+		 data were analyzed and organized into reports given back to teachers and coaches within three weeks
+		  of each data collection.
+			 </p>
+	</Typography>
+			var data3 =
+	<Typography>
+				<p className={classes.arrowBody} >
+			Through this work, we identified 8 clusters of classroom practices that were
+			<a target="_blank" href=""> associated with children’s gains across a number of domains.</a>
+			Validation was conducted with groups of teachers, coaches and even into kindergarten.
+		  The idea of CHALK was eventually born out of a commitment to rigorous research designed to
+			 improve children’s early education.
+			   </p>
+	</Typography>
+			var data4 =
+	<Typography>
+			   <p className={classes.arrowBody} >
+		Over the course of the partnership, schools began to focus their professional development on the 
+		CHALK practices. Instructional coaches worked with teachers to improve these practices, but some 
+		were much harder to improve than others.  Moreover, coaches were reliant on data collected by 
+		researchers rather than data they collected themselves.  We concluded that coaches need a tool
+		that helps them connect what they see in the classroom with questions that help guide their coaching 
+		conversations, in addition to concrete strategies for practice improvement.
+		     </p>
 		</Typography>
-					var data3 =
+			var data5=
 		<Typography>
-					  <p className={classes.arrowBody} >
-					  Through this work, we identified 8 clusters of classroom practices that were<a target="_blank" href=""> associated with children’s gains across a number of domains.</a>
-					   Validation was conducted with groups of teachers, coaches and even into kindergarten.
-					   The idea of CHALK was eventually born out of a commitment to rigorous research designed to improve children’s early education. </p>
+					<p className={classes.arrowBody} >
+		CHALK is focused on empowering coaches and transforming classroom experiences.
+	  To achieve this goal, we challenged an <a target="_blank" href="">interdisciplinary team</a>
+		 of coaches, teachers, principals, policy makers, researchers and other stakeholders to bring
+		their unique expertise and perspectives to the table. Finally, we are bringing the vision for
+		 the CHALK to life.  </p>
 		</Typography>
-					var data4 =
-					<Typography>
-					  <p className={classes.arrowBody} >
-					  Over the course of the partnership, schools began to focus their professional development on the CHALK practices.
-					   Instructional coaches worked with teachers to improve these practices, but some were much harder to improve than others. 
-					   Moreover, coaches were reliant on data collected by researchers rather than data they collected themselves. 
-					   We concluded that coaches need a tool that helps them connect what they see in the classroom with questions that help guide their coaching 
-					   conversations, in addition to concrete strategies for practice improvement. </p>
-		</Typography>
-					var data5=
-					<Typography>
-					  <p className={classes.arrowBody} >
-					  CHALK is focused on empowering coaches and transforming classroom experiences.
-					   To achieve this goal, we challenged an <a target="_blank" href="">interdisciplinary team</a>  of coaches, teachers, principals, policy makers, researchers 
-					   and other stakeholders to bring their unique expertise and perspectives to the table.
-					   Finally, we are bringing the vision for the CHALK to life.  </p>
-		</Typography>
-				var data6=
+			var data6=
 		<Typography>
 				  <p className={classes.readMoreBody} >
-				<a target="_blank" href="">Data-Driven Improvement in Pre-kindergarten Classrooms: Report From a Partnership in an Urban District</a>
-				</p>
+			<a target="_blank" href="">Data-Driven Improvement in Pre-kindergarten Classrooms: Report From
+			 a Partnership in an Urban District</a>
+				  </p>
 		</Typography>
 		return (
 			<div>
@@ -648,7 +661,7 @@ class OurStory extends React.Component<Props, State> {
 									teachers to improve classroom practices, we designed an online tool that enables
 									coaches to monitor classroom behaviors and to create strategies for teachers to
 									provide children with high quality learning experiences. 
-								</Typography>
+					</Typography>
         </Grid>
 
         <Grid item xs>
@@ -862,7 +875,7 @@ class OurStory extends React.Component<Props, State> {
 								{/* <div className={classes.getInvolvedTitle}>
 									<strong>OR GET INVOLVED</strong>
 								</div> */}
-									<InvolveDetail
+									<LandingDetail
 										icon1={PilotProgramImage}
 										iconAlt1="Participation"
 										title1="Participate in our pilot program!"
@@ -929,7 +942,7 @@ class OurStory extends React.Component<Props, State> {
 											/>
 											
 										</div>
-										<div style={{justifyContent: 'flex-start', marginLeft: '-85px', marginTop: '16px'}}>
+										<div style={{justifyContent: 'flex-start', marginLeft: '-105px', marginTop: '16px'}}>
 											<Fab
 												variant="extended"
 												onClick={this.handleSubmit}

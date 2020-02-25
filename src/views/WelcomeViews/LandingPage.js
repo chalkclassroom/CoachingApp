@@ -113,7 +113,7 @@ const styles = {
   },
   textField: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: '24px',
     textAlign: 'center',
     width: '90%',
     fontFamily: 'Arimo'
@@ -123,7 +123,8 @@ const styles = {
     backgroundColor: '#459aeb',
     fontSize: 14,
     fontFamily: 'Arimo',
-    letterSpacing: '0.03em'
+    letterSpacing: '0.03em',
+    textTransform: 'none',
   },
   partnerLogo: {
     maxWidth:125
@@ -561,47 +562,65 @@ class LandingPage extends React.Component {
                 </Grid>
               </Grid>
               <Grid item style={{width: '100%', paddingTop: '2em'}}>
-                
-                  {this.state.emailAdded ? (
-                    <Grid container direction="row" justify="center" alignItems="center">
-                      <Grid item xs={12}>
-                        <Typography className={classes.mailingListText} style={{textAlign: 'center'}}>
-                          You have been added to our mailing list.
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  ) : (
-                    <Grid container direction="row" justify="flex-start" alignItems="center">
-                      <Grid item xs={1} />
-                      <Grid item xs={4}>
-                        <Typography className={classes.mailingListText}>
-                          Stay informed with our mailing list!
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Grid container direction="row" justify="flex-end" alignItems="center">
-                        <TextField
-                          label="Enter your email here"
-                          margin="normal"
-                          value={this.state.email}
-                          onChange={this.handleChange('email')}
-                          helperText={this.state.emailError}
-                          InputLabelProps={{style: {color: '#dbdbdb', fontSize: 20, marginLeft: '0.5em'}}}
-                          InputProps={{classes: {input: classes.input}, disableUnderline: true}}
-                          className={classes.textField}
-                        />
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={3}>
-                      <Grid container direction="row" justify="center" alignItems="center">
-                        <Fab variant="extended" onClick={this.handleSubmit} className={classes.mailingListButton}>
-                          <strong>Join mailing list</strong>
-                        </Fab>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  )}
-                
+              {this.state.emailAdded ? (
+								<Grid container direction="row" justify="center" alignItems="center">
+									<Grid item xs={12}>
+										<Typography className={classes.mailingListText} style={{ textAlign: 'center' }}>
+											You have been added to our mailing list.
+										</Typography>
+									</Grid>
+								</Grid>
+							) : (
+								<Grid container direction="row" justify="flex-end" alignItems="center">
+									  <Grid item  xl={2}
+									md={2}
+									sm={2}
+									xs={2}  />
+									<Grid item   xl={4}
+									md={4}
+									sm={4}
+									xs={4} >
+										<Typography className={classes.mailingListText}>
+											Stay informed with our mailing list!
+										</Typography>
+									</Grid>
+									<Grid item direction="row"
+									 xl={6}
+									md={6}
+									sm={6}
+									xs={6}  justify="center" alignItems="center">
+									<div style={{flexDirection:'row',display:'flex'}}>
+										<div style={{width:'60%',marginLeft:'67px'}}>
+											<TextField											
+												label="Enter your email here"
+												margin="normal"
+												value={this.state.email}
+												onChange={this.handleChange('email')}
+												helperText={this.state.emailError}
+												InputLabelProps={{
+													style: { color: '#dbdbdb', fontSize: 20, marginLeft: '0.5em' }
+												}}
+												InputProps={{
+													classes: { input: classes.input },
+													disableUnderline: true
+												}}
+												className={classes.textField}
+											/>
+											
+										</div>
+										<div style={{justifyContent: 'flex-start', marginLeft: '-105px', marginTop: '16px'}}>
+											<Fab
+												variant="extended"
+												onClick={this.handleSubmit}
+												className={classes.mailingListButton} style={{ height: '53px'}}
+											>
+												<strong>Join our mailing list</strong>
+											</Fab>
+											</div>
+											</div>
+								</Grid>									
+								</Grid>
+							)}
               </Grid>
             </Grid>
             <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em'}} className={classes.section}>
