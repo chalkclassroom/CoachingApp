@@ -5,7 +5,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import BehaviorResponsesDetailsChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/BehaviorResponsesDetailsChart";
-import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstruction12CoachingQuestions";
+import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionCoachingQuestions";
 import LevelOfInstructionSummarySlider from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummarySlider";
 import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph.tsx";
 
@@ -343,7 +343,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.location.state.teacher.id}
-              magic8={"Level of Instruction"}
+              magic8={"Level Of Instruction"}
             />
           }
           chosenQuestions={chosenQuestions}
