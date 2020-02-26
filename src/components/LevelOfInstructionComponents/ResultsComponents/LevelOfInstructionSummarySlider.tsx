@@ -1,26 +1,26 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
-import BehaviorResponsesSummaryChart from './BehaviorResponsesSummaryChart';
+import InstructionResponsesSummaryChart from './InstructionResponsesSummaryChart';
 import ToneSummary from './ToneSummary';
 import Slider from "react-slick";
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
 interface Props {
-  negativeResponses: number,
-  positiveResponses: number,
-  averageToneRating: number
+  basicSkillsResponses: number, 
+  inferentialResponses: number, 
+  // averageToneRating: number
 }
 
-class ClimateSummarySlider extends React.Component<Props, {}> {
+class LevelOfInstructionSummarySlider extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
   }
 
   static propTypes = {
-    negativeResponses: PropTypes.number.isRequired,
-    positiveResponses: PropTypes.number.isRequired,
-    averageToneRating: PropTypes.number
+    basicSkillsResponses: PropTypes.number.isRequired, 
+    inferentialResponses: PropTypes.number.isRequired,
+//    averageToneRating: PropTypes.number
   }
 
   render() {
@@ -38,25 +38,25 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
             <Typography align={"center"} variant={"h4"}>
               Summary
             </Typography>
-            <BehaviorResponsesSummaryChart
-              negativeResponses={this.props.negativeResponses}
-              positiveResponses={this.props.positiveResponses}
+            <InstructionResponsesSummaryChart
+              basicSkillsResponses={this.props.basicSkillsResponses} 
+              inferentialResponses={this.props.inferentialResponses} 
             />
           </Grid>
         </div>
         <div>
-          <Grid justify={"center"} direction={"column"}>
+        {/*   <Grid justify={"center"} direction={"column"}>
             <Typography align={"center"} variant={"h4"}>
               Average Tone
             </Typography>
             <ToneSummary
               averageToneRating={this.props.averageToneRating}
             />
-          </Grid>
+          </Grid> */}
         </div>
       </Slider>
     );
   }
 }
 
-export default ClimateSummarySlider;
+export default LevelOfInstructionSummarySlider;

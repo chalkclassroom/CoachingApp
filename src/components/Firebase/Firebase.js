@@ -661,6 +661,43 @@ class Firebase {
       );
   };
 
+  fetchInstructionTypeCount = async function(sessionId) {
+    const getInstructionTypeCountFirebaseFunction = this.functions.httpsCallable(
+      "funcInstructionTypeCount"
+    );
+
+    return getInstructionTypeCountFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          // Read result of the Cloud Function.
+          // var sanitizedMessage = result.data[0];
+          // console.log(sanitizedMessage);
+          // return sanitizedMessage;
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting instruction type count: ", error)
+      );
+  };
+
+  fetchInstructionTrend = async function(teacherId) {
+    const getInstructionTrendFirebaseFunction = this.functions.httpsCallable(
+      "funcInstructionTrend"
+    );
+    return getInstructionTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        result =>
+          // Read result of the Cloud Function.
+          // var sanitizedMessage = result.data[0];
+          // console.log(sanitizedMessage);
+          // return sanitizedMessage;
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting instruction trend: ", error)
+      );
+  };
+
   fetchSessionDates = async function(teacherId, sessionType) {
     const getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable(
       "funcSessionDates"

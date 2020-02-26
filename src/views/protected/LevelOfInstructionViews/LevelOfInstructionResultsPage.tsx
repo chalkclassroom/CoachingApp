@@ -4,10 +4,10 @@ import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
-import BehaviorResponsesDetailsChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/BehaviorResponsesDetailsChart";
+import InstructionResponsesDetailsChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/InstructionResponsesDetailsChart";
 import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionCoachingQuestions";
 import LevelOfInstructionSummarySlider from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummarySlider";
-import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph.tsx";
+import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph";
 
 const styles: object = {
   root: {
@@ -29,15 +29,15 @@ interface Style {
 }
 
 interface State {
-  disapprovalBehaviorCount: number,
-  redirectionsBehaviorCount: number,
-  nonspecificBehaviorCount: number,
-  specificBehaviorCount: number,
-  averageToneRating: number,
+  highLevelQuesInsCount: number, 
+  followUpInsCount: number,
+  lowLevelInsCount: number,
+  specificSkillInsCount: number,
+  // averageToneRating: number,
   sessionId: string,
   trendsDates: Array<string>,
-  trendsPos: Array<number>,
-  trendsNeg: Array<number>,
+  trendsInfer: Array<number>,
+  trendsBasic: Array<number>,
   notes: Array<{id: string, content: string, timestamp: Date}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
@@ -57,15 +57,15 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      disapprovalBehaviorCount: 0,
-      redirectionsBehaviorCount: 0,
-      nonspecificBehaviorCount: 0,
-      specificBehaviorCount: 0,
-      averageToneRating: 0,
+      highLevelQuesInsCount: 0,      
+      followUpInsCount: 0,
+      lowLevelInsCount: 0,
+      specificSkillInsCount: 0,              
+     // averageToneRating: 0,
       sessionId: '',
       trendsDates: [],
-      trendsPos: [],
-      trendsNeg: [],
+      trendsInfer: [],                   
+      trendsBasic: [],                    
       notes: [],
       actionPlanExists: false,
       conferencePlanExists: false,
@@ -78,9 +78,9 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   componentDidMount() {
     const firebase = this.context;
     const teacherId = this.props.location.state.teacher.id;
-    firebase.fetchBehaviourTypeCount(this.state.sessionId);
-    firebase.fetchAvgToneRating(this.state.sessionId);
-    this.handleDateFetching(teacherId);
+    firebase.fetchInstructionTypeCount(this.state.sessionId); 
+/*     firebase.fetchAvgToneRating(this.state.sessionId);    
+ */    this.handleDateFetching(teacherId);
   }
 
   /**
@@ -89,19 +89,19 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   handleTrendsFetching = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<string> = [];
-    const posArray: Array<number> = [];
-    const negArray: Array<number> = [];
-    firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<object>) => {
+    const inferArray: Array<number> = []; 
+    const basicArray: Array<number> = [];
+    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<object>) => {                       
       console.log("dataset is: ", dataSet);
-      dataSet.forEach((data: {dayOfEvent: {value: string}, positive: number, negative: number}) => {
+      dataSet.forEach((data: {dayOfEvent: {value: string}, inferential: number, basicSkills: number}) => { 
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
-        posArray.push(data.positive);
-        negArray.push(data.negative);
+        inferArray.push(data.inferential); 
+        basicArray.push(data.basicSkills); 
       });
       this.setState({
-        trendsDates: dateArray,
-        trendsPos: posArray,
-        trendsNeg: negArray,
+        trendsDates: dateArray, 
+        trendsInfer: inferArray, 
+        trendsBasic: basicArray, 
       });
     });
   };
@@ -140,7 +140,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<string>) =>
+    firebase.fetchSessionDates(teacherId, "level").then((dates: Array<string>) =>  
       this.setState({
         sessionDates: dates
       }, () => {
@@ -159,16 +159,16 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Redirection/Disapproval",
-          data: this.state.trendsNeg,
+          label: "Ask Low-Level Question / Teach Specific Skills",  
+          data: this.state.trendsBasic, 
           backgroundColor: "#ec2409",
           borderColor: "#ec2409",
           fill: false,
           lineTension: 0,
         },
         {
-          label: "Specific/General Approval",
-          data: this.state.trendsPos,
+          label: "Ask High-Level Question / Follow-up on Children’s Responses", 
+          data: this.state.trendsInfer,  
           backgroundColor: "#0988ec",
           borderColor: "#0988ec",
           fill: false,
@@ -180,18 +180,18 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
 
   getData = () => {
     const firebase = this.context;
-    let specificCount = 0;
-    let nonspecificCount = 0;
-    let disapprovalCount = 0;
-    let redirectionCount = 0;
+    let specificSkillCount = 0;
+    let lowLevelCount = 0;
+    let highLevelQuesCount = 0;
+    let followUpCount = 0;
     this.handleNotesFetching(this.state.sessionId);
-    firebase.fetchAvgToneRating(this.state.sessionId).then((json: Array<{average: number}>) =>
+/*     firebase.fetchAvgToneRating(this.state.sessionId).then((json: Array<{average: number}>) =>
           json.forEach(toneRating => {
             this.setState({
               averageToneRating: toneRating.average
             });
           })
-        );
+        ); */
         firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
           if (actionPlanData.length>0) {
             console.log('actionplan data: ', actionPlanData>0)
@@ -219,23 +219,23 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
         }).catch(() => {
           console.log('unable to retrieve conference plan')
         })
-        firebase.fetchBehaviourTypeCount(this.state.sessionId).then((json: Array<{behaviorResponse: string, count: number}>) => {
-          json.forEach(behavior => {
-            if (behavior.behaviorResponse === "specificapproval") {
-              specificCount = behavior.count;
-            } else if (behavior.behaviorResponse === "nonspecificapproval") {
-              nonspecificCount = behavior.count;
-            } else if (behavior.behaviorResponse === "disapproval") {
-              disapprovalCount = behavior.count;
-            } else if (behavior.behaviorResponse === "redirection") {
-              redirectionCount = behavior.count;
+        firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionResponse: string, count: number}>) => {  
+          json.forEach(instruction => {                                
+            if (instruction.instructionResponse === "specificSkill") { 
+              specificSkillCount = instruction.count;                       
+            } else if (instruction.instructionResponse === "lowLevel") {    
+              lowLevelCount = instruction.count;                                 
+            } else if (instruction.instructionResponse === "highLevel") {            
+              highLevelQuesCount = instruction.count;                                 
+            } else if (instruction.instructionResponse === "followUp") {            
+              followUpCount = instruction.count;                                 
             }
           });
           this.setState({
-            redirectionsBehaviorCount: redirectionCount,
-            disapprovalBehaviorCount: disapprovalCount,
-            nonspecificBehaviorCount: nonspecificCount,
-            specificBehaviorCount: specificCount
+            followUpInsCount: followUpCount,                          
+            highLevelQuesInsCount: highLevelQuesCount,
+            lowLevelInsCount: lowLevelCount,
+            specificSkillInsCount: specificSkillCount                                  
           });
         });
   }
@@ -316,20 +316,20 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           teacherId={this.props.location.state.teacher.id}
           magic8="Level of Instruction"
           handleTrendsFetch={this.handleTrendsFetching}
-          observationType="climate"
+          observationType="level"
           summary={
             <LevelOfInstructionSummarySlider
-              positiveResponses={this.state.specificBehaviorCount+this.state.nonspecificBehaviorCount}
-              negativeResponses={this.state.redirectionsBehaviorCount+this.state.disapprovalBehaviorCount}
-              averageToneRating={this.state.averageToneRating}
+              inferentialResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
+              basicSkillsResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
+              // averageToneRating={this.state.averageToneRating}
             />
           }
           details={
-            <BehaviorResponsesDetailsChart
-              disapprovalBehaviorCount={this.state.disapprovalBehaviorCount}
-              redirectionsBehaviorCount={this.state.redirectionsBehaviorCount}
-              nonspecificBehaviorCount={this.state.nonspecificBehaviorCount}
-              specificBehaviorCount={this.state.specificBehaviorCount}
+            <InstructionResponsesDetailsChart
+              highLevelQuesInsCount={this.state.highLevelQuesInsCount}               
+              followUpInsCount={this.state.followUpInsCount}            
+              lowLevelInsCount={this.state.lowLevelInsCount}             
+              specificSkillInsCount={this.state.specificSkillInsCount}                  
             />
           }
           trendsGraph={<LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>}

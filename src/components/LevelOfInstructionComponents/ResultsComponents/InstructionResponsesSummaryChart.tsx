@@ -5,15 +5,15 @@ import FirebaseContext from "../../Firebase/FirebaseContext";
 import * as Constants from '../../../constants';
 
 interface Props {
-  positiveResponses: number,
-  negativeResponses: number,
+  inferentialResponses: number,
+  basicSkillsResponses: number,
 }
 
 /**
- * specifies data sets and formatting for the climate behavior responses pie chart
- * @class BehaviorResponsesSummaryChart
+ * specifies data sets and formatting for the climate Instruction responses pie chart
+ * @class InstructionResponsesSummaryChart
  */
-class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
+class InstructionResponsesSummaryChart extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -22,8 +22,8 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    positiveResponses: PropTypes.number.isRequired,
-    negativeResponses: PropTypes.number.isRequired,
+    inferentialResponses: PropTypes.number.isRequired,
+    basicSkillsResponses: PropTypes.number.isRequired,
   };
 
   /**
@@ -31,11 +31,11 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
    * @return {ReactElement}
    */
   render() {
-    const behaviorResponseData = {
+    const instructionResponseData = {
       labels: ["Inferential Instruction", "Basic Skills Instruction"],
       datasets: [
         {
-          data: [this.props.positiveResponses, this.props.negativeResponses],
+          data: [this.props.inferentialResponses, this.props.basicSkillsResponses],
           backgroundColor: [Constants.InstructionColor,"#1156cc"],
           hoverBackgroundColor: [Constants.InstructionColor, "#6aa84f"]
         }
@@ -44,7 +44,7 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
 
     return (
       <Pie
-        data={behaviorResponseData}
+        data={instructionResponseData}
         options={{ 
           tooltips: {
             callbacks: {
@@ -101,5 +101,5 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
   }
 }
 
-BehaviorResponsesSummaryChart.contextType = FirebaseContext;
-export default BehaviorResponsesSummaryChart;
+InstructionResponsesSummaryChart.contextType = FirebaseContext;
+export default InstructionResponsesSummaryChart;

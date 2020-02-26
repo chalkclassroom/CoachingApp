@@ -12,9 +12,9 @@ interface Props {
 
 /**
  * specifies data sets and formatting for the climate details bar graph
- * @class BehaviorResponsesDetailsChart
+ * @class InstructionResponsesDetailsChart
  */
-class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
+class InstructionResponsesDetailsChart extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -78,7 +78,7 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
                   fontColor: "#000000",
                 },
                 afterFit: function(scale: { height: number }) {
-                  scale.height = 100 // creates pading between ticks and scaleLabel
+                  scale.height = 100 // creates padding between ticks and scaleLabel
                 }
               }
             ],
@@ -89,7 +89,7 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
                 },
                 scaleLabel: {
                   display: true,
-                  labelString: "Behavior Responses",
+                  labelString: "Instruction Responses",
                   fontSize: 18,
                   fontColor: "#000000"
                 },
@@ -137,4 +137,4 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
   }
 }
 
-export default BehaviorResponsesDetailsChart;
+export default InstructionResponsesDetailsChart;
