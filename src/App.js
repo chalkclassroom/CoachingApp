@@ -19,6 +19,7 @@ import {
   withStyles
 } from "@material-ui/core/styles";
 import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage.tsx";
+import ACPage from "./views/protected/AssociativeCooperativeViews/ACPage.tsx";
 import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage.tsx";
 import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage.tsx";
 import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage.tsx";
@@ -187,7 +188,7 @@ class App extends Component {
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractions"
-              component={AssociativeCooperativeInteractionsPage}
+              component={ACPage}
             />
             <PrivateRoute
               auth={this.state.auth}

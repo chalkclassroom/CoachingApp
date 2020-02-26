@@ -28,6 +28,24 @@ export const TransitionTypeColors = {
   otherColor: indigo['A200'],
 }
 
+export const CentersFirstHalf = [
+  "Blocks",
+  "Toys and Games",
+  "Technology/\nComputer",
+  "Sensory",
+  "Math/\nManipulatives",
+  "Science and Nature",
+];
+
+export const CentersSecondHalf = [
+  "Writing",
+  "Art",
+  "Dramatic Play",
+  "Music and Movement",
+  "Library",
+  "Small Group"
+]
+
 
 // Team Members
 export const CC = {

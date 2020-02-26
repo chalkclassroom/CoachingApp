@@ -448,6 +448,7 @@ class CenterMenuAssocCoop extends React.Component {
 }
 
 const mapStateToProps = state => {
+  console.log('centermenuassoccoop state is ', state);
   return {
     centers: state.associativeCenterState.associativeCenters
   };

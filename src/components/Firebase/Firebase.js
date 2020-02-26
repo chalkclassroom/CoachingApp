@@ -451,6 +451,19 @@ class Firebase {
       );
   };
 
+  handlePushCentersData = async function(mEntry) {
+    return this.sessionRef
+      .collection("entries")
+      .add({
+        Checked: mEntry.checked,
+        PeopleType: mEntry.people,
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch(error =>
+        console.error("error occurred adding observation: ", error)
+      );
+  }
+
 
   handleUnlockSection = async function(section) {
     return this.db
