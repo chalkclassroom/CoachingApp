@@ -538,7 +538,7 @@ class LandingPage extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item>
+              {/* <Grid item> */}
                 <Grid container direction="row">
                   <Grid item xs={12}>
                     <LandingDetail
@@ -560,7 +560,7 @@ class LandingPage extends React.Component {
                     />
                   </Grid>
                 </Grid>
-              </Grid>
+              {/* </Grid> */}
               <Grid item style={{width: '100%', paddingTop: '2em'}}>
               {this.state.emailAdded ? (
 								<Grid container direction="row" justify="center" alignItems="center">
@@ -659,7 +659,7 @@ class LandingPage extends React.Component {
             </Grid>
           </Grid>
         </div>
-        <div className={classes.mobileRoot}>
+         <div className={classes.mobileRoot}>
           {this.state.events ? (
             <ClickAwayListener onClickAway={this.handleClickAwayEvents}>
               <UpcomingEventsModal />
@@ -895,7 +895,7 @@ class LandingPage extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item>
+              <Grid item style={{width:'100%'}} >
                 <LandingDetail
                   icon={PilotProgramImage}
                   iconAlt="Participation"
@@ -994,7 +994,7 @@ class LandingPage extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-        </div>
+        </div> 
       </div>
     );
   }

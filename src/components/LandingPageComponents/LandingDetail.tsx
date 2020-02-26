@@ -119,13 +119,13 @@ class LandingDetail extends React.Component<Props, {}> {
         <Grid container direction="column">
           <Grid item>
             <Grid container direction="row" alignItems="center">
-              <Grid item xs={1} />
+              <Grid item xs={2} />
               <Grid item xs={1}>
                 <Grid container direction="row" justify="flex-end" alignItems="flex-start" style={{height: '100%'}}>
                   <img alt={this.props.iconAlt1} src={this.props.icon1} height={55} width={55} style={{paddingRight: 10}}/>
                 </Grid>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <Typography className={classes.titleText}>
                   {this.props.title1}
                 </Typography>
@@ -135,47 +135,47 @@ class LandingDetail extends React.Component<Props, {}> {
                   <img alt={this.props.iconAlt2} src={this.props.icon2} height={55} width={55} style={{paddingRight: 10}}/>
                 </Grid>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <Typography className={classes.titleText}>
                   {this.props.title2}
                 </Typography>
               </Grid>
-              <Grid item xs={1} />
+              <Grid item xs={2} />
             </Grid>
           </Grid>
           <Grid item style={{paddingTop: '1em'}}>
             <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-              <Grid item xs={2} xl={2} lg={2} />
-              <Grid item xs={4} xl={4} lg={4} >
+              <Grid item xs={3} xl={3} lg={3} />
+              <Grid item xs={3} xl={3} lg={3} >
                 <Typography className={classes.bodyText}>
                   {this.props.text1}
                 </Typography>
               </Grid>
               <Grid item xs={1} xl={1} lg={1} />
-              <Grid item xs={4} xl={4} lg={4} >
+              <Grid item  xs={3} xl={3} lg={3}  >
                 <Typography className={classes.bodyText}>
                   {this.props.text2}
                 </Typography>
               </Grid>
-              <Grid item xs={1} />
+              <Grid item xs={2} />
             </Grid>
           </Grid>
           {this.props.button1 || this.props.button2 ? (
             <Grid item style={{paddingTop: '1em'}}>
               <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-                <Grid item xs={2} />
-                <Grid item xs={4}>
+                <Grid item xs={3} />
+                <Grid item xs={3}>
                   <Fab variant="extended" onClick={this.props.onClick1} className={classes.button}>
                     <strong>{this.props.button1}</strong>
                   </Fab>
                 </Grid>
                 <Grid item xs={1} />
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                   <Fab variant="extended" onClick={this.props.onClick2} className={classes.button}>
                     <strong>{this.props.button2}</strong>
                   </Fab>
                 </Grid>
-                <Grid item xs={1} />
+                <Grid item xs={2} />
               </Grid>
             </Grid>
           ) : (
