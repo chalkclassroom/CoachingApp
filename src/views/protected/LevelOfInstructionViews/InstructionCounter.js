@@ -48,7 +48,7 @@ class InstructionCounter extends React.Component {
 			teacher: this.props.teacherId,
 			observedBy: this.props.firebase.auth.currentUser.uid,
 			setting: this.props.selected,
-			type: 'Level'
+			type: 'level'
 		};
 		this.props.firebase.handleLOISession(mEntry);
 	}
@@ -61,7 +61,7 @@ class InstructionCounter extends React.Component {
 	handlePushFire = (insType) => {
 		const mEntry = {
 			InstructionResponse: insType,
-			Type: 'Level'
+			Type: 'level'
 		};
 		this.props.firebase.handlePushInstruction(mEntry);
 		this.props.pushOntoLoiStack(mEntry);
