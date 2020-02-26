@@ -10,7 +10,7 @@ interface Props {
 }
 
 /**
- * specifies data sets and formatting for the climate Instruction responses pie chart
+ * specifies data sets and formatting for the Instruction responses pie chart
  * @class InstructionResponsesSummaryChart
  */
 class InstructionResponsesSummaryChart extends React.Component<Props, {}> {
@@ -36,7 +36,7 @@ class InstructionResponsesSummaryChart extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.inferentialResponses, this.props.basicSkillsResponses],
-          backgroundColor: [Constants.InstructionColor,"#1156cc"],
+          backgroundColor: [Constants.InstructionColor,"#6aa84f"],
           hoverBackgroundColor: [Constants.InstructionColor, "#6aa84f"]
         }
       ]

@@ -191,7 +191,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
               averageToneRating: toneRating.average
             });
           })
-        ); */
+        ); */ 
         firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
           if (actionPlanData.length>0) {
             console.log('actionplan data: ', actionPlanData>0)
@@ -343,7 +343,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.location.state.teacher.id}
-              magic8={"Level Of Instruction"}
+              magic8={"Level of Instruction"}
             />
           }
           chosenQuestions={chosenQuestions}

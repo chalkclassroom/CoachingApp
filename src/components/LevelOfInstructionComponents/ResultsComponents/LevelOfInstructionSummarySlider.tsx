@@ -9,11 +9,16 @@ import Grid from '@material-ui/core/Grid';
 interface Props {
   basicSkillsResponses: number, 
   inferentialResponses: number, 
-  // averageToneRating: number
+//  averageToneRating: number
 }
-
+/**
+ * 
+ * @class LevelOfInstructionSummarySlider
+ */
 class LevelOfInstructionSummarySlider extends React.Component<Props, {}> {
-  constructor(props: Props) {
+  /**
+   * @param {Props} props 
+   */  constructor(props: Props) {
     super(props);
   }
 
@@ -22,7 +27,10 @@ class LevelOfInstructionSummarySlider extends React.Component<Props, {}> {
     inferentialResponses: PropTypes.number.isRequired,
 //    averageToneRating: PropTypes.number
   }
-
+  /**
+   * render function
+   * @return {ReactElement}
+   */
   render() {
     const settings = {
       dots: true,
@@ -45,14 +53,14 @@ class LevelOfInstructionSummarySlider extends React.Component<Props, {}> {
           </Grid>
         </div>
         <div>
-        {/*   <Grid justify={"center"} direction={"column"}>
+         {/*  <Grid justify={"center"} direction={"column"}>
             <Typography align={"center"} variant={"h4"}>
               Average Tone
             </Typography>
             <ToneSummary
               averageToneRating={this.props.averageToneRating}
             />
-          </Grid> */}
+          </Grid> */} 
         </div>
       </Slider>
     );

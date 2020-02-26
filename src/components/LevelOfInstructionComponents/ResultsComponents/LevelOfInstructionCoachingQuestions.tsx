@@ -28,7 +28,7 @@ interface State {
 }
 
 /**
- * data reflection question layout for math
+ * data reflection question layout for instruction
  * @class LevelOfInstructionCoachingQuestions
  */
 class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> {
@@ -176,7 +176,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
               magic8={this.props.magic8}
               color={Constants.InstructionColor}
             />
-          ) : this.state.categoryView === "patterns" ? (
+          ) : this.state.categoryView === "basicSkills" ? (
             <DataQuestions
               questions={Constants.CoachingQuestions.Instruction.Patterns}
               openPanel={this.state.openPanel}
