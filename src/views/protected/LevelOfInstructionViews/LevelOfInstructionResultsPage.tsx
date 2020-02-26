@@ -319,8 +319,8 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           observationType="level"
           summary={
             <LevelOfInstructionSummarySlider
-              inferentialResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
-              basicSkillsResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
+               basicSkillsResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
+               inferentialResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
               // averageToneRating={this.state.averageToneRating}
             />
           }
