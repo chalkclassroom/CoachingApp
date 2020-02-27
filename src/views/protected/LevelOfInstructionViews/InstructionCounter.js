@@ -60,7 +60,7 @@ class InstructionCounter extends React.Component {
 
 	handlePushFire = (insType) => {
 		const mEntry = {
-			InstructionResponse: insType,
+			instructionType: insType,
 			Type: 'level'
 		};
 		this.props.firebase.handlePushInstruction(mEntry);
@@ -71,7 +71,7 @@ class InstructionCounter extends React.Component {
 		if (this.props.totalVisitCount > 0) {
 			this.props.popOffLoiStack();
 			const mEntry = {
-				InstructionResponse: 'UNDO',
+				instructionType: 'UNDO',
 				Type: 'UNDO'
 			};
 			this.props.firebase.handlePushInstruction(mEntry);

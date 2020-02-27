@@ -468,7 +468,7 @@ class Firebase {
     return this.sessionRef
       .collection("entries")
       .add({
-        InstructionResponse: mEntry.InstructionResponse,
+        instructionType: mEntry.instructionType,
         Type: mEntry.Type,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
