@@ -9,6 +9,11 @@ import { deleteAllCenters } from "../../../state/actions/associative-cooperative
 import AssocCoopHelp from "../AssociativeCooperativeViews/AssocCoopHelp"
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
+import {
+  addNewCenter,
+  incrementCenterCount
+} from "../../../state/actions/associative-cooperative.js";
+import * as Constants from '../../../constants';
 
 
 const styles: object = {
@@ -41,6 +46,9 @@ interface State {
   completeEnabled: boolean
 }
 
+/**
+ * @class ACPage
+ */
 class ACPage extends React.Component<Props, State> {
   
   state = {
@@ -48,6 +56,9 @@ class ACPage extends React.Component<Props, State> {
      completeEnabled: false
   };
 
+  /**
+   * @param {boolean} enable
+   */
   handleCompleteButton = (enable: boolean) => {
     this.setState({ completeEnabled: enable });
   };
@@ -57,45 +68,35 @@ class ACPage extends React.Component<Props, State> {
     location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
   };
 
-  render() {
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => (<AppBar firebase={firebase}
-              //classes={{ root: this.props.classes.grow }}
+          {(firebase: object): React.ReactNode => (
+            <AppBar
+              firebase={firebase}
               className={classes.grow}
             />
           )}
         </FirebaseContext.Consumer>
-
-
-        {/* this.state.recs ? (
-          <FirebaseContext.Consumer>
-            {firebase => (
-              <Recs
-                open={true}
-                onClose={this.handleRecsModal}
-                firebase={firebase}
-              />
-            )}
-          </FirebaseContext.Consumer>
-        ) : (
-          <div />
-        ) */}
         <main style={{ flex: 1 }}>
-       
-          
           <FirebaseContext.Consumer>
-            {(firebase: object) => (
+            {(firebase: object): React.ReactNode => (
               <CenterMenu
                 teacherId={this.props.location.state.teacher.id}
                 firebase={firebase}
                 onStatusChange={this.handleCompleteButton}
-                // addNewCenter={this.props.addNewCenter}
-                // incrementCenterCount={this.props.incrementCenterCount}
+                addNewCenter={this.props.addNewCenter}
+                incrementCenterCount={this.props.incrementCenterCount}
                 magic8="Associative and Cooperative"
                 type="AC"
+                color={Constants.ACColor}
+                checklist={Constants.Checklist.AC}
               />
             )}
           </FirebaseContext.Consumer>
@@ -105,6 +106,6 @@ class ACPage extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { deleteAllCenters })(
+export default connect(null, { deleteAllCenters, addNewCenter, incrementCenterCount })(
   withStyles(styles)(ACPage)
 );

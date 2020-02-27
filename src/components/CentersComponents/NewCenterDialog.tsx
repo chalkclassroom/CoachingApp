@@ -66,7 +66,6 @@ class NewCenterDialog extends React.Component<Props, {}> {
           <Button onClick={this.props.handleClose} color="primary" style={{fontFamily: 'Arimo'}}>
             Cancel
           </Button>
-          {console.log('center name in newcenterdialog', centerName.value)}
           <Button
             onClick={() => this.props.handleSubmit(centerName.value)}
             color="primary"

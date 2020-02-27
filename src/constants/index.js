@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {
   lightGreen,
   deepOrange,
@@ -146,6 +148,41 @@ export const DS = {
   'job': 'Professor of Computer Science and Computer Engineering',
   'affiliation': 'Vanderbilt University'
 };
+
+
+// Centers Observation Checklists
+export const Checklist = {
+  'AC': {
+    'ChildBehaviors': [
+      <div key={0}> Participating in a <b>conversation</b> about a <b>shared activity</b> </div>,
+      <div key={1}> Engaging <b>together</b> in an <b>open-ended activity</b> without clear {" "}
+        roles or order
+      </div>,
+      <div key={2}> Following <b>formal rules of a game</b> and/or taking turns </div>,
+      <div key={3}>Talking about or doing an activity together that has
+        a <b>predetermined sequence</b> (e.g., acting out
+        restaurant in a dramatic play; doing pattern blocks
+        together)
+      </div>,
+      <div key={4}> None of the above </div>
+    ],
+    'TeacherBehaviors': [
+      <div key={0}> <b>Participating</b> in children’s play </div>,
+      <div key={1}>
+        Asking questions to <b>extend children’s thinking</b> {" "}
+        about their shared activity
+      </div>,
+      <div key={2}> <b>Encouraging</b> children to <b>share</b>, <b>work</b>,
+        or <b>interact</b> with each other </div>,
+      <div key={3}> Helping children find the <b>words to communicate</b> </div>,
+      <div key={4}> None of the above </div>,
+    ]
+  }
+}
+
+
+
+
 
 // Coaching Questions
 export const CoachingQuestions = {

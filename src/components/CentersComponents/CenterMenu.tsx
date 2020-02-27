@@ -10,10 +10,10 @@ import TotalVisitCount from '../TotalVisitCount';
 import grey from "@material-ui/core/colors/grey";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
-import {
+/* import {
   addNewCenter,
   incrementCenterCount
-} from "../../state/actions/associative-cooperative";
+} from "../../state/actions/associative-cooperative"; */
 
 const styles: object = {
   root: {
@@ -71,13 +71,15 @@ interface Props {
   },
   type: string,
   onStatusChange(enable: boolean): void,
-  // addNewCenter(centerName: string): void,
-  // incrementCenterCount(centerName: string): void,
+  addNewCenter(centerName: string): void,
+  incrementCenterCount(centerName: string): void,
   centers: Array<{
     name: string,
     count: number
   }>,
-  magic8: string
+  magic8: string,
+  color: string,
+  checklist: {ChildBehaviors: Array<string>, TeacherBehaviors: Array<string>}
 }
 
 interface State{
@@ -159,7 +161,10 @@ class CenterMenu extends React.Component<Props, State> {
     firebase: PropTypes.object.isRequired,
     addNewCenter: PropTypes.func.isRequired,
     incrementCenterCount: PropTypes.func.isRequired,
-    centers: PropTypes.array.isRequired
+    centers: PropTypes.array.isRequired,
+    type: PropTypes.string.isRequired,
+    magic8: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired
   }
 
   /**
@@ -201,7 +206,7 @@ class CenterMenu extends React.Component<Props, State> {
                       {/* <div style={{ margin: 20 }} /> */}
                       <Dashboard
                         magic8={this.props.magic8}
-                        color="#6f39c4"
+                        color={this.props.color}
                         infoDisplay={
                           <TotalVisitCount count={this.state.totalVisitCount} />
                         }
@@ -258,6 +263,9 @@ class CenterMenu extends React.Component<Props, State> {
             toggleScreen={this.switchToCenterMenu}
             finishVisit={centerName => this.finishCenterVisit(centerName)}
             firebase={this.props.firebase}
+            magic8={this.props.magic8}
+            color={this.props.color}
+            checklist={this.props.checklist}
           />
         );
       default:
@@ -273,7 +281,7 @@ const mapStateToProps = state => {
 };
 
 export default withStyles(styles)(
-  connect(mapStateToProps, { addNewCenter, incrementCenterCount })(
+  connect(mapStateToProps, { })(
     CenterMenu
   )
 );

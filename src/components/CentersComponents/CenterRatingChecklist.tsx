@@ -33,8 +33,7 @@ const styles: object = {
 const TeacherChildEnum = {
   CHILD_1: 1,
   CHILD_2: 2,
-  CHILD_1_TEACHER: 3,
-  CHILD_2_TEACHER: 4
+  TEACHER: 3,
 };
 
 const RATING_INTERVAL = 60000;
@@ -49,8 +48,11 @@ interface Props {
     grow: string
   },
   firebase: {
-    handlePushCentersData(mEntry: {Checked: Array<number>, PeopleType: number, timestamp: {seconds: number, nanoseconds: number}}): void
-  }
+    handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
+  },
+  magic8: string,
+  color: string,
+  checklist: {ChildBehaviors: Array<string>, TeacherBehaviors: Array<string>}
 }
 
 interface State {
@@ -126,7 +128,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     this.props.toggleScreen();
   };
 
-  handleSubmit = () => {
+  handleSubmit = (): void => {
     console.log('submitting checklist ', [...this.state.childChecked, ...this.state.teacherChecked])
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
@@ -143,8 +145,9 @@ class CenterRatingChecklist extends React.Component<Props, State> {
 
   /**
    * @param {number} value
+   * @return {void}
    */
-  handleChildToggle = (value: number) => () => {
+  handleChildToggle = (value: number) => (): void => {
     if (value <=5 && this.childDisabled()) {
       return;
     }
@@ -169,9 +172,12 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     this.setState({childChecked: newChecked});
   }
 
-  handleTeacherToggle = (value: number) => () => {
+  /**
+   * @param {number} value
+   * @return {void}
+   */
+  handleTeacherToggle = (value: number) => (): void  => {
     if (value >=6 && this.teacherDisabled()) {
-      console.log('is this even possible');
       return;
     }
     const { teacherChecked } = this.state;
@@ -195,14 +201,18 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     this.setState({teacherChecked: newChecked});
   }
 
-  childDisabled = () => {
+  childDisabled = (): boolean  => {
     return (
-      this.state.people === TeacherChildEnum.CHILD_1 ||
-      this.state.people === undefined
+      this.props.magic8 === "Associative and Cooperative" ? (
+        this.state.people === TeacherChildEnum.CHILD_1 ||
+        this.state.people === undefined
+      ) : (
+        this.state.people === undefined
+      )
     );
   };
 
-  teacherDisabled = () => {
+  teacherDisabled = (): boolean  => {
     return (
       this.state.people === TeacherChildEnum.CHILD_1 ||
       this.state.people === TeacherChildEnum.CHILD_2 ||
@@ -210,20 +220,22 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     );
   };
 
-  handleChild1Click = () => {
+  handleChild1Click = (): void  => {
     if (this.state.people !== TeacherChildEnum.CHILD_1) {
       this.setState({ people: TeacherChildEnum.CHILD_1 });
 
-      const { childChecked } = this.state;
-      const newChildChecked = [...childChecked];
-      for (let i = 1; i <= 5; i++) {
-        // If there are child ratings checked, remove them
-        if (childChecked.includes(i)) {
-          const currentIndex = childChecked.indexOf(i);
-          newChildChecked.splice(currentIndex);
+      if (this.props.magic8 === "Associative and Cooperative") {
+        const { childChecked } = this.state;
+        const newChildChecked = [...childChecked];
+        for (let i = 1; i <= 5; i++) {
+          // If there are child ratings checked, remove them
+          if (childChecked.includes(i)) {
+            const currentIndex = childChecked.indexOf(i);
+            newChildChecked.splice(currentIndex);
+          }
         }
+        this.setState({ childChecked: newChildChecked });
       }
-      this.setState({ childChecked: newChildChecked });
 
       const { teacherChecked } = this.state;
       const newTeacherChecked = [...teacherChecked];
@@ -238,7 +250,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     }
   };
 
-  handleChild2Click = () => {
+  handleChild2Click = (): void  => {
     if (this.state.people !== TeacherChildEnum.CHILD_2) {
       this.setState({ people: TeacherChildEnum.CHILD_2 });
 
@@ -255,30 +267,27 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     }
   };
 
-  handleChild1TeacherClick = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_1_TEACHER) {
-      this.setState({ people: TeacherChildEnum.CHILD_1_TEACHER });
+  handleTeacherClick = (): void  => {
+    if (this.state.people !== TeacherChildEnum.TEACHER) {
+      this.setState({ people: TeacherChildEnum.TEACHER });
     }
   };
 
-  handleChild2TeacherClick = () => {
-    if (this.state.people !== TeacherChildEnum.CHILD_2_TEACHER) {
-      this.setState({ people: TeacherChildEnum.CHILD_2_TEACHER });
-    }
-  };
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
     toggleScreen: PropTypes.func.isRequired,
     finishVisit: PropTypes.func.isRequired,
-    currentCenter: PropTypes.string.isRequired
+    currentCenter: PropTypes.string.isRequired,
+    magic8: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired
   }
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return (
       <div className={this.props.classes.root}>
         <Dialog
@@ -324,11 +333,10 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                 justify={"center"}
                 direction={"column"}
               >
-                {/* <div style={{ margin: 20 }} /> */}
                 <Dashboard
-                  magic8="Associative and Cooperative"
-                  color="#6f39c4"
-                  infoDisplay={<Countdown color="#6f39c4" timerTime={60000} />}
+                  magic8={this.props.magic8}
+                  color={this.props.color}
+                  infoDisplay={<Countdown color={this.props.color} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />
@@ -388,30 +396,16 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                   </Grid>
                   <Grid item>
                     <Button
-                      onClick={this.handleChild1TeacherClick}
+                      onClick={this.handleTeacherClick}
                       size="small"
                       variant={
-                        this.state.people === TeacherChildEnum.CHILD_1_TEACHER
+                        this.state.people === TeacherChildEnum.TEACHER
                           ? "contained"
                           : "outlined"
                       }
                       style={{fontFamily: 'Arimo'}}
                     >
-                      1 child with teacher
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={this.handleChild2TeacherClick}
-                      size="small"
-                      variant={
-                        this.state.people === TeacherChildEnum.CHILD_2_TEACHER
-                          ? "contained"
-                          : "outlined"
-                      }
-                      style={{fontFamily: 'Arimo'}}
-                    >
-                      2+ children with teacher
+                      1 + child with teacher
                     </Button>
                   </Grid>
                 </Grid>
@@ -423,86 +417,22 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                         Child Behaviors
                       </Typography>
                       <List>
-                        <ListItem
-                          onClick={this.handleChildToggle(1)}
-                          disabled={this.childDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.childDisabled() &&
-                              this.state.childChecked.includes(1)
-                            }
+                        {this.props.checklist.ChildBehaviors.map((value, index) => {
+                          return (<ListItem
+                            key={index}
+                            onClick={this.handleChildToggle(index+1)}
                             disabled={this.childDisabled()}
-                          />
-                          <ListItemText disableTypography>
-                            Participating in a <b>conversation</b> about a{" "}
-                            <b>shared activity</b>
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleChildToggle(2)}
-                          disabled={this.childDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.childDisabled() &&
-                              this.state.childChecked.includes(2)
-                            }
-                            disabled={this.childDisabled()}
-                          />
-                          <ListItemText disableTypography>
-                            Engaging <b>together</b> in an{" "}
-                            <b>open-ended activity</b> without clear roles or
-                            order
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleChildToggle(3)}
-                          disabled={this.childDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.childDisabled() &&
-                              this.state.childChecked.includes(3)
-                            }
-                            disabled={this.childDisabled()}
-                          />
-                          <ListItemText disableTypography>
-                            Following <b>formal rules of a game</b> and/or
-                            taking turns
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleChildToggle(4)}
-                          disabled={this.childDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.childDisabled() &&
-                              this.state.childChecked.includes(4)
-                            }
-                            disabled={this.childDisabled()}
-                          />
-                          <ListItemText disableTypography>
-                            Talking about or doing an activity together that has
-                            a <b>predetermined sequence</b> (e.g., acting out
-                            restaurant in a dramatic play; doing pattern blocks
-                            together)
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleChildToggle(5)}
-                          disabled={this.childDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.childDisabled() &&
-                              this.state.childChecked.includes(5)
-                            }
-                            disabled={this.childDisabled()}
-                          />
-                          <ListItemText>None</ListItemText>
-                        </ListItem>
+                          >
+                            <Checkbox
+                              checked={
+                                !this.childDisabled() && this.state.childChecked.includes(index+1)
+                              }
+                            />
+                            <ListItemText disableTypography>
+                              {value}
+                            </ListItemText>
+                          </ListItem>);
+                        })}
                       </List>
                     </Card>
                   </Grid>
@@ -512,85 +442,22 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                         Teacher Behaviors
                       </Typography>
                       <List>
-                        <ListItem
-                          onClick={this.handleTeacherToggle(6)}
-                          disabled={this.teacherDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.teacherDisabled() &&
-                              this.state.teacherChecked.includes(6)
-                            }
+                        {this.props.checklist.TeacherBehaviors.map((value, index) => {
+                          return (<ListItem
+                            key={index}
+                            onClick={this.handleTeacherToggle(index+6)}
                             disabled={this.teacherDisabled()}
-                          />
-                          <ListItemText disableTypography>
-                            <b>Participating</b> in children’s play
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleTeacherToggle(7)}
-                          disabled={this.teacherDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.teacherDisabled() &&
-                              this.state.teacherChecked.includes(7)
-                            }
-                            disabled={this.teacherDisabled()}
-                          />
-                          <ListItemText disableTypography>
-                            Asking questions to{" "}
-                            <b>extend children’s thinking</b> about their shared
-                            activity
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleTeacherToggle(8)}
-                          disabled={this.teacherDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.teacherDisabled() &&
-                              this.state.teacherChecked.includes(8)
-                            }
-                            disabled={this.teacherDisabled()}
-                          />
-                          <ListItemText disableTypography>
-                            <b>Encouraging</b> children to <b>share</b>,
-                            <b>work</b>, or <b>interact</b> with each other
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleTeacherToggle(9)}
-                          disabled={this.teacherDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.teacherDisabled() &&
-                              this.state.teacherChecked.includes(9)
-                            }
-                            disabled={this.teacherDisabled()}
-                          />
-                          <ListItemText disableTypography>
-                            Helping children find the{" "}
-                            <b>words to communicate</b>
-                          </ListItemText>
-                        </ListItem>
-                        <ListItem
-                          onClick={this.handleTeacherToggle(10)}
-                          disabled={this.teacherDisabled()}
-                        >
-                          <Checkbox
-                            checked={
-                              !this.childDisabled() &&
-                              this.state.teacherChecked.includes(10)
-                            }
-                            disabled={this.teacherDisabled()}
-                          />
-                          <ListItemText disableTypography>
-                            None
-                          </ListItemText>
-                        </ListItem>
+                          >
+                            <Checkbox
+                              checked={
+                                !this.teacherDisabled() && this.state.teacherChecked.includes(index+6)
+                              }
+                            />
+                            <ListItemText disableTypography>
+                              {value}
+                            </ListItemText>
+                          </ListItem>);
+                        })}
                       </List>
                     </Card>
                   </Grid>
