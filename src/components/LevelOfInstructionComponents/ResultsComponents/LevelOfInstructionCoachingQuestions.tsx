@@ -28,8 +28,8 @@ interface State {
 }
 
 /**
- * data reflection question layout for instruction
- * @class LevelOfInstructionCoachingQuestions
+ * data reflection question layout for instructor
+ * @class MathCoachingQuestions
  */
 class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> {
   /**
@@ -55,7 +55,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
   followUpClick = (): void => {
     if (this.state.categoryView !== "followUp") {
       this.setState({
-        categoryView: "followUp ",
+        categoryView: "followUp",
         openPanel: null
       })
     }
@@ -68,7 +68,8 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
       })
     }
   }
-  inferentialInstructionClick = (): void => {
+
+    inferentialInstructionClick = (): void => {
     if (this.state.categoryView !== "inferentialInstruction") {
       this.setState({
         categoryView: "inferentialInstruction",
@@ -126,7 +127,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
           <Grid item>
             <MuiThemeProvider theme={InstructionTheme}>
               <Button
-                onClick={this.basicSkillsClick}
+               onClick={this.basicSkillsClick}
                 variant="contained"
                 color="primary"
                 style={{width:'8em', height: '8em'}}
@@ -146,11 +147,14 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
                 style={{width:'8em', height: '8em'}}
               >
                 <Typography style={{color: 'white'}}>
-                Inferential Instruction in Content Areas                </Typography>
+                Inferential Instruction in Content Areas
+                </Typography>
               </Button>
             </MuiThemeProvider>
-          </Grid>         
+          </Grid>
+          
         </Grid>
+
         <Grid container direction="column" style={{marginTop: "1vh"}}>
           {this.state.categoryView === "highLevel" ? (
             <DataQuestions
@@ -164,7 +168,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
               magic8={this.props.magic8}
               color={Constants.InstructionColor}
             />
-          ) : this.state.categoryView === "followUp" ? (
+          ) : this.state.categoryView === "followUp"  ? (
             <DataQuestions
               questions={Constants.CoachingQuestions.Instruction.followUp}
               openPanel={this.state.openPanel}
@@ -178,7 +182,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
             />
           ) : this.state.categoryView === "basicSkills" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Instruction.Patterns}
+              questions={Constants.CoachingQuestions.Instruction.basicSkills}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}

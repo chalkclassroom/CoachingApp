@@ -36,8 +36,8 @@ class InstructionResponsesSummaryChart extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.inferentialResponses, this.props.basicSkillsResponses],
-          backgroundColor: [Constants.InstructionColor,"#6aa84f"],
-          hoverBackgroundColor: [Constants.InstructionColor, "#6aa84f"]
+          backgroundColor: [Constants.InstructionColor,"#6d9eeb"],
+          hoverBackgroundColor: [Constants.InstructionColor, "#6d9eeb"] //6d9eeb
         }
       ]
     };

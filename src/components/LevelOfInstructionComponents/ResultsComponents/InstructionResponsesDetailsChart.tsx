@@ -11,7 +11,7 @@ interface Props {
 }
 
 /**
- * specifies data sets and formatting for the climate details bar graph
+ * specifies data sets and formatting for the Instruction details bar graph
  * @class InstructionResponsesDetailsChart
  */
 class InstructionResponsesDetailsChart extends React.Component<Props, {}> {
@@ -42,12 +42,12 @@ class InstructionResponsesDetailsChart extends React.Component<Props, {}> {
         "Teach Specific Skills",
       ],
       datasets: [{
-        data: [this.props.highLevelQuesInsCount, this.props.lowLevelInsCount
-, this.props.followUpInsCount
+        data: [this.props.highLevelQuesInsCount, this.props.followUpInsCount
+, this.props.lowLevelInsCount
 , this.props.specificSkillInsCount
 ],
-        backgroundColor: ["#0988ec", "#84C3F5", "#f37b6b", "#ec2409"],
-        hoverBackgroundColor: ["#0988ec", "#84C3F5", "#f37b6b", "#ec2409"],
+        backgroundColor: ["#38761dff", "38761dff","#1155ccff", "#1155ccff"],
+        hoverBackgroundColor: ["#38761dff", "38761dff","#1155ccff", "#1155ccff"]
       }]
     };
     return(

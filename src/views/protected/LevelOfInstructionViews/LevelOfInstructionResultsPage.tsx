@@ -161,16 +161,16 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
         {
           label: "Ask Low-Level Question / Teach Specific Skills",  
           data: this.state.trendsBasic, 
-          backgroundColor: "#ec2409",
-          borderColor: "#ec2409",
+          backgroundColor: "#6d9eeb",
+          borderColor: "#6d9eeb",
           fill: false,
           lineTension: 0,
         },
         {
           label: "Ask High-Level Question / Follow-up on Children’s Responses", 
           data: this.state.trendsInfer,  
-          backgroundColor: "#0988ec",
-          borderColor: "#0988ec",
+          backgroundColor: "#6aa84fff",
+          borderColor: "#6aa84fff",
           fill: false,
           lineTension: 0,
         }
