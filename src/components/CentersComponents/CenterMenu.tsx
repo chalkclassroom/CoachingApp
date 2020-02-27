@@ -8,12 +8,7 @@ import CenterRatingChecklist from './CenterRatingChecklist';
 import Dashboard from '../Dashboard.js';
 import TotalVisitCount from '../TotalVisitCount';
 import grey from "@material-ui/core/colors/grey";
-import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
-/* import {
-  addNewCenter,
-  incrementCenterCount
-} from "../../state/actions/associative-cooperative"; */
 
 const styles: object = {
   root: {
@@ -27,8 +22,18 @@ const styles: object = {
   }
 };
 
-const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
-  const hsl = Math.max(82 - 4 * visitCount, 54);
+interface VisitCenterProps {
+  centerName: string,
+  visitCount: number,
+  onClick(): void 
+}
+
+/**
+ * @param {VisitCenterProps} props
+ * @return {ReactElement}
+ */
+const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
+  const hsl = Math.max(82 - 4 * props.visitCount, 54);
   return (
     <Button
       variant="contained"
@@ -43,12 +48,12 @@ const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
         backgroundColor: `hsl(263, 55%, ${hsl}%`,
         fontFamily: 'Arimo'
       }}
-      onClick={onClick}
+      onClick={props.onClick}
     >
-      {centerName}
+      {props.centerName}
       <br />
       <br />
-      {visitCount}
+      {props.visitCount}
     </Button>
   );
 };
@@ -67,7 +72,7 @@ interface Props {
       }
     },
     handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
-    handlePushCentersData(mEntry: {Checked: Array<number>, PeopleType: number, timestamp: {seconds: number, nanoseconds: number}}): void
+    handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
   },
   type: string,
   onStatusChange(enable: boolean): void,
@@ -136,19 +141,26 @@ class CenterMenu extends React.Component<Props, State> {
     this.props.onStatusChange(false);
   };
 
-  handleAddCenter = (centerName): void => {
+  /**
+   * @param {string} centerName
+   */
+  handleAddCenter = (centerName: string): void => {
     this.props.addNewCenter(centerName);
     this.handleClose();
   };
 
-  // Entry point for a center visit.
-  handleCenterVisit = (centerName): void => {
+  /**
+   * @param {string} centerName
+   */
+  handleCenterVisit = (centerName: string): void => {
     this.switchToRatingScreen();
     this.setState({ currentCenter: centerName });
   };
 
-  // Exit point for a center visit.
-  finishCenterVisit = (centerName): void => {
+  /**
+   * @param {string} centerName
+   */
+  finishCenterVisit = (centerName: string): void => {
     if (centerName !== undefined) {
       this.props.incrementCenterCount(centerName);
       this.setState({ totalVisitCount: this.state.totalVisitCount + 1 });
@@ -274,14 +286,14 @@ class CenterMenu extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+/* const mapStateToProps = state => {
   return {
     centers: state.associativeCenterState.associativeCenters
   };
-};
+}; */
 
-export default withStyles(styles)(
-  connect(mapStateToProps, { })(
+export default withStyles(styles)(CenterMenu
+  /* connect(mapStateToProps, { })(
     CenterMenu
-  )
+  ) */
 );

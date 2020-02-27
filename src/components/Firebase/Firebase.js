@@ -424,33 +424,7 @@ class Firebase {
       );
   };
 
-  handlePushAC = async function(mEntry) {
-    return this.sessionRef
-      .collection("entries")
-      .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .catch(error =>
-        console.error("Error occurred adding observation: ", error)
-      );
-  };
-
   handlePushSequential = async function(mEntry) {
-    return this.sessionRef
-      .collection("entries")
-      .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .catch(error =>
-        console.error("Error occurred adding observation: ", error)
-      );
-  };
-
-  handlePushMath = async function(mEntry) {
     return this.sessionRef
       .collection("entries")
       .add({

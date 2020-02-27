@@ -152,14 +152,36 @@ export const DS = {
 
 // Centers Observation Checklists
 export const Checklist = {
+  'Math': {
+    'ChildBehaviors': [
+      <div> <b>Counting and Numbers</b> </div>,
+      <div> <b>Shapes and Spatial reasoning</b> </div>,
+      <div> <b>Patterns</b> </div>,
+      <div> <b>Measurement and Data</b> </div>,
+      <div> None of the above </div>,
+    ],
+    'TeacherBehaviors': [
+      <div> Using <b>math vocabulary</b> </div>,
+      <div> <b>Asking questions</b> about math concepts </div>,
+      <div> <b>Demonstrating</b> math concepts </div>,
+      <div> Helping children use math to <b>problem solve</b> </div>,
+      <div> None of the above </div>,
+    ]
+  },
   'AC': {
     'ChildBehaviors': [
-      <div key={0}> Participating in a <b>conversation</b> about a <b>shared activity</b> </div>,
-      <div key={1}> Engaging <b>together</b> in an <b>open-ended activity</b> without clear {" "}
+      <div key={0}>
+        Participating in a <b>conversation</b> about a <b>shared activity</b>
+        </div>,
+      <div key={1}>
+        Engaging <b>together</b> in an <b>open-ended activity</b> without clear {" "}
         roles or order
       </div>,
-      <div key={2}> Following <b>formal rules of a game</b> and/or taking turns </div>,
-      <div key={3}>Talking about or doing an activity together that has
+      <div key={2}>
+        Following <b>formal rules of a game</b> and/or taking turns
+      </div>,
+      <div key={3}>
+        Talking about or doing an activity together that has
         a <b>predetermined sequence</b> (e.g., acting out
         restaurant in a dramatic play; doing pattern blocks
         together)
@@ -172,9 +194,54 @@ export const Checklist = {
         Asking questions to <b>extend children’s thinking</b> {" "}
         about their shared activity
       </div>,
-      <div key={2}> <b>Encouraging</b> children to <b>share</b>, <b>work</b>,
-        or <b>interact</b> with each other </div>,
-      <div key={3}> Helping children find the <b>words to communicate</b> </div>,
+      <div key={2}>
+        <b>Encouraging</b> children to <b>share</b>, <b>work</b>,
+        or <b>interact</b> with each other
+      </div>,
+      <div key={3}>
+        Helping children find the <b>words to communicate</b>
+      </div>,
+      <div key={4}> None of the above </div>,
+    ]
+  },
+  'Sequential': {
+    'ChildBehaviors': [
+      <div key={0}>
+        Using materials in a{" "}
+        <b>step-by-step, predictable way</b>
+        </div>,
+      <div key={1}>
+        <b>Drawing</b> recognizable images or <b>writing</b>{" "}
+        names or messages (letters or letter-like forms)
+      </div>,
+      <div key={2}>
+        Playing a game with <b>set rules</b> and/or {" "}
+        <b>taking turns</b>
+      </div>,
+      <div key={3}>
+        Speaking or acting according to a{" "}
+        <b>pretend scenario</b> that follows a
+        predictable plot
+      </div>,
+      <div key={4}> None of the above </div>,
+    ],
+    'TeacherBehaviors': [
+      <div key={0}>
+        <b>Helping</b> children do sequential activities
+        with manipulatives or toys
+      </div>,
+      <div key={1}>
+        Supporting children as they <b>draw</b> images
+        or <b>write</b> messages
+      </div>,
+      <div key={2}>
+        <b>Demonstrating the steps</b> to an activity
+        or game
+      </div>,
+      <div key={3}>
+        Supporting children as they <b>act out</b> 
+        {" "} a dramatic play scenario or book
+      </div>,
       <div key={4}> None of the above </div>,
     ]
   }
