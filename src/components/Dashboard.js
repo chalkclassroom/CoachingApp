@@ -11,9 +11,9 @@ import InstructionIconImage from "../assets/images/InstructionIconImage.svg";
 import ListeningIconImage from "../assets/images/ListeningIconImage.svg";
 import SequentialIconImage from "../assets/images/SequentialIconImage.svg";
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg";
-import TransitionNotesImage from "../assets/images/TransitionNotesImage.svg";
+import TransitionTimeNotesImage from "../assets/images/TransitionTimeNotesImage.svg";
 import ClassroomClimateNotesImage from "../assets/images/ClassroomClimateNotesImage.svg";
-import MathNotesImage from "../assets/images/MathNotesImage.svg";
+import MathInstructionNotesImage from "../assets/images/MathInstructionNotesImage.svg";
 import EngagementNotesImage from "../assets/images/EngagementNotesImage.svg";
 import InstructionNotesImage from "../assets/images/InstructionNotesImage.svg";
 import ListeningNotesImage from "../assets/images/ListeningNotesImage.svg";
@@ -21,7 +21,7 @@ import SequentialNotesImage from "../assets/images/SequentialNotesImage.svg";
 import AssocCoopNotesImage from "../assets/images/AssocCoopNotesImage.svg";
 import TransitionTimeLookForsImage from "../assets/images/TransitionTimeLookForsImage.svg";
 import ClassroomClimateLookForsImage from "../assets/images/ClassroomClimateLookForsImage.svg";
-import MathLookForsImage from "../assets/images/MathLookForsImage.svg";
+import MathInstructionLookForsImage from "../assets/images/MathInstructionLookForsImage.svg";
 import EngagementLookForsImage from "../assets/images/EngagementLookForsImage.svg";
 import InstructionLookForsImage from "../assets/images/InstructionLookForsImage.svg";
 import ListeningLookForsImage from "../assets/images/ListeningLookForsImage.svg";
@@ -109,7 +109,7 @@ const styles = {
  */
 class Dashboard extends React.Component {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props) {
     super(props);
@@ -130,10 +130,6 @@ class Dashboard extends React.Component {
       lookForsIcon: null,
       notesIcon: null
     };
-    // Assigning for scope
-    this.resetTransitionTime = resetTransitionTime;
-    this.emptyClimateStack = emptyClimateStack;
-    this.deleteAllCenters = deleteAllCenters;
   }
 
   /** lifecycle method invoked after component mounts */
@@ -142,7 +138,7 @@ class Dashboard extends React.Component {
       ? this.setState({
           icon: TransitionTimeIconImage,
           lookForsIcon: TransitionTimeLookForsImage,
-          notesIcon: TransitionNotesImage
+          notesIcon: TransitionTimeNotesImage
         })
       : this.props.magic8 === "Classroom Climate"
       ? this.setState({
@@ -153,8 +149,8 @@ class Dashboard extends React.Component {
       : this.props.magic8 === "Math Instruction"
       ? this.setState({
           icon: MathIconImage,
-          lookForsIcon: MathLookForsImage,
-          notesIcon: MathNotesImage
+          lookForsIcon: MathInstructionLookForsImage,
+          notesIcon: MathInstructionNotesImage
         })
       : this.props.magic8 === "Level of Engagement"
       ? this.setState({
@@ -322,15 +318,15 @@ class Dashboard extends React.Component {
                       shouldOpen={true}
                       onAccept={() => {
                         magic8 === "Classroom Climate"
-                          ? this.emptyClimateStack()
+                          ? this.props.emptyClimateStack()
                           : magic8 === "Transition Time"
-                          ? this.resetTransitionTime()
-                          : this.deleteAllCenters();
-                        this.props.history.push({
-                          pathname: "/Home",
-                          state: this.props.history.state
-                        });
-                        firebase.endSession();
+                          ? this.props.resetTransitionTime()
+                          : this.props.deleteAllCenters();
+                          this.props.history.push({
+                            pathname: "/Home",
+                            state: this.props.history.state
+                          });
+                          firebase.endSession();
                       }}
                     />
                   )}
@@ -361,7 +357,14 @@ Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   infoPlacement: PropTypes.string.isRequired,
-  completeObservation: PropTypes.bool.isRequired
+  completeObservation: PropTypes.bool.isRequired,
+  // These Are mapped from Redux into Props
+  resetTransitionTime: PropTypes.func.isRequired,
+  emptyClimateStack: PropTypes.func.isRequired,
+  deleteAllCenters: PropTypes.func.isRequired
 };
 
-export default withRouter(connect()(withStyles(styles)(Dashboard)));
+export default withRouter(connect(
+    null,
+    { resetTransitionTime, emptyClimateStack, deleteAllCenters }
+)(withStyles(styles)(Dashboard)));

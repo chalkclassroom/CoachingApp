@@ -61,7 +61,9 @@ class ChildBarDetails extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: 20,
+                  max: 
+                    (Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) > 20) ? 
+                    Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) : 20,
                   fontSize: 16,
                   fontColor: 'black'
                 },

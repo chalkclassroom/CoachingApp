@@ -42,8 +42,8 @@ class TeacherPieSummary extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.support, this.props.noSupport, this.props.noTeacherOpp],
-          backgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, "#E99C2E"],
-          hoverBackgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, "#E99C2E"]
+          backgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, Constants.NotPresentColor],
+          hoverBackgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, Constants.NotPresentColor]
         }
       ]
     };

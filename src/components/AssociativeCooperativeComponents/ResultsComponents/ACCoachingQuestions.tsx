@@ -22,27 +22,33 @@ const CooperativeTheme = createMuiTheme({
   }
 });
 
+interface Props {
+  handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
+  addedToPlan: Array<{panel: string, number: number, question: string}>,
+  sessionId: string
+  teacherId: string,
+  magic8: string
+}
+
 interface State {
   categoryView: string,
   openPanel: string,
-  addedToPrep: Array<string>
 }
 
 /**
  * data reflection question layout for associative & cooperative
  * @class ACCoachingQuestions
  */
-class ACCoachingQuestions extends React.Component<{}, State> {
+class ACCoachingQuestions extends React.Component<Props, State> {
   /**
-   * @param {null} null
+   * @param {Props} props
    */
-  constructor({}) {
-    super({});
+  constructor(props: Props) {
+    super(props);
 
     this.state = {
       categoryView: '',
       openPanel: '',
-      addedToPrep: []
     }
   }
 
@@ -90,15 +96,6 @@ class ACCoachingQuestions extends React.Component<{}, State> {
       this.setState({ openPanel: '' });
     } else {
       this.setState({ openPanel: panel });
-    }
-  };
-
-  /**
-   * @param {string} panel
-   */
-  handleAddToPlan = (panel: string): void => {
-    if (!this.state.addedToPrep.includes(panel)) {
-      this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
     }
   };
 
@@ -166,8 +163,11 @@ class ACCoachingQuestions extends React.Component<{}, State> {
               questions={Constants.CoachingQuestions.AC.Associative}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.ACColor}
             />
           ) : this.state.categoryView === "cooperative" ? (
@@ -175,8 +175,11 @@ class ACCoachingQuestions extends React.Component<{}, State> {
               questions={Constants.CoachingQuestions.AC.Cooperative}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.ACColor}
             />
           ) : this.state.categoryView === "teacherParticipation" ? (
@@ -184,8 +187,11 @@ class ACCoachingQuestions extends React.Component<{}, State> {
               questions={Constants.CoachingQuestions.AC.TeacherParticipation}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.ACColor}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
@@ -193,8 +199,11 @@ class ACCoachingQuestions extends React.Component<{}, State> {
               questions={Constants.CoachingQuestions.AC.TeacherSupport}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.ACColor}
             />
           ) : <div/>}

@@ -61,7 +61,9 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: 20,
+                  max:
+                    (Math.max(this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4) > 20) ? 
+                    Math.max(this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4) : 20,
                   fontSize: 16,
                   fontColor: 'black'
                 },

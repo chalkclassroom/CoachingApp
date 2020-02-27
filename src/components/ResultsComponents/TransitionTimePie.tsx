@@ -2,6 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
 import FirebaseContext from "../Firebase/FirebaseContext";
+import * as Constants from "../../constants";
 
 interface Props {
   transitionTime: number,
@@ -35,8 +36,8 @@ class TransitionTimePie extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.transitionTime, this.props.learningActivityTime],
-          backgroundColor: ["#ec2409", "#0988EC"],
-          hoverBackgroundColor: ["#ec2409", "#0988EC"]
+          backgroundColor: [Constants.TransitionColor, Constants.AppBarColor],
+          hoverBackgroundColor: [Constants.TransitionColor, Constants.AppBarColor]
         }
       ]
     };

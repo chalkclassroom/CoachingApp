@@ -7,11 +7,11 @@ import ChildPieSummary from "./ChildPieSummary";
 import TeacherPieSummary from "./TeacherPieSummary";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-// import PieSliceChildSequentialImage from "../../../assets/images/PieSliceChildSequentialImage.svg";
-import PieSliceChildACImage from "../../../assets/images/PieSliceChildACImage.svg";
+import PieSliceChildMathImage from "../../../assets/images/PieSliceChildMathImage.svg";
+import PieSliceChildNonImage from "../../../assets/images/PieSliceChildNonImage.svg";
 import PieSliceTeacherSupportImage from "../../../assets/images/PieSliceTeacherSupportImage.svg";
 import PieSliceTeacherNoSupportImage from "../../../assets/images/PieSliceTeacherNoSupportImage.svg";
-import PieSliceTeacherNoOppImage from "../../../assets/images/PieSliceTeacherNoOppImage.svg";
+import PieSliceNoOppImage from "../../../assets/images/PieSliceNoOppImage.svg";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles: object = {
@@ -77,10 +77,10 @@ class SummarySlider extends React.Component<Props, {}> {
                     <Grid item xs={1}>
                       <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
                         <Grid item style={{height:"50%"}}>
-                          <img alt="yellow" src={PieSliceChildACImage} height="95%"/>
+                          <img alt="yellow" src={PieSliceChildMathImage} height="95%"/>
                         </Grid>
                         <Grid item style={{height:"50%"}}>
-                          <img alt="red" src={PieSliceChildACImage} height="95%"/>
+                          <img alt="red" src={PieSliceChildNonImage} height="95%"/>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -127,7 +127,7 @@ class SummarySlider extends React.Component<Props, {}> {
                           <img alt="red" src={PieSliceTeacherNoSupportImage} height="95%"/>
                         </Grid>
                         <Grid item style={{height:"33%"}}>
-                          <img alt="orange" src={PieSliceTeacherNoOppImage} height="95%"/>
+                          <img alt="orange" src={PieSliceNoOppImage} height="95%"/>
                         </Grid>
                       </Grid>
                     </Grid>

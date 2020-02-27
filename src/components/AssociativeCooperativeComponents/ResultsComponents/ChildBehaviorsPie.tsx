@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
+import * as Constants from "../../../constants";
 
 interface Props {
   ac: number,
@@ -41,8 +42,8 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.ac, this.props.noAc, this.props.noChildOpp],
-          backgroundColor: ["#6F39C4", "#ec2409", "#E99C2E"],
-          hoverBackgroundColor: ["#6F39C4", "#ec2409", "#E99C2E"]
+          backgroundColor: [Constants.ACColor, Constants.RedGraphColor, Constants.NotPresentColor],
+          hoverBackgroundColor: [Constants.ACColor, Constants.RedGraphColor, Constants.NotPresentColor]
         }
       ]
     };

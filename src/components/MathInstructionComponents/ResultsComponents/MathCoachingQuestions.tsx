@@ -14,28 +14,33 @@ const MathTheme = createMuiTheme({
   }
 });
 
+interface Props {
+  handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
+  addedToPlan: Array<{panel: string, number: number, question: string}>,
+  sessionId: string
+  teacherId: string,
+  magic8: string
+}
 
 interface State {
   categoryView: string,
-  openPanel: string,
-  addedToPrep: Array<string>
+  openPanel: string
 }
 
 /**
  * data reflection question layout for math
  * @class MathCoachingQuestions
  */
-class MathCoachingQuestions extends React.Component<{}, State> {
+class MathCoachingQuestions extends React.Component<Props, State> {
   /**
-   * @param {null} null
+   * @param {Props} props
    */
-  constructor({}) {
-    super({});
+  constructor(props: Props) {
+    super(props);
 
     this.state = {
       categoryView: '',
-      openPanel: '',
-      addedToPrep: []
+      openPanel: ''
     }
   }
 
@@ -94,15 +99,6 @@ class MathCoachingQuestions extends React.Component<{}, State> {
   };
 
   /**
-   * @param {string} panel
-   */
-  handleAddToPlan = (panel: string): void => {
-    if (!this.state.addedToPrep.includes(panel)) {
-      this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
-    }
-  };
-
-  /**
    * @return {ReactNode}
    */
   render(): React.ReactNode {
@@ -117,7 +113,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
-                <Typography>
+                <Typography style={{color: 'white'}}>
                   Counting and Numbers
                 </Typography>
               </Button >
@@ -131,7 +127,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
-                <Typography style={{color: 'black'}}>
+                <Typography style={{color: 'white'}}>
                   Measurement and Data
                 </Typography>
               </Button>
@@ -145,7 +141,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
-                <Typography style={{color: 'black'}}>
+                <Typography style={{color: 'white'}}>
                   Patterns
                 </Typography>
               </Button>
@@ -159,7 +155,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
-                <Typography style={{color: 'black'}}>
+                <Typography style={{color: 'white'}}>
                   Shapes and Spatial Reasoning
                 </Typography>
               </Button>
@@ -173,7 +169,7 @@ class MathCoachingQuestions extends React.Component<{}, State> {
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
-                <Typography>
+                <Typography style={{color: 'white'}}>
                   Teacher Support for Math
                 </Typography>
               </Button>
@@ -186,8 +182,11 @@ class MathCoachingQuestions extends React.Component<{}, State> {
               questions={Constants.CoachingQuestions.Math.CountingAndNumbers}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.MathColor}
             />
           ) : this.state.categoryView === "measurement" ? (
@@ -195,8 +194,11 @@ class MathCoachingQuestions extends React.Component<{}, State> {
               questions={Constants.CoachingQuestions.Math.MeasurementAndData}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.MathColor}
             />
           ) : this.state.categoryView === "patterns" ? (
@@ -204,8 +206,11 @@ class MathCoachingQuestions extends React.Component<{}, State> {
               questions={Constants.CoachingQuestions.Math.Patterns}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.MathColor}
             />
           ) : this.state.categoryView === "shapes" ? (
@@ -213,8 +218,11 @@ class MathCoachingQuestions extends React.Component<{}, State> {
               questions={Constants.CoachingQuestions.Math.ShapesAndSpatialReasoning}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.MathColor}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
@@ -222,8 +230,11 @@ class MathCoachingQuestions extends React.Component<{}, State> {
               questions={Constants.CoachingQuestions.Math.TeacherSupport}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
               color={Constants.MathColor}
             />
           ) : <div/>}

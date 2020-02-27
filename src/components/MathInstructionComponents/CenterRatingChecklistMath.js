@@ -16,13 +16,15 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
+import * as Constants from "../../constants";
 
 const styles = {
   root: {
     flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    fontFamily: 'Arimo'
   },
   grow: {
     flexGrow: 1
@@ -207,11 +209,11 @@ class CenterRatingChecklistMath extends React.Component {
           onClose={this.handleTimeUpClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title">
+          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
             Don&apos;t forget to circulate!
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
               You&apos;ve been at the {this.props.currentCenter} center for 1 minute.
             </DialogContentText>
           </DialogContent>
@@ -221,9 +223,9 @@ class CenterRatingChecklistMath extends React.Component {
           onClose={this.handlePeopleWarningClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title">Wait!</DialogTitle>
+          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>Wait!</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
               Please select if the teachers is present at the center or not
               before submitting your rating.
             </DialogContentText>
@@ -246,8 +248,8 @@ class CenterRatingChecklistMath extends React.Component {
                 {/* <div style={{ margin: 20 }} /> */}
                 <Dashboard
                   magic8="Math Instruction"
-                  color="#E55529"
-                  infoDisplay={<Countdown color="#E55529" timerTime={60000} />}
+                  color={Constants.MathColor}
+                  infoDisplay={<Countdown color={Constants.MathColor} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />
@@ -256,18 +258,18 @@ class CenterRatingChecklistMath extends React.Component {
             <Grid item xs={9}>
               <Grid>
                 <div style={{ margin: 10 }} />
-                <Button size={"small"} onClick={this.handleBackButton}>
+                <Button size={"small"} onClick={this.handleBackButton} style={{fontFamily: 'Arimo'}}>
                   <KeyboardArrowLeft />
                   Back
                 </Button>
               </Grid>
               <Grid container alignItems="center" direction="column" xs={12}>
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h4" gutterBottom style={{fontFamily: 'Arimo'}}>
                   {this.props.currentCenter[0].toUpperCase() +
                     this.props.currentCenter.substr(1)}
                 </Typography>
                 <div style={{ height: 20 }} />
-                <Typography variant={"subtitle2"} gutterBottom>
+                <Typography variant={"subtitle2"} gutterBottom style={{fontFamily: 'Arimo'}}>
                   Please select if teacher is present or not at the
                   center:
                 </Typography>
@@ -287,6 +289,7 @@ class CenterRatingChecklistMath extends React.Component {
                           ? "contained"
                           : "outlined"
                       }
+                      style={{fontFamily: 'Arimo'}}
                     >
                       no teacher
                     </Button>
@@ -300,6 +303,7 @@ class CenterRatingChecklistMath extends React.Component {
                           ? "contained"
                           : "outlined"
                       }
+                      style={{fontFamily: 'Arimo'}}
                     >
                      teacher present
                     </Button>
@@ -310,7 +314,7 @@ class CenterRatingChecklistMath extends React.Component {
                   <Grid item
                    xs={6}>
                     <Card>
-                      <Typography variant="h6" align={"center"}>
+                      <Typography variant="h6" align={"center"} style={{fontFamily: 'Arimo'}}>
                         Child Behaviors
                       </Typography>
                       <List>
@@ -325,7 +329,7 @@ class CenterRatingChecklistMath extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                              <b>Counting and Numbers</b> 
                           </ListItemText>
                         </ListItem>
@@ -340,7 +344,7 @@ class CenterRatingChecklistMath extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                              <b>Shapes and Spatial reasoning</b>  
                           </ListItemText>
                         </ListItem>
@@ -355,7 +359,7 @@ class CenterRatingChecklistMath extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                           <b>Patterns</b>  
                           </ListItemText>
                         </ListItem>
@@ -370,7 +374,7 @@ class CenterRatingChecklistMath extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             <b>Measurement and Data</b>
                           </ListItemText>
                         </ListItem>
@@ -385,14 +389,14 @@ class CenterRatingChecklistMath extends React.Component {
                             }
                             disabled={this.childDisabled()}
                           />
-                          <ListItemText>None</ListItemText>
+                          <ListItemText disableTypography>None</ListItemText>
                         </ListItem>
                       </List>
                     </Card>
                   </Grid>
                   <Grid item xs={6}>
                     <Card>
-                      <Typography variant="h6" align={"center"}>
+                      <Typography variant="h6" align={"center"} style={{fontFamily: 'Arimo'}}>
                         Teacher Behaviors
                       </Typography>
                       <List>
@@ -407,7 +411,7 @@ class CenterRatingChecklistMath extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             Using <b>math vocabulary</b> 
                           </ListItemText>
                         </ListItem>
@@ -422,7 +426,7 @@ class CenterRatingChecklistMath extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             <b>Asking questions {" "}</b> about math concepts
                           </ListItemText>
                         </ListItem>
@@ -437,7 +441,7 @@ class CenterRatingChecklistMath extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
+                          <ListItemText disableTypography>
                             <b>Demonstrating</b> math concepts
                           </ListItemText>
                         </ListItem>
@@ -452,8 +456,9 @@ class CenterRatingChecklistMath extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>
-                            <b>Doing</b> math with children
+                          <ListItemText disableTypography>
+                            Helping children use math
+                            to <b>problem solve</b>
                           </ListItemText>
                         </ListItem>
                         <ListItem
@@ -467,7 +472,7 @@ class CenterRatingChecklistMath extends React.Component {
                             }
                             disabled={this.teacherDisabled()}
                           />
-                          <ListItemText>None</ListItemText>
+                          <ListItemText disableTypography>None</ListItemText>
                         </ListItem>
                       </List>
                     </Card>
@@ -483,7 +488,7 @@ class CenterRatingChecklistMath extends React.Component {
                     variant="contained"
                     color={"secondary"}
                     onClick={this.handleSubmit}
-                    style={{ marginTop: 20 }}
+                    style={{ marginTop: 20, fontFamily: 'Arimo' }}
                   >
                     Submit
                   </Button>

@@ -39,7 +39,7 @@ const styles = theme => ({
 });
 
 const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
-  const hsl = Math.max(82 - 4 * visitCount, 54);
+  const hsl = Math.max(82 - 4 * visitCount, 30);
 
   return (
     <Button

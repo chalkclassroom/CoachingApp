@@ -7,11 +7,12 @@ import TableRow from '@material-ui/core/TableRow/index';
 import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
 import Typography from '@material-ui/core/Typography/index';
+import * as Constants from "../../constants";
 
 
 const styles = () => ({
   definitionTitle: {
-    backgroundColor: "#094492",
+    backgroundColor: Constants.TransitionColor,
     color: "white",
     fontSize: 18,
     textAlign: "center",
@@ -24,7 +25,7 @@ const styles = () => ({
     fontFamily: 'Arimo'
   },
   buttonTitle: {
-    backgroundColor: "#094492", 
+    backgroundColor: Constants.TransitionColor,
     color: "white",
     fontSize: 14,
     textAlign: "center", 
