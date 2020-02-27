@@ -71,8 +71,8 @@ interface Props {
   },
   type: string,
   onStatusChange(enable: boolean): void,
-  addNewCenter(centerName: string): void,
-  incrementCenterCount(centerName: string): void,
+  // addNewCenter(centerName: string): void,
+  // incrementCenterCount(centerName: string): void,
   centers: Array<{
     name: string,
     count: number
@@ -90,7 +90,6 @@ interface State{
 /**
  * Center Menu
  * @class CenterMenu
- * @param {string} centerName
  */
 class CenterMenu extends React.Component<Props, State> {
   /**
@@ -135,19 +134,19 @@ class CenterMenu extends React.Component<Props, State> {
     this.props.onStatusChange(false);
   };
 
-  handleAddCenter = (centerName: string): void => {
+  handleAddCenter = (centerName): void => {
     this.props.addNewCenter(centerName);
     this.handleClose();
   };
 
   // Entry point for a center visit.
-  handleCenterVisit = (centerName: string): void => {
+  handleCenterVisit = (centerName): void => {
     this.switchToRatingScreen();
     this.setState({ currentCenter: centerName });
   };
 
   // Exit point for a center visit.
-  finishCenterVisit = (centerName: string): void => {
+  finishCenterVisit = (centerName): void => {
     if (centerName !== undefined) {
       this.props.incrementCenterCount(centerName);
       this.setState({ totalVisitCount: this.state.totalVisitCount + 1 });

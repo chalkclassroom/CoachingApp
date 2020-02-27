@@ -16,54 +16,68 @@ interface Props {
 
 /**
  * New Center Dialog
- * @function NewCenterDialog
- * @return {ReactElement}
+ * @class NewCenterDialog
+ * @return {ReactNode}
  */
-function NewCenterDialog(props: Props): React.ReactElement {
-  let centerName = '';
-  return (
-    <Dialog
-      open={props.open}
-      onClose={props.handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title" style={{fontFamily: 'Arimo'}}>
-        Add a New Center
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText style={{fontFamily: 'Arimo'}}>
-          Please enter the name of the new center.
-        </DialogContentText>
-        <TextField
-          autoFocus
-          inputRef={cn => (centerName = cn)}
-          margin="dense"
-          id="center-name"
-          label="Center Name"
-          type="text"
-          fullWidth
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={props.handleClose} color="primary" style={{fontFamily: 'Arimo'}}>
-          Cancel
-        </Button>
-        <Button
-          onClick={() => props.handleSubmit(centerName)}
-          color="primary"
-          style={{fontFamily: 'Arimo'}}
-        >
-          Add Center
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-}
+class NewCenterDialog extends React.Component<Props, {}> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
+    super(props);
+  }
 
-NewCenterDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired
+  static propTypes = {
+    open: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired
+  }
+
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
+    let centerName = {value: ''};
+    return (
+      <Dialog
+        open={this.props.open}
+        onClose={this.props.handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title" style={{fontFamily: 'Arimo'}}>
+          Add a New Center
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText style={{fontFamily: 'Arimo'}}>
+            Please enter the name of the new center.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            inputRef={cn => (centerName = cn)}
+            margin="dense"
+            id="center-name"
+            label="Center Name"
+            type="text"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.props.handleClose} color="primary" style={{fontFamily: 'Arimo'}}>
+            Cancel
+          </Button>
+          {console.log('center name in newcenterdialog', centerName.value)}
+          <Button
+            onClick={() => this.props.handleSubmit(centerName.value)}
+            color="primary"
+            style={{fontFamily: 'Arimo'}}
+          >
+            Add Center
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
 }
 
 export default NewCenterDialog;
