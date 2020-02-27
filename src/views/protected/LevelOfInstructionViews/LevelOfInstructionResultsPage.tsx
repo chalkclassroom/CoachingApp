@@ -219,15 +219,15 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
         }).catch(() => {
           console.log('unable to retrieve conference plan')
         })
-        firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionResponse: string, count: number}>) => {  
+        firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionType: string, count: number}>) => {  
           json.forEach(instruction => {                                
-            if (instruction.instructionResponse === "specificSkill") { 
+            if (instruction.instructionType === "specificSkill") { 
               specificSkillCount = instruction.count;                       
-            } else if (instruction.instructionResponse === "lowLevel") {    
+            } else if (instruction.instructionType === "lowLevel") {    
               lowLevelCount = instruction.count;                                 
-            } else if (instruction.instructionResponse === "highLevel") {            
+            } else if (instruction.instructionType === "highLevel") {            
               highLevelQuesCount = instruction.count;                                 
-            } else if (instruction.instructionResponse === "followUp") {            
+            } else if (instruction.instructionType === "followUp") {            
               followUpCount = instruction.count;                                 
             }
           });
