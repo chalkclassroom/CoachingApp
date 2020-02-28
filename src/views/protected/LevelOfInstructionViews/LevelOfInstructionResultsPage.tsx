@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
-import InstructionResponsesDetailsChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/InstructionResponsesDetailsChart";
+import InstructionTypeDetailsChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/InstructionTypeDetailsChart";
 import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionCoachingQuestions";
 import LevelOfInstructionSummarySlider from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummarySlider";
 import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph";
@@ -369,7 +369,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
             Was there a type of instruction they used less often?               
               </Typography>
             </Grid>
-            <InstructionResponsesDetailsChart
+            <InstructionTypeDetailsChart
               highLevelQuesInsCount={this.state.highLevelQuesInsCount}               
               followUpInsCount={this.state.followUpInsCount}            
               lowLevelInsCount={this.state.lowLevelInsCount}             

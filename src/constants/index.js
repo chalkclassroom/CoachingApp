@@ -755,7 +755,7 @@ export const CoachingQuestions = {
       },
       {
         'name': 'InstructionPanel2C',
-        'title': 'Listen to Children (magic 8 icon here to signal crossover)',
+        'title': 'Listen to Children',
         'text': [
           'Talk about times during the day when you able to have more lengthy conversations' +
           ' with children.', 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
-// import InstructionResponsesSummaryChart from './InstructionResponsesSummaryChart';
+import InstructionTypeSummaryChart from './InstructionTypeSummaryChart';
 import Slider from "react-slick";
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -105,7 +105,7 @@ class LevelOfInstructionSummarySlider extends React.Component<Props, {}> {
             <Typography align={"center"} variant={"h4"}>
               Summary
             </Typography>
-            <InstructionResponsesSummaryChart
+            <InstructionTypeSummaryChart
               basicSkillsResponses={this.props.basicSkillsResponses} 
               inferentialResponses={this.props.inferentialResponses} 
             />

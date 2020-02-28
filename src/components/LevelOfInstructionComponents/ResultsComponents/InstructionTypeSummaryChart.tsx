@@ -10,10 +10,10 @@ interface Props {
 }
 
 /**
- * specifies data sets and formatting for the Instruction responses pie chart
- * @class InstructionResponsesSummaryChart
+ * specifies data sets and formatting for the Instruction type pie chart
+ * @class InstructionTypeSummaryChart
  */
-class InstructionResponsesSummaryChart extends React.Component<Props, {}> {
+class InstructionTypeSummaryChart extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -101,5 +101,5 @@ class InstructionResponsesSummaryChart extends React.Component<Props, {}> {
   }
 }
 
-InstructionResponsesSummaryChart.contextType = FirebaseContext;
-export default InstructionResponsesSummaryChart;
+InstructionTypeSummaryChart.contextType = FirebaseContext;
+export default InstructionTypeSummaryChart;

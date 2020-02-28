@@ -11,9 +11,9 @@ interface Props {
 
 /**
  * specifies data sets and formatting for the Instruction details bar graph
- * @class InstructionResponsesDetailsChart
+ * @class InstructionTypeDetailsChart
  */
-class InstructionResponsesDetailsChart extends React.Component<Props, {}> {
+class InstructionTypeDetailsChart extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -136,4 +136,4 @@ class InstructionResponsesDetailsChart extends React.Component<Props, {}> {
   }
 }
 
-export default InstructionResponsesDetailsChart;
+export default InstructionTypeDetailsChart;
