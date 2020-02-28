@@ -7,7 +7,7 @@ interface Props {
 }
 
 /**
- * formatting for transition trends graph, including title and scales for the axes
+ * formatting for instruction trends graph, including title and scales for the axes
  * @type {{showScale: boolean, pointDot: boolean, scales: {yAxes: {ticks: {min: number, max: number, callback: (function(*): string), beginAtZero: boolean}, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[], xAxes: {display: boolean, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[]}, title: {display: boolean, fontSize: number, text: string, fontStyle: string}, showLines: boolean}}
  */
 const instructionTrendOptions = {             
@@ -26,14 +26,10 @@ const instructionTrendOptions = {
       }
     ]
   },
-  /* tooltips: {
-    displayColors: true,
-    multiKeyBackground: "white"
-  }, */
 };
 
 /**
- * specifies data sets and formatting for climate trends graph
+ * specifies data sets and formatting for level of instruction trends graph
  * @class LevelOfInstructionTrendsGraph                                             
  */
 class LevelOfInstructionTrendsGraph extends React.Component<Props, {}> {            

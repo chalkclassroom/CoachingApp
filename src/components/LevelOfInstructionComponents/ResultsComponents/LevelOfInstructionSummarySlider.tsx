@@ -1,9 +1,5 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
-import InstructionTypeSummaryChart from './InstructionTypeSummaryChart';
-import Slider from "react-slick";
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import { Pie } from "react-chartjs-2";
 import FirebaseContext from "../../Firebase/FirebaseContext";
 import * as Constants from '../../../constants';
@@ -11,7 +7,6 @@ import * as Constants from '../../../constants';
 interface Props {
   basicSkillsResponses: number, 
   inferentialResponses: number, 
-//  averageToneRating: number
 }
 /**
  * 
@@ -27,7 +22,6 @@ class LevelOfInstructionSummarySlider extends React.Component<Props, {}> {
   static propTypes = {
     basicSkillsResponses: PropTypes.number.isRequired, 
     inferentialResponses: PropTypes.number.isRequired,
-//    averageToneRating: PropTypes.number
   }
   /**
    * render function
@@ -79,7 +73,7 @@ class LevelOfInstructionSummarySlider extends React.Component<Props, {}> {
           },
           title: {
             display: true,
-            text: "Level of Instruction Summary",
+            text: "Teacher Instruction",
             fontSize: 20,
             fontStyle: "bold"
           },
@@ -101,19 +95,11 @@ class LevelOfInstructionSummarySlider extends React.Component<Props, {}> {
         width={650}
         height={400}
       />
-          {/* <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"} variant={"h4"}>
-              Summary
-            </Typography>
-            <InstructionTypeSummaryChart
-              basicSkillsResponses={this.props.basicSkillsResponses} 
-              inferentialResponses={this.props.inferentialResponses} 
-            />
-          </Grid> */}
         </div>
        
     );
   }
 }
 
+LevelOfInstructionSummarySlider.contextType = FirebaseContext;
 export default LevelOfInstructionSummarySlider;
