@@ -28,8 +28,8 @@ interface State {
 }
 
 /**
- * data reflection question layout for instructor
- * @class MathCoachingQuestions
+ * data reflection question layout for instruction
+ * @class LevelOfInstructionCoachingQuestions
  */
 class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> {
   /**

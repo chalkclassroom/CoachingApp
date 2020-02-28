@@ -88,7 +88,7 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
                 },
                 scaleLabel: {
                   display: true,
-                  labelString: "Instruction Responses",
+                  labelString: "Instruction Types",
                   fontSize: 18,
                   fontColor: "#000000"
                 },
