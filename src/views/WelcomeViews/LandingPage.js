@@ -538,7 +538,6 @@ class LandingPage extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-              {/* <Grid item> */}
                 <Grid container direction="row">
                   <Grid item xs={12}>
                     <LandingDetail
@@ -560,7 +559,6 @@ class LandingPage extends React.Component {
                     />
                   </Grid>
                 </Grid>
-              {/* </Grid> */}
               <Grid item style={{width: '100%', paddingTop: '2em'}}>
               {this.state.emailAdded ? (
 								<Grid container direction="row" justify="center" alignItems="center">
