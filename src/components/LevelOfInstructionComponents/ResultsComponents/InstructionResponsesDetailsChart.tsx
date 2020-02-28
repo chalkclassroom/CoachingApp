@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import {HorizontalBar} from 'react-chartjs-2';
 
-
 interface Props {
   highLevelQuesInsCount: number,
   followUpInsCount: number,
@@ -34,10 +33,10 @@ class InstructionResponsesDetailsChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const instructionData = {
+    const instructionData = {  
       labels: [
         "Ask High-Level Question",
-        "Follow-up on Children’s Responses",
+        ["Follow-up on ","Children’s Responses"],
         "Ask Low-LevelQuestion", 
         "Teach Specific Skills",
       ],
@@ -131,7 +130,7 @@ class InstructionResponsesDetailsChart extends React.Component<Props, {}> {
           }
         }}
         width={650}
-        height={400}
+        height={400}       
       />
     );
   }

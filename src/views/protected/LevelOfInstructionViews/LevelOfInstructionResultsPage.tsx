@@ -33,7 +33,6 @@ interface State {
   followUpInsCount: number,
   lowLevelInsCount: number,
   specificSkillInsCount: number,
-  // averageToneRating: number,
   sessionId: string,
   trendsDates: Array<string>,
   trendsInfer: Array<number>,
@@ -61,7 +60,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       followUpInsCount: 0,
       lowLevelInsCount: 0,
       specificSkillInsCount: 0,              
-     // averageToneRating: 0,
       sessionId: '',
       trendsDates: [],
       trendsInfer: [],                   
@@ -185,13 +183,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     let highLevelQuesCount = 0;
     let followUpCount = 0;
     this.handleNotesFetching(this.state.sessionId);
-/*     firebase.fetchAvgToneRating(this.state.sessionId).then((json: Array<{average: number}>) =>
-          json.forEach(toneRating => {
-            this.setState({
-              averageToneRating: toneRating.average
-            });
-          })
-        ); */ 
         firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
           if (actionPlanData.length>0) {
             console.log('actionplan data: ', actionPlanData>0)
@@ -321,7 +312,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
             <LevelOfInstructionSummarySlider
                basicSkillsResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
                inferentialResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
-              // averageToneRating={this.state.averageToneRating}
             />
           }
           details={
