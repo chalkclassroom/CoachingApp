@@ -292,7 +292,14 @@ class ResultsLayout extends React.Component<Props, State> {
                             {this.props.summary}
                           </div>
                         ) : (
-                          <img src={CHALKLogoGIF} alt="Loading" />
+                          <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                          >
+                            <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                          </Grid>
                         )}
                       </div>
                       ) : this.state.tabValue === 1 ? (
