@@ -51,11 +51,17 @@ interface State {
  * @class SequentialActivitiesPage
  */
 class SequentialActivitiesPage extends React.Component<Props, State> {
-  
-  state = {
-    auth: true,
-     completeEnabled: false
-  };
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
+    super(props);
+    
+    this.state = {
+      auth: true,
+      completeEnabled: false
+    };
+  }
 
   /**
    * @param {boolean} enable
