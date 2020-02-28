@@ -35,7 +35,7 @@ import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import ReactGA from 'react-ga';
 import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
-import CHALKLogoFastGIF from './assets/images/CHALKLogoFastGIF.gif';
+// import CHALKLogoFastGIF from './assets/images/CHALKLogoFastGIF.gif';
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -144,7 +144,7 @@ class App extends Component {
    */
   render() {
     return this.state.loading === true ? (
-      <img src={CHALKLogoFastGIF} alt="Loading" />
+      <img src={CHALKLogoGIF} alt="Loading" />
     ) : (
       <BrowserRouter>
         <MuiThemeProvider theme={styles}>

@@ -292,7 +292,6 @@ class ResultsLayout extends React.Component<Props, State> {
                             {this.props.summary}
                           </div>
                         ) : (
-                          
                           <img src={CHALKLogoGIF} alt="Loading" />
                         )}
                       </div>
