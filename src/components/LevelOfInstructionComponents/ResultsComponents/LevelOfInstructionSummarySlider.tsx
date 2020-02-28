@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
-import InstructionResponsesSummaryChart from './InstructionResponsesSummaryChart';
-import ToneSummary from './ToneSummary';
+// import InstructionResponsesSummaryChart from './InstructionResponsesSummaryChart';
 import Slider from "react-slick";
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';

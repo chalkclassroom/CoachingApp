@@ -8,6 +8,9 @@ import InstructionResponsesDetailsChart from "../../../components/LevelOfInstruc
 import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionCoachingQuestions";
 import LevelOfInstructionSummarySlider from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummarySlider";
 import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph";
+import { Grid, Typography } from "@material-ui/core";
+import PieSliceBasicSkillsLOIImage from "../../../assets/images/PieSliceBasicSkillsLOIImage.svg";
+import PieSliceInferentialLOIImage from "../../../assets/images/PieSliceInferentialLOIImage.svg";
 
 const styles: object = {
   root: {
@@ -17,6 +20,11 @@ const styles: object = {
     overflowY: "auto",
     overflowX: "hidden"
   },
+  comparisonText: {
+    paddingLeft: '1em',
+    lineHeight: '0.8em',
+    fontFamily: 'Arimo'
+  }
 };
 
 interface Props {
@@ -25,7 +33,8 @@ interface Props {
 }
 
 interface Style {
-  root: string
+  root: string,
+  comparisonText: string
 }
 
 interface State {
@@ -77,8 +86,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     const firebase = this.context;
     const teacherId = this.props.location.state.teacher.id;
     firebase.fetchInstructionTypeCount(this.state.sessionId); 
-/*     firebase.fetchAvgToneRating(this.state.sessionId);    
- */    this.handleDateFetching(teacherId);
+    this.handleDateFetching(teacherId);
   }
 
   /**
@@ -308,21 +316,78 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           magic8="Level of Instruction"
           handleTrendsFetch={this.handleTrendsFetching}
           observationType="level"
-          summary={
+           summary={
+             <div>
+            <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+            Compare how often the teacher provided: 
+          </Typography>
+          <Grid container direction="column" alignItems="center">
+            <Grid item style={{width: '100%'}}>
+              <Grid container direction="row">
+                <Grid item xs={1}>
+                  <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
+                    <Grid item style={{height:"33%"}}>
+                      <img alt="blue" src={PieSliceBasicSkillsLOIImage} height="95%"/>
+                    </Grid>
+                    <Grid></Grid> 
+                    <Grid item style={{height:"33%"}}>
+                      <img alt="green" src={PieSliceInferentialLOIImage} height="95%"/>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={11}>
+                  <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                    <Grid item style={{height:"33%"}}>
+                      <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
+                      Basic skills instruction 
+                      </Typography>
+                    </Grid>
+                    <Grid></Grid> 
+                    <Grid item style={{height:"33%"}}>
+                      <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
+                      Inferential instruction
+                    </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid></Grid> 
             <LevelOfInstructionSummarySlider
                basicSkillsResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
                inferentialResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
             />
-          }
+          </div>} 
           details={
+            <div>
+            <Grid container justify={"center"} direction={"column"}>
+              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+            Was there a type of instruction the teacher used more often? 
+              </Typography>
+              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+            Was there a type of instruction they used less often?               
+              </Typography>
+            </Grid>
             <InstructionResponsesDetailsChart
               highLevelQuesInsCount={this.state.highLevelQuesInsCount}               
               followUpInsCount={this.state.followUpInsCount}            
               lowLevelInsCount={this.state.lowLevelInsCount}             
               specificSkillInsCount={this.state.specificSkillInsCount}                  
             />
-          }
-          trendsGraph={<LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>}
+         </div>  }
+          
+          trendsGraph={
+            <div>
+            <Grid container justify={"center"} direction={"column"}>
+              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+            Was there a type of instruction the teacher used more often? 
+              </Typography>
+              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+            Was there a type of instruction they used less often?               
+              </Typography>
+            </Grid>
+          <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/> </div> }
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
           sessionDates={this.state.sessionDates}
@@ -335,7 +400,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
               teacherId={this.props.location.state.teacher.id}
               magic8={"Level of Instruction"}
             />
-          }
+             }
           chosenQuestions={chosenQuestions}
           teacherFirstName={this.props.location.state.teacher.firstName}
           teacherLastName={this.props.location.state.teacher.lastName}

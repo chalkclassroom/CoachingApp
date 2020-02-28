@@ -37,7 +37,7 @@ class InstructionResponsesSummaryChart extends React.Component<Props, {}> {
         {
           data: [this.props.inferentialResponses, this.props.basicSkillsResponses],
           backgroundColor: [Constants.InstructionColor,"#6d9eeb"],
-          hoverBackgroundColor: [Constants.InstructionColor, "#6d9eeb"] //6d9eeb
+          hoverBackgroundColor: [Constants.InstructionColor, "#6d9eeb"]
         }
       ]
     };
@@ -75,7 +75,7 @@ class InstructionResponsesSummaryChart extends React.Component<Props, {}> {
           },
           title: {
             display: true,
-            text: "Level of Instruction Summary",
+            text: "Teacher Instruction",
             fontSize: 20,
             fontStyle: "bold"
           },
