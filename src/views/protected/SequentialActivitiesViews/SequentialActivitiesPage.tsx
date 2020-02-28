@@ -4,15 +4,12 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import CenterMenuAssocCoop from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
-import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
-import AssocCoopHelp from "../AssociativeCooperativeViews/AssocCoopHelp"
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import { deleteAllCenters } from "../../../state/actions/sequential-activities";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import {
   addNewCenter,
   incrementCenterCount
-} from "../../../state/actions/associative-cooperative.js";
+} from "../../../state/actions/sequential-activities.js";
 import * as Constants from '../../../constants';
 
 
@@ -51,9 +48,9 @@ interface State {
 }
 
 /**
- * @class ACPage
+ * @class SequentialActivitiesPage
  */
-class ACPage extends React.Component<Props, State> {
+class SequentialActivitiesPage extends React.Component<Props, State> {
   
   state = {
     auth: true,
@@ -97,10 +94,10 @@ class ACPage extends React.Component<Props, State> {
                 onStatusChange={this.handleCompleteButton}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
-                magic8="Associative and Cooperative"
-                type="AC"
-                color={Constants.ACColor}
-                checklist={Constants.Checklist.AC}
+                magic8="Sequential Activities"
+                type="sequential"
+                color={Constants.SequentialColor}
+                checklist={Constants.Checklist.Sequential}
                 centers={this.props.centers}
               />
             )}
@@ -113,10 +110,10 @@ class ACPage extends React.Component<Props, State> {
 
 const mapStateToProps = state => {
   return {
-    centers: state.associativeCenterState.associativeCenters
+    centers: state.sequentialCenterState.sequentialCenters
   };
 };
 
 export default connect(mapStateToProps, { deleteAllCenters, addNewCenter, incrementCenterCount })(
-  withStyles(styles)(ACPage)
+  withStyles(styles)(SequentialActivitiesPage)
 );

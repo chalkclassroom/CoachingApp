@@ -4,10 +4,13 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import CenterMenuAssocCoop from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
 import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
-import AssocCoopHelp from "../AssociativeCooperativeViews/AssocCoopHelp"
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import CenterMenu from '../../../components/CentersComponents/CenterMenu';
+import {
+  addNewCenter,
+  incrementCenterCount
+} from "../../../state/actions/associative-cooperative.js";
+import * as Constants from '../../../constants';
 
 
 const styles: object = {
@@ -30,7 +33,13 @@ interface Style {
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: { id: string }}}
+  location: { state: { teacher: { id: string }}},
+  addNewCenter(): void,
+  incrementCenterCount(): void,
+  centers: Array<{
+    name: string,
+    count: number
+  }>,
 }
 
 interface State {
@@ -38,6 +47,9 @@ interface State {
   completeEnabled: boolean
 }
 
+/**
+ * @class AssociativeCooperativeInteractionsPage
+ */
 class AssociativeCooperativeInteractionsPage extends React.Component<Props, State> {
   
   state = {
@@ -45,7 +57,10 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
      completeEnabled: false
   };
 
-  handleCompleteButton = (enable: boolean) => {
+  /**
+   * @param {boolean} enable
+   */
+  handleCompleteButton = (enable: boolean): void => {
     this.setState({ completeEnabled: enable });
   };
 
@@ -54,41 +69,36 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
     location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
   };
 
-  render() {
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => (<AppBar firebase={firebase}
-              //classes={{ root: this.props.classes.grow }}
+          {(firebase: object): React.ReactNode => (
+            <AppBar
+              firebase={firebase}
               className={classes.grow}
             />
           )}
         </FirebaseContext.Consumer>
-
-
-        {/* this.state.recs ? (
-          <FirebaseContext.Consumer>
-            {firebase => (
-              <Recs
-                open={true}
-                onClose={this.handleRecsModal}
-                firebase={firebase}
-              />
-            )}
-          </FirebaseContext.Consumer>
-        ) : (
-          <div />
-        ) */}
         <main style={{ flex: 1 }}>
-       
-          
           <FirebaseContext.Consumer>
-            {(firebase: object) => (
-              <CenterMenuAssocCoop
+            {(firebase: object): React.ReactNode => (
+              <CenterMenu
                 teacherId={this.props.location.state.teacher.id}
                 firebase={firebase}
                 onStatusChange={this.handleCompleteButton}
+                addNewCenter={this.props.addNewCenter}
+                incrementCenterCount={this.props.incrementCenterCount}
+                magic8="Associative and Cooperative"
+                type="AC"
+                color={Constants.ACColor}
+                checklist={Constants.Checklist.AC}
+                centers={this.props.centers}
               />
             )}
           </FirebaseContext.Consumer>
@@ -98,6 +108,12 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
   }
 }
 
-export default connect(null, { deleteAllCenters })(
+const mapStateToProps = state => {
+  return {
+    centers: state.associativeCenterState.associativeCenters
+  };
+};
+
+export default connect(mapStateToProps, { deleteAllCenters, addNewCenter, incrementCenterCount })(
   withStyles(styles)(AssociativeCooperativeInteractionsPage)
 );

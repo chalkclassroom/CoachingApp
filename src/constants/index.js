@@ -154,18 +154,18 @@ export const DS = {
 export const Checklist = {
   'Math': {
     'ChildBehaviors': [
-      <div> <b>Counting and Numbers</b> </div>,
-      <div> <b>Shapes and Spatial reasoning</b> </div>,
-      <div> <b>Patterns</b> </div>,
-      <div> <b>Measurement and Data</b> </div>,
-      <div> None of the above </div>,
+      <div key={0}> <b>Counting and Numbers</b> </div>,
+      <div key={1}> <b>Shapes and Spatial reasoning</b> </div>,
+      <div key={2}> <b>Patterns</b> </div>,
+      <div key={3}> <b>Measurement and Data</b> </div>,
+      <div key={4}> None of the above </div>,
     ],
     'TeacherBehaviors': [
-      <div> Using <b>math vocabulary</b> </div>,
-      <div> <b>Asking questions</b> about math concepts </div>,
-      <div> <b>Demonstrating</b> math concepts </div>,
-      <div> Helping children use math to <b>problem solve</b> </div>,
-      <div> None of the above </div>,
+      <div key={0}> Using <b>math vocabulary</b> </div>,
+      <div key={1}> <b>Asking questions</b> about math concepts </div>,
+      <div key={2}> <b>Demonstrating</b> math concepts </div>,
+      <div key={3}> Helping children use math to <b>problem solve</b> </div>,
+      <div key={4}> None of the above </div>,
     ]
   },
   'AC': {

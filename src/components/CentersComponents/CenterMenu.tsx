@@ -26,6 +26,7 @@ interface VisitCenterProps {
   centerName: string,
   visitCount: number,
   onClick(): void 
+  type: string
 }
 
 /**
@@ -33,7 +34,12 @@ interface VisitCenterProps {
  * @return {ReactElement}
  */
 const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
-  const hsl = Math.max(82 - 4 * props.visitCount, 54);
+  let hsl = 0;
+  props.type === "AC" ? 
+    hsl = Math.max(82 - 4 * props.visitCount, 49.6)
+    : props.type === "math" ?
+    hsl = Math.max(70 - 4 * props.visitCount, 30)
+    : hsl = Math.max(82 - 4 * props.visitCount, 50);
   return (
     <Button
       variant="contained"
@@ -45,7 +51,12 @@ const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
         maxWidth: 150,
         whiteSpace: "normal",
         wordWrap: "break-word",
-        backgroundColor: `hsl(263, 55%, ${hsl}%`,
+        backgroundColor: props.type === "AC" ?
+          `hsl(263.3, 54.9%, ${hsl}%`
+          : props.type === "math" ?
+          `hsl(214.2, 88.4%, ${hsl}%`
+          : `hsl(49.6, 100%, ${hsl}%`
+        ,
         fontFamily: 'Arimo'
       }}
       onClick={props.onClick}
@@ -239,6 +250,7 @@ class CenterMenu extends React.Component<Props, State> {
                           centerName={center.name}
                           visitCount={center.count}
                           onClick={() => this.handleCenterVisit(center.name)}
+                          type={this.props.type}
                         />
                       </Grid>
                     ))}
@@ -286,14 +298,6 @@ class CenterMenu extends React.Component<Props, State> {
   }
 }
 
-/* const mapStateToProps = state => {
-  return {
-    centers: state.associativeCenterState.associativeCenters
-  };
-}; */
 
-export default withStyles(styles)(CenterMenu
-  /* connect(mapStateToProps, { })(
-    CenterMenu
-  ) */
-);
+
+export default withStyles(styles)(CenterMenu);
