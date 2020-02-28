@@ -10,9 +10,9 @@ interface Props {
 }
 /**
  * 
- * @class LevelOfInstructionSummarySlider
+ * @class LevelOfInstructionSummaryChart
  */
-class LevelOfInstructionSummarySlider extends React.Component<Props, {}> {
+class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */  constructor(props: Props) {
@@ -101,5 +101,5 @@ class LevelOfInstructionSummarySlider extends React.Component<Props, {}> {
   }
 }
 
-LevelOfInstructionSummarySlider.contextType = FirebaseContext;
-export default LevelOfInstructionSummarySlider;
+LevelOfInstructionSummaryChart.contextType = FirebaseContext;
+export default LevelOfInstructionSummaryChart;

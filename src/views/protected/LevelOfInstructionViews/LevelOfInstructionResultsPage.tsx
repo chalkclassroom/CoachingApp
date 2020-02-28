@@ -6,7 +6,7 @@ import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import InstructionTypeDetailsChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/InstructionTypeDetailsChart";
 import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionCoachingQuestions";
-import LevelOfInstructionSummarySlider from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummarySlider";
+import LevelOfInstructionSummaryChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummaryChart";
 import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph";
 import { Grid, Typography } from "@material-ui/core";
 import PieSliceBasicSkillsLOIImage from "../../../assets/images/PieSliceBasicSkillsLOIImage.svg";
@@ -354,7 +354,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
             </Grid>
           </Grid>
           <Grid></Grid> 
-            <LevelOfInstructionSummarySlider
+            <LevelOfInstructionSummaryChart
                basicSkillsResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
                inferentialResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
             />
