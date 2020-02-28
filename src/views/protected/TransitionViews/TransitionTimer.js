@@ -144,29 +144,28 @@ class TransitionTimer extends React.Component {
  
             {!this.props.typeSelected ? (
               <Button
-                color="#e0e0e0" // graycolor
-                variant="contained"
-                opacity="0.3"
-                // disabled={!this.props.typeSelected}
-                aria-label="Start"
-                onClick={this.guide}
-                style={{ fontFamily: 'Arimo' }}
-              >
-                Start New Transition
-              </Button>
-            ) : null}
-            {this.props.typeSelected ? (
-              <Button
-                variant="contained"
-                color="primary"
-                // disabled={!this.props.typeSelected}
-                aria-label="Start"
-                onClick={this.onStart}
-                style={{ fontFamily: 'Arimo' }}
-              >
+              color="#E0E0E0" // graycolor
+              variant="raised"
+              opacity="0.3"
+              // disabled={!this.props.typeSelected}
+              aria-label="Start"
+              onClick={this.guide}
+              style={{ fontFamily: 'Arimo' }}
+            >
+              Start New Transition
+            </Button>
+              ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              // disabled={!this.props.typeSelected}
+              aria-label="Start"
+              onClick={this.onStart}
+              style={{ fontFamily: 'Arimo' }}
+            >
               {this.state.isOn ? "End Transition" : "Start new Transition"}
             </Button>
-            ) : null}
+            ) }
             <div style={{ margin: 2 }} />
             <YesNoDialog
               buttonVariant={"outlined"}
