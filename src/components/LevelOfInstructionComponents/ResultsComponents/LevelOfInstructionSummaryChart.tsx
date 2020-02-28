@@ -33,8 +33,8 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.inferentialResponses, this.props.basicSkillsResponses],
-          backgroundColor: [Constants.InstructionColor,"#6d9eeb"],
-          hoverBackgroundColor: [Constants.InstructionColor, "#6d9eeb"] //6d9eeb
+          backgroundColor: ["#6aa84f","#6d9eeb"],
+          hoverBackgroundColor: ["#6aa84f", "#6d9eeb"] 
         }
       ]
     };
@@ -63,13 +63,8 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
             }
           },
           legend: {
-            onClick: null,
-            position: "bottom",
-            labels: {
-              padding: 20,
-              fontColor: "black",
-              fontSize: 14,
-            }
+            display: false,
+            position: 'bottom'
           },
           title: {
             display: true,
