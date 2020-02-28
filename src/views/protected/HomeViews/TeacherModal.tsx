@@ -135,6 +135,7 @@ class TeacherModal extends React.Component<Props, State> {
       pathname: "/Magic8Menu",
       state: { teacher: teacherInfo, type: this.props.type }
     });
+    this.setState({open: false})
     console.log(' history is ', this.props.history, ' and the type is ', typeof this.props.history);
   }
 

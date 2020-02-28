@@ -160,15 +160,29 @@ class Magic8MenuPage extends Component {
   }
 
   /**
+   * 
+   * @param {Props} prevProps 
+   */
+  componentDidUpdate(prevProps) {
+    if (this.props.location.state.type !== prevProps.location.state.type) {
+      this.setState({
+        page: this.props.location.state.type
+      });
+    }
+  }
+
+  /**
    * render function
    * @return {ReactElement}
    */
   render() {
     const { classes } = this.props;
+    console.log('props location state in magic8 page ', this.props.location.state);
+    console.log('state page ', this.state.page)
     return (
       <div>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {firebase => <AppBar firebase={firebase} menu={this.state.menu} />}
         </FirebaseContext.Consumer>
         <div>
           <div align="center">
