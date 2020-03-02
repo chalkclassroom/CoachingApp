@@ -12,7 +12,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
 import StarsIcon from '@material-ui/icons/Stars';
 import * as Constants from '../../../constants';
 
@@ -20,7 +19,7 @@ import * as Constants from '../../../constants';
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -105,13 +104,12 @@ class TeacherModal extends React.Component<Props, State> {
     this.selectTeacher = this.selectTeacher.bind(this);
   }
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
-    console.log(typeof this.props.handleClose);
+  componentDidMount(): void {
     this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Teacher>) => {
       const teacherList = [];
       teacherPromiseList.forEach(tpromise => {
@@ -130,13 +128,13 @@ class TeacherModal extends React.Component<Props, State> {
   /**
    * @param {object} teacherInfo 
    */
-  selectTeacher(teacherInfo: Teacher) {
+  selectTeacher(teacherInfo: Teacher): void {
     this.props.history.push({
       pathname: "/Magic8Menu",
       state: { teacher: teacherInfo, type: this.props.type }
     });
-    this.setState({open: false})
-    console.log(' history is ', this.props.history, ' and the type is ', typeof this.props.history);
+    this.setState({open: false});
+    this.props.handleClose();
   }
 
   static propTypes = {
@@ -149,9 +147,9 @@ class TeacherModal extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
@@ -191,8 +189,8 @@ class TeacherModal extends React.Component<Props, State> {
                   <ListItem
                       key={index}
                       alignItems="center"
-                      onClick={() =>
-                          this.selectTeacher(teacher)
+                      onClick={(): void =>
+                        this.selectTeacher(teacher)
                       }
                   >
                     <ListItemAvatar>
@@ -228,4 +226,4 @@ class TeacherModal extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(connect()(withStyles(styles)(TeacherModal)));
+export default withRouter(withStyles(styles)(TeacherModal));

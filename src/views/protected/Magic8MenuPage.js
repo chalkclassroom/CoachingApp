@@ -88,12 +88,7 @@ class Magic8MenuPage extends Component {
       numSelected: 0,
       selected: "none",
       unlocked: [],
-      page:
-        this.props.history.location.state.type === "Training"
-          ? "Training"
-          : this.props.history.location.state.type === "Observe"
-          ? "Observation"
-          : "Results"
+      page: ''
     };
 
     this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this);
@@ -128,7 +123,7 @@ class Magic8MenuPage extends Component {
         state: this.props.location.state
       });
     } else if (this.state.unlocked.includes(MAP[this.state.selected])) {
-      if (this.state.page === "Observation") {
+      if (this.state.page === "Observe") {
         this.props.history.push({
           pathname: `/${this.state.selected}`,
           state: this.props.location.state
@@ -157,6 +152,13 @@ class Magic8MenuPage extends Component {
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.setUnlockedSectionsState();
+    this.setState({
+      page: this.props.history.location.state.type === "Training"
+        ? "Training"
+        : this.props.history.location.state.type === "Observe"
+        ? "Observe"
+        : "Results"
+    });
   }
 
   /**
@@ -177,8 +179,6 @@ class Magic8MenuPage extends Component {
    */
   render() {
     const { classes } = this.props;
-    console.log('props location state in magic8 page ', this.props.location.state);
-    console.log('state page ', this.state.page)
     return (
       <div>
         <FirebaseContext.Consumer>
@@ -293,7 +293,7 @@ class Magic8MenuPage extends Component {
             >
               {this.state.page === "Training"
                 ? "Start Training"
-                : this.state.page === "Observation"
+                : this.state.page === "Observe"
                 ? "Observe"
                 : "View Results"}
               <link
