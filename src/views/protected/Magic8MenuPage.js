@@ -182,7 +182,7 @@ class Magic8MenuPage extends Component {
     return (
       <div>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} menu={this.state.menu} />}
+          {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div>
           <div align="center">
