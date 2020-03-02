@@ -118,8 +118,7 @@ class AppBar extends React.Component {
     );
   };
 
-  handleMenu = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  handleMenu = () => {
     this.setState({ open: !this.state.open });
   };
 
@@ -168,7 +167,7 @@ class AppBar extends React.Component {
                     classes.menuButton,
                     classes.menuButtonHidden
                   )}
-                  onClick={event => this.handleMenu(event)}
+                  onClick={() => this.handleMenu()}
                 >
                   <MenuIcon color="secondary" />
                 </IconButton>
@@ -347,4 +346,4 @@ AppBar.propTypes = {
   history: PropTypes.object.isRequired
 };
 
-export default withRouter(connect()(withStyles(styles)(AppBar)));
+export default withRouter(withStyles(styles)(AppBar));
