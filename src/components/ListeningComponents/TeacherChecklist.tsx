@@ -42,15 +42,23 @@ interface Props {
   },
   magic8: string,
   color: string,
-  checklist: {ChildBehaviors: Array<string>, TeacherBehaviors: Array<string>}
+  checklist: {TeacherBehaviors: Array<string>},
+  firebase: {
+    auth: {
+      currentUser: {
+        uid: string
+      }
+    },
+    handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
+    handlePushListening(mEntry: {checked: Array<number>}): Promise<void>
+  },
+  teacherId: string
 }
 
 interface State {
   checked: Array<number>,
-  people: number,
   time: number,
-  timeUpOpen: boolean,
-  peopleWarning: boolean
+  timeUpOpen: boolean
 }
 
 /**
@@ -65,12 +73,17 @@ class TeacherChecklist extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const mEntry = {
+      teacher: this.props.teacherId,
+      observedBy: this.props.firebase.auth.currentUser.uid,
+      type: "listening"
+    };
+    this.props.firebase.handleSession(mEntry);
+
     this.state = {
       checked: [],
-      people: undefined,
       time: RATING_INTERVAL,
       timeUpOpen: false,
-      peopleWarning: false,
     }
   }
 
@@ -81,6 +94,7 @@ class TeacherChecklist extends React.Component<Props, State> {
     if (this.state.time <= 0) {
       this.handleTimeUpNotification();
       this.setState({ time: RATING_INTERVAL });
+      this.handleSubmit();
     } else {
       if (this.state.time - 1000 < 0) {
         this.setState({ time: 0 });
@@ -117,18 +131,16 @@ class TeacherChecklist extends React.Component<Props, State> {
   };
 
   handleSubmit = (): void => {
-    console.log('submitting checklist ', [...this.state.childChecked, ...this.state.teacherChecked])
-    if (this.state.people === undefined) {
-      this.setState({ peopleWarning: true });
-    } else {
-      const mEntry = {
-        checked: [...this.state.checked],
-        people: this.state.people
-      };
-      this.props.firebase.handlePushCentersData(mEntry);
-      this.props.finishVisit(this.props.currentCenter);
-      this.props.toggleScreen();
-    }
+    const mEntry = {
+      checked: this.state.checked,
+    };
+    this.props.firebase.handlePushListening(mEntry).then(() => {
+      this.setState({
+        checked: []
+      })
+    });
+    // this.props.finishVisit(this.props.currentCenter);
+    // this.props.toggleScreen();
   };
 
   /**
@@ -138,14 +150,11 @@ class TeacherChecklist extends React.Component<Props, State> {
   handleCheck = (value: number) => (): void => {
     const { checked } = this.state;
     const newChecked: Array<number> = [];
-    console.log('newChecked starts as ', newChecked);
     if (((checked.includes(7) && value != 7) || 
     (checked.includes(1) || checked.includes(2) ||
     checked.includes(3) || checked.includes(4) || checked.includes(5) 
     || checked.includes(6)) && value === 7)) {
-      newChecked.splice(0, newChecked.length);
       newChecked.push(value);
-      console.log('after if condition ', newChecked);
     } else {
       newChecked.push(...checked);
       const currentIndex = checked.indexOf(value);
@@ -156,7 +165,6 @@ class TeacherChecklist extends React.Component<Props, State> {
         newChecked.splice(currentIndex, 1);
       }
       
-      console.log('after else condition ', newChecked);
     }
     this.setState({checked: newChecked});
   }
@@ -196,6 +204,7 @@ class TeacherChecklist extends React.Component<Props, State> {
             alignItems={"center"}
             direction={"row"}
             justify={"center"}
+            style={{height: '90vh'}}
           >
             <Grid item xs={3}>
               <Grid
@@ -209,7 +218,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                   color={this.props.color}
                   infoDisplay={<Countdown color={this.props.color} timerTime={60000} />}
                   infoPlacement="center"
-                  completeObservation={false}
+                  completeObservation={true}
                 />
               </Grid>
             </Grid>

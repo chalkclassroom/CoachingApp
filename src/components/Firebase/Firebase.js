@@ -463,6 +463,17 @@ class Firebase {
       );
   };
 
+  handlePushListening = async function(mEntry) {
+    return this.sessionRef
+      .collection("entries")
+      .add({
+        Checked: mEntry.checked,
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch(error =>
+        console.error("Error occurred adding observation: ", error)
+      );
+  };
 
   handleUnlockSection = async function(section) {
     return this.db

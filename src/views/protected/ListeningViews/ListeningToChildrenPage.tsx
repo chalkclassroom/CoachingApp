@@ -47,6 +47,7 @@ class ListeningToChildrenPage extends React.Component<Props, State> {
             {(firebase: object) => (
               <TeacherChecklist
                 firebase={firebase}
+                teacherId={this.props.location.state.teacher.id}
                 magic8="Listening to Children"
                 color={Constants.ListeningColor}
                 checklist={Constants.Checklist.Listening}
