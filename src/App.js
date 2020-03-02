@@ -28,6 +28,7 @@ import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivi
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
 import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage"; 
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
+import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage';
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
@@ -183,6 +184,11 @@ class App extends Component {
               auth={this.state.auth}
               path="/ClassroomClimate"
               component={ClassroomClimatePage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ListeningToChildren"
+              component={ListeningToChildrenPage}
             />
             <PrivateRoute
               auth={this.state.auth}

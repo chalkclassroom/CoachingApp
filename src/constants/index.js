@@ -129,6 +129,22 @@ export const DS = {
   'affiliation': 'Vanderbilt University'
 };
 
+
+// Centers Observation Checklists
+export const Checklist = {
+  'Listening': {
+    'TeacherBehaviors': [
+      'At eye-level with children',
+      'Looks expectantly at children and shows warmth to encourage interaction and child talk',
+      'Repeats or expands children\'s comments',
+      'Asks open-ended questions to encourage conversation',
+      'Expands on children\'s play or talk using questions or comments',
+      'Encourages children to talk to peers',
+      'None of the above'
+    ]
+  }
+}
+
 // Coaching Questions
 export const CoachingQuestions = {
   'Transition': {
