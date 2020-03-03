@@ -15,7 +15,7 @@
  //   ... rest of types
  // }
 
-const questionBank = {
+ const questionBank = {
   'transition':[
     {
       text: "What are the potential benefits of reducing transition time?",
@@ -275,7 +275,156 @@ const questionBank = {
       "positive classroom climate."
     }
   ],
-  'math':[],
+  'math':[
+    {
+      text: "A teacher observes a child in dramatic play placing toy eggs in a basket." +
+      " She says, “Wow, Jaden, you have a big basket of eggs! How many do you have?” " + 
+      " Which of the following behaviors did the teacher use?",
+      options: new Map([
+        ["Asking questions about math concepts", true],
+        ["Demonstrating math concepts", false],
+        ["Using math vocabulary", false],
+        ["A and B only", false]     
+       ]),
+      feedback: "The correct answer is A. When a teacher asks, “How many do you have?” " +
+      " that is considered asking questions about math concepts because it prompts the " +
+      " child to use counting skills such as one-to-one correspondence or subitizing."
+    },
+    {
+      text: "A child is playing with blocks and begins to put all the green triangles into" +
+      " a pile and the red triangles into a separate pile. What type of math is this child doing?",
+      options: new Map([
+        ["Measurement and data", false ],
+        ["Patterns", false],
+  ["Shapes and spatial reasoning ", false],
+  ["None of the above ", true]
+      ]),
+      feedback: " The correct answer is D. The child is sorting the triangles by color; " +
+      "therefore the child is not doing one of the math types listed in the answers." +
+      " If the child had sorted the blocks by shape, placing those with three sides (triangles) " +
+      " in one pile and those with four sides (squares) in a separate pile, then the correct type"+
+      " of math would be shapes and spatial reasoning. "
+    },
+    {
+      text: "Which of the following is NOT an example of the math type counting and number?",
+      options: new Map([
+        ["Matching a card showing three dots with a card showing the numeral 3",false],
+        ["Making a pattern with magnet numbers (1,2,1,2)", true],
+        ["Counting all of the letter A’s on a book page", false],        
+        ["Singing a counting song like ‘Five Little Monkeys”", false]
+      ]),
+      feedback: "The correct answer is B. Making a pattern with magnet numbers (1,2,1,2) is an "+
+      "example of patterning (not counting and number). Whenever a child repeats a sequence of items,"+
+      " the child is creating a pattern."
+    },
+    {
+      text: "A child is putting beans on one side of a bucket balance and marbles on the other side. "+
+      "The bucket with marbles sinks and the bucket with beans rises. If the child ________________,"+
+      " this would be an example of the math type measurement and data.",
+      options: new Map([
+  [" Counts the beans ", false],
+        ["Says there are more marbles than beans", false],
+        ["Says the marbles are heavier", true],
+        ["All of the above", false]
+      ]),
+      feedback: "The correct answer is C. One way that children engage in the math type measurement"+
+      "and data is by comparing objects by weight. The child does this when she observes that the"+
+      "  marbles in the bucket balance are heavier."
+        },
+    {
+      text: " A child is exploring letter stamps at the writing center. At first he tries out the "+
+      "A, C, and S stamps. Then he starts alternating the A and S stamp across the bottom of the"+
+      " paper. What type of math is he doing?",
+      options: new Map([
+        ["Patterns", true],
+        ["Shapes and spatial reasoning ", false],
+        ["Counting and number ", false],
+        ["Measurement and data ", false]
+      ]),
+      feedback: " The correct answer is A.  When children repeat a sequence like A, S, A, S they "+
+      "are creating a pattern."
+    },
+    {
+      text: "A teacher is introducing measurement concepts to a small group of children using blocks"+
+      " to determine the length of a table. She lines blocks from one edge of the table to the other."+
+      " When she reaches the end of the table, she says, “Hmm, it looks like the table is 16 blocks long"+
+      "  plus part of a block. So it is more than 16 blocks but less than 17 blocks.” In this scenario, "+
+      "  the teacher is_______________.?",
+      options: new Map([
+        ["Demonstrating a math concept", false],
+        ["Asking questions about a math concept", false ],
+        ["Demonstrating a math concepts and using math vocabulary ", true],
+        ["Asking questions about a math concept and using math vocabulary ", false]
+      ]),
+      feedback: "The correct answer is C. The teacher models, or demonstrates, how to use blocks "+
+      "(a non-standard unit of measurement) to figure out the length of the table. In addition, the"+
+      " teacher uses math vocabulary including “long,” “more,” and “less” as she demonstrates the"+
+      "  measurement concepts."
+    },
+
+{
+      text: "A teacher reads a book about a bear who picks seven apples every Sunday, then eats one"+
+      " per day until he has none left. One child says, “On the next page, he’s going to have four "+
+       " left!” This child is showing what type of mathematical thinking? ",
+      options: new Map([
+        ["Measurement and data ", false ],
+        ["Counting and number ", true],       
+        ["Shapes and spatial reasoning ", false],
+        ["All the above", false ]
+      ]),
+       feedback: "The correct answer is B. The child notices that each time the bear eats an apple,"+
+         " it is one less than the amount the bear had before. When the child predicts that the bear " +
+         "will have four on the next page, the child shows his knowledge that counting backward is one "+
+         "less. (I could also see some people thinking of patterning?).",
+    },
+{
+      text: " A teacher watches a child at the art center play with a handful of pipe cleaners. "+
+      " She encourages the child to create something and he builds a house. The teacher asks, "+
+      " “What shapes do you see in your house?” The child replies, “It’s just a house!” "+
+      "The teacher is ______________; the child is doing this type of math: _______________.?",
+      options: new Map([
+        ["Using math vocabulary; measurement and data",false],
+        ["Asking questions about math concepts; shapes and spatial reasoning", false],
+        ["Using math vocabulary; shapes and spatial reasoning ", false],
+        ["Asking questions about math concepts; none ", true]
+      ]),
+      feedback: "The correct answer is D. The teacher is asking questions about math concepts when"+
+       "she asks the child about shapes. However, the child does not show that she is thinking about"+
+        "a particular math concept when she replies, “It’s just a house!” Therefore, there is no math "+
+        "type to identify regarding the child’s behavior."
+    },
+{
+      text: "A child in the music center listens to a peer create a rhythm on the hand drums "+
+      " (one beat slow, three beats fast, ba-da-da-da). The child copies the rhythm (ba-da-da-da)"+
+      " with his hands over and over again. This is an example of ________________.?",
+      options: new Map([
+        ["Patterns", true],
+        ["Counting and number ", false],
+        ["Measurement and data ", false ],
+        ["Shapes and spatial reasoning ", false],
+      ]),
+      feedback: " The correct answer is A. When children create a pattern in their environment,"+
+      "whether it is using blocks to make a red-blue-red-blue pattern or hand-clapping to repeat "+
+      "a series of beats, this is doing patterns."
+    },
+{
+      text: " Two children at the blocks center have each connected several train cars together "+
+      " to make one long line of trains. One boy says, “Mine is the longest!” The teacher joins their "+
+      "play and says, “How do you know your train is longer than Leo’s train? Let’s find out how long"+
+      " they are.” The boys eagerly start pointing to their trains one by one and saying, “one, two, "+
+      " three, four,” etc. What type(s) of math are the children doing?",
+      options: new Map([
+        ["Counting and number",false],
+        ["Patterns; counting and number ", false],
+        ["Measurement and data; counting and number", true],
+        ["Patterns ", false],
+      ]),
+      feedback: "The correct answer is C. When children compare objects by length to figure"+
+      " which is the longest (or longer, shorter, etc.), they are doing measurement and data "+
+      " math. Because the boys counted their trains to help them compare lengths, they are"+
+      " also engaged in the counting and number type of math."
+    }
+  ],
   'student':[],
   'level':[],
   'listening':[],
@@ -418,7 +567,7 @@ const questionBank = {
         ["Introduce visuals that remind children how to play a game", false],
         ["Explain to children that we take turns during board games and ask who would like to go first", false],
         ["Demonstrate how to move the game pieces on the board ", false],
-        ["All of the above", true],
+        ["All of the above", true]
       ]),
       feedback: "The correct answer is D. Children may have a difficult time interacting " + 
       "cooperatively by playing a board game if they don’t remember how to play.  If teachers introduce " + 
@@ -432,7 +581,7 @@ const questionBank = {
         ["Cooperative interaction", false],
         ["Associative interaction", false],
         ["Not enough information to choose an answer", true],
-        ["None of the above", false],
+        ["None of the above", false]
       ]),
       feedback: "The correct answer is C.  In order to know whether this is an associative or " + 
       "cooperative interaction, we need more information about the child’s interaction with " + 
@@ -447,7 +596,7 @@ const questionBank = {
         ["Interacting with a teacher", false],
         ["Talking", false],
         ["A or B", true],
-        ["None of the above", false],
+        ["None of the above", false]
       ]),
       feedback: "The correct answer is D.  An interaction can be considered associative or " + 
       "cooperative if the child is interacting with another person, whether it is another " + 
@@ -470,7 +619,7 @@ const questionBank = {
         ["Participating in children’s play", false],
         ["Encouraging children to spread out across centers", true],
         ["Encouraging children to work together", false],
-        ["Helping children find words to communicate", false],
+        ["Helping children find words to communicate", false]
       ]),
       feedback: "The correct answer is B.  In order for an interaction to be associative or " + 
       "cooperative, children need to be interacting with another child(ren) or an adult.  If a " + 
@@ -484,7 +633,7 @@ const questionBank = {
         ["Demonstrate the game", false],
         ["Model good sportsmanship", false],
         ["Help children communicate (Say, “it’s my turn next”)", false],
-        ["All of the above", true],
+        ["All of the above", true]
       ]),
       feedback: "The correct answer is D.  When children are struggling to play a game, it might " + 
       "be because they do not know how to play, have not developed good sportsmanship, or might " + 
@@ -498,7 +647,7 @@ const questionBank = {
         ["Cooperative interaction", true],
         ["Associative interaction", false],
         ["Not enough information to choose an answer", false],
-        ["None of the above", false],
+        ["None of the above", false]
       ]),
       feedback: "The correct answer is A. When children take turns, they are exhibiting cooperative behavior."
     },
@@ -508,7 +657,7 @@ const questionBank = {
         ["Children are playing with shared materials", false],
         ["Children are communicating about a task with their peers", false],
         ["Children are constructing an idea together", false],
-        ["All of the above", true],
+        ["All of the above", true]
       ]),
       feedback: "The correct answer is D.  Associative interactions are seen when children " + 
       "are playing with shared materials, communicating about a task with others, or " + 
@@ -523,7 +672,7 @@ const questionBank = {
         ["Engaging in a cooperative interaction", false],
         ["Acting out a recognizable scenario", false],
         ["B & C", true],
-        ["A & C", false],
+        ["A & C", false]
       ]),
       feedback: "The correct answer is D.  The children in this scenario are acting out a common " + 
       "scenario (dinnertime) and using role speech. Therefore, this is an example of a cooperative interaction."
@@ -535,7 +684,7 @@ const questionBank = {
         ["Board games", true],
         ["Crayons", false],
         ["Worksheets", false],
-        ["Backpacks", false],
+        ["Backpacks", false]
       ]),
       feedback: "The correct answer is A.  Although materials like crayons may be present during " + 
       "cooperative interactions, board games are particularly likely to help children initiate " + 
@@ -543,6 +692,8 @@ const questionBank = {
       "and share ideas / communicate about their game."
     }
   ]
+
+  
 };
 
 export default questionBank;

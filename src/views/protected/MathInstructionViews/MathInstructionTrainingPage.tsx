@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as Constants from '../../../constants/index';
 import Button from '@material-ui/core/Button/Button';
-import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
+import MathIconImage from '../../../assets/images/MathIconImage.svg';
 import { withStyles } from '@material-ui/core/styles/index';
 import AppBar from '../../../components/AppBar';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
@@ -10,14 +10,14 @@ import 'chartjs-plugin-datalabels';
 import TrainingVideo from '../../../components/Shared/TrainingVideo.tsx';
 import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionnaire';
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
-import AssocCoopHelpCard from '../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard';
+import MathInstructionHelpCard from '../../../components/MathInstructionComponents/MathInstructionHelpCard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/es';
 
-const ACTheme = createMuiTheme({
+const MathTheme = createMuiTheme({
 	palette: {
 		primary: {
-			main: Constants.ACColor
+			main: Constants.MathColor
 		}
 	}
 });
@@ -152,11 +152,11 @@ interface Props {
 }
 
 interface Style {
-	main: string;
-	titleContainer: string;
-	backButton: string;
-	trainingContentCard: string;
-	dashboardContainer: string;
+  titleContainer: string;
+  backButton: string;
+  main: string;
+  dashboardContainer: string;
+  trainingContentCard: string;
 	root: string;
 	viewButtons: string;
 	buttonsList: string;
@@ -169,9 +169,9 @@ interface State {
 
 /**
  * Math Instruction  training
- * @class AssociativeCooperativeInteractionsTrainingPage
+ * @class MathInstructionTrainingPage
  */
-class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Props, State> {
+class MathInstructionTrainingPage extends React.Component<Props, State> {
 	/**
    * @param {Props} props 
    */
@@ -268,29 +268,29 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
 					</Button>
 				</div>
 				<div className={classes.main}>
-					<div className={classes.dashboardContainer}>
+				<div className={classes.dashboardContainer}> 
 						<TrainingDashboard
 							ViewEnum={ViewEnum}
 							view={view}
-							Icon={AssocCoopIconImage}
+							Icon={MathIconImage}
 							conceptsClick={this.conceptsClick}
 							definitionsClick={this.definitionsClick}
 							exampleClick={this.exampleClick}
 							demonstrationClick={this.demonstrationClick}
 							tryItClick={this.tryItClick}
 							knowledgeCheckClick={this.knowledgeCheckClick}
-							colorTheme={ACTheme}
+							colorTheme={MathTheme}
 						/>
 					</div>
 					<div className={classes.trainingContentCard}>
 						{view === ViewEnum.CONCEPTS ? (
 							<TrainingVideo
 								videoUrl={
-									'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/AC_Concepts.mp4?alt=media&token=6499ec3f-8f39-4334-aeea-8e34a4e8fb7e'
+									'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/MathInstruction_Concepts.mp4?alt=media&token=5294431b-208d-41ae-a61d-f9be8e043720'
 								}
 							/>
 						) : view === ViewEnum.DEFINITIONS ? (
-							<AssocCoopHelpCard />
+							<MathInstructionHelpCard />
 						) : view === ViewEnum.EXAMPLE ? (
 							<div>EXAMPLE</div>
 						) : view === ViewEnum.DEMONSTRATION ? (
@@ -304,7 +304,7 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
 						) : view === ViewEnum.TRYIT ? (
 							<div>TRY IT</div>
 						) : view === ViewEnum.KNOWLEDGECHECK ? (
-							<TrainingQuestionnaire section={'ac'} />
+							<TrainingQuestionnaire section={'math'} />
 						) : null}
 					</div>
 				</div>
@@ -313,4 +313,4 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
 	}
 }
 
-export default withStyles(styles)(AssociativeCooperativeInteractionsTrainingPage);
+export default withStyles(styles)(MathInstructionTrainingPage);
