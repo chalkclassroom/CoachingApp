@@ -73,10 +73,6 @@ function TransitionObservationPopUp(props: Props): React.ReactElement {
                 <Typography variant="h6">
                   ACTIVITY SETTING: Any time of the day!
                 </Typography>
-                {/* <img src={AdminSchoolImage} alt="school" />
-                <Typography variant="h6">
-                  Any time of the day!
-                </Typography> */}
               </Grid>
             </Grid>
           </Grid>
