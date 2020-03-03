@@ -16,6 +16,8 @@ import SequentialIconImage from "../../assets/images/SequentialIconImage.svg";
 import EngagementIconImage from "../../assets/images/EngagementIconImage.svg";
 import TransitionTimeIconImage from "../../assets/images/TransitionTimeIconImage.svg";
 import Icon from "@material-ui/core/Icon";
+import ObservationModal from '../../components/ObservationModal';
+import TransitionObservationPopUp from '../../components/TransitionComponents/TransitionObservationPopUp';
 
 const CardRow = styled.div`
   position: relative;
@@ -49,14 +51,16 @@ const styles = {
   titleText: {
     fontSize: "2.9em",
     color: "#000000",
-    marginTop: "5%"
+    marginTop: "5%",
+    fontFamily: "Arimo"
   },
   instructionText: {
     fontSize: "1em",
     color: "#000000",
     marginLeft: "17%",
     marginTop: "2%",
-    marginBottom: "2vh"
+    marginBottom: "2vh",
+    fontFamily: "Arimo"
   }
 };
 
@@ -149,6 +153,15 @@ class Magic8MenuPage extends Component {
     });
   }
 
+  /**
+   * @return {void}
+   */
+  handleCloseObservationModal = () => {
+    this.setState({
+      numSelected: 0
+    })
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.setUnlockedSectionsState();
@@ -190,6 +203,7 @@ class Magic8MenuPage extends Component {
               {this.state.page}
             </Typography>
           </div>
+          {console.log('num selected state ', this.state.numSelected)}
           <div>
             <Typography className={classes.instructionText}>
               Select the skill you&apos;d like to{" "}
@@ -265,7 +279,7 @@ class Magic8MenuPage extends Component {
             />
           </CardRow>
           <CardRow>
-            <Button
+            {/* <Button
               className={classes.goButton}
               disabled={
                 this.state.page === "Training"
@@ -301,8 +315,14 @@ class Magic8MenuPage extends Component {
                 href="https://fonts.googleapis.com/icon?family=Material+Icons"
               />
               <Icon style={{ marginLeft: 5 }}>send</Icon>
-            </Button>
+            </Button> */}
           </CardRow>
+          <ObservationModal
+            open={this.state.numSelected && this.state.page==="Observe"}
+            content={<TransitionObservationPopUp />}
+            handleBegin={this.handleGoButton}
+            handleClose={this.handleCloseObservationModal}
+          />
         </div>
       </div>
     );
