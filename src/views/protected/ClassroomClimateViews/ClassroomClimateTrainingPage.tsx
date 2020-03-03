@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as Constants from '../../../constants/index';
 import Button from '@material-ui/core/Button/Button';
-import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
+import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg';
 import { withStyles } from '@material-ui/core/styles/index';
 import AppBar from '../../../components/AppBar';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
@@ -10,14 +10,14 @@ import 'chartjs-plugin-datalabels';
 import TrainingVideo from '../../../components/Shared/TrainingVideo.tsx';
 import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionnaire';
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
-import AssocCoopHelpCard from '../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard';
+import ClassroomClimateHelpCard from '../../../components/ClassroomClimateComponent/ClassroomClimateHelp';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/es';
 
-const ACTheme = createMuiTheme({
+const ClimateTheme = createMuiTheme({
 	palette: {
 		primary: {
-			main: Constants.ACColor
+			main: Constants.ClimateColor
 		}
 	}
 });
@@ -163,10 +163,10 @@ interface State {
 }
 
 /**
- * Math Instruction  training
- * @class AssociativeCooperativeInteractionsTrainingPage
+ * Classroom Climate training
+ * @class ClassroomClimateTrainingPage
  */
-class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Props, State> {
+class ClassroomClimateTrainingPage extends React.Component<Props, State> {
 	/**
    * @param {Props} props 
    */
@@ -263,29 +263,29 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
 					</Button>
 				</div>
 				<div className={classes.main}>
-					<div md={3}  xs={3} className={classes.dashboardContainer}>
+					<div className={classes.dashboardContainer}>
 						<TrainingDashboard
 							ViewEnum={ViewEnum}
 							view={view}
-							Icon={AssocCoopIconImage}
+							Icon={ClassroomClimateIconImage}
 							conceptsClick={this.conceptsClick}
 							definitionsClick={this.definitionsClick}
 							exampleClick={this.exampleClick}
 							demonstrationClick={this.demonstrationClick}
 							tryItClick={this.tryItClick}
 							knowledgeCheckClick={this.knowledgeCheckClick}
-							colorTheme={ACTheme}
+							colorTheme={ClimateTheme}
 						/>
 					</div>
-					<div  md={9}  xs={9} className={classes.trainingContentCard}>
+					<div className={classes.trainingContentCard}>
 						{view === ViewEnum.CONCEPTS ? (
 							<TrainingVideo
 								videoUrl={
-									'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/AC_Concepts.mp4?alt=media&token=6499ec3f-8f39-4334-aeea-8e34a4e8fb7e'
+									'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/CC%20Concepts%207-17-19.mp4?alt=media&token=2375a7d2-3c6e-4eec-a9c0-a29214db9cdf'
 								}
 							/>
 						) : view === ViewEnum.DEFINITIONS ? (
-							<AssocCoopHelpCard />
+							<ClassroomClimateHelpCard />
 						) : view === ViewEnum.EXAMPLE ? (
 							<div>EXAMPLE</div>
 						) : view === ViewEnum.DEMONSTRATION ? (
@@ -299,7 +299,7 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
 						) : view === ViewEnum.TRYIT ? (
 							<div>TRY IT</div>
 						) : view === ViewEnum.KNOWLEDGECHECK ? (
-							<TrainingQuestionnaire section={'ac'} />
+							<TrainingQuestionnaire section={'climate'} />
 						) : null}
 					</div>
 				</div>
@@ -308,4 +308,4 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
 	}
 }
 
-export default withStyles(styles)(AssociativeCooperativeInteractionsTrainingPage);
+export default withStyles(styles)(ClassroomClimateTrainingPage);

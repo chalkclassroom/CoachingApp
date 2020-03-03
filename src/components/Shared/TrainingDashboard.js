@@ -1,10 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button/Button";
-import ListItem from "@material-ui/core/ListItem/index";
+import { Button, Card } from '@material-ui/core'; import ListItem from "@material-ui/core/ListItem/index";
 import { withStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 const styles = {
+  card: {
+    border: '3px solid #d9d9d9',
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    height: '100%',
+    boxShadow: '5px',
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justify: 'space-evenly',
+    display: 'flex',
+    flex: '1',
+    flexWrap: 'nowrap'
+  },
   container: {
     minWidth: '240px',
     display: 'flex',
@@ -19,23 +33,41 @@ const styles = {
   },
   buttonsListContainer: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+   
   },
+//    viewButtons: {
+//       Width: '80%',
+// },
 
   // iPad Pro 12.9" Portrait
   '@media only screen and (max-width:1024px) and (orientation:portrait)': {
-    buttonsListContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center'
-    },
+    // buttonsListContainer: {
+    //   flexDirection: 'row',
+    //   flexWrap: 'wrap',
+    //   justifyContent: 'center'
+    // },
     iconContainer: {
       display: 'none'
     },
-    viewButtons: {
-      minWidth: '240px',
-      maxWidth: '325px'
-    }
+    // viewButtons: {
+    //   minWidth: '240px',
+    //   maxWidth: '240px'
+    // },
+    card: {
+      border: '3px solid #d9d9d9',
+      borderRadius: 10,
+      backgroundColor: '#fff',
+      height: '100%',
+      boxShadow: '5px',
+      width: '100%',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justify: 'space-evenly',
+      display: 'flex',
+      flex: '1',
+      flexWrap: 'nowrap'
+    },
   },
 
   //iPad Pro 10.5" Landscape
@@ -47,9 +79,23 @@ const styles = {
 
   // iPad Pro 10.5" Portrait
   '@media only screen and (max-width:834px) and (orientation:portrait)': {
-    viewButtons: {
-      maxWidth: '395px'
-    }
+    // viewButtons: {
+    //   maxWidth: '395px'
+    // },
+    card: {
+      border: '3px solid #d9d9d9',
+      borderRadius: 10,
+      backgroundColor: '#fff',
+      height: '100%',
+      boxShadow: '5px',
+      width: '35%',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justify: 'space-evenly',
+      display: 'flex',
+      flex: '1',
+      flexWrap: 'nowrap'
+    },
   },
 
   //iPad-Mini Landscape
@@ -64,24 +110,38 @@ const styles = {
     container: {
       fontSize: '0.6em'
     },
-    viewButtons: {
-      maxWidth: '240px'
-    }
+    // viewButtons: {
+    //   maxWidth: '240px'
+    // },
+    card: {
+      border: '3px solid #d9d9d9',
+      borderRadius: 10,
+      backgroundColor: '#fff',
+      height: '100%',
+      boxShadow: '5px',
+      width: '30%',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justify: 'space-evenly',
+      display: 'flex',
+      flex: '1',
+      flexWrap: 'nowrap'
+    },
   },
 
   // Minor Breakpoint - 920px width
   '@media only screen and (max-width:920px) and (orientation:landscape)': {
-    buttonsListContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center'
-    },
+    // buttonsListContainer: {
+    //   flexDirection: 'row',
+    //   flexWrap: 'wrap',
+    //   justifyContent: 'center'
+    // },
     iconContainer: {
       display: 'none'
     },
-    viewButtons: {
-      maxWidth: '250px'
-    }
+    // viewButtons: {
+    //   maxWidth: '250px'
+    // }
   },
 
   // Mobile Landscape
@@ -89,9 +149,9 @@ const styles = {
     container: {
       fontSize: '0.8em'
     },
-    viewButtons: {
-      maxWidth: '180px'
-    }
+    // viewButtons: {
+    //   maxWidth: '180px'
+    // }
   }
 };
 
@@ -107,91 +167,107 @@ function TrainingDashboard(props) {
     exampleClick,
     demonstrationClick,
     tryItClick,
-    knowledgeCheckClick
+    knowledgeCheckClick,
+    colorTheme
   } = props;
   const { container, buttonsListContainer, iconContainer, viewButtons } = classes;
 
   return (
     <div className={container}>
-      <ListItem className={iconContainer}>
-        <img src={Icon} width={"100px"} alt="Magic Eight" />
-      </ListItem>
-      <div className={buttonsListContainer}>
-        <ListItem className={viewButtons}>
-          <Button
-            size="large"
-            color={"primary"}
-            fullWidth={true}
-            variant={view === ViewEnum.CONCEPTS ? "contained" : "outlined"}
-            onClick={conceptsClick}
-            style={{ fontSize:'1em' }} // necessary to responsively change font sizes w/ media queries
-          >
-            CONCEPTS
-          </Button>
+      <Card className={classes.card}>
+        <ListItem className={iconContainer}>
+          <img src={Icon} width={"100px"} alt="Magic Eight" />
         </ListItem>
-        <ListItem className={viewButtons}>
-          <Button
-            size="large"
-            color={"primary"}
-            fullWidth={true}
-            variant={view === ViewEnum.DEFINITIONS ? "contained" : "outlined"}
-            onClick={definitionsClick}
-            style={{ fontSize:'1em' }}
-          >
-            DEFINITIONS
+        <div className={buttonsListContainer} style={{width:'90%'}}>
+          <ListItem className={viewButtons}>
+            <MuiThemeProvider theme={colorTheme}>
+              <Button
+                size="large"
+                color={"primary"}
+                fullWidth={true}
+                variant={view === ViewEnum.CONCEPTS ? "contained" : "outlined"}
+                onClick={conceptsClick}
+                style={{ fontSize: '1em' }} // necessary to responsively change font sizes w/ media queries
+              >
+                CONCEPTS
           </Button>
-        </ListItem>
-        <ListItem className={viewButtons}>
-          <Button
-            size="large"
-            color={"primary"}
-            fullWidth={true}
-            variant={view === ViewEnum.EXAMPLE ? "contained" : "outlined"}
-            onClick={exampleClick}
-            style={{ fontSize:'1em' }}
-            disabled
-          >
-            EXAMPLE
+            </MuiThemeProvider>
+          </ListItem>
+          <ListItem className={viewButtons}>
+            <MuiThemeProvider theme={colorTheme}>
+              <Button
+                size="large"
+                color={"primary"}
+                fullWidth={true}
+                variant={view === ViewEnum.DEFINITIONS ? "contained" : "outlined"}
+                onClick={definitionsClick}
+                style={{ fontSize: '1em' }}
+              >
+                DEFINITIONS
           </Button>
-        </ListItem>
-        <ListItem className={viewButtons}>
-          <Button
-            size="large"
-            color={"primary"}
-            fullWidth={true}
-            variant={view === ViewEnum.DEMONSTRATION ? "contained" : "outlined"}
-            onClick={demonstrationClick}
-            style={{ fontSize:'1em' }}
-          >
-            DEMONSTRATION
+            </MuiThemeProvider>
+          </ListItem>
+          <ListItem className={viewButtons}>
+            <MuiThemeProvider theme={colorTheme}>
+              <Button
+                size="large"
+                color={"primary"}
+                fullWidth={true}
+                variant={view === ViewEnum.EXAMPLE ? "contained" : "outlined"}
+                onClick={exampleClick}
+                style={{ fontSize: '1em' }}
+                disabled
+              >
+                EXAMPLE
           </Button>
-        </ListItem>
-        <ListItem className={viewButtons}>
-          <Button
-            size="large"
-            color={"primary"}
-            fullWidth={true}
-            variant={view === ViewEnum.TRYIT ? "contained" : "outlined"}
-            onClick={tryItClick}
-            style={{ fontSize:'1em' }}
-            disabled
-          >
-            TRY IT YOURSELF
+            </MuiThemeProvider>
+          </ListItem>
+          <ListItem className={viewButtons}>
+            <MuiThemeProvider theme={colorTheme}>
+              <Button
+                size="large"
+                color={"primary"}
+                fullWidth={true}
+                variant={view === ViewEnum.DEMONSTRATION ? "contained" : "outlined"}
+                onClick={demonstrationClick}
+                style={{ fontSize: '1em' }}
+              >
+                DEMONSTRATION
           </Button>
-        </ListItem>
-        <ListItem className={viewButtons}>
-          <Button
-            size="large"
-            color={"primary"}
-            fullWidth={true}
-            variant={view === ViewEnum.KNOWLEDGECHECK ? "contained" : "outlined"}
-            onClick={knowledgeCheckClick}
-            style={{ fontSize:'1em' }}
-          >
-            KNOWLEDGE CHECK
+            </MuiThemeProvider>
+          </ListItem>
+          <ListItem className={viewButtons}>
+            <MuiThemeProvider theme={colorTheme}>
+
+              <Button
+                size="large"
+                color={"primary"}
+                fullWidth={true}
+                variant={view === ViewEnum.TRYIT ? "contained" : "outlined"}
+                onClick={tryItClick}
+                style={{ fontSize: '1em' }}
+                disabled
+              >
+                TRY IT YOURSELF
+             </Button>
+            </MuiThemeProvider>
+          </ListItem>
+          <ListItem className={viewButtons}>
+            <MuiThemeProvider theme={colorTheme}>
+              <Button
+                size="large"
+                color={"primary"}
+                fullWidth={true}
+                variant={view === ViewEnum.KNOWLEDGECHECK ? "contained" : "outlined"}
+                onClick={knowledgeCheckClick}
+                style={{ fontSize: '1em' }}
+              >
+                KNOWLEDGE CHECK
           </Button>
-        </ListItem>
-      </div>
+            </MuiThemeProvider>
+          </ListItem>
+        </div>
+      </Card>
     </div>
   );
 }

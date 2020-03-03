@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
+import * as Constants from '../../../constants';
 import Button from "@material-ui/core/Button/Button";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
@@ -11,6 +12,15 @@ import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionna
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+import { createMuiTheme } from '@material-ui/core/styles';
+
+const TransitionTheme = createMuiTheme({
+	palette: {
+		primary: {
+			main: Constants.TransitionColor
+		}
+	}
+});
 
 const styles: object = {
   root: {
@@ -44,7 +54,8 @@ const styles: object = {
     display: 'grid',
     gridTemplateRows: '100%',
     gridTemplateColumns: '25% 75%',
-    margin: '2% 5% 2% 5%'
+    margin: '2% 2% 2% 2%', 
+    flexDirection: 'row'
   },
   trainingContentCard: {
     display: 'flex',
@@ -62,7 +73,9 @@ const styles: object = {
       fontSize: '1.5em'
     },
     main: {
-      margin: '8% 2% 2% 2%'
+      margin: '8% 2% 2% 2%',
+      flexDirection: 'row',
+      gridTemplateColumns: '25% 75%',
     }
   },
 
@@ -72,10 +85,12 @@ const styles: object = {
       height: '100%',
       margin: '2%',
       display: 'flex',
-      flexDirection: 'column'
+      // flexDirection: 'column'
+      flexDirection: 'row',
+      gridTemplateColumns: '25% 75%',
     },
     dashboardContainer: {
-      boxShadow: '1px 1px 3px #8C8D91'
+      // boxShadow: '1px 1px 3px #8C8D91'
     },
     trainingContentCard: {
       flexGrow: 1,
@@ -89,7 +104,9 @@ const styles: object = {
   // iPad-Mini Landscape
   '@media only screen and (max-width:1024px) and (orientation:landscape)': {
     main: {
-      margin: '2%'
+      margin: '2%',
+      flexDirection: 'row',
+      gridTemplateColumns: '25% 75%',
     }
   },
 
@@ -106,10 +123,13 @@ const styles: object = {
       height: '100%',
       margin: '0% 2% 0% 2%',
       display: 'flex',
-      flexDirection: 'column'
+      // flexDirection: 'column'
+      flexDirection: 'row',
+      gridTemplateColumns: '25% 75%',
     },
     dashboardContainer: {
-      boxShadow: '1px 1px 3px #8C8D91'
+      // boxShadow: '1px 1px 3px #8C8D91',
+
     },
     trainingContentCard: {
       flexGrow: 1,
@@ -242,7 +262,7 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
           </Button>
         </div>
         <div className={classes.main}>
-          <div className={classes.dashboardContainer}>
+          <div className={classes.dashboardContainer} md={3}  xs={3}>
             <TrainingDashboard
               ViewEnum={ViewEnum}
               view={view}
@@ -253,10 +273,11 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
               demonstrationClick={this.demonstrationClick}
               tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
-              color="#ffd300"
+              colorTheme={TransitionTheme}
             />
           </div>
-          <div className={classes.trainingContentCard}>
+          
+          <div  md={9}  xs={9} className={classes.trainingContentCard}>
             {view === ViewEnum.CONCEPTS ? 
               <TrainingVideo
                 videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT%20Concepts%201.30.2020.mp4?alt=media&token=0561eb57-b13c-43c5-a135-33223c3bb369'} />
