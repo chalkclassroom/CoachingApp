@@ -249,7 +249,7 @@ class CenterRatingChecklistMath extends React.Component {
                 <Dashboard
                   magic8="Math Instruction"
                   color={Constants.MathColor}
-                  infoDisplay={<Countdown color={Constants.MathColor} timerTime={60000} />}
+                  infoDisplay={<Countdown color={Constants.MathColor} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />

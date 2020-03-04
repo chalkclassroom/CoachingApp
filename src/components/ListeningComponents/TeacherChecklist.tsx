@@ -6,6 +6,7 @@ import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
@@ -16,6 +17,8 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
+import Zoom from '@material-ui/core/Zoom';
+
 
 const styles: object = {
   root: {
@@ -58,7 +61,9 @@ interface Props {
 interface State {
   checked: Array<number>,
   time: number,
-  timeUpOpen: boolean
+  timeUpOpen: boolean,
+  final: boolean,
+  in: boolean
 }
 
 /**
@@ -84,6 +89,8 @@ class TeacherChecklist extends React.Component<Props, State> {
       checked: [],
       time: RATING_INTERVAL,
       timeUpOpen: false,
+      final: false,
+      in: true
     }
   }
 
@@ -92,9 +99,13 @@ class TeacherChecklist extends React.Component<Props, State> {
    */
   tick = (): void => {
     if (this.state.time <= 0) {
-      this.handleTimeUpNotification();
-      this.setState({ time: RATING_INTERVAL });
-      this.handleSubmit();
+      if (this.state.final) {
+        this.handleSubmit(this.state.checked);
+        this.setState({ final: false, time: 60000 })
+      } else {
+        this.handleTimeUpNotification();
+        clearInterval(this.timer);
+      }
     } else {
       if (this.state.time - 1000 < 0) {
         this.setState({ time: 0 });
@@ -118,27 +129,43 @@ class TeacherChecklist extends React.Component<Props, State> {
     this.setState({ timeUpOpen: true });
   };
 
-  handleTimeUpClose = (): void => {
-    this.setState({ timeUpOpen: false });
-  };
-
-  handlePeopleWarningClose = (): void => {
-    this.setState({ peopleWarning: false });
-  };
-
   handleBackButton = (): void => {
     this.props.toggleScreen();
   };
 
-  handleSubmit = (): void => {
-    const mEntry = {
-      checked: this.state.checked,
-    };
-    this.props.firebase.handlePushListening(mEntry).then(() => {
-      this.setState({
-        checked: []
-      })
+  handleFinish = (): void => {
+    this.setState({
+      timeUpOpen: false,
+      time: 10000,
+      final: true
+    }, () => {this.timer = setInterval(this.tick, 1000)})
+  }
+
+  handleNext = (): void => {
+    this.setState({
+      timeUpOpen: false,
+      time: 60000
+    }, () => {
+      if (this.state.checked.length > 0) {
+        this.handleSubmit(this.state.checked);
+      } else {
+        this.handleSubmit([7]);
+      }
     });
+  }
+
+  /**
+   * @param {Array<number>} checked
+   */
+  handleSubmit = (checked: Array<number>): void => {
+    this.setState({in: false}, () => {
+      this.props.firebase.handlePushListening({checked}).then(() => {
+        this.setState({
+          checked: [],
+          in: true
+        }, () => {this.timer = setInterval(this.tick, 1000)})
+      });
+    })
     // this.props.finishVisit(this.props.currentCenter);
     // this.props.toggleScreen();
   };
@@ -171,8 +198,6 @@ class TeacherChecklist extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    // toggleScreen: PropTypes.func.isRequired,
-    // finishVisit: PropTypes.func.isRequired,
     magic8: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired
   }
@@ -186,17 +211,50 @@ class TeacherChecklist extends React.Component<Props, State> {
       <div className={this.props.classes.root}>
         <Dialog
           open={this.state.timeUpOpen}
-          onClose={this.handleTimeUpClose}
           aria-labelledby="simple-dialog-title"
+          disableBackdropClick
+          disableEscapeKeyDown
         >
-          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
-            Don&apos;t forget to circulate!
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
-              You&apos;ve been at this center for 1 minute.
-            </DialogContentText>
-          </DialogContent>
+          {this.state.checked.length > 0 ? (
+            <div>
+              <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
+                Don&apos;t forget to circulate!
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
+                  Your 1 minute observation time has ended.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleFinish} color="secondary" variant="contained" style={{fontFamily: 'Arimo'}}>
+                  MAKE FINAL SELECTIONS
+                </Button>
+                <Button onClick={this.handleNext} color="primary" variant="contained" style={{fontFamily: 'Arimo'}} autoFocus>
+                  GO TO NEXT OBSERVATION
+                </Button>
+              </DialogActions>
+            </div>
+          ) : (
+            <div>
+              <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
+                Don&apos;t forget to circulate!
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
+                  You have not made any selection in the past minute. Please make your final selections, 
+                  or indicate that none of the teacher behaviors were observed.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleFinish} color="secondary" variant="contained" style={{fontFamily: 'Arimo'}}>
+                  MAKE FINAL SELECTIONS
+                </Button>
+                <Button onClick={this.handleNext} color="primary" variant="contained" style={{fontFamily: 'Arimo'}} autoFocus>
+                  NO BEHAVIORS OBSERVED
+                </Button>
+              </DialogActions>
+            </div>
+          )}
         </Dialog>
         <main>
           <Grid
@@ -216,40 +274,42 @@ class TeacherChecklist extends React.Component<Props, State> {
                 <Dashboard
                   magic8={this.props.magic8}
                   color={this.props.color}
-                  infoDisplay={<Countdown color={this.props.color} timerTime={60000} />}
+                  infoDisplay={<Countdown color={this.props.color} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={true}
                 />
               </Grid>
             </Grid>
             <Grid item xs={9}>
-              <Grid container alignItems="center" direction="column" xs={12}>
-                <div style={{ height: 20 }} />
-                <Grid container direction={"row"} justify="center" alignItems="center" spacing={16} xs={12}>
-                  <Grid item xs={11}>
-                    <Card>
-                      <Typography variant="h6" align={"center"}>
-                        Teacher Behaviors
-                      </Typography>
-                      <List>
-                        {this.props.checklist.TeacherBehaviors.map((value, index) => {
-                          return (<ListItem
-                            key={index}
-                            onClick={this.handleCheck(index+1)}
-                          >
-                            <Checkbox
-                              checked={this.state.checked.includes(index+1)}
-                            />
-                            <ListItemText disableTypography>
-                              {value}
-                            </ListItemText>
-                          </ListItem>);
-                        })}
-                      </List>
-                    </Card>
+              <Zoom in={this.state.in}>
+                <Grid container alignItems="center" direction="column" xs={12}>
+                  <div style={{ height: 20 }} />
+                  <Grid container direction={"row"} justify="center" alignItems="center" spacing={16} xs={12}>
+                    <Grid item xs={11}>
+                      <Card>
+                        <Typography variant="h6" align={"center"}>
+                          Select the teacher behaviors you see:
+                        </Typography>
+                        <List>
+                          {this.props.checklist.TeacherBehaviors.map((value, index) => {
+                            return (<ListItem
+                              key={index}
+                              onClick={this.handleCheck(index+1)}
+                            >
+                              <Checkbox
+                                checked={this.state.checked.includes(index+1)}
+                              />
+                              <ListItemText disableTypography>
+                                {value}
+                              </ListItemText>
+                            </ListItem>);
+                          })}
+                        </List>
+                      </Card>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Zoom>
             </Grid>
           </Grid>
         </main>

@@ -157,7 +157,7 @@ class ClassroomClimatePage extends React.Component {
                     magic8="Classroom Climate"
                     color="#0988ec"
                     infoDisplay={
-                      <Countdown color="#0988ec" timerTime={RATING_INTERVAL} />
+                      <Countdown color="#0988ec" time={this.state.time} timerTime={RATING_INTERVAL} />
                     }
                     infoPlacement="center"
                     completeObservation={true}

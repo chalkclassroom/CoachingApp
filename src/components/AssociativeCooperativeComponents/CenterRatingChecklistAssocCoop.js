@@ -318,7 +318,7 @@ class CenterRatingChecklistAssocCoop extends React.Component {
                 <Dashboard
                   magic8="Associative and Cooperative"
                   color="#6f39c4"
-                  infoDisplay={<Countdown color="#6f39c4" timerTime={60000} />}
+                  infoDisplay={<Countdown color="#6f39c4" time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />
