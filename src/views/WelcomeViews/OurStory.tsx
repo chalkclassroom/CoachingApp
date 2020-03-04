@@ -135,7 +135,8 @@ const styles: object = {
 		marginLeft: '-40px',
     	lineHeight: 1.4,
 		fontFamily: 'Arimo',
-		width: '70%'
+    width: '70%',
+    paddingBottom: '1em'
 	},
 	'@media (min-width: 701px)': {
 		mobileRoot: {
@@ -558,28 +559,28 @@ class OurStory extends React.Component<Props, State> {
           The foundation for CHALK began with two classroom observation research tools: 
           the  <a target="_blank" href="">Child Observation in Preschool</a> and  <a target="_blank" href="">
           the Teacher Observation in Preschool.</a> These complex research tools have been used for over a 
-          decade to describe, measure, and evaluate hundredsof early childhood classrooms over the course of
-          multiple large evaluation projects. The COP measures observable child behaviorswhile the TOP measures
+          decade to describe, measure, and evaluate hundreds of early childhood classrooms over the course of
+          multiple large evaluation projects. The COP measures observable child behaviors while the TOP measures
           observable aspects of Pre-K teachers’ classroom behaviors. Together, they provide a comprehensive view
           of the instruction and classroom climate children experience during their school day. 
         </div>
       </Typography>
 	  const data2 =
 	    <Typography>
-			  <p className={classes.arrowBody} >
+			  <div className={classes.arrowBody} >
           Over the course of a research partnership with a Southeastern school district, we developed a vision
           for Pre-K quality and determined what practices should be measured in classrooms that would provide
           us with standardized assessment of the quality of the instructional practices being implemented in
           those classrooms. We chose specific practices that we found to be consistently predictive of 
           children’s academic and self-regulatory gains.
-			  </p>
-		    <p className={classes.arrowBody} >
+			  </div>
+		    <div className={classes.arrowBody}>
           We carefully trained and certified observers to collect a wide variety of information about the
           participating classrooms across an entireschool day at several points over the course of the school
           year throughout the four-year partnership. To promote rapid cycle continuous quality improvement, 
           data were analyzed and organized into reports given back to teachers and coaches within three weeks
           of each data collection.
-			 </p>
+			 </div>
 	    </Typography>
 		const data3 =
 	    <Typography>
@@ -606,8 +607,8 @@ class OurStory extends React.Component<Props, State> {
 		  <Typography>
 				<div className={classes.arrowBody} >
           CHALK is focused on empowering coaches and transforming classroom experiences.
-          To achieve this goal, we challenged an <a target="_blank" href="">interdisciplinary team</a>
-          of coaches, teachers, principals, policy makers, researchers and other stakeholders to bring
+          To achieve this goal, we challenged an <a target="_blank" href="">interdisciplinary team</a> of
+          coaches, teachers, principals, policy makers, researchers and other stakeholders to bring
           their unique expertise and perspectives to the table. Finally, we are bringing the vision for
           the CHALK to life.
         </div>
@@ -652,7 +653,7 @@ class OurStory extends React.Component<Props, State> {
                 <Grid container spacing={3}>
                   <Grid item xs>
                   </Grid>
-                  <Grid item xl={6} lg={6} md={8} sm={10} xs={10}  style={{paddingLeft: '1em', paddingRight: '1em'}}>
+                  <Grid item xl={8} lg={8} md={8} sm={8} xs={8}  style={{paddingLeft: '1em', paddingRight: '1em'}}>
                     <Typography  className={classes.missionBody}>
                       The Chalk Coaching Tool integrates 8 research-backed clusters of classroom practices
                       associated with positive Pre-K teaching outcomes. In order to empower coaches and
@@ -667,7 +668,7 @@ class OurStory extends React.Component<Props, State> {
                 <Grid container spacing={3}>
                   <Grid item xs>
                   </Grid>
-                  <Grid item xl={6} lg={6} md={8} sm={10} xs={10} >
+                  <Grid item xl={8} lg={8} md={8} sm={8} xs={8} >
                     <img 
                       className={classes.groupImage}
                       src={ChalkGroupImage}
@@ -681,7 +682,7 @@ class OurStory extends React.Component<Props, State> {
 							<Grid item xs={10} />
 							<Grid item xs={1} />
 						</Grid>					
-						<Grid item >
+						<Grid item>
 						  <Grid container direction="row" >
 								<Grid  xs={3}>
                   <Grid
@@ -711,7 +712,7 @@ class OurStory extends React.Component<Props, State> {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item >
+            <Grid item>
               <Grid container  direction="row">
                 <Grid item xs={12}>
                   <ArrowDetail

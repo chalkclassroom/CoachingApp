@@ -101,7 +101,7 @@ class ArrowDetail extends React.Component<Props, {}> {
 			<div>
 				<div className={classes.root}>
 					<Grid container direction="column">
-						<Grid>
+						{/* <Grid style={{border: '5px solid black'}}>
 							<Grid container direction="row">
 								<Grid xs={3}>
 									<Grid
@@ -114,8 +114,7 @@ class ArrowDetail extends React.Component<Props, {}> {
 								</Grid>
 								<Grid xs={9} style={{ paddingLeft: '1em', paddingRight: '1em' }} />
 							</Grid>
-						</Grid>
-
+						</Grid> */}
 						<Grid item>
 							<Grid container direction="row">
 								<Grid item xs={3}>
@@ -141,7 +140,7 @@ class ArrowDetail extends React.Component<Props, {}> {
 								</Grid>
 								<Grid
 									item
-									xs={8}
+									xs={9}
 									justify="flex-start"
 									alignItems="flex-end"
 									style={{ paddingLeft: '7em' }}
