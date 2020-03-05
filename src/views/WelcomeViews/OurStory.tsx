@@ -27,79 +27,21 @@ const styles: object = {
 	root: {
 		backgroundColor: '#ffffff'
 	},
-	arrowVertical: {
-		 // margin: theme.spacing(1),
-		  borderRadius: 75,
-		  width: '0.5px',
-		  height: '190px',
-		  backgroundColor: '#ffffff',
-	  },
-	mobileRoot: {
-		backgroundColor: '#ffffff'
-	},
-	  groupImage: {
-		width: "100%",
-		borderRadius: "50px",
-		marginTop:'10px',
-		marginBottom:'70px',
-       // height: '458px'
-	  },
-	  cardSize: {
-		maxWidth: 994,
-	  },
-	  cardMedia: {
-		height: 500,
-	  },
-	chalkTitle: {
-		fontFamily: 'Arimo',
-		fontSize: 'calc(16px + (80 - 16) * ((100vw - 300px) / (1600 - 300)))',
-		color: 'white',
-		lineHeight: '130%',
-		letterSpacing: '0.07em',
-		textShadow:
-			'0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'
-	},
-	tagline: {
-		fontFamily: 'Arimo',
-		fontSize: 'calc(12px + (36 - 12) * ((100vw - 300px) / (1600 - 300)))',
-		color: 'white',
-		textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'
-	},
-	blueMask: {
-		position: 'absolute',
-		bottom: 0,
-		background: 'linear-gradient(to right, rgba(69, 154, 235, 0.3), rgba(69, 154, 235, 0.3))',
-		width: '100%'
-	},
+  groupImage: {
+    width: "100%",
+    borderRadius: "50px",
+    marginTop:'10px',
+    marginBottom:'70px',
+  },
 	section: {
 		paddingTop: 10,
 		paddingBottom: 10
-	},
-	partnersText: {
-		fontStyle: 'italic',
-		fontSize: 16,
-		color: '#2F4B65',
-		fontFamily: 'Arimo',
-		paddingLeft: '2em'
 	},
 	input: {
 		disableUnderline: true,
 		color: '#233342',
 		fontSize: 20,
 		marginLeft: '0.5em'
-	},
-	demoButton: {
-		color: '#459aeb',
-		backgroundColor: '#ffffff',
-		fontSize: 16,
-		fontFamily: 'Arimo',
-		fontStyle: 'bold'
-	},
-	sectionTitle: {
-		fontFamily: 'Arimo',
-		color: '#2F4B65',
-		fontSize: 42,
-		textAlign: 'center'
 	},
 	pageTitle: {
 		fontFamily: 'Arimo',
@@ -123,8 +65,7 @@ const styles: object = {
 	missionBody: {
 		fontFamily: 'Arimo',
 		fontSize: 24,
-		// textAlign:'justify',
-	    color: '#000000',
+	  color: '#000000',
 		display: 'flex',
 		marginTop:'25px',
 		marginBottom:'25px'
@@ -133,15 +74,12 @@ const styles: object = {
 		fontSize: 20,
 		color: '#000000',
 		marginLeft: '-40px',
-    	lineHeight: 1.4,
+    lineHeight: 1.4,
 		fontFamily: 'Arimo',
     width: '70%',
     paddingBottom: '1em'
 	},
 	'@media (min-width: 701px)': {
-		mobileRoot: {
-			display: 'none'
-		}
 	},
 	readMoreTitle: {
 		color: '#094492',
@@ -156,10 +94,8 @@ const styles: object = {
 	readMoreBody: {
 		fontSize: 24,
 		color: '#000000',
-		// paddingRight: '20%',
 		fontFamily: 'Arimo',
 		marginTop:'0px',
-		// marginLeft:'60px',
 		lineHeight: '33px',
 		marginBottom:'180px'
 	  },
@@ -172,7 +108,7 @@ const styles: object = {
 		letterSpacing:'4px',
 		marginTop:'20px',
 		marginBottom:'20px',
-	    marginLeft: '-26px'
+	  marginLeft: '-26px'
 	},
 	mailingListText: {
 		color: '#2f4b65',
@@ -182,8 +118,7 @@ const styles: object = {
 		fontWeight: 'bold',
 		marginTop:'50px',
 		marginBottom:'50px',
-
-		},
+	},
 	textField: {
 		backgroundColor: 'white',
 		borderRadius: '24px',
@@ -192,7 +127,7 @@ const styles: object = {
 		fontStyle: 'italic',
 		width: '90%',
 		fontFamily: 'Arimo'
-	  },
+	},
 	mailingListButton: {
 		color: '#ffffff',
 		backgroundColor: '#459aeb',
@@ -216,7 +151,7 @@ const styles: object = {
 		position:'absolute',
 		backgroundColor: '#86CCFF', // '#86CCFF' ,
 		display: 'inline-block',
-        marginTop: '-35px',
+    marginTop: '-35px',
 		marginRight: '64px',
 		marginLeft: '-49px',
 		zIndex: 0
@@ -224,64 +159,40 @@ const styles: object = {
 	arrowDownBar:{
 		width: '10px',
 		height: '890px', 
-		// position:'absolute',
 		backgroundColor: '#86CCFF' ,// ' #86CCFF',
 		display: 'inline-block',
-		// marginBottom: '7px',
-		// borderRadius: '15%',
 		marginTop: '-890px',
 		marginRight: '-29px',
 		marginLeft: '-48px',
-	   // zIndex:0 // 0
 	},
 	arrowCurve:{    
-	    width: '10px',
-	    height: '10px', 
-	    backgroundColor: '#86CCFF', 
-	    borderRadius: '50%',
-	 // display: 'inline-block',
-	    marginBottom: '0',
-	    marginRight: '64px',
-	    marginLeft: '-49px',
+    width: '10px',
+    height: '10px', 
+    backgroundColor: '#86CCFF', 
+    borderRadius: '50%',
+    marginBottom: '0',
+    marginRight: '64px',
+    marginLeft: '-49px',
 		marginTop: '-37px',
 		position:'absolute',
-	    zIndex: 5
+	  zIndex: 5
   },		
-
-	partnerLogo: {
-		maxWidth: 125
-	},
 	'@media (min-width: 600px)': {
 		getInvolvedTitle: {
 			marginLeft: '-2px',
-		   fontfontSize: 25,
-		   // textAlign: 'center'
+		  fontSize: 25,
 	   },
 	},
-	
 	'@media (max-width: 700px)': {
 		root: {
 			display: 'none'
 		},
-		largeRoot: {
-			display: 'none'
-		},
 	  groupImage: {
-		width: "60%",
-		borderRadius: "50px",
-		marginTop:'0px',
-		marginBottom:'20px',
-       // height: '458px'
+      width: "60%",
+      borderRadius: "50px",
+      marginTop:'0px',
+      marginBottom:'20px',
 	  },
-		chalkTitle: {
-			fontSize: 'calc(24px + (50 - 24) * ((100vw - 300px) / (700 - 300)))',
-		},
-		tagline: {
-			fontSize: 'calc(14px + (24 - 14) * ((100vw - 300px) / (700 - 300)))'
-		},
-		sectionTitle: {
-			fontSize: 32
-		},
 		pageTitle: {
 			fontSize: '45',
 			letterSpacing:'2em',
@@ -300,18 +211,12 @@ const styles: object = {
 			marginTop:'20px',
 			marginBottom:'40px'
 		},
-		missionBody1:{
-			fontSize: 20,
-			color: '#000',
-			fontFamily: 'Arimo'
-		},
 		readMoreTitle: {
 			fontSize: 20
 		},
 		getInvolvedTitle: {
-			 marginLeft: 0,
-			fontfontSize: 25,
-			// textAlign: 'center'
+			marginLeft: 0,
+			fontSize: 25,
 		},
 		mailingListText: {
 			paddingLeft: '1em',
@@ -327,54 +232,39 @@ const styles: object = {
 			paddingBottom: '1em'
 		}
 	},
-
 	'@media (min-width: 701px) and (max-width: 1279px)': {
 		arrowBar:{
-		width: '10px',
-		height: '1790px', 
-		position:'absolute',
-		backgroundColor: '#86CCFF' ,// ' #86CCFF',
-		display: 'inline-block',
-		// marginBottom: '7px',
-		// borderRadius: '15%',
-	    marginTop: '-35px',
-		marginRight: '64px',
-		marginLeft: '-48px',
-		zIndex: 0
+      width: '10px',
+      height: '1790px', 
+      position:'absolute',
+      backgroundColor: '#86CCFF' ,// ' #86CCFF',
+      display: 'inline-block',
+      marginTop: '-35px',
+      marginRight: '64px',
+      marginLeft: '-48px',
+      zIndex: 0
 		},
-	    arrowDownBar:{
+	  arrowDownBar:{
 	    width: '10px',
-		height: '1400px', 
-		// position:'absolute',
-		backgroundColor: '#86CCFF' ,// ' #86CCFF',
-		display: 'inline-block',
-		// marginBottom: '7px',
-		//  borderRadius: '15%',
-		marginTop: '-1400px',
-		marginRight: '-30px',
-		marginLeft: '-50px',
-		// zIndex:0 // 0
+      height: '1400px', 
+      backgroundColor: '#86CCFF' ,// ' #86CCFF',
+      display: 'inline-block',
+      marginTop: '-1400px',
+      marginRight: '-30px',
+      marginLeft: '-50px',
 		},		
 		arrowCurve:{    
 	    width: '10px',
 	    height: '10px', 
-		backgroundColor: '#86CCFF',  // '#86CCFF',
-		borderRadius: '50%',
-		 // display: 'inline-block',
-		marginBottom: '0',
-		marginRight: '64px',
-		marginLeft: '-48px',
-	  	position:'absolute',
-		marginTop: '-37px',
-		zIndex: 5
-	
+      backgroundColor: '#86CCFF',  // '#86CCFF',
+      borderRadius: '50%',
+      marginBottom: '0',
+      marginRight: '64px',
+      marginLeft: '-48px',
+      position:'absolute',
+      marginTop: '-37px',
+      zIndex: 5
 	  },
-		mobileRoot: {
-			display: 'none'
-		},
-		largeRoot: {
-			display: 'none'
-		},
 		largeImage: {
 			display: 'none'
 		}
@@ -383,57 +273,52 @@ const styles: object = {
 		rootImage: {
 			display: 'none'
 		},
-		mobileRoot: {
-			display: 'none'
-		}
 	}
 };
 
 interface Props {
 	classes: Style
-  };
+};
   
-  interface Style {
-	  groupImage: string;
-	  arrowHead: string;
-	  arrowDownBar: string;
-	  missionBody: string;
-	  arrowBody: string;
-	  arrowBar: string;
-	  getInvolvedTitle: string;
-	  textField: string;
-	  mailingListButton: string;
-	  input: string;
-	  missionTitle: string;
-	  pageTitle: string;
-	  arrowCurve: string;
-	  mailingListText: string;
-	  readMoreBody: string;
-	  section: string;
-	  readMoreTitle: string;
-	  root: string,
-	  mobileRoot: string,
-	  titleText: string,
-	'@media (max-width: 700px)': string,
-	'@media (min-width: 701px)': string
-  }
-  
-  interface State {
-	events: boolean,
-	pilotModal: boolean,
-	demo: boolean,
-	email: string
-	emailAdded: boolean,
-	errors: boolean,
-	emailError: string  };
+interface Style {
+  groupImage: string;
+  arrowHead: string;
+  arrowDownBar: string;
+  missionBody: string;
+  arrowBody: string;
+  arrowBar: string;
+  getInvolvedTitle: string;
+  textField: string;
+  mailingListButton: string;
+  input: string;
+  missionTitle: string;
+  pageTitle: string;
+  arrowCurve: string;
+  mailingListText: string;
+  readMoreBody: string;
+  section: string;
+  readMoreTitle: string;
+  root: string,
+  titleText: string,
+  '@media (max-width: 700px)': string,
+  '@media (min-width: 701px)': string
+}
+
+interface State {
+  events: boolean,
+  pilotModal: boolean,
+  demo: boolean,
+  email: string
+  emailAdded: boolean,
+  errors: boolean,
+  emailError: string
+};
 
 /**
  * Our Story
  * @class OurStory
  */
 class OurStory extends React.Component<Props, State> {
-//	handleSubmit: (event: MouseEvent<HTMLElement, MouseEvent>) => void;
-	
 	/**
    * @param {Props} props 
    */
@@ -549,9 +434,9 @@ class OurStory extends React.Component<Props, State> {
 
 	/**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-	render(): ReactElement {
+	render(): React.ReactNode {
 		const { classes } = this.props;
 		const data1 =
       <Typography>
@@ -648,7 +533,7 @@ class OurStory extends React.Component<Props, State> {
 									OUR STORY
 								</Typography>
 								<Typography className={classes.missionTitle}>
-									<strong>CHALK'S MISSION</strong>
+									<strong>CHALK&apos;S MISSION</strong>
 								</Typography>	
                 <Grid container spacing={3}>
                   <Grid item xs>
@@ -757,7 +642,6 @@ class OurStory extends React.Component<Props, State> {
                     title="Forming our Team"
                     text={data5}
                   />
-                  
                 </Grid>
               </Grid>
             </Grid>
