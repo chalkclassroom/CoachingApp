@@ -25,31 +25,16 @@ interface Props {
 	location: { state: { teacher: { id: string } } };
 }
 
-interface State {
-	auth: boolean;
-	help: boolean;
-	notes: boolean;
-	recs: boolean;
-	open: boolean;
-}
-
 /**
  * Level Of Instruction Tool
  * @class LevelOfInstructionPage
  */
-class LevelOfInstructionPage extends React.Component<Props, State> {
+class LevelOfInstructionPage extends React.Component<Props, {}> {
 	/**
    * @param {Props} props 
    */
 	constructor(props: Props) {
 		super(props);
-		this.state = {
-			auth: true,
-			help: false,
-			notes: false,
-			recs: true,
-			open: false
-		};
 	}
 
 	/**

@@ -9,17 +9,15 @@ import ReplySharpIcon from '@material-ui/icons/ReplySharp';
 import { connect } from 'react-redux';
 import { pushOntoLoiStack, popOffLoiStack } from '../../../state/actions/level-of-instruction';
 
-const styles = (theme) => ({
-	root: {
+const styles = {
+	category: {
 		borderWidth: 1,
 		borderColor: '#000',
 		border: 0,
-		borderRadius: 3,
 		color: '#fff !important',
 		height: 48,
 		width: '100%',
 		borderRadius: '3px',
-		// marginTop: '35%',
 		textTransform: 'Capitalize',
 		fontWeight: 'normal',
 		fontSize: '1.2em',
@@ -41,10 +39,16 @@ const styles = (theme) => ({
     paddingRight: '0.5em',
     paddingLeft: '0.5em'
 	}
-});
+};
 
+/**
+ * @class InstructionCounter
+ */
 class InstructionCounter extends React.Component {
-	constructor(props) {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props) {
 		super(props);
 		const mEntry = {
 			teacher: this.props.teacherId,
@@ -55,11 +59,9 @@ class InstructionCounter extends React.Component {
 		this.props.firebase.handleLOISession(mEntry);
 	}
 
-	state = {
-		addDialog: false,
-		totalVisitCount: 0
-	};
-
+  /**
+   * @param {string} insType
+   */
 	handlePushFire = (insType) => {
 		const mEntry = {
 			instructionType: insType,
@@ -69,6 +71,9 @@ class InstructionCounter extends React.Component {
 		this.props.pushOntoLoiStack(mEntry);
 	};
 
+  /**
+   * @return {void}
+   */
 	handleUndo = () => {
 		if (this.props.totalVisitCount > 0) {
 			this.props.popOffLoiStack();
@@ -80,9 +85,12 @@ class InstructionCounter extends React.Component {
 		}
 	};
 
+  /**
+   * render function
+   * @return {ReactNode}
+   */
 	render() {
 		const { classes } = this.props;
-
 		return (
 			<div>
 				<Grid justify="center" alignItems="stretch" direction="row" style={{ width: '100%', paddingLeft: '3em', paddingRight: '3em' }}>
@@ -116,7 +124,7 @@ class InstructionCounter extends React.Component {
 									<Button
 										disabled
 										style={{ backgroundColor: '#6aa84fff', color: '#fff!important' }}
-										className={classes.root}
+										className={classes.category}
 									>
 										Inferential Instruction
 									</Button>
@@ -236,7 +244,7 @@ class InstructionCounter extends React.Component {
 									<Button
 										disabled
 										style={{ backgroundColor: '#6d9eebff', color: '#fff!important' }}
-										className={classes.root}
+										className={classes.category}
 									>
 										Basic Skills Instruction
 									</Button>
@@ -280,8 +288,8 @@ const mapStateToProps = (state) => {
 
 InstructionCounter.propTypes = {
 	classes: PropTypes.object.isRequired,
-	teacherId: PropTypes.string.isRequired,
-	toggleLOISettingType: PropTypes.func.isRequired
+  teacherId: PropTypes.string.isRequired,
+  selected: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(

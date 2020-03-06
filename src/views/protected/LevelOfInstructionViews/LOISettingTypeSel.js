@@ -8,76 +8,66 @@ import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import InstructionCounter from './InstructionCounter';
 
-const styles = () => ({
-	root: {
-		borderWidth: 1,
-		borderColor: '#000',
-		border: 0,
-		borderRadius: 3,
-		color: '#fff !important',
-		height: 48,
-		width: '100%',
-		borderRadius: '3px',
-		marginTop: '35%',
-		textTransform: 'Capitalize',
-		fontWeight: '700',
-		fontSize: '30',
-		fontFamily: 'Arimo'
+const styles = {
+	text: {
+    padding: '10px',
+    fontFamily: 'Arimo',
+    fontSize: '50px',
+    fontWeight: 'bold'
 	},
 	button: {
-		margin: '-10px',
-		width: 150,
-		height: 150,
-		textAlign: 'center',
-		display: 'flex',
-		flexDirection: 'column',
-		fontFamily: 'Arimo',
-		color: '#fff !important',
-		zIndex: '99',
-		textTransform: 'Capitalize',
-		fontWeight: '700',
-		fontSize: '30'
+		backgroundColor: '#27B78FFF',
+    width: 200,
+    height: 200,
+    color: 'white',
+    textTransform: 'Capitalize',
+    fontWeight: '700',
+    fontSize: '1.5em',
+    fontFamily: 'Arimo'
 	}
-});
+};
 
 /**
  * LOI Setting Type buttons
  * @class LOISettingTypeSel
  */
-
 class LOISettingTypeSel extends React.Component {
-	constructor(props) {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props) {
 		super(props);
 		const mEntry = {
 			teacher: this.props.teacherId,
 			observedBy: this.props.firebase.auth.currentUser.uid,
 			type: 'level'
 		};
-		this.props.firebase.handleSession(mEntry);
+    this.props.firebase.handleSession(mEntry);
+
+    this.state = {
+      selected: '',
+      teacherId: this.props.teacherId,
+      groupType: true,
+    };
 	}
 
-	state = {
-		addDialog: false,
-		selected: '',
-		teacherIdCtr: this.props.teacherId,
-		groupType: true,
-		instructionType: false
-	};
-
-	handleButtonChange = (settingValue) => {
-		this.setState({ settingType: settingValue });
-		this.pushSettingChoice(settingValue);
-	};
-
+  /**
+   * @param {string} settingType
+   * @return {void}
+   */
 	pushSettingChoice = (settingType) => {
 		this.setState({
 			groupType: false,
-			instructionType: true,
 			selected: settingType
 		});
 	};
 
+  /**
+   * render function
+   * @return {ReactNode}
+   */
 	render() {
+    const { classes } = this.props;
 		return (
 			<div style={{width: '100%'}}>
 				{this.state.groupType ? (
@@ -88,78 +78,46 @@ class LOISettingTypeSel extends React.Component {
 								component="h4"
 								variant="h4"
 								justify="center"
-								style={{ padding: '10px', fontFamily: 'Arimo', fontSize: '50px', fontWeight: 'bold' }}
+                align="center"
+								className={classes.text}
 							>
 								What is the activity setting?
 							</Typography>
 						</Grid>
-						<Grid container style={{ marginTop: '25%' }}>
-							<Grid container alignItems="flex-start" direction={'row'} style={{ fontFamily: 'Arimo' }}>
-								<Grid
-									container
-									justify="center"
-									item
-									xl={6}
-									md={6}
-									sm={12}
-									xs={12}
-									style={{ fontFamily: 'Arimo' }}
-								>
-									<Fab
-										onClick={() => {
-											this.handleButtonChange('wholeGroup');
-										}}
-										style={{
-											backgroundColor: '#27B78FFF',
-											width: 200,
-											height: 200,
-											color: 'white',
-											textTransform: 'Capitalize',
-											fontWeight: '700',
-											fontSize: '30',
-											fontFamily: 'Arimo'
-										}}
-									>
-										Whole Group
-									</Fab>
-								</Grid>
-								<Grid
-									container
-									alignItems="flex-start"
-									item
-									xl={6}
-									md={6}
-									sm={12}
-									xs={12}
-									style={{ fontFamily: 'Arimo' }}
-								>
-									<Fab
-										onClick={() => this.handleButtonChange('centersSmall')}
-										style={{
-											backgroundColor: '#27B78FFF',
-											width: 200,
-											height: 200,
-											color: 'white',
-											textTransform: 'Capitalize',
-											fontWeight: '700',
-											fontSize: '30',
-											fontFamily: 'Arimo'
-										}}
-									>
-										Centers/Small Group
-									</Fab>
-								</Grid>
-							</Grid>
+						<Grid container direction="row" justify="center" alignItems="center" style={{ marginTop: '10%' }}>
+              <Grid item xs={6}>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <Fab
+                    onClick={() => {
+                      this.pushSettingChoice('wholeGroup');
+                    }}
+                    className={classes.button}
+                  >
+                    Whole Group
+                  </Fab>
+                </Grid>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <Fab
+                    onClick={() => {
+                      this.pushSettingChoice('centersSmall');
+                    }}
+                    className={classes.button}
+                  >
+                    Centers/Small Group
+                  </Fab>
+                </Grid>
+              </Grid>
 						</Grid>
 					</div>
-				) : null}
-				{this.state.instructionType ? (
-					<InstructionCounter
+				) : (
+          <InstructionCounter
 						selected={this.state.selected}
-						teacherId={this.state.teacherIdCtr}
+						teacherId={this.state.teacherId}
 						firebase={this.props.firebase}
 					/>
-				) : null}
+        )}
 			</div>
 		);
 	}
@@ -167,14 +125,14 @@ class LOISettingTypeSel extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		currentSetting: state.LOIsettingTypeState.settingType,
-		teacherIdis: state.teacherIdCtr
+		teacherIdis: state.teacherId
 	};
 };
 
 LOISettingTypeSel.propTypes = {
 	classes: PropTypes.object.isRequired,
-	teacherId: PropTypes.string.isRequired,
-	toggleLOISettingType: PropTypes.func.isRequired
+  teacherId: PropTypes.string.isRequired,
+  firebase: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(connect(mapStateToProps, { toggleLOISettingType })(LOISettingTypeSel));
