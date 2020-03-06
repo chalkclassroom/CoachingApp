@@ -79,7 +79,7 @@ class LOISettingTypeSel extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div style={{width: '100%'}}>
 				{this.state.groupType ? (
 					<div alignItems="flex-start">
 						<Grid alignItems="flex-start" item xs={12}>

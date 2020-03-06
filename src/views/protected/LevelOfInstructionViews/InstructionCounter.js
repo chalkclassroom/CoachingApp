@@ -19,10 +19,10 @@ const styles = (theme) => ({
 		height: 48,
 		width: '100%',
 		borderRadius: '3px',
-		marginTop: '35%',
+		// marginTop: '35%',
 		textTransform: 'Capitalize',
-		fontWeight: '700',
-		fontSize: '30',
+		fontWeight: 'normal',
+		fontSize: '1.2em',
 		fontFamily: 'Arimo'
 	},
 	button: {
@@ -36,8 +36,10 @@ const styles = (theme) => ({
 		color: '#fff !important',
 		zIndex: '99',
 		textTransform: 'Capitalize',
-		fontWeight: '700',
-		fontSize: '30'
+		fontWeight: 'bold',
+    fontSize: '1.5em',
+    paddingRight: '0.5em',
+    paddingLeft: '0.5em'
 	}
 });
 
@@ -83,18 +85,18 @@ class InstructionCounter extends React.Component {
 
 		return (
 			<div>
-				<Grid justify="center" alignItems="stretch" direction="row" style={{ margin: 10 }}>
+				<Grid justify="center" alignItems="stretch" direction="row" style={{ width: '100%', paddingLeft: '3em', paddingRight: '3em' }}>
 					<Grid justify="flex-start" alignItems="center" direction="row">
 						<Grid container spacing={0} direction="row" alignItems="center">
-							<Grid container xs={12} container direction={'row'}>
+							<Grid container xs={12} direction={'row'}>
 								<Grid
 									container
-									alignItems="flex-start"
-									item
-									xl={4}
-									md={4}
-									sm={4}
-									xs={4}
+									alignItems="center"
+                  justify="flex-end"
+									xl={3}
+									md={3}
+									sm={3}
+									xs={3}
 									style={{ fontFamily: 'Arimo' }}
 								>
 									<Fab
@@ -102,15 +104,15 @@ class InstructionCounter extends React.Component {
 										className={classes.button}
 										style={{
 											backgroundColor: '#38761dff',
-											width: 200,
-											height: 200
+											width: 180,
+											height: 180
 										}}
 									>
 										Ask High-Level Question
 									</Fab>
 								</Grid>
 
-								<Grid container alignItems="flex-start" item md={4} style={{ fontFamily: 'Arimo' }}>
+								<Grid container alignItems="center" md={5} style={{ fontFamily: 'Arimo' }}>
 									<Button
 										disabled
 										style={{ backgroundColor: '#6aa84fff', color: '#fff!important' }}
@@ -121,12 +123,11 @@ class InstructionCounter extends React.Component {
 								</Grid>
 								<Grid
 									container
-									alignItems="flex-start"
-									item
-									xl={4}
-									md={4}
-									sm={4}
-									xs={4}
+									alignItems="center"
+									xl={3}
+									md={3}
+									sm={3}
+									xs={3}
 									style={{ fontFamily: 'Arimo' }}
 								>
 									<Fab
@@ -134,8 +135,8 @@ class InstructionCounter extends React.Component {
 										classes={{ root: classes.button }} //, label: classes.label
 										style={{
 											backgroundColor: '#38761dff',
-											width: 200,
-											height: 200
+											width: 180,
+											height: 180
 										}}
 									>
 										Follow-up on Children’s Responses
@@ -144,94 +145,79 @@ class InstructionCounter extends React.Component {
 							</Grid>
 						</Grid>
 					</Grid>
-
-					<Grid container xs={12} container direction={'row'}>
+					<Grid container xs={12} direction={'row'}>
 						<Grid
 							container
 							alignItems="flex-start"
-							item
-							xl={4}
-							md={4}
-							sm={4}
-							xs={12}
+							xl={3}
+							md={3}
+							sm={3}
+							xs={3}
 							style={{ fontFamily: 'Arimo' }}
 						/>
-
 						<Grid
 							container
 							alignItems="center"
 							justify="center"
-							item
-							md={4}
+							md={5}
 							style={{ fontFamily: 'Arimo' }}
-							alignItems="center"
 						>
 							<div width={100} height={100} style={{ fontSize: '80px' }}>
 								{this.props.totalVisitCount}
 							</div>
 						</Grid>
-
 						<Grid
 							container
 							alignItems="flex-start"
-							item
-							xl={4}
-							md={4}
-							sm={4}
-							xs={12}
+							xl={3}
+							md={3}
+							sm={3}
+							xs={3}
 							style={{ fontFamily: 'Arimo' }}
 						/>
 					</Grid>
-
-					<Grid container xs={12} container direction={'row'}>
+					<Grid container xs={12} direction={'row'}>
 						<Grid
 							container
 							alignItems="flex-start"
-							item
-							xl={4}
-							md={4}
-							sm={4}
-							xs={12}
+							xl={3}
+							md={3}
+							sm={3}
+							xs={3}
 							style={{ fontFamily: 'Arimo' }}
 						/>
-
 						<Grid
 							container
 							alignItems="center"
 							justify="center"
-							item
-							md={4}
+							md={5}
 							style={{ fontFamily: 'Arimo' }}
-							alignItems="center"
 						>
 							<Button onClick={() => this.handleUndo()}>
 								<ReplySharpIcon style={{ fontSize: '80px' }} width={100} height={100} />
 							</Button>
 						</Grid>
-
 						<Grid
 							container
 							alignItems="flex-start"
-							item
-							xl={4}
-							md={4}
-							sm={4}
-							xs={12}
+							xl={3}
+							md={3}
+							sm={3}
+							xs={3}
 							style={{ fontFamily: 'Arimo' }}
 						/>
 					</Grid>
-
 					<Grid justify="flex-start" alignItems="center" direction="row">
 						<Grid container spacing={0} direction="row" alignItems="center">
-							<Grid container xs={12} container direction={'row'}>
+							<Grid container xs={12} direction={'row'}>
 								<Grid
 									container
-									alignItems="flex-start"
-									item
-									xl={4}
-									md={4}
-									sm={4}
-									xs={4}
+									alignItems="center"
+                  justify="flex-end"
+									xl={3}
+									md={3}
+									sm={3}
+									xs={3}
 									style={{ fontFamily: 'Arimo' }}
 								>
 									<Fab
@@ -239,15 +225,14 @@ class InstructionCounter extends React.Component {
 										className={classes.button}
 										style={{
 											backgroundColor: '#1155ccff',
-											width: 200,
-											height: 200
+											width: 180,
+											height: 180
 										}}
 									>
 										Ask Low-Level Question
 									</Fab>
 								</Grid>
-
-								<Grid container alignItems="flex-start" item md={4} style={{ fontFamily: 'Arimo' }}>
+								<Grid container alignItems="center" md={5} style={{ fontFamily: 'Arimo' }}>
 									<Button
 										disabled
 										style={{ backgroundColor: '#6d9eebff', color: '#fff!important' }}
@@ -259,11 +244,10 @@ class InstructionCounter extends React.Component {
 								<Grid
 									container
 									alignItems="flex-start"
-									item
-									xl={4}
-									md={4}
-									sm={4}
-									xs={4}
+									xl={3}
+									md={3}
+									sm={3}
+									xs={3}
 									style={{ fontFamily: 'Arimo' }}
 								>
 									<Fab
@@ -271,8 +255,8 @@ class InstructionCounter extends React.Component {
 										classes={{ root: classes.button }}
 										style={{
 											backgroundColor: '#1155ccff',
-											width: 200,
-											height: 200
+											width: 180,
+											height: 180
 										}}
 									>
 										Teach Specific Skills

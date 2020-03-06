@@ -15,49 +15,39 @@ const styles = () => ({
     padding: '2em',
     borderRadius: 8
   },
-  disapprovalTitle: {
-    backgroundColor: "#E14B24",
+  inferentialTitle: {
+    backgroundColor: "#38761d",
+    color: "white",
+    fontSize: 24,
+    textAlign: "center",
+    width: "100%"
+  },
+  inferentialSubtitle: {
+    backgroundColor: "#6aa84f",
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    width: "25%"
+    width: '50%'
   },
-  disapprovalExample: {
-    backgroundColor: "#F9D8CE",
-    padding: "1%"
-  },
-  redirectionTitle: {
-    backgroundColor: "#E69129",
+  basicTitle: {
+    backgroundColor: "#1155cc",
     color: "white",
+    fontSize: 24,
+    textAlign: "center",
+    width: "100%"
+  },
+  basicSubtitle: {
+    backgroundColor: "#c9daf8",
+    color: "black",
     fontSize: 18,
     textAlign: "center",
-    width: "25%"
+    width: '50%'
   },
-  redirectionExample: {
-    backgroundColor: "#FAE8CF",
-    padding: "1%"
-  },
-  generalTitle: {
-    backgroundColor: "#46D3AA",
-    color: "white",
-    fontSize: 18,
-    textAlign: "center",
-    width: "25%"
-  },
-  generalExample: {
-    backgroundColor: "#D7F6EE",
-    padding: "1%"
-  },
-  specificTitle: {
-    backgroundColor: "#0C3C87",
-    color: "white",
-    fontSize: 18,
-    textAlign: "center",
-    width: "25%"
-  },
-  specificExample: {
-    backgroundColor: "#B3D1FA",
-    padding: "1%"
+  example: {
+    backgroundColor: "#f3f3f3",
+    color: 'black',
+    padding: "1%",
+    width: '50%'
   }
 });
 
@@ -67,90 +57,154 @@ function LevelOfInstructionHelpCard(props) {
   return (
     <div>
        <Table padding="checkbox">
-                <TableHead>
-                  <TableRow>
-                    <TableCell className={classes.disapprovalTitle}>
-                      TBD
-                    </TableCell>
-                    <TableCell className={classes.redirectionTitle}>
-                      TBD
-                    </TableCell>
-                    <TableCell className={classes.generalTitle}>
-                      TBD
-                    </TableCell>
-                    <TableCell className={classes.specificTitle}>
-                      TBD
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className={classes.disapprovalExample}>
-                      <strong>
-                      TBD
-                      </strong>
-                    </TableCell>
-                    <TableCell className={classes.redirectionExample}>
-                      <strong>
-                      TBD
-                      </strong>
-                    </TableCell>
-                    <TableCell className={classes.generalExample}>
-                      <strong>
-                      TBD
-                      </strong>
-                    </TableCell>
-                    <TableCell className={classes.specificExample}>
-                      <strong>
-                      TBD
-                      </strong>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className={classes.disapprovalExample}>
-                      &quot;Stop it.&quot;
-                    </TableCell>
-                    <TableCell className={classes.redirectionExample}>
-                      &quot;Are you making a good choice?&quot;
-                    </TableCell>
-                    <TableCell className={classes.generalExample}>
-                      &quot;Kiss your brain!&quot;
-                    </TableCell>
-                    <TableCell className={classes.specificExample}>
-                      &quot;I like the way you&apos;re using your finger to count the
-                      cubes.&quot;
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className={classes.disapprovalExample}>
-                      &quot;I said stay in your seat.&quot;
-                    </TableCell>
-                    <TableCell className={classes.redirectionExample}>
-                      &quot;Do you want to sit on a letter or a number?&quot;
-                    </TableCell>
-                    <TableCell className={classes.generalExample}>
-                      &quot;Good job!&quot;
-                    </TableCell>
-                    <TableCell className={classes.specificExample}>
-                      &quot;Wow, that puzzle was tricky but you stuck with it!&quot;
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className={classes.disapprovalExample}>
-                      Time out
-                    </TableCell>
-                    <TableCell className={classes.redirectionExample}>
-                      &quot;Do you need some quiet time to calm down?&quot;
-                    </TableCell>
-                    <TableCell className={classes.generalExample}>
-                      Nodding, thumbs up, high five
-                    </TableCell>
-                    <TableCell className={classes.specificExample}>
-                      &quot;Thank you for being Super Friends by sharing the trains!&quot;
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+        <TableHead>
+          <TableRow>
+            <TableCell colSpan={2} className={classes.inferentialTitle}>
+              Inferential Instruction
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell className={classes.inferentialSubtitle}>
+              Ask High-Level Questions
+            </TableCell>
+            <TableCell className={classes.inferentialSubtitle}>
+              Follow up on Children's Responses
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className={classes.example}>
+              <strong>
+                Questions that have more than one possible answer
+              </strong>
+            </TableCell>
+            <TableCell className={classes.example}>
+              <strong>
+                Teacher builds on children's responses to deepen their
+                understanding
+              </strong>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className={classes.example}>
+              Ask children to <b>explain</b> their thought process:
+              <br/>
+              <i>How do you know...?</i>
+              <br/>
+              <i>What makes you say...?</i>
+              <br/>
+              <i>Why did you...?</i>
+            </TableCell>
+            <TableCell className={classes.example}>
+              Ask <b>follow-up questions:</b>
+              <br/>
+              Teacher: <i>This week we have been talking about the word</i> {" "}
+              timid<i>. When have you felt timid?</i>
+              <br/>
+              Child: <i>Yesterday!</i>
+              <br/>
+              Teacher: <i>Why did you feel timid yesterday? What happened?</i>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className={classes.example}>
+              Ask children to make a <b>prediction</b> based on context clues
+              or prior knowledge:
+              <br/>
+              <i>What would happen if...?</i>
+              <br/>
+              <i>How could we...?</i>
+            </TableCell>
+            <TableCell className={classes.example}>
+              <b>Expand</b> on children's ideas:
+              <br/>
+              Teacher: Timid <i>is our new word today. When have you felt timid?</i>
+              <br/>
+              Child: <i>Yesterday when I was scared.</i>
+              Teacher: <i>Yes, I remember when you were timid yesterday during the
+              thunderstorm. That means you were scared or frightened by the loud noises!</i>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className={classes.example}>
+              Ask children to <b>connect</b> academic content with personal experience:
+              <br/>
+              <i>Tell your friend about a time when...</i>
+              <br/>
+              <i>How is this character's problem similar to your...?</i>
+              <br/>
+              <i>How are ______ and ______ alike?</i>
+            </TableCell>
+            <TableCell className={classes.example}>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className={classes.example}>
+              Ask children to <b>reflect</b> back on parts of activities or lessons:
+              <br/>
+              <i>What do you remember about...?</i>
+              <br/>
+              <i>What was your favorite part of...?</i>
+            </TableCell>
+            <TableCell className={classes.example} />
+          </TableRow>
+        </TableBody>
+        <TableHead>
+          <TableRow>
+            <TableCell colSpan={2} className={classes.basicTitle}>
+              Basic Skills Instruction
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell className={classes.basicSubtitle}>
+              Ask Low-Level Questions
+            </TableCell>
+            <TableCell className={classes.basicSubtitle}>
+              Teach Specific Skills
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className={classes.example}>
+              <strong>
+                Teacher asks questions with predetermined answers, with the goal
+                of having children learn or recite the correct response.
+              </strong>
+            </TableCell>
+            <TableCell className={classes.example}>
+              <strong>
+                Teacher gives information about specific, concrete skills
+              </strong>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className={classes.example}>
+              <b>What</b> sound does 'g' make?
+            </TableCell>
+            <TableCell className={classes.example}>
+              A triangle has 3 sides.
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className={classes.example}>
+              <b>Show me</b> the number 2.
+            </TableCell>
+            <TableCell className={classes.example}>
+              Run rhymes with fun.
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className={classes.example}>
+              <b>Do</b> we have more girls or boys here today?
+            </TableCell>
+            <TableCell className={classes.example}>
+              A tree gets water and food from its roots.
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </div>
   )
 }

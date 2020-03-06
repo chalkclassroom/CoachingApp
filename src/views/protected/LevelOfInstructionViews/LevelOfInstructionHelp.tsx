@@ -25,7 +25,7 @@ const styles: object = {
 		width: '67%',
 		backgroundColor: 'white',
 		padding: '2em',
-		borderRadius: 8
+    borderRadius: 8
 	},
 	disapprovalTitle: {
 		backgroundColor: '#E14B24',
@@ -108,13 +108,6 @@ class LevelOfInstructionHelp extends React.Component<Props, State> {
 				<Modal open={this.state.open}>
 					<div style={getModalStyle()} className={classes.paper}>
 						<Grid container alignItems="center" direction="column" justify="flex-start">
-							<Typography variant="h4" style={{ fontFamily: 'Arimo' }} gutterBottom>
-								TBD: COMING sOON
-							</Typography>
-							<Typography variant="subtitle2" gutterBottom style={{ fontFamily: 'Arimo' }}>
-								<strong> TBD: COMING sOON</strong>
-							</Typography>
-
 							<LevelOfInstructionHelpCard />
 						</Grid>
 					</div>

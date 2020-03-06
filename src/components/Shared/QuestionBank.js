@@ -277,7 +277,149 @@ const questionBank = {
   ],
   'math':[],
   'student':[],
-  'level':[],
+  'level':[
+    {
+      text: "Level of instruction depends on the ________ of interactions between children " +
+        "and teachers and the amount of ________ required for children to participate." ,
+      options: new Map([
+        ["quality; letter knowledge", false],
+        ["quality; academic knowledge", false],
+        ["richness; abstract thought", true],
+        ["richness; self-regulation", false],
+      ]),
+      feedback: "The correct answer is C. Level of instruction refers to the amount of inference, " + 
+        "or high-level thinking, required for children to participate in an interaction with a teacher " +
+        "or peers. Level of instruction does not depend on the type of academic content being discussed."
+    },
+    {
+      text: "Children who are interacting with teachers during basic skills instruction may do " +
+        "all of the following EXCEPT:",
+      options: new Map([
+        ["Identify letters", false],
+        ["Answer high-level questions", true],
+        ["Answer low-level questions", false],
+        ["Sing a song about shapes", false],
+      ]),
+      feedback: "The correct answer is B. Basic skills instruction occurs when teachers ask questions " + 
+        "with predetermined answers, with the goal of having children learn or recite the correct " +
+        "response. It also refers to when children participate in activities that reinforce information " +
+        "about specific, concrete skills, such as singing songs about letters or shapes."
+    },
+    {
+      text: "Which of the following is an example of a high-level question?",
+      options: new Map([
+        ["Show me the number 5.", false],
+        ["Which picture has a triangle in it?", false],
+        ["How did you figure that out?", true],
+        ["How many will you have if I take 2 away?", false],
+      ]),
+      feedback: "The correct answer is C. High-level questions have more than one possible answer " + 
+        "and require children to draw on reasoning skills as they think about how to respond."
+    },
+    {
+      text: "During inferential instruction, teachers can build on children's responses to deepen " +
+        "their understanding by:",
+      options: new Map([
+        ["Asking follow-up questions", false],
+        ["Assigning homework on the topic", false],
+        ["Expanding on children's ideas", false],
+        ["A and C", true],
+      ]),
+      feedback: "The correct answer is D. Achieving a higher level of instruction is not only about " + 
+        "asking high-level questions. Teachers must also build upon children's repsonses by asking " +
+        "follow-up questions and expanding on children's ideas."
+    },
+    {
+      text: "The goal of improving level of instruction is to:",
+      options: new Map([
+        ["Ask only high-level questions", false],
+        ["Ask zero low-level questions", false],
+        ["Ask more high-level questions and fewer low-level questions", true],
+        ["Ask more high-level and more low-level questions", false],
+      ]),
+      feedback: "The correct answer is C. Some basic skills instruction is necessary in preschool, " + 
+        "especially because low-level questions often help dual language learners and children with " +
+        "language delays enter conversations. However, the goal for improving level of instruction " +
+        "is to ask fewer low-level questions overall and ask more inferential questions that are " +
+        "high-level, have more than one possbile answer, and require abstract thought."
+    },
+    {
+      text: "Level of instruction refers to:",
+      options: new Map([
+        [
+          "The amount of inference, or abstract thought, required for children to participate " +
+          "in teacher-child interactions.", 
+          true
+        ],
+        ["The number of conversational turns in teacher-child interactions about academic content.", false],
+        ["The amount of time teachers spend on academic content across the day.", false],
+        ["The number of interactions between teachers and children during lessons.", false],
+      ]),
+      feedback: "The correct answer is A. Level of instruction does not refer to the number " + 
+        "of instructional interactions a teacher has with children throughout the day. Instead, level " +
+        "of instruction captures the degree to which children engage in deep thinking, such as drawing " +
+        "on past experiences or explaining their thinking, when interacting with teachers and peers " +
+        "about content."
+    },
+    {
+      text: "During a group lesson, the teacher points to a picture about the life cycle of a " +
+        "butterfly and says, 'The caterpillar transforms into a butterfly inside of a chrysalis.' " +
+        "This is an example of:",
+      options: new Map([
+        ["High-level questioning", false],
+        ["Teaching specific skills", true],
+        ["Following up on children's responses", false],
+        ["Low-level questioning", false],
+      ]),
+      feedback: "The correct answer is B. When children sit quietly and take in new information, " + 
+        "such as listening to a teacher explain the life cycle of a butterfly, they are learning " +
+        "specific skills or knowledge. A low-level question would be, 'What does the caterpillar " +
+        "turn into?' A high-level question would be, 'How is the life cycle of a butterfly different" +
+        "from the life cycle of a ladybug?'"
+    },
+    {
+      text: "All of the following are examples of high-level questions EXCEPT:",
+      options: new Map([
+        ["Asking children to explain their thought process", false],
+        ["Asking children to identify the correct answer", true],
+        ["Asking children to connect academic content with their personal experience", false],
+        ["Asking children to make a prediction based on context clues or prior knowledge", false],
+      ]),
+      feedback: "The correct answer is B. High-level questions do not have one correct answer. " + 
+        "Instead, high-level questions have more than one possible answer and require children to " +
+        "draw from experiences, background knowledge, and context clues to come up with a response."
+    },
+    {
+      text: "The teacher asks a student to compare two characters in a book. The student says, " +
+        "'They're both mad!' Which teacher response would be characterized as an inferential " +
+        "follow-up question?",
+      options: new Map([
+        ["'What makes you think they're both mad?'", true],
+        ["'That's right!'", false],
+        ["'What happened next in the story?'", false],
+        ["'Raise your hand if you agree with Derrick.'", false],
+      ]),
+      feedback: "The correct answer is A. For a child to answer 'What makes you think they're both mad?' " + 
+        "the child must make an inference, either drawing from experiences, background knowledge, or " +
+        "context clues. Asking a student to say what happened next in the story requires children to " +
+        "remember something they were exposed to previously, but it is not inferential because there is " +
+        "one correct answer. Questions that have one correct answer are low-level questions."
+    },
+    {
+      text: "While some basic skills instruction is necessary in preschool, research shows that children " +
+        "in classrooms with more inferential instruction do better academically and show improved " +
+        "self-regulation.",
+      options: new Map([
+        ["True", true],
+        ["False", false],
+      ]),
+      feedback: "The correct answer is True. Some basic skills instruction is necessary in preschool. " + 
+        "However, research shows that young minds also thrive when they have opportunities to think more " +
+        "deeply. The goal for improving level of instruction is to provide more of these important " +
+        "opportunities to answer high-level questions and engage in conversations that last more than " +
+        "two turns."
+    },
+  ],
   'listening':[],
   'sequential':[
     {

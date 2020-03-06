@@ -74,13 +74,13 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
 				</FirebaseContext.Consumer>
 
 				<main style={{ flex: 1 }}>
-					<Grid container spacing={16} alignItems="center">
+					<Grid container alignItems="center" style={{height: '100%'}}>
 						<Grid item xs={3}>
 							<Grid container alignItems={'center'} justify={'center'} direction={'column'}>
 								<Dashboard magic8="Level of Instruction" color="#009365" completeObservation={true} />
 							</Grid>
 						</Grid>
-						<Grid item xs={9} justify="center">
+						<Grid item xs={9} justify="center" style={{height: '100%'}}>
 							<Grid container alignItems={'center'} justify={'center'} direction={'column'}>
 								<FirebaseContext.Consumer>
 									{(firebase: object) => (
