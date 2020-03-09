@@ -105,7 +105,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
                 style={{width:'8em', height: '8em'}}
               >
                 <Typography style={{color: 'white'}}>
-                Asking High-Level Questions
+                  Asking High-Level Questions
                 </Typography>
               </Button >
             </MuiThemeProvider>
@@ -119,7 +119,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
                 style={{width:'8em', height: '8em'}}
               >
                 <Typography style={{color: 'white'}}>
-                Following up on Children’s Responses
+                  Following up on Children’s Responses
                 </Typography>
               </Button>
             </MuiThemeProvider>
@@ -133,7 +133,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
                 style={{width:'8em', height: '8em'}}
               >
                 <Typography style={{color: 'white'}}>
-                Building on Basic Skills Instruction
+                  Building on Basic Skills Instruction
                 </Typography>
               </Button>
             </MuiThemeProvider>
@@ -147,14 +147,12 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
                 style={{width:'8em', height: '8em'}}
               >
                 <Typography style={{color: 'white'}}>
-                Inferential Instruction in Content Areas
+                  Inferential Instruction in Content Areas
                 </Typography>
               </Button>
             </MuiThemeProvider>
           </Grid>
-          
         </Grid>
-
         <Grid container direction="column" style={{marginTop: "1vh"}}>
           {this.state.categoryView === "highLevel" ? (
             <DataQuestions

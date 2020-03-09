@@ -234,13 +234,14 @@ class ResultsDashboard extends React.Component {
               <TextField
                 select
                 className={classes.viewButtons}
-                label="Date"
+                label="DATE"
                 value={this.props.sessionId}
                 onChange={this.props.changeSessionId}
-                InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
               >
                 {this.props.sessionDates.map((date, index)=> 
-                  {return <MenuItem key={index} id={date.id} value={date.id}>
+                  {return <MenuItem key={index} id={date.id} value={date.id} style={{fontFamily: 'Arimo'}}>
                     <em>{moment(date.sessionStart.value).format("MMM Do YY")}</em>
                   </MenuItem>})}
               </TextField>

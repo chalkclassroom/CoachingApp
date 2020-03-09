@@ -715,7 +715,7 @@ export const CoachingQuestions = {
         'name': 'InstructionPanel1C',
         'title': 'Connecting Content to Experience',
         'text': [
-          'When do children tend to make connections between academic content and' +
+          'When do children tend to make connections between academic content and ' +
           'their lives?  During book reading, center time, or science, etc.?', 
           'Talk about the kinds of connections or comparisons to personal experience ' +
           'that might deepen their understanding of the academic content.'
@@ -726,8 +726,8 @@ export const CoachingQuestions = {
         'title': 'Reflect on Activities',
         'text': [
           'Talk about ways you could build in time for children to reflect on parts of activities or lessons.',
-          'Which lessons or center activities would go well with asking children to reflect? Why, '+ 
-          ' might that be?',
+          'Which lessons or center activities would go well with asking children to reflect? Why ' + 
+          'might that be?',
         ]
       },
     ],
@@ -757,8 +757,8 @@ export const CoachingQuestions = {
         'name': 'InstructionPanel2C',
         'title': 'Listen to Children',
         'text': [
-          'Talk about times during the day when you able to have more lengthy conversations' +
-          ' with children.', 
+          'Talk about times during the day when you are able to have more lengthy conversations ' +
+          'with children.', 
           'Talk about common obstacles to having multiple back-and-forth exchanges with ' +
           'children and about some initial solutions that might help.',
         ]
@@ -803,8 +803,8 @@ export const CoachingQuestions = {
         'title': 'Math',
         'text': [
           'Talk about how high-level math questions deepen children’s math learning ' +
-          '(e.g., Tell me what you mean when you say the groups of erasers are the same?)',
-          'What have you noticed about children’s responses and actions when you' +
+          '(e.g., Tell me what you mean when you say the groups of erasers are the same?).',
+          'What have you noticed about children’s responses and actions when you ' +
           'ask high-level math questions? '  
         ]
       },
@@ -814,9 +814,9 @@ export const CoachingQuestions = {
         'text': [
           'Talk about how you build on children’s natural curiosity about science topics. ' +
           'What kinds of questions do you tend to ask?',
-          'Once children have learned a science fact (food decomposes over time),' +
+          'Once children have learned a science fact (food decomposes over time), ' +
           'how might you encourage them to think inferentially (why do some conditions ' +
-          'speed up or slow down decomposition)? '
+          'speed up or slow down decomposition)?'
         ]
       },
       {
@@ -824,13 +824,13 @@ export const CoachingQuestions = {
         'title': 'Book Reading/Language Comprehension',
         'text': [
           'Talk about where you like to focus your questions during ' +
-          'story time- on the plot, character feelings and motivations,' +
-          ' vocabulary, making predictions, etc.?',
+          'story time- on the plot, character feelings and motivations, ' +
+          'vocabulary, making predictions, etc.?',
           'What kinds of questions would require children to make inferences, ' +
-          ' instead of retelling the story?',
-          'Talk about how children think differently when answering low-level questions like,' +
-         ' “What did the hen do with the bread? “ and high-level questions like,' +
-          '“ If you were the little red hen, what would you have done with the bread? Why?”'
+          'instead of retelling the story?',
+          'Talk about how children think differently when answering low-level questions like, ' +
+          '"What did the hen do with the bread?" and high-level questions like, ' +
+          '"If you were the little red hen, what would you have done with the bread? Why?"'
         ]
       },
       {
@@ -840,7 +840,7 @@ export const CoachingQuestions = {
           'After children learn a new word, talk about how you get them to think more deeply ' +
           'about the word. Is it similar to other words they know? Can they act the word out?',
           'When children first learn a new word, they may not be able to use it yet. Talk ' +
-          'about activities or questions  that might help children use words in conversation.' 
+          'about activities or questions that might help children use words in conversation.' 
         ]
       },
       {
@@ -849,7 +849,7 @@ export const CoachingQuestions = {
         'text': [
           'Talk about opportunities children have for composing their own messages.',         
           'Talk about how you encourage children to write for real-world reasons ' +
-          'like taking a pizza order, making a zoo diagram in the blocks center,' +
+          'like taking a pizza order, making a zoo diagram in the blocks center, ' +
           'or making observations at the science center.'
         ]
       },

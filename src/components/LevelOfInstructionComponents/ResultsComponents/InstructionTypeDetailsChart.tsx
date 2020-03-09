@@ -37,19 +37,20 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
       labels: [
         "Ask High-Level Question",
         ["Follow-up on ","Children’s Responses"],
-        "Ask Low-LevelQuestion", 
+        "Ask Low-Level Question", 
         "Teach Specific Skills",
       ],
       datasets: [{
-        data: [this.props.highLevelQuesInsCount, this.props.followUpInsCount
-, this.props.lowLevelInsCount
-, this.props.specificSkillInsCount
-],
-        backgroundColor: ["#38761dff", "38761dff","#1155ccff", "#1155ccff"],
-        hoverBackgroundColor: ["#38761dff", "38761dff","#1155ccff", "#1155ccff"]
+        data: [this.props.highLevelQuesInsCount,
+          this.props.followUpInsCount,
+          this.props.lowLevelInsCount,
+          this.props.specificSkillInsCount
+        ],
+        backgroundColor: ["#38761d", "38761d", "#1155cc", "#1155cc"],
+        hoverBackgroundColor: ["#38761d", "38761d", "#1155cc", "#1155cc"]
       }]
     };
-    return(
+    return (
       <HorizontalBar
         data={instructionData}
         options={{
@@ -58,15 +59,19 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: (Math.max(this.props.specificSkillInsCount
-, this.props.followUpInsCount
-, this.props.lowLevelInsCount
-, this.props.highLevelQuesInsCount) > 20) ?
-                    Math.max(this.props.specificSkillInsCount
-, this.props.followUpInsCount
-, this.props.lowLevelInsCount
-, this.props.highLevelQuesInsCount) : 
-                      20,
+                  max: (
+                    Math.max(
+                      this.props.specificSkillInsCount,
+                      this.props.followUpInsCount,
+                      this.props.lowLevelInsCount,
+                      this.props.highLevelQuesInsCount
+                    ) > 20) ?
+                    Math.max(
+                      this.props.specificSkillInsCount,
+                      this.props.followUpInsCount,
+                      this.props.lowLevelInsCount,
+                      this.props.highLevelQuesInsCount
+                    ) : 20,
                   fontSize: 16,
                   stepSize: 1
                 },

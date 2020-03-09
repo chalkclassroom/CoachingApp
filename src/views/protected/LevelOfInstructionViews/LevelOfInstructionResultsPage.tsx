@@ -9,8 +9,8 @@ import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInst
 import LevelOfInstructionSummaryChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummaryChart";
 import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph";
 import { Grid, Typography } from "@material-ui/core";
-import PieSliceBasicSkillsLOIImage from "../../../assets/images/PieSliceBasicSkillsLOIImage.svg";
-import PieSliceInferentialLOIImage from "../../../assets/images/PieSliceInferentialLOIImage.svg";
+import PieSliceLOIBasicImage from "../../../assets/images/PieSliceLOIBasicImage.svg";
+import PieSliceLOIInferentialImage from "../../../assets/images/PieSliceLOIInferentialImage.svg";
 
 const styles: object = {
   root: {
@@ -165,7 +165,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Ask Low-Level Question / Teach Specific Skills",  
+          label: "Basic Skills Instruction",  
           data: this.state.trendsBasic, 
           backgroundColor: "#6d9eeb",
           borderColor: "#6d9eeb",
@@ -173,7 +173,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           lineTension: 0,
         },
         {
-          label: "Ask High-Level Question / Follow-up on Children’s Responses", 
+          label: "Inferential Instruction", 
           data: this.state.trendsInfer,  
           backgroundColor: "#6aa84fff",
           borderColor: "#6aa84fff",
@@ -243,7 +243,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
    * @param {SyntheticEvent} event
    */
   changeSessionId = (event: React.SyntheticEvent) => {
-    console.log("sessionId", event.target.value, "type is: ", typeof event);
     this.setState(
       {
         sessionId: event.target.value
@@ -305,7 +304,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   render(): React.ReactNode {
     const { classes } = this.props;
     const chosenQuestions = this.state.addedToPlan.map((value) => {
-      return(
+      return (
         value.question
       )
     })
@@ -316,78 +315,81 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           magic8="Level of Instruction"
           handleTrendsFetch={this.handleTrendsFetching}
           observationType="level"
-           summary={
-             <div>
-            <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-            Compare how often the teacher provided: 
-          </Typography>
-          <Grid container direction="column" alignItems="center">
-            <Grid item style={{width: '100%'}}>
-              <Grid container direction="row">
-                <Grid item xs={1}>
-                  <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                    <Grid item style={{height:"33%"}}>
-                      <img alt="blue" src={PieSliceBasicSkillsLOIImage} height="95%"/>
-                    </Grid>
-                    <Grid></Grid> 
-                    <Grid item style={{height:"33%"}}>
-                      <img alt="green" src={PieSliceInferentialLOIImage} height="95%"/>
+          summary={
+            <div>
+              <Grid container justify={"center"} direction={"column"}>
+                <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                  Compare how often the teacher provided: 
+                </Typography>
+                <Grid container direction="column" alignItems="center">
+                  <Grid item style={{width: '100%'}}>
+                    <Grid container direction="row">
+                      <Grid item xs={1}>
+                        <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
+                          <Grid item style={{height:"50%"}}>
+                            <img alt="blue" src={PieSliceLOIBasicImage} height="95%"/>
+                          </Grid>
+                          <Grid item style={{height:"50%"}}>
+                            <img alt="green" src={PieSliceLOIInferentialImage} height="95%"/>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={11}>
+                        <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                          <Grid item style={{height:"50%"}}>
+                            <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
+                              Basic skills instruction 
+                            </Typography>
+                          </Grid>
+                          <Grid item style={{height:"50%"}}>
+                            <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
+                              Inferential instruction
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={11}>
-                  <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                    <Grid item style={{height:"33%"}}>
-                      <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
-                      Basic skills instruction 
-                      </Typography>
-                    </Grid>
-                    <Grid></Grid> 
-                    <Grid item style={{height:"33%"}}>
-                      <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                      Inferential instruction
-                    </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
+                <LevelOfInstructionSummaryChart
+                  basicSkillsResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
+                  inferentialResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
+                />
               </Grid>
-            </Grid>
-          </Grid>
-          <Grid></Grid> 
-            <LevelOfInstructionSummaryChart
-               basicSkillsResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
-               inferentialResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
-            />
-          </div>} 
+            </div>} 
           details={
             <div>
-            <Grid container justify={"center"} direction={"column"}>
-              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-            Was there a type of instruction the teacher used more often? 
-              </Typography>
-              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-            Was there a type of instruction they used less often?               
-              </Typography>
-            </Grid>
-            <InstructionTypeDetailsChart
-              highLevelQuesInsCount={this.state.highLevelQuesInsCount}               
-              followUpInsCount={this.state.followUpInsCount}            
-              lowLevelInsCount={this.state.lowLevelInsCount}             
-              specificSkillInsCount={this.state.specificSkillInsCount}                  
-            />
-         </div>  }
-          
+              <Grid container justify={"center"} direction={"column"}>
+                <Grid container justify={"center"} direction={"column"}>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    Was there a type of instruction the teacher used more often? 
+                  </Typography>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    Was there a type of instruction they used less often?               
+                  </Typography>
+                </Grid>
+                <InstructionTypeDetailsChart
+                  highLevelQuesInsCount={this.state.highLevelQuesInsCount}               
+                  followUpInsCount={this.state.followUpInsCount}            
+                  lowLevelInsCount={this.state.lowLevelInsCount}             
+                  specificSkillInsCount={this.state.specificSkillInsCount}                  
+                />
+              </Grid>
+            </div>
+          }
           trendsGraph={
             <div>
-            <Grid container justify={"center"} direction={"column"}>
-              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-            Was there a type of instruction the teacher used more often? 
-              </Typography>
-              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-            Was there a type of instruction they used less often?               
-              </Typography>
-            </Grid>
-          <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/> </div> }
+              <Grid container justify={"center"} direction={"column"}>
+                <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                  Was there a type of instruction the teacher used more often? 
+                </Typography>
+                <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                  Was there a type of instruction they used less often?               
+                </Typography>
+              </Grid>
+              <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
+            </div>
+          }
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
           sessionDates={this.state.sessionDates}
@@ -400,7 +402,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
               teacherId={this.props.location.state.teacher.id}
               magic8={"Level of Instruction"}
             />
-             }
+          }
           chosenQuestions={chosenQuestions}
           teacherFirstName={this.props.location.state.teacher.firstName}
           teacherLastName={this.props.location.state.teacher.lastName}
