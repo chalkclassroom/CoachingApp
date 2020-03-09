@@ -277,7 +277,7 @@ class App extends Component {
               path="/ClassroomClimateResults"
               component={ClassroomClimateResultsPage}
             />
-             <PrivateRoute
+            <PrivateRoute
               auth={this.state.auth}
               path="/LevelOfInstructionResults"
               component={LevelOfInstructionResultsPage}
