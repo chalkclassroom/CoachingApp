@@ -140,7 +140,7 @@ class InstructionCounter extends React.Component {
 								>
 									<Fab
 										onClick={() => this.handlePushFire('followUp')}
-										classes={{ root: classes.button }} //, label: classes.label
+										classes={{ root: classes.button }} // label: classes.label
 										style={{
 											backgroundColor: '#38761dff',
 											width: 180,
