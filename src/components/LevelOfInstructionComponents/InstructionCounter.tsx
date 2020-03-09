@@ -11,17 +11,17 @@ import { pushOntoLoiStack, popOffLoiStack } from '../../state/actions/level-of-i
 
 const styles: object = {
 	category: {
-		borderWidth: 1,
-		borderColor: '#000',
-		border: 0,
-		color: '#fff !important',
-		height: 48,
-		width: '100%',
-		borderRadius: '3px',
-		textTransform: 'Capitalize',
-		fontWeight: 'normal',
-		fontSize: '1.2em',
-		fontFamily: 'Arimo'
+    borderWidth: 1,
+    borderColor: '#000',
+    border: 0,
+    color: '#fff !important',
+    height: 48,
+    width: '100%',
+    borderRadius: '3px',
+    textTransform: 'Capitalize',
+    fontWeight: 'normal',
+    fontSize: '1.2em',
+    fontFamily: 'Arimo'
 	},
 	button: {
 		margin: '-10px',
