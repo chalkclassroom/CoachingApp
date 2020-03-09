@@ -13,7 +13,7 @@ export const pushOntoLoiStack = (entry) => ({
 	type: PUSH_LOI_STACK,
 	entry: {
 		timestamp: Date.now(),
-		observation: entry.observation
+		observation: entry
 	}
 });
 

@@ -6,7 +6,7 @@ import { toggleLOISettingType } from '../../../state/actions/level-of-instructio
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
-import InstructionCounter from './InstructionCounter';
+import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
 
 const styles = {
 	text: {

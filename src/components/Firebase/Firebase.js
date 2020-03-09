@@ -464,12 +464,11 @@ class Firebase {
       );
   };
 
-  handlePushInstruction = async function(mEntry) {
+  handlePushInstruction = async function(insType) {
     return this.sessionRef
       .collection("entries")
       .add({
-        instructionType: mEntry.instructionType,
-        Type: mEntry.Type,
+        instructionType: insType,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
