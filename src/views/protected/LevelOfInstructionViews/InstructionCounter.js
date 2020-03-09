@@ -289,7 +289,11 @@ const mapStateToProps = (state) => {
 InstructionCounter.propTypes = {
 	classes: PropTypes.object.isRequired,
   teacherId: PropTypes.string.isRequired,
-  selected: PropTypes.string.isRequired
+  selected: PropTypes.string.isRequired,
+  pushOntoLoiStack: PropTypes.func.isRequired,
+  popOffLoiStack: PropTypes.func.isRequired,
+  firebase: PropTypes.object.isRequired,
+  totalVisitCount: PropTypes.number.isRequired
 };
 
 export default withStyles(styles)(

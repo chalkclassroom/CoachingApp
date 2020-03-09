@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from "prop-types";
+import * as React from 'react';
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
 import Table from '@material-ui/core/Table/index';
 import TableHead from '@material-ui/core/TableHead/index';
@@ -7,7 +7,7 @@ import TableRow from '@material-ui/core/TableRow/index';
 import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
 
-const styles = () => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
@@ -49,10 +49,25 @@ const styles = () => ({
     padding: "1%",
     width: '50%'
   }
-});
+};
 
+interface Props {
+  classes: {
+    paper: string,
+    inferentialTitle: string,
+    inferentialSubtitle: string,
+    basicTitle: string,
+    basicSubtitle: string,
+    example: string
+  }
+}
 
-function LevelOfInstructionHelpCard(props) {
+/**
+ * 
+ * @param {Props} props 
+ * @return {ReactElement}
+ */
+function LevelOfInstructionHelpCard(props: Props): React.ReactElement {
   const { classes } = props;
   return (
     <div>
@@ -70,7 +85,7 @@ function LevelOfInstructionHelpCard(props) {
               Ask High-Level Questions
             </TableCell>
             <TableCell className={classes.inferentialSubtitle}>
-              Follow up on Children's Responses
+              Follow up on Children&apos;s Responses
             </TableCell>
           </TableRow>
           <TableRow>
@@ -81,7 +96,7 @@ function LevelOfInstructionHelpCard(props) {
             </TableCell>
             <TableCell className={classes.example}>
               <strong>
-                Teacher builds on children's responses to deepen their
+                Teacher builds on children&apos;s responses to deepen their
                 understanding
               </strong>
             </TableCell>
@@ -117,7 +132,7 @@ function LevelOfInstructionHelpCard(props) {
               <i>How could we...?</i>
             </TableCell>
             <TableCell className={classes.example}>
-              <b>Expand</b> on children's ideas:
+              <b>Expand</b> on children&apos;s ideas:
               <br/>
               Teacher: Timid <i>is our new word today. When have you felt timid?</i>
               <br/>
@@ -132,7 +147,7 @@ function LevelOfInstructionHelpCard(props) {
               <br/>
               <i>Tell your friend about a time when...</i>
               <br/>
-              <i>How is this character's problem similar to your...?</i>
+              <i>How is this character&apos;s problem similar to your...?</i>
               <br/>
               <i>How are ______ and ______ alike?</i>
             </TableCell>
