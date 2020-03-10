@@ -4,6 +4,7 @@ import "./App.css";
 import WelcomePage from "./views/WelcomeViews/WelcomePage.tsx";
 import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage";
 import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage.tsx";
+import LevelOfInstructionResultsPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionResultsPage.tsx";
 import Magic8MenuPage from "./views/protected/Magic8MenuPage";
 import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage.tsx";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
@@ -293,6 +294,11 @@ class App extends Component {
               auth={this.state.auth}
               path="/ClassroomClimateResults"
               component={ClassroomClimateResultsPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/LevelOfInstructionResults"
+              component={LevelOfInstructionResultsPage}
             />
             <Route render={() => <h3>No Match</h3>} />
           </Switch>
