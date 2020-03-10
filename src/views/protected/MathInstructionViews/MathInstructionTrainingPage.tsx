@@ -277,7 +277,7 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
             {view === ViewEnum.CONCEPTS ? (
               <TrainingVideo
                 videoUrl={
-                  'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/MathInstruction_Concepts.mp4?alt=media&token=5294431b-208d-41ae-a61d-f9be8e043720'
+                  'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Math%20Instruction%20Concepts.mp4?alt=media&token=ca70255c-7d29-4ab5-84fe-a3ebdde744af'
                 }
               />
             ) : view === ViewEnum.DEFINITIONS ? (
