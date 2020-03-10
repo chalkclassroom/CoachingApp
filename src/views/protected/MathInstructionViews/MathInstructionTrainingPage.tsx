@@ -12,6 +12,7 @@ import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionna
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/es';
+import Grid from '@material-ui/core/Grid';
 
 const MathTheme = createMuiTheme({
   palette: {
@@ -235,26 +236,27 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
           {(firebase: object) => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
-          <Button
-            variant="contained"
-            size="medium"
-            className={classes.backButton}
-            onClick={() => {
-              if (this.props.location.state !== undefined) {
-                // came from MyTeachers
-                this.props.history.goBack();
-              } else {
-                this.props.history.replace({
-                  pathname: '/Magic8Menu',
-                  state: { type: 'Training' }
-                });
-              }
-            }}
-          >
-            <ChevronLeftRoundedIcon />
-            <b>Training Home</b>
-          </Button>
-          <h1 style={{ justifySelf: 'center' }}>Training Tool</h1>
+          <Grid container justify="center" alignItems="center">
+            <Grid item xs={3}>
+              <Button variant="contained" size="medium" className={classes.backButton}
+                onClick={(): void => {
+                  if (this.props.location.state !== undefined) { // came from MyTeachers
+                    this.props.history.goBack();
+                  } else {
+                    this.props.history.replace({
+                      pathname: "/Magic8Menu",
+                      state: { type: "Training" }
+                    })
+                  }
+                }}>
+                <ChevronLeftRoundedIcon />
+                <b>Training Home</b>
+              </Button>
+            </Grid>
+            <Grid item xs={9}>
+              <h1 style={{ justifySelf: 'center', fontFamily: 'Arimo' }}>Training Tool</h1>
+            </Grid>
+          </Grid>
         </div>
         <div className={classes.main}>
           <div className={classes.dashboardContainer}> 
