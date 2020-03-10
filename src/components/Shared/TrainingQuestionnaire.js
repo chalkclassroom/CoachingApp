@@ -115,6 +115,7 @@ class TrainingQuestionnaire extends Component {
       onClick={this.handleSubmit}
       className={this.props.classes.button}
       disabled={this.state.selectedOption === -1}
+      style={{fontFamily: 'Arimo'}}
     >
       Submit
     </Button>
@@ -131,6 +132,7 @@ class TrainingQuestionnaire extends Component {
           color="primary"
           onClick={this.handleNext}
           className={classes.button}
+          style={{fontFamily: 'Arimo'}}
         >
           Next
         </Button>
@@ -144,6 +146,7 @@ class TrainingQuestionnaire extends Component {
             color="primary"
             onClick={this.handleFinish}
             className={classes.button}
+            style={{fontFamily: 'Arimo'}}
           >
             Finish
           </Button>
@@ -243,7 +246,7 @@ class TrainingQuestionnaire extends Component {
 
   getModalContent = () => {
     if (this.state.passed) {
-      return <DialogContentText>
+      return <DialogContentText style={{fontFamily: 'Arimo'}}>
         Congrats! You&apos;ve passed the knowledge check! Your observation tool has been unlocked.
       </DialogContentText>
     }
@@ -253,7 +256,7 @@ class TrainingQuestionnaire extends Component {
     //   </DialogContentText>
     // }
     else {
-      return <DialogContentText>
+      return <DialogContentText style={{fontFamily: 'Arimo'}}>
         Uh oh! You didn&apos;t answer enough of the questions correctly. Please try again.
       </DialogContentText>
     }
@@ -262,13 +265,13 @@ class TrainingQuestionnaire extends Component {
   getModalAction = () => {
     if (this.state.passed ) { //|| this.state.failed) {
       return <DialogActions>
-        <Button onClick={() => this.setState({ modalOpen: false })}>
+        <Button onClick={() => this.setState({ modalOpen: false })} style={{fontFamily: 'Arimo'}}>
           OK
         </Button>
       </DialogActions>
     }  else {
       return <DialogActions>
-        <Button onClick={this.loadNextBatch}>
+        <Button onClick={this.loadNextBatch} style={{fontFamily: 'Arimo'}}>
             OK
         </Button>
       </DialogActions>
@@ -311,7 +314,7 @@ class TrainingQuestionnaire extends Component {
           </div>
         </div>
         <Dialog open={modalOpen} onClose={null} >
-          <DialogTitle id="knowledge-check-modal-title">
+          <DialogTitle id="knowledge-check-modal-title" style={{fontFamily: 'Arimo'}}>
           Your Results
           </DialogTitle>
           {this.getModalContent()}
