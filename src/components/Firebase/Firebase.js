@@ -414,6 +414,20 @@ class Firebase {
       .catch(error => console.error("Error setting session ref: ", error));
   };
 
+  handleLOISession = async function(mEntry) {
+    this.sessionRef = this.db.collection("observations").doc();
+    this.sessionRef
+      .set({
+        observedBy: "/user/" + mEntry.observedBy,
+        start: firebase.firestore.FieldValue.serverTimestamp(),
+        teacher: "/user/" + mEntry.teacher,
+        end: firebase.firestore.FieldValue.serverTimestamp(),
+        type: mEntry.type,
+        setting: mEntry.setting
+      })
+      .catch(error => console.error("Error setting session ref: ", error));
+  };
+
   endSession = async function() {
     this.sessionRef
       .update({
@@ -443,6 +457,18 @@ class Firebase {
       .add({
         Checked: mEntry.checked,
         PeopleType: mEntry.people,
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch(error =>
+        console.error("Error occurred adding observation: ", error)
+      );
+  };
+
+  handlePushInstruction = async function(insType) {
+    return this.sessionRef
+      .collection("entries")
+      .add({
+        instructionType: insType,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>

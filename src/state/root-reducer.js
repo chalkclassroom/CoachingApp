@@ -7,6 +7,8 @@ import sequentialCenterState from "./reducers/sequential-center-state";
 import transitionLogState from "./reducers/transition-log-state";
 import transitionTypeState from "./reducers/transition-type-state";
 import mathCentersState from "./reducers/math-instruction-state";
+import LOIsettingTypeState from "./reducers/loi-setting-type-state";
+import instructionstackstate from "./reducers/instruction-stack-state"
 
 export default combineReducers({
   associativeCenterState,
@@ -16,6 +18,7 @@ export default combineReducers({
   sequentialCenterState,
   transitionLogState,
   transitionTypeState,
-  mathCentersState
-
+  mathCentersState,
+  LOIsettingTypeState,
+  instructionstackstate
 });

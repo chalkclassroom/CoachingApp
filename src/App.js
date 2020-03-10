@@ -18,6 +18,8 @@ import {
   MuiThemeProvider,
   withStyles
 } from "@material-ui/core/styles";
+import LevelOfInstructionTrainingPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage.tsx";
+import LevelOfInstructionPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionPage.tsx";
 import MathInstructionTrainingPage from "./views/protected/MathInstructionViews/MathInstructionTrainingPage";
 import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage.tsx";
 import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage.tsx";
@@ -182,6 +184,11 @@ class App extends Component {
             />
             <PrivateRoute
               auth={this.state.auth}
+              path="/LevelOfInstruction"
+              component={LevelOfInstructionPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
               path="/ClassroomClimate"
               component={ClassroomClimatePage}
             />
@@ -224,6 +231,11 @@ class App extends Component {
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsTraining"
               component={AssociativeCooperativeInteractionsTrainingPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/LevelOfInstructionTraining"
+              component={LevelOfInstructionTrainingPage}
             />
             <PrivateRoute
               auth={this.state.auth}
