@@ -326,4 +326,4 @@ class PilotForm extends React.Component<Props, State>{
   }
 }
 
-export default withRouter(connect()(withStyles(styles)(PilotForm)));
+export default withRouter(withStyles(styles)(PilotForm));
