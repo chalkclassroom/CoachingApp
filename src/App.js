@@ -72,8 +72,8 @@ function PrivateRoute({ component: Component, auth, ...rest }) {
         auth === true ? (
           <Component {...props} />
         ) : (
-            <Redirect to={{ pathname: "/", state: { from: props.location } }} />
-          )
+          <Redirect to={{ pathname: "/", state: { from: props.location } }} />
+        )
       }
     />
   );
@@ -145,148 +145,148 @@ class App extends Component {
     return this.state.loading === true ? (
       <h1>Loading</h1>
     ) : (
-        <BrowserRouter>
-          <MuiThemeProvider theme={styles}>
-            <Switch>
-              <Route exact path="/" component={WelcomePage} />
-              <Route exact path="/forgot" component={ForgotPasswordPage} />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/Invite"
-                component={HomePage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/Account"
-                component={HomePage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/Home"
-                component={HomePage}
-              />
-              <PrivateRoute
-                auth={this.state.auth || !this.state.auth}
-                path="/about"
-                component={AboutPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth || !this.state.auth}
-                path="/team"
-                component={TeamPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/TransitionTime"
-                component={TransitionTimePage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/ClassroomClimate"
-                component={ClassroomClimatePage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/AssociativeCooperativeInteractions"
-                component={AssociativeCooperativeInteractionsPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/AssociativeCooperativeInteractionsResults"
-                component={AssociativeCooperativeInteractionsResultsPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/MathInstruction"
-                component={MathInstructionPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/MathInstructionResults"
-                component={MathInstructionResultsPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/SequentialActivities"
-                component={SequentialActivitiesPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/MathInstructionTraining"
-                component={MathInstructionTrainingPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/SequentialActivitiesResults"
-                component={SequentialActivitiesResultsPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/AssociativeCooperativeInteractionsTraining"
-                component={AssociativeCooperativeInteractionsTrainingPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/ClassroomClimateTraining"
-                component={ClassroomClimateTrainingPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/SequentialActivitiesTraining"
-                component={SequentialActivitiesTrainingPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/TransitionTimeTraining"
-                component={TransitionTimeTrainingPage}
-              />
-              <PrivateRoute
-                exact
-                auth={this.state.auth}
-                path="/MyTeachers"
-                component={TeacherListPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path={`/MyTeachers/:teacherid`}
-                component={TeacherDetailPage}
-              />
-              {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
-                            the type prop into the PrivateRoute function*/}
-              <Route
-                path="/Magic8Menu"
-                render={props =>
-                  this.state.auth === true ? (
-                    <Magic8MenuPage
-                      {...props}
-                      type={
-                        props.location.state.type === "Results"
-                          ? "Results"
-                          : "Observe"
-                      }
-                    />
-                  ) : (
-                      <Redirect
-                        to={{ pathname: "/", state: { from: props.location } }}
-                      />
-                    )
-                }
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/TransitionTimeResults"
-                component={TransitionResultsPage}
-              />
-              <PrivateRoute
-                auth={this.state.auth}
-                path="/ClassroomClimateResults"
-                component={ClassroomClimateResultsPage}
-              />
-              <Route render={() => <h3>No Match</h3>} />
-            </Switch>
-          </MuiThemeProvider>
-        </BrowserRouter>
-      );
+      <BrowserRouter>
+        <MuiThemeProvider theme={styles}>
+          <Switch>
+            <Route exact path="/" component={WelcomePage} />
+            <Route exact path="/forgot" component={ForgotPasswordPage} />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/Invite"
+              component={HomePage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/Account"
+              component={HomePage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/Home"
+              component={HomePage}
+            />
+            <PrivateRoute
+              auth={this.state.auth || !this.state.auth}
+              path="/about"
+              component={AboutPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth || !this.state.auth}
+              path="/team"
+              component={TeamPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/TransitionTime"
+              component={TransitionTimePage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ClassroomClimate"
+              component={ClassroomClimatePage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/AssociativeCooperativeInteractions"
+              component={AssociativeCooperativeInteractionsPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/AssociativeCooperativeInteractionsResults"
+              component={AssociativeCooperativeInteractionsResultsPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstruction"
+              component={MathInstructionPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstructionResults"
+              component={MathInstructionResultsPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/SequentialActivities"
+              component={SequentialActivitiesPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstructionTraining"
+              component={MathInstructionTrainingPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/SequentialActivitiesResults"
+              component={SequentialActivitiesResultsPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/AssociativeCooperativeInteractionsTraining"
+              component={AssociativeCooperativeInteractionsTrainingPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ClassroomClimateTraining"
+              component={ClassroomClimateTrainingPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/SequentialActivitiesTraining"
+              component={SequentialActivitiesTrainingPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/TransitionTimeTraining"
+              component={TransitionTimeTrainingPage}
+            />
+            <PrivateRoute
+              exact
+              auth={this.state.auth}
+              path="/MyTeachers"
+              component={TeacherListPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path={`/MyTeachers/:teacherid`}
+              component={TeacherDetailPage}
+            />
+            {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
+                          the type prop into the PrivateRoute function*/}
+            <Route
+              path="/Magic8Menu"
+              render={props =>
+                this.state.auth === true ? (
+                  <Magic8MenuPage
+                    {...props}
+                    type={
+                      props.location.state.type === "Results"
+                        ? "Results"
+                        : "Observe"
+                    }
+                  />
+                ) : (
+                  <Redirect
+                    to={{ pathname: "/", state: { from: props.location } }}
+                  />
+                )
+              }
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/TransitionTimeResults"
+              component={TransitionResultsPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ClassroomClimateResults"
+              component={ClassroomClimateResultsPage}
+            />
+            <Route render={() => <h3>No Match</h3>} />
+          </Switch>
+        </MuiThemeProvider>
+      </BrowserRouter>
+    );
   }
 }
 

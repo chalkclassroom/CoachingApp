@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
-import MathInstructionHelpCard from '../../../components/MathInstructionComponents/MathInstructionHelpCard';
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
@@ -23,9 +22,8 @@ const styles: object = {
   paper: {
     position: "absolute",
     width: "67%",
-    //backgroundColor: theme.palette.background.paper,
-    //boxShadow: theme.shadows[5],
-    //padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    padding: '2em',
     borderRadius: 8
   }
 };
@@ -73,9 +71,9 @@ class MathInstructionHelp extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
@@ -89,13 +87,8 @@ class MathInstructionHelp extends React.Component<Props, State> {
               justify="flex-start"
             >
               <Typography variant="h4" gutterBottom>
-                 MathInstruction
+                 Math Instruction
               </Typography>
-              <Typography variant="subtitle2" gutterBottom>
-                SAMPLE, a <strong>MathInstruction</strong> sample <strong>most</strong> of the class is not involved in a
-                learning activity.
-              </Typography>
-              <MathInstructionHelpCard />
             </Grid>
           </div>
         </Modal>

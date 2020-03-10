@@ -159,9 +159,6 @@ interface Style {
   dashboardContainer: string;
   trainingContentCard: string;
   root: string,
-  viewButtons: string,
-  buttonsList: string,
-  resultsContent: string
 }
 
 interface State {
@@ -178,11 +175,11 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-  }
 
-  state = {
-    view: ViewEnum.CONCEPTS
-  };
+    this.state = {
+      view: ViewEnum.CONCEPTS
+    };
+  }
 
   conceptsClick = () => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
@@ -226,19 +223,19 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     const { view } = this.state;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
           <Button variant="contained" size="medium" className={classes.backButton}
-            onClick={() => {
+            onClick={(): void => {
               if (this.props.location.state !== undefined) { // came from MyTeachers
                 this.props.history.goBack();
               } else {
@@ -252,10 +249,6 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
             <b>Training Home</b>
           </Button>
           <h1 style={{ justifySelf: 'center' }}>Training Tool</h1>
-          <Button variant='contained' size='medium' className={classes.backButton} onClick={null} style={{ visibility: 'hidden' }}>
-            <ChevronLeftRoundedIcon />
-            <b>Training Home</b>
-          </Button>
         </div>
         <div className={classes.main}>
           <div className={classes.dashboardContainer}>
@@ -275,22 +268,23 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
           <div className={classes.trainingContentCard}>
             {view === ViewEnum.CONCEPTS ?
               <TrainingVideo
-                videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Sequential_Concepts.mp4?alt=media&token=44a1fe64-2e44-46e6-9c3f-cd8fd873b3e0'} />
-              : view === ViewEnum.DEFINITIONS ?
-                <SequentialHelpCard />
-                : view === ViewEnum.EXAMPLE ?
-                  <div>EXAMPLE</div>
-                  : view === ViewEnum.DEMONSTRATION ?
-                    <div>
-                      <TrainingVideo
-                        videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'}
-                      />
-                    </div>
-                    : view === ViewEnum.TRYIT ?
-                      <div>TRY IT</div>
-                      : view === ViewEnum.KNOWLEDGECHECK ? (
-                        <TrainingQuestionnaire section={'sequential'} />
-                      ) : null}
+                videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Sequential_Concepts.mp4?alt=media&token=44a1fe64-2e44-46e6-9c3f-cd8fd873b3e0'}
+              />
+            : view === ViewEnum.DEFINITIONS ?
+              <SequentialHelpCard />
+            : view === ViewEnum.EXAMPLE ?
+              <div>EXAMPLE</div>
+            : view === ViewEnum.DEMONSTRATION ?
+              <div>
+                <TrainingVideo
+                  videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'}
+                />
+              </div>
+            : view === ViewEnum.TRYIT ?
+              <div>TRY IT</div>
+            : view === ViewEnum.KNOWLEDGECHECK ? (
+              <TrainingQuestionnaire section={'sequential'} />
+            ) : null}
           </div>
         </div>
       </div>

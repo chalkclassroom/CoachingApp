@@ -34,26 +34,13 @@ const styles = {
   buttonsListContainer: {
     display: 'flex',
     flexDirection: 'column',
-   
   },
-//    viewButtons: {
-//       Width: '80%',
-// },
 
   // iPad Pro 12.9" Portrait
   '@media only screen and (max-width:1024px) and (orientation:portrait)': {
-    // buttonsListContainer: {
-    //   flexDirection: 'row',
-    //   flexWrap: 'wrap',
-    //   justifyContent: 'center'
-    // },
     iconContainer: {
       display: 'none'
     },
-    // viewButtons: {
-    //   minWidth: '240px',
-    //   maxWidth: '240px'
-    // },
     card: {
       border: '3px solid #d9d9d9',
       borderRadius: 10,
@@ -70,7 +57,7 @@ const styles = {
     },
   },
 
-  //iPad Pro 10.5" Landscape
+  // iPad Pro 10.5" Landscape
   '@media only screen and (max-width:1112px) and (orientation:landscape)': {
     container: {
       fontSize: '0.7em'
@@ -79,9 +66,6 @@ const styles = {
 
   // iPad Pro 10.5" Portrait
   '@media only screen and (max-width:834px) and (orientation:portrait)': {
-    // viewButtons: {
-    //   maxWidth: '395px'
-    // },
     card: {
       border: '3px solid #d9d9d9',
       borderRadius: 10,
@@ -110,9 +94,6 @@ const styles = {
     container: {
       fontSize: '0.6em'
     },
-    // viewButtons: {
-    //   maxWidth: '240px'
-    // },
     card: {
       border: '3px solid #d9d9d9',
       borderRadius: 10,
@@ -131,17 +112,9 @@ const styles = {
 
   // Minor Breakpoint - 920px width
   '@media only screen and (max-width:920px) and (orientation:landscape)': {
-    // buttonsListContainer: {
-    //   flexDirection: 'row',
-    //   flexWrap: 'wrap',
-    //   justifyContent: 'center'
-    // },
     iconContainer: {
       display: 'none'
     },
-    // viewButtons: {
-    //   maxWidth: '250px'
-    // }
   },
 
   // Mobile Landscape
@@ -149,14 +122,15 @@ const styles = {
     container: {
       fontSize: '0.8em'
     },
-    // viewButtons: {
-    //   maxWidth: '180px'
-    // }
   }
 };
 
+/**
+ * dashboard for all training pages
+ * @param {Props} props
+ * @return {ReactElement}
+ */
 function TrainingDashboard(props) {
-
   const {
     classes,
     ViewEnum,
@@ -170,16 +144,14 @@ function TrainingDashboard(props) {
     knowledgeCheckClick,
     colorTheme
   } = props;
-  const { container, buttonsListContainer, iconContainer, viewButtons } = classes;
-
   return (
-    <div className={container}>
+    <div className={classes.container}>
       <Card className={classes.card}>
-        <ListItem className={iconContainer}>
+        <ListItem className={classes.iconContainer}>
           <img src={Icon} width={"100px"} alt="Magic Eight" />
         </ListItem>
-        <div className={buttonsListContainer} style={{width:'90%'}}>
-          <ListItem className={viewButtons}>
+        <div className={classes.buttonsListContainer} style={{width:'90%'}}>
+          <ListItem className={classes.viewButtons}>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -190,10 +162,10 @@ function TrainingDashboard(props) {
                 style={{ fontSize: '1em' }} // necessary to responsively change font sizes w/ media queries
               >
                 CONCEPTS
-          </Button>
+              </Button>
             </MuiThemeProvider>
           </ListItem>
-          <ListItem className={viewButtons}>
+          <ListItem className={classes.viewButtons}>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -204,10 +176,10 @@ function TrainingDashboard(props) {
                 style={{ fontSize: '1em' }}
               >
                 DEFINITIONS
-          </Button>
+              </Button>
             </MuiThemeProvider>
           </ListItem>
-          <ListItem className={viewButtons}>
+          <ListItem className={classes.viewButtons}>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -219,10 +191,10 @@ function TrainingDashboard(props) {
                 disabled
               >
                 EXAMPLE
-          </Button>
+              </Button>
             </MuiThemeProvider>
           </ListItem>
-          <ListItem className={viewButtons}>
+          <ListItem className={classes.viewButtons}>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -233,12 +205,11 @@ function TrainingDashboard(props) {
                 style={{ fontSize: '1em' }}
               >
                 DEMONSTRATION
-          </Button>
+              </Button>
             </MuiThemeProvider>
           </ListItem>
-          <ListItem className={viewButtons}>
+          <ListItem className={classes.viewButtons}>
             <MuiThemeProvider theme={colorTheme}>
-
               <Button
                 size="large"
                 color={"primary"}
@@ -249,10 +220,10 @@ function TrainingDashboard(props) {
                 disabled
               >
                 TRY IT YOURSELF
-             </Button>
+              </Button>
             </MuiThemeProvider>
           </ListItem>
-          <ListItem className={viewButtons}>
+          <ListItem className={classes.viewButtons}>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -263,7 +234,7 @@ function TrainingDashboard(props) {
                 style={{ fontSize: '1em' }}
               >
                 KNOWLEDGE CHECK
-          </Button>
+              </Button>
             </MuiThemeProvider>
           </ListItem>
         </div>
@@ -282,7 +253,8 @@ TrainingDashboard.propTypes = {
   exampleClick: PropTypes.func.isRequired,
   demonstrationClick: PropTypes.func.isRequired,
   tryItClick: PropTypes.func.isRequired,
-  knowledgeCheckClick: PropTypes.func.isRequired
+  knowledgeCheckClick: PropTypes.func.isRequired,
+  colorTheme: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(TrainingDashboard);
