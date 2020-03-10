@@ -49,10 +49,9 @@ interface Props {
         uid: string
       }
     },
-    handleLOISession(entry: {teacher: string, observedBy: string, setting: string, type: string}): void,
+    handleSession(entry: {teacher: string, observedBy: string, type: string}): void,
     handlePushInstruction(insType: string): void,
   },
-  selected: string,
   totalVisitCount: number,
   classes: {
     category: string,
@@ -74,10 +73,9 @@ class InstructionCounter extends React.Component<Props, {}> {
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      setting: this.props.selected,
       type: 'level'
     };
-    this.props.firebase.handleLOISession(mEntry);
+    this.props.firebase.handleSession(mEntry);
   }
 
   /**

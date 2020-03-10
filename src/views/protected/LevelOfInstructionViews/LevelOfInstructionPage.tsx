@@ -6,8 +6,8 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import { connect } from 'react-redux';
 import { toggleLOISettingType } from '../../../state/actions/level-of-instruction';
-import LOISettingTypeSel from './LOISettingTypeSel';
 import Dashboard from '../../../components/Dashboard';
+import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
 
 const styles: object = {
   root: {
@@ -58,7 +58,6 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
         <FirebaseContext.Consumer>
           {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-
         <main style={{ flex: 1 }}>
           <Grid container alignItems="center" style={{height: '100%'}}>
             <Grid item xs={3}>
@@ -70,7 +69,7 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
               <Grid container alignItems={'center'} justify={'center'} direction={'column'}>
                 <FirebaseContext.Consumer>
                   {(firebase: object): React.ReactNode => (
-                    <LOISettingTypeSel
+                    <InstructionCounter
                       teacherId={this.props.location.state.teacher.id}
                       firebase={firebase}
                     />
