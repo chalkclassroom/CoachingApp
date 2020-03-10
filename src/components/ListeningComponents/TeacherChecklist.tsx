@@ -241,7 +241,7 @@ class TeacherChecklist extends React.Component<Props, State> {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
-                  You have not made any selection in the past minute. Please make your final selections, 
+                  Please make your final selections, 
                   or indicate that none of the teacher behaviors were observed.
                 </DialogContentText>
               </DialogContent>
