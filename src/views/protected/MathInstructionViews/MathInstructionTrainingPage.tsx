@@ -1,24 +1,23 @@
-import * as React from "react";
-import * as PropTypes from "prop-types";
-import * as Constants from '../../../constants';
-import Button from "@material-ui/core/Button/Button";
-import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
-import { withStyles } from "@material-ui/core/styles/index";
-import AppBar from "../../../components/AppBar";
-import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import "chartjs-plugin-datalabels";
-import TrainingVideo from "../../../components/Shared/TrainingVideo.tsx";
-import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import * as Constants from '../../../constants/index';
+import Button from '@material-ui/core/Button/Button';
+import MathIconImage from '../../../assets/images/MathIconImage.svg';
+import { withStyles } from '@material-ui/core/styles/index';
+import AppBar from '../../../components/AppBar';
+import FirebaseContext from '../../../components/Firebase/FirebaseContext';
+import 'chartjs-plugin-datalabels';
+import TrainingVideo from '../../../components/Shared/TrainingVideo.tsx';
+import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionnaire';
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
-import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/es';
 import Grid from '@material-ui/core/Grid';
 
-const TransitionTheme = createMuiTheme({
+const MathTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.TransitionColor
+      main: Constants.MathColor
     }
   }
 });
@@ -149,92 +148,92 @@ const ViewEnum = {
 };
 
 interface Props {
-  classes: Style
+  classes: Style;
 }
 
 interface Style {
   titleContainer: string;
-  trainingContentCard: string;
   backButton: string;
   main: string;
   dashboardContainer: string;
-  root: string,
-  viewButtons: string,
-  buttonsList: string,
-  resultsContent: string
+  trainingContentCard: string;
+  root: string;
+  viewButtons: string;
+  buttonsList: string;
+  resultsContent: string;
 }
 
 interface State {
-  view: number
+  view: number;
 }
 
 /**
- * transition time training
- * @class TransitionTimeTrainingPage
+ * Math Instruction  training
+ * @class MathInstructionTrainingPage
  */
-class TransitionTimeTrainingPage extends React.Component<Props, State> {
+class MathInstructionTrainingPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
   constructor(props: Props) {
     super(props);
-
-    this.state = {
-      view: ViewEnum.CONCEPTS
-    };
   }
+
+  state = {
+    view: ViewEnum.CONCEPTS
+  };
 
   conceptsClick = () => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
-      this.setState({ view: ViewEnum.CONCEPTS })
+      this.setState({ view: ViewEnum.CONCEPTS });
     }
-  }
+  };
 
   definitionsClick = () => {
     if (this.state.view !== ViewEnum.DEFINITIONS) {
-      this.setState({ view: ViewEnum.DEFINITIONS })
+      this.setState({ view: ViewEnum.DEFINITIONS });
     }
-  }
+  };
 
   exampleClick = () => {
     if (this.state.view !== ViewEnum.EXAMPLE) {
-      this.setState({ view: ViewEnum.EXAMPLE })
+      this.setState({ view: ViewEnum.EXAMPLE });
     }
-  }
+  };
 
   demonstrationClick = () => {
     if (this.state.view !== ViewEnum.DEMONSTRATION) {
-      this.setState({ view: ViewEnum.DEMONSTRATION })
+      this.setState({ view: ViewEnum.DEMONSTRATION });
     }
-  }
+  };
 
   tryItClick = () => {
     if (this.state.view !== ViewEnum.TRYIT) {
-      this.setState({ view: ViewEnum.TRYIT })
+      this.setState({ view: ViewEnum.TRYIT });
     }
-  }
+  };
 
   knowledgeCheckClick = () => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
-      this.setState({ view: ViewEnum.KNOWLEDGECHECK })
+      this.setState({ view: ViewEnum.KNOWLEDGECHECK });
     }
-  }
+  };
 
   static propTypes = {
     classes: PropTypes.object.isRequired
-  }
+  };
 
   /**
    * render function
-   * @return {ReactNode}
+   * @return {ReactElement}
    */
-  render(): React.ReactNode {
+  render() {
     const { classes } = this.props;
     const { view } = this.state;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: object) => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
           <Grid container justify="center" alignItems="center">
@@ -260,39 +259,43 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
           </Grid>
         </div>
         <div className={classes.main}>
-          <div className={classes.dashboardContainer}>
+          <div className={classes.dashboardContainer}> 
             <TrainingDashboard
               ViewEnum={ViewEnum}
               view={view}
-              Icon={TransitionTimeIconImage}
+              Icon={MathIconImage}
               conceptsClick={this.conceptsClick}
               definitionsClick={this.definitionsClick}
               exampleClick={this.exampleClick}
               demonstrationClick={this.demonstrationClick}
               tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
-              colorTheme={TransitionTheme}
+              colorTheme={MathTheme}
             />
           </div>
           <div className={classes.trainingContentCard}>
-            {view === ViewEnum.CONCEPTS ?
+            {view === ViewEnum.CONCEPTS ? (
               <TrainingVideo
-                videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT%20Concepts%201.30.2020.mp4?alt=media&token=b11f88fc-ed72-476d-805e-40f8287053ef'}
+                videoUrl={
+                  'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Math%20Instruction%20Concepts.mp4?alt=media&token=ca70255c-7d29-4ab5-84fe-a3ebdde744af'
+                }
               />
-            : view === ViewEnum.DEFINITIONS ?
-              <TransitionHelpCard />
-            : view === ViewEnum.EXAMPLE ?
+            ) : view === ViewEnum.DEFINITIONS ? (
+              <div />
+            ) : view === ViewEnum.EXAMPLE ? (
               <div>EXAMPLE</div>
-            : view === ViewEnum.DEMONSTRATION ?
+            ) : view === ViewEnum.DEMONSTRATION ? (
               <div>
                 <TrainingVideo
-                  videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'}
+                  videoUrl={
+                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'
+                  }
                 />
               </div>
-            : view === ViewEnum.TRYIT ?
+            ) : view === ViewEnum.TRYIT ? (
               <div>TRY IT</div>
-            : view === ViewEnum.KNOWLEDGECHECK ? (
-              <TrainingQuestionnaire section={'transition'} />
+            ) : view === ViewEnum.KNOWLEDGECHECK ? (
+              <TrainingQuestionnaire section={'math'} />
             ) : null}
           </div>
         </div>
@@ -301,4 +304,4 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(TransitionTimeTrainingPage);
+export default withStyles(styles)(MathInstructionTrainingPage);

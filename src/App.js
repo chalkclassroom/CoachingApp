@@ -18,6 +18,7 @@ import {
   MuiThemeProvider,
   withStyles
 } from "@material-ui/core/styles";
+import MathInstructionTrainingPage from "./views/protected/MathInstructionViews/MathInstructionTrainingPage";
 import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage.tsx";
 import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage.tsx";
 import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage.tsx";
@@ -26,7 +27,7 @@ import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/As
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
-import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage"; 
+import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
@@ -198,16 +199,21 @@ class App extends Component {
               auth={this.state.auth}
               path="/MathInstruction"
               component={MathInstructionPage}
-            />  
+            />
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstructionResults"
               component={MathInstructionResultsPage}
-            />  
+            />
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivities"
               component={SequentialActivitiesPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstructionTraining"
+              component={MathInstructionTrainingPage}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -246,7 +252,7 @@ class App extends Component {
               component={TeacherDetailPage}
             />
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
-                            the type prop into the PrivateRoute function*/}
+                          the type prop into the PrivateRoute function*/}
             <Route
               path="/Magic8Menu"
               render={props =>
