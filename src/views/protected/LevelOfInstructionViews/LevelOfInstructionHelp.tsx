@@ -4,6 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import LevelOfInstructionHelpCard from '../../../components/LevelOfInstructionComponents/LevelOfInstructionHelpCard.tsx';
 import Grid from '@material-ui/core/Grid';
 import Modal from '@material-ui/core/Modal';
+import CloseIcon from "@material-ui/icons/Close";
+import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
+import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
 /**
  * specifies styling for modalins
@@ -66,6 +69,18 @@ class LevelOfInstructionHelp extends React.Component<Props, State> {
       <div>
         <Modal open={this.state.open}>
           <div style={getModalStyle()} className={classes.paper}>
+          <Grid container direction="row">
+              <Grid item xs={11} />
+              <Grid item xs={1}>
+                <IconButton style={{ padding: 10 }}>
+                  <Tooltip title={"Close"} placement={"right"}>
+                    <CloseIcon
+                      onClick={this.props.close}
+                    />
+                  </Tooltip>
+                </IconButton>
+              </Grid>
+            </Grid>
             <Grid container alignItems="center" direction="column" justify="flex-start">
               <LevelOfInstructionHelpCard />
             </Grid>

@@ -230,7 +230,7 @@ class Dashboard extends React.Component {
                 case "Sequential Activities":
                     return <SequentialActivitiesHelp />;
                 case "Level of Instruction":
-                    return <LevelOfInstructionHelp/>;   
+                    return <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp}/>;   
                 default:
                     return <div />;
               }

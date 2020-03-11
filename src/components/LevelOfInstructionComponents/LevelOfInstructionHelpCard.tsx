@@ -6,6 +6,13 @@ import TableHead from '@material-ui/core/TableHead/index';
 import TableRow from '@material-ui/core/TableRow/index';
 import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
+import Slider from "react-slick";
+import LevelOfInstructionHelpCard1 from './LevelOfInstructionHelpCard1';
+import LevelOfInstructionHelpCard2 from './LevelOfInstructionHelpCard2';
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import TabBar from "@material-ui/core/AppBar";
+import Grid from '@material-ui/core/Grid';
 
 const styles: object = {
   paper: {
@@ -48,7 +55,12 @@ const styles: object = {
     color: 'black',
     padding: "1%",
     width: '50%'
-  }
+  },
+  tabBar: {
+    marginBottom: "10px",
+    height: "5%",
+    width: "100%"
+  },
 };
 
 interface Props {
@@ -62,166 +74,86 @@ interface Props {
   }
 }
 
+interface State {
+  tabValue: number
+}
+
 /**
  * 
- * @param {Props} props 
- * @return {ReactElement}
+ * @class LevelOfInstructionHelpCard
  */
-function LevelOfInstructionHelpCard(props: Props): React.ReactElement {
-  const { classes } = props;
-  return (
-    <div>
-       <Table padding="checkbox">
-        <TableHead>
-          <TableRow>
-            <TableCell colSpan={2} className={classes.inferentialTitle}>
-              Inferential Instruction
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell className={classes.inferentialSubtitle}>
-              Ask High-Level Questions
-            </TableCell>
-            <TableCell className={classes.inferentialSubtitle}>
-              Follow up on Children&apos;s Responses
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.example}>
-              <strong>
-                Questions that have more than one possible answer
-              </strong>
-            </TableCell>
-            <TableCell className={classes.example}>
-              <strong>
-                Teacher builds on children&apos;s responses to deepen their
-                understanding
-              </strong>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.example}>
-              Ask children to <b>explain</b> their thought process:
-              <br/>
-              <i>How do you know...?</i>
-              <br/>
-              <i>What makes you say...?</i>
-              <br/>
-              <i>Why did you...?</i>
-            </TableCell>
-            <TableCell className={classes.example}>
-              Ask <b>follow-up questions:</b>
-              <br/>
-              Teacher: <i>This week we have been talking about the word</i> {" "}
-              timid<i>. When have you felt timid?</i>
-              <br/>
-              Child: <i>Yesterday!</i>
-              <br/>
-              Teacher: <i>Why did you feel timid yesterday? What happened?</i>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.example}>
-              Ask children to make a <b>prediction</b> based on context clues
-              or prior knowledge:
-              <br/>
-              <i>What would happen if...?</i>
-              <br/>
-              <i>How could we...?</i>
-            </TableCell>
-            <TableCell className={classes.example}>
-              <b>Expand</b> on children&apos;s ideas:
-              <br/>
-              Teacher: Timid <i>is our new word today. When have you felt timid?</i>
-              <br/>
-              Child: <i>Yesterday when I was scared.</i>
-              Teacher: <i>Yes, I remember when you were timid yesterday during the
-              thunderstorm. That means you were scared or frightened by the loud noises!</i>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.example}>
-              Ask children to <b>connect</b> academic content with personal experience:
-              <br/>
-              <i>Tell your friend about a time when...</i>
-              <br/>
-              <i>How is this character&apos;s problem similar to your...?</i>
-              <br/>
-              <i>How are ______ and ______ alike?</i>
-            </TableCell>
-            <TableCell className={classes.example}>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.example}>
-              Ask children to <b>reflect</b> back on parts of activities or lessons:
-              <br/>
-              <i>What do you remember about...?</i>
-              <br/>
-              <i>What was your favorite part of...?</i>
-            </TableCell>
-            <TableCell className={classes.example} />
-          </TableRow>
-        </TableBody>
-        <TableHead>
-          <TableRow>
-            <TableCell colSpan={2} className={classes.basicTitle}>
-              Basic Skills Instruction
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell className={classes.basicSubtitle}>
-              Ask Low-Level Questions
-            </TableCell>
-            <TableCell className={classes.basicSubtitle}>
-              Teach Specific Skills
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.example}>
-              <strong>
-                Teacher asks questions with predetermined answers, with the goal
-                of having children learn or recite the correct response.
-              </strong>
-            </TableCell>
-            <TableCell className={classes.example}>
-              <strong>
-                Teacher gives information about specific, concrete skills
-              </strong>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.example}>
-              <b>What</b> sound does 'g' make?
-            </TableCell>
-            <TableCell className={classes.example}>
-              A triangle has 3 sides.
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.example}>
-              <b>Show me</b> the number 2.
-            </TableCell>
-            <TableCell className={classes.example}>
-              Run rhymes with fun.
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.example}>
-              <b>Do</b> we have more girls or boys here today?
-            </TableCell>
-            <TableCell className={classes.example}>
-              A tree gets water and food from its roots.
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
-  )
+class LevelOfInstructionHelpCard extends React.Component<Props, State> {
+  /**
+   * @param {Props} props
+   */
+  constructor(props: Props){
+    super(props);
+
+    this.state = {
+      tabValue: 0,
+    }
+  }
+
+  handleInferential = () => {
+    if (this.state.tabValue !== 0) {
+      this.setState({
+        tabValue: 0
+      })
+    }
+  };
+
+  handleBasic = () => {
+    if (this.state.tabValue !== 1) {
+      this.setState({
+        tabValue: 1
+      })
+    }
+  };
+  
+  render(): React.ReactNode {
+    const { classes } = this.props;
+    const settings = {
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1
+    };
+    return (
+      <div>
+          {/* <Slider {...settings}>
+            <div>
+              <LevelOfInstructionHelpCard1 />
+            </div>
+            <div>
+              <LevelOfInstructionHelpCard2 />
+            </div>
+          </Slider> */}
+          <Grid container direction="column">
+            <Grid item>
+            <TabBar position="static" color="default" className={classes.tabBar}>
+                        <Tabs
+                          value={this.state.tabValue}
+                          indicatorColor="primary"
+                          textColor="primary"
+                          variant="fullWidth"
+                        >
+                          <Tab label="Inferential Instruction" onClick={this.handleInferential} style={{fontFamily: "Arimo", fontSize: '1em'}} />
+                          <Tab label="Basic Skills Instruction" onClick={this.handleBasic} style={{fontFamily: "Arimo", fontSize: '1em'}} />
+                        </Tabs>
+                      </TabBar>
+            </Grid>
+            <Grid item>
+              {this.state.tabValue === 0 
+              ? <LevelOfInstructionHelpCard1 />
+              : <LevelOfInstructionHelpCard2 />
+              }
+            </Grid>
+          </Grid>
+          
+      </div>
+    )
+  }
 }
 
 LevelOfInstructionHelpCard.propTypes = {
