@@ -5,12 +5,15 @@ import TransitionHelpCard from '../../../components/TransitionComponents/Transit
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
+import CloseIcon from "@material-ui/icons/Close";
+import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
+import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -24,7 +27,6 @@ const styles: object = {
     position: "absolute",
     width: "67%",
     backgroundColor: 'white',
-    //boxShadow: theme.shadows[5],
     padding: '1em',
     borderRadius: 8
   }
@@ -46,26 +48,17 @@ interface Style {
   behaviorExamples: string,
 }
 
-interface State {
-  open: boolean
-}
-
 /**
  * transition time look-fors
  * @class TransitionTimeHelp
  */
-class TransitionTimeHelp extends React.Component<Props, State> {
-  state = {
-    open: true
-  };
-
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
+class TransitionTimeHelp extends React.Component<Props, {}> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
+    super(props);
+  }
 
   static propTypes = {
     classes: PropTypes.object.isRequired
@@ -73,15 +66,27 @@ class TransitionTimeHelp extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
       <div>
-        <Modal open={this.state.open}>
+        <Modal open={this.props.open}>
           <div style={getModalStyle()} className={classes.paper}>
+          <Grid container direction="row">
+              <Grid item xs={11} />
+              <Grid item xs={1}>
+                <IconButton style={{ padding: 10 }}>
+                  <Tooltip title={"Close"} placement={"right"}>
+                    <CloseIcon
+                      onClick={this.props.close}
+                    />
+                  </Tooltip>
+                </IconButton>
+              </Grid>
+            </Grid>
             <Grid
               container
               alignItems="center"

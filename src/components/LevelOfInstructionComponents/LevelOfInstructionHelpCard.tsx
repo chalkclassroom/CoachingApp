@@ -1,18 +1,24 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
-import Table from '@material-ui/core/Table/index';
-import TableHead from '@material-ui/core/TableHead/index';
-import TableRow from '@material-ui/core/TableRow/index';
-import TableBody from '@material-ui/core/TableBody/index';
-import TableCell from '@material-ui/core/TableCell/index';
-import Slider from "react-slick";
-import LevelOfInstructionHelpCard1 from './LevelOfInstructionHelpCard1';
-import LevelOfInstructionHelpCard2 from './LevelOfInstructionHelpCard2';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import LOIHelpCardInferential from './LOIHelpCardInferential';
+import LOIHelpCardBasic from './LOIHelpCardBasic';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
+
+const LOITheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#38761d"
+    },
+    secondary: {
+      main: "#1155cc"
+    }
+  }
+});
 
 const styles: object = {
   paper: {
@@ -70,7 +76,8 @@ interface Props {
     inferentialSubtitle: string,
     basicTitle: string,
     basicSubtitle: string,
-    example: string
+    example: string,
+    tabBar: string
   }
 }
 
@@ -112,45 +119,29 @@ class LevelOfInstructionHelpCard extends React.Component<Props, State> {
   
   render(): React.ReactNode {
     const { classes } = this.props;
-    const settings = {
-      dots: true,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1
-    };
     return (
       <div>
-          {/* <Slider {...settings}>
-            <div>
-              <LevelOfInstructionHelpCard1 />
-            </div>
-            <div>
-              <LevelOfInstructionHelpCard2 />
-            </div>
-          </Slider> */}
-          <Grid container direction="column">
-            <Grid item>
-            <TabBar position="static" color="default" className={classes.tabBar}>
-                        <Tabs
-                          value={this.state.tabValue}
-                          indicatorColor="primary"
-                          textColor="primary"
-                          variant="fullWidth"
-                        >
-                          <Tab label="Inferential Instruction" onClick={this.handleInferential} style={{fontFamily: "Arimo", fontSize: '1em'}} />
-                          <Tab label="Basic Skills Instruction" onClick={this.handleBasic} style={{fontFamily: "Arimo", fontSize: '1em'}} />
-                        </Tabs>
-                      </TabBar>
-            </Grid>
-            <Grid item>
-              {this.state.tabValue === 0 
-              ? <LevelOfInstructionHelpCard1 />
-              : <LevelOfInstructionHelpCard2 />
-              }
-            </Grid>
+        <Grid container direction="column">
+          <Grid item>
+            <MuiThemeProvider theme={LOITheme}>
+              <TabBar position="static" color="default" className={classes.tabBar}>
+                <Tabs
+                  value={this.state.tabValue}
+                  indicatorColor={this.state.tabValue === 0 ? "primary" : "secondary"}
+                  // textColor={this.state.tabValue === 0 ? LOITheme.palette.primary.light : LOITheme.palette.primary.main}
+                  variant="fullWidth"
+                  // style={{backgroundColor: (this.state.tabValue === 0) ? '#6aa84f' : "#c9daf8"}}
+                >
+                  <Tab label="Inferential Instruction" onClick={this.handleInferential} style={{fontFamily: "Arimo", fontSize: '1em', backgroundColor: this.state.tabValue === 0 ? '#6aa84f' : "#d3d3d3"}} />
+                  <Tab label="Basic Skills Instruction" onClick={this.handleBasic} style={{fontFamily: "Arimo", fontSize: '1em', backgroundColor: this.state.tabValue === 1 ? '#c9daf8' : "#d3d3d3"}} />
+                </Tabs>
+              </TabBar>
+            </MuiThemeProvider>
           </Grid>
-          
+          <Grid item>
+            {this.state.tabValue === 0 ? <LOIHelpCardInferential /> : <LOIHelpCardBasic />}
+          </Grid>
+        </Grid>
       </div>
     )
   }

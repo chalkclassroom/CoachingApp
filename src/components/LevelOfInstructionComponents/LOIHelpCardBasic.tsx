@@ -31,15 +31,15 @@ const styles: object = {
     width: '50%'
   },
   basicTitle: {
-    backgroundColor: "#1155cc",
+    backgroundColor: "#c9daf8",
     color: "white",
     fontSize: 24,
     textAlign: "center",
     width: "100%"
   },
   basicSubtitle: {
-    backgroundColor: "#c9daf8",
-    color: "black",
+    backgroundColor: "#1155cc",
+    color: "white",
     fontSize: 18,
     textAlign: "center",
     width: '50%'
@@ -68,25 +68,18 @@ interface Props {
  * @param {Props} props 
  * @return {ReactElement}
  */
-function LevelOfInstructionHelpCard2(props: Props): React.ReactElement {
+function LOIHelpCardBasic(props: Props): React.ReactElement {
   const { classes } = props;
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1
-  };
   return (
     <div>
       <Table padding="checkbox">
-        <TableHead>
+        {/* <TableHead>
           <TableRow>
             <TableCell colSpan={2} className={classes.basicTitle}>
               Basic Skills Instruction
             </TableCell>
           </TableRow>
-        </TableHead>
+        </TableHead> */}
         <TableBody>
           <TableRow>
             <TableCell className={classes.basicSubtitle}>
@@ -139,8 +132,8 @@ function LevelOfInstructionHelpCard2(props: Props): React.ReactElement {
   )
 }
 
-LevelOfInstructionHelpCard2.propTypes = {
+LOIHelpCardBasic.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(LevelOfInstructionHelpCard2);
+export default withStyles(styles)(LOIHelpCardBasic);

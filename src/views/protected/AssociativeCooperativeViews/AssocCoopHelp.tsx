@@ -1,16 +1,19 @@
 import * as React from "react";
 import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
-import AssocCoopHelpCard from "../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard.js";
+import AssocCoopHelpCard from "../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard.tsx";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
+import CloseIcon from "@material-ui/icons/Close";
+import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
+import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -30,7 +33,9 @@ const styles: object = {
 };
 
 interface Props {
-  classes: Style
+  classes: Style,
+  open: boolean,
+  close(): void
 }
 
 interface Style {
@@ -78,30 +83,36 @@ class AssocCoopHelp extends React.Component<Props, State> {
 
     return (
       <div>
-        <head>
-          <link href="https://fonts.googleapis.com/css?family=Arimo&display=swap" rel="stylesheet" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        </head>
-        <body>
-          <Modal open={this.state.open}>
-            <div style={getModalStyle()} className={classes.paper}>
-              <Grid
-                container
-                alignItems="center"
-                direction="column"
-                justify="flex-start"
-              >
-                <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                Associative and Cooperative Interactions
-                </Typography>
-                <Typography variant="subtitle2" gutterBottom style={{fontFamily: "Arimo"}}>
-                <strong>Hints + Reminders: Classifying Associative and Cooperative Interactions</strong>
-                </Typography>
-                <AssocCoopHelpCard />
+        <Modal open={this.props.open}>
+          <div style={getModalStyle()} className={classes.paper}>
+            <Grid container direction="row">
+              <Grid item xs={11} />
+              <Grid item xs={1}>
+                <IconButton style={{ padding: 10 }}>
+                  <Tooltip title={"Close"} placement={"right"}>
+                    <CloseIcon
+                      onClick={this.props.close}
+                    />
+                  </Tooltip>
+                </IconButton>
               </Grid>
-            </div>
-          </Modal>
-        </body>
+            </Grid>
+            <Grid
+              container
+              alignItems="center"
+              direction="column"
+              justify="flex-start"
+            >
+              <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+              Associative and Cooperative Interactions
+              </Typography>
+              <Typography variant="subtitle2" gutterBottom style={{fontFamily: "Arimo"}}>
+              <strong>Hints + Reminders: Classifying Associative and Cooperative Interactions</strong>
+              </Typography>
+              <AssocCoopHelpCard />
+            </Grid>
+          </div>
+        </Modal>
       </div>
     );
 

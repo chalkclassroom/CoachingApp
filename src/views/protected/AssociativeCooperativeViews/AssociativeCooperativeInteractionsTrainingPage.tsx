@@ -10,7 +10,7 @@ import 'chartjs-plugin-datalabels';
 import TrainingVideo from '../../../components/Shared/TrainingVideo.tsx';
 import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionnaire';
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
-import AssocCoopHelpCard from '../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard';
+import AssocCoopHelpCard from '../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard.tsx';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/es';
 import Grid from '@material-ui/core/Grid';

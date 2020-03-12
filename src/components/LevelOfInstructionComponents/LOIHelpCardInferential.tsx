@@ -6,7 +6,6 @@ import TableHead from '@material-ui/core/TableHead/index';
 import TableRow from '@material-ui/core/TableRow/index';
 import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
-import Slider from "react-slick";
 
 const styles: object = {
   paper: {
@@ -17,29 +16,17 @@ const styles: object = {
     borderRadius: 8
   },
   inferentialTitle: {
-    backgroundColor: "#38761d",
+    // backgroundColor: "#38761d",
+    backgroundColor: "#6aa84f",
     color: "white",
     fontSize: 24,
     textAlign: "center",
     width: "100%"
   },
   inferentialSubtitle: {
-    backgroundColor: "#6aa84f",
+    // backgroundColor: "#6aa84f",
+    backgroundColor: "#38761d",
     color: "white",
-    fontSize: 18,
-    textAlign: "center",
-    width: '50%'
-  },
-  basicTitle: {
-    backgroundColor: "#1155cc",
-    color: "white",
-    fontSize: 24,
-    textAlign: "center",
-    width: "100%"
-  },
-  basicSubtitle: {
-    backgroundColor: "#c9daf8",
-    color: "black",
     fontSize: 18,
     textAlign: "center",
     width: '50%'
@@ -57,8 +44,6 @@ interface Props {
     paper: string,
     inferentialTitle: string,
     inferentialSubtitle: string,
-    basicTitle: string,
-    basicSubtitle: string,
     example: string
   }
 }
@@ -68,25 +53,11 @@ interface Props {
  * @param {Props} props 
  * @return {ReactElement}
  */
-function LevelOfInstructionHelpCard1(props: Props): React.ReactElement {
+function LOIHelpCardInferential(props: Props): React.ReactElement {
   const { classes } = props;
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1
-  };
   return (
     <div>
       <Table padding="checkbox">
-        <TableHead>
-          <TableRow>
-            <TableCell colSpan={2} className={classes.inferentialTitle}>
-              Inferential Instruction
-            </TableCell>
-          </TableRow>
-        </TableHead>
         <TableBody>
           <TableRow>
             <TableCell className={classes.inferentialSubtitle}>
@@ -178,8 +149,8 @@ function LevelOfInstructionHelpCard1(props: Props): React.ReactElement {
   )
 }
 
-LevelOfInstructionHelpCard1.propTypes = {
+LOIHelpCardInferential.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(LevelOfInstructionHelpCard1);
+export default withStyles(styles)(LOIHelpCardInferential);

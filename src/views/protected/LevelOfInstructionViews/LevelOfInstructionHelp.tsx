@@ -10,13 +10,14 @@ import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
 /**
  * specifies styling for modalins
- * @return {css}
+ * @return {CSSProperties}
  */
 function getModalStyle(): React.CSSProperties {
   return {
     position: 'fixed',
     top: `50%`,
     left: `50%`,
+    height: '80%',
     transform: `translate(-50%, -50%)`
   } as React.CSSProperties;
 }
@@ -67,9 +68,9 @@ class LevelOfInstructionHelp extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
-        <Modal open={this.state.open}>
+        <Modal open={this.props.open}>
           <div style={getModalStyle()} className={classes.paper}>
-          <Grid container direction="row">
+            <Grid container direction="row">
               <Grid item xs={11} />
               <Grid item xs={1}>
                 <IconButton style={{ padding: 10 }}>
