@@ -1,16 +1,15 @@
-import React from 'react';
-import PropTypes from "prop-types";
+import * as React from 'react';
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
 import Table from '@material-ui/core/Table/index';
 import TableHead from '@material-ui/core/TableHead/index';
 import TableRow from '@material-ui/core/TableRow/index';
 import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
-import Typography from '@material-ui/core/Typography/index';
 import * as Constants from "../../constants";
 
 
-const styles = () => ({
+const styles: object = {
   definitionTitle: {
     backgroundColor: Constants.TransitionColor,
     color: "white",
@@ -20,46 +19,110 @@ const styles = () => ({
     fontFamily: 'Arimo'
   },
   definitionText: {
-    backgroundColor: "#759fe5",
+    backgroundColor: "#F3F3F3",
     width: "50%",
     fontFamily: 'Arimo'
   },
-  buttonTitle: {
-    backgroundColor: Constants.TransitionColor,
+  lineTitle: {
+    backgroundColor: "#AED581",
     color: "white",
     fontSize: 14,
     textAlign: "center", 
     width: "20%",
-    fontFamily: 'Arimo'
+    fontFamily: 'Arimo',
+    fontWeight: 'bold',
+    letterSpacing: '0.05em'
+  },
+  routinesTitle: {
+    backgroundColor: "#64B5F6",
+    color: "white",
+    fontSize: 14,
+    textAlign: "center", 
+    width: "20%",
+    fontFamily: 'Arimo',
+    fontWeight: 'bold',
+    letterSpacing: '0.05em'
+  },
+  travelingTitle: {
+    backgroundColor: "#FFA726",
+    color: "white",
+    fontSize: 14,
+    textAlign: "center", 
+    width: "20%",
+    fontFamily: 'Arimo',
+    fontWeight: 'bold',
+    letterSpacing: '0.05em'
+  },
+  behaviorTitle: {
+    backgroundColor: "#FF5252",
+    color: "white",
+    fontSize: 14,
+    textAlign: "center", 
+    width: "20%",
+    fontFamily: 'Arimo',
+    fontWeight: 'bold',
+    letterSpacing: '0.05em'
+  },
+  waitingTitle: {
+    backgroundColor: "#FF7043",
+    color: "white",
+    fontSize: 14,
+    textAlign: "center", 
+    width: "20%",
+    fontFamily: 'Arimo',
+    fontWeight: 'bold',
+    letterSpacing: '0.05em'
   },
   lineExamples: {
-    backgroundColor: "#AED581",
+    backgroundColor: "#F3F3F3",
     width:"20%",
     fontFamily: 'Arimo'
   },
   travelingExamples: {
-    backgroundColor: "#FFA726",
+    backgroundColor: "#F3F3F3",
     width:"20%",
     fontFamily: 'Arimo'
   },
   waitingExamples: {
-    backgroundColor: "#FF7043",
+    backgroundColor: "#F3F3F3",
     width:"20%",
     fontFamily: 'Arimo'
   },
   routinesExamples: {
-    backgroundColor: "#64B5F6",
+    backgroundColor: "#F3F3F3",
     width:"20%",
     fontFamily: 'Arimo'
   },
   behaviorExamples: {
-    backgroundColor: "#FF5252",
+    backgroundColor: "#F3F3F3",
     width:"20%",
     fontFamily: 'Arimo'
   }
-});
+};
 
-function TransitionHelpCard(props) {
+interface Props {
+  classes: {
+    definitionTitle: string,
+    definitionText: string,
+    buttonTitle: string,
+    lineTitle: string,
+    travelingTitle: string,
+    waitingTitle: string,
+    routinesTitle: string,
+    behaviorTitle: string
+    lineExamples: string,
+    travelingExamples: string,
+    waitingExamples: string,
+    routinesExamples: string,
+    behaviorExamples: string
+  }
+}
+
+/**
+ * @param {Props} props 
+ * @return {ReactElement}
+ */
+function TransitionHelpCard(props: Props): React.ReactElement {
   const { classes } = props;
   return (
     <div>
@@ -90,31 +153,23 @@ function TransitionHelpCard(props) {
           </TableRow>
         </TableBody>
       </Table>
-      <Typography variant="subtitle2" gutterBottom style={{ padding: 10, fontFamily: 'Arimo' }}>
-        While you are recording a transition, choose the button representing the{" "}
-        <strong>primary</strong> reason for that transition.{" "}
-        <strong>Change </strong>
-        the button if the primary reason changes during the same transition. Choose
-        the <strong>“Other”</strong> button if the reason for the transition is not
-        represented in the other buttons, and you will be prompted to explain the
-        reason in the Notes.
-      </Typography>
-      <Table>
+      <div style={{paddingTop: '2em'}} />
+      <Table padding="checkbox">
         <TableHead>
           <TableRow>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
+            <TableCell padding="checkbox" className={classes.lineTitle}>
               Waiting in line/lining up
             </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
+            <TableCell padding="checkbox" className={classes.travelingTitle}>
               Traveling outside the classroom
             </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
+            <TableCell padding="checkbox" className={classes.waitingTitle}>
               Children waiting on teacher/materials
             </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
+            <TableCell padding="checkbox" className={classes.routinesTitle}>
               Classroom Routines
             </TableCell>
-            <TableCell padding="checkbox" className={classes.buttonTitle}>
+            <TableCell padding="checkbox" className={classes.behaviorTitle}>
               Behavior Management Disruption
             </TableCell>
           </TableRow>
