@@ -10,7 +10,7 @@ import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo.tsx";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
-import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
+import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard.tsx';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';

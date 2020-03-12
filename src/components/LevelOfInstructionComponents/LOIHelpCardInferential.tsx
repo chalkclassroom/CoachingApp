@@ -2,47 +2,30 @@ import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
 import Table from '@material-ui/core/Table/index';
-import TableHead from '@material-ui/core/TableHead/index';
 import TableRow from '@material-ui/core/TableRow/index';
 import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
 
 const styles: object = {
-  paper: {
-    position: "absolute",
-    width: "67%",
-    backgroundColor: 'white',
-    padding: '2em',
-    borderRadius: 8
-  },
-  inferentialTitle: {
-    // backgroundColor: "#38761d",
-    backgroundColor: "#6aa84f",
-    color: "white",
-    fontSize: 24,
-    textAlign: "center",
-    width: "100%"
-  },
   inferentialSubtitle: {
-    // backgroundColor: "#6aa84f",
     backgroundColor: "#38761d",
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    width: '50%'
+    width: '50%',
+    fontFamily: 'Arimo'
   },
   example: {
     backgroundColor: "#f3f3f3",
     color: 'black',
     padding: "1%",
-    width: '50%'
+    width: '50%',
+    fontFamily: 'Arimo'
   }
 };
 
 interface Props {
   classes: {
-    paper: string,
-    inferentialTitle: string,
     inferentialSubtitle: string,
     example: string
   }
@@ -116,6 +99,7 @@ function LOIHelpCardInferential(props: Props): React.ReactElement {
               Teacher: Timid <i>is our new word today. When have you felt timid?</i>
               <br/>
               Child: <i>Yesterday when I was scared.</i>
+              <br/>
               Teacher: <i>Yes, I remember when you were timid yesterday during the
               thunderstorm. That means you were scared or frightened by the loud noises!</i>
             </TableCell>

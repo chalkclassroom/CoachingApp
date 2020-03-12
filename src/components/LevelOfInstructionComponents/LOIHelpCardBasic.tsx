@@ -2,62 +2,30 @@ import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
 import Table from '@material-ui/core/Table/index';
-import TableHead from '@material-ui/core/TableHead/index';
 import TableRow from '@material-ui/core/TableRow/index';
 import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
-import Slider from "react-slick";
 
 const styles: object = {
-  paper: {
-    position: "absolute",
-    width: "67%",
-    backgroundColor: 'white',
-    padding: '2em',
-    borderRadius: 8
-  },
-  inferentialTitle: {
-    backgroundColor: "#38761d",
-    color: "white",
-    fontSize: 24,
-    textAlign: "center",
-    width: "100%"
-  },
-  inferentialSubtitle: {
-    backgroundColor: "#6aa84f",
-    color: "white",
-    fontSize: 18,
-    textAlign: "center",
-    width: '50%'
-  },
-  basicTitle: {
-    backgroundColor: "#c9daf8",
-    color: "white",
-    fontSize: 24,
-    textAlign: "center",
-    width: "100%"
-  },
   basicSubtitle: {
     backgroundColor: "#1155cc",
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    width: '50%'
+    width: '50%',
+    fontFamily: 'Arimo'
   },
   example: {
     backgroundColor: "#f3f3f3",
     color: 'black',
     padding: "1%",
-    width: '50%'
+    width: '50%',
+    fontFamily: 'Arimo'
   }
 };
 
 interface Props {
   classes: {
-    paper: string,
-    inferentialTitle: string,
-    inferentialSubtitle: string,
-    basicTitle: string,
     basicSubtitle: string,
     example: string
   }
@@ -73,13 +41,6 @@ function LOIHelpCardBasic(props: Props): React.ReactElement {
   return (
     <div>
       <Table padding="checkbox">
-        {/* <TableHead>
-          <TableRow>
-            <TableCell colSpan={2} className={classes.basicTitle}>
-              Basic Skills Instruction
-            </TableCell>
-          </TableRow>
-        </TableHead> */}
         <TableBody>
           <TableRow>
             <TableCell className={classes.basicSubtitle}>
