@@ -40,7 +40,7 @@ interface Props {
 }
 
 /**
- * Definitions and Reminders for Classroom Climate Observation
+ * Modal for Classroom Climate Help
  * @function ClassroomClimateHelp
  * @param {Props} props
  * @return {ReactElement}

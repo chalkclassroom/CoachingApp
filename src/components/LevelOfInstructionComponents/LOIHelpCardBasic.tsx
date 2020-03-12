@@ -65,7 +65,7 @@ function LOIHelpCardBasic(props: Props): React.ReactElement {
           </TableRow>
           <TableRow>
             <TableCell className={classes.example}>
-              <b>What</b> sound does 'g' make?
+              <b>What</b> sound does &apos;g&apos; make?
             </TableCell>
             <TableCell className={classes.example}>
               A triangle has 3 sides.

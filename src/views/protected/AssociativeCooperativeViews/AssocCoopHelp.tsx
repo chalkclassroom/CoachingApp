@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
-import AssocCoopHelpCard from "../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard.tsx";
+import AssocCoopHelpCard from "../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
@@ -46,78 +46,56 @@ interface Style {
   definition2Title: string,
   definition2Text: string,
   lineExamples: string,
-
-}
-
-interface State {
-  open: boolean
 }
 
 /**
  * Assoc Coop time look-fors
- * @class AssocCoopHelp
+ * @function AssocCoopHelp
+ * @param {Props} props
+ * @return {ReactElement}
  */
-class AssocCoopHelp extends React.Component<Props, State> {
-  state = {
-    open: true
-  };
-
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  static propTypes = {
-    classes: PropTypes.object.isRequired
-  }
-
-  /**
-   * render function
-   * @return {ReactElement}
-   */
-  render() {
-    const { classes } = this.props;
-
-    return (
-      <div>
-        <Modal open={this.props.open}>
-          <div style={getModalStyle()} className={classes.paper}>
-            <Grid container direction="row">
-              <Grid item xs={11} />
-              <Grid item xs={1}>
-                <IconButton style={{ padding: 10 }}>
-                  <Tooltip title={"Close"} placement={"right"}>
-                    <CloseIcon
-                      onClick={this.props.close}
-                    />
-                  </Tooltip>
-                </IconButton>
-              </Grid>
+function AssocCoopHelp(props: Props): React.ReactElement {
+  const { classes, open, close } = props;
+  return (
+    <div>
+      <Modal open={open}>
+        <div style={getModalStyle()} className={classes.paper}>
+          <Grid container direction="row">
+            <Grid item xs={11} />
+            <Grid item xs={1}>
+              <IconButton style={{ padding: 10 }}>
+                <Tooltip title={"Close"} placement={"right"}>
+                  <CloseIcon
+                    onClick={close}
+                  />
+                </Tooltip>
+              </IconButton>
             </Grid>
-            <Grid
-              container
-              alignItems="center"
-              direction="column"
-              justify="flex-start"
-            >
-              <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-              Associative and Cooperative Interactions
-              </Typography>
-              <Typography variant="subtitle2" gutterBottom style={{fontFamily: "Arimo"}}>
-              <strong>Hints + Reminders: Classifying Associative and Cooperative Interactions</strong>
-              </Typography>
-              <AssocCoopHelpCard />
-            </Grid>
-          </div>
-        </Modal>
-      </div>
-    );
+          </Grid>
+          <Grid
+            container
+            alignItems="center"
+            direction="column"
+            justify="flex-start"
+          >
+            <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+            Associative and Cooperative Interactions
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom style={{fontFamily: "Arimo"}}>
+            <strong>Hints + Reminders: Classifying Associative and Cooperative Interactions</strong>
+            </Typography>
+            <AssocCoopHelpCard />
+          </Grid>
+        </div>
+      </Modal>
+    </div>
+  );
+}
 
-    
-  }
+AssocCoopHelp.propTypes = {
+  classes: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  close: PropTypes.func.isRequired
 }
 
 export default withStyles(styles)(AssocCoopHelp);

@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from "prop-types";
+import * as React from 'react';
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
 import Table from '@material-ui/core/Table/index';
 import TableHead from '@material-ui/core/TableHead/index';
@@ -9,7 +9,7 @@ import TableCell from '@material-ui/core/TableCell/index';
 import * as Constants from "../../constants";
 
 
-const styles = {
+const styles: object = {
   definitionTitle: {
     backgroundColor: Constants.TransitionColor,
     color: "white",

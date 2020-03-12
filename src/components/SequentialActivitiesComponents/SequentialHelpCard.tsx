@@ -53,7 +53,10 @@ class SequentialHelpCard extends React.Component<Props, State> {
     }
   }
 
-  handleDefinitions = () => {
+  /**
+   * @return {void}
+   */
+  handleDefinitions = (): void => {
     if (this.state.tabValue !== 0) {
       this.setState({
         tabValue: 0
@@ -61,7 +64,10 @@ class SequentialHelpCard extends React.Component<Props, State> {
     }
   };
 
-  handleChild = () => {
+  /**
+   * @return {void}
+   */
+  handleChild = (): void => {
     if (this.state.tabValue !== 1) {
       this.setState({
         tabValue: 1
@@ -69,7 +75,10 @@ class SequentialHelpCard extends React.Component<Props, State> {
     }
   };
 
-  handleTeacher = () => {
+  /**
+   * @return {void}
+   */
+  handleTeacher = (): void => {
     if (this.state.tabValue !== 2) {
       this.setState({
         tabValue: 2

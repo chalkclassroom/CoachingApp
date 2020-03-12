@@ -36,6 +36,9 @@ interface State {
   tabValue: number
 }
 
+/**
+ * @class AssocCoopHelpCard
+ */
 class AssocCoopHelpCard extends React.Component<Props, State>  {
   /**
    * @param {Props} props
@@ -48,7 +51,10 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
     }
   }
 
-  handleChild = () => {
+  /**
+   * @return {void}
+   */
+  handleChild = (): void => {
     if (this.state.tabValue !== 0) {
       this.setState({
         tabValue: 0
@@ -56,7 +62,10 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
     }
   };
 
-  handleTeacher = () => {
+  /**
+   * @return {void}
+   */
+  handleTeacher = (): void => {
     if (this.state.tabValue !== 1) {
       this.setState({
         tabValue: 1

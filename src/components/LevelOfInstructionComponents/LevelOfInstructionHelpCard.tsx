@@ -101,7 +101,10 @@ class LevelOfInstructionHelpCard extends React.Component<Props, State> {
     }
   }
 
-  handleInferential = () => {
+  /**
+   * @return {void}
+   */
+  handleInferential = (): void => {
     if (this.state.tabValue !== 0) {
       this.setState({
         tabValue: 0
@@ -109,14 +112,25 @@ class LevelOfInstructionHelpCard extends React.Component<Props, State> {
     }
   };
 
-  handleBasic = () => {
+  /**
+   * @return {void}
+   */
+  handleBasic = (): void => {
     if (this.state.tabValue !== 1) {
       this.setState({
         tabValue: 1
       })
     }
   };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
   
+  /**
+   * render function
+   * @return {ReactNode}
+   */
   render(): React.ReactNode {
     const { classes } = this.props;
     return (
@@ -128,12 +142,26 @@ class LevelOfInstructionHelpCard extends React.Component<Props, State> {
                 <Tabs
                   value={this.state.tabValue}
                   indicatorColor={this.state.tabValue === 0 ? "primary" : "secondary"}
-                  // textColor={this.state.tabValue === 0 ? LOITheme.palette.primary.light : LOITheme.palette.primary.main}
                   variant="fullWidth"
-                  // style={{backgroundColor: (this.state.tabValue === 0) ? '#6aa84f' : "#c9daf8"}}
                 >
-                  <Tab label="Inferential Instruction" onClick={this.handleInferential} style={{fontFamily: "Arimo", fontSize: '1em', backgroundColor: this.state.tabValue === 0 ? '#6aa84f' : "#d3d3d3"}} />
-                  <Tab label="Basic Skills Instruction" onClick={this.handleBasic} style={{fontFamily: "Arimo", fontSize: '1em', backgroundColor: this.state.tabValue === 1 ? '#c9daf8' : "#d3d3d3"}} />
+                  <Tab
+                    label="Inferential Instruction"
+                    onClick={this.handleInferential}
+                    style={{
+                      fontFamily: "Arimo",
+                      fontSize: '1em',
+                      backgroundColor: this.state.tabValue === 0 ? '#6aa84f' : "#d3d3d3"
+                    }}
+                  />
+                  <Tab
+                    label="Basic Skills Instruction"
+                    onClick={this.handleBasic}
+                    style={{
+                      fontFamily: "Arimo",
+                      fontSize: '1em',
+                      backgroundColor: this.state.tabValue === 1 ? '#c9daf8' : "#d3d3d3"
+                    }}
+                  />
                 </Tabs>
               </TabBar>
             </MuiThemeProvider>
@@ -146,9 +174,5 @@ class LevelOfInstructionHelpCard extends React.Component<Props, State> {
     )
   }
 }
-
-LevelOfInstructionHelpCard.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(LevelOfInstructionHelpCard);
