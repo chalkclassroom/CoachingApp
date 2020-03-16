@@ -11,7 +11,7 @@ import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
 function getModalStyle(): React.CSSProperties {
   return {
@@ -130,9 +130,6 @@ class ObservationModal extends React.Component<Props, State> {
               direction="row"
               justify="flex-end"
             >
-              {/* <Typography component={"h6"} variant={"h6"}>
-                {this.props.}
-              </Typography> */}
               <IconButton style={{ padding: 10 }}>
                 <Tooltip title={"Close"} placement={"right"}>
                   <CloseIcon onClick={this.props.handleClose} />

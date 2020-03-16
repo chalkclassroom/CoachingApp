@@ -17,7 +17,15 @@ import EngagementIconImage from "../../assets/images/EngagementIconImage.svg";
 import TransitionTimeIconImage from "../../assets/images/TransitionTimeIconImage.svg";
 import Icon from "@material-ui/core/Icon";
 import ObservationModal from '../../components/ObservationModal';
-import TransitionObservationPopUp from '../../components/TransitionComponents/TransitionObservationPopUp';
+import TransitionTimeObservationPopUp from '../../components/TransitionComponents/TransitionTimeObservationPopUp';
+import ClassroomClimateObservationPopUp from '../../components/ClassroomClimateComponent/ClassroomClimateObservationPopUp';
+import MathInstructionObservationPopUp from '../../components/MathInstructionComponents/MathInstructionObservationPopUp';
+import StudentEngagementObservationPopUp from '../../components/StudentEngagementObservationPopUp';
+import LevelOfInstructionObservationPopUp from '../../components/LevelOfInstructionObservationPopUp';
+import ListeningToChildrenObservationPopUp from '../../components/ListeningToChildrenObservationPopUp';
+import SequentialActivitiesObservationPopUp from '../../components/SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
+import AssociativeCooperativeInteractionsObservationPopUp from '../../components/AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
+import LockedModal from '../../components/LockedModal';
 
 const CardRow = styled.div`
   position: relative;
@@ -107,16 +115,16 @@ class Magic8MenuPage extends Component {
       this.setState({
         numSelected: this.state.numSelected - 1,
         selected: "none"
-      });
+      }, () => {console.log('numSelected: ', this.state.numSelected, "selected: ", this.state.selected)});
       if (this.state.numSelected === 1) {
-        this.setState({ allowed: false });
+        this.setState({ allowed: false }, () => {console.log('numSelected: ', this.state.numSelected, "selected: ", this.state.selected)});
       }
     } else if (this.state.numSelected < 1) {
       this.setState({
         numSelected: this.state.numSelected + 1,
         allowed: true,
         selected: title
-      });
+      }, () => {console.log('numSelected: ', this.state.numSelected, "selected: ", this.state.selected)});
     }
   }
 
@@ -192,6 +200,18 @@ class Magic8MenuPage extends Component {
    */
   render() {
     const { classes } = this.props;
+    // const ObservationPopUp = `${this.state.selected}ObservationPopUp`;
+    // console.log(ObservationPopUp);
+    const ObservationPopUp = {
+      'TransitionTime': <TransitionTimeObservationPopUp />,
+      'ClassroomClimate': <ClassroomClimateObservationPopUp />,
+      'MathInstruction': <MathInstructionObservationPopUp />,
+      'StudentEngagement': <StudentEngagementObservationPopUp />,
+      'LevelOfInstruction': <LevelOfInstructionObservationPopUp />,
+      'ListeningToChildren': <ListeningToChildrenObservationPopUp />,
+      'SequentialActivities': <SequentialActivitiesObservationPopUp />,
+      'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />
+    }
     return (
       <div>
         <FirebaseContext.Consumer>
@@ -318,9 +338,13 @@ class Magic8MenuPage extends Component {
             </Button> */}
           </CardRow>
           <ObservationModal
-            open={this.state.numSelected && this.state.page==="Observe"}
-            content={<TransitionObservationPopUp />}
+            open={this.state.numSelected===1 && this.state.page==="Observe" && this.state.unlocked.includes(MAP[this.state.selected])}
+            content={ObservationPopUp[this.state.selected]}
             handleBegin={this.handleGoButton}
+            handleClose={this.handleCloseObservationModal}
+          />
+          <LockedModal
+            open={this.state.numSelected===1 && this.state.page==="Observe" && !this.state.unlocked.includes(MAP[this.state.selected])}
             handleClose={this.handleCloseObservationModal}
           />
         </div>
