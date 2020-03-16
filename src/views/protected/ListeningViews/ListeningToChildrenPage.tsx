@@ -1,63 +1,46 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import TeacherChecklist from '../../../components/ListeningComponents/TeacherChecklist';
 import * as Constants from '../../../constants';
 
 interface Props {
-
-}
-
-interface State {
-
+  location: {
+    state: {
+      teacher: {
+        id: string
+      }
+    }
+  }
 }
 
 /**
- * @class ListeningToChildrenPage
+ * @function ListeningToChildrenPage
+ * @param {Props} props
+ * @return {ReactElement}
  */
-class ListeningToChildrenPage extends React.Component<Props, State> {
-  /**
-   * @param {Props} props 
-   */
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      
-    };
-  }
-
-  /**
-   * render function
-   * @return {ReactNode}
-   */
-  render(): React.ReactNode {
-    return (
-      <div>
+function ListeningToChildrenPage(props: Props): React.ReactElement {
+  const { location } = props;
+  return (
+    <div>
+      <FirebaseContext.Consumer>
+        {(firebase: object) => (<AppBar firebase={firebase}/>)}
+      </FirebaseContext.Consumer>
+      <main style={{ flex: 1 }}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => (<AppBar firebase={firebase}
-              //classes={{ root: this.props.classes.grow }}
-              
+          {(firebase: object) => (
+            <TeacherChecklist
+              firebase={firebase}
+              teacherId={location.state.teacher.id}
+              magic8="Listening to Children"
+              color={Constants.ListeningColor}
+              checklist={Constants.Checklist.Listening}
             />
           )}
         </FirebaseContext.Consumer>
-        <main style={{ flex: 1 }}>
-          <FirebaseContext.Consumer>
-            {(firebase: object) => (
-              <TeacherChecklist
-                firebase={firebase}
-                teacherId={this.props.location.state.teacher.id}
-                magic8="Listening to Children"
-                color={Constants.ListeningColor}
-                checklist={Constants.Checklist.Listening}
-              />
-            )}
-          </FirebaseContext.Consumer>
-        </main>
-      </div>
-    );
-  }
+      </main>
+    </div>
+  );
 }
 
 export default ListeningToChildrenPage;

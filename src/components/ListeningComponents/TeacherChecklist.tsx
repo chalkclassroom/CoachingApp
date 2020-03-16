@@ -179,9 +179,12 @@ class TeacherChecklist extends React.Component<Props, State> {
   }
 
   static propTypes = {
+    firebase: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     magic8: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired
+    color: PropTypes.string.isRequired,
+    teacherId: PropTypes.string.isRequired,
+    checklist: PropTypes.array.isRequired
   }
 
   /**
