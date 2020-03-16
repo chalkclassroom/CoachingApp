@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "../../App.css";
 import PropTypes from "prop-types";
 import Magic8Card from "../../components/Magic8Card.tsx";
-import { Button, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import AppBar from "../../components/AppBar";
@@ -15,8 +15,9 @@ import MathIconImage from "../../assets/images/MathIconImage.svg";
 import SequentialIconImage from "../../assets/images/SequentialIconImage.svg";
 import EngagementIconImage from "../../assets/images/EngagementIconImage.svg";
 import TransitionTimeIconImage from "../../assets/images/TransitionTimeIconImage.svg";
-import Icon from "@material-ui/core/Icon";
 import ObservationModal from '../../components/ObservationModal';
+import ResultsModal from '../../components/ResultsModal';
+import TrainingModal from '../../components/TrainingModal';
 import TransitionTimeObservationPopUp from '../../components/TransitionComponents/TransitionTimeObservationPopUp';
 import ClassroomClimateObservationPopUp from '../../components/ClassroomClimateComponent/ClassroomClimateObservationPopUp';
 import MathInstructionObservationPopUp from '../../components/MathInstructionComponents/MathInstructionObservationPopUp';
@@ -115,16 +116,16 @@ class Magic8MenuPage extends Component {
       this.setState({
         numSelected: this.state.numSelected - 1,
         selected: "none"
-      }, () => {console.log('numSelected: ', this.state.numSelected, "selected: ", this.state.selected)});
+      });
       if (this.state.numSelected === 1) {
-        this.setState({ allowed: false }, () => {console.log('numSelected: ', this.state.numSelected, "selected: ", this.state.selected)});
+        this.setState({ allowed: false });
       }
     } else if (this.state.numSelected < 1) {
       this.setState({
         numSelected: this.state.numSelected + 1,
         allowed: true,
         selected: title
-      }, () => {console.log('numSelected: ', this.state.numSelected, "selected: ", this.state.selected)});
+      });
     }
   }
 
@@ -164,7 +165,7 @@ class Magic8MenuPage extends Component {
   /**
    * @return {void}
    */
-  handleCloseObservationModal = () => {
+  handleCloseModal = () => {
     this.setState({
       numSelected: 0
     })
@@ -200,8 +201,6 @@ class Magic8MenuPage extends Component {
    */
   render() {
     const { classes } = this.props;
-    // const ObservationPopUp = `${this.state.selected}ObservationPopUp`;
-    // console.log(ObservationPopUp);
     const ObservationPopUp = {
       'TransitionTime': <TransitionTimeObservationPopUp />,
       'ClassroomClimate': <ClassroomClimateObservationPopUp />,
@@ -223,7 +222,6 @@ class Magic8MenuPage extends Component {
               {this.state.page}
             </Typography>
           </div>
-          {console.log('num selected state ', this.state.numSelected)}
           <div>
             <Typography className={classes.instructionText}>
               Select the skill you&apos;d like to{" "}
@@ -298,54 +296,27 @@ class Magic8MenuPage extends Component {
               page={this.state.page}
             />
           </CardRow>
-          <CardRow>
-            {/* <Button
-              className={classes.goButton}
-              disabled={
-                this.state.page === "Training"
-                  ? this.state.allowed
-                    ? false
-                    : true
-                  : this.state.unlocked.includes(MAP[this.state.selected]) &&
-                    this.state.allowed
-                  ? false
-                  : true
-              }
-              style={{
-                opacity:
-                  this.state.page === "Training"
-                    ? this.state.allowed
-                      ? 1
-                      : 0.5
-                    : this.state.unlocked.includes(MAP[this.state.selected]) &&
-                      this.state.allowed
-                    ? 1
-                    : 0.5,
-                color: "white"
-              }}
-              onClick={this.handleGoButton}
-            >
-              {this.state.page === "Training"
-                ? "Start Training"
-                : this.state.page === "Observe"
-                ? "Observe"
-                : "View Results"}
-              <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/icon?family=Material+Icons"
-              />
-              <Icon style={{ marginLeft: 5 }}>send</Icon>
-            </Button> */}
-          </CardRow>
           <ObservationModal
             open={this.state.numSelected===1 && this.state.page==="Observe" && this.state.unlocked.includes(MAP[this.state.selected])}
             content={ObservationPopUp[this.state.selected]}
             handleBegin={this.handleGoButton}
-            handleClose={this.handleCloseObservationModal}
+            handleClose={this.handleCloseModal}
           />
           <LockedModal
-            open={this.state.numSelected===1 && this.state.page==="Observe" && !this.state.unlocked.includes(MAP[this.state.selected])}
-            handleClose={this.handleCloseObservationModal}
+            open={this.state.numSelected===1 && (this.state.page==="Observe" || this.state.page==="Results") && !this.state.unlocked.includes(MAP[this.state.selected])}
+            handleClose={this.handleCloseModal}
+          />
+          <ResultsModal
+            open={this.state.numSelected===1 && this.state.page==="Results" && this.state.unlocked.includes(MAP[this.state.selected])}
+            handleBegin={this.handleGoButton}
+            handleClose={this.handleCloseModal}
+            tool={this.state.selected}
+          />
+          <TrainingModal
+            open={this.state.numSelected===1 && this.state.page==="Training"}
+            handleBegin={this.handleGoButton}
+            handleClose={this.handleCloseModal}
+            tool={this.state.selected}
           />
         </div>
       </div>
