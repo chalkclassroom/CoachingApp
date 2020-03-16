@@ -142,7 +142,6 @@ export const Checklist = {
       <div key={3}>Asks <b>open-ended questions</b> to encourage conversation</div>,
       <div key={4}><b>Expands on children&apos;s play or talk</b> using questions or comments</div>,
       <div key={5}>Encourages children to <b>talk to peers</b></div>,
-      <div key={6}>None of the above</div>
     ]
   }
 }

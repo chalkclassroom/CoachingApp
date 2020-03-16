@@ -34,11 +34,8 @@ const styles: object = {
 };
 
 const RATING_INTERVAL = 60000;
-// const TEN_PERCENT = 0.1 * RATING_INTERVAL;
 
 interface Props {
-  // toggleScreen(): void,
-  // finishVisit(centerName: string): void,
   classes: {
     root: string,
     grow: string
@@ -129,10 +126,6 @@ class TeacherChecklist extends React.Component<Props, State> {
     this.setState({ timeUpOpen: true });
   };
 
-  handleBackButton = (): void => {
-    this.props.toggleScreen();
-  };
-
   handleFinish = (): void => {
     this.setState({
       timeUpOpen: false,
@@ -166,8 +159,6 @@ class TeacherChecklist extends React.Component<Props, State> {
         }, () => {this.timer = setInterval(this.tick, 1000)})
       });
     })
-    // this.props.finishVisit(this.props.currentCenter);
-    // this.props.toggleScreen();
   };
 
   /**
@@ -177,21 +168,12 @@ class TeacherChecklist extends React.Component<Props, State> {
   handleCheck = (value: number) => (): void => {
     const { checked } = this.state;
     const newChecked: Array<number> = [];
-    if (((checked.includes(7) && value != 7) || 
-    (checked.includes(1) || checked.includes(2) ||
-    checked.includes(3) || checked.includes(4) || checked.includes(5) 
-    || checked.includes(6)) && value === 7)) {
+    newChecked.push(...checked);
+    const currentIndex = checked.indexOf(value);
+    if (currentIndex === -1) {
       newChecked.push(value);
     } else {
-      newChecked.push(...checked);
-      const currentIndex = checked.indexOf(value);
-
-      if (currentIndex === -1) {
-        newChecked.push(value);
-      } else {
-        newChecked.splice(currentIndex, 1);
-      }
-      
+      newChecked.splice(currentIndex, 1);
     }
     this.setState({checked: newChecked});
   }
@@ -284,20 +266,41 @@ class TeacherChecklist extends React.Component<Props, State> {
               <Zoom in={this.state.in}>
                 <Grid container alignItems="center" direction="column" xs={12}>
                   <div style={{ height: 20 }} />
+                  <Typography variant="h6" align={"center"} style={{paddingBottom: '1em'}}>
+                    Select the teacher behaviors you see:
+                  </Typography>
                   <Grid container direction={"row"} justify="center" alignItems="center" spacing={16} xs={12}>
-                    <Grid item xs={11}>
-                      <Card>
-                        <Typography variant="h6" align={"center"}>
-                          Select the teacher behaviors you see:
-                        </Typography>
+                    <Grid item xs={5}>
+                      <Card style={{height: '45vh'}}>
                         <List>
-                          {this.props.checklist.TeacherBehaviors.map((value, index) => {
+                          {this.props.checklist.TeacherBehaviors.slice(0, 3).map((value, index) => {
                             return (<ListItem
                               key={index}
                               onClick={this.handleCheck(index+1)}
+                              style={{height: '15vh'}}
                             >
                               <Checkbox
                                 checked={this.state.checked.includes(index+1)}
+                              />
+                              <ListItemText disableTypography>
+                                {value}
+                              </ListItemText>
+                            </ListItem>);
+                          })}
+                        </List>
+                      </Card>
+                    </Grid>
+                    <Grid item xs={5}>
+                      <Card style={{height: '45vh'}}>
+                        <List>
+                          {this.props.checklist.TeacherBehaviors.slice(3, 6).map((value, index) => {
+                            return (<ListItem
+                              key={index}
+                              onClick={this.handleCheck(index+4)}
+                              style={{height: '15vh'}}
+                            >
+                              <Checkbox
+                                checked={this.state.checked.includes(index+4)}
                               />
                               <ListItemText disableTypography>
                                 {value}
