@@ -51,7 +51,7 @@ interface Props {
 
 /**
  * Modal to confirm view results
- * @class ResultsModal
+ * @function ResultsModal
  * @param {Props} props
  * @return {ReactElement}
  */
