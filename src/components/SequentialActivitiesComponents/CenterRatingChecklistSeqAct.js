@@ -252,7 +252,7 @@ class CenterRatingChecklistSeqAct extends React.Component {
                 <Dashboard
                   magic8="Sequential Activities"
                   color="#ffd300"
-                  infoDisplay={<Countdown color="#ffd300" timerTime={60000} />}
+                  infoDisplay={<Countdown color="#ffd300" time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />
