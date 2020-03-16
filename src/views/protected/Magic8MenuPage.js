@@ -101,6 +101,7 @@ class Magic8MenuPage extends Component {
       numSelected: 0,
       selected: "none",
       unlocked: [],
+      unlockedData: false,
       page: ''
     };
 
@@ -157,7 +158,8 @@ class Magic8MenuPage extends Component {
     const firebase = this.context;
     firebase.getUnlockedSections().then(unlocked => {
       this.setState({
-        unlocked: unlocked
+        unlocked: unlocked,
+        unlockedData: true
       });
     });
   }
@@ -297,23 +299,42 @@ class Magic8MenuPage extends Component {
             />
           </CardRow>
           <ObservationModal
-            open={this.state.numSelected===1 && this.state.page==="Observe" && this.state.unlocked.includes(MAP[this.state.selected])}
+            open={
+              this.state.numSelected===1 &&
+              this.state.page==="Observe" &&
+              this.state.unlocked.includes(MAP[this.state.selected]) &&
+              this.state.unlockedData
+            }
             content={ObservationPopUp[this.state.selected]}
             handleBegin={this.handleGoButton}
             handleClose={this.handleCloseModal}
           />
           <LockedModal
-            open={this.state.numSelected===1 && (this.state.page==="Observe" || this.state.page==="Results") && !this.state.unlocked.includes(MAP[this.state.selected])}
+            open={
+              this.state.numSelected===1 &&
+              (this.state.page==="Observe" || this.state.page==="Results") &&
+              !this.state.unlocked.includes(MAP[this.state.selected]) &&
+              this.state.unlockedData
+            }
             handleClose={this.handleCloseModal}
           />
           <ResultsModal
-            open={this.state.numSelected===1 && this.state.page==="Results" && this.state.unlocked.includes(MAP[this.state.selected])}
+            open={
+              this.state.numSelected===1 &&
+              this.state.page==="Results" &&
+              this.state.unlocked.includes(MAP[this.state.selected]) &&
+              this.state.unlockedData
+            }
             handleBegin={this.handleGoButton}
             handleClose={this.handleCloseModal}
             tool={this.state.selected}
           />
           <TrainingModal
-            open={this.state.numSelected===1 && this.state.page==="Training"}
+            open={
+              this.state.numSelected===1 &&
+              this.state.page==="Training" &&
+              this.state.unlockedData
+            }
             handleBegin={this.handleGoButton}
             handleClose={this.handleCloseModal}
             tool={this.state.selected}
