@@ -10,6 +10,7 @@ import 'chartjs-plugin-datalabels';
 import TrainingVideo from '../../../components/Shared/TrainingVideo.tsx';
 import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionnaire';
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
+import MathHelpCard from '../../../components/MathInstructionComponents/MathHelpCard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/es';
 import Grid from '@material-ui/core/Grid';
@@ -281,7 +282,7 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
                 }
               />
             ) : view === ViewEnum.DEFINITIONS ? (
-              <div />
+              <MathHelpCard />
             ) : view === ViewEnum.EXAMPLE ? (
               <div>EXAMPLE</div>
             ) : view === ViewEnum.DEMONSTRATION ? (

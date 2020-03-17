@@ -32,6 +32,7 @@ import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from "@material-ui/core/es";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
@@ -222,6 +223,8 @@ class Dashboard extends React.Component {
             <TransitionTimeHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : magic8 === "Classroom Climate" ?
             <ClassroomClimateHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : magic8 === "Math Instruction" ? 
+            <MathInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : magic8 === "Associative and Cooperative" ?
             <AssocCoopHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : magic8 === "Sequential Activities" ?

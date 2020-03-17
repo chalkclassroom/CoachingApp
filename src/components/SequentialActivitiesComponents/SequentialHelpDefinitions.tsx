@@ -9,12 +9,12 @@ import TableCell from '@material-ui/core/TableCell/index';
 
 const styles: object = {
   definitionText1: {
-    backgroundColor: "#d9eafb",
+    backgroundColor: "#f3f3f3",
     width: "50%",
     fontFamily: "Arimo"
   },
   definitionText2: {
-    backgroundColor: "#b4d6f7",
+    backgroundColor: "#f3f3f3",
     width: "50%",
     fontFamily: "Arimo"
   },

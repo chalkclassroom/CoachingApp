@@ -8,19 +8,19 @@ import TableCell from '@material-ui/core/TableCell/index';
 
 const styles: object = {
   childExample1: {
-    backgroundColor: "#FFF6CC",
+    backgroundColor: "#f3f3f3",
     fontFamily: "Arimo"
   },
   childExample2: {
-    backgroundColor: "#FFEE99",
+    backgroundColor: "#f3f3f3",
     fontFamily: "Arimo"
   },
   childExample3: {
-    backgroundColor: "#FFE14C",
+    backgroundColor: "#f3f3f3",
     fontFamily: "Arimo"
   },
   childExample4: {
-    backgroundColor: "#FFD300",
+    backgroundColor: "#f3f3f3",
     fontFamily: "Arimo"
   },
 };

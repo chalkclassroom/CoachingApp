@@ -279,7 +279,7 @@ class ClassroomClimateTrainingPage extends React.Component<Props, State> {
                 }
               />
             ) : view === ViewEnum.DEFINITIONS ? (
-              <div />
+              <ClassroomClimateHelp />
             ) : view === ViewEnum.EXAMPLE ? (
               <div>EXAMPLE</div>
             ) : view === ViewEnum.DEMONSTRATION ? (
