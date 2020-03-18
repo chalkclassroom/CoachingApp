@@ -12,22 +12,29 @@ const styles: object = {
     backgroundColor: "#a481d9",
     color: "white",
     width: "50%",
-    fontSize: 16,
+    fontSize: '1.1em',
     textAlign: "center",
     fontFamily: 'Arimo'
   },
   checklistItem: {
-    backgroundColor: "#f6f6f1",
+    backgroundColor: "#f3f3f3",
     color: "black",
-    fontSize: 14,
+    fontSize: '0.9em',
     textAlign: "center",
     width: "20%",
-    fontFamily: 'Arimo'
+    fontFamily: 'Arimo',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em',
+    verticalAlign: 'top'
   },
   example: {
-    backgroundColor: "#f6f6f1",
+    backgroundColor: "#f3f3f3",
     width: "20%",
-    fontFamily: 'Arimo'
+    fontSize: '0.9em',
+    fontFamily: 'Arimo',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em',
+    verticalAlign: 'top',
   },
 };
 

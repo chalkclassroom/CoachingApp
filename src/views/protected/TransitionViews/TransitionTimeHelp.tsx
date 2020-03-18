@@ -25,7 +25,7 @@ function getModalStyle(): React.CSSProperties {
 const styles: object = {
   paper: {
     position: "absolute",
-    width: "67%",
+    width: "78%",
     backgroundColor: 'white',
     padding: '1em',
     borderRadius: 8

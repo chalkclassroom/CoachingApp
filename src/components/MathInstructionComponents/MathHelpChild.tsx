@@ -21,7 +21,8 @@ const styles: object = {
     fontFamily: "Arimo",
     width: '25%',
     paddingTop: '0.5em',
-    paddingBottom: '0.5em'
+    paddingBottom: '0.5em',
+    verticalAlign: 'top'
   }
 };
 

@@ -14,7 +14,7 @@ const styles: object = {
     fontWeight: 'bold',
     fontSize: '1.1em',
     color: 'black',
-    paddingRight: '24px' // default is larger--24 matches paddingLeft default
+    paddingRight: '12px'
   },
   checklistItem : {
     backgroundColor: '#f3f3f3',
@@ -22,7 +22,8 @@ const styles: object = {
     fontFamily: 'Arimo',
     width: '25%',
     paddingTop: '0.5em',
-    paddingBottom: '0.5em'
+    paddingBottom: '0.5em',
+    verticalAlign: 'top'
   },
   example: {
     backgroundColor: "#f3f3f3",
@@ -30,7 +31,8 @@ const styles: object = {
     fontFamily: "Arimo",
     width: '75%',
     paddingTop: '0.5em',
-    paddingBottom: '0.5em'
+    paddingBottom: '0.5em',
+    verticalAlign: 'top'
   }
 };
 

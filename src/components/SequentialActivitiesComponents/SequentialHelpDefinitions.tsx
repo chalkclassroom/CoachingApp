@@ -8,22 +8,20 @@ import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
 
 const styles: object = {
-  definitionText1: {
+  definitionText: {
     backgroundColor: "#f3f3f3",
     width: "50%",
-    fontFamily: "Arimo"
-  },
-  definitionText2: {
-    backgroundColor: "#f3f3f3",
-    width: "50%",
-    fontFamily: "Arimo"
-  },
+    fontFamily: "Arimo",
+    verticalAlign: 'top',
+    fontSize: '0.9em',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  }
 };
 
 interface Props {
   classes: {
-    definitionText1: string,
-    definitionText2: string,
+    definitionText: string
   }
 }
 
@@ -37,7 +35,7 @@ function SequentialHelpDefinitions(props: Props): React.ReactElement {
     <Table>
       <TableBody>
         <TableRow>
-          <TableCell className={classes.definitionText1}>
+          <TableCell className={classes.definitionText}>
             <Typography variant="subtitle2" style={{fontFamily: "Arimo"}}>
               <strong>
                 Sequential:
@@ -66,7 +64,7 @@ function SequentialHelpDefinitions(props: Props): React.ReactElement {
               </ul>
             </Typography>
           </TableCell>
-          <TableCell className={classes.definitionText2}>
+          <TableCell className={classes.definitionText}>
             <Typography variant="subtitle2" style={{fontFamily: "Arimo"}}>
               <strong>
                 Non-Sequential:

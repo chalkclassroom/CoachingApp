@@ -18,7 +18,8 @@ const styles: object = {
     fontSize: '0.9em',
     height: '20%',
     paddingTop: '0.5em',
-    paddingBottom: '0.5em'
+    paddingBottom: '0.5em',
+    verticalAlign: 'top'
   }
 };
 
@@ -54,7 +55,7 @@ function MathHelpTeacher(props: Props): React.ReactElement {
         </TableRow>
         <TableRow>
           <TableCell rowSpan={5} padding="checkbox" className={classes.teacherExample}>
-            <ul style={{padding: '0.5em'}}>
+            <ul style={{paddingLeft: '0.5em', marginTop: 0}}>
               <li>
               number words (one, two, three)
               </li>

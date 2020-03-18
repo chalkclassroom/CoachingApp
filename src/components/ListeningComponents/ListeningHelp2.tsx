@@ -13,7 +13,7 @@ const styles: object = {
     fontWeight: 'bold',
     fontSize: '1.1em',
     color: 'black',
-    paddingRight: '24px' // default is larger--24 matches paddingLeft default
+    paddingRight: '12px'
   },
   checklistItem : {
     backgroundColor: '#f3f3f3',
@@ -21,7 +21,8 @@ const styles: object = {
     fontFamily: 'Arimo',
     width: '25%',
     paddingTop: '0.5em',
-    paddingBottom: '0.5em'
+    paddingBottom: '0.5em',
+    verticalAlign: 'top'
   },
   example: {
     backgroundColor: "#f3f3f3",
@@ -29,7 +30,8 @@ const styles: object = {
     fontFamily: "Arimo",
     width: '75%',
     paddingTop: '0.5em',
-    paddingBottom: '0.5em'
+    paddingBottom: '0.5em',
+    verticalAlign: 'top'
   }
 };
 
@@ -94,7 +96,7 @@ function ListeningHelp2(props: Props): React.ReactElement {
                 <i>You created a race track!</i>
               </li>
               <li>
-                Child in the art center points to his paint marks and says,
+                Child in the art center points to his paint marks and says, {" "}
                 <i>My scooter!</i>
                 <br />
                 The teacher responds, {" "}

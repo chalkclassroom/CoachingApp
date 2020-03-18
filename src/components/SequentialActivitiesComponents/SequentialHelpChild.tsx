@@ -7,30 +7,20 @@ import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
 
 const styles: object = {
-  childExample1: {
+  example: {
     backgroundColor: "#f3f3f3",
-    fontFamily: "Arimo"
-  },
-  childExample2: {
-    backgroundColor: "#f3f3f3",
-    fontFamily: "Arimo"
-  },
-  childExample3: {
-    backgroundColor: "#f3f3f3",
-    fontFamily: "Arimo"
-  },
-  childExample4: {
-    backgroundColor: "#f3f3f3",
-    fontFamily: "Arimo"
-  },
+    fontFamily: "Arimo",
+    verticalAlign: 'top',
+    fontSize: '0.9em',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em',
+    width: '25%'
+  }
 };
 
 interface Props {
   classes: {
-    childExample1: string,
-    childExample2: string,
-    childExample3: string,
-    childExample4: string,
+    example: string
   }
 }
 
@@ -44,21 +34,21 @@ function SequentialHelpChild(props: Props): React.ReactElement {
     <Table>
       <TableBody>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.childExample1}>
+          <TableCell padding="checkbox" className={classes.example}>
             <strong>Using materials in a step-by-step, predictable way</strong>
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample2}>
+          <TableCell padding="checkbox" className={classes.example}>
             <strong>
               Drawing recognizable images or writing names or messages
               (letters or letter-like forms)
             </strong>
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample3}>
+          <TableCell padding="checkbox" className={classes.example}>
             <strong>
               Playing a game with set rules and/or taking turns
             </strong>
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample4}>
+          <TableCell padding="checkbox" className={classes.example}>
             <strong>
               Speaking or acting according to a pretend scenario that
               follows a predictable plot
@@ -66,46 +56,46 @@ function SequentialHelpChild(props: Props): React.ReactElement {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.childExample1}>
+          <TableCell padding="checkbox" className={classes.example}>
             Forming recognizable shapes, letters, or objects
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample2}>
+          <TableCell padding="checkbox" className={classes.example}>
             Drawing a recognizable picture like a dog or a tree
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample3}>
+          <TableCell padding="checkbox" className={classes.example}>
             Following the rules for Candyland
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample4}>
+          <TableCell padding="checkbox" className={classes.example}>
             Acting out a story from a book
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.childExample1}>
+          <TableCell padding="checkbox" className={classes.example}>
             Working a puzzle or matching cards
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample2}>
+          <TableCell padding="checkbox" className={classes.example}>
             Writing names or messages with letters or letter-like forms
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample3}>
+          <TableCell padding="checkbox" className={classes.example}>
             Taking turns rolling a ball
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample4}>
+          <TableCell padding="checkbox" className={classes.example}>
             Pretending to be a family in dramatic play with clear roles and
             predictable actions
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.childExample1}>
+          <TableCell padding="checkbox" className={classes.example}>
             Looking carefully at the pictures of a book in order
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample2}>
+          <TableCell padding="checkbox" className={classes.example}>
             Writing in response to journal prompts or labeling a drawing
             (child writes &quot;C&quot; for car)
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample3}>
+          <TableCell padding="checkbox" className={classes.example}>
             Following a set of rules for an invented game
           </TableCell>
-          <TableCell padding="checkbox" className={classes.childExample4} />
+          <TableCell padding="checkbox" className={classes.example} />
         </TableRow>
       </TableBody>
     </Table>

@@ -13,90 +13,124 @@ const styles: object = {
   definitionTitle: {
     backgroundColor: Constants.TransitionColor,
     color: "white",
-    fontSize: 18,
+    fontSize: '1.1em',
     textAlign: "center",
     width: "50%",
-    fontFamily: 'Arimo'
+    fontFamily: 'Arimo',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em'
   },
   definitionText: {
     backgroundColor: "#F3F3F3",
     width: "50%",
-    fontFamily: 'Arimo'
+    fontFamily: 'Arimo',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em'
   },
   lineTitle: {
     backgroundColor: "#AED581",
     color: "white",
-    fontSize: 14,
+    fontSize: '0.9em',
     textAlign: "center", 
     width: "20%",
     fontFamily: 'Arimo',
     fontWeight: 'bold',
-    letterSpacing: '0.05em'
+    letterSpacing: '0.05em',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em'
   },
   routinesTitle: {
     backgroundColor: "#64B5F6",
     color: "white",
-    fontSize: 14,
+    fontSize: '0.9em',
     textAlign: "center", 
     width: "20%",
     fontFamily: 'Arimo',
     fontWeight: 'bold',
-    letterSpacing: '0.05em'
+    letterSpacing: '0.05em',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em'
   },
   travelingTitle: {
     backgroundColor: "#FFA726",
     color: "white",
-    fontSize: 14,
+    fontSize: '0.9em',
     textAlign: "center", 
     width: "20%",
     fontFamily: 'Arimo',
     fontWeight: 'bold',
-    letterSpacing: '0.05em'
+    letterSpacing: '0.05em',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em'
   },
   behaviorTitle: {
     backgroundColor: "#FF5252",
     color: "white",
-    fontSize: 14,
+    fontSize: '0.9em',
     textAlign: "center", 
     width: "20%",
     fontFamily: 'Arimo',
     fontWeight: 'bold',
-    letterSpacing: '0.05em'
+    letterSpacing: '0.05em',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em'
   },
   waitingTitle: {
     backgroundColor: "#FF7043",
     color: "white",
-    fontSize: 14,
+    fontSize: '0.9em',
     textAlign: "center", 
     width: "20%",
     fontFamily: 'Arimo',
     fontWeight: 'bold',
-    letterSpacing: '0.05em'
+    letterSpacing: '0.05em',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em'
   },
   lineExamples: {
     backgroundColor: "#F3F3F3",
     width:"20%",
-    fontFamily: 'Arimo'
+    fontSize: '0.9em',
+    fontFamily: 'Arimo',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em',
+    verticalAlign: 'top'
   },
   travelingExamples: {
     backgroundColor: "#F3F3F3",
     width:"20%",
-    fontFamily: 'Arimo'
+    fontSize: '0.9em',
+    fontFamily: 'Arimo',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em',
+    verticalAlign: 'top'
   },
   waitingExamples: {
     backgroundColor: "#F3F3F3",
     width:"20%",
-    fontFamily: 'Arimo'
+    fontSize: '0.9em',
+    fontFamily: 'Arimo',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em',
+    verticalAlign: 'top'
   },
   routinesExamples: {
     backgroundColor: "#F3F3F3",
     width:"20%",
-    fontFamily: 'Arimo'
+    fontSize: '0.9em',
+    fontFamily: 'Arimo',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em',
+    verticalAlign: 'top'
   },
   behaviorExamples: {
     backgroundColor: "#F3F3F3",
     width:"20%",
-    fontFamily: 'Arimo'
+    fontSize: '0.9em',
+    fontFamily: 'Arimo',
+    paddingBottom: '0.2em',
+    paddingTop: '0.2em',
+    verticalAlign: 'top'
   }
 };
 
@@ -153,7 +187,7 @@ function TransitionHelpCard(props: Props): React.ReactElement {
           </TableRow>
         </TableBody>
       </Table>
-      <div style={{paddingTop: '2em'}} />
+      <div style={{paddingTop: '1em'}} />
       <Table padding="checkbox">
         <TableHead>
           <TableRow>
