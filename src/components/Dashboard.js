@@ -36,6 +36,7 @@ import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
+import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
@@ -231,6 +232,8 @@ class Dashboard extends React.Component {
             <SequentialActivitiesHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : magic8 === "Level of Instruction" ?
             <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : magic8 === "Listening to Children" ? 
+            <ListeningToChildrenHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : <div />
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>

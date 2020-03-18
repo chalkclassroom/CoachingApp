@@ -4,7 +4,6 @@ import { withStyles } from "@material-ui/core/styles/index";
 import Table from '@material-ui/core/Table/index';
 import TableRow from '@material-ui/core/TableRow/index';
 import TableBody from '@material-ui/core/TableBody/index';
-import TableHead from '@material-ui/core/TableHead/index';
 import TableCell from '@material-ui/core/TableCell/index';
 
 const styles: object = {
@@ -20,7 +19,9 @@ const styles: object = {
     backgroundColor: "#f3f3f3",
     fontSize: '0.9em',
     fontFamily: "Arimo",
-    width: '25%'
+    width: '25%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
   }
 };
 
@@ -40,7 +41,7 @@ function MathHelpChild(props: Props): React.ReactElement {
   return(
     <Table>
       <TableBody>
-      <TableRow>
+        <TableRow>
           <TableCell align="center" className={classes.header} style={{backgroundColor: '#9ccff7'}}>
             Counting and Numbers
           </TableCell>
