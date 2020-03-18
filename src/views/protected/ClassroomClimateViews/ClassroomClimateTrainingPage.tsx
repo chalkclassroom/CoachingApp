@@ -10,10 +10,10 @@ import 'chartjs-plugin-datalabels';
 import TrainingVideo from '../../../components/Shared/TrainingVideo.tsx';
 import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionnaire';
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
-import ClassroomClimateHelpCard from '../../../components/ClassroomClimateComponent/ClassroomClimateHelp';
+import ClassroomClimateHelpCard from '../../../components/ClassroomClimateComponent/ClassroomClimateHelpCard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme, Typography, Grid, Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core/es';
-import ClassroomClimateHelp from '../../../components/ClassroomClimateComponent/ClassroomClimateHelp';
+
 
 const ClimateTheme = createMuiTheme({
   palette: {
@@ -279,7 +279,7 @@ class ClassroomClimateTrainingPage extends React.Component<Props, State> {
                 }
               />
             ) : view === ViewEnum.DEFINITIONS ? (
-              <div />
+              <ClassroomClimateHelpCard />
             ) : view === ViewEnum.EXAMPLE ? (
               <div>EXAMPLE</div>
             ) : view === ViewEnum.DEMONSTRATION ? (

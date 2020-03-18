@@ -20,7 +20,11 @@ const styles: object = {
     color: 'black',
     padding: "1%",
     width: '50%',
-    fontFamily: 'Arimo'
+    fontFamily: 'Arimo',
+    fontSize: '0.9em',
+    paddingBottom: '0.5em',
+    paddingTop: '0.5em',
+    verticalAlign: 'top'
   }
 };
 

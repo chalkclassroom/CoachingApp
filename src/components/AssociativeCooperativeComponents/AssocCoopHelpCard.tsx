@@ -14,6 +14,9 @@ const ACTheme = createMuiTheme({
   palette: {
     primary: {
       main: Constants.ACColor
+    },
+    secondary: {
+      main: '#000000'
     }
   }
 });
@@ -91,11 +94,28 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
               <TabBar position="static" color="default" className={classes.tabBar}>
                 <Tabs
                   value={this.state.tabValue}
-                  indicatorColor="primary"
+                  indicatorColor="secondary"
                   variant="fullWidth"
                 >
-                  <Tab label="Child Behaviors" onClick={this.handleChild} style={{fontFamily: "Arimo", fontSize: '1em'}} />
-                  <Tab label="Teacher Behaviors" onClick={this.handleTeacher} style={{fontFamily: "Arimo", fontSize: '1em'}} />
+                  <Tab
+                    label="Child Behaviors"
+                    onClick={this.handleChild}
+                    style={{
+                      fontFamily: "Arimo",
+                      fontSize: '1em',
+                      color: this.state.tabValue === 0? 'white' : 'black',
+                      backgroundColor: this.state.tabValue === 0 ? Constants.ACColor : '#d3d3d3'
+                    }}
+                  />
+                  <Tab
+                    label="Teacher Behaviors"
+                    onClick={this.handleTeacher}
+                    style={{
+                      fontFamily: "Arimo",
+                      fontSize: '1em',
+                      backgroundColor: this.state.tabValue === 1 ? Constants.AppBarColor: '#d3d3d3'
+                    }}
+                  />
                 </Tabs>
               </TabBar>
             </MuiThemeProvider>
