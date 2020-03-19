@@ -56,7 +56,7 @@ interface State {
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<string>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>
 }
 
 /**
@@ -151,15 +151,17 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "ac").then((dates: Array<string>) =>
+    firebase.fetchSessionDates(teacherId, "ac").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
       this.setState({
         sessionDates: dates
       }, () => {
-        this.setState({ sessionId: this.state.sessionDates[0].id },
-          () => {
-            this.getData();
-          }
-        );
+        if (this.state.sessionDates[0]) {
+          this.setState({ sessionId: this.state.sessionDates[0].id },
+            () => {
+              this.getData();
+            }
+          );
+        }
       })
     );
     console.log('date fetching was called');
