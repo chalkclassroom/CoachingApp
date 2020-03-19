@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as Constants from '../../../constants/index';
 import Button from '@material-ui/core/Button/Button';
-import MathIconImage from '../../../assets/images/MathIconImage.svg';
+import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg';
 import { withStyles } from '@material-ui/core/styles/index';
 import AppBar from '../../../components/AppBar';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
@@ -271,7 +271,7 @@ class ListeningToChildrenTrainingPage extends React.Component<Props, State> {
             <TrainingDashboard
               ViewEnum={ViewEnum}
               view={view}
-              Icon={MathIconImage}
+              Icon={ListeningIconImage}
               conceptsClick={this.conceptsClick}
               definitionsClick={this.definitionsClick}
               exampleClick={this.exampleClick}
