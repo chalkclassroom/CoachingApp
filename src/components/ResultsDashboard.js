@@ -162,10 +162,24 @@ class ResultsDashboard extends React.Component {
       auth: true,
       icon: null,
       theme: null,
+      teachers: []
     }
   }
 
   componentDidMount = () => {
+    this.props.firebase.getTeacherList().then((teacherPromiseList) => {
+      const teacherList = [];
+      teacherPromiseList.forEach(tpromise => {
+        tpromise.then((data) => {
+          teacherList.push(data);
+          this.setState((previousState) => {
+            return {
+              teachers: previousState.teachers.concat(data)
+            };
+          });
+        });
+      });
+    });
     if (this.props.magic8 === "Transition Time") {
       this.setState({
         icon: TransitionTimeIconImage,
@@ -210,10 +224,19 @@ class ResultsDashboard extends React.Component {
   };
 
   /**
-   * render function
-   * @return {ReactElement}
+   * @param {event} event
    */
-  render(){
+  changeTeacherId = (event) => {
+    this.setState({
+      sessionId: event.target.value,
+    })
+  };
+
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render() {
     const { classes } = this.props;
     return(
       <div>
@@ -229,6 +252,22 @@ class ResultsDashboard extends React.Component {
           >
             <Grid item className={classes.iconGrid}>
               <img src={this.state.icon} alt="Magic 8 Icon" className={classes.icon}/>
+            </Grid>
+            <Grid item className={classes.resultsButtons}>
+              <TextField
+                select
+                className={classes.viewButtons}
+                label="TEACHER"
+                value={this.props.teacherLastName}
+                onChange={this.changeTeacherId}
+                InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
+              >
+                {this.state.teachers.map((teacher, index)=> 
+                  {return <MenuItem key={index} id={teacher.id} value={teacher.lastName} style={{fontFamily: 'Arimo'}}>
+                    <em>{teacher.lastName}</em>
+                  </MenuItem>})}
+              </TextField>
             </Grid>
             <Grid item className={classes.resultsButtons}>
               <TextField
@@ -351,7 +390,11 @@ ResultsDashboard.propTypes = {
   sessionDates: PropTypes.array.isRequired,
   viewEnum: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  view: PropTypes.number.isRequired
+  view: PropTypes.number.isRequired,
+  teacherId: PropTypes.string.isRequired,
+  teacherFirstName: PropTypes.string.isRequired,
+  teacherLastName: PropTypes.string.isRequired,
+  firebase: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(ResultsDashboard);

@@ -249,20 +249,26 @@ class ResultsLayout extends React.Component<Props, State> {
               justify="center"
               direction="column"
             >
-              <ResultsDashboard
-                magic8={this.props.magic8}
-                color="#0988ec"
-                view={this.state.view}
-                dataClick={this.dataClick}
-                questionsClick={this.questionsClick}
-                coachPrepClick={this.coachPrepClick}
-                actionPlanClick={this.actionPlanClick}
-                notesClick={this.notesClick}
-                viewEnum={ViewEnum}
-                sessionId={this.props.sessionId}
-                changeSessionId={this.props.changeSessionId}
-                sessionDates={this.props.sessionDates}
-              />
+              <FirebaseContext.Consumer>
+                {(firebase: object) => <ResultsDashboard
+                  firebase={firebase}
+                  magic8={this.props.magic8}
+                  color="#0988ec"
+                  view={this.state.view}
+                  dataClick={this.dataClick}
+                  questionsClick={this.questionsClick}
+                  coachPrepClick={this.coachPrepClick}
+                  actionPlanClick={this.actionPlanClick}
+                  notesClick={this.notesClick}
+                  viewEnum={ViewEnum}
+                  sessionId={this.props.sessionId}
+                  changeSessionId={this.props.changeSessionId}
+                  sessionDates={this.props.sessionDates}
+                  teacherId={this.props.teacherId}
+                  teacherFirstName={this.props.teacherFirstName}
+                  teacherLastName={this.props.teacherLastName}
+                />}
+              </FirebaseContext.Consumer>
             </Grid>
           </Grid>
           <Grid container xs={8} justify="flex-start" direction="column" alignItems="center" style={{height: '90vh'}}>
