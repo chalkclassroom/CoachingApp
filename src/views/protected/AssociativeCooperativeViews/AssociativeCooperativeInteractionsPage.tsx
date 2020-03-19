@@ -39,7 +39,7 @@ interface State {
 }
 
 class AssociativeCooperativeInteractionsPage extends React.Component<Props, State> {
-  
+
   state = {
     auth: true,
      completeEnabled: false
@@ -81,8 +81,6 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
           <div />
         ) */}
         <main style={{ flex: 1 }}>
-       
-          
           <FirebaseContext.Consumer>
             {(firebase: object) => (
               <CenterMenuAssocCoop

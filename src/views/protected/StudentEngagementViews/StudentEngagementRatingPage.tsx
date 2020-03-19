@@ -15,6 +15,7 @@ import {
 } from "../../../state/actions/classroom-climate";
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown.tsx";
+import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
 
 /*
     N.B. Time measured in milliseconds.
@@ -43,18 +44,21 @@ const styles = {
 
 /**
  * classroom climate observation tool
- * @class ClassroomClimatePage
+ * @class StudentEngagementRatingPage
  */
-class StudentEngagementPage extends React.Component {
+class StudentEngagementRatingPage extends React.Component {
     state = {
         auth: true,
         time: RATING_INTERVAL,
+        ratingIsOpen: false,
+        ratings: [],
         recs: true,
         incompleteRating: false
     };
 
     tick = () => {
         if (this.state.time <= 0) {
+            this.handleRatingModal();
             this.setState({ time: RATING_INTERVAL });
         } else {
             if (this.state.time - 1000 < 0) {
@@ -65,6 +69,10 @@ class StudentEngagementPage extends React.Component {
         }
     };
 
+    handleRatingModal = () => {
+        this.setState({ ratingIsOpen: true });
+    };
+
     handleClickAway = () => {
         this.setState({ help: false });
     };
@@ -73,6 +81,8 @@ class StudentEngagementPage extends React.Component {
      * @param {number} rating
      */
     handleRatingConfirmation = rating => {
+        this.setState({ ratingIsOpen: false });
+
         this.props.appendClimateRating(rating);
 
         const entry = {
@@ -118,6 +128,9 @@ class StudentEngagementPage extends React.Component {
                     />
                 </Modal>
                 <Modal open={this.state.incompleteRating}>
+                    <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
+                        <EmptyToneRating />
+                    </ClickAwayListener>
                 </Modal>
                 <main style={{ flex: 1 }}>
                     <Grid
@@ -143,8 +156,11 @@ class StudentEngagementPage extends React.Component {
                                     <Dashboard
                                         magic8="Student Engagement"
                                         color="#e99b2e"
+                                        infoDisplay={
+                                            <Countdown color="#e99b2e" timerTime={RATING_INTERVAL} />
+                                        }
                                         infoPlacement="center"
-                                        completeObservation={false}
+                                        completeObservation={true}
                                     />
                                 </Grid>
                             </Grid>
@@ -173,14 +189,13 @@ class StudentEngagementPage extends React.Component {
     }
 }
 
-StudentEngagementPage.propTypes = {
+StudentEngagementRatingPage.propTypes = {
     classes: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    appendClimateRating: PropTypes.func.isRequired
 };
 
-StudentEngagementPage.contextType = FirebaseContext;
+StudentEngagementRatingPage.contextType = FirebaseContext;
 
-export default connect(null, { appendClimateRating, emptyClimateStack })(
-    withStyles(styles)(StudentEngagementPage)
+export default connect(null,null )(
+    withStyles(styles)(StudentEngagementRatingPage)
 );
