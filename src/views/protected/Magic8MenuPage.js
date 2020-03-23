@@ -108,7 +108,8 @@ class Magic8MenuPage extends Component {
       unlockedData: false,
       page: '',
       teacherId: '',
-      teacherName: ''
+      teacherName: '',
+      teacher: {}
     };
 
     this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this);
@@ -139,21 +140,22 @@ class Magic8MenuPage extends Component {
   handleGoButton = () => {
     console.log('this.props.location.state', this.props.location.state);
     // console.log('this.location.state?', this.location.state);
+    console.log('teacher state', this.state.teacher)
     if (this.state.page === "Training") {
       this.props.history.push({
         pathname: `/${this.state.selected}Training`,
-        state: this.props.location.state
+        state: {teacher: this.state.teacher}
       });
     } else if (this.state.unlocked.includes(MAP[this.state.selected])) {
       if (this.state.page === "Observe") {
         this.props.history.push({
           pathname: `/${this.state.selected}`,
-          state: this.props.location.state
+          state: {teacher: this.state.teacher, teachers: this.props.location.state.teachers}
         });
       } else if (this.state.page === "Results") {
         this.props.history.push({
           pathname: `/${this.state.selected}Results`,
-          state: this.props.location.state
+          state: {teacher: this.state.teacher}
         });
       }
     }
@@ -190,7 +192,7 @@ class Magic8MenuPage extends Component {
         : this.props.history.location.state.type === "Observe"
         ? "Observe"
         : "Results",
-      teacherId: this.props.location.state.teacher.id
+      teacher: this.props.location.state.teacher
     });
   }
 
@@ -212,7 +214,7 @@ class Magic8MenuPage extends Component {
   changeTeacher = (event) => {
     console.log('new teacher', event.target.value);
     this.setState({
-      teacherId: event.target.value,
+      teacher: event.target.value,
     })
   };
 
@@ -257,14 +259,13 @@ class Magic8MenuPage extends Component {
                         select
                         // className={classes.viewButtons}
                         style={{width: '100%'}}
-                        // label="TEACHER"
-                        value={this.state.teacherId}
+                        value={this.state.teacher}
                         onChange={this.changeTeacher}
                         InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
                         InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
                       >
                         {this.props.location.state.teachers.map((teacher, index)=> 
-                          {return <MenuItem key={index} id={teacher.id} value={teacher.id} style={{fontFamily: 'Arimo'}}>
+                          {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
                             <em>{teacher.firstName + " " + teacher.lastName}</em>
                           </MenuItem>})}
                       </TextField>)

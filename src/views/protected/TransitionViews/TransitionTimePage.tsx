@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
+import Button from '@material-ui/core/Button';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { withStyles } from "@material-ui/core/styles";
 import TransitionTimeHelp from "./TransitionTimeHelp";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -25,11 +27,29 @@ const styles: object = {
     overflowY: 'auto',
     overflowX: 'hidden'
   },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
+  },
+};
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
 };
 
 interface Props {
-  classes: { root: string },
-  location: { state: { teacher: { id: string }}}
+  classes: { root: string, backButton: string },
+  location: { state: { teacher: Teacher, teachers: Array<Teacher>}}
 };
 
 interface State {
@@ -162,13 +182,29 @@ class TransitionTimePage extends React.Component<Props, State> {
                 justify={"center"}
                 direction={"column"}
               >
+                <Grid item>
+                  <Button variant="contained" size="medium" className={classes.backButton}
+                  onClick={(): void => {
+                      this.props.history.replace({
+                        pathname: "/Magic8Menu",
+                        state: { teacher: this.props.location.state.teacher, type: "Observe", teachers: this.props.location.state.teachers }
+                      })
+                  }}>
+                  <ChevronLeftRoundedIcon />
+                  <b>Observe</b>
+                </Button>
+                </Grid>
+                <Grid item>
                 <Dashboard
                   magic8="Transition Time"
                   color={Constants.TransitionColor}
                   infoDisplay={<TransitionLog />}
                   infoPlacement="center"
                   completeObservation={true}
+                  teacherFirstName={this.props.location.state.teacher.firstName}
+                  teacherLastName={this.props.location.state.teacher.lastName}
                 />
+                </Grid>
               </Grid>
             </Grid>
             <Grid item xs={4} justify="center">

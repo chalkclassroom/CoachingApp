@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
-import { Button, Card, Grid } from '@material-ui/core';
+import { Button, Card, Grid, Typography } from '@material-ui/core';
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg"
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg"
 import MathIconImage from "../assets/images/MathIconImage.svg"
@@ -161,25 +161,11 @@ class ResultsDashboard extends React.Component {
     this.state = {
       auth: true,
       icon: null,
-      theme: null,
-      teachers: []
+      theme: null
     }
   }
 
   componentDidMount = () => {
-    this.props.firebase.getTeacherList().then((teacherPromiseList) => {
-      const teacherList = [];
-      teacherPromiseList.forEach(tpromise => {
-        tpromise.then((data) => {
-          teacherList.push(data);
-          this.setState((previousState) => {
-            return {
-              teachers: previousState.teachers.concat(data)
-            };
-          });
-        });
-      });
-    });
     if (this.props.magic8 === "Transition Time") {
       this.setState({
         icon: TransitionTimeIconImage,
@@ -224,15 +210,6 @@ class ResultsDashboard extends React.Component {
   };
 
   /**
-   * @param {event} event
-   */
-  changeTeacherId = (event) => {
-    this.setState({
-      teacherId: event.target.value,
-    })
-  };
-
-  /**
    * render function
    * @return {ReactNode}
    */
@@ -254,20 +231,9 @@ class ResultsDashboard extends React.Component {
               <img src={this.state.icon} alt="Magic 8 Icon" className={classes.icon}/>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <TextField
-                select
-                className={classes.viewButtons}
-                label="TEACHER"
-                value={this.props.teacherLastName}
-                onChange={this.changeTeacherId}
-                InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
-                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
-              >
-                {this.state.teachers.map((teacher, index)=> 
-                  {return <MenuItem key={index} id={teacher.id} value={teacher.lastName} style={{fontFamily: 'Arimo'}}>
-                    <em>{teacher.lastName}</em>
-                  </MenuItem>})}
-              </TextField>
+              <Typography>
+                {this.props.teacherFirstName} {this.props.teacherLastName}
+              </Typography>
             </Grid>
             <Grid item className={classes.resultsButtons}>
               <TextField

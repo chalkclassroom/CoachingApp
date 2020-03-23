@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Button, Card, Grid } from "@material-ui/core";
+import { Button, Card, Grid, Typography } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg";
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg";
@@ -70,7 +70,7 @@ const styles = {
     height: "100px"
   },
   infoDisplayGrid: {
-    height: "41vh",
+    height: "34vh",
     width: "90%",
     marginLeft: "5px",
     marginRight: "5px",
@@ -270,6 +270,11 @@ class Dashboard extends React.Component {
                 alt="Magic 8 Icon"
                 className={classes.icon}
               />
+            </Grid>
+            <Grid item>
+              <Typography>
+                {this.props.teacherFirstName} {this.props.teacherLastName}
+              </Typography>
             </Grid>
             <Grid
               item
