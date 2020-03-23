@@ -228,7 +228,7 @@ class ResultsDashboard extends React.Component {
    */
   changeTeacherId = (event) => {
     this.setState({
-      sessionId: event.target.value,
+      teacherId: event.target.value,
     })
   };
 

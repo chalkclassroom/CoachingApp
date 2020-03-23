@@ -27,7 +27,6 @@ const styles: object = {
 };
 
 const CardBase = styled.div`
-  margin: 5px;
   position: relative;
   display: inline-block;
   //border: dashed 2px #808080;

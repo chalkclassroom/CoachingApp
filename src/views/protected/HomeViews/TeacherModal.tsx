@@ -131,7 +131,7 @@ class TeacherModal extends React.Component<Props, State> {
   selectTeacher(teacherInfo: Teacher): void {
     this.props.history.push({
       pathname: "/Magic8Menu",
-      state: { teacher: teacherInfo, type: this.props.type }
+      state: { teacher: teacherInfo, type: this.props.type, teachers: this.state.teachers}
     });
     this.setState({open: false});
     this.props.handleClose();

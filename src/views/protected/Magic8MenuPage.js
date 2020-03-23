@@ -27,6 +27,9 @@ import ListeningToChildrenObservationPopUp from '../../components/ListeningToChi
 import SequentialActivitiesObservationPopUp from '../../components/SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
 import AssociativeCooperativeInteractionsObservationPopUp from '../../components/AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
 import LockedModal from '../../components/LockedModal';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from "@material-ui/core/MenuItem";
 
 const CardRow = styled.div`
   position: relative;
@@ -70,7 +73,8 @@ const styles = {
     marginTop: "2%",
     marginBottom: "2vh",
     fontFamily: "Arimo"
-  }
+  },
+
 };
 
 const MAP = {
@@ -102,7 +106,9 @@ class Magic8MenuPage extends Component {
       selected: "none",
       unlocked: [],
       unlockedData: false,
-      page: ''
+      page: '',
+      teacherId: '',
+      teacherName: ''
     };
 
     this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this);
@@ -131,6 +137,8 @@ class Magic8MenuPage extends Component {
   }
 
   handleGoButton = () => {
+    console.log('this.props.location.state', this.props.location.state);
+    // console.log('this.location.state?', this.location.state);
     if (this.state.page === "Training") {
       this.props.history.push({
         pathname: `/${this.state.selected}Training`,
@@ -181,7 +189,8 @@ class Magic8MenuPage extends Component {
         ? "Training"
         : this.props.history.location.state.type === "Observe"
         ? "Observe"
-        : "Results"
+        : "Results",
+      teacherId: this.props.location.state.teacher.id
     });
   }
 
@@ -196,6 +205,16 @@ class Magic8MenuPage extends Component {
       });
     }
   }
+
+  /**
+   * @param {event} event
+   */
+  changeTeacher = (event) => {
+    console.log('new teacher', event.target.value);
+    this.setState({
+      teacherId: event.target.value,
+    })
+  };
 
   /**
    * render function
@@ -214,12 +233,146 @@ class Magic8MenuPage extends Component {
       'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />
     }
     return (
-      <div>
-        <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
-        </FirebaseContext.Consumer>
+      <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
         <div>
-          <div align="center">
+          <FirebaseContext.Consumer>
+            {firebase => <AppBar firebase={firebase} />}
+          </FirebaseContext.Consumer>
+        </div>
+        <div style={{flexGrow: 1}}>
+          <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100vw', height: '100%', paddingTop: '3em'}}>
+            <Grid item style={{width: '70vw', paddingBottom: '1em'}}>
+              <Grid container direction="row" justify="center" alignItems="center">
+                <Grid item xs={9}>
+                  <Grid container direction="row" justify="flex-start" alignItems="center">
+                    <Typography style={{fontSize:'3em'}}>
+                      {this.state.page}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item xs={3}>
+                  <Grid container direction="row" justify="flex-end" alignItems="center">
+                    {this.props.history.location.state.type === "Training" ? <div /> : (
+                      <TextField
+                        select
+                        // className={classes.viewButtons}
+                        style={{width: '100%'}}
+                        // label="TEACHER"
+                        value={this.state.teacherId}
+                        onChange={this.changeTeacher}
+                        InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                        InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
+                      >
+                        {this.props.location.state.teachers.map((teacher, index)=> 
+                          {return <MenuItem key={index} id={teacher.id} value={teacher.id} style={{fontFamily: 'Arimo'}}>
+                            <em>{teacher.firstName + " " + teacher.lastName}</em>
+                          </MenuItem>})}
+                      </TextField>)
+                    }
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item style={{width: '70vw', paddingBottom: '1.5em'}}>
+              <Grid container direction="row" justify="flex-start" alignItems="center">
+                <Grid item xs={12}>
+                  <Typography style={{fontSize: '1.2em'}}>
+                    Select the skill you would like to{" "}
+                    {this.state.page === "Training" ? "learn:" : "focus on:"}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item style={{width: '70vw', paddingBottom: '1em'}}>
+              <Grid container direction="row" justify="space-between" alignItems="center">
+                <Grid item>
+                  <Magic8Card
+                    title="TransitionTime"
+                    icon={TransitionTimeIconImage}
+                    onClick={this.onClick}
+                    numSelected={this.state.numSelected}
+                    unlocked={this.state.unlocked.includes(1)}
+                    page={this.state.page}
+                  />
+                </Grid>
+                <Grid item>
+                  <Magic8Card
+                    title="ClassroomClimate"
+                    icon={ClassroomClimateIconImage}
+                    onClick={this.onClick}
+                    numSelected={this.state.numSelected}
+                    unlocked={this.state.unlocked.includes(2)}
+                    page={this.state.page}
+                  />
+                </Grid>
+                <Grid item>
+                  <Magic8Card
+                    title="MathInstruction"
+                    icon={MathIconImage}
+                    onClick={this.onClick}
+                    numSelected={this.state.numSelected}
+                    unlocked={this.state.unlocked.includes(3)}
+                    page={this.state.page}
+                  />
+                </Grid>
+                <Grid item>
+                  <Magic8Card
+                    title="StudentEngagement"
+                    icon={EngagementIconImage}
+                    onClick={this.onClick}
+                    numSelected={this.state.numSelected}
+                    unlocked={this.state.unlocked.includes(4)}
+                    page={this.state.page}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item style={{width: '70vw'}}>
+              <Grid container direction="row" justify="space-between" alignItems="center">
+                <Grid item>
+                  <Magic8Card
+                    title="LevelOfInstruction"
+                    icon={InstructionIconImage}
+                    onClick={this.onClick}
+                    numSelected={this.state.numSelected}
+                    unlocked={this.state.unlocked.includes(5)}
+                    page={this.state.page}
+                  />
+                </Grid>
+                <Grid item>
+                  <Magic8Card
+                    title="ListeningToChildren"
+                    icon={ListeningIconImage}
+                    onClick={this.onClick}
+                    numSelected={this.state.numSelected}
+                    unlocked={this.state.unlocked.includes(6)}
+                    page={this.state.page}
+                  />
+                </Grid>
+                <Grid item>
+                  <Magic8Card
+                    title="SequentialActivities"
+                    icon={SequentialIconImage}
+                    onClick={this.onClick}
+                    numSelected={this.state.numSelected}
+                    unlocked={this.state.unlocked.includes(7)}
+                    page={this.state.page}
+                  />
+                </Grid>
+                <Grid item>
+                  <Magic8Card
+                    title="AssociativeCooperativeInteractions"
+                    icon={AssocCoopIconImage}
+                    onClick={this.onClick}
+                    numSelected={this.state.numSelected}
+                    unlocked={this.state.unlocked.includes(8)}
+                    page={this.state.page}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* <div align="center">
             <Typography className={classes.titleText}>
               {this.state.page}
             </Typography>
@@ -229,8 +382,8 @@ class Magic8MenuPage extends Component {
               Select the skill you&apos;d like to{" "}
               {this.state.page === "Training" ? "learn:" : "focus on:"}
             </Typography>
-          </div>
-          <CardRow>
+          </div> */}
+          {/* <CardRow>
             <Magic8Card
               title="TransitionTime"
               icon={TransitionTimeIconImage}
@@ -263,8 +416,8 @@ class Magic8MenuPage extends Component {
               unlocked={this.state.unlocked.includes(4)}
               page={this.state.page}
             />
-          </CardRow>
-          <CardRow>
+          </CardRow> */}
+          {/* <CardRow>
             <Magic8Card
               title="LevelOfInstruction"
               icon={InstructionIconImage}
@@ -297,7 +450,7 @@ class Magic8MenuPage extends Component {
               unlocked={this.state.unlocked.includes(8)}
               page={this.state.page}
             />
-          </CardRow>
+          </CardRow> */}
           <ObservationModal
             open={
               this.state.numSelected===1 &&
