@@ -40,12 +40,12 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const listeningData = {  
       labels: [
-        "At eye-level with children",
-        ["Looks expectantly at children","and shows warmth to", "encourage child talk"],
-        ["Repeats or clarifies", "children's comments"], 
-        ["Asks open-ended questions", "to encourage conversation"],
-        ["Expands on children's", "play or talk using", "questions or comments"],
-        ["Encourages children to", "talk to peers"]
+        "At eye-level",
+        "Encourages child talk",
+        "Repeats or clarifies", 
+        "Asks open-ended questions",
+        ["Expands on children's", "play or talk"],
+        "Encourages peer talk"
       ],
       datasets: [{
         data: [
@@ -121,7 +121,6 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
           tooltips: {
             mode: 'index',
             intersect: false,
-            ypadding: '0.5em'
           },
           legend: {
             display: false,
@@ -137,7 +136,7 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
               display: 'auto',
               color: 'black',
               font: {
-                size: 14,
+                size: 16,
                 weight: 'bold'
               },
               formatter: function(value: number) {

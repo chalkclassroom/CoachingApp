@@ -44,44 +44,28 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
     }
   }
 
-  countingClick = (): void => {
-    if (this.state.categoryView !== "counting") {
+  listeningClick = (): void => {
+    if (this.state.categoryView !== "listening") {
       this.setState({
-        categoryView: "counting",
+        categoryView: "listening",
         openPanel: null
       })
     }
   }
 
-  measurementClick = (): void => {
-    if (this.state.categoryView !== "measurement") {
+  supportingClick = (): void => {
+    if (this.state.categoryView !== "supporting") {
       this.setState({
-        categoryView: "measurement",
-        openPanel: null
-      })
-    }
-  }
-  patternsClick = (): void => {
-    if (this.state.categoryView !== "patterns") {
-      this.setState({
-        categoryView: "patterns",
-        openPanel: null
-      })
-    }
-  }
-  shapesClick = (): void => {
-    if (this.state.categoryView !== "shapes") {
-      this.setState({
-        categoryView: "shapes",
+        categoryView: "supporting",
         openPanel: null
       })
     }
   }
 
-  teacherSupportClick = (): void => {
-    if (this.state.categoryView !== "teacherSupport") {
+  encouragingClick = (): void => {
+    if (this.state.categoryView !== "encouraging") {
       this.setState({
-        categoryView: "teacherSupport",
+        categoryView: "encouraging",
         openPanel: null
       })
     }
@@ -108,13 +92,13 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
           <Grid item>
             <MuiThemeProvider theme={ListeningTheme}>
               <Button 
-                onClick={this.countingClick}
+                onClick={this.listeningClick}
                 variant="contained"
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
                 <Typography style={{color: 'white'}}>
-                  Counting and Numbers
+                  Listening to Children
                 </Typography>
               </Button >
             </MuiThemeProvider>
@@ -122,13 +106,13 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
           <Grid item>
             <MuiThemeProvider theme={ListeningTheme}>
               <Button
-                onClick={this.measurementClick}
+                onClick={this.supportingClick}
                 variant="contained"
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
                 <Typography style={{color: 'white'}}>
-                  Measurement and Data
+                  Supporting Child Talk
                 </Typography>
               </Button>
             </MuiThemeProvider>
@@ -136,50 +120,22 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
           <Grid item>
             <MuiThemeProvider theme={ListeningTheme}>
               <Button
-                onClick={this.patternsClick}
+                onClick={this.encouragingClick}
                 variant="contained"
                 color="primary"
                 style={{width:'8em', height: '8em'}}
               >
                 <Typography style={{color: 'white'}}>
-                  Patterns
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={ListeningTheme}>
-              <Button
-                onClick={this.shapesClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Shapes and Spatial Reasoning
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={ListeningTheme}>
-              <Button
-                onClick={this.teacherSupportClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Teacher Support for Math
+                  Encouraging Peer Talk
                 </Typography>
               </Button>
             </MuiThemeProvider>
           </Grid>
         </Grid>
         <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "counting" ? (
+          {this.state.categoryView === "listening" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Math.CountingAndNumbers}
+              questions={Constants.CoachingQuestions.Listening.Listening}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
@@ -187,11 +143,11 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.MathColor}
+              color={Constants.ListeningColor}
             />
-          ) : this.state.categoryView === "measurement" ? (
+          ) : this.state.categoryView === "supporting" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Math.MeasurementAndData}
+              questions={Constants.CoachingQuestions.Listening.Supporting}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
@@ -199,11 +155,11 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.MathColor}
+              color={Constants.ListeningColor}
             />
-          ) : this.state.categoryView === "patterns" ? (
+          ) : this.state.categoryView === "encouraging" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Math.Patterns}
+              questions={Constants.CoachingQuestions.Listening.Encouraging}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
@@ -211,31 +167,7 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.MathColor}
-            />
-          ) : this.state.categoryView === "shapes" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Math.ShapesAndSpatialReasoning}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.MathColor}
-            />
-          ) : this.state.categoryView === "teacherSupport" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Math.TeacherSupport}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.MathColor}
+              color={Constants.ListeningColor}
             />
           ) : <div/>}
         </Grid>

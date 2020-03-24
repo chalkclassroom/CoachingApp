@@ -873,7 +873,84 @@ export const CoachingQuestions = {
     ],
   },
   'Listening': {
-
+    'Listening': [
+      {
+        'name': 'ListeningPanel1A',
+        'title': 'Teacher Positions',
+        'text': [
+          'Talk about how you position your body when interacting with children.',
+          'Talk about how you balance your time between interacting with children, ' +
+          'monitoring children, and/or doing managerial tasks during centers, ' +
+          'small groups, or mealtimes.'
+        ]
+      },
+      {
+        'name': 'ListeningPanel1B',
+        'title': 'Interest in Child Talk',
+        'text': [
+          'Talk about how you show children that you are interested in what ' +
+          'they say (with facial expressions, smiling, nodding, etc.).',
+          'What do you notice happening when adults give children wait time, ' +
+          'or time to respond, during conversations?'
+        ]
+      }
+    ],
+    'Supporting': [
+      {
+        'name': 'ListeningPanel2A',
+        'title': 'Repeating and Clarifying Child Comments',
+        'text': [
+          'What do you notice about children\'s responses or behaviors when you ' +
+          'repeat what they say? Are there certain activities when you find yourself ' +
+          'repeating children\'s comments more?',
+          'When do you notice yourself clarifying children\'s comments? How does it ' +
+          'help sustain the conversation?'
+        ]
+      },
+      {
+        'name': 'ListeningPanel2B',
+        'title': 'Asking Open-Ended Questions',
+        'text': [
+          'When do you find time to have conversations with children?',
+          'Talk about topics that children enjoy discussing. How do you know?',
+          'What do you notice happening when you ask children open-ended questions ' +
+          'that don\'t have one-word answers?'
+        ]
+      },
+      {
+        'name': 'ListeningPanel2C',
+        'title': 'Expanding on Child Talk and Play',
+        'text': [
+          'Talk about when you find time to observe children and follow their lead.',
+          'What are effective strategies for building on children\'s play and getting ' +
+          'children to talk about their play?',
+          'For children who talk less than their peers, how do you get them to open up?'
+        ]
+      }
+    ],
+    'Encouraging': [
+      {
+        'name': 'ListeningPanel3A',
+        'title': 'Peer Talk During Play',
+        'text': [
+          'Talk about effective strategies you use to promote children\'s communication ' +
+          'with each other during play.',
+          'Talk about how you help children use role speech with each other during ' +
+          'pretend play.',
+          'As children play with blocks or games, what strategies encourage them to ' +
+          'share ideas and create together?'
+        ]
+      },
+      {
+        'name': 'ListeningPanel3B',
+        'title': 'Solving Problems',
+        'text': [
+          'What verbal strategies do children use for solving problems like deciding ' +
+          'what to play, sharing, taking turns, etc.?',
+          'Talk about how you teach problem-solving to children.'
+        ]
+      }
+    ]
   },
   'AC': {
     'Associative': [
