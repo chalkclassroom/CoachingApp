@@ -203,7 +203,8 @@ class Magic8MenuPage extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.location.state.type !== prevProps.location.state.type) {
       this.setState({
-        page: this.props.location.state.type
+        page: this.props.location.state.type,
+        teacher: this.props.location.state.teacher
       });
     }
   }

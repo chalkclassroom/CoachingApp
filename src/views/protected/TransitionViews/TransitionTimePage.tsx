@@ -184,26 +184,30 @@ class TransitionTimePage extends React.Component<Props, State> {
               >
                 <Grid item>
                   <Button variant="contained" size="medium" className={classes.backButton}
-                  onClick={(): void => {
-                      this.props.history.replace({
-                        pathname: "/Magic8Menu",
-                        state: { teacher: this.props.location.state.teacher, type: "Observe", teachers: this.props.location.state.teachers }
-                      })
-                  }}>
-                  <ChevronLeftRoundedIcon />
-                  <b>Observe</b>
-                </Button>
+                    onClick={(): void => {
+                        this.props.history.replace({
+                          pathname: "/Magic8Menu",
+                          state: {
+                            teacher: this.props.location.state.teacher,
+                            type: "Observe",
+                            teachers: this.props.location.state.teachers
+                          }
+                        })
+                    }}>
+                    <ChevronLeftRoundedIcon />
+                    <b>Observe</b>
+                  </Button>
                 </Grid>
                 <Grid item>
-                <Dashboard
-                  magic8="Transition Time"
-                  color={Constants.TransitionColor}
-                  infoDisplay={<TransitionLog />}
-                  infoPlacement="center"
-                  completeObservation={true}
-                  teacherFirstName={this.props.location.state.teacher.firstName}
-                  teacherLastName={this.props.location.state.teacher.lastName}
-                />
+                  <Dashboard
+                    magic8="Transition Time"
+                    color={Constants.TransitionColor}
+                    infoDisplay={<TransitionLog />}
+                    infoPlacement="center"
+                    completeObservation={true}
+                    teacherFirstName={this.props.location.state.teacher.firstName}
+                    teacherLastName={this.props.location.state.teacher.lastName}
+                  />
                 </Grid>
               </Grid>
             </Grid>

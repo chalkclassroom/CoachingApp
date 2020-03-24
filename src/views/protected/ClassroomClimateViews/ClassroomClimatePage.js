@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
+import Button from '@material-ui/core/Button';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
@@ -39,6 +41,13 @@ const styles = {
   },
   grow: {
     flexGrow: 1
+  },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
   }
 };
 
@@ -153,15 +162,33 @@ class ClassroomClimatePage extends React.Component {
                   justify={"center"}
                   direction={"column"}
                 >
-                  <Dashboard
-                    magic8="Classroom Climate"
-                    color="#0988ec"
-                    infoDisplay={
-                      <Countdown color="#0988ec" time={this.state.time} timerTime={RATING_INTERVAL} />
-                    }
-                    infoPlacement="center"
-                    completeObservation={true}
-                  />
+                  <Grid item>
+                    <Button variant="contained" size="medium" className={classes.backButton}
+                      onClick={() => {
+                          this.props.history.replace({
+                            pathname: "/Magic8Menu",
+                            state: {
+                              teacher: this.props.location.state.teacher,
+                              type: "Observe",
+                              teachers: this.props.location.state.teachers
+                            }
+                          })
+                      }}>
+                      <ChevronLeftRoundedIcon />
+                      <b>Observe</b>
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Dashboard
+                      magic8="Classroom Climate"
+                      color="#0988ec"
+                      infoDisplay={
+                        <Countdown color="#0988ec" time={this.state.time} timerTime={RATING_INTERVAL} />
+                      }
+                      infoPlacement="center"
+                      completeObservation={true}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={9}>

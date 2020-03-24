@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { toggleLOISettingType } from '../../../state/actions/level-of-instruction';
 import Dashboard from '../../../components/Dashboard';
 import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
+import Button from '@material-ui/core/Button';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 
 const styles: object = {
   root: {
@@ -62,7 +64,29 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
           <Grid container alignItems="center" style={{height: '100%'}}>
             <Grid item xs={3}>
               <Grid container alignItems={'center'} justify={'center'} direction={'column'}>
-                <Dashboard magic8="Level of Instruction" color="#009365" completeObservation={true} />
+                <Grid item>
+                  <Button variant="contained" size="medium" className={classes.backButton}
+                    onClick={() => {
+                        this.props.history.replace({
+                          pathname: "/Magic8Menu",
+                          state: {
+                            teacher: this.props.location.state.teacher,
+                            type: "Observe",
+                            teachers: this.props.location.state.teachers
+                          }
+                        })
+                    }}>
+                    <ChevronLeftRoundedIcon />
+                    <b>Observe</b>
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Dashboard
+                    magic8="Level of Instruction"
+                    color="#009365"
+                    completeObservation={true}
+                  />
+                </Grid>
               </Grid>
             </Grid>
             <Grid item xs={9} justify="center" style={{height: '100%'}}>
