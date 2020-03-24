@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as Constants from '../../../constants/index';
 import Button from '@material-ui/core/Button/Button';
-import MathIconImage from '../../../assets/images/MathIconImage.svg';
+import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg';
 import { withStyles } from '@material-ui/core/styles/index';
 import AppBar from '../../../components/AppBar';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
@@ -10,15 +10,15 @@ import 'chartjs-plugin-datalabels';
 import TrainingVideo from '../../../components/Shared/TrainingVideo.tsx';
 import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionnaire';
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
-import MathHelpCard from '../../../components/MathInstructionComponents/MathHelpCard';
+import ListeningToChildrenHelpCard from '../../../components/ListeningComponents/ListeningToChildrenHelpCard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/es';
 import Grid from '@material-ui/core/Grid';
 
-const MathTheme = createMuiTheme({
+const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.MathColor
+      main: Constants.ListeningColor
     }
   }
 });
@@ -150,6 +150,13 @@ const ViewEnum = {
 
 interface Props {
   classes: Style;
+  location: {
+    state: string
+  };
+  history: {
+    goBack(): void,
+    replace(param: {pathname: string, state: {type: string}}): void
+  };
 }
 
 interface Style {
@@ -169,52 +176,52 @@ interface State {
 }
 
 /**
- * Math Instruction  training
- * @class MathInstructionTrainingPage
+ * Listening to Children training
+ * @class ListeningToChildrenTrainingPage
  */
-class MathInstructionTrainingPage extends React.Component<Props, State> {
+class ListeningToChildrenTrainingPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
   constructor(props: Props) {
     super(props);
+
+    this.state = {
+      view: ViewEnum.CONCEPTS
+    };
   }
 
-  state = {
-    view: ViewEnum.CONCEPTS
-  };
-
-  conceptsClick = () => {
+  conceptsClick = (): void => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
       this.setState({ view: ViewEnum.CONCEPTS });
     }
   };
 
-  definitionsClick = () => {
+  definitionsClick = (): void => {
     if (this.state.view !== ViewEnum.DEFINITIONS) {
       this.setState({ view: ViewEnum.DEFINITIONS });
     }
   };
 
-  exampleClick = () => {
+  exampleClick = (): void => {
     if (this.state.view !== ViewEnum.EXAMPLE) {
       this.setState({ view: ViewEnum.EXAMPLE });
     }
   };
 
-  demonstrationClick = () => {
+  demonstrationClick = (): void => {
     if (this.state.view !== ViewEnum.DEMONSTRATION) {
       this.setState({ view: ViewEnum.DEMONSTRATION });
     }
   };
 
-  tryItClick = () => {
+  tryItClick = (): void => {
     if (this.state.view !== ViewEnum.TRYIT) {
       this.setState({ view: ViewEnum.TRYIT });
     }
   };
 
-  knowledgeCheckClick = () => {
+  knowledgeCheckClick = (): void => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
       this.setState({ view: ViewEnum.KNOWLEDGECHECK });
     }
@@ -226,15 +233,15 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     const { view } = this.state;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
           <Grid container justify="center" alignItems="center">
@@ -264,25 +271,28 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
             <TrainingDashboard
               ViewEnum={ViewEnum}
               view={view}
-              Icon={MathIconImage}
+              Icon={ListeningIconImage}
               conceptsClick={this.conceptsClick}
               definitionsClick={this.definitionsClick}
               exampleClick={this.exampleClick}
               demonstrationClick={this.demonstrationClick}
               tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
-              colorTheme={MathTheme}
+              colorTheme={ListeningTheme}
             />
           </div>
           <div className={classes.trainingContentCard}>
             {view === ViewEnum.CONCEPTS ? (
-              <TrainingVideo
+              /* <TrainingVideo
                 videoUrl={
                   'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Math%20Instruction%20Concepts.mp4?alt=media&token=ca70255c-7d29-4ab5-84fe-a3ebdde744af'
                 }
-              />
+              /> */
+              <div>
+                COMING SOON
+              </div>
             ) : view === ViewEnum.DEFINITIONS ? (
-              <MathHelpCard />
+              <ListeningToChildrenHelpCard />
             ) : view === ViewEnum.EXAMPLE ? (
               <div>EXAMPLE</div>
             ) : view === ViewEnum.DEMONSTRATION ? (
@@ -296,7 +306,7 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
             ) : view === ViewEnum.TRYIT ? (
               <div>TRY IT</div>
             ) : view === ViewEnum.KNOWLEDGECHECK ? (
-              <TrainingQuestionnaire section={'math'} />
+              <TrainingQuestionnaire section={'listening'} />
             ) : null}
           </div>
         </div>
@@ -305,4 +315,4 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(MathInstructionTrainingPage);
+export default withStyles(styles)(ListeningToChildrenTrainingPage);

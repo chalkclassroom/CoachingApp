@@ -6,15 +6,14 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
-import SequentialHelpDefinitions from './SequentialHelpDefinitions';
-import SequentialHelpChild from './SequentialHelpChild';
-import SequentialHelpTeacher from './SequentialHelpTeacher';
 import * as Constants from '../../constants';
+import ListeningHelp1 from './ListeningHelp1';
+import ListeningHelp2 from './ListeningHelp2';
 
-const SequentialTheme = createMuiTheme({
+const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.SequentialColor
+      main: Constants.ListeningColor
     },
     secondary: {
       main: '#000000'
@@ -22,7 +21,7 @@ const SequentialTheme = createMuiTheme({
   }
 });
 
-const styles: object = {
+const styles = {
   tabBar: {
     marginBottom: "10px",
     height: "5%",
@@ -41,10 +40,9 @@ interface State {
 }
 
 /**
- * hints and reminders for sequential activities observation
- * @param {Props} props 
+ * @class ListeningToChildrenHelpCard
  */
-class SequentialHelpCard extends React.Component<Props, State> {
+class ListeningToChildrenHelpCard extends React.Component<Props, State>  {
   /**
    * @param {Props} props
    */
@@ -59,7 +57,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
   /**
    * @return {void}
    */
-  handleDefinitions = (): void => {
+  handleChecklist1 = (): void => {
     if (this.state.tabValue !== 0) {
       this.setState({
         tabValue: 0
@@ -70,21 +68,10 @@ class SequentialHelpCard extends React.Component<Props, State> {
   /**
    * @return {void}
    */
-  handleChild = (): void => {
+  handleChecklist2 = (): void => {
     if (this.state.tabValue !== 1) {
       this.setState({
         tabValue: 1
-      })
-    }
-  };
-
-  /**
-   * @return {void}
-   */
-  handleTeacher = (): void => {
-    if (this.state.tabValue !== 2) {
-      this.setState({
-        tabValue: 2
       })
     }
   };
@@ -103,7 +90,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
       <div>
         <Grid container direction="column">
           <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
+            <MuiThemeProvider theme={ListeningTheme}>
               <TabBar position="static" color="default" className={classes.tabBar}>
                 <Tabs
                   value={this.state.tabValue}
@@ -111,33 +98,23 @@ class SequentialHelpCard extends React.Component<Props, State> {
                   variant="fullWidth"
                 >
                   <Tab
-                    label="Definitions"
-                    onClick={this.handleDefinitions}
+                    label="Checklist 1"
+                    onClick={this.handleChecklist1}
                     style={{
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 0 ? '#b4d6f7' : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 0 ? Constants.ListeningColor : '#d3d3d3'
                     }}
                   />
                   <Tab
-                    label="Child Behaviors"
-                    onClick={this.handleChild}
+                    label="Checklist 2"
+                    onClick={this.handleChecklist2}
                     style={{
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 1 ? Constants.SequentialColor : '#d3d3d3'
-                    }}
-                  />
-                  <Tab
-                    label="Teacher Behaviors"
-                    onClick={this.handleTeacher}
-                    style={{
-                      fontFamily: "Arimo",
-                      fontSize: '1em',
-                      color: 'black',
-                      backgroundColor: this.state.tabValue === 2 ? Constants.AppBarColor : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 1 ? Constants.ListeningColor: '#d3d3d3'
                     }}
                   />
                 </Tabs>
@@ -145,11 +122,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            {this.state.tabValue === 0 ?
-              <SequentialHelpDefinitions />
-            : this.state.tabValue === 1 ?
-              <SequentialHelpChild />
-            : <SequentialHelpTeacher />}
+            {this.state.tabValue === 0 ? <ListeningHelp1 /> : <ListeningHelp2 />}
           </Grid>
         </Grid>
       </div>
@@ -157,4 +130,4 @@ class SequentialHelpCard extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(SequentialHelpCard);
+export default withStyles(styles)(ListeningToChildrenHelpCard);

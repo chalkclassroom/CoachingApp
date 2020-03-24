@@ -34,6 +34,7 @@ import MathInstructionPage from "./views/protected/MathInstructionViews/MathInst
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
 import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage';
 import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
+import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
@@ -204,6 +205,11 @@ class App extends Component {
               auth={this.state.auth}
               path="/ListeningToChildrenResults"
               component={ListeningToChildrenResultsPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ListeningToChildrenTraining"
+              component={ListeningToChildrenTrainingPage}
             />
             <PrivateRoute
               auth={this.state.auth}

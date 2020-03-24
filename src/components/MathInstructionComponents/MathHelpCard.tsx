@@ -6,15 +6,14 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
-import SequentialHelpDefinitions from './SequentialHelpDefinitions';
-import SequentialHelpChild from './SequentialHelpChild';
-import SequentialHelpTeacher from './SequentialHelpTeacher';
+import MathHelpChild from './MathHelpChild';
+import MathHelpTeacher from './MathHelpTeacher';
 import * as Constants from '../../constants';
 
-const SequentialTheme = createMuiTheme({
+const MathTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.SequentialColor
+      main: Constants.MathColor
     },
     secondary: {
       main: '#000000'
@@ -41,10 +40,10 @@ interface State {
 }
 
 /**
- * hints and reminders for sequential activities observation
+ * hints and reminders for math observation
  * @param {Props} props 
  */
-class SequentialHelpCard extends React.Component<Props, State> {
+class MathHelpCard extends React.Component<Props, State> {
   /**
    * @param {Props} props
    */
@@ -59,7 +58,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
   /**
    * @return {void}
    */
-  handleDefinitions = (): void => {
+  handleChild = (): void => {
     if (this.state.tabValue !== 0) {
       this.setState({
         tabValue: 0
@@ -70,21 +69,10 @@ class SequentialHelpCard extends React.Component<Props, State> {
   /**
    * @return {void}
    */
-  handleChild = (): void => {
+  handleTeacher = (): void => {
     if (this.state.tabValue !== 1) {
       this.setState({
         tabValue: 1
-      })
-    }
-  };
-
-  /**
-   * @return {void}
-   */
-  handleTeacher = (): void => {
-    if (this.state.tabValue !== 2) {
-      this.setState({
-        tabValue: 2
       })
     }
   };
@@ -103,7 +91,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
       <div>
         <Grid container direction="column">
           <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
+            <MuiThemeProvider theme={MathTheme}>
               <TabBar position="static" color="default" className={classes.tabBar}>
                 <Tabs
                   value={this.state.tabValue}
@@ -111,23 +99,13 @@ class SequentialHelpCard extends React.Component<Props, State> {
                   variant="fullWidth"
                 >
                   <Tab
-                    label="Definitions"
-                    onClick={this.handleDefinitions}
-                    style={{
-                      fontFamily: "Arimo",
-                      fontSize: '1em',
-                      color: 'black',
-                      backgroundColor: this.state.tabValue === 0 ? '#b4d6f7' : '#d3d3d3'
-                    }}
-                  />
-                  <Tab
                     label="Child Behaviors"
                     onClick={this.handleChild}
                     style={{
                       fontFamily: "Arimo",
                       fontSize: '1em',
-                      color: 'black',
-                      backgroundColor: this.state.tabValue === 1 ? Constants.SequentialColor : '#d3d3d3'
+                      color: this.state.tabValue === 0 ? 'white' : 'black',
+                      backgroundColor: this.state.tabValue === 0 ? Constants.MathColor : '#d3d3d3'
                     }}
                   />
                   <Tab
@@ -137,7 +115,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 2 ? Constants.AppBarColor : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 1 ? Constants.AppBarColor : '#d3d3d3'
                     }}
                   />
                 </Tabs>
@@ -145,11 +123,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            {this.state.tabValue === 0 ?
-              <SequentialHelpDefinitions />
-            : this.state.tabValue === 1 ?
-              <SequentialHelpChild />
-            : <SequentialHelpTeacher />}
+            {this.state.tabValue === 0 ? <MathHelpChild /> : <MathHelpTeacher />}
           </Grid>
         </Grid>
       </div>
@@ -157,4 +131,4 @@ class SequentialHelpCard extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(SequentialHelpCard);
+export default withStyles(styles)(MathHelpCard);
