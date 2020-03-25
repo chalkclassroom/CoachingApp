@@ -39,8 +39,8 @@ class ChildPieSummary extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.math, this.props.notMath],
-          backgroundColor: [Constants.MathColor, Constants.RedGraphColor],
-          hoverBackgroundColor: [Constants.MathColor, Constants.RedGraphColor]
+          backgroundColor: [Constants.Colors.MI, Constants.Colors.RedGraph],
+          hoverBackgroundColor: [Constants.Colors.MI, Constants.Colors.RedGraph]
         }
       ]
     };

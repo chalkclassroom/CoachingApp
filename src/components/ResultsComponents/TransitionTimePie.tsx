@@ -36,8 +36,8 @@ class TransitionTimePie extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.transitionTime, this.props.learningActivityTime],
-          backgroundColor: [Constants.TransitionColor, Constants.AppBarColor],
-          hoverBackgroundColor: [Constants.TransitionColor, Constants.AppBarColor]
+          backgroundColor: [Constants.Colors.TT, Constants.Colors.AppBar],
+          hoverBackgroundColor: [Constants.Colors.TT, Constants.Colors.AppBar]
         }
       ]
     };

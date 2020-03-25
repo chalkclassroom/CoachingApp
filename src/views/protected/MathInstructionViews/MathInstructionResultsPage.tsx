@@ -235,8 +235,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
         },
         {
           label: "Math",
-          backgroundColor: Constants.MathColor,
-          borderColor: Constants.MathColor,
+          backgroundColor: Constants.Colors.MI,
+          borderColor: Constants.Colors.MI,
           fill: false,
           lineTension: 0,
           data: this.state.trendsMath

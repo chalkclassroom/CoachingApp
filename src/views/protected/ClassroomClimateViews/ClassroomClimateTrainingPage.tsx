@@ -18,7 +18,7 @@ import { createMuiTheme, Typography, Grid, Table, TableHead, TableRow, TableCell
 const ClimateTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ClimateColor
+      main: Constants.Colors.CC
     }
   }
 });

@@ -56,8 +56,8 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
           this.props.listening5,
           this.props.listening6
         ],
-        backgroundColor: [Constants.ListeningColor, Constants.ListeningColor, Constants.ListeningColor, Constants.ListeningColor, Constants.ListeningColor, Constants.ListeningColor],
-        hoverBackgroundColor: [Constants.ListeningColor, Constants.ListeningColor, Constants.ListeningColor, Constants.ListeningColor, Constants.ListeningColor, Constants.ListeningColor]
+        backgroundColor: [Constants.Colors.LI, Constants.Colors.LI, Constants.Colors.LI, Constants.Colors.LI, Constants.Colors.LI, Constants.Colors.LI],
+        hoverBackgroundColor: [Constants.Colors.LI, Constants.Colors.LI, Constants.Colors.LI, Constants.Colors.LI, Constants.Colors.LI, Constants.Colors.LI]
       }]
     };
     return (

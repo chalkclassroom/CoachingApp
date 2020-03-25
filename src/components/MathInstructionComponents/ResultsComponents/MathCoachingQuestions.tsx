@@ -9,7 +9,7 @@ import * as Constants from '../../../constants';
 const MathTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.MathColor
+      main: Constants.Colors.MI
     }
   }
 });
@@ -187,7 +187,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.MathColor}
+              color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "measurement" ? (
             <DataQuestions
@@ -199,7 +199,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.MathColor}
+              color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "patterns" ? (
             <DataQuestions
@@ -211,7 +211,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.MathColor}
+              color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "shapes" ? (
             <DataQuestions
@@ -223,7 +223,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.MathColor}
+              color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
             <DataQuestions
@@ -235,7 +235,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.MathColor}
+              color={Constants.Colors.MI}
             />
           ) : <div/>}
         </Grid>

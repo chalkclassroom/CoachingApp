@@ -18,7 +18,7 @@ import Grid from '@material-ui/core/Grid';
 const TransitionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.TransitionColor
+      main: Constants.Colors.TT
     }
   }
 });

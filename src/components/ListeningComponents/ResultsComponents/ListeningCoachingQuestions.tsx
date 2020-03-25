@@ -9,7 +9,7 @@ import * as Constants from '../../../constants';
 const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ListeningColor
+      main: Constants.Colors.LI
     }
   }
 });
@@ -143,7 +143,7 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.ListeningColor}
+              color={Constants.Colors.LI}
             />
           ) : this.state.categoryView === "supporting" ? (
             <DataQuestions
@@ -155,7 +155,7 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.ListeningColor}
+              color={Constants.Colors.LI}
             />
           ) : this.state.categoryView === "encouraging" ? (
             <DataQuestions
@@ -167,7 +167,7 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.ListeningColor}
+              color={Constants.Colors.LI}
             />
           ) : <div/>}
         </Grid>

@@ -180,8 +180,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
       datasets:  [
         {
           label: 'TOTAL',
-          backgroundColor: Constants.TransitionColor,
-          borderColor: Constants.TransitionColor,
+          backgroundColor: Constants.Colors.TT,
+          borderColor: Constants.Colors.TT,
           fill: false,
           lineTension: 0,
           data: this.state.trendsTotal,

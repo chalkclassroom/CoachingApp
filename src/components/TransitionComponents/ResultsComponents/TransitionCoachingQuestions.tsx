@@ -361,7 +361,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.TransitionColor}
+              color={Constants.Colors.TT}
             />
           ) : this.state.categoryView === "traveling" ? (
             <DataQuestions
@@ -373,7 +373,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.TransitionColor}
+              color={Constants.Colors.TT}
             />
           ) : this.state.categoryView === "childrenWaiting" ? (
             <DataQuestions
@@ -385,7 +385,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.TransitionColor}
+              color={Constants.Colors.TT}
             />
           ) : this.state.categoryView === "routines" ? (
             <DataQuestions
@@ -397,7 +397,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.TransitionColor}
+              color={Constants.Colors.TT}
             />
           ) : this.state.categoryView === "behavior" ? (
             <DataQuestions
@@ -409,7 +409,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.TransitionColor}
+              color={Constants.Colors.TT}
             />
           ) : <div/>}
         </Grid>

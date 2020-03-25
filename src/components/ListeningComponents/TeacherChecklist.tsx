@@ -18,6 +18,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
 import Zoom from '@material-ui/core/Zoom';
+import * as Constants from '../../constants';
 
 
 const styles: object = {
@@ -40,9 +41,7 @@ interface Props {
     root: string,
     grow: string
   },
-  magic8: string,
-  color: string,
-  checklist: {TeacherBehaviors: Array<string>},
+  type: string,
   firebase: {
     auth: {
       currentUser: {
@@ -78,7 +77,7 @@ class TeacherChecklist extends React.Component<Props, State> {
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: "listening"
+      type: "LC"
     };
     this.props.firebase.handleSession(mEntry);
 
@@ -181,10 +180,8 @@ class TeacherChecklist extends React.Component<Props, State> {
   static propTypes = {
     firebase: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
-    magic8: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
     teacherId: PropTypes.string.isRequired,
-    checklist: PropTypes.array.isRequired
   }
 
   /**
@@ -257,9 +254,8 @@ class TeacherChecklist extends React.Component<Props, State> {
                 direction={"column"}
               >
                 <Dashboard
-                  magic8={this.props.magic8}
-                  color={this.props.color}
-                  infoDisplay={<Countdown color={this.props.color} time={this.state.time} timerTime={60000} />}
+                  type={this.props.type}
+                  infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={true}
                 />
@@ -276,7 +272,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                     <Grid item xs={5}>
                       <Card style={{height: '45vh'}}>
                         <List>
-                          {this.props.checklist.TeacherBehaviors.slice(0, 3).map((value, index) => {
+                          {Constants.Checklist.LC.TeacherBehaviors.slice(0, 3).map((value, index) => {
                             return (<ListItem
                               key={index}
                               onClick={this.handleCheck(index+1)}
@@ -296,7 +292,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                     <Grid item xs={5}>
                       <Card style={{height: '45vh'}}>
                         <List>
-                          {this.props.checklist.TeacherBehaviors.slice(3, 6).map((value, index) => {
+                          {Constants.Checklist.LC.TeacherBehaviors.slice(3, 6).map((value, index) => {
                             return (<ListItem
                               key={index}
                               onClick={this.handleCheck(index+4)}

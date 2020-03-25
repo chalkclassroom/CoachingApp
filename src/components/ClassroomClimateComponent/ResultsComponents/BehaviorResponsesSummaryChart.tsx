@@ -28,16 +28,16 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const behaviorResponseData = {
       labels: ["General/Specific Approvals", "Redirections/Disapprovals"],
       datasets: [
         {
           data: [this.props.positiveResponses, this.props.negativeResponses],
-          backgroundColor: [Constants.ClimateColor, "#ec2409"],
-          hoverBackgroundColor: [Constants.ClimateColor, "#ec2409"]
+          backgroundColor: [Constants.Colors.CC, "#ec2409"],
+          hoverBackgroundColor: [Constants.Colors.CC, "#ec2409"]
         }
       ]
     };

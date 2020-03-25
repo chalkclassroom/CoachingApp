@@ -198,7 +198,7 @@ class TeacherModal extends React.Component<Props, State> {
                         alt="Teacher Profile Pic"
                         src={TeacherSvg}
                       /> */}
-                      <StarsIcon style={{color: Constants.SequentialColor }}/>
+                      <StarsIcon style={{color: Constants.Colors.SA }}/>
                     </ListItemAvatar>
                     <ListItemText
                       primary={teacher.firstName + " " + teacher.lastName}

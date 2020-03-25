@@ -10,6 +10,20 @@ import {
 import { red } from "@material-ui/core/es/colors";
 
 // Colors
+export const Colors = {
+  'AppBar': "#459aeb",
+  'TT': '#e55529',
+  'CC': '#0988ec',
+  'MI': '#094492',
+  'SE': '#e99c2e',
+  'LI': '#009365',
+  'LC': '#4fd9b3',
+  'SA': '#ffd300',
+  'AC': '#6f39c4',
+  'RedGraph': "#ec2409",
+  'NotPresent': "#bababa"
+}
+
 export const AppBarColor = "#459aeb";
 export const TransitionColor = '#e55529';
 export const ClimateColor = '#0988ec';
@@ -30,6 +44,24 @@ export const TransitionTypeColors = {
   behaviorManagementColor: red['A200'],
   otherColor: indigo['A200'],
 }
+
+export const CentersFirstHalf = [
+  "Blocks",
+  "Toys and Games",
+  "Technology/\nComputer",
+  "Sensory",
+  "Math/\nManipulatives",
+  "Science and Nature",
+];
+
+export const CentersSecondHalf = [
+  "Writing",
+  "Art",
+  "Dramatic Play",
+  "Music and Movement",
+  "Library",
+  "Small Group"
+]
 
 
 // Team Members
@@ -134,7 +166,109 @@ export const DS = {
 
 // Centers Observation Checklists
 export const Checklist = {
-  'Listening': {
+  'MI': {
+    'ChildInstructions': 'Select the types of math activities children are doing at this center.',
+    'TeacherInstructions': 'Select the types of support for math the ' +
+      'teacher is providing at this center.',
+    'ChildBehaviors': [
+      <div key={0}> <b>Counting and Numbers</b> </div>,
+      <div key={1}> <b>Shapes and Spatial reasoning</b> </div>,
+      <div key={2}> <b>Patterns</b> </div>,
+      <div key={3}> <b>Measurement and Data</b> </div>,
+      <div key={4}> None of the above </div>,
+    ],
+    'TeacherBehaviors': [
+      <div key={0}> Using <b>math vocabulary</b> </div>,
+      <div key={1}> <b>Asking questions</b> about math concepts </div>,
+      <div key={2}> <b>Demonstrating</b> math concepts </div>,
+      <div key={3}> Helping children use math to <b>problem solve</b> </div>,
+      <div key={4}> None of the above </div>,
+    ]
+  },
+  'AC': {
+    'ChildInstructions': 'Select all the activities children are doing at this center.',
+    'TeacherInstructions': 'Select the types of support for interactions the ' +
+      'teacher is providing at this center.',
+    'ChildBehaviors': [
+      <div key={0}>
+        Participating in a <b>conversation</b> about a <b>shared activity</b>
+        </div>,
+      <div key={1}>
+        Engaging <b>together</b> in an <b>open-ended activity</b> without clear {" "}
+        roles or order
+      </div>,
+      <div key={2}>
+        Following <b>formal rules of a game</b> and/or taking turns
+      </div>,
+      <div key={3}>
+        Talking about or doing an activity together that has
+        a <b>predetermined sequence</b> (e.g., acting out
+        restaurant in a dramatic play; doing pattern blocks
+        together)
+      </div>,
+      <div key={4}> None of the above </div>
+    ],
+    'TeacherBehaviors': [
+      <div key={0}> <b>Participating</b> in children’s play </div>,
+      <div key={1}>
+        Asking questions to <b>extend children’s thinking</b> {" "}
+        about their shared activity
+      </div>,
+      <div key={2}>
+        <b>Encouraging</b> children to <b>share</b>, <b>work</b>,
+        or <b>interact</b> with each other
+      </div>,
+      <div key={3}>
+        Helping children find the <b>words to communicate</b>
+      </div>,
+      <div key={4}> None of the above </div>,
+    ]
+  },
+  'SA': {
+    'ChildInstructions': 'Select all the activities children are doing at this center.',
+    'TeacherInstructions': 'Select the types of support for sequential activities the ' +
+      'teacher is providing at this center.',
+    'ChildBehaviors': [
+      <div key={0}>
+        Using materials in a{" "}
+        <b>step-by-step, predictable way</b>
+        </div>,
+      <div key={1}>
+        <b>Drawing</b> recognizable images or <b>writing</b>{" "}
+        names or messages (letters or letter-like forms)
+      </div>,
+      <div key={2}>
+        Playing a game with <b>set rules</b> and/or {" "}
+        <b>taking turns</b>
+      </div>,
+      <div key={3}>
+        Speaking or acting according to a{" "}
+        <b>pretend scenario</b> that follows a
+        predictable plot
+      </div>,
+      <div key={4}> None of the above </div>,
+    ],
+    'TeacherBehaviors': [
+      <div key={0}>
+        <b>Helping</b> children do sequential activities
+        with manipulatives or toys
+      </div>,
+      <div key={1}>
+        Supporting children as they <b>draw</b> images
+        or <b>write</b> messages
+      </div>,
+      <div key={2}>
+        <b>Demonstrating the steps</b> to an activity
+        or game
+      </div>,
+      <div key={3}>
+        Supporting children as they <b>act out</b> 
+        {" "} a dramatic play scenario or book
+      </div>,
+      <div key={4}> None of the above </div>,
+    ]
+  },
+  'LC': {
     'TeacherBehaviors': [
       <div key={0}>At <b>eye-level</b> with children</div>,
       <div key={1}><b>Looks expectantly</b> at children and <b>shows warmth</b> to encourage child talk</div>,

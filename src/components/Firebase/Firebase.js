@@ -438,7 +438,7 @@ class Firebase {
       );
   };
 
-  handlePushAC = async function(mEntry) {
+  handlePushCentersData = async function(mEntry) {
     return this.sessionRef
       .collection("entries")
       .add({
@@ -447,20 +447,7 @@ class Firebase {
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
-        console.error("Error occurred adding observation: ", error)
-      );
-  };
-
-  handlePushSequential = async function(mEntry) {
-    return this.sessionRef
-      .collection("entries")
-      .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .catch(error =>
-        console.error("Error occurred adding observation: ", error)
+        console.error("error occurred adding observation: ", error)
       );
   };
 
@@ -469,19 +456,6 @@ class Firebase {
       .collection("entries")
       .add({
         instructionType: insType,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .catch(error =>
-        console.error("Error occurred adding observation: ", error)
-      );
-  };
-
-  handlePushMath = async function(mEntry) {
-    return this.sessionRef
-      .collection("entries")
-      .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>

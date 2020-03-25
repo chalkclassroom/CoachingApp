@@ -43,6 +43,7 @@ import { emptyClimateStack } from "../state/actions/classroom-climate";
 import { deleteAllCenters } from "../state/actions/associative-cooperative";
 import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
+import * as Constants from '../constants';
 
 const styles = {
   card: {
@@ -131,58 +132,67 @@ class Dashboard extends React.Component {
       incomplete: false,
       icon: null,
       lookForsIcon: null,
-      notesIcon: null
+      notesIcon: null,
+      title: ''
     };
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount = () => {
-    this.props.magic8 === "Transition Time"
+    this.props.type === "TT"
       ? this.setState({
           icon: TransitionTimeIconImage,
           lookForsIcon: TransitionTimeLookForsImage,
-          notesIcon: TransitionTimeNotesImage
+          notesIcon: TransitionTimeNotesImage,
+          title: 'Transition Time'
         })
-      : this.props.magic8 === "Classroom Climate"
+      : this.props.type === "CC"
       ? this.setState({
           icon: ClassroomClimateIconImage,
           lookForsIcon: ClassroomClimateLookForsImage,
-          notesIcon: ClassroomClimateNotesImage
+          notesIcon: ClassroomClimateNotesImage,
+          title: 'Classroom Climate'
         })
-      : this.props.magic8 === "Math Instruction"
+      : this.props.type === "MI"
       ? this.setState({
           icon: MathIconImage,
           lookForsIcon: MathInstructionLookForsImage,
-          notesIcon: MathInstructionNotesImage
+          notesIcon: MathInstructionNotesImage,
+          title: 'Math Instruction'
         })
-      : this.props.magic8 === "Level of Engagement"
+      : this.props.type === "SE"
       ? this.setState({
           icon: EngagementIconImage,
           lookForsIcon: EngagementLookForsImage,
-          notesIcon: EngagementNotesImage
+          notesIcon: EngagementNotesImage,
+          title: 'Student Engagement'
         })
-      : this.props.magic8 === "Level of Instruction"
+      : this.props.type === "LI"
       ? this.setState({
           icon: InstructionIconImage,
           lookForsIcon: InstructionLookForsImage,
-          notesIcon: InstructionNotesImage
+          notesIcon: InstructionNotesImage,
+          title: 'Level of Instruction'
         })
-      : this.props.magic8 === "Listening to Children"
+      : this.props.type === "LC"
       ? this.setState({
           icon: ListeningIconImage,
           lookForsIcon: ListeningLookForsImage,
-          notesIcon: ListeningNotesImage
+          notesIcon: ListeningNotesImage,
+          title: 'Listening to Children'
         })
-      : this.props.magic8 === "Sequential Activities"
+      : this.props.type === "SA"
       ? this.setState({
           icon: SequentialIconImage,
           lookForsIcon: SequentialLookForsImage,
-          notesIcon: SequentialNotesImage
+          notesIcon: SequentialNotesImage,
+          title: 'Sequential Activities'
         })
       : this.setState({
           icon: AssocCoopIconImage,
           lookForsIcon: AssocCoopLookForsImage,
-          notesIcon: AssocCoopNotesImage
+          notesIcon: AssocCoopNotesImage,
+          title: 'Associative and Cooperative'
         });
   };
 
@@ -216,23 +226,22 @@ class Dashboard extends React.Component {
    */
   render() {
     const { classes } = this.props;
-    const magic8 = this.props.magic8;
     return (
       <div>
         {this.state.help ? (
-          magic8 === "Transition Time" ? 
+          this.props.type === "TT" ? 
             <TransitionTimeHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : magic8 === "Classroom Climate" ?
+          : this.props.type === "CC" ?
             <ClassroomClimateHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : magic8 === "Math Instruction" ? 
+          : this.props.type === "MI" ? 
             <MathInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : magic8 === "Associative and Cooperative" ?
+          : this.props.type === "AC" ?
             <AssocCoopHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : magic8 === "Sequential Activities" ?
+          : this.props.type === "SA" ?
             <SequentialActivitiesHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : magic8 === "Level of Instruction" ?
+          : this.props.type === "LI" ?
             <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : magic8 === "Listening to Children" ? 
+          : this.props.type === "LC" ? 
             <ListeningToChildrenHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : <div />
         ) : this.state.notes ? (
@@ -241,8 +250,8 @@ class Dashboard extends React.Component {
               <Notes
                 open={true}
                 onClose={this.handleNotes}
-                color={this.props.color}
-                text={magic8 + " Notes"}
+                color={Constants.Colors[this.props.type]}
+                text={this.state.title + " Notes"}
                 firebase={firebase}
               />
             )}
@@ -312,16 +321,16 @@ class Dashboard extends React.Component {
                     <YesNoDialog
                       buttonText={<b>COMPLETE OBSERVATION</b>}
                       buttonVariant={"outlined"}
-                      buttonColor={this.props.color}
+                      buttonColor={Constants.Colors[this.props.type]}
                       buttonMargin={10}
                       dialogTitle={
                         "Are you sure you want to complete this observation?"
                       }
                       shouldOpen={true}
                       onAccept={() => {
-                        magic8 === "Classroom Climate"
+                        this.props.type === "CC"
                           ? this.props.emptyClimateStack()
-                          : magic8 === "Transition Time"
+                          : this.props.type === "TT"
                           ? this.props.resetTransitionTime()
                           : this.props.deleteAllCenters();
                           this.props.history.push({
@@ -353,13 +362,12 @@ class Dashboard extends React.Component {
 }
 
 Dashboard.propTypes = {
-  magic8: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
   infoDisplay: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   infoPlacement: PropTypes.string.isRequired,
   completeObservation: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired,
   // These Are mapped from Redux into Props
   resetTransitionTime: PropTypes.func.isRequired,
   emptyClimateStack: PropTypes.func.isRequired,
