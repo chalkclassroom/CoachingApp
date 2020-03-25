@@ -346,12 +346,12 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                 </Button>
               </Grid>
               <Grid container alignItems="center" direction="column" xs={12}>
-                <Typography variant="h4" gutterBottom style={{fontFamily: 'Arimo'}}>
+                <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
                   {this.props.currentCenter[0].toUpperCase() +
                     this.props.currentCenter.substr(1)}
                 </Typography>
                 <div style={{ height: 20 }} />
-                <Typography variant={"subtitle2"} gutterBottom style={{fontFamily: 'Arimo'}}>
+                <Typography variant={"subtitle2"} style={{fontFamily: 'Arimo', paddingBottom: '1em'}}>
                   Please select the number of children and teachers at the
                   center:
                 </Typography>
@@ -408,11 +408,19 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                 <Grid container direction={"row"} spacing={16} xs={12}>
                   <Grid item xs={6}>
                     <Card>
-                      <Typography variant="h6" align={"center"}>
+                      <Typography variant="h6" align="center" style={{fontFamily: 'Arimo'}}>
                         Child Behaviors
                       </Typography>
+                      <Typography
+                        variant="body1"
+                        align="center"
+                        style={{fontFamily: 'Arimo', paddingRight: '1em', paddingBottom: '1em'}}
+                      >
+                        {Constants.Checklist[this.props.type].ChildInstructions}
+                      </Typography>
                       <List>
-                        {Constants.Checklist[this.props.type].ChildBehaviors.map((value, index) => {
+                        {Constants.Checklist[this.props.type].ChildBehaviors.map(
+                        (value: Array<React.ReactElement>, index: number) => {
                           return (<ListItem
                             key={index}
                             onClick={this.handleChildToggle(index+1)}
@@ -433,11 +441,19 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                   </Grid>
                   <Grid item xs={6}>
                     <Card>
-                      <Typography variant="h6" align={"center"}>
+                      <Typography variant="h6" align={"center"} style={{fontFamily: 'Arimo'}}>
                         Teacher Behaviors
                       </Typography>
+                      <Typography
+                        variant="body1"
+                        align="center"
+                        style={{fontFamily: 'Arimo', paddingRight: '1em', paddingBottom: '1em'}}
+                      >
+                        {Constants.Checklist[this.props.type].TeacherInstructions}
+                      </Typography>
                       <List>
-                        {Constants.Checklist[this.props.type].TeacherBehaviors.map((value, index) => {
+                        {Constants.Checklist[this.props.type].TeacherBehaviors.map(
+                        (value: Array<React.ReactElement>, index: number) => {
                           return (<ListItem
                             key={index}
                             onClick={this.handleTeacherToggle(index+6)}

@@ -167,6 +167,9 @@ export const DS = {
 // Centers Observation Checklists
 export const Checklist = {
   'MI': {
+    'ChildInstructions': 'Select the types of math activities children are doing at this center.',
+    'TeacherInstructions': 'Select the types of support for math the ' +
+      'teacher is providing at this center.',
     'ChildBehaviors': [
       <div key={0}> <b>Counting and Numbers</b> </div>,
       <div key={1}> <b>Shapes and Spatial reasoning</b> </div>,
@@ -183,6 +186,9 @@ export const Checklist = {
     ]
   },
   'AC': {
+    'ChildInstructions': 'Select all the activities children are doing at this center.',
+    'TeacherInstructions': 'Select the types of support for interactions the ' +
+      'teacher is providing at this center.',
     'ChildBehaviors': [
       <div key={0}>
         Participating in a <b>conversation</b> about a <b>shared activity</b>
@@ -219,6 +225,9 @@ export const Checklist = {
     ]
   },
   'SA': {
+    'ChildInstructions': 'Select all the activities children are doing at this center.',
+    'TeacherInstructions': 'Select the types of support for sequential activities the ' +
+      'teacher is providing at this center.',
     'ChildBehaviors': [
       <div key={0}>
         Using materials in a{" "}
