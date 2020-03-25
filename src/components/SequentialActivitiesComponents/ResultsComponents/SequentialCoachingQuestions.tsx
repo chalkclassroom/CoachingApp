@@ -9,7 +9,7 @@ import * as Constants from '../../../constants';
 const SequentialTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.SequentialColor
+      main: Constants.Colors.SA
     }
   }
 });
@@ -143,7 +143,7 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.SequentialColor}
+              color={Constants.Colors.SA}
             />
           ) : this.state.categoryView === "games" ? (
             <DataQuestions
@@ -155,7 +155,7 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.SequentialColor}
+              color={Constants.Colors.SA}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
             <DataQuestions
@@ -167,7 +167,7 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.SequentialColor}
+              color={Constants.Colors.SA}
             />
           ) : <div/>}
         </Grid>

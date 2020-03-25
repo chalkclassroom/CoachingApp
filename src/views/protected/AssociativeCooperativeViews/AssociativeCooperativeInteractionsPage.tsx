@@ -41,33 +41,16 @@ interface Props {
   }>,
 }
 
-interface State {
-  auth: boolean,
-  completeEnabled: boolean
-}
-
 /**
  * @class AssociativeCooperativeInteractionsPage
  */
-class AssociativeCooperativeInteractionsPage extends React.Component<Props, State> {
+class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
   constructor(props: Props) {
     super(props);
-    
-    this.state = {
-      auth: true,
-      completeEnabled: false
-    };
   }
-
-  /**
-   * @param {boolean} enable
-   */
-  handleCompleteButton = (enable: boolean): void => {
-    this.setState({ completeEnabled: enable });
-  };
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -96,7 +79,6 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
               <CenterMenu
                 teacherId={this.props.location.state.teacher.id}
                 firebase={firebase}
-                onStatusChange={this.handleCompleteButton}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
                 type="AC"

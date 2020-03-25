@@ -124,15 +124,15 @@ class TransitionTimer extends React.Component {
       <MuiThemeProvider theme={theme}>
         <div style={{ width: 400, fontFamily: 'Arimo' }}>
           <CircularProgressbar
-            fill={Constants.TransitionColor}
+            fill={Constants.Colors.TT}
             background
             percentage={this.state.percentage}
             text={this.state.time === 0 ? "0:00" : ms(this.state.time)}
             initialAnimation={false}
             styles={{
-              path: { stroke: Constants.TransitionColor },
+              path: { stroke: Constants.Colors.TT },
               text: { fill: "white", fontSize: "16px" },
-              background: { fill: Constants.TransitionColor }
+              background: { fill: Constants.Colors.TT }
             }}
           />
           <Grid

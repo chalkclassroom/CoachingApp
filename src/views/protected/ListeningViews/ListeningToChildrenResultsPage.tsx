@@ -192,16 +192,16 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       datasets: [
         {
           label: "Teacher Listening",
-          backgroundColor: Constants.ListeningColor,
-          borderColor: Constants.ListeningColor,
+          backgroundColor: Constants.Colors.LI,
+          borderColor: Constants.Colors.LI,
           fill: false,
           lineTension: 0,
           data: this.state.trendsListening
         },
         {
           label: "Other Tasks or Behaviors",
-          backgroundColor: Constants.RedGraphColor,
-          borderColor: Constants.RedGraphColor,
+          backgroundColor: Constants.Colors.RedGraph,
+          borderColor: Constants.Colors.RedGraph,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNotListening

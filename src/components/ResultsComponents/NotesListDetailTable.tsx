@@ -52,20 +52,20 @@ class NotesListDetailTable extends React.Component<Props, {}> {
     const { classes } = this.props;
     let color = '';
     this.props.magic8 === "Transition Time" ? 
-      color = Constants.TransitionColor
+      color = Constants.Colors.TT
     : this.props.magic8 === "Classroom Climate" ?
-      color = Constants.ClimateColor
+      color = Constants.Colors.CC
     : this.props.magic8 === "Math Instruction" ?
-      color = Constants.MathColor
+      color = Constants.Colors.MI
     : this.props.magic8 === "Level of Engagement" ?
-      color = Constants.EngagementColor
+      color = Constants.Colors.SE
     : this.props.magic8 === "Level of Instruction" ?
-      color = Constants.InstructionColor
+      color = Constants.Colors.LI
     : this.props.magic8 === "Listening to Children" ?
-      color = Constants.ListeningColor
+      color = Constants.Colors.LC
     : this.props.magic8 === "Sequential Activities" ?
-      color = Constants.SequentialColor
-    : color = Constants.ACColor
+      color = Constants.Colors.SA
+    : color = Constants.Colors.AC
 
     return (
       <Paper className={classes.paper}>

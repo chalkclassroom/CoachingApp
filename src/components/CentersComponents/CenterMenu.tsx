@@ -86,7 +86,6 @@ interface Props {
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
   },
   type: string,
-  onStatusChange(enable: boolean): void,
   addNewCenter(centerName: string): void,
   incrementCenterCount(centerName: string): void,
   centers: Array<{
@@ -141,12 +140,10 @@ class CenterMenu extends React.Component<Props, State> {
 
   switchToCenterMenu = (): void => {
     this.setState({ status: CENTER_MENU });
-    this.props.onStatusChange(true);
   };
 
   switchToRatingScreen = (): void => {
     this.setState({ status: RATING_SCREEN });
-    this.props.onStatusChange(false);
   };
 
   /**
@@ -176,7 +173,6 @@ class CenterMenu extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    onStatusChange: PropTypes.func.isRequired,
     teacherId: PropTypes.string,
     firebase: PropTypes.object.isRequired,
     addNewCenter: PropTypes.func.isRequired,

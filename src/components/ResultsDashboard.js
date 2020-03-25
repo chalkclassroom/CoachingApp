@@ -19,56 +19,56 @@ import * as Constants from '../constants';
 const TransitionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.TransitionColor
+      main: Constants.Colors.TT
     }
   }
 });
 const ClimateTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ClimateColor
+      main: Constants.Colors.CC
     }
   }
 });
 const MathTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.MathColor
+      main: Constants.Colors.MI
     }
   }
 });
 const EngagementTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.EngagementColor
+      main: Constants.Colors.SE
     }
   }
 });
 const InstructionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.InstructionColor
+      main: Constants.Colors.LI
     }
   }
 });
 const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ListeningColor
+      main: Constants.Colors.LC
     }
   }
 });
 const SequentialTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.SequentialColor
+      main: Constants.Colors.SA
     }
   }
 });
 const ACTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ACColor
+      main: Constants.Colors.AC
     }
   }
 });

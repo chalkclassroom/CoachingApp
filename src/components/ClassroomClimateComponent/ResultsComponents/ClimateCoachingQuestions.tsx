@@ -150,7 +150,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.ClimateColor}
+              color={Constants.Colors.CC}
             />
           ) : this.state.categoryView === "redirections" ? (
             <DataQuestions
@@ -162,7 +162,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.ClimateColor}
+              color={Constants.Colors.CC}
             />
           ) : this.state.categoryView === "disapprovals" ? (
             <DataQuestions
@@ -174,7 +174,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.ClimateColor}
+              color={Constants.Colors.CC}
             />
           ) : <div/>}
         </Grid>

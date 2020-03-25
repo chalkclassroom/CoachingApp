@@ -41,33 +41,16 @@ interface Props {
   }>,
 }
 
-interface State {
-  auth: boolean,
-  completeEnabled: boolean
-}
-
 /**
  * @class SequentialActivitiesPage
  */
-class SequentialActivitiesPage extends React.Component<Props, State> {
+class SequentialActivitiesPage extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
   constructor(props: Props) {
     super(props);
-    
-    this.state = {
-      auth: true,
-      completeEnabled: false
-    };
   }
-
-  /**
-   * @param {boolean} enable
-   */
-  handleCompleteButton = (enable: boolean) => {
-    this.setState({ completeEnabled: enable });
-  };
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -96,7 +79,6 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
               <CenterMenu
                 teacherId={this.props.location.state.teacher.id}
                 firebase={firebase}
-                onStatusChange={this.handleCompleteButton}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
                 type="SA"

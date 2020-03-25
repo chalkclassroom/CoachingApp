@@ -24,15 +24,24 @@ interface State {
  * @return {void}
  */
 class CenterChecklist extends React.Component<Props, State> {
-  state: State = {
-    checked: []
-  };
+  /**
+   * 
+   * @param {Props} props
+   */
+  constructor(props: Props){
+    super(props);
+
+    this.state = {
+      checked: []
+    }
+  }
 
   /**
    * adds checked center string to array, or removes if already checked
    * @param {string} value
+   * @return {void}
    */
-  handleToggle = (value: string) => () => {
+  handleToggle = (value: string) => (): void => {
     const { checked } = this.state;
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];

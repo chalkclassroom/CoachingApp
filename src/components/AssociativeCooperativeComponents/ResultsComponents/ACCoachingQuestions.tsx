@@ -17,7 +17,7 @@ const AssociativeTheme = createMuiTheme({
 const CooperativeTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ACColor
+      main: Constants.Colors.AC
     }
   }
 });
@@ -168,7 +168,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.ACColor}
+              color={Constants.Colors.AC}
             />
           ) : this.state.categoryView === "cooperative" ? (
             <DataQuestions
@@ -180,7 +180,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.ACColor}
+              color={Constants.Colors.AC}
             />
           ) : this.state.categoryView === "teacherParticipation" ? (
             <DataQuestions
@@ -192,7 +192,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.ACColor}
+              color={Constants.Colors.AC}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
             <DataQuestions
@@ -204,7 +204,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.ACColor}
+              color={Constants.Colors.AC}
             />
           ) : <div/>}
         </Grid>
