@@ -10,7 +10,6 @@ import {
   addNewCenter,
   incrementCenterCount
 } from "../../../state/actions/sequential-activities.js";
-import * as Constants from '../../../constants';
 
 
 const styles: object = {
@@ -100,10 +99,7 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
                 onStatusChange={this.handleCompleteButton}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
-                magic8="Sequential Activities"
-                type="sequential"
-                color={Constants.SequentialColor}
-                checklist={Constants.Checklist.Sequential}
+                type="SA"
                 centers={this.props.centers}
               />
             )}

@@ -37,7 +37,7 @@ const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
   let hsl = 0;
   props.type === "AC" ? 
     hsl = Math.max(82 - 4 * props.visitCount, 49.6)
-    : props.type === "math" ?
+    : props.type === "MI" ?
     hsl = Math.max(70 - 4 * props.visitCount, 30)
     : hsl = Math.max(82 - 4 * props.visitCount, 50);
   return (
@@ -53,7 +53,7 @@ const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
         wordWrap: "break-word",
         backgroundColor: props.type === "AC" ?
           `hsl(263.3, 54.9%, ${hsl}%`
-          : props.type === "math" ?
+          : props.type === "MI" ?
           `hsl(214.2, 88.4%, ${hsl}%`
           : `hsl(49.6, 100%, ${hsl}%`
         ,
@@ -93,9 +93,6 @@ interface Props {
     name: string,
     count: number
   }>,
-  magic8: string,
-  color: string,
-  checklist: {ChildBehaviors: Array<string>, TeacherBehaviors: Array<string>}
 }
 
 interface State{
@@ -186,8 +183,6 @@ class CenterMenu extends React.Component<Props, State> {
     incrementCenterCount: PropTypes.func.isRequired,
     centers: PropTypes.array.isRequired,
     type: PropTypes.string.isRequired,
-    magic8: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired
   }
 
   /**
@@ -228,8 +223,7 @@ class CenterMenu extends React.Component<Props, State> {
                     >
                       {/* <div style={{ margin: 20 }} /> */}
                       <Dashboard
-                        magic8={this.props.magic8}
-                        color={this.props.color}
+                        type={this.props.type}
                         infoDisplay={
                           <TotalVisitCount count={this.state.totalVisitCount} />
                         }
@@ -287,9 +281,7 @@ class CenterMenu extends React.Component<Props, State> {
             toggleScreen={this.switchToCenterMenu}
             finishVisit={centerName => this.finishCenterVisit(centerName)}
             firebase={this.props.firebase}
-            magic8={this.props.magic8}
-            color={this.props.color}
-            checklist={this.props.checklist}
+            type={this.props.type}
           />
         );
       default:

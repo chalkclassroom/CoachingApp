@@ -10,7 +10,6 @@ import {
   addNewCenter,
   incrementCenterCount
 } from "../../../state/actions/associative-cooperative.js";
-import * as Constants from '../../../constants';
 
 
 const styles: object = {
@@ -100,10 +99,7 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
                 onStatusChange={this.handleCompleteButton}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
-                magic8="Associative and Cooperative"
                 type="AC"
-                color={Constants.ACColor}
-                checklist={Constants.Checklist.AC}
                 centers={this.props.centers}
               />
             )}

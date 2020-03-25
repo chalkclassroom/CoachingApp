@@ -10,7 +10,6 @@ import {
   addNewCenter,
   incrementCenterCount
 } from "../../../state/actions/math-instruction.js";
-import * as Constants from '../../../constants';
 
 
 const styles: object = {
@@ -100,10 +99,7 @@ class MathInstructionPage extends React.Component<Props, State> {
                 onStatusChange={this.handleCompleteButton}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
-                magic8="Math Instruction"
-                type="math"
-                color={Constants.MathColor}
-                checklist={Constants.Checklist.Math}
+                type="MI"
                 centers={this.props.centers}
               />
             )}

@@ -10,6 +10,20 @@ import {
 import { red } from "@material-ui/core/es/colors";
 
 // Colors
+export const Colors = {
+  'AppBar': "#459aeb",
+  'TT': '#e55529',
+  'CC': '#0988ec',
+  'MI': '#094492',
+  'SE': '#e99c2e',
+  'LI': '#009365',
+  'LC': '#4fd9b3',
+  'SA': '#ffd300',
+  'AC': '#6f39c4',
+  'RedGraph': "#ec2409",
+  'NotPresent': "#bababa"
+}
+
 export const AppBarColor = "#459aeb";
 export const TransitionColor = '#e55529';
 export const ClimateColor = '#0988ec';
@@ -152,7 +166,7 @@ export const DS = {
 
 // Centers Observation Checklists
 export const Checklist = {
-  'Math': {
+  'MI': {
     'ChildBehaviors': [
       <div key={0}> <b>Counting and Numbers</b> </div>,
       <div key={1}> <b>Shapes and Spatial reasoning</b> </div>,
@@ -204,7 +218,7 @@ export const Checklist = {
       <div key={4}> None of the above </div>,
     ]
   },
-  'Sequential': {
+  'SA': {
     'ChildBehaviors': [
       <div key={0}>
         Using materials in a{" "}
@@ -245,7 +259,7 @@ export const Checklist = {
       <div key={4}> None of the above </div>,
     ]
   },
-  'Listening': {
+  'LC': {
     'TeacherBehaviors': [
       <div key={0}>At <b>eye-level</b> with children</div>,
       <div key={1}><b>Looks expectantly</b> at children and <b>shows warmth</b> to encourage child talk</div>,

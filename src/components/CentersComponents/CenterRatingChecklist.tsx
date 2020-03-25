@@ -16,6 +16,7 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
+import * as Constants from '../../constants';
 
 const styles: object = {
   root: {
@@ -50,9 +51,7 @@ interface Props {
   firebase: {
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
   },
-  magic8: string,
-  color: string,
-  checklist: {ChildBehaviors: Array<string>, TeacherBehaviors: Array<string>}
+  type: string,
 }
 
 interface State {
@@ -129,7 +128,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
   };
 
   handleSubmit = (): void => {
-    console.log('submitting checklist ', [...this.state.childChecked, ...this.state.teacherChecked])
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
@@ -203,7 +201,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
 
   childDisabled = (): boolean  => {
     return (
-      this.props.magic8 === "Associative and Cooperative" ? (
+      this.props.type === "AC" ? (
         this.state.people === TeacherChildEnum.CHILD_1 ||
         this.state.people === undefined
       ) : (
@@ -224,7 +222,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     if (this.state.people !== TeacherChildEnum.CHILD_1) {
       this.setState({ people: TeacherChildEnum.CHILD_1 });
 
-      if (this.props.magic8 === "Associative and Cooperative") {
+      if (this.props.type === "AC") {
         const { childChecked } = this.state;
         const newChildChecked = [...childChecked];
         for (let i = 1; i <= 5; i++) {
@@ -279,8 +277,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     toggleScreen: PropTypes.func.isRequired,
     finishVisit: PropTypes.func.isRequired,
     currentCenter: PropTypes.string.isRequired,
-    magic8: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired
   }
 
   /**
@@ -334,9 +330,8 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                 direction={"column"}
               >
                 <Dashboard
-                  magic8={this.props.magic8}
-                  color={this.props.color}
-                  infoDisplay={<Countdown color={this.props.color} timerTime={60000} />}
+                  type={this.props.type}
+                  infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />
@@ -417,7 +412,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                         Child Behaviors
                       </Typography>
                       <List>
-                        {this.props.checklist.ChildBehaviors.map((value, index) => {
+                        {Constants.Checklist[this.props.type].ChildBehaviors.map((value, index) => {
                           return (<ListItem
                             key={index}
                             onClick={this.handleChildToggle(index+1)}
@@ -442,7 +437,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                         Teacher Behaviors
                       </Typography>
                       <List>
-                        {this.props.checklist.TeacherBehaviors.map((value, index) => {
+                        {Constants.Checklist[this.props.type].TeacherBehaviors.map((value, index) => {
                           return (<ListItem
                             key={index}
                             onClick={this.handleTeacherToggle(index+6)}

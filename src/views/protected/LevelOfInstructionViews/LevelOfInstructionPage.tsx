@@ -62,7 +62,10 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
           <Grid container alignItems="center" style={{height: '100%'}}>
             <Grid item xs={3}>
               <Grid container alignItems={'center'} justify={'center'} direction={'column'}>
-                <Dashboard magic8="Level of Instruction" color="#009365" completeObservation={true} />
+                <Dashboard
+                  type="LI"
+                  completeObservation={true}
+                />
               </Grid>
             </Grid>
             <Grid item xs={9} justify="center" style={{height: '100%'}}>

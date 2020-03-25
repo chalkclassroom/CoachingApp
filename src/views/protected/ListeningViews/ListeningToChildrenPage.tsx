@@ -32,9 +32,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
             <TeacherChecklist
               firebase={firebase}
               teacherId={location.state.teacher.id}
-              magic8="Listening to Children"
-              color={Constants.ListeningColor}
-              checklist={Constants.Checklist.Listening}
+              type='LC'
             />
           )}
         </FirebaseContext.Consumer>

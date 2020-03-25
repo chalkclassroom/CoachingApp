@@ -4,6 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Line } from "rc-progress";
 import ms from "pretty-ms";
+import * as Constants from '../constants';
 
 const styles: object = {
   line: {
@@ -22,7 +23,7 @@ const styles: object = {
 interface Props {
   classes: Style,
   timerTime: number,
-  color: string,
+  type: string,
   time: number
 }
 
@@ -41,7 +42,7 @@ function Countdown(props: Props): React.ReactElement {
   const {
     classes,
     timerTime,
-    color,
+    type,
     time
   } = props;
   return (
@@ -59,7 +60,7 @@ function Countdown(props: Props): React.ReactElement {
           strokeWidth={10}
           strokeColor={
             time > ((1/6) * timerTime)
-              ? color
+              ? Constants.Colors[type]
               : "#E55529"
           }
           trailWidth={10}

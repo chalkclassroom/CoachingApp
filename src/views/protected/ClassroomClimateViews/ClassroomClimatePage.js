@@ -154,10 +154,9 @@ class ClassroomClimatePage extends React.Component {
                   direction={"column"}
                 >
                   <Dashboard
-                    magic8="Classroom Climate"
-                    color="#0988ec"
+                    type="CC"
                     infoDisplay={
-                      <Countdown color="#0988ec" time={this.state.time} timerTime={RATING_INTERVAL} />
+                      <Countdown type='CC' time={this.state.time} timerTime={RATING_INTERVAL} />
                     }
                     infoPlacement="center"
                     completeObservation={true}
