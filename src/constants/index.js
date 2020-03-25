@@ -244,12 +244,18 @@ export const Checklist = {
       </div>,
       <div key={4}> None of the above </div>,
     ]
+  },
+  'Listening': {
+    'TeacherBehaviors': [
+      <div key={0}>At <b>eye-level</b> with children</div>,
+      <div key={1}><b>Looks expectantly</b> at children and <b>shows warmth</b> to encourage child talk</div>,
+      <div key={2}><b>Repeats</b> or <b>clarifies</b> children&apos;s comments</div>,
+      <div key={3}>Asks <b>open-ended questions</b> to encourage conversation</div>,
+      <div key={4}><b>Expands on children&apos;s play or talk</b> using questions or comments</div>,
+      <div key={5}>Encourages children to <b>talk to peers</b></div>,
+    ]
   }
 }
-
-
-
-
 
 // Coaching Questions
 export const CoachingQuestions = {
@@ -812,6 +818,250 @@ export const CoachingQuestions = {
         ]
       },
     ],
+  },
+  'Instruction' : {
+    'highLevel': [
+      {
+        'name': 'InstructionPanel1A',
+        'title': 'Explain Thinking',
+        'text': [
+          'Which resources are the most helpful for planning math activities?',
+          'What supports help children who struggle at first when ' +
+          'responding to how and why questions?',
+        ]
+      },
+      {
+        'name': 'InstructionPanel1B',
+        'title': 'Make a Prediction',
+        'text': [
+          'What types of activities give children opportunities to make predictions?',
+          'Let’s think about the children’s favorite units - ' +
+          'what could they make predictions about using context clues or prior knowledge?'
+        ]
+      },
+      {
+        'name': 'InstructionPanel1C',
+        'title': 'Connecting Content to Experience',
+        'text': [
+          'When do children tend to make connections between academic content and ' +
+          'their lives?  During book reading, center time, or science, etc.?', 
+          'Talk about the kinds of connections or comparisons to personal experience ' +
+          'that might deepen their understanding of the academic content.'
+        ]
+      },
+      {
+        'name': 'InstructionPanel1D',
+        'title': 'Reflect on Activities',
+        'text': [
+          'Talk about ways you could build in time for children to reflect on parts of activities or lessons.',
+          'Which lessons or center activities would go well with asking children to reflect? Why ' + 
+          'might that be?',
+        ]
+      },
+    ],
+    'followUp': [
+      {
+        'name': 'InstructionPanel2A',
+        'title': 'Ask Follow-up Questions',
+        'text': [
+          'Talk about how you decide what follow-up questions to ask children.',
+          'What kinds of hints do you give children when they have trouble ' +
+          'responding to high-level questions?',
+          'Talk about how you use wait time after asking a question. What are barriers to using ' +
+          'wait time?'
+        ]
+      },
+      {
+        'name': 'InstructionPanel2B',
+        'title': 'Expand on Children’s Ideas',
+        'text': [
+          'What helps you decide how to expand on children’s responses?', 
+          'Talk about how your learning goals for children influence ' +
+          'your conversations.',
+          'What do you notice when you let children guide the conversation?'
+        ]
+      },
+      {
+        'name': 'InstructionPanel2C',
+        'title': 'Listen to Children',
+        'text': [
+          'Talk about times during the day when you are able to have more lengthy conversations ' +
+          'with children.', 
+          'Talk about common obstacles to having multiple back-and-forth exchanges with ' +
+          'children and about some initial solutions that might help.',
+        ]
+      },
+    
+    ],
+    'basicSkills': [
+      {
+        'name': 'InstructionPanel3A',
+        'title': 'Encouraging Student Participation',
+        'text': [
+          'How do some children benefit from low-level questions that have 1 or 2 - word ' +
+          'answers?', 
+          'Talk about the successes you have had using low-level questions to help children ' +
+          'participate in a conversation.',		
+	        'Over time, how do children develop in their participation? Talk about your role ' +
+          'in their development.' 
+        ]
+      },
+      {
+        'name': 'InstructionPanel3B',
+        'title': 'Making a Bridge between Low- and High-Level Questions',
+        'text': [
+          'Talk about how you have used low-level questions as a springboard for asking ' +
+          'high-level questions.',
+          'How do you plan questions to ask?  Is there a mix of question types?',
+	        'Talk about how children respond differently to low versus high-level questions.'
+        ]
+      },
+      {
+        'name': 'InstructionPanel3C',
+        'title': 'Building on Specific Skills',
+        'text': [
+          'Once children have learned a skill like the name and sound of a letter or how to ' +
+          'count objects, talk about how you get them to think more deeply about the concept?',
+        ]
+      },
+    ],
+    'inferentialInstruction': [
+      {
+        'name': 'InstructionPanel4A',
+        'title': 'Math',
+        'text': [
+          'Talk about how high-level math questions deepen children’s math learning ' +
+          '(e.g., Tell me what you mean when you say the groups of erasers are the same?).',
+          'What have you noticed about children’s responses and actions when you ' +
+          'ask high-level math questions? '  
+        ]
+      },
+      {
+        'name': 'InstructionPanel4B',
+        'title': 'Science and Discovery',
+        'text': [
+          'Talk about how you build on children’s natural curiosity about science topics. ' +
+          'What kinds of questions do you tend to ask?',
+          'Once children have learned a science fact (food decomposes over time), ' +
+          'how might you encourage them to think inferentially (why do some conditions ' +
+          'speed up or slow down decomposition)?'
+        ]
+      },
+      {
+        'name': 'InstructionPanel4C',
+        'title': 'Book Reading/Language Comprehension',
+        'text': [
+          'Talk about where you like to focus your questions during ' +
+          'story time- on the plot, character feelings and motivations, ' +
+          'vocabulary, making predictions, etc.?',
+          'What kinds of questions would require children to make inferences, ' +
+          'instead of retelling the story?',
+          'Talk about how children think differently when answering low-level questions like, ' +
+          '"What did the hen do with the bread?" and high-level questions like, ' +
+          '"If you were the little red hen, what would you have done with the bread? Why?"'
+        ]
+      },
+      {
+        'name': 'InstructionPanel4D',
+        'title': 'Vocabulary',
+        'text': [
+          'After children learn a new word, talk about how you get them to think more deeply ' +
+          'about the word. Is it similar to other words they know? Can they act the word out?',
+          'When children first learn a new word, they may not be able to use it yet. Talk ' +
+          'about activities or questions that might help children use words in conversation.' 
+        ]
+      },
+      {
+        'name': 'InstructionPanel4E',
+        'title': ' Writing',
+        'text': [
+          'Talk about opportunities children have for composing their own messages.',         
+          'Talk about how you encourage children to write for real-world reasons ' +
+          'like taking a pizza order, making a zoo diagram in the blocks center, ' +
+          'or making observations at the science center.'
+        ]
+      },
+    ],
+  },
+  'Listening': {
+    'Listening': [
+      {
+        'name': 'ListeningPanel1A',
+        'title': 'Teacher Positions',
+        'text': [
+          'Talk about how you position your body when interacting with children.',
+          'Talk about how you balance your time between interacting with children, ' +
+          'monitoring children, and/or doing managerial tasks during centers, ' +
+          'small groups, or mealtimes.'
+        ]
+      },
+      {
+        'name': 'ListeningPanel1B',
+        'title': 'Interest in Child Talk',
+        'text': [
+          'Talk about how you show children that you are interested in what ' +
+          'they say (with facial expressions, smiling, nodding, etc.).',
+          'What do you notice happening when adults give children wait time, ' +
+          'or time to respond, during conversations?'
+        ]
+      }
+    ],
+    'Supporting': [
+      {
+        'name': 'ListeningPanel2A',
+        'title': 'Repeating and Clarifying Child Comments',
+        'text': [
+          'What do you notice about children\'s responses or behaviors when you ' +
+          'repeat what they say? Are there certain activities when you find yourself ' +
+          'repeating children\'s comments more?',
+          'When do you notice yourself clarifying children\'s comments? How does it ' +
+          'help sustain the conversation?'
+        ]
+      },
+      {
+        'name': 'ListeningPanel2B',
+        'title': 'Asking Open-Ended Questions',
+        'text': [
+          'When do you find time to have conversations with children?',
+          'Talk about topics that children enjoy discussing. How do you know?',
+          'What do you notice happening when you ask children open-ended questions ' +
+          'that don\'t have one-word answers?'
+        ]
+      },
+      {
+        'name': 'ListeningPanel2C',
+        'title': 'Expanding on Child Talk and Play',
+        'text': [
+          'Talk about when you find time to observe children and follow their lead.',
+          'What are effective strategies for building on children\'s play and getting ' +
+          'children to talk about their play?',
+          'For children who talk less than their peers, how do you get them to open up?'
+        ]
+      }
+    ],
+    'Encouraging': [
+      {
+        'name': 'ListeningPanel3A',
+        'title': 'Peer Talk During Play',
+        'text': [
+          'Talk about effective strategies you use to promote children\'s communication ' +
+          'with each other during play.',
+          'Talk about how you help children use role speech with each other during ' +
+          'pretend play.',
+          'As children play with blocks or games, what strategies encourage them to ' +
+          'share ideas and create together?'
+        ]
+      },
+      {
+        'name': 'ListeningPanel3B',
+        'title': 'Solving Problems',
+        'text': [
+          'What verbal strategies do children use for solving problems like deciding ' +
+          'what to play, sharing, taking turns, etc.?',
+          'Talk about how you teach problem-solving to children.'
+        ]
+      }
+    ]
   },
   'AC': {
     'Associative': [

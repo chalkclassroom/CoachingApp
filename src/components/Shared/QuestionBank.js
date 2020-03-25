@@ -275,10 +275,448 @@ const questionBank = {
       "positive classroom climate."
     }
   ],
-  'math':[],
+  'math':[
+    {
+      text: "A teacher observes a child in dramatic play placing toy eggs in a basket. " +
+      "She says, “Wow, Jaden, you have a big basket of eggs! How many do you have?” " + 
+      "Which of the following behaviors did the teacher use?",
+      options: new Map([
+        ["Asking questions about math concepts", true],
+        ["Demonstrating math concepts", false],
+        ["Using math vocabulary", false],
+        ["A and B only", false]     
+       ]),
+      feedback: "The correct answer is A. When a teacher asks, “How many do you have?” " +
+      "that is considered asking questions about math concepts because it prompts the " +
+      "child to use counting skills such as one-to-one correspondence or subitizing."
+    },
+    {
+      text: "A child is playing with blocks and begins to put all the green triangles into " +
+      "a pile and the red triangles into a separate pile. What type of math is this child doing?",
+      options: new Map([
+        ["Measurement and data", false ],
+        ["Patterns", false],
+        ["Shapes and spatial reasoning", false],
+        ["None of the above", true]
+      ]),
+      feedback: "The correct answer is D. The child is sorting the triangles by color; " +
+      "therefore the child is not doing one of the math types listed in the answers. " +
+      "If the child had sorted the blocks by shape, placing those with three sides (triangles) " +
+      "in one pile and those with four sides (squares) in a separate pile, then the correct type "+
+      "of math would be shapes and spatial reasoning."
+    },
+    {
+      text: "Which of the following is NOT an example of the math type counting and number?",
+      options: new Map([
+        ["Matching a card showing three dots with a card showing the numeral 3",false],
+        ["Making a pattern with magnet numbers (1,2,1,2)", true],
+        ["Counting all of the letter A’s on a book page", false],        
+        ["Singing a counting song like 'Five Little Monkeys'", false]
+      ]),
+      feedback: "The correct answer is B. Making a pattern with magnet numbers (1,2,1,2) is an "+
+      "example of patterning (not counting and number). Whenever a child repeats a sequence of items, "+
+      "the child is creating a pattern."
+    },
+    {
+      text: "A child is putting beans on one side of a bucket balance and marbles on the other side. "+
+      "The bucket with marbles sinks and the bucket with beans rises. If the child ________________, "+
+      "this would be an example of the math type measurement and data.",
+      options: new Map([
+        ["Counts the beans", false],
+        ["Says there are more marbles than beans", false],
+        ["Says the marbles are heavier", true],
+        ["All of the above", false]
+      ]),
+      feedback: "The correct answer is C. One way that children engage in the math type measurement "+
+      "and data is by comparing objects by weight. The child does this when she observes that the "+
+      "marbles in the bucket balance are heavier."
+    },
+    {
+      text: "A child is exploring letter stamps at the writing center. At first he tries out the "+
+      "A, C, and S stamps. Then he starts alternating the A and S stamp across the bottom of the "+
+      "paper. What type of math is he doing?",
+      options: new Map([
+        ["Patterns", true],
+        ["Shapes and spatial reasoning", false],
+        ["Counting and number", false],
+        ["Measurement and data", false]
+      ]),
+      feedback: "The correct answer is A. When children repeat a sequence like A, S, A, S they "+
+      "are creating a pattern."
+    },
+    {
+      text: "A teacher is introducing measurement concepts to a small group of children using blocks "+
+      "to determine the length of a table. She lines blocks from one edge of the table to the other. "+
+      "When she reaches the end of the table, she says, “Hmm, it looks like the table is 16 blocks long "+
+      "plus part of a block. So it is more than 16 blocks but less than 17 blocks.” In this scenario, "+
+      "the teacher is_______________.?",
+      options: new Map([
+        ["Demonstrating a math concept", false],
+        ["Asking questions about a math concept", false ],
+        ["Demonstrating a math concept and using math vocabulary", true],
+        ["Asking questions about a math concept and using math vocabulary", false]
+      ]),
+      feedback: "The correct answer is C. The teacher models, or demonstrates, how to use blocks "+
+      "(a non-standard unit of measurement) to figure out the length of the table. In addition, the "+
+      "teacher uses math vocabulary including “long”, “more”, and “less” as she demonstrates the "+
+      "measurement concepts."
+    },
+    {
+      text: "A teacher reads a book about a bear who picks seven apples every Sunday, then eats one "+
+      "per day until he has none left. One child says, “On the next page, he’s going to have four "+
+      "left!” This child is showing what type of mathematical thinking?",
+      options: new Map([
+        ["Measurement and data", false ],
+        ["Counting and number", true],       
+        ["Shapes and spatial reasoning", false],
+        ["All the above", false ]
+      ]),
+      feedback: "The correct answer is B. The child notices that each time the bear eats an apple, "+
+      "it is one less than the amount the bear had before. When the child predicts that the bear " +
+      "will have four on the next page, the child shows his knowledge that counting backward is one "+
+      "less.",
+    },
+    {
+      text: "A teacher watches a child at the art center play with a handful of pipe cleaners. "+
+      "She encourages the child to create something and he builds a house. The teacher asks, "+
+      "“What shapes do you see in your house?” The child replies, “It’s just a house!” "+
+      "The teacher is ______________; the child is doing this type of math: _______________.",
+      options: new Map([
+        ["Using math vocabulary; measurement and data",false],
+        ["Asking questions about math concepts; shapes and spatial reasoning", false],
+        ["Using math vocabulary; shapes and spatial reasoning", false],
+        ["Asking questions about math concepts; none", true]
+      ]),
+      feedback: "The correct answer is D. The teacher is asking questions about math concepts when "+
+      "she asks the child about shapes. However, the child does not show that she is thinking about "+
+      "a particular math concept when she replies, “It’s just a house!” Therefore, there is no math "+
+      "type to identify regarding the child’s behavior."
+    },
+    {
+      text: "A child in the music center listens to a peer create a rhythm on the hand drums "+
+      "(one beat slow, three beats fast, ba-da-da-da). The child copies the rhythm (ba-da-da-da) "+
+      "with his hands over and over again. This is an example of ________________.",
+      options: new Map([
+        ["Patterns", true],
+        ["Counting and number", false],
+        ["Measurement and data", false ],
+        ["Shapes and spatial reasoning", false],
+      ]),
+      feedback: "The correct answer is A. When children create a pattern in their environment, "+
+      "whether it is using blocks to make a red-blue-red-blue pattern or hand-clapping to repeat "+
+      "a series of beats, this is doing patterns."
+    },
+    {
+      text: "Two children at the blocks center have each connected several train cars together "+
+      "to make one long line of trains. One boy says, “Mine is the longest!” The teacher joins their "+
+      "play and says, “How do you know your train is longer than Leo’s train? Let’s find out how long "+
+      "they are.” The boys eagerly start pointing to their trains one by one and saying, “one, two, "+
+      "three, four,” etc. What type(s) of math are the children doing?",
+      options: new Map([
+        ["Counting and number", false],
+        ["Patterns; counting and number", false],
+        ["Measurement and data; counting and number", true],
+        ["Patterns", false],
+      ]),
+      feedback: "The correct answer is C. When children compare objects by length to figure "+
+      "which is the longest (or longer, shorter, etc.), they are doing measurement and data "+
+      "math. Because the boys counted their trains to help them compare lengths, they are "+
+      "also engaged in the counting and number type of math."
+    }
+  ],
   'student':[],
-  'level':[],
-  'listening':[],
+  'level':[
+    {
+      text: "Level of instruction depends on the ________ of interactions between children " +
+        "and teachers and the amount of ________ required for children to participate." ,
+      options: new Map([
+        ["quality; letter knowledge", false],
+        ["quality; academic knowledge", false],
+        ["richness; abstract thought", true],
+        ["richness; self-regulation", false],
+      ]),
+      feedback: "The correct answer is C. Level of instruction refers to the amount of inference, " + 
+        "or high-level thinking, required for children to participate in an interaction with a teacher " +
+        "or peers. Level of instruction does not depend on the type of academic content being discussed."
+    },
+    {
+      text: "Children who are interacting with teachers during basic skills instruction may do " +
+        "all of the following EXCEPT:",
+      options: new Map([
+        ["Identify letters", false],
+        ["Answer high-level questions", true],
+        ["Answer low-level questions", false],
+        ["Sing a song about shapes", false],
+      ]),
+      feedback: "The correct answer is B. Basic skills instruction occurs when teachers ask questions " + 
+        "with predetermined answers, with the goal of having children learn or recite the correct " +
+        "response. It also refers to when children participate in activities that reinforce information " +
+        "about specific, concrete skills, such as singing songs about letters or shapes."
+    },
+    {
+      text: "Which of the following is an example of a high-level question?",
+      options: new Map([
+        ["Show me the number 5.", false],
+        ["Which picture has a triangle in it?", false],
+        ["How did you figure that out?", true],
+        ["How many will you have if I take 2 away?", false],
+      ]),
+      feedback: "The correct answer is C. High-level questions have more than one possible answer " + 
+        "and require children to draw on reasoning skills as they think about how to respond."
+    },
+    {
+      text: "During inferential instruction, teachers can build on children's responses to deepen " +
+        "their understanding by:",
+      options: new Map([
+        ["Asking follow-up questions", false],
+        ["Assigning homework on the topic", false],
+        ["Expanding on children's ideas", false],
+        ["A and C", true],
+      ]),
+      feedback: "The correct answer is D. Achieving a higher level of instruction is not only about " + 
+        "asking high-level questions. Teachers must also build upon children's repsonses by asking " +
+        "follow-up questions and expanding on children's ideas."
+    },
+    {
+      text: "The goal of improving level of instruction is to:",
+      options: new Map([
+        ["Ask only high-level questions", false],
+        ["Ask zero low-level questions", false],
+        ["Ask more high-level questions and fewer low-level questions", true],
+        ["Ask more high-level and more low-level questions", false],
+      ]),
+      feedback: "The correct answer is C. Some basic skills instruction is necessary in preschool, " + 
+        "especially because low-level questions often help dual language learners and children with " +
+        "language delays enter conversations. However, the goal for improving level of instruction " +
+        "is to ask fewer low-level questions overall and ask more inferential questions that are " +
+        "high-level, have more than one possbile answer, and require abstract thought."
+    },
+    {
+      text: "Level of instruction refers to:",
+      options: new Map([
+        [
+          "The amount of inference, or abstract thought, required for children to participate " +
+          "in teacher-child interactions.", 
+          true
+        ],
+        ["The number of conversational turns in teacher-child interactions about academic content.", false],
+        ["The amount of time teachers spend on academic content across the day.", false],
+        ["The number of interactions between teachers and children during lessons.", false],
+      ]),
+      feedback: "The correct answer is A. Level of instruction does not refer to the number " + 
+        "of instructional interactions a teacher has with children throughout the day. Instead, level " +
+        "of instruction captures the degree to which children engage in deep thinking, such as drawing " +
+        "on past experiences or explaining their thinking, when interacting with teachers and peers " +
+        "about content."
+    },
+    {
+      text: "During a group lesson, the teacher points to a picture about the life cycle of a " +
+        "butterfly and says, 'The caterpillar transforms into a butterfly inside of a chrysalis.' " +
+        "This is an example of:",
+      options: new Map([
+        ["High-level questioning", false],
+        ["Teaching specific skills", true],
+        ["Following up on children's responses", false],
+        ["Low-level questioning", false],
+      ]),
+      feedback: "The correct answer is B. When children sit quietly and take in new information, " + 
+        "such as listening to a teacher explain the life cycle of a butterfly, they are learning " +
+        "specific skills or knowledge. A low-level question would be, 'What does the caterpillar " +
+        "turn into?' A high-level question would be, 'How is the life cycle of a butterfly different" +
+        "from the life cycle of a ladybug?'"
+    },
+    {
+      text: "All of the following are examples of high-level questions EXCEPT:",
+      options: new Map([
+        ["Asking children to explain their thought process", false],
+        ["Asking children to identify the correct answer", true],
+        ["Asking children to connect academic content with their personal experience", false],
+        ["Asking children to make a prediction based on context clues or prior knowledge", false],
+      ]),
+      feedback: "The correct answer is B. High-level questions do not have one correct answer. " + 
+        "Instead, high-level questions have more than one possible answer and require children to " +
+        "draw from experiences, background knowledge, and context clues to come up with a response."
+    },
+    {
+      text: "The teacher asks a student to compare two characters in a book. The student says, " +
+        "'They're both mad!' Which teacher response would be characterized as an inferential " +
+        "follow-up question?",
+      options: new Map([
+        ["'What makes you think they're both mad?'", true],
+        ["'That's right!'", false],
+        ["'What happened next in the story?'", false],
+        ["'Raise your hand if you agree with Derrick.'", false],
+      ]),
+      feedback: "The correct answer is A. For a child to answer 'What makes you think they're both mad?' " + 
+        "the child must make an inference, either drawing from experiences, background knowledge, or " +
+        "context clues. Asking a student to say what happened next in the story requires children to " +
+        "remember something they were exposed to previously, but it is not inferential because there is " +
+        "one correct answer. Questions that have one correct answer are low-level questions."
+    },
+    {
+      text: "While some basic skills instruction is necessary in preschool, research shows that children " +
+        "in classrooms with more inferential instruction do better academically and show improved " +
+        "self-regulation.",
+      options: new Map([
+        ["True", true],
+        ["False", false],
+      ]),
+      feedback: "The correct answer is True. Some basic skills instruction is necessary in preschool. " + 
+        "However, research shows that young minds also thrive when they have opportunities to think more " +
+        "deeply. The goal for improving level of instruction is to provide more of these important " +
+        "opportunities to answer high-level questions and engage in conversations that last more than " +
+        "two turns."
+    },
+  ],
+  'listening':[
+    {
+      text: "The Listening to Children practice refers to two important behaviors " +
+        "that contribute to a high-quality ________ environment: the amount of " +
+        "teacher listening to children and the amount of ________ talk.",
+      options: new Map([
+        ["academic; teacher", false],
+        ["language; teacher", false],
+        ["language; child", true],
+        ["indoor; child", false]
+      ]),
+      feedback: "The correct answer is C. The practice of Listening to Children " +
+        "refers to two important indicators of a high-quality language environment--" +
+        "teachers listening to children and children talking."
+    },
+    {
+      text: "Which of the following is NOT one of the teacher behaviors tracked " +
+        "by the observation tool that encourages child talk?",
+      options: new Map([
+        ["Teaching in small groups", true],
+        ["Looking expectantly at children and showing warmth", false],
+        ["Asking open-ended questions", false],
+        ["Positioning oneself at eye level with children", false]
+      ]),
+      feedback: "The correct answer is A. Small group instruction might encourage " +
+        "child talk if the teacher limited her own contributions and asked " +
+        "effective questions. However, teaching in small groups does not automatically " +
+        "encourage child talk; the amount of child talk in small groups depends on " +
+        "the teacher's skill in fostering child participation."
+    },
+    {
+      text: "Which of the following is an example of an open-ended question to " +
+        "encourage child talk?",
+      options: new Map([
+        ["Tell me what that letter is.", false],
+        ["What might happen to Corduroy if Lisa doesn't come back?", true],
+        ["How many do you have?", false],
+        ["Do we need a square or a rectangle to continue our pattern?", false]
+      ]),
+      feedback: "The correct answer is B. Open-ended questions or statements invite " +
+        "children to respond with longer sentences because there is not one correct " +
+        "answer. In this example, children must use their imagination, background " +
+        "knowledge, and clues from the text ot produce a unique answer."
+    },
+    {
+      text: "Teachers play an important role in encouraging children to talk to " +
+        "each other. Which of the following is NOT an example of promoting peer talk?",
+      options: new Map([
+        ["Helping children use role speech or talk in character with each other " +
+          "during dramatic play", false],
+        ["Asking children to talk to their neighbor about a character during a read aloud", false],
+        ["Encouraging two children to talk about their building at the blocks center", false],
+        ["Asking two children to pass out glues for an art project", true]
+      ]),
+      feedback: "The correct answer is D. All of the answers except for D are examples " +
+        "of promoting peer talk. In contrast, asking children to pass out materials " +
+        "might result in one child saying, 'Here,' or 'Glue for you,' but the children " +
+        "are not likely to have a multi-turn conversation about a learning activity."
+    },
+    {
+      text: "Listening and ________ children helps teachers expand on children's play " +
+        "or talk during an activity. This can increase children's involvement level " +
+        "and lead to more child ________.",
+      options: new Map([
+        ["assessing; talk", false],
+        ["assessing; listening", false],
+        ["observing; talk", true],
+        ["observing; listening", false]
+      ]),
+      feedback: "The correct answer is C. When teachers take the time to notice " +
+        "children's actions and listen to their comments, they are better able to " +
+        "respond in ways that expand, or build on children's play or activity. " +
+        "Teacher responses encourage children to continue interacting and talking " +
+        "with teachers and peers."
+    },
+    {
+      text: "The Listening to Children practice is comprised of two related behaviors:",
+      options: new Map([
+        ["teacher listening and teacher instructing", false],
+        ["teacher listening and child talk", true],
+        ["teacher instruction and child listening", false],
+        ["teacher instruction and child talking"]
+      ]),
+      feedback: "The correct answer is B. The Listening to Children practice refers " +
+        "to two indicators of a high-quality language environment--teachers listening " +
+        "to children and children talking. Both are important for supporting children's " +
+        "learning."
+    },
+    {
+      text: "Which of the following is one of the teacher behaviors tracked by the " +
+        "observation tool that encourages child talk?",
+      options: new Map([
+        ["Teaching in small groups", false],
+        ["Giving children classroom jobs", false],
+        ["Reading books to children", false],
+        ["Looking expectantly at children and showing warmth", true]
+      ]),
+      feedback: "The correct answer is D. When teachers look expectantly at children " +
+        "with a positive expression, their body lanugage shows interest in what children " +
+        "say. This may encourage children to start talking or continue talking during " +
+        "conversation."
+    },
+    {
+      text: "During a small group lesson, children buidl shapes using rubber bands on " +
+        "geoboards. The teacher says, 'Look, Dwayne made a square and Lucy made a " + 
+        "traingle. How are their shapes different?' In this scenario, which of the " +
+        "following strategies did the teacher use?",
+      options: new Map([
+        ["Encouraging children to talk to peers", false],
+        ["Repeating or clarifying children's comments", false],
+        ["Asking open-ended questions", true],
+        ["Using questions or comments to expand on children's play or talk", false]
+      ]),
+      feedback: "The correct answer is C. Open-ended questions do not have one correct " +
+        "answer, and they typically encourage children to answer in longer sentences. " +
+        "Children can think of several ways that the shapes are different."
+    },
+    {
+      text: "A teacher observes two children in the dramatic play center silently " +
+        "taking dishes and food out of the cupboards and placing them on the table. " +
+        "She walks over to them and says, 'Louisa, why don't you ask Valerie what she " +
+        "wants for breakfast?' What kind of teacher behavior is this?",
+      options: new Map([
+        ["Encouraging children to talk to peers", true],
+        ["Repeating or clarifying children's comments", false],
+        ["Being at eye-level with children", false],
+        ["Looking expectantly at children and showing warmth", false]
+      ]),
+      feedback: "The correct answer is A. When teachers facilitate talk between " +
+        "children, they provide specific prompts to help children talk to peers or " +
+        "solve problems together during activities."
+    },
+    {
+      text: "A teacher observes two children in the dramatic play center silently " +
+        "taking dishes and food out of the cupboards and placing them on the table. " +
+        "She walks over to them and says, 'Who wants to play pet store with me?' " +
+        "This is an example of the teacher using questions or comments to expand on " +
+        "children's play or talk.",
+      options: new Map([
+        ["True", false],
+        ["False", true]
+      ]),
+      feedback: "The correct answer is False. The teacher's question about the pet store " +
+        "is not responsive to what the children are already playing; therefore, her comment " +
+        "does not expand, or add to, children's play. If she had said, 'I see you are " +
+        "getting ready for dinner. Who is coming to eat?' she would be expanding on " +
+        "their play actions."
+    }
+  ],
   'sequential':[
     {
       text: "Sequential activities can happen when",
@@ -418,7 +856,7 @@ const questionBank = {
         ["Introduce visuals that remind children how to play a game", false],
         ["Explain to children that we take turns during board games and ask who would like to go first", false],
         ["Demonstrate how to move the game pieces on the board ", false],
-        ["All of the above", true],
+        ["All of the above", true]
       ]),
       feedback: "The correct answer is D. Children may have a difficult time interacting " + 
       "cooperatively by playing a board game if they don’t remember how to play.  If teachers introduce " + 
@@ -432,7 +870,7 @@ const questionBank = {
         ["Cooperative interaction", false],
         ["Associative interaction", false],
         ["Not enough information to choose an answer", true],
-        ["None of the above", false],
+        ["None of the above", false]
       ]),
       feedback: "The correct answer is C.  In order to know whether this is an associative or " + 
       "cooperative interaction, we need more information about the child’s interaction with " + 
@@ -447,7 +885,7 @@ const questionBank = {
         ["Interacting with a teacher", false],
         ["Talking", false],
         ["A or B", true],
-        ["None of the above", false],
+        ["None of the above", false]
       ]),
       feedback: "The correct answer is D.  An interaction can be considered associative or " + 
       "cooperative if the child is interacting with another person, whether it is another " + 
@@ -470,7 +908,7 @@ const questionBank = {
         ["Participating in children’s play", false],
         ["Encouraging children to spread out across centers", true],
         ["Encouraging children to work together", false],
-        ["Helping children find words to communicate", false],
+        ["Helping children find words to communicate", false]
       ]),
       feedback: "The correct answer is B.  In order for an interaction to be associative or " + 
       "cooperative, children need to be interacting with another child(ren) or an adult.  If a " + 
@@ -484,7 +922,7 @@ const questionBank = {
         ["Demonstrate the game", false],
         ["Model good sportsmanship", false],
         ["Help children communicate (Say, “it’s my turn next”)", false],
-        ["All of the above", true],
+        ["All of the above", true]
       ]),
       feedback: "The correct answer is D.  When children are struggling to play a game, it might " + 
       "be because they do not know how to play, have not developed good sportsmanship, or might " + 
@@ -498,7 +936,7 @@ const questionBank = {
         ["Cooperative interaction", true],
         ["Associative interaction", false],
         ["Not enough information to choose an answer", false],
-        ["None of the above", false],
+        ["None of the above", false]
       ]),
       feedback: "The correct answer is A. When children take turns, they are exhibiting cooperative behavior."
     },
@@ -508,7 +946,7 @@ const questionBank = {
         ["Children are playing with shared materials", false],
         ["Children are communicating about a task with their peers", false],
         ["Children are constructing an idea together", false],
-        ["All of the above", true],
+        ["All of the above", true]
       ]),
       feedback: "The correct answer is D.  Associative interactions are seen when children " + 
       "are playing with shared materials, communicating about a task with others, or " + 
@@ -523,7 +961,7 @@ const questionBank = {
         ["Engaging in a cooperative interaction", false],
         ["Acting out a recognizable scenario", false],
         ["B & C", true],
-        ["A & C", false],
+        ["A & C", false]
       ]),
       feedback: "The correct answer is D.  The children in this scenario are acting out a common " + 
       "scenario (dinnertime) and using role speech. Therefore, this is an example of a cooperative interaction."
@@ -535,7 +973,7 @@ const questionBank = {
         ["Board games", true],
         ["Crayons", false],
         ["Worksheets", false],
-        ["Backpacks", false],
+        ["Backpacks", false]
       ]),
       feedback: "The correct answer is A.  Although materials like crayons may be present during " + 
       "cooperative interactions, board games are particularly likely to help children initiate " + 

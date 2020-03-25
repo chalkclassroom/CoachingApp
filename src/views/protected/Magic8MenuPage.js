@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "../../App.css";
 import PropTypes from "prop-types";
 import Magic8Card from "../../components/Magic8Card.tsx";
-import { Button, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import AppBar from "../../components/AppBar";
@@ -15,7 +15,18 @@ import MathIconImage from "../../assets/images/MathIconImage.svg";
 import SequentialIconImage from "../../assets/images/SequentialIconImage.svg";
 import EngagementIconImage from "../../assets/images/EngagementIconImage.svg";
 import TransitionTimeIconImage from "../../assets/images/TransitionTimeIconImage.svg";
-import Icon from "@material-ui/core/Icon";
+import ObservationModal from '../../components/ObservationModal';
+import ResultsModal from '../../components/ResultsModal';
+import TrainingModal from '../../components/TrainingModal';
+import TransitionTimeObservationPopUp from '../../components/TransitionComponents/TransitionTimeObservationPopUp';
+import ClassroomClimateObservationPopUp from '../../components/ClassroomClimateComponent/ClassroomClimateObservationPopUp';
+import MathInstructionObservationPopUp from '../../components/MathInstructionComponents/MathInstructionObservationPopUp';
+import StudentEngagementObservationPopUp from '../../components/StudentEngagementObservationPopUp';
+import LevelOfInstructionObservationPopUp from '../../components/LevelOfInstructionObservationPopUp';
+import ListeningToChildrenObservationPopUp from '../../components/ListeningToChildrenObservationPopUp';
+import SequentialActivitiesObservationPopUp from '../../components/SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
+import AssociativeCooperativeInteractionsObservationPopUp from '../../components/AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
+import LockedModal from '../../components/LockedModal';
 
 const CardRow = styled.div`
   position: relative;
@@ -49,14 +60,16 @@ const styles = {
   titleText: {
     fontSize: "2.9em",
     color: "#000000",
-    marginTop: "5%"
+    marginTop: "5%",
+    fontFamily: "Arimo"
   },
   instructionText: {
     fontSize: "1em",
     color: "#000000",
     marginLeft: "17%",
     marginTop: "2%",
-    marginBottom: "2vh"
+    marginBottom: "2vh",
+    fontFamily: "Arimo"
   }
 };
 
@@ -88,12 +101,8 @@ class Magic8MenuPage extends Component {
       numSelected: 0,
       selected: "none",
       unlocked: [],
-      page:
-        this.props.history.location.state.type === "Training"
-          ? "Training"
-          : this.props.history.location.state.type === "Observe"
-          ? "Observation"
-          : "Results"
+      unlockedData: false,
+      page: ''
     };
 
     this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this);
@@ -128,7 +137,7 @@ class Magic8MenuPage extends Component {
         state: this.props.location.state
       });
     } else if (this.state.unlocked.includes(MAP[this.state.selected])) {
-      if (this.state.page === "Observation") {
+      if (this.state.page === "Observe") {
         this.props.history.push({
           pathname: `/${this.state.selected}`,
           state: this.props.location.state
@@ -149,14 +158,43 @@ class Magic8MenuPage extends Component {
     const firebase = this.context;
     firebase.getUnlockedSections().then(unlocked => {
       this.setState({
-        unlocked: unlocked
+        unlocked: unlocked,
+        unlockedData: true
       });
     });
+  }
+
+  /**
+   * @return {void}
+   */
+  handleCloseModal = () => {
+    this.setState({
+      numSelected: 0
+    })
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
     this.setUnlockedSectionsState();
+    this.setState({
+      page: this.props.history.location.state.type === "Training"
+        ? "Training"
+        : this.props.history.location.state.type === "Observe"
+        ? "Observe"
+        : "Results"
+    });
+  }
+
+  /**
+   * 
+   * @param {Props} prevProps 
+   */
+  componentDidUpdate(prevProps) {
+    if (this.props.location.state.type !== prevProps.location.state.type) {
+      this.setState({
+        page: this.props.location.state.type
+      });
+    }
   }
 
   /**
@@ -165,6 +203,16 @@ class Magic8MenuPage extends Component {
    */
   render() {
     const { classes } = this.props;
+    const ObservationPopUp = {
+      'TransitionTime': <TransitionTimeObservationPopUp />,
+      'ClassroomClimate': <ClassroomClimateObservationPopUp />,
+      'MathInstruction': <MathInstructionObservationPopUp />,
+      'StudentEngagement': <StudentEngagementObservationPopUp />,
+      'LevelOfInstruction': <LevelOfInstructionObservationPopUp />,
+      'ListeningToChildren': <ListeningToChildrenObservationPopUp />,
+      'SequentialActivities': <SequentialActivitiesObservationPopUp />,
+      'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />
+    }
     return (
       <div>
         <FirebaseContext.Consumer>
@@ -250,45 +298,47 @@ class Magic8MenuPage extends Component {
               page={this.state.page}
             />
           </CardRow>
-          <CardRow>
-            <Button
-              className={classes.goButton}
-              disabled={
-                this.state.page === "Training"
-                  ? this.state.allowed
-                    ? false
-                    : true
-                  : this.state.unlocked.includes(MAP[this.state.selected]) &&
-                    this.state.allowed
-                  ? false
-                  : true
-              }
-              style={{
-                opacity:
-                  this.state.page === "Training"
-                    ? this.state.allowed
-                      ? 1
-                      : 0.5
-                    : this.state.unlocked.includes(MAP[this.state.selected]) &&
-                      this.state.allowed
-                    ? 1
-                    : 0.5,
-                color: "white"
-              }}
-              onClick={this.handleGoButton}
-            >
-              {this.state.page === "Training"
-                ? "Start Training"
-                : this.state.page === "Observation"
-                ? "Observe"
-                : "View Results"}
-              <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/icon?family=Material+Icons"
-              />
-              <Icon style={{ marginLeft: 5 }}>send</Icon>
-            </Button>
-          </CardRow>
+          <ObservationModal
+            open={
+              this.state.numSelected===1 &&
+              this.state.page==="Observe" &&
+              this.state.unlocked.includes(MAP[this.state.selected]) &&
+              this.state.unlockedData
+            }
+            content={ObservationPopUp[this.state.selected]}
+            handleBegin={this.handleGoButton}
+            handleClose={this.handleCloseModal}
+          />
+          <LockedModal
+            open={
+              this.state.numSelected===1 &&
+              (this.state.page==="Observe" || this.state.page==="Results") &&
+              !this.state.unlocked.includes(MAP[this.state.selected]) &&
+              this.state.unlockedData
+            }
+            handleClose={this.handleCloseModal}
+          />
+          <ResultsModal
+            open={
+              this.state.numSelected===1 &&
+              this.state.page==="Results" &&
+              this.state.unlocked.includes(MAP[this.state.selected]) &&
+              this.state.unlockedData
+            }
+            handleBegin={this.handleGoButton}
+            handleClose={this.handleCloseModal}
+            tool={this.state.selected}
+          />
+          <TrainingModal
+            open={
+              this.state.numSelected===1 &&
+              this.state.page==="Training" &&
+              this.state.unlockedData
+            }
+            handleBegin={this.handleGoButton}
+            handleClose={this.handleCloseModal}
+            tool={this.state.selected}
+          />
         </div>
       </div>
     );
