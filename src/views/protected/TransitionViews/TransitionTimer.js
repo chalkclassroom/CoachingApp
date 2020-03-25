@@ -47,7 +47,7 @@ class TransitionTimer extends React.Component {
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: "TT"
+      type: "transition"
     };
 
     this.props.firebase.handleSession(mEntry);

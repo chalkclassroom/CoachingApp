@@ -114,7 +114,9 @@ class CenterMenu extends React.Component<Props, State> {
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: this.props.type
+      type: this.props.type === 'MI' ? 'math'
+        : this.props.type === 'SA' ? 'sequential'
+        : 'AC'
     };
     this.props.firebase.handleSession(mEntry);
 
