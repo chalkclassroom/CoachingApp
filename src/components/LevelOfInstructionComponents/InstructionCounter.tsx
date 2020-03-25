@@ -73,7 +73,7 @@ class InstructionCounter extends React.Component<Props, {}> {
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: 'LI'
+      type: 'level'
     };
     this.props.firebase.handleSession(mEntry);
   }

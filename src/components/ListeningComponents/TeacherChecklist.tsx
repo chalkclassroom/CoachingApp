@@ -77,7 +77,7 @@ class TeacherChecklist extends React.Component<Props, State> {
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: "LC"
+      type: "listening"
     };
     this.props.firebase.handleSession(mEntry);
 
