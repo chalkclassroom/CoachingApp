@@ -24,11 +24,11 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
   return (
     <div>
       <FirebaseContext.Consumer>
-        {(firebase: object) => (<AppBar firebase={firebase}/>)}
+        {(firebase: object): React.ReactNode => (<AppBar firebase={firebase}/>)}
       </FirebaseContext.Consumer>
       <main style={{ flex: 1 }}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => (
+          {(firebase: object): React.ReactNode => (
             <TeacherChecklist
               firebase={firebase}
               teacherId={location.state.teacher.id}
