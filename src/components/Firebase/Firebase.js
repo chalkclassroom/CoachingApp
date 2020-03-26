@@ -387,7 +387,7 @@ class Firebase {
         isCorrect: isCorrect
       })
     .catch(error => console.error("Error occurred recording knowlegde check answer: ", error))
-  }
+  };
 
   handleSession = async function(mEntry) {
     this.sessionRef = this.db.collection("observations").doc();
@@ -425,6 +425,22 @@ class Firebase {
         console.error("Error occurred adding observation: ", error)
       );
   };
+
+    handlePushSE = async function(totalPointsPerRun) {
+        console.log("handle push SE Called with points:", totalPointsPerRun)
+        for(let i = 0;i<totalPointsPerRun;i++){
+            if(totalPointsPerRun[i] === null){
+                totalPointsPerRun[i] = 0;
+            }
+        }
+        return this.sessionRef
+            .set({
+                totalPoints: totalPointsPerRun,
+            }, { merge: true })
+            .catch(error =>
+                console.error("Error occurred adding observation: ", error)
+            );
+    };
 
   handlePushSequential = async function(mEntry) {
     return this.sessionRef

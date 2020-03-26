@@ -7,7 +7,7 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
 import RatingModal from "../../../components/ClassroomClimateComponent/RatingModal";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import StudentEngagementNameList from "../../../components/StudentEngagementComponents/StudentEngagementNameList";
+import CenterMenuStudentEngagement from "../../../components/StudentEngagementComponents/CenterMenuStudentEngagement";
 import { connect } from "react-redux";
 import {
     appendClimateRating,
@@ -25,7 +25,7 @@ import Countdown from "../../../components/Countdown.tsx";
     and then allow for 2 full minutes in between ratings.
  */
 
-const RATING_INTERVAL = 130000;
+const RATING_INTERVAL = 5000;
 
 const styles = {
     root: {
@@ -50,12 +50,13 @@ class StudentEngagementPage extends React.Component {
         auth: true,
         time: RATING_INTERVAL,
         recs: true,
-        incompleteRating: false
+        incompleteRating: false,
+        completeEnabled: false,
     };
 
     tick = () => {
         if (this.state.time <= 0) {
-            this.setState({ time: RATING_INTERVAL });
+            this.setState({ time: 0 });
         } else {
             if (this.state.time - 1000 < 0) {
                 this.setState({ time: 0 });
@@ -69,27 +70,23 @@ class StudentEngagementPage extends React.Component {
         this.setState({ help: false });
     };
 
-    /**
-     * @param {number} rating
-     */
-    handleRatingConfirmation = rating => {
-        this.props.appendClimateRating(rating);
-
-        const entry = {
-            BehaviorResponse: rating,
-            Type: "Rat",
-            ratingInterval: RATING_INTERVAL
-        };
-        const firebase = this.context;
-        firebase.handlePushClimate(entry);
-    };
-
     handleIncomplete = () => {
         this.setState({ incompleteRating: true });
     };
 
     handleClickAwayIncomplete = () => {
         this.setState({ incompleteRating: false });
+    };
+
+    handleTimerReset = ()=>{
+        this.setState({ time: RATING_INTERVAL });
+    }
+
+    /**
+     * @param {boolean} enable
+     */
+    handleCompleteButton = (enable: boolean) => {
+        this.setState({ completeEnabled: enable });
     };
 
     /** lifecycle method invoked after component mounts */
@@ -143,27 +140,29 @@ class StudentEngagementPage extends React.Component {
                                     <Dashboard
                                         magic8="Student Engagement"
                                         color="#e99b2e"
+                                        infoDisplay={
+                                            this.state.completeEnabled && this.state.time !== 0 && <Countdown color="#e99b2e" timerTime={RATING_INTERVAL} />
+                                        }
                                         infoPlacement="center"
-                                        completeObservation={false}
+                                        uploadStudentEngagement = {this.handleUploadingStudentEngagement}
+                                        completeObservation={this.state.completeEnabled}
                                     />
                                 </Grid>
                             </Grid>
-                            <Grid item xs={9}>
-                                <Grid
-                                    container
-                                    alignItems={"center"}
-                                    justify={"center"}
-                                    direction={"column"}
-                                >
+                            <Grid item xs={8}
+                                  style={{ margin: 10 }}
+                            >
                                     <FirebaseContext.Consumer>
                                         {firebase => (
-                                            <StudentEngagementNameList
+                                            <CenterMenuStudentEngagement
                                                 teacherId={this.props.location.state.teacher.id}
                                                 firebase={firebase}
+                                                onStatusChange={this.handleCompleteButton}
+                                                time={this.state.time}
+                                                handleTimerReset = {this.handleTimerReset}
                                             />
                                         )}
                                     </FirebaseContext.Consumer>
-                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>

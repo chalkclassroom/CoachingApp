@@ -7,7 +7,7 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
 import RatingModal from "../../../components/ClassroomClimateComponent/RatingModal";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import StudentEngagementNameList from "../../../components/StudentEngagementComponents/StudentEngagementNameList";
+import StudentEngagementNameList from "../../../components/StudentEngagementComponents/CenterMenuStudentEngagement";
 import { connect } from "react-redux";
 import {
     appendClimateRating,
