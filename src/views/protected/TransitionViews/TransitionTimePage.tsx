@@ -200,8 +200,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                 </Grid>
                 <Grid item>
                   <Dashboard
-                    magic8="Transition Time"
-                    color={Constants.TransitionColor}
+                    type="TT"
                     infoDisplay={<TransitionLog />}
                     infoPlacement="center"
                     completeObservation={true}

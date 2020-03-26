@@ -13,7 +13,7 @@ import ListeningHelp2 from './ListeningHelp2';
 const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ListeningColor
+      main: Constants.Colors.LI
     },
     secondary: {
       main: '#000000'
@@ -77,7 +77,7 @@ class ListeningToChildrenHelpCard extends React.Component<Props, State>  {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.exact({tabBar: PropTypes.string}).isRequired
   }
 
   /**
@@ -98,23 +98,23 @@ class ListeningToChildrenHelpCard extends React.Component<Props, State>  {
                   variant="fullWidth"
                 >
                   <Tab
-                    label="Checklist 1"
+                    label="Listening"
                     onClick={this.handleChecklist1}
                     style={{
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 0 ? Constants.ListeningColor : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 0 ? Constants.Colors.LC : '#d3d3d3'
                     }}
                   />
                   <Tab
-                    label="Checklist 2"
+                    label="Supporting Child Talk"
                     onClick={this.handleChecklist2}
                     style={{
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 1 ? Constants.ListeningColor: '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 1 ? Constants.Colors.LC: '#d3d3d3'
                     }}
                   />
                 </Tabs>

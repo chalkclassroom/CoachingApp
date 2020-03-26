@@ -30,9 +30,10 @@ import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/As
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
-import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
+import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage.tsx"; 
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
 import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage';
+import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
 import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
@@ -199,6 +200,11 @@ class App extends Component {
               auth={this.state.auth}
               path="/ListeningToChildren"
               component={ListeningToChildrenPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ListeningToChildrenResults"
+              component={ListeningToChildrenResultsPage}
             />
             <PrivateRoute
               auth={this.state.auth}

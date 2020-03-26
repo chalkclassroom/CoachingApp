@@ -11,7 +11,7 @@ import * as Constants from "../../constants";
 
 const styles: object = {
   definitionTitle: {
-    backgroundColor: Constants.TransitionColor,
+    backgroundColor: Constants.Colors.TT,
     color: "white",
     fontSize: '1.1em',
     textAlign: "center",

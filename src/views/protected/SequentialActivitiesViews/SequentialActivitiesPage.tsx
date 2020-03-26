@@ -1,13 +1,16 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import ClassroomClimateHelp from "../../../components/ClassroomClimateComponent/ClassroomClimateHelp";
-import CenterMenuSequentialActivities from "../../../components/SequentialActivitiesComponents/CenterMenuSequentialActivities";
 import { deleteAllCenters } from "../../../state/actions/sequential-activities";
+import CenterMenu from '../../../components/CentersComponents/CenterMenu';
+import {
+  addNewCenter,
+  incrementCenterCount
+} from "../../../state/actions/sequential-activities.js";
+
 
 const styles: object = {
   root: {
@@ -22,87 +25,64 @@ const styles: object = {
   }
 };
 
-interface Props {
-  classes: Style,
-  location: { state: { teacher: { id: string }}}
-}
-
 interface Style {
   root: string,
   grow: string
 }
 
-interface State {
-
+interface Props {
+  classes: Style,
+  location: { state: { teacher: { id: string }}},
+  addNewCenter(): void,
+  incrementCenterCount(): void,
+  centers: Array<{
+    name: string,
+    count: number
+  }>,
 }
 
 /**
- * sequential activities observation
  * @class SequentialActivitiesPage
  */
-class SequentialActivitiesPage extends React.Component<Props, State> {
-  state = {
-    auth: true,
-    help: false,
-    completeEnabled: false
-  };
-
-  handleClickAway = () => {
-    this.setState({ help: false });
-  };
-
+class SequentialActivitiesPage extends React.Component<Props, {}> {
   /**
-   * @param {boolean} open
+   * @param {Props} props 
    */
-  handleNotes = (open: boolean) => {
-    if (open) {
-      this.setState({ notes: true });
-    } else {
-      this.setState({ notes: false });
-    }
-  };
-
-  /**
-   * @param {boolean} enable
-   */
-  handleCompleteButton = (enable: boolean) => {
-    this.setState({ completeEnabled: enable });
-  };
+  constructor(props: Props) {
+    super(props);
+  }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
   };
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
+    const { classes } = this.props;
     return (
-      <div className={this.props.classes.root}>
+      <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object)=> (
+          {(firebase: object): React.ReactNode => (
             <AppBar
               firebase={firebase}
-              classes={{ root: this.props.classes.grow }}
+              className={classes.grow}
             />
           )}
         </FirebaseContext.Consumer>
-        {this.state.help ? (
-          <ClickAwayListener onClickAway={this.handleClickAway}>
-            {" "}
-            <ClassroomClimateHelp />
-          </ClickAwayListener>
-        ) : (
-          <div />
-        )}
         <main style={{ flex: 1 }}>
           <FirebaseContext.Consumer>
-            {(firebase: object) => (
-              <CenterMenuSequentialActivities
+            {(firebase: object): React.ReactNode => (
+              <CenterMenu
                 teacherId={this.props.location.state.teacher.id}
                 firebase={firebase}
-                onStatusChange={this.handleCompleteButton}
+                addNewCenter={this.props.addNewCenter}
+                incrementCenterCount={this.props.incrementCenterCount}
+                type="SA"
+                centers={this.props.centers}
               />
             )}
           </FirebaseContext.Consumer>
@@ -112,6 +92,12 @@ class SequentialActivitiesPage extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { deleteAllCenters })(
+const mapStateToProps = state => {
+  return {
+    centers: state.sequentialCenterState.sequentialCenters
+  };
+};
+
+export default connect(mapStateToProps, { deleteAllCenters, addNewCenter, incrementCenterCount })(
   withStyles(styles)(SequentialActivitiesPage)
 );

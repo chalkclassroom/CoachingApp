@@ -438,7 +438,7 @@ class Firebase {
       );
   };
 
-  handlePushAC = async function(mEntry) {
+  handlePushCentersData = async function(mEntry) {
     return this.sessionRef
       .collection("entries")
       .add({
@@ -447,20 +447,7 @@ class Firebase {
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
-        console.error("Error occurred adding observation: ", error)
-      );
-  };
-
-  handlePushSequential = async function(mEntry) {
-    return this.sessionRef
-      .collection("entries")
-      .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .catch(error =>
-        console.error("Error occurred adding observation: ", error)
+        console.error("error occurred adding observation: ", error)
       );
   };
 
@@ -469,19 +456,6 @@ class Firebase {
       .collection("entries")
       .add({
         instructionType: insType,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .catch(error =>
-        console.error("Error occurred adding observation: ", error)
-      );
-  };
-
-  handlePushMath = async function(mEntry) {
-    return this.sessionRef
-      .collection("entries")
-      .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
@@ -881,6 +855,20 @@ class Firebase {
       );
   };
 
+  fetchListeningDetails = async function(sessionId) {
+    const getListeningDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcListeningDetails"
+    );
+    return getListeningDetailsFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting listening details: ", error)
+      );
+  };
+
   fetchChildACSummary = async function(sessionId) {
     const getChildACSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcChildACSummary"
@@ -988,6 +976,20 @@ class Firebase {
       );
   };
 
+  fetchListeningSummary = async function(sessionId) {
+    const getListeningSummaryFirebaseFunction = this.functions.httpsCallable(
+      "funcListeningSummary"
+    );
+    return getListeningSummaryFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting listening summary: ", error)
+      );
+  };
+
 
   fetchChildACTrend = async function(teacherId) {
     const getChildACTrendFirebaseFunction = this.functions.httpsCallable(
@@ -1085,6 +1087,20 @@ class Firebase {
       )
       .catch(error =>
         console.error("Error occurred getting teacher math trend: ", error)
+      );
+  };
+
+  fetchListeningTrend = async function(teacherId) {
+    const getListeningTrendFirebaseFunction = this.functions.httpsCallable(
+      "funcListeningTrend"
+    );
+    return getListeningTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        result =>
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting listening trend: ", error)
       );
   };
 

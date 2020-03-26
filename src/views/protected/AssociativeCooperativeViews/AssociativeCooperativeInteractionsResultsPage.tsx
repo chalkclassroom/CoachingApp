@@ -261,8 +261,8 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         },
         {
           label: "Associative and/or Cooperative",
-          backgroundColor: Constants.ACColor,
-          borderColor: Constants.ACColor,
+          backgroundColor: Constants.Colors.AC,
+          borderColor: Constants.Colors.AC,
           fill: false,
           lineTension: 0,
           data: this.state.trendsAC

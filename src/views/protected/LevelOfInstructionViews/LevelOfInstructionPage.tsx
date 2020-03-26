@@ -82,8 +82,7 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
                 </Grid>
                 <Grid item>
                   <Dashboard
-                    magic8="Level of Instruction"
-                    color="#009365"
+                    type="LI"
                     completeObservation={true}
                   />
                 </Grid>

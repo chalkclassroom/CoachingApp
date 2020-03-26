@@ -6,18 +6,10 @@ import DataQuestions from '../../ResultsComponents/DataQuestions';
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants';
 
-const AssociativeTheme = createMuiTheme({
+const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: "#c5afe7"
-    }
-  }
-});
-
-const CooperativeTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.AC
+      main: Constants.Colors.LI
     }
   }
 });
@@ -32,14 +24,14 @@ interface Props {
 
 interface State {
   categoryView: string,
-  openPanel: string,
+  openPanel: string
 }
 
 /**
- * data reflection question layout for associative & cooperative
- * @class ACCoachingQuestions
+ * data reflection question layout for listening to children
+ * @class ListeningCoachingQuestions
  */
-class ACCoachingQuestions extends React.Component<Props, State> {
+class ListeningCoachingQuestions extends React.Component<Props, State> {
   /**
    * @param {Props} props
    */
@@ -48,41 +40,32 @@ class ACCoachingQuestions extends React.Component<Props, State> {
 
     this.state = {
       categoryView: '',
-      openPanel: '',
+      openPanel: ''
     }
   }
 
-  associativeClick = (): void => {
-    if (this.state.categoryView !== "associative") {
+  listeningClick = (): void => {
+    if (this.state.categoryView !== "listening") {
       this.setState({
-        categoryView: "associative",
+        categoryView: "listening",
         openPanel: null
       })
     }
   }
 
-  cooperativeClick = (): void => {
-    if (this.state.categoryView !== "cooperative") {
+  supportingClick = (): void => {
+    if (this.state.categoryView !== "supporting") {
       this.setState({
-        categoryView: "cooperative",
+        categoryView: "supporting",
         openPanel: null
       })
     }
   }
 
-  teacherParticipationClick = (): void => {
-    if (this.state.categoryView !== "teacherParticipation") {
+  encouragingClick = (): void => {
+    if (this.state.categoryView !== "encouraging") {
       this.setState({
-        categoryView: "teacherParticipation",
-        openPanel: null
-      })
-    }
-  }
-
-  teacherSupportClick = (): void => {
-    if (this.state.categoryView !== "teacherSupport") {
-      this.setState({
-        categoryView: "teacherSupport",
+        categoryView: "encouraging",
         openPanel: null
       })
     }
@@ -107,60 +90,52 @@ class ACCoachingQuestions extends React.Component<Props, State> {
       <Grid container direction="column">
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
           <Grid item>
-            <MuiThemeProvider theme={AssociativeTheme}>
+            <MuiThemeProvider theme={ListeningTheme}>
               <Button 
-                onClick={this.associativeClick}
+                onClick={this.listeningClick}
                 variant="contained"
                 color="primary"
-                style={{width:'10em', height: '10em'}}
+                style={{width:'8em', height: '8em'}}
               >
-                <Typography>
-                  Associative Interactions
+                <Typography style={{color: 'white'}}>
+                  Listening to Children
                 </Typography>
               </Button >
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <MuiThemeProvider theme={CooperativeTheme}>
+            <MuiThemeProvider theme={ListeningTheme}>
               <Button
-                onClick={this.cooperativeClick}
+                onClick={this.supportingClick}
                 variant="contained"
                 color="primary"
-                style={{width:'10em', height: '10em'}}
+                style={{width:'8em', height: '8em'}}
               >
                 <Typography style={{color: 'white'}}>
-                  Cooperative Interactions
+                  Supporting Child Talk
                 </Typography>
               </Button>
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <Button
-              onClick={this.teacherParticipationClick}
-              variant="contained"
-              style={{width:'10em', height: '10em'}}
-            >
-              <Typography>
-                Teacher Participation in Activities
-              </Typography>
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              onClick={this.teacherSupportClick}
-              variant="contained"
-              style={{width:'10em', height: '10em'}}
-            >
-              <Typography>
-                Teacher Support for Child Interactions
-              </Typography>
-            </Button>
+            <MuiThemeProvider theme={ListeningTheme}>
+              <Button
+                onClick={this.encouragingClick}
+                variant="contained"
+                color="primary"
+                style={{width:'8em', height: '8em'}}
+              >
+                <Typography style={{color: 'white'}}>
+                  Encouraging Peer Talk
+                </Typography>
+              </Button>
+            </MuiThemeProvider>
           </Grid>
         </Grid>
         <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "associative" ? (
+          {this.state.categoryView === "listening" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.AC.Associative}
+              questions={Constants.CoachingQuestions.Listening.Listening}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
@@ -168,11 +143,11 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.Colors.AC}
+              color={Constants.Colors.LI}
             />
-          ) : this.state.categoryView === "cooperative" ? (
+          ) : this.state.categoryView === "supporting" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.AC.Cooperative}
+              questions={Constants.CoachingQuestions.Listening.Supporting}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
@@ -180,11 +155,11 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.Colors.AC}
+              color={Constants.Colors.LI}
             />
-          ) : this.state.categoryView === "teacherParticipation" ? (
+          ) : this.state.categoryView === "encouraging" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.AC.TeacherParticipation}
+              questions={Constants.CoachingQuestions.Listening.Encouraging}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
@@ -192,19 +167,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.Colors.AC}
-            />
-          ) : this.state.categoryView === "teacherSupport" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.AC.TeacherSupport}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.Colors.AC}
+              color={Constants.Colors.LI}
             />
           ) : <div/>}
         </Grid>
@@ -213,4 +176,4 @@ class ACCoachingQuestions extends React.Component<Props, State> {
   }
 }
 
-export default ACCoachingQuestions;
+export default ListeningCoachingQuestions;

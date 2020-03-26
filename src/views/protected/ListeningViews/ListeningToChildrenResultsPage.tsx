@@ -1,13 +1,17 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
-import SummarySlider from "../../../components/MathInstructionComponents/ResultsComponents/SummarySlider";
-import DetailsSlider from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSlider";
-import TrendsSlider from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSlider";
-import MathCoachingQuestions from "../../../components/MathInstructionComponents/ResultsComponents/MathCoachingQuestions";
+import ListeningSummaryChart from "../../../components/ListeningComponents/ResultsComponents/ListeningSummaryChart";
+import ListeningDetailsChart from "../../../components/ListeningComponents/ResultsComponents/ListeningDetailsChart";
+import ListeningTrendsGraph from "../../../components/ListeningComponents/ResultsComponents/ListeningTrendsGraph";
+import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
+import PieSliceListeningImage from '../../../assets/images/PieSliceListeningImage.svg';
+import PieSliceChildNonImage from '../../../assets/images/PieSliceChildNonImage.svg';
 import * as Constants from '../../../constants';
 
 const styles: object = {
@@ -18,6 +22,11 @@ const styles: object = {
     overflowY: "auto",
     overflowX: "hidden"
   },
+  comparisonText: {
+    paddingLeft: '1em',
+    lineHeight: '0.8em',
+    fontFamily: 'Arimo'
+  }
 };
 
 interface Props {
@@ -26,30 +35,23 @@ interface Props {
 }
 
 interface Style {
-  root: string
+  root: string,
+  comparisonText: string
 }
 
 interface State {
-  math: number,
-  notMath: number,
-  support: number,
-  noSupport: number,
-  noTeacherOpp: number,
+  listening: number,
+  notListening: number,
   sessionId: string,
-  math1: number,
-  math2: number,
-  math3: number,
-  math4: number,
-  teacher1: number,
-  teacher2: number,
-  teacher3: number,
-  teacher4: number,
+  listening1: number,
+  listening2: number,
+  listening3: number,
+  listening4: number,
+  listening5: number,
+  listening6: number,
   trendsDates: Array<Array<string>>,
-  trendsMath: Array<number>,
-  trendsNotMath: Array<number>,
-  trendsNoTeacherOpp: Array<number>,
-  trendsNoSupport: Array<number>,
-  trendsSupport: Array<number>,
+  trendsListening: Array<number>,
+  trendsNotListening: Array<number>,
   notes: Array<{id: string, content: string, timestamp: Date}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
@@ -58,10 +60,10 @@ interface State {
 }
 
 /**
- * math results
- * @class MathInstructionResultsPage
+ * listening to children results
+ * @class ListeningToChildrenResultsPage
  */
-class MathInstructionResultsPage extends React.Component<Props, State> {
+class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
@@ -69,26 +71,18 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      math: 0,
-      notMath: 0,
-      support: 0,
-      noSupport: 0,
-      noTeacherOpp: 0,
+      listening: 0,
+      notListening: 0,
       sessionId: '',
-      math1: 0,
-      math2: 0,
-      math3: 0,
-      math4: 0,
-      teacher1: 0,
-      teacher2: 0,
-      teacher3: 0,
-      teacher4: 0,
+      listening1: 0,
+      listening2: 0,
+      listening3: 0,
+      listening4: 0,
+      listening5: 0,
+      listening6: 0,
       trendsDates: [],
-      trendsMath: [],
-      trendsNotMath: [],
-      trendsNoTeacherOpp: [],
-      trendsNoSupport: [],
-      trendsSupport: [],
+      trendsListening: [],
+      trendsNotListening: [],
       notes: [],
       actionPlanExists: false,
       conferencePlanExists: false,
@@ -101,8 +95,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
    * @param {string} teacherId
    */
   handleTrendsFetching = (teacherId: string): void => {
-    this.handleChildTrendsFetch(teacherId);
-    this.handleTeacherTrendsFetch(teacherId);
+    this.handleTrendsFetch(teacherId);
   };
 
   /**
@@ -137,7 +130,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "math").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+    firebase.fetchSessionDates(teacherId, "listening").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
       this.setState({
         sessionDates: dates
       }, () => {
@@ -156,54 +149,26 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleChildTrendsFetch = (teacherId: string): void => {
+  handleTrendsFetch = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<Array<string>> = [];
-    const mathArray: Array<number> = [];
-    const notMathArray: Array<number> = [];
-    firebase.fetchChildMathTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, math: number, notMath: number}>) => {
+    const listeningArray: Array<number> = [];
+    const notListeningArray: Array<number> = [];
+    firebase.fetchListeningTrend(teacherId)
+    .then((dataSet: Array<{startDate: {value: string}, listening: number, notListening: number}>) => {
+      console.log('handletrendsfetch returns: ', dataSet);
       dataSet.forEach(data => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        mathArray.push(Math.floor((data.math / (data.math + data.notMath)) * 100));
-        notMathArray.push(Math.floor((data.notMath / (data.math + data.notMath)) * 100));
-      });
-
-      this.setState({
-        trendsDates: dateArray,
-        trendsMath: mathArray,
-        trendsNotMath: notMathArray
-      }, () => console.log('math trends: ', this.state.trendsMath, this.state.trendsNotMath));
-    });
-  };
-
-  /**
-   * @param {string} teacherId
-   */
-  handleTeacherTrendsFetch = (teacherId: string): void => {
-    const firebase = this.context;
-    const dateArray: Array<Array<string>> = [];
-    const supportArray: Array<number> = [];
-    const noSupportArray: Array<number> = [];
-    const noOppArray: Array<number> = [];
-    firebase.fetchTeacherMathTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
-      dataSet.forEach(data => {
-        dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
-        ]);
-        supportArray.push(Math.floor((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        noSupportArray.push(Math.floor((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        listeningArray.push(Math.floor((data.listening / (data.listening + data.notListening)) * 100));
+        notListeningArray.push(Math.floor((data.notListening / (data.listening + data.notListening)) * 100));
       });
       this.setState({
         trendsDates: dateArray,
-        trendsSupport: supportArray,
-        trendsNoSupport: noSupportArray,
-        trendsNoTeacherOpp: noOppArray
-      });
+        trendsListening: listeningArray,
+        trendsNotListening: notListeningArray
+      }, () => console.log('listening trends: ', this.state.trendsListening, this.state.trendsNotListening));
     });
   };
 
@@ -211,7 +176,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
    * specifies formatting for child trends
    * @return {object}
    */
-  handleTrendsChildFormatData = (): {
+  handleTrendsFormatData = (): {
       labels: Array<Array<string>>,
       datasets: Array<{
         label: string,
@@ -226,67 +191,21 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Non-Math Activities",
-          backgroundColor: '#ec2409',
-          borderColor: '#ec2409',
+          label: "Teacher Listening",
+          backgroundColor: Constants.Colors.LI,
+          borderColor: Constants.Colors.LI,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsNotMath
+          data: this.state.trendsListening
         },
         {
-          label: "Math",
-          backgroundColor: Constants.Colors.MI,
-          borderColor: Constants.Colors.MI,
+          label: "Other Tasks or Behaviors",
+          backgroundColor: Constants.Colors.RedGraph,
+          borderColor: Constants.Colors.RedGraph,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsMath
+          data: this.state.trendsNotListening
         }
-      ]
-    };
-  };
-
-  /**
-   * specifies formatting for teacher trends
-   * @return {object}
-   */
-  handleTrendsTeacherFormatData = (): {
-    labels: Array<Array<string>>,
-    datasets: Array<{
-      label: string,
-      backgroundColor: string,
-      borderColor: string,
-      fill: boolean,
-      lineTension: number,
-      data: Array<number>
-    }>,
-  } => {
-    return {
-      labels: this.state.trendsDates,
-      datasets: [
-        {
-          label: "Teacher Not at Center",
-          backgroundColor: Constants.NotPresentColor,
-          borderColor: Constants.NotPresentColor,
-          fill: false,
-          lineTension: 0,
-          data: this.state.trendsNoTeacherOpp
-        },
-        {
-          label: "No Support",
-          backgroundColor: Constants.RedGraphColor,
-          borderColor: Constants.RedGraphColor,
-          fill: false,
-          lineTension: 0,
-          data: this.state.trendsNoSupport
-        },
-        {
-          label: "Teacher Support",
-          backgroundColor: Constants.AppBarColor,
-          borderColor: Constants.AppBarColor,
-          fill: false,
-          lineTension: 0,
-          data: this.state.trendsSupport
-        },
       ]
     };
   };
@@ -325,41 +244,29 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchChildMathSummary(this.state.sessionId)
-    .then((summary: {math: number, notMath: number}) => {
+    firebase.fetchListeningSummary(this.state.sessionId)
+    .then((summary: {listening: number, notListening: number}) => {
       this.setState({
-        math: summary.math,
-        notMath: summary.notMath,
+        listening: summary.listening,
+        notListening: summary.notListening,
       });
     });
-    firebase.fetchTeacherMathSummary(this.state.sessionId)
-    .then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
-      this.setState({
-        noTeacherOpp: summary.noOpportunity,
-        noSupport: summary.noSupport,
-        support: summary.support,
-      });
-    });
-    firebase.fetchMathDetails(this.state.sessionId)
+    firebase.fetchListeningDetails(this.state.sessionId)
     .then((summary: {
-      math1: number,
-      math2: number,
-      math3: number,
-      math4: number,
-      teacher1: number,
-      teacher2: number,
-      teacher3: number,
-      teacher4: number
+      listening1: number,
+      listening2: number,
+      listening3: number,
+      listening4: number,
+      listening5: number,
+      listening6: number,
     }) => {
       this.setState({
-        math1: summary.math1,
-        math2: summary.math2,
-        math3: summary.math3,
-        math4: summary.math4,
-        teacher1: summary.teacher1,
-        teacher2: summary.teacher2,
-        teacher3: summary.teacher3,
-        teacher4: summary.teacher4
+        listening1: summary.listening1,
+        listening2: summary.listening2,
+        listening3: summary.listening3,
+        listening4: summary.listening4,
+        listening5: summary.listening5,
+        listening6: summary.listening6,
       })
     })
   }
@@ -441,34 +348,85 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       <div className={classes.root}>
         <ResultsLayout
           teacherId={this.props.location.state.teacher.id}
-          magic8="Math Instruction"
+          magic8="Listening to Children"
           handleTrendsFetch={this.handleTrendsFetching}
-          observationType="math"
+          observationType="listening"
           summary={
-            <SummarySlider
-              math={this.state.math}
-              notMath={this.state.notMath}
-              support={this.state.support}
-              noSupport={this.state.noSupport}
-              noTeacherOpp={this.state.noTeacherOpp}
-            />
+            <Grid container justify={"center"} direction={"column"}>
+              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                Compare how often the teacher was: 
+              </Typography>
+              <Grid container direction="column" alignItems="center">
+                <Grid item style={{width: '100%'}}>
+                  <Grid container direction="row">
+                    <Grid item xs={1}>
+                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
+                        <Grid item style={{height:"50%"}}>
+                          <img alt="green" src={PieSliceListeningImage} height="95%"/>
+                        </Grid>
+                        <Grid item style={{height:"50%"}}>
+                          <img alt="red" src={PieSliceChildNonImage} height="95%"/>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={11}>
+                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                        <Grid item style={{height:"50%"}}>
+                          <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
+                            Listening to children/encouraging child talk
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{height:"50%"}}>
+                          <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
+                            Doing other tasks or activities
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <ListeningSummaryChart
+                  listening={this.state.listening}
+                  notListening={this.state.notListening}
+                />
+              </Grid>
+              <Grid item>
+              <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
+                Total Observations: {this.state.listening + this.state.notListening}
+              </Typography>
+              </Grid>
+            </Grid>
           }
           details={
-            <DetailsSlider
-              math1={this.state.math1}
-              math2={this.state.math2}
-              math3={this.state.math3}
-              math4={this.state.math4}
-              teacher1={this.state.teacher1}
-              teacher2={this.state.teacher2}
-              teacher3={this.state.teacher3}
-              teacher4={this.state.teacher4}
-            />
+            <div>
+              <Grid container justify={"center"} direction={"column"}>
+                <Grid container justify={"center"} direction={"column"}>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    What behaviors did the teacher use during the observation?
+                  </Typography>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    Did the teacher do one type of behavior more often than the other behaviors?               
+                  </Typography>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    Did the teacher do one type of behavior less often than the other behaviors?               
+                  </Typography>
+                </Grid>
+                <ListeningDetailsChart
+                  listening1={this.state.listening1}
+                  listening2={this.state.listening2}
+                  listening3={this.state.listening3}
+                  listening4={this.state.listening4}
+                  listening5={this.state.listening5}
+                  listening6={this.state.listening6}
+                />
+              </Grid>
+            </div>
           }
           trendsGraph={
-            <TrendsSlider
-              childData={this.handleTrendsChildFormatData}
-              teacherData={this.handleTrendsTeacherFormatData}
+            <ListeningTrendsGraph
+              data={this.handleTrendsFormatData}
             />
           }
           changeSessionId={this.changeSessionId}
@@ -476,12 +434,12 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
           sessionDates={this.state.sessionDates}
           notes={this.state.notes}
           questions={
-            <MathCoachingQuestions
+            <ListeningCoachingQuestions
               handleAddToPlan={this.handleAddToPlan}
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.location.state.teacher.id}
-              magic8={"Math Instruction"}
+              magic8={"Listening To Children"}
             />
           }
           chosenQuestions={chosenQuestions}
@@ -496,5 +454,5 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
 }
 
 
-MathInstructionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(MathInstructionResultsPage);
+ListeningToChildrenResultsPage.contextType = FirebaseContext;
+export default withStyles(styles)(ListeningToChildrenResultsPage);

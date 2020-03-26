@@ -235,8 +235,8 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
         },
         {
           label: "Sequential Activities",
-          backgroundColor: Constants.SequentialColor,
-          borderColor: Constants.SequentialColor,
+          backgroundColor: Constants.Colors.SA,
+          borderColor: Constants.Colors.SA,
           fill: false,
           lineTension: 0,
           data: this.state.trendsSequential

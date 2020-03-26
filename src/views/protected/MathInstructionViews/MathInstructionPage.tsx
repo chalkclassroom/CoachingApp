@@ -4,12 +4,12 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
+import { deleteAllCenters } from "../../../state/actions/math-instruction";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import {
   addNewCenter,
   incrementCenterCount
-} from "../../../state/actions/associative-cooperative.js";
+} from "../../../state/actions/math-instruction.js";
 
 
 const styles: object = {
@@ -42,9 +42,9 @@ interface Props {
 }
 
 /**
- * @class AssociativeCooperativeInteractionsPage
+ * @class MathInstructionPage
  */
-class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> {
+class MathInstructionPage extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -81,7 +81,7 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
                 firebase={firebase}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
-                type="AC"
+                type="MI"
                 centers={this.props.centers}
               />
             )}
@@ -94,10 +94,10 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
 
 const mapStateToProps = state => {
   return {
-    centers: state.associativeCenterState.associativeCenters
+    centers: state.mathCentersState.mathCenters
   };
 };
 
 export default connect(mapStateToProps, { deleteAllCenters, addNewCenter, incrementCenterCount })(
-  withStyles(styles)(AssociativeCooperativeInteractionsPage)
+  withStyles(styles)(MathInstructionPage)
 );

@@ -93,7 +93,7 @@ function ListeningHelp2(props: Props): React.ReactElement {
             <ul>
               <li>
                 Watching a child build with blocks, the teacher says, {" "}
-                <i>You created a race track!</i>
+                <i>You created a race track! Tell me more about what you&apos;re building.</i>
               </li>
               <li>
                 Child in the art center points to his paint marks and says, {" "}
