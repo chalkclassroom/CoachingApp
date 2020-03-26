@@ -77,7 +77,7 @@ class ListeningToChildrenHelpCard extends React.Component<Props, State>  {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.exact({tabBar: PropTypes.string}).isRequired
   }
 
   /**
@@ -104,7 +104,7 @@ class ListeningToChildrenHelpCard extends React.Component<Props, State>  {
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 0 ? Constants.Colors.LI : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 0 ? Constants.Colors.LC : '#d3d3d3'
                     }}
                   />
                   <Tab
@@ -114,7 +114,7 @@ class ListeningToChildrenHelpCard extends React.Component<Props, State>  {
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 1 ? Constants.Colors.LI: '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 1 ? Constants.Colors.LC: '#d3d3d3'
                     }}
                   />
                 </Tabs>

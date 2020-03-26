@@ -18,7 +18,7 @@ import Grid from '@material-ui/core/Grid';
 const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.Colors.SA
+      main: Constants.Colors.LC
     }
   }
 });
