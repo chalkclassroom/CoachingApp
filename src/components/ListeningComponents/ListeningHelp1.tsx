@@ -66,7 +66,7 @@ function ListeningHelp1(props: Props): React.ReactElement {
             At <strong>eye-level</strong> with children
           </TableCell>
           <TableCell padding="checkbox" className={classes.example}>
-            Teacher positions her body so that she is at eye-level with children.
+            Teacher positions body at eye-level with children.
             <ul>
               <li>
                 Sits on the floor next to children.
@@ -83,11 +83,11 @@ function ListeningHelp1(props: Props): React.ReactElement {
         </TableRow>
         <TableRow>
           <TableCell padding="checkbox" className={classes.checklistItem}>
-            <strong>Looks expectantly</strong> at children and {" "}
-            <strong>shows warmth</strong> to encourage child talk
+            <strong>Looks at children</strong> with a {" "}
+            <strong>positive expression</strong> to encourage child talk
           </TableCell>
           <TableCell padding="checkbox" className={classes.example}>
-            Teacher looks at children with a positive expression and
+            Teacher looks at children with curiosity and
             tries to make eye contact. The teacher&apos;s body language
             shows interest in what children say.
             <ul>
@@ -110,7 +110,7 @@ function ListeningHelp1(props: Props): React.ReactElement {
               <li>
                 Child: <i>Giraffe!</i>
                 <br />
-                Teacher: <i>Giraffe!</i> or <i>Giraffe, that&apos;s right!</i>
+                Teacher: <i>Giraffe!</i> or <i>Wow, a giraffe!</i>
               </li>
             </ul>
             Teacher asks questions that clarify the meaning of the child&apos;s previous comment.

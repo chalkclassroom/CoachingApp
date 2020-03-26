@@ -98,7 +98,7 @@ class ListeningToChildrenHelpCard extends React.Component<Props, State>  {
                   variant="fullWidth"
                 >
                   <Tab
-                    label="Checklist 1"
+                    label="Listening"
                     onClick={this.handleChecklist1}
                     style={{
                       fontFamily: "Arimo",
@@ -108,7 +108,7 @@ class ListeningToChildrenHelpCard extends React.Component<Props, State>  {
                     }}
                   />
                   <Tab
-                    label="Checklist 2"
+                    label="Supporting Child Talk"
                     onClick={this.handleChecklist2}
                     style={{
                       fontFamily: "Arimo",

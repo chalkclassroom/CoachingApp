@@ -95,12 +95,12 @@ class TeacherChecklist extends React.Component<Props, State> {
    */
   tick = (): void => {
     if (this.state.time <= 0) {
+      clearInterval(this.timer);
       if (this.state.final) {
         this.handleSubmit(this.state.checked);
-        this.setState({ final: false, time: 60000 })
+        this.setState({ final: false })
       } else {
         this.handleTimeUpNotification();
-        clearInterval(this.timer);
       }
     } else {
       if (this.state.time - 1000 < 0) {
@@ -154,7 +154,8 @@ class TeacherChecklist extends React.Component<Props, State> {
       this.props.firebase.handlePushListening({checked}).then(() => {
         this.setState({
           checked: [],
-          in: true
+          in: true,
+          time: 60000
         }, () => {this.timer = setInterval(this.tick, 1000)})
       });
     })
@@ -266,7 +267,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                 <Grid container alignItems="center" direction="column" xs={12}>
                   <div style={{ height: 20 }} />
                   <Typography variant="h6" align={"center"} style={{paddingBottom: '1em'}}>
-                    Select the teacher behaviors you see:
+                    Select all the teacher behaviors you see:
                   </Typography>
                   <Grid container direction={"row"} justify="center" alignItems="center" spacing={16} xs={12}>
                     <Grid item xs={5}>
