@@ -75,8 +75,8 @@ const styles = {
     width: "90%",
     marginLeft: "5px",
     marginRight: "5px",
-    marginTop: "5px",
-    marginBottom: "5px",
+    // marginTop: "5px",
+    // marginBottom: "5px",
     display: "flex",
     justifyItems: "center"
   },
@@ -109,7 +109,6 @@ const styles = {
 /**
  * Dashboard for Observation Tools
  * @class Dashboard
- * @param {boolean} open
  */
 class Dashboard extends React.Component {
   /**
@@ -204,6 +203,9 @@ class Dashboard extends React.Component {
     this.setState({ help: false });
   };
 
+  /**
+   * @param {boolean} open
+   */
   handleNotes = open => {
     if (open) {
       this.setState({ notes: true });
@@ -266,6 +268,7 @@ class Dashboard extends React.Component {
         <Card className={classes.card}>
           <Grid
             container
+            style={{display: 'flex', flex: 1, flexDirection: 'column'}}
             flexGrow={1}
             padding="50"
             spacing={0}
@@ -281,7 +284,7 @@ class Dashboard extends React.Component {
               />
             </Grid>
             <Grid item>
-              <Typography>
+              <Typography style={{fontFamily: 'Arimo'}}>
                 {this.props.teacherFirstName} {this.props.teacherLastName}
               </Typography>
             </Grid>
@@ -289,6 +292,7 @@ class Dashboard extends React.Component {
               item
               className={classes.infoDisplayGrid}
               style={{ alignItems: this.props.infoPlacement }}
+              flex={1}
             >
               {this.props.infoDisplay}
             </Grid>
@@ -373,6 +377,8 @@ Dashboard.propTypes = {
   infoPlacement: PropTypes.string.isRequired,
   completeObservation: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
+  teacherFirstName: PropTypes.string.isRequired,
+  teacherLastName: PropTypes.string.isRequired,
   // These Are mapped from Redux into Props
   resetTransitionTime: PropTypes.func.isRequired,
   emptyClimateStack: PropTypes.func.isRequired,

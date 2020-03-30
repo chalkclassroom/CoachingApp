@@ -140,13 +140,13 @@ const clickedThemes = createMuiTheme({
       primaryTextColor: white
     },
     travelingColor: {
-      backgroundColor: orange[200],
+      backgroundColor: orange[100],
       color: "#000",
       textColor: white,
       primaryTextColor: white
     },
     childWaitingColor: {
-      backgroundColor: deepOrange[200],
+      backgroundColor: deepOrange[100],
       color: "#000",
       textColor: white,
       primaryTextColor: white

@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
 import Button from '@material-ui/core/Button';
@@ -16,7 +16,7 @@ import {
   emptyClimateStack
 } from "../../../state/actions/classroom-climate";
 import Dashboard from "../../../components/Dashboard";
-import Countdown from "../../../components/Countdown.tsx";
+import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
 
 /*
@@ -28,16 +28,16 @@ import EmptyToneRating from "../../../components/ClassroomClimateComponent/Empty
     and then allow for 2 full minutes in between ratings.
  */
 
-const RATING_INTERVAL = 130000;
+const RATING_INTERVAL: number = 130000;
 
-const styles = {
+const styles: object = {
   root: {
-    flexGrow: 1,
-    backgroundColor: "#ffffff",
     display: "flex",
-    minHeight: "100vh",
+    height: "100vh",
     flexDirection: "column",
-    overflow: 'hidden'
+    backgroundColor: "#ffffff",
+    overflowX: 'hidden',
+    overflowY: 'auto'
   },
   grow: {
     flexGrow: 1
@@ -51,21 +51,57 @@ const styles = {
   }
 };
 
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
+interface Props {
+  classes: { root: string, grow: string, backButton: string },
+  location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string,
+          teacher: Teacher,
+          teachers: Array<Teacher>
+        }
+      }
+    ): void
+  },
+  appendClimateRating(rating: number): void
+};
+
+interface State {
+  auth: boolean,
+  time: number,
+  ratingIsOpen: boolean,
+  recs: boolean,
+  incompleteRating: boolean
+}
+
 /**
  * classroom climate observation tool
  * @class ClassroomClimatePage
  */
-class ClassroomClimatePage extends React.Component {
+class ClassroomClimatePage extends React.Component<Props, State> {
   state = {
     auth: true,
     time: RATING_INTERVAL,
     ratingIsOpen: false,
-    ratings: [],
     recs: true,
     incompleteRating: false
   };
 
-  tick = () => {
+  tick = (): void => {
     if (this.state.time <= 0) {
       this.handleRatingModal();
       this.setState({ time: RATING_INTERVAL });
@@ -78,18 +114,18 @@ class ClassroomClimatePage extends React.Component {
     }
   };
 
-  handleRatingModal = () => {
+  /**
+   * @return {void}
+   */
+  handleRatingModal = (): void => {
     this.setState({ ratingIsOpen: true });
-  };
-
-  handleClickAway = () => {
-    this.setState({ help: false });
   };
 
   /**
    * @param {number} rating
+   * @return {void}
    */
-  handleRatingConfirmation = rating => {
+  handleRatingConfirmation = (rating: number): void => {
     this.setState({ ratingIsOpen: false });
 
     this.props.appendClimateRating(rating);
@@ -103,11 +139,17 @@ class ClassroomClimatePage extends React.Component {
     firebase.handlePushClimate(entry);
   };
 
-  handleIncomplete = () => {
+  /**
+   * @return {void}
+   */
+  handleIncomplete = (): void => {
     this.setState({ incompleteRating: true });
   };
 
-  handleClickAwayIncomplete = () => {
+  /**
+   * @return {void}
+   */
+  handleClickAwayIncomplete = (): void => {
     this.setState({ incompleteRating: false });
   };
 
@@ -120,15 +162,39 @@ class ClassroomClimatePage extends React.Component {
   componentWillUnmount() {
     clearInterval(this.timer);
   }
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    location: PropTypes.exact({
+      state: PropTypes.exact({
+        teacher: PropTypes.exact({
+          email: PropTypes.string,
+          firstName: PropTypes.string,
+          lastName: PropTypes.string,
+          notes: PropTypes.string,
+          id: PropTypes.string,
+          phone: PropTypes.string,
+          role: PropTypes.string,
+          school: PropTypes.string
+        }).isRequired,
+        teachers: PropTypes.array.isRequired
+      })
+    }).isRequired,
+    history: PropTypes.exact({
+      replace: PropTypes.func
+    }).isRequired,
+    appendClimateRating: PropTypes.func.isRequired
+  }
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
           <RatingModal
@@ -141,13 +207,37 @@ class ClassroomClimatePage extends React.Component {
             <EmptyToneRating />
           </ClickAwayListener>
         </Modal>
-        <main style={{ flex: 1 }}>
+        <header>
+          <Grid container direction="row" alignItems="center" justify="flex-start">
+            <Grid item xs={3}>
+              <Grid container alignItems="center" justify="center">
+                <Grid item>
+                <Button variant="contained" size="medium" className={this.props.classes.backButton}
+                    onClick={(): void => {
+                      this.props.history.replace({
+                        pathname: "/Magic8Menu",
+                        state: {
+                          teacher: this.props.location.state.teacher,
+                          type: "Observe",
+                          teachers: this.props.location.state.teachers
+                        }
+                      })
+                    }}>
+                    <ChevronLeftRoundedIcon />
+                    <b>Back</b>
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </header>
+        <main style={{ flexGrow: 1 }}>
           <Grid
             container
             alignItems={"center"}
             justify={"center"}
             direction={"column"}
-            style={{ margin: 10 }}
+            // style={{ margin: 10 }}
           >
             <Grid
               container
@@ -163,22 +253,6 @@ class ClassroomClimatePage extends React.Component {
                   direction={"column"}
                 >
                   <Grid item>
-                    <Button variant="contained" size="medium" className={classes.backButton}
-                      onClick={() => {
-                          this.props.history.replace({
-                            pathname: "/Magic8Menu",
-                            state: {
-                              teacher: this.props.location.state.teacher,
-                              type: "Observe",
-                              teachers: this.props.location.state.teachers
-                            }
-                          })
-                      }}>
-                      <ChevronLeftRoundedIcon />
-                      <b>Observe</b>
-                    </Button>
-                  </Grid>
-                  <Grid item>
                     <Dashboard
                       type="CC"
                       infoDisplay={
@@ -186,6 +260,8 @@ class ClassroomClimatePage extends React.Component {
                       }
                       infoPlacement="center"
                       completeObservation={true}
+                      teacherFirstName={this.props.location.state.teacher.firstName}
+                      teacherLastName={this.props.location.state.teacher.lastName}
                     />
                   </Grid>
                 </Grid>
@@ -198,7 +274,7 @@ class ClassroomClimatePage extends React.Component {
                   direction={"column"}
                 >
                   <FirebaseContext.Consumer>
-                    {firebase => (
+                    {(firebase: object): React.ReactNode => (
                       <BehaviorCounter
                         teacherId={this.props.location.state.teacher.id}
                         firebase={firebase}
@@ -214,12 +290,6 @@ class ClassroomClimatePage extends React.Component {
     );
   }
 }
-
-ClassroomClimatePage.propTypes = {
-  classes: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-  appendClimateRating: PropTypes.func.isRequired
-};
 
 ClassroomClimatePage.contextType = FirebaseContext;
 

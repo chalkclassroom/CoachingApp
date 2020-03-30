@@ -236,7 +236,7 @@ class Magic8MenuPage extends Component {
       'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />
     }
     return (
-      <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
+      <div style={{display: 'flex', flexDirection: 'column', height: '100vh', overflowX: 'hidden'}}>
         <div>
           <FirebaseContext.Consumer>
             {firebase => <AppBar firebase={firebase} />}

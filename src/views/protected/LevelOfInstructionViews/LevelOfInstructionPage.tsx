@@ -77,7 +77,7 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
                         })
                     }}>
                     <ChevronLeftRoundedIcon />
-                    <b>Observe</b>
+                    <b>Back</b>
                   </Button>
                 </Grid>
                 <Grid item>
