@@ -245,7 +245,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
               justify={"center"}
               direction={"row"}
             >
-              <Grid item xs={3}>
+              <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
                 <Grid
                   container
                   alignItems={"center"}

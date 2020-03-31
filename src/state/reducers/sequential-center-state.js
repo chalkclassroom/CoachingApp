@@ -2,7 +2,7 @@ import {
   ADD_NEW_CENTER,
   UPDATE_CENTER_COUNT,
   TOGGLE_SEQUENTIAL_MATERIALS,
-  DELETE_ALL_CENTERS
+  DELETE_SA_CENTERS
 } from "../actions/sequential-activities";
 
 const initialState = { sequentialCenters: [] };
@@ -60,7 +60,7 @@ export default (state = initialState, action) => {
         sequentialCenters: new_centers
       };
 
-    case DELETE_ALL_CENTERS:
+    case DELETE_SA_CENTERS:
       return {
         ...state,
         sequentialCenters: []

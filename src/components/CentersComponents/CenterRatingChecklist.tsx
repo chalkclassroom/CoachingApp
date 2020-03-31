@@ -20,10 +20,11 @@ import * as Constants from '../../constants';
 
 const styles: object = {
   root: {
-    flexGrow: 1,
+    // flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
     flexDirection: "column",
+    height: '100vh',
     fontFamily: "Arimo"
   },
   grow: {
@@ -52,6 +53,8 @@ interface Props {
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
   },
   type: string,
+  teacherFirstName: string,
+  teacherLastName: string
 }
 
 interface State {
@@ -277,6 +280,8 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     toggleScreen: PropTypes.func.isRequired,
     finishVisit: PropTypes.func.isRequired,
     currentCenter: PropTypes.string.isRequired,
+    teacherFirstName: PropTypes.string.isRequired,
+    teacherLastName: PropTypes.string.isRequired
   }
 
   /**
@@ -285,7 +290,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     return (
-      <div className={this.props.classes.root}>
+      <div>
         <Dialog
           open={this.state.timeUpOpen}
           onClose={this.handleTimeUpClose}
@@ -322,7 +327,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
             direction={"row"}
             justify={"center"}
           >
-            <Grid item xs={3}>
+            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
               <Grid
                 container
                 alignItems={"center"}
@@ -334,15 +339,16 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                   infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
+                  teacherFirstName={this.props.teacherFirstName}
+                  teacherLastName={this.props.teacherLastName}
                 />
               </Grid>
             </Grid>
             <Grid item xs={9}>
               <Grid>
-                <div style={{ margin: 10 }} />
                 <Button size={"small"} onClick={this.handleBackButton} style={{fontFamily: 'Arimo'}}>
                   <KeyboardArrowLeft />
-                  Back
+                  Return to Center Menu
                 </Button>
               </Grid>
               <Grid container alignItems="center" direction="column" xs={12}>
@@ -414,7 +420,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       <Typography
                         variant="body1"
                         align="center"
-                        style={{fontFamily: 'Arimo', paddingRight: '1em', paddingBottom: '1em'}}
+                        style={{fontFamily: 'Arimo', paddingLeft: '1em', paddingRight: '1em', height: '5vh', verticalAlign: 'center'}}
                       >
                         {Constants.Checklist[this.props.type].ChildInstructions}
                       </Typography>
@@ -425,13 +431,14 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                             key={index}
                             onClick={this.handleChildToggle(index+1)}
                             disabled={this.childDisabled()}
+                            style={{height: '12vh'}}
                           >
                             <Checkbox
                               checked={
                                 !this.childDisabled() && this.state.childChecked.includes(index+1)
                               }
                             />
-                            <ListItemText disableTypography>
+                            <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
                               {value}
                             </ListItemText>
                           </ListItem>);
@@ -447,7 +454,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       <Typography
                         variant="body1"
                         align="center"
-                        style={{fontFamily: 'Arimo', paddingRight: '1em', paddingBottom: '1em'}}
+                        style={{fontFamily: 'Arimo', paddingLeft: '1em', paddingRight: '1em', height: '5vh', verticalAlign: 'center'}}
                       >
                         {Constants.Checklist[this.props.type].TeacherInstructions}
                       </Typography>
@@ -458,13 +465,14 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                             key={index}
                             onClick={this.handleTeacherToggle(index+6)}
                             disabled={this.teacherDisabled()}
+                            style={{height: '12vh'}}
                           >
                             <Checkbox
                               checked={
                                 !this.teacherDisabled() && this.state.teacherChecked.includes(index+6)
                               }
                             />
-                            <ListItemText disableTypography>
+                            <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
                               {value}
                             </ListItemText>
                           </ListItem>);

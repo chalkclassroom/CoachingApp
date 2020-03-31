@@ -92,6 +92,8 @@ interface Props {
     name: string,
     count: number
   }>,
+  teacherFirstName: string,
+  teacherLastName: string
 }
 
 interface State{
@@ -181,6 +183,8 @@ class CenterMenu extends React.Component<Props, State> {
     incrementCenterCount: PropTypes.func.isRequired,
     centers: PropTypes.array.isRequired,
     type: PropTypes.string.isRequired,
+    teacherFirstName: PropTypes.string.isRequired,
+    teacherLastName: PropTypes.string.isRequired
   }
 
   /**
@@ -200,72 +204,71 @@ class CenterMenu extends React.Component<Props, State> {
         return (
           <div>
             <Grid
+              container
               justify="center"
-              alignItems="stretch"
+              alignItems="center"
               direction="row"
-              style={{ margin: 10 }}
             >
-              <Grid justify="flex-start" alignItems="center" direction="row">
-                <Grid container spacing={0} direction="row" alignItems="center">
-                  <NewCenterDialog
-                    open={this.state.addDialog}
-                    handleClose={this.handleClose}
-                    handleSubmit={this.handleAddCenter}
+              <NewCenterDialog
+                open={this.state.addDialog}
+                handleClose={this.handleClose}
+                handleSubmit={this.handleAddCenter}
+              />
+              <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+                <Grid
+                  container
+                  alignItems={"center"}
+                  justify={"center"}
+                  direction={"column"}
+                >
+                  <Dashboard
+                    type={this.props.type}
+                    infoDisplay={
+                      <TotalVisitCount count={this.state.totalVisitCount} />
+                    }
+                    infoPlacement="flex-start"
+                    completeObservation={true}
+                    teacherFirstName={this.props.teacherFirstName}
+                    teacherLastName={this.props.teacherLastName}
                   />
-                  <Grid item xs={3}>
+                </Grid>
+              </Grid>
+              <Grid item xs={9}>
+                <Grid container direction="row" justify="flex-start" alignItems="center">
+                  {this.props.centers.map((center, index) => (
                     <Grid
-                      container
-                      alignItems={"center"}
-                      justify={"center"}
-                      direction={"column"}
-                    >
-                      {/* <div style={{ margin: 20 }} /> */}
-                      <Dashboard
-                        type={this.props.type}
-                        infoDisplay={
-                          <TotalVisitCount count={this.state.totalVisitCount} />
-                        }
-                        infoPlacement="flex-start"
-                        completeObservation={true}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container xs={9}>
-                    {this.props.centers.map((center, index) => (
-                      <Grid
-                        key={index}
-                        item
-                        xs={4}
-                        style={{ textAlign: "center", padding: "10px" }}
-                      >
-                        <VisitCenterButton
-                          centerName={center.name}
-                          visitCount={center.count}
-                          onClick={() => this.handleCenterVisit(center.name)}
-                          type={this.props.type}
-                        />
-                      </Grid>
-                    ))}
-                    <Grid
+                      key={index}
                       item
                       xs={4}
                       style={{ textAlign: "center", padding: "10px" }}
                     >
-                      <Button
-                        variant="contained"
-                        style={{
-                          minHeight: 150,
-                          maxHeight: 150,
-                          minWidth: 150,
-                          maxWidth: 150,
-                          backgroundColor: grey[400],
-                          fontFamily: 'Arimo'
-                        }}
-                        onClick={this.handleClickOpen}
-                      >
-                        Add Center <br /> <br /> +
-                      </Button>
+                      <VisitCenterButton
+                        centerName={center.name}
+                        visitCount={center.count}
+                        onClick={(): void => this.handleCenterVisit(center.name)}
+                        type={this.props.type}
+                      />
                     </Grid>
+                  ))}
+                  <Grid
+                    item
+                    xs={4}
+                    style={{ textAlign: "center", padding: "10px" }}
+                  >
+                    <Button
+                      variant="contained"
+                      style={{
+                        minHeight: 150,
+                        maxHeight: 150,
+                        minWidth: 150,
+                        maxWidth: 150,
+                        backgroundColor: grey[400],
+                        fontFamily: 'Arimo'
+                      }}
+                      onClick={this.handleClickOpen}
+                    >
+                      Add Center <br /> <br /> +
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>
@@ -280,6 +283,8 @@ class CenterMenu extends React.Component<Props, State> {
             finishVisit={centerName => this.finishCenterVisit(centerName)}
             firebase={this.props.firebase}
             type={this.props.type}
+            teacherFirstName={this.props.teacherFirstName}
+            teacherLastName={this.props.teacherLastName}
           />
         );
       default:

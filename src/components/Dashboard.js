@@ -40,7 +40,9 @@ import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHe
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
-import { deleteAllCenters } from "../state/actions/associative-cooperative";
+import { deleteACCenters } from "../state/actions/associative-cooperative";
+import { deleteSACenters } from "../state/actions/sequential-activities";
+import { deleteMICenters } from "../state/actions/math-instruction";
 import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
 import * as Constants from '../constants';
@@ -97,8 +99,8 @@ const styles = {
     borderWidth: "2px",
     fontSize: "15px",
     alignSelf: "flex-end",
-    marginTop: "auto",
-    fontFamily: "Arimo"
+    fontFamily: "Arimo",
+    margin: 10
   },
   gridTopMargin: {
     marginTop: "5px",
@@ -341,7 +343,13 @@ class Dashboard extends React.Component {
                           ? this.props.emptyClimateStack()
                           : this.props.type === "TT"
                           ? this.props.resetTransitionTime()
-                          : this.props.deleteAllCenters();
+                          : this.props.type === "MI"
+                          ? this.props.deleteMICenters()
+                          : this.props.type === "SA"
+                          ? this.props.deleteSACenters()
+                          : this.props.type === "AC"
+                          ? this.props.deleteACCenters()
+                          : null;
                           this.props.history.push({
                             pathname: "/Home",
                             state: this.props.history.state
@@ -382,10 +390,12 @@ Dashboard.propTypes = {
   // These Are mapped from Redux into Props
   resetTransitionTime: PropTypes.func.isRequired,
   emptyClimateStack: PropTypes.func.isRequired,
-  deleteAllCenters: PropTypes.func.isRequired
+  deleteMICenters: PropTypes.func.isRequired,
+  deleteSACenters: PropTypes.func.isRequired,
+  deleteACCenters: PropTypes.func.isRequired
 };
 
 export default withRouter(connect(
     null,
-    { resetTransitionTime, emptyClimateStack, deleteAllCenters }
+    { resetTransitionTime, emptyClimateStack, deleteMICenters, deleteSACenters, deleteACCenters }
 )(withStyles(styles)(Dashboard)));

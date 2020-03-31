@@ -48,7 +48,19 @@ interface Teacher {
 
 interface Props {
   classes: { root: string, backButton: string },
-  location: { state: { teacher: Teacher, teachers: Array<Teacher>}}
+  location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string,
+          teacher: Teacher,
+          teachers: Array<Teacher>
+        }
+      }
+    ): void
+  }
 };
 
 interface State {
@@ -129,7 +141,7 @@ class TransitionTimePage extends React.Component<Props, State> {
             <Grid item xs={3}>
               <Grid container alignItems="center" justify="center">
                 <Grid item>
-                <Button variant="contained" size="medium" className={classes.backButton}
+                  <Button variant="contained" size="medium" className={classes.backButton}
                     onClick={(): void => {
                       this.props.history.replace({
                         pathname: "/Magic8Menu",
@@ -150,7 +162,7 @@ class TransitionTimePage extends React.Component<Props, State> {
         </header>
         <main style={{ flexGrow: 1 }}>
           <Grid container alignItems="center">
-            <Grid item xs={3}>
+            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
               <Grid
                 container
                 alignItems={"center"}
