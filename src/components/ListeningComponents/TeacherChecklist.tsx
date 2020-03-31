@@ -51,7 +51,9 @@ interface Props {
     handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
     handlePushListening(mEntry: {checked: Array<number>}): Promise<void>
   },
-  teacherId: string
+  teacherId: string,
+  teacherFirstName: string,
+  teacherLastName: string
 }
 
 interface State {
@@ -183,6 +185,8 @@ class TeacherChecklist extends React.Component<Props, State> {
     classes: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired,
     teacherId: PropTypes.string.isRequired,
+    teacherFirstName: PropTypes.string.isRequired,
+    teacherLastName: PropTypes.string.isRequired
   }
 
   /**
@@ -245,9 +249,8 @@ class TeacherChecklist extends React.Component<Props, State> {
             alignItems={"center"}
             direction={"row"}
             justify={"center"}
-            style={{height: '90vh'}}
           >
-            <Grid item xs={3}>
+            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
               <Grid
                 container
                 alignItems={"center"}
@@ -259,6 +262,8 @@ class TeacherChecklist extends React.Component<Props, State> {
                   infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={true}
+                  teacherFirstName={this.props.teacherFirstName}
+                  teacherLastName={this.props.teacherLastName}
                 />
               </Grid>
             </Grid>
