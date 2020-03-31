@@ -7,7 +7,7 @@ import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
+import { deleteACCenters } from "../../../state/actions/associative-cooperative";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import {
   addNewCenter,
@@ -17,7 +17,6 @@ import {
 
 const styles: object = {
   root: {
-    // flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
     height: "100vh",
@@ -33,7 +32,7 @@ const styles: object = {
     color: '#333333',
     borderRadius: 3,
     textTransform: 'none'
-  },
+  }
 };
 
 interface Teacher {
@@ -89,7 +88,21 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
+    location: PropTypes.exact({
+      state: PropTypes.exact({
+        teacher: PropTypes.exact({
+          email: PropTypes.string,
+          firstName: PropTypes.string,
+          lastName: PropTypes.string,
+          notes: PropTypes.string,
+          id: PropTypes.string,
+          phone: PropTypes.string,
+          role: PropTypes.string,
+          school: PropTypes.string
+        }).isRequired,
+        teachers: PropTypes.array.isRequired
+      })
+    }).isRequired
   };
 
   /**
@@ -159,6 +172,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { deleteAllCenters, addNewCenter, incrementCenterCount })(
+export default connect(mapStateToProps, { deleteACCenters, addNewCenter, incrementCenterCount })(
   withStyles(styles)(AssociativeCooperativeInteractionsPage)
 );
