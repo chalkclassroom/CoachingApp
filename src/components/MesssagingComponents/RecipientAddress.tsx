@@ -14,7 +14,8 @@ const options = [
 const RecipentAddress: React.FC<{selectedOption: any, setOption: any, firebase: any}> = (props: {selectedOption: any, setOption: any, firebase: any}) => {
 
 	const [teacherList, setTeacherList] = useState([{value: '', label: ''}])
-	console.log(teacherList);
+  /*
+  console.log(teacherList);
 	console.log(teacherList[0]);
 	console.log(teacherList[0].value);
 	console.log(teacherList[0].label);
@@ -22,6 +23,12 @@ const RecipentAddress: React.FC<{selectedOption: any, setOption: any, firebase: 
 	props.firebase.getTeacherList().then(teacherList =>
     teacherList.map(teacher => {return {value: teacher.email, label: teacher.firstName+teacher.lastName}})).then(options => { console.log(options); setTeacherList(options); });
   }
+  */
+  props.firebase.collection("partners").get().then(function(querySnapshot: any[]) {
+    querySnapshot.forEach(function(doc) {
+      teacherList.push(doc.id,doc.data)
+    });
+  });
 
   const handleChange = newSelectedOption => {
     props.setOption(newSelectedOption);
