@@ -47,11 +47,7 @@ interface Props {
     replace(
       param: {
         pathname: string,
-        state: {
-          type: string,
-          teacher: Teacher,
-          teachers: Array<Teacher>
-        }
+        state: { type: string }
       }
     ): void
   }
@@ -113,9 +109,7 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
                       this.props.history.replace({
                         pathname: "/Magic8Menu",
                         state: {
-                          teacher: this.props.location.state.teacher,
-                          type: "Observe",
-                          teachers: this.props.location.state.teachers
+                          type: "Observe"
                         }
                       })
                     }}>
@@ -134,8 +128,6 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
                 <Dashboard
                   type="LI"
                   completeObservation={true}
-                  teacherFirstName={this.props.location.state.teacher.firstName}
-                  teacherLastName={this.props.location.state.teacher.lastName}
                 />
               </Grid>
             </Grid>
@@ -144,7 +136,6 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
                 <FirebaseContext.Consumer>
                   {(firebase: object): React.ReactNode => (
                     <InstructionCounter
-                      teacherId={this.props.location.state.teacher.id}
                       firebase={firebase}
                     />
                   )}

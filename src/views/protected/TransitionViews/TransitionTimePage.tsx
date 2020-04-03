@@ -48,15 +48,15 @@ interface Teacher {
 
 interface Props {
   classes: { root: string, backButton: string },
-  location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
+  // location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
   history: {
     replace(
       param: {
         pathname: string,
         state: {
           type: string,
-          teacher: Teacher,
-          teachers: Array<Teacher>
+          // teacher: Teacher,
+          // teachers: Array<Teacher>
         }
       }
     ): void
@@ -121,7 +121,7 @@ class TransitionTimePage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
+    // location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
   };
 
   /**
@@ -146,9 +146,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                       this.props.history.replace({
                         pathname: "/Magic8Menu",
                         state: {
-                          teacher: this.props.location.state.teacher,
-                          type: "Observe",
-                          teachers: this.props.location.state.teachers
+                          type: "Observe"
                         }
                       })
                     }}>
@@ -175,8 +173,6 @@ class TransitionTimePage extends React.Component<Props, State> {
                     infoDisplay={<TransitionLog />}
                     infoPlacement="center"
                     completeObservation={true}
-                    teacherFirstName={this.props.location.state.teacher.firstName}
-                    teacherLastName={this.props.location.state.teacher.lastName}
                   />
                 </Grid>
               </Grid>
@@ -206,7 +202,6 @@ class TransitionTimePage extends React.Component<Props, State> {
                 <FirebaseContext.Consumer>
                   {(firebase: object): React.ReactNode => (
                     <TransitionTimer
-                      teacherId={this.props.location.state.teacher.id}
                       firebase={firebase}
                       typeSelected={
                         this.state.transitionType === null ? false : true

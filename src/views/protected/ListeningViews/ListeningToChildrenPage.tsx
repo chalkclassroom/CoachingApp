@@ -43,9 +43,7 @@ interface Props {
       param: {
         pathname: string,
         state: {
-          type: string,
-          teacher: Teacher,
-          teachers: Array<Teacher>
+          type: string
         }
       }
     ): void
@@ -74,9 +72,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
                     history.replace({
                       pathname: "/Magic8Menu",
                       state: {
-                        teacher: location.state.teacher,
-                        type: "Observe",
-                        teachers: location.state.teachers
+                        type: "Observe"
                       }
                     })
                   }}>
@@ -90,12 +86,23 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
       </header>
       <main style={{ flexGrow: 1 }}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => (
+          {(firebase: {
+            auth: {
+              currentUser: {
+                uid: string
+              }
+            },
+            handleSession(mEntry: {
+              teacher: string,
+              observedBy: string,
+              type: string
+            }): void,
+            handlePushListening(mEntry: {
+              checked: Array<number>
+            }): Promise<void>
+          }): React.ReactNode => (
             <TeacherChecklist
               firebase={firebase}
-              teacherId={location.state.teacher.id}
-              teacherFirstName={location.state.teacher.firstName}
-              teacherLastName={location.state.teacher.lastName}
               type='LC'
             />
           )}

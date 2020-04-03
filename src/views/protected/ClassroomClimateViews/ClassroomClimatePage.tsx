@@ -64,15 +64,12 @@ interface Teacher {
 
 interface Props {
   classes: { root: string, grow: string, backButton: string },
-  location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
   history: {
     replace(
       param: {
         pathname: string,
         state: {
-          type: string,
-          teacher: Teacher,
-          teachers: Array<Teacher>
+          type: string
         }
       }
     ): void
@@ -165,21 +162,6 @@ class ClassroomClimatePage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.exact({
-      state: PropTypes.exact({
-        teacher: PropTypes.exact({
-          email: PropTypes.string,
-          firstName: PropTypes.string,
-          lastName: PropTypes.string,
-          notes: PropTypes.string,
-          id: PropTypes.string,
-          phone: PropTypes.string,
-          role: PropTypes.string,
-          school: PropTypes.string
-        }).isRequired,
-        teachers: PropTypes.array.isRequired
-      })
-    }).isRequired,
     history: PropTypes.exact({
       replace: PropTypes.func
     }).isRequired,
@@ -217,9 +199,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                       this.props.history.replace({
                         pathname: "/Magic8Menu",
                         state: {
-                          teacher: this.props.location.state.teacher,
-                          type: "Observe",
-                          teachers: this.props.location.state.teachers
+                          type: "Observe"
                         }
                       })
                     }}>
@@ -231,13 +211,12 @@ class ClassroomClimatePage extends React.Component<Props, State> {
             </Grid>
           </Grid>
         </header>
-        <main style={{ flexGrow: 1 }}>
+        <main style={{ flex: 1 }}>
           <Grid
             container
             alignItems={"center"}
             justify={"center"}
             direction={"column"}
-            // style={{ margin: 10 }}
           >
             <Grid
               container
@@ -260,8 +239,6 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                       }
                       infoPlacement="center"
                       completeObservation={true}
-                      teacherFirstName={this.props.location.state.teacher.firstName}
-                      teacherLastName={this.props.location.state.teacher.lastName}
                     />
                   </Grid>
                 </Grid>
@@ -276,7 +253,6 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                   <FirebaseContext.Consumer>
                     {(firebase: object): React.ReactNode => (
                       <BehaviorCounter
-                        teacherId={this.props.location.state.teacher.id}
                         firebase={firebase}
                       />
                     )}

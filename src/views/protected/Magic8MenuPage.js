@@ -30,6 +30,8 @@ import LockedModal from '../../components/LockedModal';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
+import { changeTeacher } from '../../state/actions/teacher';
+import { connect } from 'react-redux';
 
 const CardRow = styled.div`
   position: relative;
@@ -118,8 +120,9 @@ class Magic8MenuPage extends Component {
   /**
    * @param {string} selected 
    * @param {string} title 
+   * @return {void}
    */
-  onClick(selected, title) {
+  onClick = (selected, title) => {
     if (selected && this.state.numSelected > 0) {
       this.setState({
         numSelected: this.state.numSelected - 1,
@@ -138,24 +141,18 @@ class Magic8MenuPage extends Component {
   }
 
   handleGoButton = () => {
-    console.log('this.props.location.state', this.props.location.state);
-    // console.log('this.location.state?', this.location.state);
-    console.log('teacher state', this.state.teacher)
     if (this.state.page === "Training") {
       this.props.history.push({
         pathname: `/${this.state.selected}Training`,
-        state: {teacher: this.state.teacher}
       });
     } else if (this.state.unlocked.includes(MAP[this.state.selected])) {
       if (this.state.page === "Observe") {
         this.props.history.push({
           pathname: `/${this.state.selected}`,
-          state: {teacher: this.state.teacher, teachers: this.props.location.state.teachers}
         });
       } else if (this.state.page === "Results") {
         this.props.history.push({
           pathname: `/${this.state.selected}Results`,
-          state: {teacher: this.state.teacher}
         });
       }
     }
@@ -192,7 +189,6 @@ class Magic8MenuPage extends Component {
         : this.props.history.location.state.type === "Observe"
         ? "Observe"
         : "Results",
-      teacher: this.props.location.state.teacher
     });
   }
 
@@ -204,7 +200,6 @@ class Magic8MenuPage extends Component {
     if (this.props.location.state.type !== prevProps.location.state.type) {
       this.setState({
         page: this.props.location.state.type,
-        teacher: this.props.location.state.teacher
       });
     }
   }
@@ -213,10 +208,7 @@ class Magic8MenuPage extends Component {
    * @param {event} event
    */
   changeTeacher = (event) => {
-    console.log('new teacher', event.target.value);
-    this.setState({
-      teacher: event.target.value,
-    })
+    this.props.changeTeacher(event.target.value);
   };
 
   /**
@@ -258,14 +250,13 @@ class Magic8MenuPage extends Component {
                     {this.props.history.location.state.type === "Training" ? <div /> : (
                       <TextField
                         select
-                        // className={classes.viewButtons}
                         style={{width: '100%'}}
-                        value={this.state.teacher}
+                        value={this.props.teacherSelected}
                         onChange={this.changeTeacher}
                         InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
                         InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
                       >
-                        {this.props.location.state.teachers.map((teacher, index)=> 
+                        {this.props.teacherList.map((teacher, index)=> 
                           {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
                             <em>{teacher.firstName + " " + teacher.lastName}</em>
                           </MenuItem>})}
@@ -374,85 +365,6 @@ class Magic8MenuPage extends Component {
               </Grid>
             </Grid>
           </Grid>
-          {/* <div align="center">
-            <Typography className={classes.titleText}>
-              {this.state.page}
-            </Typography>
-          </div>
-          <div>
-            <Typography className={classes.instructionText}>
-              Select the skill you&apos;d like to{" "}
-              {this.state.page === "Training" ? "learn:" : "focus on:"}
-            </Typography>
-          </div> */}
-          {/* <CardRow>
-            <Magic8Card
-              title="TransitionTime"
-              icon={TransitionTimeIconImage}
-              onClick={this.onClick}
-              numSelected={this.state.numSelected}
-              unlocked={this.state.unlocked.includes(1)}
-              page={this.state.page}
-            />
-            <Magic8Card
-              title="ClassroomClimate"
-              icon={ClassroomClimateIconImage}
-              onClick={this.onClick}
-              numSelected={this.state.numSelected}
-              unlocked={this.state.unlocked.includes(2)}
-              page={this.state.page}
-            />
-            <Magic8Card
-              title="MathInstruction"
-              icon={MathIconImage}
-              onClick={this.onClick}
-              numSelected={this.state.numSelected}
-              unlocked={this.state.unlocked.includes(3)}
-              page={this.state.page}
-            />
-            <Magic8Card
-              title="StudentEngagement"
-              icon={EngagementIconImage}
-              onClick={this.onClick}
-              numSelected={this.state.numSelected}
-              unlocked={this.state.unlocked.includes(4)}
-              page={this.state.page}
-            />
-          </CardRow> */}
-          {/* <CardRow>
-            <Magic8Card
-              title="LevelOfInstruction"
-              icon={InstructionIconImage}
-              onClick={this.onClick}
-              numSelected={this.state.numSelected}
-              unlocked={this.state.unlocked.includes(5)}
-              page={this.state.page}
-            />
-            <Magic8Card
-              title="ListeningToChildren"
-              icon={ListeningIconImage}
-              onClick={this.onClick}
-              numSelected={this.state.numSelected}
-              unlocked={this.state.unlocked.includes(6)}
-              page={this.state.page}
-            />
-            <Magic8Card
-              title="SequentialActivities"
-              icon={SequentialIconImage}
-              onClick={this.onClick}
-              numSelected={this.state.numSelected}
-              unlocked={this.state.unlocked.includes(7)}
-              page={this.state.page}
-            />
-            <Magic8Card
-              title="AssociativeCooperativeInteractions"
-              icon={AssocCoopIconImage}
-              onClick={this.onClick}
-              numSelected={this.state.numSelected}
-              unlocked={this.state.unlocked.includes(8)}
-              page={this.state.page}
-            />
-          </CardRow> */}
           <ObservationModal
             open={
               this.state.numSelected===1 &&
@@ -504,7 +416,26 @@ Magic8MenuPage.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
+  changeTeacher: PropTypes.func.isRequired,
+  teacherSelected: PropTypes.exact({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    notes: PropTypes.string,
+    id: PropTypes.string,
+    phone: PropTypes.string,
+    role: PropTypes.string,
+    school: PropTypes.string
+  }).isRequired,
+  teacherList: PropTypes.array.isRequired
+};
+
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher,
+    teacherList: state.teacherListState.teachers
+  };
 };
 
 Magic8MenuPage.contextType = FirebaseContext;
-export default withStyles(styles)(Magic8MenuPage);
+export default withStyles(styles)(connect(mapStateToProps, { changeTeacher })(Magic8MenuPage));;

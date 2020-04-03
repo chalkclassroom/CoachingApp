@@ -43,6 +43,7 @@ import { emptyClimateStack } from "../state/actions/classroom-climate";
 import { deleteACCenters } from "../state/actions/associative-cooperative";
 import { deleteSACenters } from "../state/actions/sequential-activities";
 import { deleteMICenters } from "../state/actions/math-instruction";
+import { clearTeacher } from "../state/actions/teacher";
 import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
 import * as Constants from '../constants';
@@ -287,7 +288,7 @@ class Dashboard extends React.Component {
             </Grid>
             <Grid item>
               <Typography style={{fontFamily: 'Arimo'}}>
-                {this.props.teacherFirstName} {this.props.teacherLastName}
+                {this.props.teacherSelected.firstName} {this.props.teacherSelected.lastName}
               </Typography>
             </Grid>
             <Grid
@@ -351,9 +352,9 @@ class Dashboard extends React.Component {
                           ? this.props.deleteACCenters()
                           : null;
                           this.props.history.push({
-                            pathname: "/Home",
-                            state: this.props.history.state
+                            pathname: "/Home"
                           });
+                          this.props.clearTeacher();
                           firebase.endSession();
                       }}
                     />
@@ -385,17 +386,34 @@ Dashboard.propTypes = {
   infoPlacement: PropTypes.string.isRequired,
   completeObservation: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
-  teacherFirstName: PropTypes.string.isRequired,
-  teacherLastName: PropTypes.string.isRequired,
+  // teacherFirstName: PropTypes.string.isRequired,
+  // teacherLastName: PropTypes.string.isRequired,
   // These Are mapped from Redux into Props
   resetTransitionTime: PropTypes.func.isRequired,
   emptyClimateStack: PropTypes.func.isRequired,
   deleteMICenters: PropTypes.func.isRequired,
   deleteSACenters: PropTypes.func.isRequired,
-  deleteACCenters: PropTypes.func.isRequired
+  deleteACCenters: PropTypes.func.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  teacherSelected: PropTypes.exact({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    notes: PropTypes.string,
+    id: PropTypes.string,
+    phone: PropTypes.string,
+    role: PropTypes.string,
+    school: PropTypes.string
+  }).isRequired,
 };
 
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  }
+}
+
 export default withRouter(connect(
-    null,
-    { resetTransitionTime, emptyClimateStack, deleteMICenters, deleteSACenters, deleteACCenters }
+    mapStateToProps,
+    { clearTeacher, resetTransitionTime, emptyClimateStack, deleteMICenters, deleteSACenters, deleteACCenters }
 )(withStyles(styles)(Dashboard)));

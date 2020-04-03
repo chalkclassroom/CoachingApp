@@ -18,6 +18,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
 import Zoom from '@material-ui/core/Zoom';
+import { connect } from 'react-redux';
 import * as Constants from '../../constants';
 
 
@@ -51,9 +52,7 @@ interface Props {
     handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
     handlePushListening(mEntry: {checked: Array<number>}): Promise<void>
   },
-  teacherId: string,
-  teacherFirstName: string,
-  teacherLastName: string
+  teacherSelected: Teacher
 }
 
 interface State {
@@ -63,6 +62,17 @@ interface State {
   final: boolean,
   in: boolean
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 /**
  * Teacher Checklist
@@ -77,7 +87,7 @@ class TeacherChecklist extends React.Component<Props, State> {
     super(props);
 
     const mEntry = {
-      teacher: this.props.teacherId,
+      teacher: this.props.teacherSelected.teacher,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "listening"
     };
@@ -181,12 +191,27 @@ class TeacherChecklist extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    firebase: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      auth: PropTypes.exact({
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        })
+      }),
+      handleSession: PropTypes.func,
+      handlePushListening: PropTypes.func
+    }).isRequired,
     classes: PropTypes.object.isRequired,
     type: PropTypes.string.isRequired,
-    teacherId: PropTypes.string.isRequired,
-    teacherFirstName: PropTypes.string.isRequired,
-    teacherLastName: PropTypes.string.isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   }
 
   /**
@@ -262,8 +287,6 @@ class TeacherChecklist extends React.Component<Props, State> {
                   infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={true}
-                  teacherFirstName={this.props.teacherFirstName}
-                  teacherLastName={this.props.teacherLastName}
                 />
               </Grid>
             </Grid>
@@ -326,4 +349,10 @@ class TeacherChecklist extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(TeacherChecklist);
+const mapStateToProps = (state): {teacherSelected: Teacher} => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(TeacherChecklist));

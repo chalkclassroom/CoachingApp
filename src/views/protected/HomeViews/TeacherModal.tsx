@@ -13,6 +13,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import { withRouter } from "react-router-dom";
 import StarsIcon from '@material-ui/icons/Stars';
+import { changeTeacher, getTeacherList } from '../../../state/actions/teacher';
+import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
 /**
@@ -62,12 +64,20 @@ interface Props {
   type: string,
   history: { push(object: Push): void },
   firebase: { getTeacherList(): Promise<Teacher[]> },
-  handleClose(): void
+  handleClose(): void,
+  changeTeacher(teacher: Teacher): Teacher,
+  getTeacherList(teachers: Array<Teacher>): Array<Teacher>,
+  teacherSelected: Teacher,
+  teacherList: Array<Teacher>
 }
 
 interface Push {
   pathname: string,
-  state: object
+  state: {
+    teacher: Teacher,
+    teachers: Array<Teacher>,
+    type: string
+  }
 }
 
 interface State {
@@ -119,7 +129,7 @@ class TeacherModal extends React.Component<Props, State> {
             return {
               teachers: previousState.teachers.concat(data)
             };
-          });
+          }, () => { this.props.getTeacherList(this.state.teachers) });
         });
       });
     });
@@ -131,19 +141,21 @@ class TeacherModal extends React.Component<Props, State> {
   selectTeacher(teacherInfo: Teacher): void {
     this.props.history.push({
       pathname: "/Magic8Menu",
-      state: { teacher: teacherInfo, type: this.props.type, teachers: this.state.teachers}
+      state: { teacher: this.props.teacherSelected, type: this.props.type, teachers: this.props.teacherList}
     });
     this.setState({open: false});
     this.props.handleClose();
+    this.props.changeTeacher(teacherInfo);
   }
 
-  static propTypes = {
+  /* static propTypes = {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
     firebase: PropTypes.exact({getTeacherList: PropTypes.func}).isRequired,
-    history: PropTypes.exact({push: PropTypes.func}).isRequired
-  }
+    history: PropTypes.exact({push: PropTypes.func}).isRequired,
+    changeTeacher: PropTypes.func.isRequired
+  } */
 
   /**
    * render function
@@ -151,7 +163,7 @@ class TeacherModal extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
-
+    console.log('teacher list', this.props.teacherList);
     return (
       <div>
         <Modal open={this.state.open}>
@@ -226,4 +238,18 @@ class TeacherModal extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(withStyles(styles)(TeacherModal));
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher,
+    teacherList: state.teacherListState.teachers
+  };
+};
+
+// export default withRouter(withStyles(styles)(TeacherModal));
+
+// export default withRouter(connect(null,{ changeTeacher })(withStyles(styles)(TeacherModal)));
+
+export default withRouter(connect(
+  mapStateToProps,
+  { changeTeacher, getTeacherList }
+)(withStyles(styles)(TeacherModal)));

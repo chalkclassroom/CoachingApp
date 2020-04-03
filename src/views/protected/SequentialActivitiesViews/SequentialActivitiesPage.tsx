@@ -66,13 +66,12 @@ interface Props {
       param: {
         pathname: string,
         state: {
-          type: string,
-          teacher: Teacher,
-          teachers: Array<Teacher>
+          type: string
         }
       }
     ): void
-  }
+  },
+  teacherSelected: Teacher
 }
 
 /**
@@ -131,9 +130,7 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
                       this.props.history.replace({
                         pathname: "/Magic8Menu",
                         state: {
-                          teacher: this.props.location.state.teacher,
-                          type: "Observe",
-                          teachers: this.props.location.state.teachers
+                          type: "Observe"
                         }
                       })
                     }}>
@@ -149,9 +146,7 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
           <FirebaseContext.Consumer>
             {(firebase: object): React.ReactNode => (
               <CenterMenu
-                teacherId={this.props.location.state.teacher.id}
-                teacherFirstName={this.props.location.state.teacher.firstName}
-                teacherLastName={this.props.location.state.teacher.lastName}
+                teacher={this.props.teacherSelected}
                 firebase={firebase}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
@@ -168,7 +163,8 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
 
 const mapStateToProps = state => {
   return {
-    centers: state.sequentialCenterState.sequentialCenters
+    centers: state.sequentialCenterState.sequentialCenters,
+    teacherSelected: state.teacherSelectedState.teacher
   };
 };
 

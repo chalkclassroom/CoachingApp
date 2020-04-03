@@ -75,7 +75,16 @@ const CENTER_MENU = 1;
 const RATING_SCREEN = 2;
 
 interface Props {
-  teacherId: string,
+  teacher: {
+    email: string,
+    firstName: string,
+    lastName: string,
+    notes: string,
+    id: string,
+    phone: string,
+    role: string,
+    school: string
+  },
   firebase: {
     auth: {
       currentUser: {
@@ -91,9 +100,7 @@ interface Props {
   centers: Array<{
     name: string,
     count: number
-  }>,
-  teacherFirstName: string,
-  teacherLastName: string
+  }>
 }
 
 interface State{
@@ -114,7 +121,7 @@ class CenterMenu extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     const mEntry = {
-      teacher: this.props.teacherId,
+      teacher: this.props.teacher.id,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: this.props.type === 'MI' ? 'math'
         : this.props.type === 'SA' ? 'sequential'
@@ -177,14 +184,21 @@ class CenterMenu extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    teacherId: PropTypes.string,
+    teacher: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
     firebase: PropTypes.object.isRequired,
     addNewCenter: PropTypes.func.isRequired,
     incrementCenterCount: PropTypes.func.isRequired,
     centers: PropTypes.array.isRequired,
     type: PropTypes.string.isRequired,
-    teacherFirstName: PropTypes.string.isRequired,
-    teacherLastName: PropTypes.string.isRequired
   }
 
   /**
@@ -228,8 +242,6 @@ class CenterMenu extends React.Component<Props, State> {
                     }
                     infoPlacement="flex-start"
                     completeObservation={true}
-                    teacherFirstName={this.props.teacherFirstName}
-                    teacherLastName={this.props.teacherLastName}
                   />
                 </Grid>
               </Grid>
@@ -283,8 +295,6 @@ class CenterMenu extends React.Component<Props, State> {
             finishVisit={centerName => this.finishCenterVisit(centerName)}
             firebase={this.props.firebase}
             type={this.props.type}
-            teacherFirstName={this.props.teacherFirstName}
-            teacherLastName={this.props.teacherLastName}
           />
         );
       default:

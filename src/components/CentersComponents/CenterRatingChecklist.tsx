@@ -52,9 +52,7 @@ interface Props {
   firebase: {
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
   },
-  type: string,
-  teacherFirstName: string,
-  teacherLastName: string
+  type: string
 }
 
 interface State {
@@ -280,8 +278,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     toggleScreen: PropTypes.func.isRequired,
     finishVisit: PropTypes.func.isRequired,
     currentCenter: PropTypes.string.isRequired,
-    teacherFirstName: PropTypes.string.isRequired,
-    teacherLastName: PropTypes.string.isRequired
   }
 
   /**
@@ -339,8 +335,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                   infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
-                  teacherFirstName={this.props.teacherFirstName}
-                  teacherLastName={this.props.teacherLastName}
                 />
               </Grid>
             </Grid>
