@@ -48,12 +48,21 @@ interface Props {
   classes: Style,
   handleClose(): void,
   firebase: {},
-  teacherFirstName: string,
-  teacherLastName: string,
-  teacherId: string,
+  teacher: Teacher,
   sessionId: string,
   actionPlanExists: boolean,
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 interface State {
   open: boolean,
@@ -103,9 +112,7 @@ class ActionPlanModal extends React.Component<Props, State> {
           <div style={getModalStyle()} className={classes.paper}>
             <ActionPlanForm 
               firebase={this.props.firebase}
-              teacherFirstName={this.props.teacherFirstName}
-              teacherLastName={this.props.teacherLastName}
-              teacherId={this.props.teacherId}
+              teacher={this.props.teacher}
               sessionId={this.props.sessionId}
               handleClose={this.handleClose}
               readOnly={false}

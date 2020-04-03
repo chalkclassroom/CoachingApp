@@ -438,4 +438,4 @@ const mapStateToProps = state => {
 };
 
 Magic8MenuPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps, { changeTeacher })(Magic8MenuPage));;
+export default withStyles(styles)(connect(mapStateToProps, { changeTeacher })(Magic8MenuPage));

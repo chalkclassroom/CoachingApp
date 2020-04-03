@@ -58,9 +58,20 @@ const ViewEnum = {
   NOTES: 5
 };
 
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
 interface Props {
   // location: { state: { teacher: { id: string }}},
-  teacherId: string,
+  teacher: Teacher,
   classes: Style,
   handleTrendsFetch(teacherId: string): void,
   magic8: string,
@@ -74,8 +85,6 @@ interface Props {
   questions: React.ReactNode,
   chosenQuestions: Array<string>,
   notes: Array<{timestamp: Date, content: string}>,
-  teacherFirstName: string,
-  teacherLastName: string,
   actionPlanExists: boolean,
   conferencePlanExists: boolean
 }
@@ -220,7 +229,7 @@ class ResultsLayout extends React.Component<Props, State> {
   componentDidMount(): void {
     const firebase = this.context;
     // this.handleDateFetching(this.props.teacherId);
-    this.props.handleTrendsFetch(this.props.teacherId);
+    this.props.handleTrendsFetch(this.props.teacher.id);
     /* const actionPlanExists = firebase.findActionPlan(this.props.sessionId);
     if (actionPlanExists) {
       this.setState({
@@ -264,9 +273,6 @@ class ResultsLayout extends React.Component<Props, State> {
                   sessionId={this.props.sessionId}
                   changeSessionId={this.props.changeSessionId}
                   sessionDates={this.props.sessionDates}
-                  teacherId={this.props.teacherId}
-                  teacherFirstName={this.props.teacherFirstName}
-                  teacherLastName={this.props.teacherLastName}
                 />}
               </FirebaseContext.Consumer>
             </Grid>
@@ -344,27 +350,23 @@ class ResultsLayout extends React.Component<Props, State> {
                   {this.props.sessionId ? (
                     <div>
                       <FirebaseContext.Consumer>
-                        {(firebase: object) => <ConferencePlanForm 
+                        {(firebase: object): React.ReactNode => <ConferencePlanForm 
                           conferencePlanExists={this.props.conferencePlanExists}
                           editMode={this.state.conferencePlanEditMode}
                           firebase={firebase}
-                          teacherFirstName={this.props.teacherFirstName}
-                          teacherLastName={this.props.teacherLastName}
+                          teacher={this.props.teacher}
                           chosenQuestions={this.props.chosenQuestions}
                           handleEditConferencePlan={this.handleEditConferencePlan}
                           readOnly={true}
-                          teacherId={this.props.teacherId}
                           sessionId={this.props.sessionId}
                           magic8={this.props.magic8}
                         />}
                       </FirebaseContext.Consumer>
                         {this.state.conferencePlanEditMode ? (
                           <FirebaseContext.Consumer>
-                            {(firebase: object) => <ConferencePlanModal 
+                            {(firebase: object): React.ReactNode => <ConferencePlanModal 
                               firebase={firebase}
-                              teacherFirstName={this.props.teacherFirstName}
-                              teacherLastName={this.props.teacherLastName}
-                              teacherId={this.props.teacherId}
+                              teacher={this.props.teacher}
                               sessionId={this.props.sessionId}
                               handleClose={this.handleSaveAndCloseConferencePlan}
                               conferencePlanExists={true}
@@ -377,76 +379,15 @@ class ResultsLayout extends React.Component<Props, State> {
                       Please choose a date from the dropdown menu.
                     </Typography>
                   )}
-                  {/* <Grid>
-                    <Card className={classes.coachPrepCard} style={{height: "30vh"}}>
-                      <CardContent>
-                        <Typography variant="h5">
-                          Reflection Questions
-                        </Typography>
-                        <TextField
-                          placeholder="Choose questions from the Data-Driven Coaching tab of the Details section." 
-                          fullWidth 
-                          disabled
-                        />
-                        <TextField
-                          placeholder="Or add your own questions here!"
-                          fullWidth
-                          multiline
-                        />
-                        {this.state.selectedQuestions.map((item, index) => (
-                          <div key={index}>
-                            <Typography
-                              variant="h6"
-                              style={{textDecoration: "underline"}}
-                            >
-                              {item.type}
-                            </Typography>
-                            <ol style={{marginTop: ".5vh", marginBottom: "1vh"}}>
-                              {item.questions.map((question: string, i: number) => (
-                                <li key={i}>
-                                  <Typography
-                                    variant="subtitle2"
-                                  >
-                                    {question}
-                                  </Typography>
-                                </li>
-                              ))}
-                            </ol>
-                          </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-                    <Card className={classes.coachPrepCard} style={{height: "20vh"}}>
-                      <CardContent>
-                        <Typography variant="h5">
-                          Strengths-Based Feedback
-                        </Typography>
-                        <TextField
-                          placeholder="Add your observations of positive things the teacher did."
-                          fullWidth
-                          multiline
-                        />
-                      </CardContent>
-                    </Card>
-                    <Card className={classes.coachPrepCard} style={{height: "20vh"}}>
-                      <CardContent>
-                        <Typography variant="h5">
-                          Notes
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid> */}
                 </div>
               ) : this.state.view === ViewEnum.ACTION_PLAN ? (
                 <div className={classes.resultsContent} >
                   {this.props.sessionId ? (
                     <div>
                       <FirebaseContext.Consumer>
-                        {(firebase: object) => <ActionPlanForm 
+                        {(firebase: object): React.ReactNode => <ActionPlanForm 
                           firebase={firebase}
-                          teacherFirstName={this.props.teacherFirstName}
-                          teacherLastName={this.props.teacherLastName}
-                          teacherId={this.props.teacherId}
+                          teacher={this.props.teacher}
                           sessionId={this.props.sessionId}
                           handleEditActionPlan={this.handleEditActionPlan}
                           handleClose={null}
@@ -458,11 +399,9 @@ class ResultsLayout extends React.Component<Props, State> {
                       </FirebaseContext.Consumer>
                       {this.state.actionPlanEditMode ? (
                         <FirebaseContext.Consumer>
-                          {(firebase: object) => <ActionPlanModal 
+                          {(firebase: object): React.ReactNode => <ActionPlanModal 
                             firebase={firebase}
-                            teacherFirstName={this.props.teacherFirstName}
-                            teacherLastName={this.props.teacherLastName}
-                            teacherId={this.props.teacherId}
+                            teacher={this.props.teacher}
                             sessionId={this.props.sessionId}
                             handleClose={this.handleSaveAndCloseActionPlan}
                             actionPlanExists={true}

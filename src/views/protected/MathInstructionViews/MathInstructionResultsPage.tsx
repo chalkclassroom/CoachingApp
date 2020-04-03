@@ -8,6 +8,7 @@ import SummarySlider from "../../../components/MathInstructionComponents/Results
 import DetailsSlider from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSlider";
 import TrendsSlider from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSlider";
 import MathCoachingQuestions from "../../../components/MathInstructionComponents/ResultsComponents/MathCoachingQuestions";
+import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
 const styles: object = {
@@ -22,7 +23,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
+  teacherSelected: Teacher
 }
 
 interface Style {
@@ -56,6 +57,17 @@ interface State {
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 /**
  * math results
@@ -418,12 +430,21 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.location.state.teacher.id);
+    this.handleDateFetching(this.props.teacherSelected.id);
   }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
   /**
@@ -440,7 +461,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <ResultsLayout
-          teacherId={this.props.location.state.teacher.id}
+          teacher={this.props.teacherSelected}
           magic8="Math Instruction"
           handleTrendsFetch={this.handleTrendsFetching}
           observationType="math"
@@ -480,13 +501,11 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
               handleAddToPlan={this.handleAddToPlan}
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
-              teacherId={this.props.location.state.teacher.id}
+              teacherId={this.props.teacherSelected.id}
               magic8={"Math Instruction"}
             />
           }
           chosenQuestions={chosenQuestions}
-          teacherFirstName={this.props.location.state.teacher.firstName}
-          teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
         />
@@ -495,6 +514,11 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
 
 MathInstructionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(MathInstructionResultsPage);
+export default withStyles(styles)(connect(mapStateToProps)(MathInstructionResultsPage));

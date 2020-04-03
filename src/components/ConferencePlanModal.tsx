@@ -44,13 +44,22 @@ interface Style {
   '@media (max-width: 700px)': string
 }
 
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
 interface Props {
   classes: Style,
   handleClose(): void,
   firebase: {},
-  teacherFirstName: string,
-  teacherLastName: string,
-  teacherId: string,
+  teacher: Teacher,
   sessionId: string,
   conferencePlanExists: boolean,
 }
@@ -83,9 +92,7 @@ class ConferencePlanModal extends React.Component<Props, State> {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     firebase: PropTypes.object.isRequired,
-    teacherFirstName: PropTypes.string.isRequired,
-    teacherLastName: PropTypes.string.isRequired,
-    teacherId: PropTypes.string.isRequired,
+    teacher: PropTypes.object.isRequired,
     sessionId: PropTypes.string.isRequired,
     conferencePlanExists: PropTypes.bool.isRequired,
   };
@@ -103,9 +110,7 @@ class ConferencePlanModal extends React.Component<Props, State> {
           <div style={getModalStyle()} className={classes.paper}>
             <ConferencePlanForm 
               firebase={this.props.firebase}
-              teacherFirstName={this.props.teacherFirstName}
-              teacherLastName={this.props.teacherLastName}
-              teacherId={this.props.teacherId}
+              teacher={this.props.teacher}
               sessionId={this.props.sessionId}
               handleClose={this.handleClose}
               readOnly={false}

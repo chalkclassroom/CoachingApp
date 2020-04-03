@@ -14,6 +14,8 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from 'moment';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { changeTeacher } from '../state/actions/teacher';
+import { connect } from 'react-redux';
 import * as Constants from '../constants';
 
 const TransitionTheme = createMuiTheme({
@@ -210,6 +212,13 @@ class ResultsDashboard extends React.Component {
   };
 
   /**
+   * @param {event} event
+   */
+  changeTeacher = (event) => {
+    this.props.changeTeacher(event.target.value);
+  };
+
+  /**
    * render function
    * @return {ReactNode}
    */
@@ -231,9 +240,20 @@ class ResultsDashboard extends React.Component {
               <img src={this.state.icon} alt="Magic 8 Icon" className={classes.icon}/>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <Typography>
-                {this.props.teacherFirstName} {this.props.teacherLastName}
-              </Typography>
+              <TextField
+                select
+                className={classes.viewButtons}
+                label="TEACHER"
+                value={this.props.teacherSelected}
+                onChange={this.changeTeacher}
+                InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
+              >
+                {this.props.teacherList.map((teacher, index)=> 
+                  {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
+                    <em>{teacher.firstName + " " + teacher.lastName}</em>
+                  </MenuItem>})}
+              </TextField>
             </Grid>
             <Grid item className={classes.resultsButtons}>
               <TextField
@@ -247,7 +267,7 @@ class ResultsDashboard extends React.Component {
               >
                 {this.props.sessionDates.map((date, index)=> 
                   {return <MenuItem key={index} id={date.id} value={date.id} style={{fontFamily: 'Arimo'}}>
-                    <em>{moment(date.sessionStart.value).format("MMM Do YY")}</em>
+                    <em>{moment(date.sessionStart.value).format("MMMM DD YYYY")}</em>
                   </MenuItem>})}
               </TextField>
             </Grid>
@@ -357,10 +377,26 @@ ResultsDashboard.propTypes = {
   viewEnum: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   view: PropTypes.number.isRequired,
-  teacherId: PropTypes.string.isRequired,
-  teacherFirstName: PropTypes.string.isRequired,
-  teacherLastName: PropTypes.string.isRequired,
-  firebase: PropTypes.object.isRequired
+  firebase: PropTypes.object.isRequired,
+  changeTeacher: PropTypes.func.isRequired,
+  teacherSelected: PropTypes.exact({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    notes: PropTypes.string,
+    id: PropTypes.string,
+    phone: PropTypes.string,
+    role: PropTypes.string,
+    school: PropTypes.string
+  }).isRequired,
+  teacherList: PropTypes.array.isRequired
 };
 
-export default withStyles(styles)(ResultsDashboard);
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher,
+    teacherList: state.teacherListState.teachers
+  };
+};
+
+export default withStyles(styles)(connect(mapStateToProps, { changeTeacher })(ResultsDashboard));

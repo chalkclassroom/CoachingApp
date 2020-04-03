@@ -8,6 +8,7 @@ import ChildTeacherBehaviorPieSlider from "../../../components/AssociativeCooper
 import ChildTeacherBehaviorDetailsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
 import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import ACCoachingQuestions from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ACCoachingQuestions";
+import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
 const styles: object = {
@@ -22,7 +23,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
+  teacherSelected: Teacher
 }
 
 interface Style {
@@ -58,6 +59,17 @@ interface State {
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 /**
  * associative cooperative results
@@ -106,7 +118,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     const firebase = this.context;
     firebase.fetchBehaviourTypeCount(this.state.sessionId);
     firebase.fetchAvgToneRating(this.state.sessionId);
-    this.handleDateFetching(this.props.location.state.teacher.id);
+    this.handleDateFetching(this.props.teacherSelected.id);
   }
 
   /**
@@ -453,7 +465,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     return (
       <div className={classes.root}>
         <ResultsLayout
-          teacherId={this.props.location.state.teacher.id}
+          teacher={this.props.teacherSelected}
           magic8="AC"
           handleTrendsFetch={this.handleTrendsFetching}
           observationType="ac"
@@ -495,13 +507,11 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
               handleAddToPlan={this.handleAddToPlan}
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
-              teacherId={this.props.location.state.teacher.id}
+              teacherId={this.props.teacherSelected.id}
               magic8={"Associative and Cooperative"}
             />
           }
           chosenQuestions={chosenQuestions}
-          teacherFirstName={this.props.location.state.teacher.firstName}
-          teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
         />
@@ -510,6 +520,11 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
 
 AssociativeCooperativeInteractionsResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(AssociativeCooperativeInteractionsResultsPage);
+export default withStyles(styles)(connect(mapStateToProps)(AssociativeCooperativeInteractionsResultsPage));
