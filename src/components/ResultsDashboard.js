@@ -280,12 +280,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.DATA
+                    this.props.view === 'data'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.DATA ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.dataClick}
+                  className={this.props.view === 'data' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('data')}
                 >
                   Data
                 </Button>
@@ -297,12 +297,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.QUESTIONS
+                    this.props.view === 'questions'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.QUESTIONS ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.questionsClick}
+                  className={this.props.view === 'questions' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('questions')}
                 >
                   Questions
                 </Button>
@@ -314,12 +314,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.COACH_PREP
+                    this.props.view === 'conferencePlan'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.COACH_PREP ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.coachPrepClick}
+                  className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('conferencePlan')}
                 >
                   Conference Plan
                 </Button>
@@ -331,12 +331,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.ACTION_PLAN
+                    this.props.view === 'actionPlan'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.ACTION_PLAN ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.actionPlanClick}
+                  className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('actionPlan')}
                 >
                   Action Plan
                 </Button>
@@ -348,12 +348,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.NOTES
+                    this.props.view === 'notes'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.NOTES ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.notesClick}
+                  className={this.props.view === 'notes' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('notes')}
                 >
                   Notes
                 </Button>
@@ -368,17 +368,12 @@ class ResultsDashboard extends React.Component {
 
 ResultsDashboard.propTypes = {
   magic8: PropTypes.string.isRequired,
-  dataClick: PropTypes.func.isRequired,
-  questionsClick: PropTypes.func.isRequired,
-  coachPrepClick: PropTypes.func.isRequired,
-  actionPlanClick: PropTypes.func.isRequired,
-  notesClick: PropTypes.func.isRequired,
+  view: PropTypes.string.isRequired,
+  viewClick: PropTypes.func.isRequired,
   changeSessionId: PropTypes.func.isRequired,
   sessionId: PropTypes.string.isRequired,
   sessionDates: PropTypes.array.isRequired,
-  viewEnum: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  view: PropTypes.number.isRequired,
   firebase: PropTypes.object.isRequired,
   changeTeacher: PropTypes.func.isRequired,
   teacherSelected: PropTypes.exact({

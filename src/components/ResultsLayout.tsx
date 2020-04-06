@@ -6,9 +6,6 @@ import AppBar from "./AppBar";
 import Grid from '@material-ui/core/Grid';
 import Button from "@material-ui/core/Button/Button";
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import TextField from "@material-ui/core/TextField";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
@@ -58,14 +55,6 @@ const styles: object = {
   },
 };
 
-const ViewEnum = {
-  DATA: 1,
-  QUESTIONS: 2,
-  COACH_PREP: 3,
-  ACTION_PLAN: 4,
-  NOTES: 5
-};
-
 interface Teacher {
   email: string,
   firstName: string,
@@ -78,7 +67,6 @@ interface Teacher {
 };
 
 interface Props {
-  // location: { state: { teacher: { id: string }}},
   teacher: Teacher,
   classes: Style,
   magic8: string,
@@ -116,14 +104,10 @@ interface Style {
 }
 
 interface State {
-  // sessionId: string,
-  view: number,
+  view: string,
   tabValue: number,
-  // notes: Array<object>,
-  // sessionDates: Array<string>,
   actionPlanEditMode: boolean,
   conferencePlanEditMode: boolean,
-  // actionPlanExists: boolean
   count: number
 }
 
@@ -139,47 +123,22 @@ class ResultsLayout extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      // sessionId: '',
-      view: ViewEnum.DATA,
+      view: 'data',
       tabValue: 0,
-      // notes: [],
-      // sessionDates: [],
       actionPlanEditMode: false,
       conferencePlanEditMode: false,
-      // actionPlanExists: false,
       count: 0
     }
   }
 
-  dataClick = () => {
-    if (this.state.view !== ViewEnum.DATA) {
-      this.setState({ view: ViewEnum.DATA });
+  /**
+   * @param {string} name
+   */
+  viewClick = (name: string): void => {
+    if (this.state.view !== name) {
+      this.setState({ view: name })
     }
-  };
-
-  questionsClick = () => {
-    if (this.state.view !== ViewEnum.QUESTIONS) {
-      this.setState({ view: ViewEnum.QUESTIONS });
-    }
-  };
-
-  notesClick = () => {
-    if (this.state.view !== ViewEnum.NOTES) {
-      this.setState({ view: ViewEnum.NOTES });
-    }
-  };
-
-  coachPrepClick = () => {
-    if (this.state.view !== ViewEnum.COACH_PREP) {
-      this.setState({ view: ViewEnum.COACH_PREP });
-    }
-  };
-
-  actionPlanClick = () => {
-    if (this.state.view !== ViewEnum.ACTION_PLAN) {
-      this.setState({ view: ViewEnum.ACTION_PLAN });
-    }
-  };
+  }
 
   handleSummary = () => {
     if (this.state.tabValue !== 0) {
@@ -229,11 +188,6 @@ class ResultsLayout extends React.Component<Props, State> {
     })
   }
 
-  /** lifecycle method invoked after component mounts */
-  componentDidMount(): void {
-    const firebase = this.context;
-  }
-
   /**
    * render function
    * @return {ReactNode}
@@ -275,17 +229,11 @@ class ResultsLayout extends React.Component<Props, State> {
               direction="column"
             >
               <FirebaseContext.Consumer>
-                {(firebase: object) => <ResultsDashboard
+                {(firebase: object): React.ReactNode => <ResultsDashboard
                   firebase={firebase}
                   magic8={this.props.magic8}
-                  color="#0988ec"
                   view={this.state.view}
-                  dataClick={this.dataClick}
-                  questionsClick={this.questionsClick}
-                  coachPrepClick={this.coachPrepClick}
-                  actionPlanClick={this.actionPlanClick}
-                  notesClick={this.notesClick}
-                  viewEnum={ViewEnum}
+                  viewClick = {this.viewClick}
                   sessionId={this.props.sessionId}
                   changeSessionId={this.props.changeSessionId}
                   sessionDates={this.props.sessionDates}
@@ -295,7 +243,7 @@ class ResultsLayout extends React.Component<Props, State> {
           </Grid>
           <Grid container xs={8} justify="flex-start" direction="column" alignItems="center" style={{height: '75vh'}}>
             <div>
-              {this.state.view === ViewEnum.DATA ? (
+              {this.state.view === 'data' ? (
                 <div className={classes.resultsContent} style={{width: '60vw'}}>
                   <Grid item>
                     <TabBar position="static" color="default" className={classes.tabBar}>
@@ -345,7 +293,7 @@ class ResultsLayout extends React.Component<Props, State> {
                     )}
                   </Grid>
                 </div>
-              ) : this.state.view === ViewEnum.NOTES ? (
+              ) : this.state.view === 'notes' ? (
                 <div className={classes.resultsContent}>
                   <Grid item>
                     <NotesListDetailTable
@@ -355,13 +303,13 @@ class ResultsLayout extends React.Component<Props, State> {
                     />
                   </Grid>
                 </div>
-              ) : this.state.view === ViewEnum.QUESTIONS ? (
+              ) : this.state.view === 'questions' ? (
                 <div className={classes.resultsContent}>
                   <Grid container direction="column">
                     {this.props.questions}
                   </Grid>
                 </div>
-              ) : this.state.view === ViewEnum.COACH_PREP ? (
+              ) : this.state.view === 'conferencePlan' ? (
                 <div className={classes.resultsContent}>
                   {this.props.sessionId ? (
                     <div>
@@ -396,7 +344,7 @@ class ResultsLayout extends React.Component<Props, State> {
                     </Typography>
                   )}
                 </div>
-              ) : this.state.view === ViewEnum.ACTION_PLAN ? (
+              ) : this.state.view === 'actionPlan' ? (
                 <div className={classes.resultsContent} >
                   {this.props.sessionId ? (
                     <div>
