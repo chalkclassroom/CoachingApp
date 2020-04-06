@@ -48,15 +48,12 @@ interface Teacher {
 
 interface Props {
   classes: { root: string, backButton: string },
-  // location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
   history: {
     replace(
       param: {
         pathname: string,
         state: {
-          type: string,
-          // teacher: Teacher,
-          // teachers: Array<Teacher>
+          type: string
         }
       }
     ): void

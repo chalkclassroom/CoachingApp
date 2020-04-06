@@ -430,6 +430,18 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     this.handleDateFetching(this.props.teacherSelected.id);
+    this.handleTrendsFetching(this.props.teacherSelected.id);
+  }
+
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    }
   }
 
   static propTypes = {
@@ -462,8 +474,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Sequential Activities"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="sequential"
+          history={this.props.history}
           summary={
             <SummarySlider
               sequential={this.state.sequential}
@@ -501,7 +512,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.teacherSelected.id}
-              magic8={"Sequential Activities"}
             />
           }
           chosenQuestions={chosenQuestions}

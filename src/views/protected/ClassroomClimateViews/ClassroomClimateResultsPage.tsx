@@ -93,6 +93,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     firebase.fetchBehaviourTypeCount(this.state.sessionId);
     firebase.fetchAvgToneRating(this.state.sessionId);
     this.handleDateFetching(teacherId);
+    this.handleTrendsFetching(teacherId);
   }
 
   /**
@@ -308,6 +309,17 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     })
   };
 
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+      this.handleDateFetching(this.props.teacherSelected.id);
+    }
+  }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     teacherSelected: PropTypes.exact({
@@ -338,8 +350,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Classroom Climate"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="climate"
+          history={this.props.history}
           summary={
             <ClimateSummarySlider
               positiveResponses={this.state.specificBehaviorCount+this.state.nonspecificBehaviorCount}
@@ -366,7 +377,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.teacherSelected.id}
-              magic8={"Classroom Climate"}
             />
           }
           chosenQuestions={chosenQuestions}

@@ -95,10 +95,20 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
-    const firebase = this.context;
     const teacherId = this.props.teacherSelected.id;
-    firebase.fetchInstructionTypeCount(this.state.sessionId); 
     this.handleDateFetching(teacherId);
+    this.handleTrendsFetching(teacherId);
+  }
+
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    }
   }
 
   /**
@@ -336,8 +346,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Level of Instruction"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="level"
+          history={this.props.history}
           summary={
             <div>
               <Grid container justify={"center"} direction={"column"}>
@@ -423,7 +432,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.teacherSelected.id}
-              magic8={"Level of Instruction"}
             />
           }
           chosenQuestions={chosenQuestions}

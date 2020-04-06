@@ -26,6 +26,16 @@ const styles: object = {
 interface Props {
   classes: { root: string },
   teacherSelected: Teacher,
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void
+  }
 }
 
 interface State {
@@ -348,12 +358,12 @@ class TransitionResultsPage extends React.Component<Props, State> {
     })
     firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
       this.setState({
-        sessionLine: Math.round(((type[0].line))),
-        sessionTraveling: Math.round(((type[0].traveling))),
-        sessionWaiting: Math.round(((type[0].waiting))),
-        sessionRoutines: Math.round(((type[0].routines))),
-        sessionBehaviorManagement: Math.round(((type[0].behaviorManagement))),
-        sessionOther: Math.round(((type[0].other))),
+        sessionLine: Math.round(type[0].line),
+        sessionTraveling: Math.round(type[0].traveling),
+        sessionWaiting: Math.round(type[0].waiting),
+        sessionRoutines: Math.round(type[0].routines),
+        sessionBehaviorManagement: Math.round(type[0].behaviorManagement),
+        sessionOther: Math.round(type[0].other),
         transitionTime: type[0].total
       }, () => {console.log("session line is ", this.state.sessionLine)})
     });
@@ -414,6 +424,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
    */
   componentDidUpdate(prevProps: Props): void {
     if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleTrendsFetch(this.props.teacherSelected.id);
       this.handleDateFetching(this.props.teacherSelected.id);
     }
   }
@@ -448,8 +459,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Transition Time"
-          handleTrendsFetch={this.handleTrendsFetch}
-          observationType="transition"
+          history={this.props.history}
           summary={
             <div>
               <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: 'Arimo'}}>
@@ -494,7 +504,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.teacherSelected.id}
-              magic8={"Transition Time"}
             />
           }
           chosenQuestions = {chosenQuestions}

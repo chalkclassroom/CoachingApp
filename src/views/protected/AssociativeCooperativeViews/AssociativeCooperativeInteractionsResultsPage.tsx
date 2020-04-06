@@ -115,10 +115,19 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    const firebase = this.context;
-    firebase.fetchBehaviourTypeCount(this.state.sessionId);
-    firebase.fetchAvgToneRating(this.state.sessionId);
     this.handleDateFetching(this.props.teacherSelected.id);
+    this.handleTrendsFetching(this.props.teacherSelected.id);
+  }
+
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    }
   }
 
   /**
@@ -467,8 +476,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="AC"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="ac"
+          history={this.props.history}
           summary={
             <ChildTeacherBehaviorPieSlider
               ac={this.state.ac}
@@ -508,7 +516,6 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.teacherSelected.id}
-              magic8={"Associative and Cooperative"}
             />
           }
           chosenQuestions={chosenQuestions}

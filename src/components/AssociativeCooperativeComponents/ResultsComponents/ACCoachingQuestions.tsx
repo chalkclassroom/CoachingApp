@@ -26,8 +26,7 @@ interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
-  teacherId: string,
-  magic8: string
+  teacherId: string
 }
 
 interface State {
@@ -167,7 +166,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Associative and Cooperative"}
               color={Constants.Colors.AC}
             />
           ) : this.state.categoryView === "cooperative" ? (
@@ -179,7 +178,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Associative and Cooperative"}
               color={Constants.Colors.AC}
             />
           ) : this.state.categoryView === "teacherParticipation" ? (
@@ -191,7 +190,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Associative and Cooperative"}
               color={Constants.Colors.AC}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
@@ -203,7 +202,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Associative and Cooperative"}
               color={Constants.Colors.AC}
             />
           ) : <div/>}

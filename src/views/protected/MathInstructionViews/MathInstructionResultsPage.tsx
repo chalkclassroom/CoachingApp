@@ -431,6 +431,18 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     this.handleDateFetching(this.props.teacherSelected.id);
+    this.handleTrendsFetching(this.props.teacherSelected.id);
+  }
+
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    }
   }
 
   static propTypes = {
@@ -463,8 +475,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Math Instruction"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="math"
+          history={this.props.history}
           summary={
             <SummarySlider
               math={this.state.math}
@@ -502,7 +513,6 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.teacherSelected.id}
-              magic8={"Math Instruction"}
             />
           }
           chosenQuestions={chosenQuestions}

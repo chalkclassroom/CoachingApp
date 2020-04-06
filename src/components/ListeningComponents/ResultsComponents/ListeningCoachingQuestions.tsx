@@ -9,7 +9,7 @@ import * as Constants from '../../../constants';
 const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.Colors.LI
+      main: Constants.Colors.LC
     }
   }
 });
@@ -18,8 +18,7 @@ interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
-  teacherId: string,
-  magic8: string
+  teacherId: string
 }
 
 interface State {
@@ -142,8 +141,8 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.Colors.LI}
+              magic8={"Listening To Children"}
+              color={Constants.Colors.LC}
             />
           ) : this.state.categoryView === "supporting" ? (
             <DataQuestions
@@ -154,8 +153,8 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.Colors.LI}
+              magic8={"Listening To Children"}
+              color={Constants.Colors.LC}
             />
           ) : this.state.categoryView === "encouraging" ? (
             <DataQuestions
@@ -166,8 +165,8 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.Colors.LI}
+              magic8={"Listening To Children"}
+              color={Constants.Colors.LC}
             />
           ) : <div/>}
         </Grid>

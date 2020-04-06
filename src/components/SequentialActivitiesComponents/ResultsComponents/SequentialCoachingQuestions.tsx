@@ -18,8 +18,7 @@ interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
-  teacherId: string,
-  magic8: string
+  teacherId: string
 }
 
 interface State {
@@ -142,7 +141,7 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Sequential Activities"}
               color={Constants.Colors.SA}
             />
           ) : this.state.categoryView === "games" ? (
@@ -154,7 +153,7 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Sequential Activities"}
               color={Constants.Colors.SA}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
@@ -166,7 +165,7 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Sequential Activities"}
               color={Constants.Colors.SA}
             />
           ) : <div/>}

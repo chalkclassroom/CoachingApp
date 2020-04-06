@@ -204,8 +204,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       datasets: [
         {
           label: "Teacher Listening",
-          backgroundColor: Constants.Colors.LI,
-          borderColor: Constants.Colors.LI,
+          backgroundColor: Constants.Colors.LC,
+          borderColor: Constants.Colors.LC,
           fill: false,
           lineTension: 0,
           data: this.state.trendsListening
@@ -338,6 +338,18 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     this.handleDateFetching(this.props.teacherSelected.id);
+    this.handleTrendsFetch(this.props.teacherSelected.id);
+  }
+
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetch(this.props.teacherSelected.id);
+    }
   }
 
   static propTypes = {
@@ -370,8 +382,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Listening to Children"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="listening"
+          history={this.props.history}
           summary={
             <Grid container justify={"center"} direction={"column"}>
               <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
@@ -460,7 +471,6 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.teacherSelected.id}
-              magic8={"Listening To Children"}
             />
           }
           chosenQuestions={chosenQuestions}

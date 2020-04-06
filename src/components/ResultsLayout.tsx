@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "./AppBar";
 import Grid from '@material-ui/core/Grid';
 import Button from "@material-ui/core/Button/Button";
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import TextField from "@material-ui/core/TextField";
@@ -48,6 +49,13 @@ const styles: object = {
     width: "100%",
     overflow: "auto"
   },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
+  },
 };
 
 const ViewEnum = {
@@ -73,9 +81,7 @@ interface Props {
   // location: { state: { teacher: { id: string }}},
   teacher: Teacher,
   classes: Style,
-  handleTrendsFetch(teacherId: string): void,
   magic8: string,
-  observationType: string,
   summary: React.ReactNode,
   details: React.ReactNode,
   trendsGraph: React.ReactNode,
@@ -86,7 +92,17 @@ interface Props {
   chosenQuestions: Array<string>,
   notes: Array<{timestamp: Date, content: string}>,
   actionPlanExists: boolean,
-  conferencePlanExists: boolean
+  conferencePlanExists: boolean,
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void
+  }
 }
 
 interface Style {
@@ -95,7 +111,8 @@ interface Style {
   buttonText: string,
   transitionTypeButton: string,
   tabBar: string,
-  coachPrepCard: string
+  coachPrepCard: string,
+  backButton: string
 }
 
 interface State {
@@ -188,19 +205,6 @@ class ResultsLayout extends React.Component<Props, State> {
     }
   };
 
-  /**
-   * @param {string} teacherId
-   */
-  /* handleDateFetching = (teacherId: string) => {
-    const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, this.props.observationType).then((dates: Array<string>) =>
-      this.setState({
-        sessionDates: dates
-      })
-    );
-    console.log('date fetching was called');
-  }; */
-
   handleEditActionPlan = (): void => {
     this.setState({
       actionPlanEditMode: true
@@ -228,16 +232,6 @@ class ResultsLayout extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     const firebase = this.context;
-    // this.handleDateFetching(this.props.teacherId);
-    this.props.handleTrendsFetch(this.props.teacher.id);
-    /* const actionPlanExists = firebase.findActionPlan(this.props.sessionId);
-    if (actionPlanExists) {
-      this.setState({
-        actionPlanExists: true
-      }, () => {console.log('ap exists true')})
-    } else {
-      console.log('ap exists false')
-    } */
   }
 
   /**
@@ -251,8 +245,30 @@ class ResultsLayout extends React.Component<Props, State> {
         <FirebaseContext.Consumer>
           {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <Grid container spacing={16} justify="center" direction="row" alignItems="center">
-          <Grid item xs={3}>
+        <header>
+          <Grid container direction="row" alignItems="center" justify="flex-start">
+            <Grid item xs={3}>
+              <Grid container alignItems="center" justify="center">
+                <Grid item>
+                  <Button variant="contained" size="medium" className={classes.backButton}
+                    onClick={(): void => {
+                      this.props.history.replace({
+                        pathname: "/Magic8Menu",
+                        state: {
+                          type: "Results"
+                        }
+                      })
+                    }}>
+                    <ChevronLeftRoundedIcon />
+                    <b>Back</b>
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </header>
+        <Grid container justify="flex-start" direction="row" alignItems="flex-start">
+          <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
             <Grid container 
               alignItems="center"
               justify="center"
@@ -277,7 +293,7 @@ class ResultsLayout extends React.Component<Props, State> {
               </FirebaseContext.Consumer>
             </Grid>
           </Grid>
-          <Grid container xs={8} justify="flex-start" direction="column" alignItems="center" style={{height: '90vh'}}>
+          <Grid container xs={8} justify="flex-start" direction="column" alignItems="center" style={{height: '75vh'}}>
             <div>
               {this.state.view === ViewEnum.DATA ? (
                 <div className={classes.resultsContent} style={{width: '60vw'}}>
