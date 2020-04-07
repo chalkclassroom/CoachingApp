@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Button, Card, Grid } from "@material-ui/core";
+import { Button, Card, Grid, Typography } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg";
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg";
@@ -40,7 +40,10 @@ import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHe
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
-import { deleteAllCenters } from "../state/actions/associative-cooperative";
+import { deleteACCenters } from "../state/actions/associative-cooperative";
+import { deleteSACenters } from "../state/actions/sequential-activities";
+import { deleteMICenters } from "../state/actions/math-instruction";
+import { clearTeacher } from "../state/actions/teacher";
 import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
 import * as Constants from '../constants';
@@ -71,12 +74,10 @@ const styles = {
     height: "100px"
   },
   infoDisplayGrid: {
-    height: "41vh",
+    height: "34vh",
     width: "90%",
     marginLeft: "5px",
     marginRight: "5px",
-    marginTop: "5px",
-    marginBottom: "5px",
     display: "flex",
     justifyItems: "center"
   },
@@ -97,8 +98,8 @@ const styles = {
     borderWidth: "2px",
     fontSize: "15px",
     alignSelf: "flex-end",
-    marginTop: "auto",
-    fontFamily: "Arimo"
+    fontFamily: "Arimo",
+    margin: 10
   },
   gridTopMargin: {
     marginTop: "5px",
@@ -109,7 +110,6 @@ const styles = {
 /**
  * Dashboard for Observation Tools
  * @class Dashboard
- * @param {boolean} open
  */
 class Dashboard extends React.Component {
   /**
@@ -204,6 +204,9 @@ class Dashboard extends React.Component {
     this.setState({ help: false });
   };
 
+  /**
+   * @param {boolean} open
+   */
   handleNotes = open => {
     if (open) {
       this.setState({ notes: true });
@@ -266,6 +269,7 @@ class Dashboard extends React.Component {
         <Card className={classes.card}>
           <Grid
             container
+            style={{display: 'flex', flex: 1, flexDirection: 'column'}}
             flexGrow={1}
             padding="50"
             spacing={0}
@@ -280,10 +284,16 @@ class Dashboard extends React.Component {
                 className={classes.icon}
               />
             </Grid>
+            <Grid item>
+              <Typography style={{fontFamily: 'Arimo'}}>
+                {this.props.teacherSelected.firstName} {this.props.teacherSelected.lastName}
+              </Typography>
+            </Grid>
             <Grid
               item
               className={classes.infoDisplayGrid}
               style={{ alignItems: this.props.infoPlacement }}
+              flex={1}
             >
               {this.props.infoDisplay}
             </Grid>
@@ -332,11 +342,17 @@ class Dashboard extends React.Component {
                           ? this.props.emptyClimateStack()
                           : this.props.type === "TT"
                           ? this.props.resetTransitionTime()
-                          : this.props.deleteAllCenters();
+                          : this.props.type === "MI"
+                          ? this.props.deleteMICenters()
+                          : this.props.type === "SA"
+                          ? this.props.deleteSACenters()
+                          : this.props.type === "AC"
+                          ? this.props.deleteACCenters()
+                          : null;
                           this.props.history.push({
-                            pathname: "/Home",
-                            state: this.props.history.state
+                            pathname: "/Home"
                           });
+                          this.props.clearTeacher();
                           firebase.endSession();
                       }}
                     />
@@ -371,10 +387,29 @@ Dashboard.propTypes = {
   // These Are mapped from Redux into Props
   resetTransitionTime: PropTypes.func.isRequired,
   emptyClimateStack: PropTypes.func.isRequired,
-  deleteAllCenters: PropTypes.func.isRequired
+  deleteMICenters: PropTypes.func.isRequired,
+  deleteSACenters: PropTypes.func.isRequired,
+  deleteACCenters: PropTypes.func.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  teacherSelected: PropTypes.exact({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    notes: PropTypes.string,
+    id: PropTypes.string,
+    phone: PropTypes.string,
+    role: PropTypes.string,
+    school: PropTypes.string
+  }).isRequired,
 };
 
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  }
+}
+
 export default withRouter(connect(
-    null,
-    { resetTransitionTime, emptyClimateStack, deleteAllCenters }
+    mapStateToProps,
+    { clearTeacher, resetTransitionTime, emptyClimateStack, deleteMICenters, deleteSACenters, deleteACCenters }
 )(withStyles(styles)(Dashboard)));

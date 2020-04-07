@@ -19,8 +19,8 @@ import { red } from "@material-ui/core/es/colors";
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
+    paddingTop: theme.spacing.unit * 1,
+    paddingBottom: theme.spacing.unit * 1,
     marginLeft: "5%",
     marginRight: "5%"
   }
@@ -47,13 +47,13 @@ const TransitionLog = ({ entries, classes }) => {
   return (
     <div>
       <Paper className={classes.root} elevation={0}>
-        <Typography variant="h5" component="h3" align="center" style={{fontFamily: 'Arimo'}}>
+        <Typography variant="h6" component="h3" align="center" style={{fontFamily: 'Arimo'}}>
           Recent Transitions
         </Typography>
         <Divider />
         <div
           style={{
-            height: "28vh",
+            height: "22vh",
             display: "flex",
             flexDirection: "column",
             flexGrow: 1,

@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import Button from "@material-ui/core/Button/Button";
 import Card from "@material-ui/core/Card/Card";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
@@ -20,14 +21,29 @@ import * as Constants from '../../constants';
 
 const styles: object = {
   root: {
-    flexGrow: 1,
+    // flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
     flexDirection: "column",
+    height: '100vh',
     fontFamily: "Arimo"
   },
   grow: {
     flexGrow: 1
+  },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
+  },
+  instructionText: {
+    fontFamily: 'Arimo',
+    paddingLeft: '1em',
+    paddingRight: '1em',
+    height: '5vh',
+    verticalAlign: 'center'
   }
 };
 
@@ -46,12 +62,15 @@ interface Props {
   currentCenter: string,
   classes: {
     root: string,
-    grow: string
+    grow: string,
+    backButton: string,
+    instructionText: string
   },
   firebase: {
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
   },
   type: string,
+  backToCenterMenu(): void
 }
 
 interface State {
@@ -277,6 +296,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     toggleScreen: PropTypes.func.isRequired,
     finishVisit: PropTypes.func.isRequired,
     currentCenter: PropTypes.string.isRequired,
+    backToCenterMenu: PropTypes.func.isRequired
   }
 
   /**
@@ -284,8 +304,9 @@ class CenterRatingChecklist extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const { classes } = this.props;
     return (
-      <div className={this.props.classes.root}>
+      <div>
         <Dialog
           open={this.state.timeUpOpen}
           onClose={this.handleTimeUpClose}
@@ -322,31 +343,33 @@ class CenterRatingChecklist extends React.Component<Props, State> {
             direction={"row"}
             justify={"center"}
           >
-            <Grid item xs={3}>
+            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
               <Grid
                 container
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}
               >
+                <Grid item>
+                  <Button variant="contained" size="medium" className={classes.backButton}
+                    onClick={this.props.backToCenterMenu}>
+                    <ChevronLeftRoundedIcon />
+                    <b>Back</b>
+                  </Button>
+                </Grid>
+                <Grid item>
                 <Dashboard
                   type={this.props.type}
                   infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />
+                </Grid>
               </Grid>
             </Grid>
             <Grid item xs={9}>
-              <Grid>
-                <div style={{ margin: 10 }} />
-                <Button size={"small"} onClick={this.handleBackButton} style={{fontFamily: 'Arimo'}}>
-                  <KeyboardArrowLeft />
-                  Back
-                </Button>
-              </Grid>
               <Grid container alignItems="center" direction="column" xs={12}>
-                <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                <Typography variant="h5" style={{fontFamily: 'Arimo', paddingTop: '1em'}}>
                   {this.props.currentCenter[0].toUpperCase() +
                     this.props.currentCenter.substr(1)}
                 </Typography>
@@ -414,7 +437,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       <Typography
                         variant="body1"
                         align="center"
-                        style={{fontFamily: 'Arimo', paddingRight: '1em', paddingBottom: '1em'}}
+                        className={classes.instructionText}
                       >
                         {Constants.Checklist[this.props.type].ChildInstructions}
                       </Typography>
@@ -425,13 +448,14 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                             key={index}
                             onClick={this.handleChildToggle(index+1)}
                             disabled={this.childDisabled()}
+                            style={{height: '12vh'}}
                           >
                             <Checkbox
                               checked={
                                 !this.childDisabled() && this.state.childChecked.includes(index+1)
                               }
                             />
-                            <ListItemText disableTypography>
+                            <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
                               {value}
                             </ListItemText>
                           </ListItem>);
@@ -447,7 +471,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       <Typography
                         variant="body1"
                         align="center"
-                        style={{fontFamily: 'Arimo', paddingRight: '1em', paddingBottom: '1em'}}
+                        className={classes.instructionText}
                       >
                         {Constants.Checklist[this.props.type].TeacherInstructions}
                       </Typography>
@@ -458,13 +482,14 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                             key={index}
                             onClick={this.handleTeacherToggle(index+6)}
                             disabled={this.teacherDisabled()}
+                            style={{height: '12vh'}}
                           >
                             <Checkbox
                               checked={
                                 !this.teacherDisabled() && this.state.teacherChecked.includes(index+6)
                               }
                             />
-                            <ListItemText disableTypography>
+                            <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
                               {value}
                             </ListItemText>
                           </ListItem>);

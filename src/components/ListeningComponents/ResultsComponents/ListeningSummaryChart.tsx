@@ -35,8 +35,8 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.listening, this.props.notListening],
-          backgroundColor: [Constants.Colors.LI, Constants.Colors.RedGraph],
-          hoverBackgroundColor: [Constants.Colors.LI, Constants.Colors.RedGraph] 
+          backgroundColor: [Constants.Colors.LC, Constants.Colors.RedGraph],
+          hoverBackgroundColor: [Constants.Colors.LC, Constants.Colors.RedGraph] 
         }
       ]
     };

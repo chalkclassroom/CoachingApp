@@ -22,10 +22,20 @@ const styles: object = {
   }
 }
 
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
 interface Props {
   classes: Style,
-  teacherFirstName: string,
-  teacherLastName: string,
+  teacher: Teacher,
   magic8: string,
   firebase: {
     createActionPlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
@@ -37,7 +47,6 @@ interface Props {
     getCoachFirstName(): Promise<string>,
     getCoachLastName(): Promise<string>
   },
-  teacherId: string,
   sessionId: string,
   readOnly: boolean,
   handleEditActionPlan(): void,
@@ -169,7 +178,7 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 
   handleCreate = (): void => {
-    this.props.firebase.createActionPlan(this.props.teacherId, this.props.sessionId, this.props.magic8)
+    this.props.firebase.createActionPlan(this.props.teacher.id, this.props.sessionId, this.props.magic8)
       .then(() => {
         this.setState({
           editMode: true,
@@ -399,7 +408,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                 style={{fontFamily: 'Arimo'}}
               >
                 <Grid item xs={4}>
-                  {this.props.teacherFirstName + " " + this.props.teacherLastName}
+                  {this.props.teacher.firstName + " " + this.props.teacher.lastName}
                 </Grid>
                 <Grid item xs={4}>
                   <Grid container direction="row" justify="center">

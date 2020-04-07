@@ -18,8 +18,7 @@ interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
-  teacherId: string,
-  magic8: string
+  teacherId: string
 }
 
 interface State {
@@ -186,7 +185,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Math Instruction"}
               color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "measurement" ? (
@@ -198,7 +197,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Math Instruction"}
               color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "patterns" ? (
@@ -210,7 +209,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Math Instruction"}
               color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "shapes" ? (
@@ -222,7 +221,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Math Instruction"}
               color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
@@ -234,7 +233,7 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
+              magic8={"Math Instruction"}
               color={Constants.Colors.MI}
             />
           ) : <div/>}

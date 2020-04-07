@@ -12,6 +12,7 @@ import ListeningTrendsGraph from "../../../components/ListeningComponents/Result
 import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
 import PieSliceListeningImage from '../../../assets/images/PieSliceListeningImage.svg';
 import PieSliceChildNonImage from '../../../assets/images/PieSliceChildNonImage.svg';
+import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
 const styles: object = {
@@ -31,7 +32,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
+  teacherSelected: Teacher
 }
 
 interface Style {
@@ -58,6 +59,17 @@ interface State {
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 /**
  * listening to children results
@@ -192,8 +204,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       datasets: [
         {
           label: "Teacher Listening",
-          backgroundColor: Constants.Colors.LI,
-          borderColor: Constants.Colors.LI,
+          backgroundColor: Constants.Colors.LC,
+          borderColor: Constants.Colors.LC,
           fill: false,
           lineTension: 0,
           data: this.state.trendsListening
@@ -325,12 +337,33 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.location.state.teacher.id);
+    this.handleDateFetching(this.props.teacherSelected.id);
+    this.handleTrendsFetch(this.props.teacherSelected.id);
+  }
+
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetch(this.props.teacherSelected.id);
+    }
   }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
   /**
@@ -347,10 +380,9 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <ResultsLayout
-          teacherId={this.props.location.state.teacher.id}
+          teacher={this.props.teacherSelected}
           magic8="Listening to Children"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="listening"
+          history={this.props.history}
           summary={
             <Grid container justify={"center"} direction={"column"}>
               <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
@@ -438,13 +470,10 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
               handleAddToPlan={this.handleAddToPlan}
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
-              teacherId={this.props.location.state.teacher.id}
-              magic8={"Listening To Children"}
+              teacherId={this.props.teacherSelected.id}
             />
           }
           chosenQuestions={chosenQuestions}
-          teacherFirstName={this.props.location.state.teacher.firstName}
-          teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
         />
@@ -453,6 +482,11 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
 
 ListeningToChildrenResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(ListeningToChildrenResultsPage);
+export default withStyles(styles)(connect(mapStateToProps)(ListeningToChildrenResultsPage));

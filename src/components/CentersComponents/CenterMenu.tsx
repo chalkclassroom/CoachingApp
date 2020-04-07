@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import CenterChecklist from './CenterChecklist';
 import NewCenterDialog from './NewCenterDialog';
 import CenterRatingChecklist from './CenterRatingChecklist';
@@ -19,6 +20,13 @@ const styles: object = {
   },
   grow: {
     flexGrow: 1
+  },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
   }
 };
 
@@ -75,7 +83,16 @@ const CENTER_MENU = 1;
 const RATING_SCREEN = 2;
 
 interface Props {
-  teacherId: string,
+  teacher: {
+    email: string,
+    firstName: string,
+    lastName: string,
+    notes: string,
+    id: string,
+    phone: string,
+    role: string,
+    school: string
+  },
   firebase: {
     auth: {
       currentUser: {
@@ -92,6 +109,11 @@ interface Props {
     name: string,
     count: number
   }>,
+  classes: {
+    root: string,
+    grow: string,
+    backButton: string
+  }
 }
 
 interface State{
@@ -112,7 +134,7 @@ class CenterMenu extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     const mEntry = {
-      teacher: this.props.teacherId,
+      teacher: this.props.teacher.id,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: this.props.type === 'MI' ? 'math'
         : this.props.type === 'SA' ? 'sequential'
@@ -174,8 +196,22 @@ class CenterMenu extends React.Component<Props, State> {
     }
   };
 
+  backToCenterMenu = () => {
+    this.setState({ status: CENTER_MENU })
+  }
+
   static propTypes = {
-    teacherId: PropTypes.string,
+    teacher: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
+    classes: PropTypes.object.isRequired,
     firebase: PropTypes.object.isRequired,
     addNewCenter: PropTypes.func.isRequired,
     incrementCenterCount: PropTypes.func.isRequired,
@@ -188,6 +224,7 @@ class CenterMenu extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const { classes } = this.props;
     switch (this.state.status) {
       case CENTER_CHECKLIST:
         return (
@@ -200,72 +237,85 @@ class CenterMenu extends React.Component<Props, State> {
         return (
           <div>
             <Grid
+              container
               justify="center"
-              alignItems="stretch"
+              alignItems="center"
               direction="row"
-              style={{ margin: 10 }}
             >
-              <Grid justify="flex-start" alignItems="center" direction="row">
-                <Grid container spacing={0} direction="row" alignItems="center">
-                  <NewCenterDialog
-                    open={this.state.addDialog}
-                    handleClose={this.handleClose}
-                    handleSubmit={this.handleAddCenter}
-                  />
-                  <Grid item xs={3}>
-                    <Grid
-                      container
-                      alignItems={"center"}
-                      justify={"center"}
-                      direction={"column"}
-                    >
-                      {/* <div style={{ margin: 20 }} /> */}
-                      <Dashboard
-                        type={this.props.type}
-                        infoDisplay={
-                          <TotalVisitCount count={this.state.totalVisitCount} />
-                        }
-                        infoPlacement="flex-start"
-                        completeObservation={true}
-                      />
-                    </Grid>
+              <NewCenterDialog
+                open={this.state.addDialog}
+                handleClose={this.handleClose}
+                handleSubmit={this.handleAddCenter}
+              />
+              <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+                <Grid
+                  container
+                  alignItems={"center"}
+                  justify={"center"}
+                  direction={"column"}
+                >
+                  <Grid item>
+                    <Button variant="contained" size="medium" className={classes.backButton}
+                      onClick={(): void => {
+                        this.props.history.replace({
+                          pathname: "/Magic8Menu",
+                          state: {
+                            type: "Observe"
+                          }
+                        })
+                      }}>
+                      <ChevronLeftRoundedIcon />
+                      <b>Back</b>
+                    </Button>
                   </Grid>
-                  <Grid container xs={9}>
-                    {this.props.centers.map((center, index) => (
-                      <Grid
-                        key={index}
-                        item
-                        xs={4}
-                        style={{ textAlign: "center", padding: "10px" }}
-                      >
-                        <VisitCenterButton
-                          centerName={center.name}
-                          visitCount={center.count}
-                          onClick={() => this.handleCenterVisit(center.name)}
-                          type={this.props.type}
-                        />
-                      </Grid>
-                    ))}
+                  <Grid item>
+                    <Dashboard
+                      type={this.props.type}
+                      infoDisplay={
+                        <TotalVisitCount count={this.state.totalVisitCount} />
+                      }
+                      infoPlacement="flex-start"
+                      completeObservation={true}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={9}>
+                <Grid container direction="row" justify="flex-start" alignItems="center">
+                  {this.props.centers.map((center, index) => (
                     <Grid
+                      key={index}
                       item
                       xs={4}
                       style={{ textAlign: "center", padding: "10px" }}
                     >
-                      <Button
-                        variant="contained"
-                        style={{
-                          minHeight: 150,
-                          maxHeight: 150,
-                          minWidth: 150,
-                          maxWidth: 150,
-                          backgroundColor: grey[400],
-                          fontFamily: 'Arimo'
-                        }}
-                        onClick={this.handleClickOpen}
-                      >
-                        Add Center <br /> <br /> +
-                      </Button>
+                      <VisitCenterButton
+                        centerName={center.name}
+                        visitCount={center.count}
+                        onClick={(): void => this.handleCenterVisit(center.name)}
+                        type={this.props.type}
+                      />
                     </Grid>
+                  ))}
+                  <Grid
+                    item
+                    xs={4}
+                    style={{ textAlign: "center", padding: "10px" }}
+                  >
+                    <Button
+                      variant="contained"
+                      style={{
+                        minHeight: 150,
+                        maxHeight: 150,
+                        minWidth: 150,
+                        maxWidth: 150,
+                        backgroundColor: grey[400],
+                        fontFamily: 'Arimo'
+                      }}
+                      onClick={this.handleClickOpen}
+                    >
+                      Add Center <br /> <br /> +
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>
@@ -278,6 +328,7 @@ class CenterMenu extends React.Component<Props, State> {
             currentCenter={this.state.currentCenter}
             toggleScreen={this.switchToCenterMenu}
             finishVisit={centerName => this.finishCenterVisit(centerName)}
+            backToCenterMenu={this.backToCenterMenu}
             firebase={this.props.firebase}
             type={this.props.type}
           />

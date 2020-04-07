@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { toggleLOISettingType } from '../../../state/actions/level-of-instruction';
 import Dashboard from '../../../components/Dashboard';
 import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
+import Button from '@material-ui/core/Button';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 
 const styles: object = {
   root: {
@@ -17,12 +19,38 @@ const styles: object = {
     flexDirection: 'column',
     overflowY: 'auto',
     overflowX: 'hidden'
+  },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
   }
 };
 
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
 interface Props {
-  classes: { root: string };
-  location: { state: { teacher: { id: string } } };
+  classes: { root: string, backButton: string },
+  location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: { type: string }
+      }
+    ): void
+  }
 }
 
 /**
@@ -42,8 +70,21 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
    */
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string }) }) })
-      .isRequired
+    location: PropTypes.exact({
+      state: PropTypes.exact({
+        teacher: PropTypes.exact({
+          email: PropTypes.string,
+          firstName: PropTypes.string,
+          lastName: PropTypes.string,
+          notes: PropTypes.string,
+          id: PropTypes.string,
+          phone: PropTypes.string,
+          role: PropTypes.string,
+          school: PropTypes.string
+        }).isRequired,
+        teachers: PropTypes.array.isRequired
+      })
+    }).isRequired
   };
 
   /**
@@ -58,9 +99,31 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
         <FirebaseContext.Consumer>
           {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <main style={{ flex: 1 }}>
-          <Grid container alignItems="center" style={{height: '100%'}}>
+        <header>
+          <Grid container direction="row" alignItems="center" justify="flex-start">
             <Grid item xs={3}>
+              <Grid container alignItems="center" justify="center">
+                <Grid item>
+                  <Button variant="contained" size="medium" className={classes.backButton}
+                    onClick={(): void => {
+                      this.props.history.replace({
+                        pathname: "/Magic8Menu",
+                        state: {
+                          type: "Observe"
+                        }
+                      })
+                    }}>
+                    <ChevronLeftRoundedIcon />
+                    <b>Back</b>
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </header>
+        <main style={{ flexGrow: 1 }}>
+          <Grid container alignItems="center" style={{height: '100%'}}>
+            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
               <Grid container alignItems={'center'} justify={'center'} direction={'column'}>
                 <Dashboard
                   type="LI"
@@ -73,7 +136,6 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
                 <FirebaseContext.Consumer>
                   {(firebase: object): React.ReactNode => (
                     <InstructionCounter
-                      teacherId={this.props.location.state.teacher.id}
                       firebase={firebase}
                     />
                   )}
