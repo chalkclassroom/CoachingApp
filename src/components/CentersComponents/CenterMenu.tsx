@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import CenterChecklist from './CenterChecklist';
 import NewCenterDialog from './NewCenterDialog';
 import CenterRatingChecklist from './CenterRatingChecklist';
@@ -19,6 +20,13 @@ const styles: object = {
   },
   grow: {
     flexGrow: 1
+  },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
   }
 };
 
@@ -100,7 +108,12 @@ interface Props {
   centers: Array<{
     name: string,
     count: number
-  }>
+  }>,
+  classes: {
+    root: string,
+    grow: string,
+    backButton: string
+  }
 }
 
 interface State{
@@ -183,6 +196,10 @@ class CenterMenu extends React.Component<Props, State> {
     }
   };
 
+  backToCenterMenu = () => {
+    this.setState({ status: CENTER_MENU })
+  }
+
   static propTypes = {
     teacher: PropTypes.exact({
       email: PropTypes.string,
@@ -194,6 +211,7 @@ class CenterMenu extends React.Component<Props, State> {
       role: PropTypes.string,
       school: PropTypes.string
     }).isRequired,
+    classes: PropTypes.object.isRequired,
     firebase: PropTypes.object.isRequired,
     addNewCenter: PropTypes.func.isRequired,
     incrementCenterCount: PropTypes.func.isRequired,
@@ -206,6 +224,7 @@ class CenterMenu extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const { classes } = this.props;
     switch (this.state.status) {
       case CENTER_CHECKLIST:
         return (
@@ -235,14 +254,30 @@ class CenterMenu extends React.Component<Props, State> {
                   justify={"center"}
                   direction={"column"}
                 >
-                  <Dashboard
-                    type={this.props.type}
-                    infoDisplay={
-                      <TotalVisitCount count={this.state.totalVisitCount} />
-                    }
-                    infoPlacement="flex-start"
-                    completeObservation={true}
-                  />
+                  <Grid item>
+                    <Button variant="contained" size="medium" className={classes.backButton}
+                      onClick={(): void => {
+                        this.props.history.replace({
+                          pathname: "/Magic8Menu",
+                          state: {
+                            type: "Observe"
+                          }
+                        })
+                      }}>
+                      <ChevronLeftRoundedIcon />
+                      <b>Back</b>
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Dashboard
+                      type={this.props.type}
+                      infoDisplay={
+                        <TotalVisitCount count={this.state.totalVisitCount} />
+                      }
+                      infoPlacement="flex-start"
+                      completeObservation={true}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={9}>
@@ -293,6 +328,7 @@ class CenterMenu extends React.Component<Props, State> {
             currentCenter={this.state.currentCenter}
             toggleScreen={this.switchToCenterMenu}
             finishVisit={centerName => this.finishCenterVisit(centerName)}
+            backToCenterMenu={this.backToCenterMenu}
             firebase={this.props.firebase}
             type={this.props.type}
           />

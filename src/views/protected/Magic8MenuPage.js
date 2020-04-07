@@ -44,11 +44,10 @@ const CardRow = styled.div`
 
 const styles = {
   root: {
-    flexGrow: 1,
-    backgroundColor: "#ffffff",
-    display: "flex",
-    minHeight: "100vh",
-    flexDirection: "column"
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
+    overflowX: 'hidden'
   },
   grow: {
     flexGrow: 1
@@ -228,14 +227,20 @@ class Magic8MenuPage extends Component {
       'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />
     }
     return (
-      <div style={{display: 'flex', flexDirection: 'column', height: '100vh', overflowX: 'hidden'}}>
+      <div className={classes.root}>
         <div>
           <FirebaseContext.Consumer>
             {firebase => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
         </div>
         <div style={{flexGrow: 1}}>
-          <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100vw', height: '100%', paddingTop: '3em'}}>
+          <Grid
+            container
+            direction="column"
+            justify="flex-start"
+            alignItems="center"
+            style={{width: '100vw', height: '100%', paddingTop: '3em'}}
+          >
             <Grid item style={{width: '70vw', paddingBottom: '1em'}}>
               <Grid container direction="row" justify="center" alignItems="center">
                 <Grid item xs={9}>

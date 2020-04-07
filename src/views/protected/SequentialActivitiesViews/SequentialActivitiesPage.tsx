@@ -1,9 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
@@ -54,7 +51,6 @@ interface Style {
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
   addNewCenter(): void,
   incrementCenterCount(): void,
   centers: Array<{
@@ -87,20 +83,15 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.exact({
-      state: PropTypes.exact({
-        teacher: PropTypes.exact({
-          email: PropTypes.string,
-          firstName: PropTypes.string,
-          lastName: PropTypes.string,
-          notes: PropTypes.string,
-          id: PropTypes.string,
-          phone: PropTypes.string,
-          role: PropTypes.string,
-          school: PropTypes.string
-        }).isRequired,
-        teachers: PropTypes.array.isRequired
-      })
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
     }).isRequired
   };
 
@@ -120,33 +111,12 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
             />
           )}
         </FirebaseContext.Consumer>
-        <header>
-          <Grid container direction="row" alignItems="center" justify="flex-start">
-            <Grid item xs={3}>
-              <Grid container alignItems="center" justify="center">
-                <Grid item>
-                  <Button variant="contained" size="medium" className={classes.backButton}
-                    onClick={(): void => {
-                      this.props.history.replace({
-                        pathname: "/Magic8Menu",
-                        state: {
-                          type: "Observe"
-                        }
-                      })
-                    }}>
-                    <ChevronLeftRoundedIcon />
-                    <b>Back</b>
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </header>
         <main style={{ flexGrow: 1 }}>
           <FirebaseContext.Consumer>
             {(firebase: object): React.ReactNode => (
               <CenterMenu
                 teacher={this.props.teacherSelected}
+                history={this.props.history}
                 firebase={firebase}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}

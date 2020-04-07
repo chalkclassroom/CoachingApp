@@ -92,7 +92,16 @@ class ConferencePlanModal extends React.Component<Props, State> {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     firebase: PropTypes.object.isRequired,
-    teacher: PropTypes.object.isRequired,
+    teacher: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
     sessionId: PropTypes.string.isRequired,
     conferencePlanExists: PropTypes.bool.isRequired,
   };

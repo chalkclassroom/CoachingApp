@@ -79,7 +79,7 @@ class CenterChecklist extends React.Component<Props, State> {
   render(): React.ReactNode {
     return (
       <div>
-        <Grid container direction="column" justify="center" alignItems="center">
+        <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '1em'}}>
           <Typography
             component="h4"
             variant="h4"

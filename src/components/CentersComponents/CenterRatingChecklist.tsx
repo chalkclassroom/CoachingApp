@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import Button from "@material-ui/core/Button/Button";
 import Card from "@material-ui/core/Card/Card";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
@@ -29,6 +30,20 @@ const styles: object = {
   },
   grow: {
     flexGrow: 1
+  },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
+  },
+  instructionText: {
+    fontFamily: 'Arimo',
+    paddingLeft: '1em',
+    paddingRight: '1em',
+    height: '5vh',
+    verticalAlign: 'center'
   }
 };
 
@@ -47,12 +62,15 @@ interface Props {
   currentCenter: string,
   classes: {
     root: string,
-    grow: string
+    grow: string,
+    backButton: string,
+    instructionText: string
   },
   firebase: {
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
   },
-  type: string
+  type: string,
+  backToCenterMenu(): void
 }
 
 interface State {
@@ -278,6 +296,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     toggleScreen: PropTypes.func.isRequired,
     finishVisit: PropTypes.func.isRequired,
     currentCenter: PropTypes.string.isRequired,
+    backToCenterMenu: PropTypes.func.isRequired
   }
 
   /**
@@ -285,6 +304,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const { classes } = this.props;
     return (
       <div>
         <Dialog
@@ -330,23 +350,26 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                 justify={"center"}
                 direction={"column"}
               >
+                <Grid item>
+                  <Button variant="contained" size="medium" className={classes.backButton}
+                    onClick={this.props.backToCenterMenu}>
+                    <ChevronLeftRoundedIcon />
+                    <b>Back</b>
+                  </Button>
+                </Grid>
+                <Grid item>
                 <Dashboard
                   type={this.props.type}
                   infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={false}
                 />
+                </Grid>
               </Grid>
             </Grid>
             <Grid item xs={9}>
-              <Grid>
-                <Button size={"small"} onClick={this.handleBackButton} style={{fontFamily: 'Arimo'}}>
-                  <KeyboardArrowLeft />
-                  Return to Center Menu
-                </Button>
-              </Grid>
               <Grid container alignItems="center" direction="column" xs={12}>
-                <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                <Typography variant="h5" style={{fontFamily: 'Arimo', paddingTop: '1em'}}>
                   {this.props.currentCenter[0].toUpperCase() +
                     this.props.currentCenter.substr(1)}
                 </Typography>
@@ -414,7 +437,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       <Typography
                         variant="body1"
                         align="center"
-                        style={{fontFamily: 'Arimo', paddingLeft: '1em', paddingRight: '1em', height: '5vh', verticalAlign: 'center'}}
+                        className={classes.instructionText}
                       >
                         {Constants.Checklist[this.props.type].ChildInstructions}
                       </Typography>
@@ -448,7 +471,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       <Typography
                         variant="body1"
                         align="center"
-                        style={{fontFamily: 'Arimo', paddingLeft: '1em', paddingRight: '1em', height: '5vh', verticalAlign: 'center'}}
+                        className={classes.instructionText}
                       >
                         {Constants.Checklist[this.props.type].TeacherInstructions}
                       </Typography>

@@ -199,28 +199,6 @@ class ResultsLayout extends React.Component<Props, State> {
         <FirebaseContext.Consumer>
           {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <header>
-          <Grid container direction="row" alignItems="center" justify="flex-start">
-            <Grid item xs={3}>
-              <Grid container alignItems="center" justify="center">
-                <Grid item>
-                  <Button variant="contained" size="medium" className={classes.backButton}
-                    onClick={(): void => {
-                      this.props.history.replace({
-                        pathname: "/Magic8Menu",
-                        state: {
-                          type: "Results"
-                        }
-                      })
-                    }}>
-                    <ChevronLeftRoundedIcon />
-                    <b>Back</b>
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </header>
         <Grid container justify="flex-start" direction="row" alignItems="flex-start">
           <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
             <Grid container 
@@ -228,17 +206,33 @@ class ResultsLayout extends React.Component<Props, State> {
               justify="center"
               direction="column"
             >
-              <FirebaseContext.Consumer>
-                {(firebase: object): React.ReactNode => <ResultsDashboard
-                  firebase={firebase}
-                  magic8={this.props.magic8}
-                  view={this.state.view}
-                  viewClick = {this.viewClick}
-                  sessionId={this.props.sessionId}
-                  changeSessionId={this.props.changeSessionId}
-                  sessionDates={this.props.sessionDates}
-                />}
-              </FirebaseContext.Consumer>
+              <Grid item>
+                <Button variant="contained" size="medium" className={classes.backButton}
+                  onClick={(): void => {
+                    this.props.history.replace({
+                      pathname: "/Magic8Menu",
+                      state: {
+                        type: "Results"
+                      }
+                    })
+                  }}>
+                  <ChevronLeftRoundedIcon />
+                  <b>Back</b>
+                </Button>
+              </Grid>
+              <Grid item>
+                <FirebaseContext.Consumer>
+                  {(firebase: object): React.ReactNode => <ResultsDashboard
+                    firebase={firebase}
+                    magic8={this.props.magic8}
+                    view={this.state.view}
+                    viewClick = {this.viewClick}
+                    sessionId={this.props.sessionId}
+                    changeSessionId={this.props.changeSessionId}
+                    sessionDates={this.props.sessionDates}
+                  />}
+                </FirebaseContext.Consumer>
+              </Grid>
             </Grid>
           </Grid>
           <Grid container xs={8} justify="flex-start" direction="column" alignItems="center" style={{height: '75vh'}}>

@@ -78,8 +78,6 @@ const styles = {
     width: "90%",
     marginLeft: "5px",
     marginRight: "5px",
-    // marginTop: "5px",
-    // marginBottom: "5px",
     display: "flex",
     justifyItems: "center"
   },
@@ -386,8 +384,6 @@ Dashboard.propTypes = {
   infoPlacement: PropTypes.string.isRequired,
   completeObservation: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
-  // teacherFirstName: PropTypes.string.isRequired,
-  // teacherLastName: PropTypes.string.isRequired,
   // These Are mapped from Redux into Props
   resetTransitionTime: PropTypes.func.isRequired,
   emptyClimateStack: PropTypes.func.isRequired,
