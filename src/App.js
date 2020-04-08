@@ -44,6 +44,8 @@ import ReactGA from 'react-ga';
 import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
 // import CHALKLogoFastGIF from './assets/images/CHALKLogoFastGIF.gif';
 import Grid from '@material-ui/core/Grid';
+import { getCoach } from './state/actions/coach';
+import { connect } from 'react-redux';
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -128,10 +130,17 @@ class App extends Component {
   componentDidMount() {
     this.removeListener = this.props.firebase.auth.onAuthStateChanged(user => {
       if (user) {
-        this.setState({
+        this.props.firebase.getCoachFirstName().then(name => {
+          this.props.getCoach(name);
+          this.setState({
+            auth: true,
+            loading: false
+          });
+        });
+        /* this.setState({
           auth: true,
           loading: false
-        });
+        }); */
       } else {
         this.setState({
           auth: false,
@@ -338,7 +347,8 @@ class App extends Component {
 }
 
 App.propTypes = {
-  firebase: PropTypes.object.isRequired
+  firebase: PropTypes.object.isRequired,
+  getCoach: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(connect(null, {getCoach})(App));

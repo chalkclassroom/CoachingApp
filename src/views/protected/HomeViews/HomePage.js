@@ -13,6 +13,7 @@ import MessagesImage from "../../../assets/images/MessagesImage.svg";
 import TeacherModal from "./TeacherModal.tsx";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { withRouter } from "react-router-dom";
+import { connect } from 'react-redux';
 
 const styles = {
   root: {
@@ -69,9 +70,9 @@ class HomePage extends React.Component {
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const firebase = this.context;
-    firebase.getCoachFirstName().then(name => {
+    /* firebase.getCoachFirstName().then(name => {
       this.setState({ coachName: name });
-    });
+    }); */
     firebase.handleFetchTrainingStatus();
     firebase.handleFetchQuestions("transition");
   }
@@ -95,7 +96,7 @@ class HomePage extends React.Component {
           style={{ padding: 40 }}
         >
           <Typography component={"h3"} variant={"h3"} align={"center"}>
-            Welcome, {this.state.coachName}!
+            Welcome, {this.props.coachName}!
           </Typography>
           <Grid
             container
@@ -217,8 +218,15 @@ class HomePage extends React.Component {
 
 HomePage.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  coachName: PropTypes.string.isRequired
+};
+
+const mapStateToProps = state => {
+  return {
+    coachName: state.coachState.coachName
+  };
 };
 
 HomePage.contextType = FirebaseContext;
-export default withRouter(withStyles(styles)(HomePage));
+export default withStyles(styles)(connect(mapStateToProps)(HomePage));

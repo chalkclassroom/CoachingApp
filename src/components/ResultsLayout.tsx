@@ -280,9 +280,14 @@ class ResultsLayout extends React.Component<Props, State> {
                               {this.props.details}
                           </div>
                           ) : (
-                            <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
-                              Please choose a date from the dropdown menu.
-                            </Typography>
+                            <Grid
+                              container
+                              direction="row"
+                              justify="center"
+                              alignItems="center"
+                            >
+                              <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                            </Grid>
                           )}
                         </Grid>
                       </div>
