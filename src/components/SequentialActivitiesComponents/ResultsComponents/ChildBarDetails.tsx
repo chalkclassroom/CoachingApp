@@ -46,8 +46,8 @@ class ChildBarDetails extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4],
-          backgroundColor: [Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor],
-          hoverBackgroundColor: [Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor]
+          backgroundColor: [Constants.Colors.SA, Constants.Colors.SA, Constants.Colors.SA, Constants.Colors.SA],
+          hoverBackgroundColor: [Constants.Colors.SA, Constants.Colors.SA, Constants.Colors.SA, Constants.Colors.SA]
         }
       ]
     };

@@ -17,7 +17,7 @@ const AssociativeTheme = createMuiTheme({
 const CooperativeTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ACColor
+      main: Constants.Colors.AC
     }
   }
 });
@@ -26,8 +26,7 @@ interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
-  teacherId: string,
-  magic8: string
+  teacherId: string
 }
 
 interface State {
@@ -167,8 +166,8 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.ACColor}
+              magic8={"Associative and Cooperative"}
+              color={Constants.Colors.AC}
             />
           ) : this.state.categoryView === "cooperative" ? (
             <DataQuestions
@@ -179,8 +178,8 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.ACColor}
+              magic8={"Associative and Cooperative"}
+              color={Constants.Colors.AC}
             />
           ) : this.state.categoryView === "teacherParticipation" ? (
             <DataQuestions
@@ -191,8 +190,8 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.ACColor}
+              magic8={"Associative and Cooperative"}
+              color={Constants.Colors.AC}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
             <DataQuestions
@@ -203,8 +202,8 @@ class ACCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.ACColor}
+              magic8={"Associative and Cooperative"}
+              color={Constants.Colors.AC}
             />
           ) : <div/>}
         </Grid>

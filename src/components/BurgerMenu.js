@@ -31,7 +31,6 @@ import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
 import TeacherModal from "../views/protected/HomeViews/TeacherModal.tsx";
 import FirebaseContext from "./Firebase/FirebaseContext";
-import { connect } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -263,12 +262,13 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Training"
-                  onClick={() =>
+                  onClick={() => {
                     this.props.history.push({
                       pathname: "/Magic8Menu",
                       state: { type: "Training" }
-                    })
-                  }
+                    });
+                    this.props.handleClose(event);
+                  }}
                 />
               </ListItem>
               <ListItem
@@ -283,7 +283,10 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Observe"
-                  onClick={() => this.showTeacherModal("Observe")}
+                  onClick={() => {
+                    this.showTeacherModal("Observe");
+                    this.props.handleClose();
+                  }}
                 />
               </ListItem>
               <ListItem
@@ -298,7 +301,10 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Results"
-                  onClick={() => this.showTeacherModal("Results")}
+                  onClick={() => {
+                    this.showTeacherModal("Results");
+                    this.props.handleClose();
+                  }}
                 />
               </ListItem>
               <ListItem
@@ -438,4 +444,4 @@ BurgerMenu.propTypes = {
   firebase: PropTypes.object.isRequired
 };
 
-export default withRouter(connect()(withStyles(styles)(BurgerMenu)));
+export default withRouter(withStyles(styles)(BurgerMenu));

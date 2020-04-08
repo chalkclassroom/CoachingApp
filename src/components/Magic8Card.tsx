@@ -27,7 +27,6 @@ const styles: object = {
 };
 
 const CardBase = styled.div`
-  margin: 5px;
   position: relative;
   display: inline-block;
   //border: dashed 2px #808080;
@@ -79,15 +78,15 @@ class Magic8Card extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-    this.onClick = this.onClick.bind(this);
+    
     this.state = {
       selected: false
     };
   }
 
-  /** @param {event} e */
-  onClick(e) {
-    e.preventDefault();
+  /** @return {void} */
+  onClick = (): void => {
+    // e.preventDefault();
     const { onClick, numSelected } = this.props;
     onClick(this.state.selected, this.props.title);
     if (this.state.selected) {
@@ -109,16 +108,16 @@ class Magic8Card extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <CardBase>
         <Card
           className={classes.card}
           onClick={this.onClick}
-          style={{ opacity: this.state.selected ? 0.5 : 1 }}
+          // style={{ opacity: this.state.selected ? 0.5 : 1 }}
         >
           <CardActionArea className={classes.cardAction}>
             <BackgroundImage>

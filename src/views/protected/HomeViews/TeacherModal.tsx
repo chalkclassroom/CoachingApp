@@ -12,15 +12,16 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
 import StarsIcon from '@material-ui/icons/Stars';
+import { changeTeacher, getTeacherList } from '../../../state/actions/teacher';
+import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
 /**
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -63,12 +64,20 @@ interface Props {
   type: string,
   history: { push(object: Push): void },
   firebase: { getTeacherList(): Promise<Teacher[]> },
-  handleClose(): void
+  handleClose(): void,
+  changeTeacher(teacher: Teacher): Teacher,
+  getTeacherList(teachers: Array<Teacher>): Array<Teacher>,
+  teacherSelected: Teacher,
+  teacherList: Array<Teacher>
 }
 
 interface Push {
   pathname: string,
-  state: object
+  state: {
+    teacher: Teacher,
+    teachers: Array<Teacher>,
+    type: string
+  }
 }
 
 interface State {
@@ -105,13 +114,12 @@ class TeacherModal extends React.Component<Props, State> {
     this.selectTeacher = this.selectTeacher.bind(this);
   }
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
-    console.log(typeof this.props.handleClose);
+  componentDidMount(): void {
     this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Teacher>) => {
       const teacherList = [];
       teacherPromiseList.forEach(tpromise => {
@@ -121,7 +129,7 @@ class TeacherModal extends React.Component<Props, State> {
             return {
               teachers: previousState.teachers.concat(data)
             };
-          });
+          }, () => { this.props.getTeacherList(this.state.teachers) });
         });
       });
     });
@@ -130,29 +138,32 @@ class TeacherModal extends React.Component<Props, State> {
   /**
    * @param {object} teacherInfo 
    */
-  selectTeacher(teacherInfo: Teacher) {
+  selectTeacher(teacherInfo: Teacher): void {
     this.props.history.push({
       pathname: "/Magic8Menu",
-      state: { teacher: teacherInfo, type: this.props.type }
+      state: { teacher: this.props.teacherSelected, type: this.props.type, teachers: this.props.teacherList}
     });
-    console.log(' history is ', this.props.history, ' and the type is ', typeof this.props.history);
+    this.setState({open: false});
+    this.props.handleClose();
+    this.props.changeTeacher(teacherInfo);
   }
 
-  static propTypes = {
+  /* static propTypes = {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
     firebase: PropTypes.exact({getTeacherList: PropTypes.func}).isRequired,
-    history: PropTypes.exact({push: PropTypes.func}).isRequired
-  }
+    history: PropTypes.exact({push: PropTypes.func}).isRequired,
+    changeTeacher: PropTypes.func.isRequired
+  } */
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
-
+    console.log('teacher list', this.props.teacherList);
     return (
       <div>
         <Modal open={this.state.open}>
@@ -190,8 +201,8 @@ class TeacherModal extends React.Component<Props, State> {
                   <ListItem
                       key={index}
                       alignItems="center"
-                      onClick={() =>
-                          this.selectTeacher(teacher)
+                      onClick={(): void =>
+                        this.selectTeacher(teacher)
                       }
                   >
                     <ListItemAvatar>
@@ -199,7 +210,7 @@ class TeacherModal extends React.Component<Props, State> {
                         alt="Teacher Profile Pic"
                         src={TeacherSvg}
                       /> */}
-                      <StarsIcon style={{color: Constants.SequentialColor }}/>
+                      <StarsIcon style={{color: Constants.Colors.SA }}/>
                     </ListItemAvatar>
                     <ListItemText
                       primary={teacher.firstName + " " + teacher.lastName}
@@ -227,4 +238,18 @@ class TeacherModal extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(connect()(withStyles(styles)(TeacherModal)));
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher,
+    teacherList: state.teacherListState.teachers
+  };
+};
+
+// export default withRouter(withStyles(styles)(TeacherModal));
+
+// export default withRouter(connect(null,{ changeTeacher })(withStyles(styles)(TeacherModal)));
+
+export default withRouter(connect(
+  mapStateToProps,
+  { changeTeacher, getTeacherList }
+)(withStyles(styles)(TeacherModal)));

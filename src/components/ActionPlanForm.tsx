@@ -12,6 +12,7 @@ import CloseImage from '../assets/images/CloseImage.svg';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import moment from 'moment';
 
 const styles: object = {
   textField: {
@@ -21,10 +22,20 @@ const styles: object = {
   }
 }
 
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
 interface Props {
   classes: Style,
-  teacherFirstName: string,
-  teacherLastName: string,
+  teacher: Teacher,
   magic8: string,
   firebase: {
     createActionPlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
@@ -36,7 +47,6 @@ interface Props {
     getCoachFirstName(): Promise<string>,
     getCoachLastName(): Promise<string>
   },
-  teacherId: string,
   sessionId: string,
   readOnly: boolean,
   handleEditActionPlan(): void,
@@ -48,7 +58,7 @@ interface Props {
 interface State {
   goal: string,
   benefit: string,
-  date: string,
+  date: Date,
   actionSteps: string,
   actionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}>,
   editMode: boolean,
@@ -80,7 +90,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.state = {
       goal: '',
       benefit: '',
-      date: '',
+      date: new Date(),
       actionSteps: '',
       actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}],
       editMode: false,
@@ -168,7 +178,7 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 
   handleCreate = (): void => {
-    this.props.firebase.createActionPlan(this.props.teacherId, this.props.sessionId, this.props.magic8)
+    this.props.firebase.createActionPlan(this.props.teacher.id, this.props.sessionId, this.props.magic8)
       .then(() => {
         this.setState({
           editMode: true,
@@ -184,14 +194,16 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   getActionPlan = (): void => {
     this.props.firebase.getActionPlan(this.props.sessionId)
-    .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
+    .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: {seconds: number, nanoseconds: number}}>) => {
       if (actionPlanData[0]) {
+        const newDate = new Date(0);
+        newDate.setUTCSeconds(actionPlanData[0].date.seconds);
         this.setState({
           actionPlanExists: true,
           actionPlanId: actionPlanData[0].id,
           goal: actionPlanData[0].goal,
           benefit: actionPlanData[0].benefit,
-          date: actionPlanData[0].date
+          date: newDate
         });
         const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
         this.props.firebase.getActionSteps(actionPlanData[0].id).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
@@ -396,7 +408,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                 style={{fontFamily: 'Arimo'}}
               >
                 <Grid item xs={4}>
-                  {this.props.teacherFirstName + " " + this.props.teacherLastName}
+                  {this.props.teacher.firstName + " " + this.props.teacher.lastName}
                 </Grid>
                 <Grid item xs={4}>
                   <Grid container direction="row" justify="center">
@@ -405,7 +417,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                 </Grid>
                 <Grid item xs={4}>
                   <Grid container direction="row" justify="flex-end">
-                    {this.state.date}
+                    {moment(this.state.date).format('MM/DD/YYYY')}
                   </Grid>
                 </Grid>
               </Grid>

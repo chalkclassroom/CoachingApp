@@ -8,6 +8,7 @@ import SummarySlider from "../../../components/SequentialActivitiesComponents/Re
 import DetailsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/DetailsSlider";
 import TrendsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/TrendsSlider";
 import SequentialCoachingQuestions from "../../../components/SequentialActivitiesComponents/ResultsComponents/SequentialCoachingQuestions";
+import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
 const styles: object = {
@@ -22,7 +23,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
+  teacherSelected: Teacher
 }
 
 interface Style {
@@ -54,8 +55,19 @@ interface State {
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<string>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 /**
  * sequential results
@@ -137,15 +149,17 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "sequential").then((dates: Array<string>) =>
+    firebase.fetchSessionDates(teacherId, "sequential").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
       this.setState({
         sessionDates: dates
       }, () => {
-        this.setState({ sessionId: this.state.sessionDates[0].id },
-          () => {
-            this.getData();
-          }
-        );
+        if (this.state.sessionDates[0]) {
+          this.setState({ sessionId: this.state.sessionDates[0].id },
+            () => {
+              this.getData();
+            }
+          );
+        }
       })
     );
     console.log('date fetching was called');
@@ -233,8 +247,8 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
         },
         {
           label: "Sequential Activities",
-          backgroundColor: Constants.SequentialColor,
-          borderColor: Constants.SequentialColor,
+          backgroundColor: Constants.Colors.SA,
+          borderColor: Constants.Colors.SA,
           fill: false,
           lineTension: 0,
           data: this.state.trendsSequential
@@ -415,12 +429,33 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.location.state.teacher.id);
+    this.handleDateFetching(this.props.teacherSelected.id);
+    this.handleTrendsFetching(this.props.teacherSelected.id);
+  }
+
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    }
   }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
   /**
@@ -437,10 +472,9 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <ResultsLayout
-          teacherId={this.props.location.state.teacher.id}
+          teacher={this.props.teacherSelected}
           magic8="Sequential Activities"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="sequential"
+          history={this.props.history}
           summary={
             <SummarySlider
               sequential={this.state.sequential}
@@ -477,13 +511,10 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
               handleAddToPlan={this.handleAddToPlan}
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
-              teacherId={this.props.location.state.teacher.id}
-              magic8={"Sequential Activities"}
+              teacherId={this.props.teacherSelected.id}
             />
           }
           chosenQuestions={chosenQuestions}
-          teacherFirstName={this.props.location.state.teacher.firstName}
-          teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
         />
@@ -492,6 +523,11 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
 
 SequentialActivitiesResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(SequentialActivitiesResultsPage);
+export default withStyles(styles)(connect(mapStateToProps)(SequentialActivitiesResultsPage));

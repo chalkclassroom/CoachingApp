@@ -4,91 +4,124 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import CenterMenuAssocCoop from "../../../components/AssociativeCooperativeComponents/CenterMenuAssocCoop";
-import { deleteAllCenters } from "../../../state/actions/associative-cooperative";
-import AssocCoopHelp from "../AssociativeCooperativeViews/AssocCoopHelp"
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import { deleteACCenters } from "../../../state/actions/associative-cooperative";
+import CenterMenu from '../../../components/CentersComponents/CenterMenu';
+import {
+  addNewCenter,
+  incrementCenterCount
+} from "../../../state/actions/associative-cooperative.js";
 
 
 const styles: object = {
   root: {
-    flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
-    minHeight: "100vh",
-    flexDirection: "column"
+    height: "100vh",
+    flexDirection: "column",
+    overflowY: 'auto'
   },
   grow: {
     flexGrow: 0
+  },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
   }
+};
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
 };
 
 interface Style {
   root: string,
-  grow: string
+  grow: string,
+  backButton: string
 }
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: { id: string }}}
+  addNewCenter(): void,
+  incrementCenterCount(): void,
+  centers: Array<{
+    name: string,
+    count: number
+  }>,
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void
+  },
+  teacherSelected: Teacher
 }
 
-interface State {
-  auth: boolean,
-  completeEnabled: boolean
-}
-
-class AssociativeCooperativeInteractionsPage extends React.Component<Props, State> {
-  
-  state = {
-    auth: true,
-     completeEnabled: false
-  };
-
-  handleCompleteButton = (enable: boolean) => {
-    this.setState({ completeEnabled: enable });
-  };
+/**
+ * @class AssociativeCooperativeInteractionsPage
+ */
+class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> {
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
+    super(props);
+  }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
-  render() {
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => (<AppBar firebase={firebase}
-              //classes={{ root: this.props.classes.grow }}
+          {(firebase: object): React.ReactNode => (
+            <AppBar
+              firebase={firebase}
               className={classes.grow}
             />
           )}
         </FirebaseContext.Consumer>
-
-
-        {/* this.state.recs ? (
+        <main style={{ flexGrow: 1 }}>
           <FirebaseContext.Consumer>
-            {firebase => (
-              <Recs
-                open={true}
-                onClose={this.handleRecsModal}
+            {(firebase: object): React.ReactNode => (
+              <CenterMenu
+                teacher={this.props.teacherSelected}
+                history={this.props.history}
                 firebase={firebase}
-              />
-            )}
-          </FirebaseContext.Consumer>
-        ) : (
-          <div />
-        ) */}
-        <main style={{ flex: 1 }}>
-       
-          
-          <FirebaseContext.Consumer>
-            {(firebase: object) => (
-              <CenterMenuAssocCoop
-                teacherId={this.props.location.state.teacher.id}
-                firebase={firebase}
-                onStatusChange={this.handleCompleteButton}
+                addNewCenter={this.props.addNewCenter}
+                incrementCenterCount={this.props.incrementCenterCount}
+                type="AC"
+                centers={this.props.centers}
               />
             )}
           </FirebaseContext.Consumer>
@@ -98,6 +131,13 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, Stat
   }
 }
 
-export default connect(null, { deleteAllCenters })(
+const mapStateToProps = state => {
+  return {
+    centers: state.associativeCenterState.associativeCenters,
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
+
+export default connect(mapStateToProps, { deleteACCenters, addNewCenter, incrementCenterCount })(
   withStyles(styles)(AssociativeCooperativeInteractionsPage)
 );

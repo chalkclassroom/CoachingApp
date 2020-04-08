@@ -1,7 +1,7 @@
 export const ADD_NEW_CENTER = "add_new_sa_center";
 export const UPDATE_CENTER_COUNT = "update_sa_center_count";
 export const TOGGLE_SEQUENTIAL_MATERIALS = "toggle_sa_materials";
-export const DELETE_ALL_CENTERS = "delete_all_sa_centers";
+export const DELETE_SA_CENTERS = "delete_all_sa_centers";
 
 export const addNewCenter = centerName => ({
   type: ADD_NEW_CENTER,
@@ -18,6 +18,6 @@ export const toggleSequentialMaterials = centerName => ({
   centerName
 });
 
-export const deleteAllCenters = () => ({
-  type: DELETE_ALL_CENTERS
+export const deleteSACenters = () => ({
+  type: DELETE_SA_CENTERS
 });

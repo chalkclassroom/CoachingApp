@@ -22,8 +22,7 @@ interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
-  teacherId: string,
-  magic8: string
+  teacherId: string
 }
 
 interface State {
@@ -149,8 +148,8 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.ClimateColor}
+              magic8={"Classroom Climate"}
+              color={Constants.Colors.CC}
             />
           ) : this.state.categoryView === "redirections" ? (
             <DataQuestions
@@ -161,8 +160,8 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.ClimateColor}
+              magic8={"Classroom Climate"}
+              color={Constants.Colors.CC}
             />
           ) : this.state.categoryView === "disapprovals" ? (
             <DataQuestions
@@ -173,8 +172,8 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.ClimateColor}
+              magic8={"Classroom Climate"}
+              color={Constants.Colors.CC}
             />
           ) : <div/>}
         </Grid>

@@ -8,7 +8,7 @@ import ResultsLayout from '../../../components/ResultsLayout';
 import BehaviorResponsesDetailsChart from "../../../components/ClassroomClimateComponent/ResultsComponents/BehaviorResponsesDetailsChart";
 import ClimateCoachingQuestions from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateCoachingQuestions";
 import ClimateSummarySlider from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateSummarySlider";
-
+import { connect } from 'react-redux';
 
 const styles: object = {
   root: {
@@ -22,7 +22,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
+  teacherSelected: Teacher
 }
 
 interface Style {
@@ -43,8 +43,19 @@ interface State {
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<string>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 /**
  * classroom climate results
@@ -78,10 +89,11 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const firebase = this.context;
-    const teacherId = this.props.location.state.teacher.id;
+    const teacherId = this.props.teacherSelected.id;
     firebase.fetchBehaviourTypeCount(this.state.sessionId);
     firebase.fetchAvgToneRating(this.state.sessionId);
     this.handleDateFetching(teacherId);
+    this.handleTrendsFetching(teacherId);
   }
 
   /**
@@ -141,15 +153,17 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<string>) =>
+    firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
       this.setState({
         sessionDates: dates
       }, () => {
-        this.setState({ sessionId: this.state.sessionDates[0].id },
-          () => {
-            this.getData();
-          }
-        );
+        if (this.state.sessionDates[0]) {
+          this.setState({ sessionId: this.state.sessionDates[0].id },
+            () => {
+              this.getData();
+            }
+          );
+        }
       })
     );
     console.log('date fetching was called');
@@ -295,9 +309,29 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     })
   };
 
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+      this.handleDateFetching(this.props.teacherSelected.id);
+    }
+  }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
   /**
@@ -314,10 +348,9 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <ResultsLayout
-          teacherId={this.props.location.state.teacher.id}
+          teacher={this.props.teacherSelected}
           magic8="Classroom Climate"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="climate"
+          history={this.props.history}
           summary={
             <ClimateSummarySlider
               positiveResponses={this.state.specificBehaviorCount+this.state.nonspecificBehaviorCount}
@@ -343,13 +376,10 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
               handleAddToPlan={this.handleAddToPlan}
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
-              teacherId={this.props.location.state.teacher.id}
-              magic8={"Classroom Climate"}
+              teacherId={this.props.teacherSelected.id}
             />
           }
           chosenQuestions={chosenQuestions}
-          teacherFirstName={this.props.location.state.teacher.firstName}
-          teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
         />
@@ -358,6 +388,11 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
 
 ClassroomClimateResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(ClassroomClimateResultsPage);
+export default withStyles(styles)(connect(mapStateToProps)(ClassroomClimateResultsPage));

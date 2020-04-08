@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
+import * as Constants from '../../../constants';
 import Button from "@material-ui/core/Button/Button";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
@@ -9,8 +10,18 @@ import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo.tsx";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
-import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
+import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard.tsx';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+import { createMuiTheme } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+
+const TransitionTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.TT
+    }
+  }
+});
 
 const styles: object = {
   root: {
@@ -142,6 +153,11 @@ interface Props {
 }
 
 interface Style {
+  titleContainer: string;
+  trainingContentCard: string;
+  backButton: string;
+  main: string;
+  dashboardContainer: string;
   root: string,
   viewButtons: string,
   buttonsList: string,
@@ -162,45 +178,45 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-  }
 
-  state = {
-    view: ViewEnum.CONCEPTS
-  };
+    this.state = {
+      view: ViewEnum.CONCEPTS
+    };
+  }
 
   conceptsClick = () => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
-      this.setState({view: ViewEnum.CONCEPTS})
+      this.setState({ view: ViewEnum.CONCEPTS })
     }
   }
 
   definitionsClick = () => {
     if (this.state.view !== ViewEnum.DEFINITIONS) {
-      this.setState({view: ViewEnum.DEFINITIONS})
+      this.setState({ view: ViewEnum.DEFINITIONS })
     }
   }
 
   exampleClick = () => {
     if (this.state.view !== ViewEnum.EXAMPLE) {
-      this.setState({view: ViewEnum.EXAMPLE})
+      this.setState({ view: ViewEnum.EXAMPLE })
     }
   }
 
   demonstrationClick = () => {
     if (this.state.view !== ViewEnum.DEMONSTRATION) {
-      this.setState({view: ViewEnum.DEMONSTRATION})
+      this.setState({ view: ViewEnum.DEMONSTRATION })
     }
   }
 
   tryItClick = () => {
     if (this.state.view !== ViewEnum.TRYIT) {
-      this.setState({view: ViewEnum.TRYIT})
+      this.setState({ view: ViewEnum.TRYIT })
     }
   }
 
   knowledgeCheckClick = () => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
-      this.setState({view: ViewEnum.KNOWLEDGECHECK})
+      this.setState({ view: ViewEnum.KNOWLEDGECHECK })
     }
   }
 
@@ -210,36 +226,38 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     const { view } = this.state;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
-        <Button variant="contained" size="medium" className={classes.backButton}
-                  onClick={() => {
-                    if (this.props.location.state !== undefined) { // came from MyTeachers
-                      this.props.history.goBack();
-                    } else {
-                      this.props.history.replace({
-                        pathname: "/Magic8Menu",
-                        state: {type: "Training"}
-                      })
-                    }
-                  }}>
-            <ChevronLeftRoundedIcon />
-            <b>Training Home</b>
-          </Button>
-          <h1 style={{ justifySelf: 'center' }}>Training Tool</h1>
-          <Button variant='contained' size='medium' className={classes.backButton} onClick={null} style={{ visibility:'hidden' }}>
-            <ChevronLeftRoundedIcon />
-            <b>Training Home</b>
-          </Button>
+          <Grid container justify="center" alignItems="center">
+            <Grid item xs={3}>
+              <Button variant="contained" size="medium" className={classes.backButton}
+                onClick={(): void => {
+                  if (this.props.location.state !== undefined) { // came from MyTeachers
+                    this.props.history.goBack();
+                  } else {
+                    this.props.history.replace({
+                      pathname: "/Magic8Menu",
+                      state: { type: "Training" }
+                    })
+                  }
+                }}>
+                <ChevronLeftRoundedIcon />
+                <b>Training Home</b>
+              </Button>
+            </Grid>
+            <Grid item xs={9}>
+              <h1 style={{ justifySelf: 'center', fontFamily: 'Arimo' }}>Training Tool</h1>
+            </Grid>
+          </Grid>
         </div>
         <div className={classes.main}>
           <div className={classes.dashboardContainer}>
@@ -253,27 +271,28 @@ class TransitionTimeTrainingPage extends React.Component<Props, State> {
               demonstrationClick={this.demonstrationClick}
               tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
-              color="#ffd300"
+              colorTheme={TransitionTheme}
             />
           </div>
           <div className={classes.trainingContentCard}>
-            {view === ViewEnum.CONCEPTS ? 
+            {view === ViewEnum.CONCEPTS ?
               <TrainingVideo
-                videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT%20Concepts%201.30.2020.mp4?alt=media&token=0561eb57-b13c-43c5-a135-33223c3bb369'} />
+                videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT%20Concepts%201.30.2020.mp4?alt=media&token=b11f88fc-ed72-476d-805e-40f8287053ef'}
+              />
             : view === ViewEnum.DEFINITIONS ?
               <TransitionHelpCard />
-            : view === ViewEnum.EXAMPLE ? 
+            : view === ViewEnum.EXAMPLE ?
               <div>EXAMPLE</div>
-            : view === ViewEnum.DEMONSTRATION ? 
+            : view === ViewEnum.DEMONSTRATION ?
               <div>
                 <TrainingVideo
                   videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'}
                 />
               </div>
-            : view === ViewEnum.TRYIT ? 
+            : view === ViewEnum.TRYIT ?
               <div>TRY IT</div>
             : view === ViewEnum.KNOWLEDGECHECK ? (
-              <TrainingQuestionnaire section={'transition'}/>
+              <TrainingQuestionnaire section={'transition'} />
             ) : null}
           </div>
         </div>
