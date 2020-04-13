@@ -229,12 +229,12 @@ class TeacherChecklist extends React.Component<Props, State> {
         >
           {this.state.checked.length > 0 ? (
             <div>
-              <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
+              {/* <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
                 Don&apos;t forget to circulate!
-              </DialogTitle>
+              </DialogTitle> */}
               <DialogContent>
-                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
-                  Your 1 minute observation time has ended.
+                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
+                  Complete your selections or move to the next observation.
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -248,13 +248,12 @@ class TeacherChecklist extends React.Component<Props, State> {
             </div>
           ) : (
             <div>
-              <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
+              {/* <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
                 Don&apos;t forget to circulate!
-              </DialogTitle>
+              </DialogTitle> */}
               <DialogContent>
-                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
-                  Please make your final selections, 
-                  or indicate that none of the teacher behaviors were observed.
+                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
+                  Complete your selections or move to the next observation.
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
