@@ -17,6 +17,7 @@ import ActionPlanForm from './ActionPlanForm';
 import ActionPlanModal from './ActionPlanModal';
 import ConferencePlanForm from './ConferencePlanForm';
 import ConferencePlanModal from './ConferencePlanModal';
+import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 
 const styles: object = {
   root: {
@@ -261,9 +262,14 @@ class ResultsLayout extends React.Component<Props, State> {
                             {this.props.summary}
                           </div>
                         ) : (
-                          <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
-                            Please choose a date from the dropdown menu.
-                          </Typography>
+                          <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                          >
+                            <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                          </Grid>
                         )}
                       </div>
                       ) : this.state.tabValue === 1 ? (
@@ -274,9 +280,14 @@ class ResultsLayout extends React.Component<Props, State> {
                               {this.props.details}
                           </div>
                           ) : (
-                            <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
-                              Please choose a date from the dropdown menu.
-                            </Typography>
+                            <Grid
+                              container
+                              direction="row"
+                              justify="center"
+                              alignItems="center"
+                            >
+                              <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                            </Grid>
                           )}
                         </Grid>
                       </div>

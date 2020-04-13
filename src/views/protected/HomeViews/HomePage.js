@@ -16,7 +16,9 @@ import ActionPlansIcon from "@material-ui/icons/CastForEducation";
 import ConferencePlansIcon from "@material-ui/icons/ListAlt";
 import TeacherModal from "./TeacherModal.tsx";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import { withRouter } from "react-router-dom";
+import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
+import { getCoach } from '../../../state/actions/coach';
+import { connect } from 'react-redux';
 
 const styles = {
   root: {
@@ -79,9 +81,11 @@ class HomePage extends React.Component {
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const firebase = this.context;
-    firebase.getCoachFirstName().then(name => {
-      this.setState({ coachName: name });
-    });
+    if (!this.props.coachName) {
+      firebase.getCoachFirstName().then(name => {
+        this.props.getCoach(name);
+      })
+    }
     firebase.handleFetchTrainingStatus();
     firebase.handleFetchQuestions("transition");
   }
@@ -97,222 +101,234 @@ class HomePage extends React.Component {
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <Grid
-          container
-          alignItems="center"
-          direction="column"
-          justify="flex-start"
-          style={{ flexGrow: 1 }}
-        >
-          <Grid item style={{height: '15vh'}}>
-            <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
-              <Grid item>
-              <Typography variant="h3" align={"center"} style={{fontFamily: 'Arimo', verticalAlign: 'center'}}>
-                Welcome, {this.state.coachName}!
-              </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          {/* <Grid item style={{width: '100%', paddingTop: '2em'}}>
-            <Grid container direction="row" alignItems="center" justify="space-around">
-              <Grid item>
-                <Typography variant="h6" align="center" style={{fontFamily: 'Arimo'}}>
-                  Last Observation: Harsha Seethalam on 4/8/20
+        {this.props.coachName ? (
+          <Grid
+            container
+            alignItems="center"
+            direction="column"
+            justify="flex-start"
+            style={{ flexGrow: 1 }}
+          >
+            <Grid item style={{height: '15vh'}}>
+              <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
+                <Grid item>
+                <Typography variant="h3" align={"center"} style={{fontFamily: 'Arimo', verticalAlign: 'center'}}>
+                  Welcome, {this.props.coachName}!
                 </Typography>
-              </Grid>
-              <Grid item>
-                <MuiThemeProvider theme={theme}>
-                  <Button variant="outlined" color="primary">
-                    SEND THANK YOU
-                  </Button>
-                </MuiThemeProvider>
-              </Grid>
-              <Grid item>
-                <MuiThemeProvider theme={theme}>
-                  <Button variant="outlined" color="primary">
-                    VIEW RESULTS
-                  </Button>
-                </MuiThemeProvider>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid> */}
-          <Grid
-            container
-            alignItems="center"
-            direction="row"
-            justify="space-around"
-            className={classes.buttonGrid}
-          >
-            <Card
-              className={classes.card}
-              onClick={() => this.showTeacherModal("Observe")}
+            {/* <Grid item style={{width: '100%', paddingTop: '2em'}}>
+              <Grid container direction="row" alignItems="center" justify="space-around">
+                <Grid item>
+                  <Typography variant="h6" align="center" style={{fontFamily: 'Arimo'}}>
+                    Last Observation: Harsha Seethalam on 4/8/20
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <MuiThemeProvider theme={theme}>
+                    <Button variant="outlined" color="primary">
+                      SEND THANK YOU
+                    </Button>
+                  </MuiThemeProvider>
+                </Grid>
+                <Grid item>
+                  <MuiThemeProvider theme={theme}>
+                    <Button variant="outlined" color="primary">
+                      VIEW RESULTS
+                    </Button>
+                  </MuiThemeProvider>
+                </Grid>
+              </Grid>
+            </Grid> */}
+            <Grid
+              container
+              alignItems="center"
+              direction="row"
+              justify="space-around"
+              className={classes.buttonGrid}
             >
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                >
-                  <Grid item>
-                    <ObserveIcon style={{ fill: "#094492", width: '12vw', height: '12vh' }} />
+              <Card
+                className={classes.card}
+                onClick={() => this.showTeacherModal("Observe")}
+              >
+                <CardContent>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <Grid item>
+                      <ObserveIcon style={{ fill: "#094492", width: '12vw', height: '12vh' }} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                        Observe
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                      Observe
-                    </Typography>
+                </CardContent>
+              </Card>
+              <Card
+                className={classes.card}
+                onClick={() => this.showTeacherModal("Results")}
+              >
+                <CardContent>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <Grid item>
+                      <ResultsIcon style={{ fill: "#4fd9b3", width: '12vw', height: '12vh' }} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                        Results
+                      </Typography>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-            <Card
-              className={classes.card}
-              onClick={() => this.showTeacherModal("Results")}
+                </CardContent>
+              </Card>
+              <Card className={classes.card}>
+                <CardContent>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                    onClick={() => this.props.history.push("/MyTeachers")}
+                  >
+                    <Grid item>
+                      <PeopleIcon style={{ fill: "#ffd300", width: '12vw', height: '12vh' }} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                        My Teachers
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid
+              container
+              alignItems="center"
+              direction="row"
+              justify="space-around"
+              className={classes.buttonGrid}
             >
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                >
-                  <Grid item>
-                    <ResultsIcon style={{ fill: "#4fd9b3", width: '12vw', height: '12vh' }} />
+              <Card className={classes.card}>
+                <CardContent>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <Grid item>
+                      <ActionPlansIcon style={{ fill: "#e55529", width: '12vw', height: '12vh' }} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                        Action Plan
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                      Results
-                    </Typography>
+                </CardContent>
+              </Card>
+              <Card className={classes.card}>
+                <CardContent>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <Grid item>
+                      <ConferencePlansIcon style={{ fill: "#0988ec", width: '12vw', height: '12vh' }} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                        Conference Plan
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+              <Card
+                className={classes.card}
+                onClick={() => 
+                  this.props.history.push({
+                    pathname: "/Magic8Menu",
+                    state: { type: "Training" }
+                  })
+                }
+              >
+                <CardContent>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <Grid item>
+                      <TrainingIcon style={{fill: '#6f39c4', width: '12vw', height: '12vh'}} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                        Training
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid
+              container
+              alignItems="flex-end"
+              direction="row"
+              justify="center"
+              style={{height: '14vh'}}
+            >
+              <Grid item xs={4} style={{paddingBottom: '1em', paddingTop: '1em'}}>
+                <Grid container direction="row" justify="space-between" alignItems="center">
+                  <Grid item xs={5}>
+                    <Grid container direction="row" justify="flex-end" alignItems="center">
+                      <Button color="primary" style={{paddingRight: '2em'}}>
+                        MY ACCOUNT
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                      <Divider orientation="vertical" variant="fullWidth" style={{height: '2em', borderLeft: '3px solid #d3d3d3', borderRadius: '0.5em'}} />
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={5}>
+                    <Grid container direction="row" justify="flex-start" alignItems="center">
+                      <Button color="primary" style={{paddingLeft: '2em'}}>
+                        HELP
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </CardContent>
-            </Card>
-            <Card className={classes.card}>
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                  onClick={() => this.props.history.push("/MyTeachers")}
-                >
-                  <Grid item>
-                    <PeopleIcon style={{ fill: "#ffd300", width: '12vw', height: '12vh' }} />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                      My Teachers
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+              </Grid>
+            </Grid>
           </Grid>
+        ) : (
           <Grid
             container
-            alignItems="center"
-            direction="row"
-            justify="space-around"
-            className={classes.buttonGrid}
-          >
-            <Card className={classes.card}>
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                >
-                  <Grid item>
-                    <ActionPlansIcon style={{ fill: "#e55529", width: '12vw', height: '12vh' }} />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                      Action Plan
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-            <Card className={classes.card}>
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                >
-                  <Grid item>
-                    <ConferencePlansIcon style={{ fill: "#0988ec", width: '12vw', height: '12vh' }} />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                      Conference Plan
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-            <Card
-              className={classes.card}
-              onClick={() => 
-                this.props.history.push({
-                  pathname: "/Magic8Menu",
-                  state: { type: "Training" }
-                })
-              }
-            >
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                >
-                  <Grid item>
-                    <TrainingIcon style={{fill: '#6f39c4', width: '12vw', height: '12vh'}} />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                      Training
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid
-            container
-            alignItems="flex-end"
             direction="row"
             justify="center"
-            style={{height: '14vh'}}
+            alignItems="center"
+            style={{height: "85vh"}}
           >
-            <Grid item xs={4} style={{paddingBottom: '1em', paddingTop: '1em'}}>
-              <Grid container direction="row" justify="space-between" alignItems="center">
-                <Grid item xs={5}>
-                  <Grid container direction="row" justify="flex-end" alignItems="center">
-                    <Button color="primary" style={{paddingRight: '2em'}}>
-                      MY ACCOUNT
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Grid item xs={2}>
-                  <Grid container direction="row" justify="center" alignItems="center">
-                    <Divider orientation="vertical" variant="fullWidth" style={{height: '2em', borderLeft: '3px solid #d3d3d3', borderRadius: '0.5em'}} />
-                  </Grid>
-                </Grid>
-                <Grid item xs={5}>
-                  <Grid container direction="row" justify="flex-start" alignItems="center">
-                    <Button color="primary" style={{paddingLeft: '2em'}}>
-                      HELP
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
+            <img src={CHALKLogoGIF} alt="Loading" width="80%" />
           </Grid>
-        </Grid>
+        )}
         {this.state.teacherModal ? (
           <FirebaseContext.Consumer>
             {firebase => (
@@ -333,8 +349,16 @@ class HomePage extends React.Component {
 
 HomePage.propTypes = {
   classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  coachName: PropTypes.string.isRequired,
+  getCoach: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => {
+  return {
+    coachName: state.coachState.coachName
+  };
 };
 
 HomePage.contextType = FirebaseContext;
-export default withRouter(withStyles(styles)(HomePage));
+export default withStyles(styles)(connect(mapStateToProps, {getCoach})(HomePage));

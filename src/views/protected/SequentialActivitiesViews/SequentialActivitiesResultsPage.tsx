@@ -149,20 +149,47 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "sequential").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-      this.setState({
-        sessionDates: dates
-      }, () => {
-        if (this.state.sessionDates[0]) {
-          this.setState({ sessionId: this.state.sessionDates[0].id },
-            () => {
-              this.getData();
-            }
-          );
-        }
-      })
-    );
-    console.log('date fetching was called');
+    this.setState({
+      sequential: 0,
+      notSequential: 0,
+      support: 0,
+      noSupport: 0,
+      noTeacherOpp: 0,
+      sessionId: '',
+      sequential1: 0,
+      sequential2: 0,
+      sequential3: 0,
+      sequential4: 0,
+      teacher1: 0,
+      teacher2: 0,
+      teacher3: 0,
+      teacher4: 0,
+      trendsDates: [],
+      trendsNotSequential: [],
+      trendsSequential: [],
+      trendsNoTeacherOpp: [],
+      trendsNoSupport: [],
+      trendsSupport: [],
+      notes: [],
+      actionPlanExists: false,
+      conferencePlanExists: false,
+      addedToPlan: [],
+      sessionDates: []
+    }, () => {
+      firebase.fetchSessionDates(teacherId, "sequential").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+        this.setState({
+          sessionDates: dates
+        }, () => {
+          if (this.state.sessionDates[0]) {
+            this.setState({ sessionId: this.state.sessionDates[0].id },
+              () => {
+                this.getData();
+              }
+            );
+          }
+        })
+      );
+    })
   };
 
   /**

@@ -142,20 +142,39 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "listening").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-      this.setState({
-        sessionDates: dates
-      }, () => {
-        if (this.state.sessionDates[0]) {
-          this.setState({ sessionId: this.state.sessionDates[0].id },
-            () => {
-              this.getData();
-            }
-          );
-        }
-      })
-    );
-    console.log('date fetching was called');
+    this.setState({
+      listening: 0,
+      notListening: 0,
+      sessionId: '',
+      listening1: 0,
+      listening2: 0,
+      listening3: 0,
+      listening4: 0,
+      listening5: 0,
+      listening6: 0,
+      trendsDates: [],
+      trendsListening: [],
+      trendsNotListening: [],
+      notes: [],
+      actionPlanExists: false,
+      conferencePlanExists: false,
+      addedToPlan: [],
+      sessionDates: []
+    }, () => {
+      firebase.fetchSessionDates(teacherId, "listening").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+        this.setState({
+          sessionDates: dates
+        }, () => {
+          if (this.state.sessionDates[0]) {
+            this.setState({ sessionId: this.state.sessionDates[0].id },
+              () => {
+                this.getData();
+              }
+            );
+          }
+        })
+      );
+    })
   };
 
   /**

@@ -168,20 +168,35 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "level").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>  
-      this.setState({
-        sessionDates: dates
-      }, () => {
-        if (this.state.sessionDates[0]) {
-          this.setState({ sessionId: this.state.sessionDates[0].id },
-            () => {
-              this.getData();
-            }
-          );
-        }
-      })
-    );
-    console.log('date fetching was called');
+    this.setState({
+      highLevelQuesInsCount: 0,      
+      followUpInsCount: 0,
+      lowLevelInsCount: 0,
+      specificSkillInsCount: 0,              
+      sessionId: '',
+      trendsDates: [],
+      trendsInfer: [],                   
+      trendsBasic: [],                    
+      notes: [],
+      actionPlanExists: false,
+      conferencePlanExists: false,
+      addedToPlan: [],
+      sessionDates: []
+    }, () => {
+      firebase.fetchSessionDates(teacherId, "level").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>  
+        this.setState({
+          sessionDates: dates
+        }, () => {
+          if (this.state.sessionDates[0]) {
+            this.setState({ sessionId: this.state.sessionDates[0].id },
+              () => {
+                this.getData();
+              }
+            );
+          }
+        })
+      );
+    })
   };
 
   trendsFormatData = () => {

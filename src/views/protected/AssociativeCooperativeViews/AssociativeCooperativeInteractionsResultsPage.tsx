@@ -172,20 +172,49 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "ac").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-      this.setState({
-        sessionDates: dates
-      }, () => {
-        if (this.state.sessionDates[0]) {
-          this.setState({ sessionId: this.state.sessionDates[0].id },
-            () => {
-              this.getData();
-            }
-          );
-        }
-      })
-    );
-    console.log('date fetching was called');
+    this.setState({
+      ac: 0,
+      noAc: 0,
+      noChildOpp: 0,
+      support: 0,
+      noSupport: 0,
+      noTeacherOpp: 0,
+      sessionId: '',
+      ac1: 0,
+      ac2: 0,
+      ac3: 0,
+      ac4: 0,
+      teacher1: 0,
+      teacher2: 0,
+      teacher3: 0,
+      teacher4: 0,
+      trendsDates: [],
+      trendsNoChildOpp: [],
+      trendsNoAC: [],
+      trendsAC: [],
+      trendsNoTeacherOpp: [],
+      trendsNoSupport: [],
+      trendsSupport: [],
+      notes: [],
+      actionPlanExists: false,
+      conferencePlanExists: false,
+      addedToPlan: [],
+      sessionDates: []
+    }, () => {
+      firebase.fetchSessionDates(teacherId, "ac").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+        this.setState({
+          sessionDates: dates
+        }, () => {
+          if (this.state.sessionDates[0]) {
+            this.setState({ sessionId: this.state.sessionDates[0].id },
+              () => {
+                this.getData();
+              }
+            );
+          }
+        })
+      );
+    })
   };
 
   /**

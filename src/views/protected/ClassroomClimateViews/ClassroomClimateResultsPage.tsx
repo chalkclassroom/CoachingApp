@@ -153,20 +153,36 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-      this.setState({
-        sessionDates: dates
-      }, () => {
-        if (this.state.sessionDates[0]) {
-          this.setState({ sessionId: this.state.sessionDates[0].id },
-            () => {
-              this.getData();
-            }
-          );
-        }
-      })
-    );
-    console.log('date fetching was called');
+    this.setState({
+      sessionId: '',
+      disapprovalBehaviorCount: 0,
+      redirectionsBehaviorCount: 0,
+      nonspecificBehaviorCount: 0,
+      specificBehaviorCount: 0,
+      averageToneRating: 0,
+      trendsDates: [],
+      trendsPos: [],
+      trendsNeg: [],
+      notes: [],
+      actionPlanExists: false,
+      conferencePlanExists: false,
+      addedToPlan: [],
+      sessionDates: []
+    }, () => {
+      firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+        this.setState({
+          sessionDates: dates
+        }, () => {
+          if (this.state.sessionDates[0]) {
+            this.setState({ sessionId: this.state.sessionDates[0].id },
+              () => {
+                this.getData();
+              }
+            );
+          }
+        })
+      );
+    })
   };
 
   trendsFormatData = () => {

@@ -11,6 +11,7 @@ import LOIsettingTypeState from "./reducers/loi-setting-type-state";
 import instructionstackstate from "./reducers/instruction-stack-state";
 import teacherSelectedState from "./reducers/teacher-selected-state";
 import teacherListState from "./reducers/teacher-list-state";
+import coachState from './reducers/coach-state';
 
 export default combineReducers({
   associativeCenterState,
@@ -24,5 +25,6 @@ export default combineReducers({
   LOIsettingTypeState,
   instructionstackstate,
   teacherSelectedState,
-  teacherListState
+  teacherListState,
+  coachState
 });

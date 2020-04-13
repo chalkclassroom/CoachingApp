@@ -41,6 +41,10 @@ import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import ReactGA from 'react-ga';
+import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
+import Grid from '@material-ui/core/Grid';
+import { getCoach } from './state/actions/coach';
+import { connect } from 'react-redux';
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -125,9 +129,12 @@ class App extends Component {
   componentDidMount() {
     this.removeListener = this.props.firebase.auth.onAuthStateChanged(user => {
       if (user) {
-        this.setState({
-          auth: true,
-          loading: false
+        this.props.firebase.getCoachFirstName().then(name => {
+          this.props.getCoach(name);
+          this.setState({
+            auth: true,
+            loading: false
+          });
         });
       } else {
         this.setState({
@@ -149,13 +156,36 @@ class App extends Component {
    */
   render() {
     return this.state.loading === true ? (
-      <h1>Loading</h1>
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        style={{height: "100vh"}}
+      >
+        <img src={CHALKLogoGIF} alt="Loading" width="80%" />
+      </Grid>
     ) : (
       <BrowserRouter>
         <MuiThemeProvider theme={styles}>
           <Switch>
-            <Route exact path="/" component={WelcomePage} />
+            <Route
+              exact
+              path="/"
+              render={props =>
+                this.state.auth === true ? (
+                  <Redirect to={{ pathname: '/Home', state: { from: props.location } }} />
+                ) : (
+                  <WelcomePage />
+                )
+              }
+            />
             <Route exact path="/forgot" component={ForgotPasswordPage} />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/Landing"
+              component={WelcomePage}
+            />
             <PrivateRoute
               auth={this.state.auth}
               path="/Invite"
@@ -327,7 +357,8 @@ class App extends Component {
 }
 
 App.propTypes = {
-  firebase: PropTypes.object.isRequired
+  firebase: PropTypes.object.isRequired,
+  getCoach: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(connect(null, {getCoach})(App));
