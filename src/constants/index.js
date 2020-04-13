@@ -921,12 +921,12 @@ export const CoachingQuestions = {
         'name': 'InstructionPanel3A',
         'title': 'Encouraging Student Participation',
         'text': [
-          'How do some children benefit from low-level questions that have 1 or 2 - word ' +
-          'answers?', 
+          'How do some dual-language learners and/or children with language delays benefit ' + 
+          'from low-level questions that have 1 or 2 - word answers?',
           'Talk about the successes you have had using low-level questions to help children ' +
           'participate in a conversation.',		
-	        'Over time, how do children develop in their participation? Talk about your role ' +
-          'in their development.' 
+	        'Over time, how do children develop in their participation? Talk about how you as ' +
+          'the teacher support their ability to participate.' 
         ]
       },
       {
