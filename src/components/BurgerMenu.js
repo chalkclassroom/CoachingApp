@@ -29,6 +29,8 @@ import CalendarIcon from "@material-ui/icons/CalendarToday";
 import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
+import { connect } from 'react-redux';
+import { clearCoach } from '../state/actions/coach';
 import TeacherModal from "../views/protected/HomeViews/TeacherModal.tsx";
 import FirebaseContext from "./Firebase/FirebaseContext";
 
@@ -411,8 +413,11 @@ class BurgerMenu extends React.Component {
               <ListItemText
                 primary="Logout"
                 onClick={() => {
-                  this.props.firebase.firebaseSignOut();
-                  this.props.history.push("/");
+                  this.props.firebase.firebaseSignOut().then(() => {
+                    this.props.history.push("/");
+                    this.props.clearCoach();
+                  });
+                  // this.props.history.push("/");
                 }}
               />
             </ListItem>
@@ -441,7 +446,8 @@ BurgerMenu.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
-  firebase: PropTypes.object.isRequired
+  firebase: PropTypes.object.isRequired,
+  clearCoach: PropTypes.func.isRequired
 };
 
-export default withRouter(withStyles(styles)(BurgerMenu));
+export default withRouter(withStyles(styles)(connect(null, {clearCoach})(BurgerMenu)));

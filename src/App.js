@@ -137,10 +137,6 @@ class App extends Component {
             loading: false
           });
         });
-        /* this.setState({
-          auth: true,
-          loading: false
-        }); */
       } else {
         this.setState({
           auth: false,
@@ -174,8 +170,23 @@ class App extends Component {
       <BrowserRouter>
         <MuiThemeProvider theme={styles}>
           <Switch>
-            <Route exact path="/" component={WelcomePage} />
+            <Route
+              exact
+              path="/"
+              render={props =>
+                this.state.auth === true ? (
+                  <Redirect to={{ pathname: '/Home', state: { from: props.location } }} />
+                ) : (
+                  <WelcomePage />
+                )
+              }
+            />
             <Route exact path="/forgot" component={ForgotPasswordPage} />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/Landing"
+              component={WelcomePage}
+            />
             <PrivateRoute
               auth={this.state.auth}
               path="/Invite"

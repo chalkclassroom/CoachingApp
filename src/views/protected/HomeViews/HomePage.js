@@ -12,7 +12,9 @@ import ResultsImage from "../../../assets/images/ResultsImage.svg";
 import MessagesImage from "../../../assets/images/MessagesImage.svg";
 import TeacherModal from "./TeacherModal.tsx";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import { withRouter } from "react-router-dom";
+import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
+// import { withRouter } from "react-router-dom";
+import { getCoach } from '../../../state/actions/coach';
 import { connect } from 'react-redux';
 
 const styles = {
@@ -70,9 +72,11 @@ class HomePage extends React.Component {
   /** lifecycle method invoked after component mounts */
   componentDidMount() {
     const firebase = this.context;
-    /* firebase.getCoachFirstName().then(name => {
-      this.setState({ coachName: name });
-    }); */
+    if (!this.props.coachName) {
+      firebase.getCoachFirstName().then(name => {
+        this.props.getCoach(name);
+      })
+    }
     firebase.handleFetchTrainingStatus();
     firebase.handleFetchQuestions("transition");
   }
@@ -88,116 +92,128 @@ class HomePage extends React.Component {
         <FirebaseContext.Consumer>
           {firebase => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <Grid
-          container
-          alignItems="center"
-          direction="column"
-          justify="space-between"
-          style={{ padding: 40 }}
-        >
-          <Typography component={"h3"} variant={"h3"} align={"center"}>
-            Welcome, {this.props.coachName}!
-          </Typography>
+        {this.props.coachName ? (
           <Grid
             container
             alignItems="center"
-            direction="row"
-            justify="space-around"
-            className={classes.buttonGrid}
+            direction="column"
+            justify="space-between"
+            style={{ padding: 40 }}
           >
-            <Card className={classes.card}>
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                  onClick={() => this.props.history.push("/MyTeachers")}
-                >
-                  <Grid item>
-                    <img src={MyTeachersImage} className={classes.image} />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5" component="h2">
-                      My Teachers
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-            <Card
-              className={classes.card}
-              onClick={() => this.showTeacherModal("Observe")}
+            <Typography component={"h3"} variant={"h3"} align={"center"}>
+              Welcome, {this.props.coachName}!
+            </Typography>
+            <Grid
+              container
+              alignItems="center"
+              direction="row"
+              justify="space-around"
+              className={classes.buttonGrid}
             >
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                >
-                  <Grid item>
-                    <img src={ObserveImage} className={classes.image} />
+              <Card className={classes.card}>
+                <CardContent>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                    onClick={() => this.props.history.push("/MyTeachers")}
+                  >
+                    <Grid item>
+                      <img src={MyTeachersImage} className={classes.image} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" component="h2">
+                        My Teachers
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <Typography variant="h5" component="h2">
-                      Observe
-                    </Typography>
+                </CardContent>
+              </Card>
+              <Card
+                className={classes.card}
+                onClick={() => this.showTeacherModal("Observe")}
+              >
+                <CardContent>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <Grid item>
+                      <img src={ObserveImage} className={classes.image} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" component="h2">
+                        Observe
+                      </Typography>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid
+              container
+              alignItems="center"
+              direction="row"
+              justify="space-around"
+              className={classes.buttonGrid}
+            >
+              <Card
+                className={classes.card}
+                onClick={() => this.showTeacherModal("Results")}
+              >
+                <CardContent>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <Grid item>
+                      <img src={ResultsImage} className={classes.image} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" component="h2">
+                        Results
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+              <Card className={classes.card}>
+                <CardContent>
+                  <Grid
+                    container
+                    alignItems="center"
+                    direction="column"
+                    justify="flex-start"
+                  >
+                    <Grid item>
+                      <img src={MessagesImage} className={classes.image} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" component="h2">
+                        Messages
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
+        ) : (
           <Grid
             container
-            alignItems="center"
             direction="row"
-            justify="space-around"
-            className={classes.buttonGrid}
+            justify="center"
+            alignItems="center"
+            style={{height: "85vh"}}
           >
-            <Card
-              className={classes.card}
-              onClick={() => this.showTeacherModal("Results")}
-            >
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                >
-                  <Grid item>
-                    <img src={ResultsImage} className={classes.image} />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5" component="h2">
-                      Results
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-            <Card className={classes.card}>
-              <CardContent>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                >
-                  <Grid item>
-                    <img src={MessagesImage} className={classes.image} />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5" component="h2">
-                      Messages
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+            <img src={CHALKLogoGIF} alt="Loading" width="80%" />
           </Grid>
-        </Grid>
+        )}
         {this.state.teacherModal ? (
           <FirebaseContext.Consumer>
             {firebase => (
@@ -219,7 +235,8 @@ class HomePage extends React.Component {
 HomePage.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  coachName: PropTypes.string.isRequired
+  coachName: PropTypes.string.isRequired,
+  getCoach: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -229,4 +246,4 @@ const mapStateToProps = state => {
 };
 
 HomePage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps)(HomePage));
+export default withStyles(styles)(connect(mapStateToProps, {getCoach})(HomePage));

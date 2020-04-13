@@ -179,7 +179,7 @@ class AppBar extends React.Component {
                     classes.menuButtonHidden,
                     classes.logoButton
                   )}
-                  onClick = {() => this.props.history.push("/")}
+                  onClick = {() => this.props.history.push("/Landing")}
                 >
                   <img src={LogoImage} height={'36'} alt={""}/>
                 </IconButton>
@@ -188,7 +188,7 @@ class AppBar extends React.Component {
                     <Typography
                       variant="h6"
                       className={classes.chalkText}
-                      onClick = {() => this.props.history.push("/")}
+                      onClick = {() => this.props.history.push("/Landing")}
                     >
                       CHALK
                     </Typography>
@@ -197,7 +197,7 @@ class AppBar extends React.Component {
                     <Typography 
                       variant="h6"
                       className={classes.coachingText}
-                      onClick = {() => this.props.history.push("/")}
+                      onClick = {() => this.props.history.push("/Landing")}
                     >
                       COACHING
                     </Typography>
@@ -212,7 +212,7 @@ class AppBar extends React.Component {
                         className={classes.menuButton}
                         onClick={() => this.props.history.push("/")}
                       >
-                        Homepage
+                        Home
                       </Button>
                     </Link>
                     <Link to="/team" className={classes.link}>
