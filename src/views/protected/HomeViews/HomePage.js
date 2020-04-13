@@ -181,7 +181,7 @@ class HomePage extends React.Component {
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                      View Results
+                      Results
                     </Typography>
                   </Grid>
                 </Grid>
