@@ -13,7 +13,6 @@ import MessagesImage from "../../../assets/images/MessagesImage.svg";
 import TeacherModal from "./TeacherModal.tsx";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
-// import { withRouter } from "react-router-dom";
 import { getCoach } from '../../../state/actions/coach';
 import { connect } from 'react-redux';
 

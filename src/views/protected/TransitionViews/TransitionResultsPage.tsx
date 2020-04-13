@@ -55,7 +55,6 @@ interface State {
   trendsBehaviorManagement: Array<number>,
   trendsOther: Array<number>,
   trendsTotal: Array<number>,
-  trendsTotalColor: string,
   transitionTime: number,
   sessionTotal: number,
   learningActivityTime: number,
@@ -104,7 +103,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
       trendsBehaviorManagement:  [],
       trendsOther: [],
       trendsTotal: [],
-      trendsTotalColor: "#ec2409",
       transitionTime: 0,
       sessionTotal: 0,
       learningActivityTime: 0,
@@ -292,20 +290,45 @@ class TransitionResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-      this.setState({
-        sessionDates: dates
-      }, () => {
-        if (this.state.sessionDates[0]) {
-          this.setState({ sessionId: this.state.sessionDates[0].id },
-            () => {
-              this.getData();
-            }
-          );
-        }
-      })
-    );
-    console.log('date fetching was called');
+    this.setState({
+      sessionId: "",
+      notes: [],
+      sessionLine: 0,
+      sessionTraveling: 0,
+      sessionWaiting: 0,
+      sessionRoutines: 0,
+      sessionBehaviorManagement: 0,
+      sessionOther: 0,
+      trendsDates: [[]],
+      trendsLine: [],
+      trendsTraveling: [],
+      trendsWaiting:  [],
+      trendsRoutines: [],
+      trendsBehaviorManagement:  [],
+      trendsOther: [],
+      trendsTotal: [],
+      transitionTime: 0,
+      sessionTotal: 0,
+      learningActivityTime: 0,
+      actionPlanExists: false,
+      conferencePlanExists: false,
+      addedToPlan: [],
+      sessionDates: []
+    }, () => {
+      firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+        this.setState({
+          sessionDates: dates
+        }, () => {
+          if (this.state.sessionDates[0]) {
+            this.setState({ sessionId: this.state.sessionDates[0].id },
+              () => {
+                this.getData();
+              }
+            );
+          }
+        })
+      );
+    })
   };
 
   /**

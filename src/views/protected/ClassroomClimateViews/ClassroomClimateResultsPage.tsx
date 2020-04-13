@@ -183,7 +183,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
         })
       );
     })
-    console.log('date fetching was called');
   };
 
   trendsFormatData = () => {
