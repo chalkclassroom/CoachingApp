@@ -87,7 +87,7 @@ class TeacherChecklist extends React.Component<Props, State> {
     super(props);
 
     const mEntry = {
-      teacher: this.props.teacherSelected.teacher,
+      teacher: this.props.teacherSelected.id,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "listening"
     };
