@@ -848,7 +848,7 @@ export const CoachingQuestions = {
         'name': 'InstructionPanel1A',
         'title': 'Explain Thinking',
         'text': [
-          'Which resources are the most helpful for planning math activities?',
+          'Talk about the opportunities children have to explain their thinking.',
           'What supports help children who struggle at first when ' +
           'responding to how and why questions?',
         ]
