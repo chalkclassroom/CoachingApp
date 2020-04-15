@@ -3,6 +3,9 @@ import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -12,7 +15,7 @@ import CloseImage from '../assets/images/CloseImage.svg';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import moment from 'moment';
+import * as moment from 'moment';
 
 const styles: object = {
   textField: {
@@ -368,7 +371,7 @@ class ActionPlanForm extends React.Component<Props, State> {
             direction="column"
             justify="flex-start"
             alignItems="flex-start"
-            style={{width: '100%'}}
+            style={{width: '100%', border: '1px solid black'}}
           >
             <Grid item style={{width: '100%'}}>
               <Grid
@@ -470,11 +473,55 @@ class ActionPlanForm extends React.Component<Props, State> {
                 style={{border: '2px solid #e99c2e'}}
               />
             </Grid>
-            {this.state.actionStepsArray.map((value, index) => {
+            <Grid item xs={12} style={{width: '100%', height: '35vh'}}>
+              <Grid container direction="row" justify="space-between">
+                <Grid item xs={5} style={{border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%'}}>
+                  <Typography style={{fontSize: '1.4em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', color: '#a9a9a9'}}>
+                    Action Steps
+                  </Typography>
+                  {/* <Table> */}
+                  {this.state.actionStepsArray.map((value, index) => {
+                    return(
+                      /* <TableRow key={index}>
+                        <TableCell style={{border: '1px solid blue'}} padding='none'> */
+                          <TextField
+                            key={index}
+                            id={"actionSteps" + index.toString()}
+                            name={"actionSteps" + index.toString()}
+                            type="text"
+                            // label={index===0 ? "Action Steps" : null}
+                            value={value.step}
+                            onChange={this.handleChangeActionStep(index)}
+                            margin="normal"
+                            variant="standard"
+                            fullWidth
+                            multiline
+                            rowsMax={4}
+                            rows={4}
+                            className={classes.textField}
+                            InputProps={{
+                              disableUnderline: true,
+                              readOnly: this.props.readOnly,
+                              style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em', paddingTop: '0px', marginBottom: 0, paddingBottom: '0px'}
+                            }}
+                            // InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
+                            // style={{border: '2px solid #0988ec'}}
+                            style={{marginTop: 0, paddingTop: '0.5em', paddingBottom: '0.5em', marginBottom: 0}}
+                          />
+                        /* </TableCell>
+                      </TableRow> */
+                      
+                    );
+                  })}
+                  {/* </Table> */}
+                </Grid>
+              </Grid>
+            </Grid>
+            {/* {this.state.actionStepsArray.map((value, index) => {
               return (
                 <Grid item xs={12} style={{width: '100%'}} key={index}>
                   <Grid container direction="row" justify="space-between"> 
-                    <Grid item xs={5}>
+                    <Grid item xs={5} style={{border: '2px solid #0988ec', borderRadius: '0.5em', height: '30vh'}}>
                       <TextField
                         id={"actionSteps" + index.toString()}
                         name={"actionSteps" + index.toString()}
@@ -573,7 +620,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
               );
-            })}
+            })} */}
             <Button disabled={this.props.readOnly} onClick={this.handleAddActionStep}>
               <AddCircleIcon />
             </Button>
