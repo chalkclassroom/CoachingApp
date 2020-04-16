@@ -7,8 +7,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import actionPlanIcon from '../../assets/icons/talk.svg';
 import feedbackIcon from '../../assets/icons/check-mark.svg';
 import newMessageIcon from '../../assets/icons/files-and-folders.svg';
@@ -29,19 +27,17 @@ const getIcon = (text: string) => {
 	}
 };
 
-const ChooseIntent: React.FC<{changeIntent: any}> = (props: {changeIntent: any}) => {
+const ChooseIntent: React.FC<{changeIntent: any, chosenIntent: string}> = (props: {changeIntent: any, chosenIntent: string}) => {
 	return (<List style={{width: drawerWidth, height: '80vh'}}>
             {['Thank You', 'Feedback', 'Action Plan', 'New Message'].map((text, index) => (
-		    <ListItem button key={text} onClick={() => props.changeIntent(text)}>
+		    <ListItem button key={text} onClick={() => props.changeIntent(text)} style={{marginBottom: "10px"}}>
 		<ListItemAvatar>
-			<Avatar src={getIcon(text)}>
-				<AccountCircleIcon />
-			</Avatar>
+			<img src={getIcon(text)} style={{width: "40px", height: "40px"}}/>
 		</ListItemAvatar>
                 <ListItemText primary={text} />
               </ListItem>
             ))}
           </List>);
-}
+};
 
 export default ChooseIntent;

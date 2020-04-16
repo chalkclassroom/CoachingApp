@@ -27,6 +27,20 @@ class Firebase {
     }
   }
 
+  sendEmail = async function(msg) {
+    const sendEmailFirebaseFunction = this.functions.httpsCallable(
+      "funcSendEmail"
+    );
+    return sendEmailFirebaseFunction(msg)
+      .then(
+        result =>
+          result
+      )
+      .catch(error =>
+          error
+      );  
+  }
+
   firebasePilotSignUp = async function(userData) {
     const data = Object.assign(
       {},
