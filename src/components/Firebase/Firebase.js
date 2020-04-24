@@ -1114,6 +1114,7 @@ class Firebase {
         tool: magic8,
         dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
         goal: '',
+        goalTimeline: '',
         benefit: ''
       }
     );
@@ -1176,6 +1177,7 @@ class Firebase {
           idArr.push({
             id: doc.id,
             goal: doc.data().goal,
+            goalTimeline: doc.data().goalTimeline,
             benefit: doc.data().benefit,
             date: doc.data().dateCreated
           })
@@ -1207,10 +1209,11 @@ class Firebase {
       })
   }
 
-  saveActionPlan = async function(actionPlanId, goal, benefit) {
+  saveActionPlan = async function(actionPlanId, goal, goalTimeline, benefit) {
     var actionPlanRef = this.db.collection("actionPlans").doc(actionPlanId);
     return actionPlanRef.update({
       goal: goal,
+      goalTimeline: goalTimeline,
       benefit: benefit
     })
     .then(() => {

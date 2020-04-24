@@ -3,9 +3,7 @@ import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
+import Popover from '@material-ui/core/Popover';
 import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -61,6 +59,7 @@ interface Props {
 
 interface State {
   goal: string,
+  goalTimeline: string,
   benefit: string,
   date: Date,
   actionSteps: string,
@@ -72,7 +71,9 @@ interface State {
   coachLastName: string,
   createMode: boolean,
   saved: boolean,
-  saveModal: boolean
+  saveModal: boolean,
+  anchorEl: HTMLElement,
+  popover: string
 }
 
 interface Style {
@@ -93,6 +94,7 @@ class ActionPlanForm extends React.Component<Props, State> {
 
     this.state = {
       goal: '',
+      goalTimeline: '',
       benefit: '',
       date: new Date(),
       actionSteps: '',
@@ -104,7 +106,9 @@ class ActionPlanForm extends React.Component<Props, State> {
       coachLastName: '',
       createMode: false,
       saved: true,
-      saveModal: false
+      saveModal: false,
+      anchorEl: null,
+      popover: ''
     }
   }
 
@@ -113,6 +117,24 @@ class ActionPlanForm extends React.Component<Props, State> {
       actionStepsArray: [...this.state.actionStepsArray, {step: '', materials: '', person: '', timeline: ''}]
     }, () => {
       this.props.firebase.createActionStep(this.state.actionPlanId, (this.state.actionStepsArray.length-1).toString());
+    })
+  }
+
+  /**
+   * @param {SyntheticEvent} event
+   * @param {string} popover
+   */
+  handlePopoverOpen = (event: React.SyntheticEvent, popover: string): void => {
+    this.setState({
+      anchorEl: event.currentTarget,
+      popover: popover
+    })
+  }
+
+  handlePopoverClose = (): void => {
+    this.setState({
+      anchorEl: null,
+      popover: ''
     })
   }
 
@@ -198,7 +220,7 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   getActionPlan = (): void => {
     this.props.firebase.getActionPlan(this.props.sessionId)
-    .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: {seconds: number, nanoseconds: number}}>) => {
+    .then((actionPlanData: Array<{id: string, goal: string, goalTimeline: string, benefit: string, date: {seconds: number, nanoseconds: number}}>) => {
       if (actionPlanData[0]) {
         const newDate = new Date(0);
         newDate.setUTCSeconds(actionPlanData[0].date.seconds);
@@ -206,6 +228,7 @@ class ActionPlanForm extends React.Component<Props, State> {
           actionPlanExists: true,
           actionPlanId: actionPlanData[0].id,
           goal: actionPlanData[0].goal,
+          goalTimeline: actionPlanData[0].goalTimeline,
           benefit: actionPlanData[0].benefit,
           date: newDate
         });
@@ -227,6 +250,7 @@ class ActionPlanForm extends React.Component<Props, State> {
           actionPlanExists: false,
           actionPlanId: '',
           goal: '',
+          goalTimeline: '',
           benefit: '',
           actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}]
         }, () => {console.log('action plan exists? ', this.state.actionPlanExists)})
@@ -239,7 +263,7 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @return {void}
    */
   handleSave = (): void => {
-    this.props.firebase.saveActionPlan(this.state.actionPlanId, this.state.goal, this.state.benefit).then(() => {
+    this.props.firebase.saveActionPlan(this.state.actionPlanId, this.state.goal, this.state.goalTimeline, this.state.benefit).then(() => {
       console.log("action plan saved");
     })
     .catch(() => {
@@ -345,6 +369,20 @@ class ActionPlanForm extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
+    const goalOpen = Boolean(this.state.popover === 'goal-popover');
+    const goalTimelineOpen = Boolean(this.state.popover === 'goal-timeline-popover');
+    const benefitOpen = Boolean(this.state.popover === 'benefit-popover');
+    const actionStepOpen = Boolean(this.state.popover === 'action-step-popover');
+    const materialsOpen = Boolean(this.state.popover === 'materials-popover');
+    const personOpen = Boolean(this.state.popover === 'person-popover');
+    const timelineOpen = Boolean(this.state.popover === 'timeline-popover');
+    const goalId = goalOpen ? 'goal-popover' : undefined;
+    const goalTimelineId = goalTimelineOpen ? 'goal-timeline-popover' : undefined;
+    const benefitId = benefitOpen ? 'benefit-popover' : undefined;
+    const actionStepId = actionStepOpen ? 'action-step-popover' : undefined;
+    const materialsId = materialsOpen ? 'materials-popover' : undefined;
+    const personId = personOpen ? 'person-popover' : undefined;
+    const timelineId = timelineOpen ? 'timeline-popover' : undefined;
     return (
       <div>
         {this.props.actionPlanExists || this.state.createMode ? 
@@ -428,19 +466,67 @@ class ActionPlanForm extends React.Component<Props, State> {
             </Grid>
             <Grid item xs={12} style={{width: "100%", paddingTop: '0.4em', paddingBottom: '0.8em'}}>
               <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
-                <Grid item xs={12} style={{border: '2px solid #094492', borderRadius: '0.5em', height: '100%'}}>
+                <Grid item style={{width: '81%', border: '2px solid #094492', borderRadius: '0.5em', height: '100%'}}>
                   <Grid container direction="column" style={{width: '100%'}}>
                     <Grid item>
                       <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                         <Grid item xs={11}>
-                          <Typography style={{fontSize: '1.2em', fontFamily: 'Arimo', marginLeft: '0.3em', marginTop: '0.3em', color: '#a9a9a9'}}>
+                          <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.3em', marginTop: '0.3em', fontWeight: 'bold'}}>
                             Teacher Goal
                           </Typography>
                         </Grid>
                         <Grid item xs={1}>
                           <Grid container justify="flex-end" direction="row" alignItems="center">
                             <Grid item>
-                              <InfoIcon style={{ fill: "#094492", marginRight: '0.3em', marginTop: '0.3em' }} />
+                              <InfoIcon
+                                style={{
+                                  fill: "#094492",
+                                  marginRight: '0.3em',
+                                  marginTop: '0.3em'
+                                }}
+                                onClick={
+                                  (e): void => this.handlePopoverOpen(e, 'goal-popover')
+                                }
+                              />
+                              <Popover
+                                id={goalId}
+                                open={goalOpen}
+                                anchorEl={this.state.anchorEl}
+                                onClose={this.handlePopoverClose}
+                                anchorOrigin={{
+                                  vertical: 'bottom',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center'
+                                }}
+                                elevation={16}
+                              >
+                                <div style={{padding: '2em'}}>
+                                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                                    Writing a High-Quality Goal
+                                  </Typography>
+                                  <ul>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Clearly define what you want to achieve.
+                                      </Typography>
+                                    </li>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Check that your goal can be measured by 
+                                        <br />
+                                        the CHALK observation tool (e.g. Reduce
+                                        <br />
+                                        center time clean-up transition to 7 
+                                        <br />
+                                        minutes).
+                                      </Typography>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </Popover>
                             </Grid>
                           </Grid>
                         </Grid>
@@ -465,7 +551,84 @@ class ActionPlanForm extends React.Component<Props, State> {
                           readOnly: this.props.readOnly,
                           style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
                         }}
-                        style={{marginTop: 0, paddingTop: '0.5em', paddingBottom: '0.5em', marginBottom: 0}}
+                        style={{marginTop: 0, paddingTop: '0em', paddingBottom: '0.5em', marginBottom: 0}}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item style={{width: '18%', border: '2px solid #4fd9b3', borderRadius: '0.5em', height: '100%'}}>
+                  <Grid container direction="column" style={{width: '100%'}}>
+                    <Grid item>
+                      <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
+                        <Grid item xs={11}>
+                          <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.3em', marginTop: '0.3em', fontWeight: 'bold'}}>
+                            Achieve by:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                          <Grid container justify="flex-end" direction="row" alignItems="center">
+                            <Grid item>
+                              <InfoIcon
+                                onClick={
+                                  (e): void => this.handlePopoverOpen(e, 'goal-timeline-popover')
+                                }
+                                style={{
+                                  fill: "#4fd9b3",
+                                  marginRight: '0.3em',
+                                  marginTop: '0.3em'
+                                }}
+                              />
+                              <Popover
+                                id={goalTimelineId}
+                                open={goalTimelineOpen}
+                                anchorEl={this.state.anchorEl}
+                                onClose={this.handlePopoverClose}
+                                anchorOrigin={{
+                                  vertical: 'bottom',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center'
+                                }}
+                                elevation={16}
+                              >
+                                <div style={{padding: '2em'}}>
+                                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                                    Achieve by:
+                                  </Typography>
+                                  <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                    Indicate a date by which you will achieve
+                                    <br />
+                                    your goal.
+                                  </Typography>
+                                </div>
+                              </Popover>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        id="goalTimeline"
+                        name="goalTimeline"
+                        type="text"
+                        value={this.state.goalTimeline}
+                        onChange={this.handleChange('goalTimeline')}
+                        margin="normal"
+                        variant="standard"
+                        fullWidth
+                        multiline
+                        rowsMax={3}
+                        rows={3}
+                        className={classes.textField}
+                        InputProps={{
+                          disableUnderline: true,
+                          readOnly: this.props.readOnly,
+                          style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                        }}
+                        style={{marginTop: 0, paddingTop: '0em', paddingBottom: '0.5em', marginBottom: 0}}
                       />
                     </Grid>
                   </Grid>
@@ -479,14 +642,51 @@ class ActionPlanForm extends React.Component<Props, State> {
                     <Grid item>
                       <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                         <Grid item xs={11}>
-                          <Typography style={{fontSize: '1.2em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', color: '#a9a9a9'}}>
+                          <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
                             Benefit for Students
                           </Typography>
                         </Grid>
                         <Grid item xs={1}>
                           <Grid container justify="flex-end" direction="row" alignItems="center">
                             <Grid item>
-                              <InfoIcon style={{ fill: "#e99c2e", marginRight: '0.3em', marginTop: '0.3em' }} />
+                              <InfoIcon style={{ fill: "#e99c2e", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'benefit-popover')} />
+                              <Popover
+                                id={benefitId}
+                                open={benefitOpen}
+                                anchorEl={this.state.anchorEl}
+                                onClose={this.handlePopoverClose}
+                                anchorOrigin={{
+                                  vertical: 'bottom',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center'
+                                }}
+                                elevation={16}
+                              >
+                                <div style={{padding: '2em'}}>
+                                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                                    Benefit for Students
+                                  </Typography>
+                                  <ul>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        How will achieving this goal improve children&apos;s
+                                        <br />
+                                        learning?
+                                      </Typography>
+                                    </li>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        How will achieving this goal enhance the classroom
+                                        <br />
+                                        environment and children&apos;s experience?
+                                      </Typography>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </Popover>
                             </Grid>
                           </Grid>
                         </Grid>
@@ -511,28 +711,72 @@ class ActionPlanForm extends React.Component<Props, State> {
                           readOnly: this.props.readOnly,
                           style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
                         }}
-                        style={{marginTop: 0, paddingTop: '0.5em', paddingBottom: '0.5em', marginBottom: 0}}
+                        style={{marginTop: 0, paddingTop: '0em', paddingBottom: '0.5em', marginBottom: 0}}
                       />
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} style={{width: '100%', height: '36vh'}}>
+            <Grid item xs={12} style={{width: '100%', height: '38vh'}}>
               <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
                 <Grid item style={{width: '42%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                   <Grid container direction="column" style={{width: '100%'}}>
                     <Grid item>
                       <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                         <Grid item xs={11}>
-                          <Typography style={{fontSize: '1.2em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', color: '#a9a9a9'}}>
+                          <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
                             Action Steps
                           </Typography>
                         </Grid>
                         <Grid item xs={1}>
                           <Grid container justify="flex-end" direction="row" alignItems="center">
                             <Grid item>
-                              <InfoIcon style={{ fill: "#0988ec", marginRight: '0.3em', marginTop: '0.3em' }} />
+                              <InfoIcon style={{ fill: "#0988ec", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'action-step-popover')}/>
+                              <Popover
+                                id={actionStepId}
+                                open={actionStepOpen}
+                                anchorEl={this.state.anchorEl}
+                                onClose={this.handlePopoverClose}
+                                anchorOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center'
+                                }}
+                                elevation={16}
+                              >
+                                <div style={{padding: '2em'}}>
+                                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                                    Generating Action Steps
+                                  </Typography>
+                                  <ul>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Break down the goal into two or more actions.
+                                      </Typography>
+                                    </li>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Consider what knowledge or skills will lead to
+                                        <br />
+                                        achieving the goal.                                  
+                                      </Typography>
+                                    </li>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Create at least one action step that describes
+                                        <br />
+                                        how the coach will support the teacher.
+                                        <br />
+                                        Example: modeling
+                                      </Typography>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </Popover>
                             </Grid>
                           </Grid>
                         </Grid>
@@ -552,8 +796,8 @@ class ActionPlanForm extends React.Component<Props, State> {
                               variant="standard"
                               fullWidth
                               multiline
-                              rowsMax={3}
-                              rows={3}
+                              rowsMax={4}
+                              rows={4}
                               className={classes.textField}
                               InputProps={{
                                 disableUnderline: true,
@@ -578,103 +822,296 @@ class ActionPlanForm extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
                 <Grid item style={{width: '23%', border: '2px solid #009365', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
-                  <Typography style={{fontSize: '1.2em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', color: '#a9a9a9'}}>
-                    Materials
-                  </Typography>
-                  <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
-                    {this.state.actionStepsArray.map((value, index) => {
-                      return(
-                        <li key={index}>
-                          <TextField
-                            id={"materials" + index.toString()}
-                            name={"materials" + index.toString()}
-                            type="text"
-                            value={value.materials}
-                            onChange={this.handleChangeMaterials(index)}
-                            margin="normal"
-                            variant="standard"
-                            fullWidth
-                            multiline
-                            rowsMax={3}
-                            rows={3}
-                            className={classes.textField}
-                            InputProps={{
-                              disableUnderline: true,
-                              readOnly: this.props.readOnly,
-                              style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                            }}
-                            style={{marginTop: 0, paddingBottom: '0.5em', marginBottom: 0}}
-                          />
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  <Grid container direction="column" style={{width: '100%'}}>
+                    <Grid item>
+                      <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
+                        <Grid item xs={11}>
+                          <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
+                            Materials
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                          <Grid container justify="flex-end" direction="row" alignItems="center">
+                            <Grid item>
+                              <InfoIcon
+                                style={{
+                                  fill: "#009365",
+                                  marginRight: '0.3em',
+                                  marginTop: '0.3em'
+                                }}
+                                onClick={
+                                  (e): void => this.handlePopoverOpen(e, 'materials-popover')
+                                }
+                              />
+                              <Popover
+                                id={materialsId}
+                                open={materialsOpen}
+                                anchorEl={this.state.anchorEl}
+                                onClose={this.handlePopoverClose}
+                                anchorOrigin={{
+                                  vertical: 'bottom',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center'
+                                }}
+                                elevation={16}
+                              >
+                                <div style={{padding: '2em'}}>
+                                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                                    Materials
+                                  </Typography>
+                                  <ul>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        List materials or resources needed to support
+                                        <br />
+                                        each action step.
+                                      </Typography>
+                                    </li>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Example: laminated cards for small-group game,
+                                        <br />
+                                        list of high-level questions for read-aloud                                 
+                                      </Typography>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </Popover>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                        {this.state.actionStepsArray.map((value, index) => {
+                          return(
+                            <li key={index}>
+                              <TextField
+                                id={"materials" + index.toString()}
+                                name={"materials" + index.toString()}
+                                type="text"
+                                value={value.materials}
+                                onChange={this.handleChangeMaterials(index)}
+                                margin="normal"
+                                variant="standard"
+                                fullWidth
+                                multiline
+                                rowsMax={4}
+                                rows={4}
+                                className={classes.textField}
+                                InputProps={{
+                                  disableUnderline: true,
+                                  readOnly: this.props.readOnly,
+                                  style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
+                                }}
+                                style={{marginTop: 0, paddingBottom: '0.5em', marginBottom: 0}}
+                              />
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item style={{width: '16%', border: '2px solid #ffd300', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
-                  <Typography style={{fontSize: '1.2em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', color: '#a9a9a9'}}>
-                    Person
-                  </Typography>
-                  <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
-                    {this.state.actionStepsArray.map((value, index) => {
-                      return(
-                        <li key={index}>
-                          <TextField
-                            id={"person" + index.toString()}
-                            name={"person" + index.toString()}
-                            type="text"
-                            value={value.person}
-                            onChange={this.handleChangePerson(index)}
-                            margin="normal"
-                            variant="standard"
-                            fullWidth
-                            multiline
-                            rowsMax={3}
-                            rows={3}
-                            className={classes.textField}
-                            InputProps={{
-                              disableUnderline: true,
-                              readOnly: this.props.readOnly,
-                              style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                            }}
-                            style={{marginTop: 0, paddingBottom: '0.5em', marginBottom: 0}}
-                          />
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  <Grid container direction="column" style={{width: '100%'}}>
+                    <Grid item>
+                      <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
+                        <Grid item xs={11}>
+                          <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
+                            Person
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                          <Grid container justify="flex-end" direction="row" alignItems="center">
+                            <Grid item>
+                              <InfoIcon
+                                style={{
+                                  fill: "#ffd300",
+                                  marginRight: '0.3em',
+                                  marginTop: '0.3em'
+                                }} 
+                                onClick={
+                                  (e): void => this.handlePopoverOpen(e, 'person-popover')
+                                }
+                              />
+                              <Popover
+                                id={personId}
+                                open={personOpen}
+                                anchorEl={this.state.anchorEl}
+                                onClose={this.handlePopoverClose}
+                                anchorOrigin={{
+                                  vertical: 'bottom',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center'
+                                }}
+                                elevation={16}
+                              >
+                                <div style={{padding: '2em'}}>
+                                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                                    Person
+                                  </Typography>
+                                  <ul>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        List the person responsible for completing
+                                        <br />
+                                        each action step.
+                                      </Typography>
+                                    </li>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Both the coach and teacher are responsible
+                                        <br />
+                                        for action steps.                                
+                                      </Typography>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </Popover>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                        {this.state.actionStepsArray.map((value, index) => {
+                          return(
+                            <li key={index}>
+                              <TextField
+                                id={"person" + index.toString()}
+                                name={"person" + index.toString()}
+                                type="text"
+                                value={value.person}
+                                onChange={this.handleChangePerson(index)}
+                                margin="normal"
+                                variant="standard"
+                                fullWidth
+                                multiline
+                                rowsMax={4}
+                                rows={4}
+                                className={classes.textField}
+                                InputProps={{
+                                  disableUnderline: true,
+                                  readOnly: this.props.readOnly,
+                                  style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
+                                }}
+                                style={{marginTop: 0, paddingBottom: '0.5em', marginBottom: 0}}
+                              />
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item style={{width: '16%', border: '2px solid #6f39c4', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
-                  <Typography style={{fontSize: '1.2em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', color: '#a9a9a9'}}>
-                    Timeline
-                  </Typography>
-                  <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
-                    {this.state.actionStepsArray.map((value, index) => {
-                      return(
-                        <li key={index}>
-                          <TextField
-                            id={"timeline" + index.toString()}
-                            name={"timeline" + index.toString()}
-                            type="date"
-                            value={value.timeline}
-                            onChange={this.handleChangeTimeline(index)}
-                            margin="normal"
-                            variant="standard"
-                            fullWidth
-                            multiline
-                            rowsMax={3}
-                            rows={3}
-                            className={classes.textField}
-                            InputProps={{
-                              disableUnderline: true,
-                              readOnly: this.props.readOnly,
-                              style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                            }}
-                            style={{marginTop: 0, paddingBottom: '0.5em', marginBottom: 0}}
-                          />
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  <Grid container direction="column" style={{width: '100%'}}>
+                    <Grid item>
+                      <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
+                        <Grid item xs={11}>
+                          <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
+                            Timeline
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                          <Grid container justify="flex-end" direction="row" alignItems="center">
+                            <Grid item>
+                              <InfoIcon
+                                style={{
+                                  fill: "#6f39c4",
+                                  marginRight: '0.3em',
+                                  marginTop: '0.3em'
+                                }}
+                                onClick={
+                                  (e): void => this.handlePopoverOpen(e, 'timeline-popover')
+                                }
+                              />
+                              <Popover
+                                id={timelineId}
+                                open={timelineOpen}
+                                anchorEl={this.state.anchorEl}
+                                onClose={this.handlePopoverClose}
+                                anchorOrigin={{
+                                  vertical: 'bottom',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center'
+                                }}
+                                elevation={16}
+                              >
+                                <div style={{padding: '2em'}}>
+                                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                                    Timeline
+                                  </Typography>
+                                  <ul>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Assign a timeframe for each action step that 
+                                        <br />
+                                        supports the coach and teacher in achieving
+                                        <br />
+                                        the goal.
+                                      </Typography>
+                                    </li>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Example Timeline:
+                                        <br />
+                                        Action Step 1: 3/6/2020
+                                        <br />
+                                        Action Step 2: 3/12/2020
+                                      </Typography>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </Popover>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                        {this.state.actionStepsArray.map((value, index) => {
+                          return(
+                            <li key={index}>
+                              <TextField
+                                id={"timeline" + index.toString()}
+                                name={"timeline" + index.toString()}
+                                type="date"
+                                value={value.timeline}
+                                onChange={this.handleChangeTimeline(index)}
+                                margin="normal"
+                                variant="standard"
+                                fullWidth
+                                multiline
+                                rowsMax={4}
+                                rows={4}
+                                className={classes.textField}
+                                InputProps={{
+                                  disableUnderline: true,
+                                  readOnly: this.props.readOnly,
+                                  style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
+                                }}
+                                style={{marginTop: 0, paddingBottom: '0.5em', marginBottom: 0}}
+                              />
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
