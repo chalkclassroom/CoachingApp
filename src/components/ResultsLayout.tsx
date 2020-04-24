@@ -27,7 +27,7 @@ const styles: object = {
   },
   resultsContent: {
     position: "relative",
-    width: '60vw',
+    width: '70vw',
     marginTop: '5vh'
   },
   buttonText: {
@@ -236,7 +236,7 @@ class ResultsLayout extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container xs={8} justify="flex-start" direction="column" alignItems="center" style={{height: '75vh'}}>
+          <Grid container xs={9} justify="flex-start" direction="column" alignItems="center" style={{height: '75vh'}}>
             <div>
               {this.state.view === 'data' ? (
                 <div className={classes.resultsContent} style={{width: '60vw'}}>

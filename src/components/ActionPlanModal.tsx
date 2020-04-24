@@ -11,7 +11,7 @@ import ActionPlanForm from './ActionPlanForm';
 function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
-    top: `50%`,
+    top: `55%`,
     left: `62.5%`,
     transform: `translate(-50%, -50%)`,
   } as React.CSSProperties;
@@ -20,10 +20,10 @@ function getModalStyle(): React.CSSProperties {
 const styles: object = {
   paper: {
     position: "absolute",
-    width: "60%",
-    height: "70%",
+    width: "70vw",
+    height: "80vh",
     backgroundColor: 'white',
-    padding: '2em',
+    padding: '1em',
     borderRadius: 8,
     overflow: 'auto'
   },

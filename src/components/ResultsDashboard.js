@@ -85,6 +85,7 @@ const styles = {
     width: "90%",
     marginRight: "5%",
     marginLeft: "5%",
+    marginBottom: "5%",
     flexDirection: "column",
     alignItems: "center",
     justify: "space-evenly",

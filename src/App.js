@@ -12,6 +12,7 @@ import TransitionTimePage from "./views/protected/TransitionViews/TransitionTime
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
 import HomePage from "./views/protected/HomeViews/HomePage";
 import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
+import ActionPlanListPage from "./views/protected/ActionPlanViews/ActionPlanListPage";
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -210,6 +211,11 @@ class App extends Component {
               auth={this.state.auth || !this.state.auth}
               path="/team"
               component={TeamPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ActionPlans"
+              component={ActionPlanListPage}
             />
             <PrivateRoute
               auth={this.state.auth}
