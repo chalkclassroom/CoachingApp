@@ -1167,6 +1167,42 @@ class Firebase {
     })
   }
 
+  getActionPlans = async function() {
+    this.sessionRef = this.db.collection("actionPlans")
+      .where("coach", "==", this.auth.currentUser.uid)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            teacherId: doc.data().teacher,
+            practice: doc.data().tool,
+            date: doc.data().dateCreated
+          })
+        )
+        /* .then(() => {
+          idArr.forEach(item => {
+            const teacherId = item.teacherId;
+            item.teacherId = this.db.collection("users").doc(teacherId).get().then(doc => doc.data().firstName).catch(error => console.error('didnt work'))
+          })
+        }) */
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve action plan id')
+      })
+  }
+
+  getTeacherName = async function(teacherId) {
+    return this.db
+      .collection("users")
+      .doc(teacherId)
+      .get()
+      .then(doc => doc.data().firstName)
+      .catch(error => console.error("Error getting cached document:", error));
+  }
+
   getActionPlan = async function(sessionId) {
     this.sessionRef = this.db.collection("actionPlans")
       .where("sessionId", "==", sessionId)
