@@ -129,6 +129,19 @@ class TransitionTimePage extends React.Component<Props, State> {
 
     return (
       <div className={classes.root}>
+        {this.state.notes ? (
+          <FirebaseContext.Consumer>
+            {firebase => (
+              <Notes
+                open={true}
+                onClose={this.handleNotes}
+                color={Constants.Colors.TT}
+                text={"Transition Time" + " Notes"}
+                firebase={firebase}
+              />
+            )}
+          </FirebaseContext.Consumer>
+        ) : (<div />)}
         <FirebaseContext.Consumer>
           {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
