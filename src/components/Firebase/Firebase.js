@@ -1177,16 +1177,12 @@ class Firebase {
           idArr.push({
             id: doc.id,
             teacherId: doc.data().teacher,
+            teacherFirstName: '',
+            teacherLastName: '',
             practice: doc.data().tool,
             date: doc.data().dateCreated
           })
         )
-        /* .then(() => {
-          idArr.forEach(item => {
-            const teacherId = item.teacherId;
-            item.teacherId = this.db.collection("users").doc(teacherId).get().then(doc => doc.data().firstName).catch(error => console.error('didnt work'))
-          })
-        }) */
         return idArr;
       })
       .catch(() => {
@@ -1194,12 +1190,21 @@ class Firebase {
       })
   }
 
-  getTeacherName = async function(teacherId) {
+  getTeacherFirstName = async function(teacherId) {
     return this.db
       .collection("users")
       .doc(teacherId)
       .get()
       .then(doc => doc.data().firstName)
+      .catch(error => console.error("Error getting cached document:", error));
+  }
+
+  getTeacherLastName = async function(teacherId) {
+    return this.db
+      .collection("users")
+      .doc(teacherId)
+      .get()
+      .then(doc => doc.data().lastName)
       .catch(error => console.error("Error getting cached document:", error));
   }
 
