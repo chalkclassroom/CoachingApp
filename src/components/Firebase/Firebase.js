@@ -1208,6 +1208,15 @@ class Firebase {
       .catch(error => console.error("Error getting cached document:", error));
   }
 
+  getActionPlanWithId = async function(actionPlanId) {
+    return this.db
+      .collection("actionPlans")
+      .doc(actionPlanId)
+      .get()
+      .then(doc => doc.data())
+      .catch(error => console.error('unable to get action plan data', error))
+  }
+
   getActionPlan = async function(sessionId) {
     this.sessionRef = this.db.collection("actionPlans")
       .where("sessionId", "==", sessionId)

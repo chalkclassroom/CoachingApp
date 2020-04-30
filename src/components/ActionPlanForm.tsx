@@ -37,24 +37,26 @@ interface Teacher {
 
 interface Props {
   classes: Style,
+  actionPlanId?: string,
   teacher: Teacher,
-  magic8: string,
+  magic8?: string,
   firebase: {
     createActionPlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
     getActionPlan(sessionId: string): Promise<Array<{id: string, goal: string, benefit: string}>>,
+    getActionPlanWithId(actionPlanId: string): Promise<{coach: string, goal: string, goalTimeline: string, benefit: string, dateCreated: {seconds: number, nanoseconds: number}, sessionId: string, teacher: string, tool: string}>,
     getActionSteps(actionPlanId: string): Promise<Array<{step: string, materials: string, person: string, timeline: string}>>,
-    saveActionPlan(actionPlanId: string, goal: string, benefit: string): Promise<void>,
+    saveActionPlan(actionPlanId: string, goal: string, goalTimeline: string, benefit: string): Promise<void>,
     saveActionStep(actionPlanId: string, index: string, step: string, materials: string, person: string, timeline: string): Promise<void>,
     createActionStep(actionPlanId: string, index: string): Promise<void>,
     getCoachFirstName(): Promise<string>,
     getCoachLastName(): Promise<string>
   },
-  sessionId: string,
+  sessionId?: string,
   readOnly: boolean,
-  handleEditActionPlan(): void,
+  handleEditActionPlan?(): void,
   handleClose?(): void,
   actionPlanExists: boolean,
-  editMode: boolean,
+  editMode?: boolean,
 }
 
 interface State {
@@ -258,6 +260,46 @@ class ActionPlanForm extends React.Component<Props, State> {
      })
   }
 
+  getActionPlanWithId = (): void => {
+    this.props.firebase.getActionPlanWithId(this.props.actionPlanId)
+    .then((actionPlanData: {coach: string, goal: string, goalTimeline: string, benefit: string, dateCreated: {seconds: number, nanoseconds: number}, sessionId: string, teacher: string, tool: string}) => {
+      if (actionPlanData) {
+        const newDate = new Date(0);
+        newDate.setUTCSeconds(actionPlanData.dateCreated.seconds);
+        this.setState({
+          actionPlanExists: true,
+          actionPlanId: this.props.actionPlanId,
+          goal: actionPlanData.goal,
+          goalTimeline: actionPlanData.goalTimeline,
+          benefit: actionPlanData.benefit,
+          date: newDate
+        });
+        const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
+        this.props.firebase.getActionSteps(this.props.actionPlanId).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
+          actionStepsData.forEach((value, index) => {
+            newActionStepsArray[index] = {step: value.step, materials: value.materials, person: value.person, timeline: value.timeline};
+          })
+        }).then(() => {
+          this.setState({
+            actionStepsArray: newActionStepsArray
+          }, () => {console.log('action steps array: ', this.state.actionStepsArray)});
+        })
+        .catch(() => {
+          console.log('error retrieving action steps');
+        });
+      } else {
+        this.setState({
+          actionPlanExists: false,
+          actionPlanId: '',
+          goal: '',
+          goalTimeline: '',
+          benefit: '',
+          actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}]
+        }, () => {console.log('action plan exists? ', this.state.actionPlanExists)})
+      }
+     })
+  }
+
   /**
    * saves action plan by updating Cloud Firestore records
    * @return {void}
@@ -312,7 +354,11 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.getActionPlan();
+    this.props.actionPlanId ? (
+      this.getActionPlanWithId()
+    ) : (
+      this.getActionPlan()
+    );
     this.props.firebase.getCoachFirstName().then((name: string) => {
       this.setState({ coachFirstName: name })
     })
@@ -342,8 +388,6 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    teacherFirstName: PropTypes.string.isRequired,
-    teacherLastName: PropTypes.string.isRequired,
     firebase: PropTypes.exact({
       createActionPlan: PropTypes.func,
       getActionPlan: PropTypes.func,
@@ -354,13 +398,12 @@ class ActionPlanForm extends React.Component<Props, State> {
       getCoachFirstName: PropTypes.func,
       getCoachLastName: PropTypes.func
     }).isRequired,
-    teacherId: PropTypes.string.isRequired,
-    sessionId: PropTypes.string.isRequired,
+    sessionId: PropTypes.string,
     readOnly: PropTypes.bool.isRequired,
-    handleEditActionPlan: PropTypes.func.isRequired,
+    handleEditActionPlan: PropTypes.func,
     handleClose: PropTypes.func,
     actionPlanExists: PropTypes.bool.isRequired,
-    editMode: PropTypes.bool.isRequired,
+    editMode: PropTypes.bool,
   };
 
   /**
