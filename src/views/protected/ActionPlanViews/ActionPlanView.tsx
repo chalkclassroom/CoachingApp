@@ -3,9 +3,6 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar.js';
 import Grid from '@material-ui/core/Grid';
 import ActionPlanForm from '../../../components/ActionPlanForm';
-// import Button from '@material-ui/core/Button';
-// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-// import { withStyles } from "@material-ui/core/styles";
 
 interface Props {
   actionPlanId: string,
@@ -79,29 +76,6 @@ class ActionPlanView extends React.Component<Props, State>{
         <FirebaseContext.Consumer>
           {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        {/* <header>
-          <Grid container direction="row" alignItems="flex-start" justify="flex-start">
-            <Grid item xs={3}>
-              <Grid container alignItems="center" justify="flex-start">
-                <Grid item style={{paddingLeft: '1.5em'}}>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    className={classes.backButton}
-                    onClick={(): void => {
-                      this.props.history.replace({
-                        pathname: "/ActionPlans"
-                      })
-                    }}
-                  >
-                    <ChevronLeftRoundedIcon />
-                    <b>Back</b>
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </header> */}
         <main>
           <Grid direction="column" justify="center" alignItems="center" style={{paddingLeft: '1.5em', paddingRight: '1.5em'}}>
             <Grid item>
