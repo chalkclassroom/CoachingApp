@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import InfoIcon from '@material-ui/icons/Info';
 import EditImage from '../assets/images/EditImage.svg';
@@ -21,6 +22,13 @@ const styles: object = {
     borderRadius: '0.5em',
     overflowY: 'auto',
     overflowX: 'hidden'
+  },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
   }
 }
 
@@ -57,6 +65,13 @@ interface Props {
   handleClose?(): void,
   actionPlanExists: boolean,
   editMode?: boolean,
+  history?: {
+    replace(
+      param: {
+        pathname: string
+      }
+    ): void
+  }
 }
 
 interface State {
@@ -79,7 +94,8 @@ interface State {
 }
 
 interface Style {
-  textField: string
+  textField: string,
+  backButton: string
 }
 
 
@@ -456,34 +472,72 @@ class ActionPlanForm extends React.Component<Props, State> {
             style={{width: '100%'}}
           >
             <Grid item style={{width: '100%'}}>
-              <Grid
-                container
-                direction="row"
-                justify="space-between"
-                alignItems="center"
-                style={{width: '100%'}}
-              >
-                <Grid item xs={9}>
-                  <Typography variant="h4" style={{fontFamily: "Arimo"}}>
-                    ACTION PLAN
-                  </Typography>
+              {this.props.history ? ( // if viewing on Action Plan Page
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-between"
+                  alignItems="center"
+                  style={{width: '100%', paddingTop: '0.5em', paddingBottom: '1em'}}
+                >
+                  <Grid item xs={2}>
+                    <Grid container alignItems="center" justify="flex-start">
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          size="medium"
+                          className={classes.backButton}
+                          onClick={(): void => {
+                            this.props.history.replace({
+                              pathname: "/ActionPlans"
+                            })
+                          }}
+                        >
+                          <ChevronLeftRoundedIcon />
+                          <b>Back</b>
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
+                      <Typography variant="h4" style={{fontFamily: "Arimo"}}>
+                        ACTION PLAN
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={2} />
                 </Grid>
-                <Grid item xs={1}>
-                  <Button disabled={!this.props.handleEditActionPlan} onClick={this.props.handleEditActionPlan}>
-                    <img alt="Edit" src={EditImage} style={{width: '100%'}}/>
-                  </Button>
+              ) : (
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-between"
+                  alignItems="center"
+                  style={{width: '100%'}}
+                >
+                  <Grid item xs={9}>
+                    <Typography variant="h4" style={{fontFamily: "Arimo"}}>
+                      ACTION PLAN
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Button disabled={!this.props.handleEditActionPlan} onClick={this.props.handleEditActionPlan}>
+                      <img alt="Edit" src={EditImage} style={{width: '100%'}}/>
+                    </Button>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Button onClick={this.handleSave}>
+                      <img alt="Save" src={SaveImage} style={{width: '100%'}}/>
+                    </Button>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Button onClick={this.handleClose}>
+                      <img alt="Close" src={CloseImage} style={{width: '95%'}}/>
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={1}>
-                  <Button onClick={this.handleSave}>
-                    <img alt="Save" src={SaveImage} style={{width: '100%'}}/>
-                  </Button>
-                </Grid>
-                <Grid item xs={1}>
-                  <Button onClick={this.handleClose}>
-                    <img alt="Close" src={CloseImage} style={{width: '95%'}}/>
-                  </Button>
-                </Grid>
-              </Grid>
+              )}
             </Grid>
             <Grid item style={{width: '100%'}}>
               <Grid

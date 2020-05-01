@@ -3,9 +3,9 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar.js';
 import Grid from '@material-ui/core/Grid';
 import ActionPlanForm from '../../../components/ActionPlanForm';
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import { withStyles } from "@material-ui/core/styles";
+// import Button from '@material-ui/core/Button';
+// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+// import { withStyles } from "@material-ui/core/styles";
 
 interface Props {
   actionPlanId: string,
@@ -35,16 +35,6 @@ interface Teacher {
   phone: string,
   role: string,
   school: string
-};
-
-const styles: object = {
-  backButton: {
-    marginTop: '0.5em',
-    marginBottom: '0.5em',
-    color: '#333333',
-    borderRadius: 3,
-    textTransform: 'none'
-  }
 };
 
 /**
@@ -84,13 +74,12 @@ class ActionPlanView extends React.Component<Props, State>{
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
     return (
       <div>
         <FirebaseContext.Consumer>
           {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <header>
+        {/* <header>
           <Grid container direction="row" alignItems="flex-start" justify="flex-start">
             <Grid item xs={3}>
               <Grid container alignItems="center" justify="flex-start">
@@ -112,7 +101,7 @@ class ActionPlanView extends React.Component<Props, State>{
               </Grid>
             </Grid>
           </Grid>
-        </header>
+        </header> */}
         <main>
           <Grid direction="column" justify="center" alignItems="center" style={{paddingLeft: '1.5em', paddingRight: '1.5em'}}>
             <Grid item>
@@ -125,6 +114,7 @@ class ActionPlanView extends React.Component<Props, State>{
                       teacher={this.state.teacher}
                       readOnly={true}
                       actionPlanExists={true}
+                      history={this.props.history}
                     />}
                   </FirebaseContext.Consumer>
                 ) : (null)}
@@ -138,4 +128,4 @@ class ActionPlanView extends React.Component<Props, State>{
 }
 
 ActionPlanView.contextType = FirebaseContext;
-export default withStyles(styles)(ActionPlanView);
+export default ActionPlanView;
