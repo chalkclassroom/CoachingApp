@@ -15,6 +15,9 @@ import CloseImage from '../assets/images/CloseImage.svg';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 import * as moment from 'moment';
 
 const styles: object = {
@@ -49,12 +52,43 @@ interface Props {
   teacher: Teacher,
   magic8?: string,
   firebase: {
-    createActionPlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
-    getActionPlan(sessionId: string): Promise<Array<{id: string, goal: string, benefit: string}>>,
-    getActionPlanWithId(actionPlanId: string): Promise<{coach: string, goal: string, goalTimeline: string, benefit: string, dateCreated: {seconds: number, nanoseconds: number}, sessionId: string, teacher: string, tool: string}>,
-    getActionSteps(actionPlanId: string): Promise<Array<{step: string, materials: string, person: string, timeline: string}>>,
-    saveActionPlan(actionPlanId: string, goal: string, goalTimeline: string, benefit: string): Promise<void>,
-    saveActionStep(actionPlanId: string, index: string, step: string, materials: string, person: string, timeline: string): Promise<void>,
+    createActionPlan(teacherId: string, magic8: string): Promise<void>,
+    getAPInfo(actionPlanId: string): Promise<{
+      sessionId: string,
+      goal: string,
+      goalTimeline: string,
+      benefit: string,
+      dateModified: {seconds: number, nanoseconds: number},
+      dateCreated: {seconds: number, nanoseconds: number},
+      coach: string,
+      teacher: string,
+      tool: string
+    }>,
+    getTeacherActionPlans(practice: string, teacherId: string): Promise<Array<{
+      id: string,
+      date: {seconds: number, nanoseconds: number},
+      newDate: Date
+    }>>,
+    getActionSteps(actionPlanId: string): Promise<Array<{
+      step: string,
+      materials: string,
+      person: string,
+      timeline: string
+    }>>,
+    saveActionPlan(
+      actionPlanId: string,
+      goal: string,
+      goalTimeline: string,
+      benefit: string
+    ): Promise<void>,
+    saveActionStep(
+      actionPlanId: string,
+      index: string,
+      step: string,
+      materials: string,
+      person: string,
+      timeline: string
+    ): Promise<void>,
     createActionStep(actionPlanId: string, index: string): Promise<void>,
     getCoachFirstName(): Promise<string>,
     getCoachLastName(): Promise<string>
@@ -90,7 +124,8 @@ interface State {
   saved: boolean,
   saveModal: boolean,
   anchorEl: HTMLElement,
-  popover: string
+  popover: string,
+  createDialog: boolean
 }
 
 interface Style {
@@ -126,7 +161,8 @@ class ActionPlanForm extends React.Component<Props, State> {
       saved: true,
       saveModal: false,
       anchorEl: null,
-      popover: ''
+      popover: '',
+      createDialog: false
     }
   }
 
@@ -162,7 +198,7 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @param {event} event
    * @return {void}
    */
-  handleChange = (name: string) => (event): void => {
+  handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({
       [name]: event.target.value,
       saved: false
@@ -173,7 +209,7 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @param {number} number
    * @return {void}
    */
-  handleChangeActionStep = (number: number) => (event): void => {
+  handleChangeActionStep = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].step = event.target.value;
     this.setState({
@@ -186,7 +222,7 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @param {number} number
    * @return {void}
    */
-  handleChangeMaterials = (number: number) => (event): void => {
+  handleChangeMaterials = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].materials = event.target.value;
     this.setState({
@@ -199,7 +235,7 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @param {number} number
    * @return {void}
    */
-  handleChangePerson = (number: number) => (event): void => {
+  handleChangePerson = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].person = event.target.value;
     this.setState({
@@ -212,7 +248,7 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @param {number} number
    * @return {void}
    */
-  handleChangeTimeline = (number: number) => (event): void => {
+  handleChangeTimeline = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].timeline = event.target.value;
     this.setState({
@@ -221,108 +257,126 @@ class ActionPlanForm extends React.Component<Props, State> {
     });
   }
 
+  /**
+   * opens dialog for creating new action plan
+   */
   handleCreate = (): void => {
-    this.props.firebase.createActionPlan(this.props.teacher.id, this.props.sessionId, this.props.magic8)
+    this.setState({
+      createDialog: true
+    })
+  }
+
+  /**
+   * closes dialog for creating new action plan
+   */
+  handleCloseCreate = (): void => {
+    this.setState({
+      createDialog: false
+    })
+  }
+
+  createNewActionPlan = (): void => {
+    this.props.firebase.createActionPlan(this.props.teacher.id, this.props.magic8)
       .then(() => {
         this.setState({
           editMode: true,
           actionPlanExists: true,
-          createMode: true
+          createMode: true,
+          createDialog: false
         });
-        this.getActionPlan();
+        this.getAllActionPlans();
       })
       .catch(() => {
         console.log('error creating action plan')
       })
   }
 
-  getActionPlan = (): void => {
-    this.props.firebase.getActionPlan(this.props.sessionId)
-    .then((actionPlanData: Array<{id: string, goal: string, goalTimeline: string, benefit: string, date: {seconds: number, nanoseconds: number}}>) => {
-      if (actionPlanData[0]) {
-        const newDate = new Date(0);
-        newDate.setUTCSeconds(actionPlanData[0].date.seconds);
-        this.setState({
-          actionPlanExists: true,
-          actionPlanId: actionPlanData[0].id,
-          goal: actionPlanData[0].goal,
-          goalTimeline: actionPlanData[0].goalTimeline,
-          benefit: actionPlanData[0].benefit,
-          date: newDate
-        });
-        const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
-        this.props.firebase.getActionSteps(actionPlanData[0].id).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
-          actionStepsData.forEach((value, index) => {
-            newActionStepsArray[index] = {step: value.step, materials: value.materials, person: value.person, timeline: value.timeline};
-          })
-        }).then(() => {
-          this.setState({
-            actionStepsArray: newActionStepsArray
-          }, () => {console.log('action steps array: ', this.state.actionStepsArray)});
+  getActionPlan = (actionPlanId: string): void => {
+    this.props.firebase.getAPInfo(actionPlanId)
+    .then((actionPlanData: {
+      sessionId: string,
+      goal: string,
+      goalTimeline: string,
+      benefit: string,
+      dateModified: {seconds: number, nanoseconds: number},
+      dateCreated: {seconds: number, nanoseconds: number},
+      coach: string,
+      teacher: string,
+      tool: string
+    }) => {
+      const newDate = this.changeDateType(actionPlanData.dateModified);
+      this.setState({
+        actionPlanExists: true,
+        goal: actionPlanData.goal,
+        goalTimeline: actionPlanData.goalTimeline,
+        benefit: actionPlanData.benefit,
+        date: newDate
+      });
+      const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
+      this.props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
+        actionStepsData.forEach((value, index) => {
+          newActionStepsArray[index] = {step: value.step, materials: value.materials, person: value.person, timeline: value.timeline};
         })
-        .catch(() => {
-          console.log('error retrieving action steps');
-        });
-      } else {
+      }).then(() => {
         this.setState({
-          actionPlanExists: false,
-          actionPlanId: '',
-          goal: '',
-          goalTimeline: '',
-          benefit: '',
-          actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}]
-        }, () => {console.log('action plan exists? ', this.state.actionPlanExists)})
-      }
-     })
+          actionStepsArray: newActionStepsArray
+        });
+      })
+      .catch(() => {
+        console.log('error retrieving action steps');
+      });
+    })
+    .catch((error) => console.log('getActionPlan', error))
   }
 
-  getActionPlanWithId = (): void => {
-    this.props.firebase.getActionPlanWithId(this.props.actionPlanId)
-    .then((actionPlanData: {coach: string, goal: string, goalTimeline: string, benefit: string, dateCreated: {seconds: number, nanoseconds: number}, sessionId: string, teacher: string, tool: string}) => {
-      if (actionPlanData) {
-        const newDate = new Date(0);
-        newDate.setUTCSeconds(actionPlanData.dateCreated.seconds);
-        this.setState({
-          actionPlanExists: true,
-          actionPlanId: this.props.actionPlanId,
-          goal: actionPlanData.goal,
-          goalTimeline: actionPlanData.goalTimeline,
-          benefit: actionPlanData.benefit,
-          date: newDate
+  changeDateType = (date: {seconds: number, nanoseconds: number}): Date => {
+    const newDate = new Date(0);
+    newDate.setUTCSeconds(date.seconds);
+    return newDate
+  }
+
+  getAllActionPlans = (): void => {
+    this.props.firebase.getTeacherActionPlans(this.props.magic8, this.props.teacher.id)
+    .then((actionPlanData: Array<{id: string, date: {seconds: number, nanoseconds: number}, newDate: Date}>) => {
+      const newArr: Array<{id: string, seconds: number, newDate: Date}> = [];
+      actionPlanData.map((value) => {
+        const newDate = this.changeDateType(value.date);
+        newArr.push({
+          id: value.id,
+          seconds: value.date.seconds,
+          newDate: newDate
         });
-        const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
-        this.props.firebase.getActionSteps(this.props.actionPlanId).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
-          actionStepsData.forEach((value, index) => {
-            newActionStepsArray[index] = {step: value.step, materials: value.materials, person: value.person, timeline: value.timeline};
-          })
-        }).then(() => {
-          this.setState({
-            actionStepsArray: newActionStepsArray
-          }, () => {console.log('action steps array: ', this.state.actionStepsArray)});
-        })
-        .catch(() => {
-          console.log('error retrieving action steps');
-        });
+        return {newArr}
+      })
+      return newArr
+    }).then((newArr) => {
+      newArr.sort(((a, b) => b.seconds - a.seconds));
+      return newArr;
+    }).then((newArr) => {
+      console.log('this is newArr', newArr);
+      if (newArr[0]) {
+        this.setState({actionPlanId: newArr[0].id});
+        this.getActionPlan(newArr[0].id);
       } else {
-        this.setState({
-          actionPlanExists: false,
-          actionPlanId: '',
-          goal: '',
-          goalTimeline: '',
-          benefit: '',
-          actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}]
-        }, () => {console.log('action plan exists? ', this.state.actionPlanExists)})
+        this.setState({actionPlanId: null});
+        this.createNewActionPlan();
       }
-     })
+    })
   }
 
   /**
    * saves action plan by updating Cloud Firestore records
+   * @param {boolean} close
    * @return {void}
    */
-  handleSave = (): void => {
-    this.props.firebase.saveActionPlan(this.state.actionPlanId, this.state.goal, this.state.goalTimeline, this.state.benefit).then(() => {
-      console.log("action plan saved");
+  handleSave = (close: boolean): void => {
+    this.props.firebase.saveActionPlan(
+      this.state.actionPlanId,
+      this.state.goal,
+      this.state.goalTimeline,
+      this.state.benefit
+    ).then(() => {
+      this.getActionPlan(this.state.actionPlanId);
     })
     .catch(() => {
       console.log("error with saving action plan");
@@ -330,25 +384,17 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.state.actionStepsArray.forEach((value, index) => {
       this.props.firebase.saveActionStep(this.state.actionPlanId, index.toString(), value.step, value.materials, value.person, value.timeline)
         .then(() => {
-          console.log("action step ", index, " saved");
-          this.setState({ saved: true })
+          this.setState({ saved: true });
+          this.getActionPlan(this.state.actionPlanId);
+        }).then(() => {
+          if (close) {
+            this.props.handleClose();
+            this.setState({saveModal: false});
+          }
         })
         .catch(() => {
           console.log("error in saving action step ", index);
         })
-    })
-  }
-
-  /**
-   * saves action plan, action steps, and closes the action plan modal
-   * @return {void}
-   */
-  handleSaveAndClose = (): void => {
-    this.setState({
-      saveModal: false
-    }, () => {
-      this.handleSave();
-      this.props.handleClose();
     })
   }
 
@@ -358,7 +404,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     } else {
       this.setState({
         saveModal: true
-      })
+      });
     }
   }
 
@@ -371,9 +417,9 @@ class ActionPlanForm extends React.Component<Props, State> {
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     this.props.actionPlanId ? (
-      this.getActionPlanWithId()
+      this.getActionPlan(this.props.actionPlanId)
     ) : (
-      this.getActionPlan()
+      this.getAllActionPlans()
     );
     this.props.firebase.getCoachFirstName().then((name: string) => {
       this.setState({ coachFirstName: name })
@@ -389,17 +435,11 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @param {State} prevState
    */
   componentDidUpdate(prevProps: Props, prevState: State): void {
-    if (this.props.sessionId !== prevProps.sessionId) {
-      this.getActionPlan();
-      this.setState({
-        createMode: false
-      })
-    }
-    if (this.props.editMode != prevProps.editMode) {
-      this.getActionPlan();
+    if ((this.props.editMode != prevProps.editMode)) {
+      this.getActionPlan(this.state.actionPlanId);
     }
     if (this.state.actionPlanExists != prevState.actionPlanExists) {
-      this.getActionPlan();
+      this.getActionPlan(this.state.actionPlanId);
     }
   }
 
@@ -414,7 +454,6 @@ class ActionPlanForm extends React.Component<Props, State> {
       getCoachFirstName: PropTypes.func,
       getCoachLastName: PropTypes.func
     }).isRequired,
-    sessionId: PropTypes.string,
     readOnly: PropTypes.bool.isRequired,
     handleEditActionPlan: PropTypes.func,
     handleClose: PropTypes.func,
@@ -443,8 +482,30 @@ class ActionPlanForm extends React.Component<Props, State> {
     const personId = personOpen ? 'person-popover' : undefined;
     const timelineId = timelineOpen ? 'timeline-popover' : undefined;
     return (
-      <div>
-        {this.props.actionPlanExists || this.state.createMode ? 
+      <div style={{width: '100%'}}>
+        {this.state.createDialog ? (
+          <Dialog
+            open={this.state.createDialog}
+          >
+            <DialogTitle style={{fontFamily: 'Arimo'}}>
+              Create new Action Plan
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Would you like to create a new Action Plan?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleCloseCreate}>
+                No
+              </Button>
+              <Button onClick={this.createNewActionPlan}>
+                Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
+        ) : (null)}
+        { this.state.actionPlanExists ?
           (this.state.saveModal && !this.state.saved) ? (
             <Dialog
               open={this.state.saveModal}
@@ -452,13 +513,13 @@ class ActionPlanForm extends React.Component<Props, State> {
               aria-describedby="alert-dialog-description"
             >
               <DialogTitle id="alert-dialog-title" style={{fontFamily: 'Arimo'}}>
-                Do you want to save the action plan before closing?
+                Do you want to save the Action Plan before closing?
               </DialogTitle>
               <DialogActions>
                 <Button onClick={this.handleCloseWithoutSave} color="primary" style={{fontFamily: 'Arimo'}}>
                   Close without saving
                 </Button>
-                <Button onClick={this.handleSaveAndClose} color="primary" style={{fontFamily: 'Arimo'}} autoFocus>
+                <Button onClick={(): void => this.handleSave(true)} color="primary" style={{fontFamily: 'Arimo'}} autoFocus>
                   Save & Close
                 </Button>
               </DialogActions>
@@ -517,9 +578,21 @@ class ActionPlanForm extends React.Component<Props, State> {
                   style={{width: '100%'}}
                 >
                   <Grid item xs={9}>
-                    <Typography variant="h4" style={{fontFamily: "Arimo"}}>
-                      ACTION PLAN
-                    </Typography>
+                    <Grid container direction="row" justify="flex-start" alignItems="center">
+                      <Grid item>
+                        <Typography variant="h4" style={{fontFamily: "Arimo"}}>
+                          ACTION PLAN
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Button disabled={!this.props.readOnly} onClick={this.handleCreate}>
+                          <AddCircleIcon
+                            fontSize='large'
+                            style={{ fill: this.props.readOnly? "#459aeb" : "#d3d3d3"}}
+                          />
+                        </Button>
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid item xs={1}>
                     <Button disabled={!this.props.handleEditActionPlan} onClick={this.props.handleEditActionPlan}>
@@ -527,7 +600,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                     </Button>
                   </Grid>
                   <Grid item xs={1}>
-                    <Button onClick={this.handleSave}>
+                    <Button onClick={(): void => this.handleSave(false)}>
                       <img alt="Save" src={SaveImage} style={{width: '100%'}}/>
                     </Button>
                   </Grid>
@@ -1214,9 +1287,9 @@ class ActionPlanForm extends React.Component<Props, State> {
             </Grid>
           </Grid>   
         : 
-        <Button onClick={this.handleCreate}>
-          Create Action Plan
-        </Button>  
+        <div>
+          <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+        </div>
       }     
       </div>
     );

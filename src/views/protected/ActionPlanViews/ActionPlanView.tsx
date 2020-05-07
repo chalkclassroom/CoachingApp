@@ -77,7 +77,7 @@ class ActionPlanView extends React.Component<Props, State>{
           {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
-          <Grid direction="column" justify="center" alignItems="center" style={{paddingLeft: '1.5em', paddingRight: '1.5em'}}>
+          <Grid direction="column" justify="center" alignItems="center" style={{paddingLeft: '3em', paddingRight: '3em', paddingTop: '1em'}}>
             <Grid item>
               <Grid container justify="center" alignItems="center" style={{width: '100%'}}>
                 {this.state.teacher ? (

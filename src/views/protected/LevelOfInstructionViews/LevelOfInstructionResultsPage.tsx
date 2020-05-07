@@ -230,52 +230,39 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     let highLevelQuesCount = 0;
     let followUpCount = 0;
     this.handleNotesFetching(this.state.sessionId);
-        firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
-          if (actionPlanData.length>0) {
-            console.log('actionplan data: ', actionPlanData>0)
-            this.setState({
-              actionPlanExists: true
-            })
-          } else {
-            this.setState({
-              actionPlanExists: false
-            })
-          }
-        }).catch(() => {
-          console.log('unable to retrieve action plan')
+
+    firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+      if (conferencePlanData[0]) {
+        this.setState({
+          conferencePlanExists: true
         })
-        firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
-          if (conferencePlanData[0]) {
-            this.setState({
-              conferencePlanExists: true
-            })
-          } else {
-            this.setState({
-              conferencePlanExists: false
-            })
-          }
-        }).catch(() => {
-          console.log('unable to retrieve conference plan')
+      } else {
+        this.setState({
+          conferencePlanExists: false
         })
-        firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionType: string, count: number}>) => {  
-          json.forEach(instruction => {                                
-            if (instruction.instructionType === "specificSkill") { 
-              specificSkillCount = instruction.count;                       
-            } else if (instruction.instructionType === "lowLevel") {    
-              lowLevelCount = instruction.count;                                 
-            } else if (instruction.instructionType === "highLevel") {            
-              highLevelQuesCount = instruction.count;                                 
-            } else if (instruction.instructionType === "followUp") {            
-              followUpCount = instruction.count;                                 
-            }
-          });
-          this.setState({
-            followUpInsCount: followUpCount,                          
-            highLevelQuesInsCount: highLevelQuesCount,
-            lowLevelInsCount: lowLevelCount,
-            specificSkillInsCount: specificSkillCount                                  
-          });
-        });
+      }
+    }).catch(() => {
+      console.log('unable to retrieve conference plan')
+    })
+    firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionType: string, count: number}>) => {  
+      json.forEach(instruction => {                                
+        if (instruction.instructionType === "specificSkill") { 
+          specificSkillCount = instruction.count;                       
+        } else if (instruction.instructionType === "lowLevel") {    
+          lowLevelCount = instruction.count;                                 
+        } else if (instruction.instructionType === "highLevel") {            
+          highLevelQuesCount = instruction.count;                                 
+        } else if (instruction.instructionType === "followUp") {            
+          followUpCount = instruction.count;                                 
+        }
+      });
+      this.setState({
+        followUpInsCount: followUpCount,                          
+        highLevelQuesInsCount: highLevelQuesCount,
+        lowLevelInsCount: lowLevelCount,
+        specificSkillInsCount: specificSkillCount                                  
+      });
+    });
   }
 
   /**

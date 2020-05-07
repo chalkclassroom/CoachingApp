@@ -51,6 +51,7 @@ interface Props {
   teacher: Teacher,
   sessionId: string,
   actionPlanExists: boolean,
+  magic8: string
 }
 
 interface Teacher {
@@ -92,11 +93,19 @@ class ActionPlanModal extends React.Component<Props, State> {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     firebase: PropTypes.object.isRequired,
-    teacherFirstName: PropTypes.string.isRequired,
-    teacherLastName: PropTypes.string.isRequired,
-    teacherId: PropTypes.string.isRequired,
+    teacher: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
     sessionId: PropTypes.string.isRequired,
     actionPlanExists: PropTypes.bool.isRequired,
+    magic8: PropTypes.string.isRequired
   };
 
   /**
@@ -117,6 +126,7 @@ class ActionPlanModal extends React.Component<Props, State> {
               handleClose={this.handleClose}
               readOnly={false}
               actionPlanExists={this.props.actionPlanExists}
+              magic8={this.props.magic8}
             />
           </div>
         </Modal>

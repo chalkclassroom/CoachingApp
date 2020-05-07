@@ -350,21 +350,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
       })
     });
 
-    firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
-      if (actionPlanData.length>0) {
-        console.log('actionplan data: ', actionPlanData>0)
-        this.setState({
-          actionPlanExists: true
-        })
-      } else {
-        this.setState({
-          actionPlanExists: false
-        })
-      }
-    }).catch(() => {
-      console.log('unable to retrieve action plan')
-    })
-
     firebase.getConferencePlan(this.state.sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {

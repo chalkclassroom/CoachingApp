@@ -411,20 +411,6 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   getData = () => {
     const firebase = this.context;
     this.handleNotesFetching(this.state.sessionId);
-    firebase.getActionPlan(this.state.sessionId)
-    .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
-      if (actionPlanData.length>0) {
-        this.setState({
-          actionPlanExists: true
-        })
-      } else {
-        this.setState({
-          actionPlanExists: false
-        })
-      }
-    }).catch(() => {
-      console.log('unable to retrieve action plan')
-    })
 
     firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
