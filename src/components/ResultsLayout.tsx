@@ -374,6 +374,7 @@ class ResultsLayout extends React.Component<Props, State> {
                             sessionId={this.props.sessionId}
                             handleClose={this.handleSaveAndCloseActionPlan}
                             actionPlanExists={true}
+                            magic8={this.props.magic8}
                           />}
                         </FirebaseContext.Consumer>
                       ) : ( <div /> )}

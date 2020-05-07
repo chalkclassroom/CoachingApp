@@ -193,7 +193,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
    */
   componentDidMount(): void {
     const firebase = this.context;
-    firebase.getActionPlans().then(
+    firebase.getCoachActionPlans().then(
       (answer: Array<{
         id: string,
         teacherId: string,

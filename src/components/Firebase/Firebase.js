@@ -1104,15 +1104,15 @@ class Firebase {
       );
   };
 
-  createActionPlan = async function(teacherId, sessionId, magic8) {
+  createActionPlan = async function(teacherId, magic8) {
     const data = Object.assign(
       {},
       {
-        sessionId: sessionId,
         coach: this.auth.currentUser.uid,
         teacher: teacherId,
         tool: magic8,
-        dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+        dateModified: firebase.firestore.Timestamp.now(),
+        dateCreated: firebase.firestore.Timestamp.now(),
         goal: '',
         goalTimeline: '',
         benefit: ''
@@ -1125,7 +1125,6 @@ class Firebase {
         materials: '',
         person: '',
         step: '',
-        // timeline: firebase.firestore.FieldValue.serverTimestamp()
         timeline: ''
       }).then(() => {
         console.log('action steps created');
@@ -1151,23 +1150,10 @@ class Firebase {
     })
   }
 
-  findActionPlan = async function(sessionId) {
-    this.sessionRef = this.db.collection("actionPlans")
-      .where("benefit", "==", "maybe")
-    return this.sessionRef.get().then((doc) => {
-      if (doc.exists) {
-        console.log('action plan found');
-        return true;
-      } else {
-        console.log('action plan not found');
-        return false
-      }
-    }).catch((error) => {
-      console.log("error finding action plan: ", error)
-    })
-  }
-
-  getActionPlans = async function() {
+  /**
+   * finds all action plans for coach and all their teachers
+   */
+  getCoachActionPlans = async function() {
     this.sessionRef = this.db.collection("actionPlans")
       .where("coach", "==", this.auth.currentUser.uid)
     return this.sessionRef.get()
@@ -1180,13 +1166,39 @@ class Firebase {
             teacherFirstName: '',
             teacherLastName: '',
             practice: doc.data().tool,
-            date: doc.data().dateCreated
+            date: doc.data().dateModified
           })
         )
         return idArr;
       })
       .catch(() => {
         console.log( 'unable to retrieve action plan id')
+      })
+  }
+
+  /**
+   * finds all action plans for coach and their selected teacher
+   * @param {string} practice
+   * @param {string} teacherId
+   */
+  getTeacherActionPlans = async function(practice, teacherId) {
+    this.sessionRef = this.db.collection("actionPlans")
+      .where("coach", "==", this.auth.currentUser.uid)
+      .where("teacher", "==", teacherId)
+      .where("tool", "==", practice)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            date: doc.data().dateModified
+          })
+        )
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve action plans')
       })
   }
 
@@ -1208,38 +1220,25 @@ class Firebase {
       .catch(error => console.error("Error getting cached document:", error));
   }
 
-  getActionPlanWithId = async function(actionPlanId) {
+  getAPInfo = async function(actionPlanId) {
     return this.db
       .collection("actionPlans")
       .doc(actionPlanId)
       .get()
-      .then(doc => doc.data())
-      .catch(error => console.error('unable to get action plan data', error))
-  }
-
-  getActionPlan = async function(sessionId) {
-    this.sessionRef = this.db.collection("actionPlans")
-      .where("sessionId", "==", sessionId)
-    return this.sessionRef.get()
-      .then(querySnapshot => {
-        const idArr = [];
-        querySnapshot.forEach(doc =>
-          idArr.push({
-            id: doc.id,
-            goal: doc.data().goal,
-            goalTimeline: doc.data().goalTimeline,
-            benefit: doc.data().benefit,
-            date: doc.data().dateCreated
-          })
-        );
-        return idArr;
+      .then(doc => {
+        if (doc.exists) {
+          return doc.data();
+        } else {
+          console.log("Doc does not exist");
+          return {};
+        }
       })
-      .catch(() => {
-        console.log( 'unable to retrieve action plan id')
-      })
-  }
+      .catch(error =>
+        console.error("Error occurred when getting document:", error)
+      );
+  };
 
-  getActionSteps = async function(actionPlanId, index) {
+  getActionSteps = async function(actionPlanId) {
     this.sessionRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps");
     return this.sessionRef.get()
       .then(querySnapshot => {
@@ -1264,7 +1263,8 @@ class Firebase {
     return actionPlanRef.update({
       goal: goal,
       goalTimeline: goalTimeline,
-      benefit: benefit
+      benefit: benefit,
+      dateModified: firebase.firestore.Timestamp.now()
     })
     .then(() => {
       console.log("Action plan updated successfully!");
