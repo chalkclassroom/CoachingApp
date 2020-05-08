@@ -451,30 +451,17 @@ class Firebase {
       );
   };
 
-    handlePushSEEachEntry = async function(mEntry) {
-        return this.sessionRef
-            .collection("entries")
-            .add({
-                studentId: mEntry.id,
-                point: mEntry.point,
-                entryType: mEntry.entryType,
-                Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .catch(error =>
-                console.error("Error occurred adding observation: ", error)
-            );
-    };
-
-  handlePushSequential = async function(mEntry) {
+  handlePushSEEachEntry = async function(mEntry) {
     return this.sessionRef
       .collection("entries")
       .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          studentId: mEntry.id,
+          point: mEntry.point,
+          entryType: mEntry.entryType,
+          Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
-        console.error("Error occurred adding observation: ", error)
+          console.error("Error occurred adding observation: ", error)
       );
   };
 
