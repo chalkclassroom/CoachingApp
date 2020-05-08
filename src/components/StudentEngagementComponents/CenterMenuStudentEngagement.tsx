@@ -26,6 +26,7 @@ import * as firebase from "firebase";
 import * as Constants from "constants";
 import {func} from "prop-types";
 import ObserveImage from '../../assets/images/ObserveImage.png';
+import {switchAll} from "rxjs/operators";
 
 const styles: object = theme => ({
     root: {
@@ -35,7 +36,7 @@ const styles: object = theme => ({
     },
     button: {
         margin: theme.spacing.unit,
-        // background: '#ede7f6',
+        background: '#ede7f6',
         backgroundColor: '#e99b2e',
     },
     gridList: {
@@ -211,7 +212,18 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     handleSkipRating = () => {
         this.props.handleTimerReset();
         this.handleSelectedValue(-1);
-        let mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint};
+        let entryType = 'none';
+        switch(this.state.entryType){
+            case 0: entryType = 'small';
+                break;
+            case 1: entryType = 'whole';
+                break;
+            case 2: entryType = 'transition';
+                break;
+            default:
+                 entryType = 'none';
+        }
+        let mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
         this.props.firebase.handlePushSEEachEntry(mEntry);
         this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
         this.showModalForNextPerson();
@@ -219,7 +231,18 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
 
     handleConfirmRating = () => {
         if(this.state.selectedPoint !== -1){
-            let mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: this.state.entryType};
+            let entryType = 'none';
+            switch(this.state.entryType){
+                case 0: entryType = 'small';
+                    break;
+                case 1: entryType = 'whole';
+                    break;
+                case 2: entryType = 'transition';
+                    break;
+                default:
+                    entryType = 'none';
+            }
+            let mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
             console.log(mEntry);
             this.props.firebase.handlePushSEEachEntry(mEntry);
             this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
@@ -297,9 +320,9 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 return (
                     <Grid
                         container
-                        alignItems={"center"}
-                        justify={"center"}
-                        direction={"column"}
+                        alignItems={'center'}
+                        justify={'center'}
+                        direction={'column'}
                     >
                         <Dialog
                             open={this.state.setOpen}
@@ -307,10 +330,13 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description"
                         >
-                            <DialogTitle id="alert-dialog-title">{"Enter Student Name"}</DialogTitle>
+                            <DialogTitle id="alert-dialog-title">
+                                {'Enter Student Name'}
+                            </DialogTitle>
                             <DialogContent>
                                 <DialogContentText id="alert-dialog-description">
-                                    You can add a description of the Student for Your Reference.
+                                    You can add a description of the Student for
+                                    Your Reference.
                                     <form>
                                         <TextField
                                             id="name-filled"
@@ -318,19 +344,33 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                             variant="outlined"
                                             color="secondary"
                                             fullWidth
-                                            value={this.state.studentTextFieldValue}
-                                            onChange={this.handleStudentTextFieldChange}
+                                            value={
+                                                this.state.studentTextFieldValue
+                                            }
+                                            onChange={
+                                                this
+                                                    .handleStudentTextFieldChange
+                                            }
                                         />
                                     </form>
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={() => this.handleClose()} color="secondary">
+                                <Button
+                                    onClick={() => this.handleClose()}
+                                    color="secondary"
+                                >
                                     Cancel
                                 </Button>
                                 <Button
-                                    onClick={() => this.handleAddStudent(this.state.studentTextFieldValue.toString())}
-                                    color="secondary" autoFocus>
+                                    onClick={() =>
+                                        this.handleAddStudent(
+                                            this.state.studentTextFieldValue.toString()
+                                        )
+                                    }
+                                    color="secondary"
+                                    autoFocus
+                                >
                                     Add
                                 </Button>
                             </DialogActions>
@@ -341,18 +381,28 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             direction="row"
                             justify={'center'}
                             xs={12}
-                            style={{margin:40}}
+                            style={{ margin: 40 }}
                         >
                             <Grid
                                 alignItems="flex-end"
                                 direction="row"
                                 justify="center"
-                                container item xs={8}
+                                container
+                                item
+                                xs={8}
                             >
-                                <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+                                <Typography
+                                    variant="h4"
+                                    gutterBottom
+                                    style={{ fontFamily: 'Arimo' }}
+                                >
                                     Create Student List
                                 </Typography>
-                                <Typography variant="subtitle1" gutterBottom style={{fontFamily: "Arimo"}}>
+                                <Typography
+                                    variant="subtitle1"
+                                    gutterBottom
+                                    style={{ fontFamily: 'Arimo' }}
+                                >
                                     Please Enter the Student Names.
                                 </Typography>
                             </Grid>
@@ -360,10 +410,16 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                 alignItems="flex-start"
                                 direction="row"
                                 justify="center"
-                                container item xs={4}
+                                container
+                                item
+                                xs={4}
                             >
-                                <Fab className={classes.button} aria-label="add" onClick={() => this.handleClickOpen()}>
-                                    <AddIcon/>
+                                <Fab
+                                    className={classes.button}
+                                    aria-label="add"
+                                    onClick={() => this.handleClickOpen()}
+                                >
+                                    <AddIcon />
                                 </Fab>
                             </Grid>
                         </Grid>
@@ -378,25 +434,53 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                 alignItems="flex-start"
                                 direction="row"
                                 justify="flex-start"
-                                container item xs={12}
+                                container
+                                item
+                                xs={12}
                             >
-                                <GridList cellHeight={60} className={classes.gridList} cols={4}>
-                                    {this.state.students.map((student: string, i: number) => {
-                                        return (
-                                            <GridListTile key={i + "grid"} cols={1} className={classes.paper}>
-                                                <Card>
-                                                    <CardContent>
-                                                        <Paper className={classes.root} elevation={1}
-                                                               style={{padding: 8}}>
-                                                            <Typography variant="subtitle2">
-                                                                {i + 1 + " : " + student.charAt(0).toUpperCase()+student.substring(1)}
-                                                            </Typography>
-                                                        </Paper>
-                                                    </CardContent>
-                                                </Card>
-                                            </GridListTile>
-                                        );
-                                    })}
+                                <GridList
+                                    cellHeight={60}
+                                    className={classes.gridList}
+                                    cols={4}
+                                >
+                                    {this.state.students.map(
+                                        (student: string, i: number) => {
+                                            return (
+                                                <GridListTile
+                                                    key={i + 'grid'}
+                                                    cols={1}
+                                                >
+                                                    <Card>
+                                                        <CardContent>
+                                                            <Paper
+                                                                className={
+                                                                    classes.root
+                                                                }
+                                                                elevation={1}
+                                                                style={{
+                                                                    padding: 8,
+                                                                }}
+                                                            >
+                                                                <Typography variant="subtitle2">
+                                                                    {i +
+                                                                        1 +
+                                                                        ' : ' +
+                                                                        student
+                                                                            .charAt(
+                                                                                0
+                                                                            )
+                                                                            .toUpperCase() +
+                                                                        student.substring(
+                                                                            1
+                                                                        )}
+                                                                </Typography>
+                                                            </Paper>
+                                                        </CardContent>
+                                                    </Card>
+                                                </GridListTile>
+                                            )
+                                        }
+                                    )}
                                 </GridList>
                             </Grid>
                         </Grid>
@@ -406,13 +490,17 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             direction="column"
                             justify="flex-start"
                         >
-                            <Button key={"Begin"} variant="contained" className={classes.button}
-                                    onClick={() => this.switchToObservationPage()}>
+                            <Button
+                                key={'Begin'}
+                                variant="contained"
+                                className={classes.button}
+                                onClick={() => this.switchToObservationPage()}
+                            >
                                 Begin Observation
                             </Button>
                         </Grid>
                     </Grid>
-                );
+                )
             case OBSERVATION:
                 return (
                     <>
@@ -425,7 +513,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                     direction="column"
                                     justify="flex-start"
                                 >
-
                                     <Typography variant="h6" gutterBottom style={{fontFamily: "Arimo"}}>
                                        Start Observing this Student
                                     </Typography>
@@ -435,7 +522,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                     <Grid
                                         alignItems="center"
                                         direction="column"
-                                        justify="space-around"
+                                        justify="space-evenly"
                                         container
                                         item xs={6}
                                     >
@@ -502,7 +589,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             justify="space-between"
                             container
                             item xs={8}
-                            style={{marginTop: 100, marginBottom: 50}}
+                            style={{marginTop: 50, marginBottom: 50}}
                         >
                             <Button
                                 variant={this.state.selectedPoint === 0? "contained": "outlined"}
@@ -573,7 +660,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                     fontSize: 14,
                                 }}
                                 onClick={()=>this.handleSelectedValue(2)}
-
                             >
                                 <Grid
                                     alignItems="center"
@@ -630,14 +716,15 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                         >
                             <BootstrapButton
                                 variant={this.state.entryType === 0? "contained": "outlined"}
-                                disabled={this.props.time!=0?true:false}
                                 style={{
                                     minHeight: 100,
                                     maxHeight: 100,
                                     minWidth: 100,
                                     maxWidth: 100,
                                     fontFamily: "Arimo",
-                                    fontSize: 14
+                                    fontSize: 14,
+                                    backgroundColor: this.state.entryType === 0 && "#0069d9",
+                                    borderColor: this.state.entryType === 0 && "#005cbf",
                                 }}
                                 onClick={()=>this.handleSelectedType(0)}
                             >
@@ -655,17 +742,17 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             </BootstrapButton>
                             <BootstrapButton
                                 variant={this.state.entryType === 1? "contained": "outlined"}
-                                disabled={this.props.time!=0?true:false}
                                 style={{
                                     minHeight: 100,
                                     maxHeight: 100,
                                     minWidth: 100,
                                     maxWidth: 100,
                                     fontFamily: "Arimo",
-                                    fontSize: 14
+                                    fontSize: 14,
+                                    backgroundColor: this.state.entryType === 1 && "#0069d9",
+                                    borderColor: this.state.entryType === 1 && "#005cbf",
                                 }}
                                 onClick={()=>this.handleSelectedType(1)}
-
                             >
                                 <Grid
                                     alignItems="center"
@@ -680,7 +767,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                 </Grid>
                             </BootstrapButton>
                             <BootstrapButton
-                                disabled={this.props.time!=0?true:false}
                                 variant={this.state.entryType === 2? "contained": "outlined"}
                                 style={{
                                     minHeight: 100,
@@ -689,9 +775,10 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                     maxWidth: 100,
                                     fontFamily: "Arimo",
                                     fontSize: 14,
+                                    backgroundColor: this.state.entryType === 2 && "#0069d9",
+                                    borderColor: this.state.entryType === 2 && "#005cbf",
                                 }}
                                 onClick={()=>this.handleSelectedType(2)}
-
                             >
                                 <Grid
                                     alignItems="center"
@@ -716,7 +803,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             <Button variant="outlined"  style={{fontFamily: "Arimo", color: "red", }} onClick={() =>this.handleSkipRating()}>
                                 SKIP RATING
                             </Button>
-                            <Button color="primary" variant="contained" className={classes.button} style={{fontFamily: "Arimo"}} disabled={this.state.selectedPoint === -1 || this.props.time !==0} onClick={() =>this.handleConfirmRating()}>
+                            <Button color="primary" variant="contained" className={classes.button} style={{fontFamily: "Arimo"}} disabled={this.state.entryType === -1 || this.state.selectedPoint === -1 || this.props.time !==0} onClick={() =>this.handleConfirmRating()}>
                                 CONFIRM RATING
                             </Button>
                         </Grid>

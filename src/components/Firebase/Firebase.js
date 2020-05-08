@@ -457,6 +457,7 @@ class Firebase {
             .add({
                 studentId: mEntry.id,
                 point: mEntry.point,
+                entryType: mEntry.entryType,
                 Timestamp: firebase.firestore.FieldValue.serverTimestamp()
             })
             .catch(error =>

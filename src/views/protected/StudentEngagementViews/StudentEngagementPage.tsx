@@ -116,7 +116,7 @@ class StudentEngagementPage extends React.Component {
                                         magic8="Student Engagement"
                                         color="#e99b2e"
                                         infoDisplay={
-                                            this.state.completeEnabled && this.state.time !== 0 && <Countdown color="#e99b2e" timerTime={RATING_INTERVAL} />
+                                            this.state.completeEnabled && <Countdown color="#e99b2e" timerTime={RATING_INTERVAL} time={this.state.time} />
                                         }
                                         infoPlacement="center"
                                         uploadStudentEngagement = {this.handleUploadingStudentEngagement}
