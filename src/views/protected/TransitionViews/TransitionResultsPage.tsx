@@ -125,7 +125,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleTrendsFetch = (teacherId: string) => {
+  handleTrendsFetch = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<Array<string>> = [];
     const lineArray: Array<number> = [];
@@ -261,11 +261,18 @@ class TransitionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} sessionId
    */
-  handleNotesFetching = (sessionId: string) => {
+  handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then(notesArr => {
-      const formattedNotesArr: {id: number, content: string, timestamp: any}[] = [];
-      notesArr.map(note => {
+    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{
+      id: number,
+      content: string,
+      timestamp: {
+        seconds: number,
+        nanoseconds: number
+      }
+    }>) => {
+      const formattedNotesArr: Array<{id: number, content: string, timestamp: Date}> = [];
+      notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
         ).toLocaleString("en-US", {
@@ -288,7 +295,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
       sessionId: "",
@@ -338,16 +345,16 @@ class TransitionResultsPage extends React.Component<Props, State> {
     const firebase = this.context;
     this.handleNotesFetching(this.state.sessionId);
 
-    firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
-      console.log("the start date is ", summary[0].startDate.value);
-      console.log("the total transition time is ", summary[0].total);
-      console.log("the session total is ", summary[0].sessionTotal);
-      console.log("the learning activity time is ", summary[0].sessionTotal - summary[0].total);
+    firebase.fetchTransitionSummary(this.state.sessionId).then((summary: Array<{
+      total: number,
+      sessionTotal: number,
+      startDate: {value: string}
+    }>)=>{
       this.setState({
         transitionTime: summary[0].total,
         sessionTotal: summary[0].sessionTotal,
         learningActivityTime: summary[0].sessionTotal - summary[0].total
-      }, () => console.log('updated states: TT, session, learning', this.state.transitionTime, this.state.sessionTotal, this.state.learningActivityTime))
+      })
     });
 
     firebase.getConferencePlan(this.state.sessionId)
@@ -364,26 +371,31 @@ class TransitionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
-      console.log('types for bar chart', type);
-      console.log('line type rounded', Math.round(type[0].line));
-      console.log('traveling type rounded', Math.round(type[0].traveling));
+    firebase.fetchTransitionTypeSummary(this.state.sessionId).then((type: Array<{
+      line: number,
+      traveling: number,
+      waiting: number,
+      routines: number,
+      behaviorManagement: number,
+      other: number,
+      total: number
+    }>) => {
       this.setState({
-        sessionLine: Math.round(type[0].line),
-        sessionTraveling: Math.round(type[0].traveling),
-        sessionWaiting: Math.round(type[0].waiting),
-        sessionRoutines: Math.round(type[0].routines),
-        sessionBehaviorManagement: Math.round(type[0].behaviorManagement),
-        sessionOther: Math.round(type[0].other),
+        sessionLine: type[0].line,
+        sessionTraveling: type[0].traveling,
+        sessionWaiting: type[0].waiting,
+        sessionRoutines: type[0].routines,
+        sessionBehaviorManagement: type[0].behaviorManagement,
+        sessionOther: type[0].other,
         transitionTime: type[0].total
-      }, () => {console.log("session line is ", this.state.sessionLine)})
+      })
     });
   }
 
   /**
    * @param {event} event
    */
-  changeSessionId = (event) => {
+  changeSessionId = (event): void => {
     this.setState({
       sessionId: event.target.value,
     }, () => {
