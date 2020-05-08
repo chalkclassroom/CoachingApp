@@ -347,7 +347,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
         transitionTime: summary[0].total,
         sessionTotal: summary[0].sessionTotal,
         learningActivityTime: summary[0].sessionTotal - summary[0].total
-      })
+      }, () => console.log('updated states: TT, session, learning', this.state.transitionTime, this.state.sessionTotal, this.state.learningActivityTime))
     });
 
     firebase.getConferencePlan(this.state.sessionId)
@@ -365,6 +365,9 @@ class TransitionResultsPage extends React.Component<Props, State> {
       console.log('unable to retrieve conference plan')
     })
     firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
+      console.log('types for bar chart', type);
+      console.log('line type rounded', Math.round(type[0].line));
+      console.log('traveling type rounded', Math.round(type[0].traveling));
       this.setState({
         sessionLine: Math.round(type[0].line),
         sessionTraveling: Math.round(type[0].traveling),
