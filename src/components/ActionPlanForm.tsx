@@ -9,6 +9,10 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import EditImage from '../assets/images/EditImage.svg';
 import SaveImage from '../assets/images/SaveImage.svg';
 import CloseImage from '../assets/images/CloseImage.svg';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import moment from 'moment';
 
 const styles: object = {
   textField: {
@@ -22,13 +26,16 @@ interface Props {
   classes: Style,
   teacherFirstName: string,
   teacherLastName: string,
+  magic8: string,
   firebase: {
-    createActionPlan(teacherId: string, sessionId: string): Promise<void>,
+    createActionPlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
     getActionPlan(sessionId: string): Promise<Array<{id: string, goal: string, benefit: string}>>,
     getActionSteps(actionPlanId: string): Promise<Array<{step: string, materials: string, person: string, timeline: string}>>,
     saveActionPlan(actionPlanId: string, goal: string, benefit: string): Promise<void>,
     saveActionStep(actionPlanId: string, index: string, step: string, materials: string, person: string, timeline: string): Promise<void>,
-    createActionStep(actionPlanId: string, index: string): Promise<void>
+    createActionStep(actionPlanId: string, index: string): Promise<void>,
+    getCoachFirstName(): Promise<string>,
+    getCoachLastName(): Promise<string>
   },
   teacherId: string,
   sessionId: string,
@@ -42,13 +49,17 @@ interface Props {
 interface State {
   goal: string,
   benefit: string,
-  date: string,
+  date: Date,
   actionSteps: string,
   actionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}>,
   editMode: boolean,
   actionPlanExists: boolean,
   actionPlanId: string,
-  createMode: boolean
+  coachFirstName: string,
+  coachLastName: string,
+  createMode: boolean,
+  saved: boolean,
+  saveModal: boolean
 }
 
 interface Style {
@@ -70,13 +81,17 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.state = {
       goal: '',
       benefit: '',
-      date: '',
+      date: new Date(),
       actionSteps: '',
       actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}],
       editMode: false,
       actionPlanExists: this.props.actionPlanExists,
       actionPlanId: '',
-      createMode: false
+      coachFirstName: '',
+      coachLastName: '',
+      createMode: false,
+      saved: true,
+      saveModal: false
     }
   }
 
@@ -97,6 +112,7 @@ class ActionPlanForm extends React.Component<Props, State> {
   handleChange = (name: string) => (event): void => {
     this.setState({
       [name]: event.target.value,
+      saved: false
     });
   };
 
@@ -108,7 +124,8 @@ class ActionPlanForm extends React.Component<Props, State> {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].step = event.target.value;
     this.setState({
-      actionStepsArray: newArray
+      actionStepsArray: newArray,
+      saved: false
     });
   }
 
@@ -120,7 +137,8 @@ class ActionPlanForm extends React.Component<Props, State> {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].materials = event.target.value;
     this.setState({
-      actionStepsArray: newArray
+      actionStepsArray: newArray,
+      saved: false
     });
   }
 
@@ -132,7 +150,8 @@ class ActionPlanForm extends React.Component<Props, State> {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].person = event.target.value;
     this.setState({
-      actionStepsArray: newArray
+      actionStepsArray: newArray,
+      saved: false
     });
   }
 
@@ -144,12 +163,13 @@ class ActionPlanForm extends React.Component<Props, State> {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].timeline = event.target.value;
     this.setState({
-      actionStepsArray: newArray
+      actionStepsArray: newArray,
+      saved: false
     });
   }
 
   handleCreate = (): void => {
-    this.props.firebase.createActionPlan(this.props.teacherId, this.props.sessionId)
+    this.props.firebase.createActionPlan(this.props.teacherId, this.props.sessionId, this.props.magic8)
       .then(() => {
         this.setState({
           editMode: true,
@@ -165,14 +185,16 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   getActionPlan = (): void => {
     this.props.firebase.getActionPlan(this.props.sessionId)
-    .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
+    .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: {seconds: number, nanoseconds: number}}>) => {
       if (actionPlanData[0]) {
+        const newDate = new Date(0);
+        newDate.setUTCSeconds(actionPlanData[0].date.seconds);
         this.setState({
           actionPlanExists: true,
           actionPlanId: actionPlanData[0].id,
           goal: actionPlanData[0].goal,
           benefit: actionPlanData[0].benefit,
-          date: actionPlanData[0].date
+          date: newDate
         });
         const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
         this.props.firebase.getActionSteps(actionPlanData[0].id).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
@@ -214,6 +236,7 @@ class ActionPlanForm extends React.Component<Props, State> {
       this.props.firebase.saveActionStep(this.state.actionPlanId, index.toString(), value.step, value.materials, value.person, value.timeline)
         .then(() => {
           console.log("action step ", index, " saved");
+          this.setState({ saved: true })
         })
         .catch(() => {
           console.log("error in saving action step ", index);
@@ -226,13 +249,39 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @return {void}
    */
   handleSaveAndClose = (): void => {
-    this.handleSave();
-    this.props.handleClose();
+    this.setState({
+      saveModal: false
+    }, () => {
+      this.handleSave();
+      this.props.handleClose();
+    })
+  }
+
+  handleClose = (): void => {
+    if (this.state.saved) {
+      this.props.handleClose();
+    } else {
+      this.setState({
+        saveModal: true
+      })
+    }
+  }
+
+  handleCloseWithoutSave = (): void => {
+    this.setState({
+      saveModal: false
+    }, () => {this.props.handleClose()})
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     this.getActionPlan();
+    this.props.firebase.getCoachFirstName().then((name: string) => {
+      this.setState({ coachFirstName: name })
+    })
+    this.props.firebase.getCoachLastName().then((name: string) => {
+      this.setState({ coachLastName: name })
+    })
   }
 
   /** 
@@ -265,6 +314,8 @@ class ActionPlanForm extends React.Component<Props, State> {
       saveActionPlan: PropTypes.func,
       saveActionStep: PropTypes.func,
       createActionStep: PropTypes.func,
+      getCoachFirstName: PropTypes.func,
+      getCoachLastName: PropTypes.func
     }).isRequired,
     teacherId: PropTypes.string.isRequired,
     sessionId: PropTypes.string.isRequired,
@@ -284,6 +335,25 @@ class ActionPlanForm extends React.Component<Props, State> {
     return (
       <div>
         {this.props.actionPlanExists || this.state.createMode ? 
+          (this.state.saveModal && !this.state.saved) ? (
+            <Dialog
+              open={this.state.saveModal}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title" style={{fontFamily: 'Arimo'}}>
+                Do you want to save the action plan before closing?
+              </DialogTitle>
+              <DialogActions>
+                <Button onClick={this.handleCloseWithoutSave} color="primary" style={{fontFamily: 'Arimo'}}>
+                  Close without saving
+                </Button>
+                <Button onClick={this.handleSaveAndClose} color="primary" style={{fontFamily: 'Arimo'}} autoFocus>
+                  Save & Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+          ) :
           <Grid
             container
             direction="column"
@@ -315,7 +385,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                   </Button>
                 </Grid>
                 <Grid item xs={1}>
-                  <Button onClick={this.handleSaveAndClose}>
+                  <Button onClick={this.handleClose}>
                     <img alt="Close" src={CloseImage} style={{width: '95%'}}/>
                   </Button>
                 </Grid>
@@ -332,11 +402,13 @@ class ActionPlanForm extends React.Component<Props, State> {
                   {this.props.teacherFirstName + " " + this.props.teacherLastName}
                 </Grid>
                 <Grid item xs={4}>
-                  {/* coach name */}
+                  <Grid container direction="row" justify="center">
+                    {this.state.coachFirstName + " " + this.state.coachLastName}
+                  </Grid>
                 </Grid>
                 <Grid item xs={4}>
                   <Grid container direction="row" justify="flex-end">
-                    {this.state.date}
+                    {moment(this.state.date).format('MM/DD/YYYY')}
                   </Grid>
                 </Grid>
               </Grid>

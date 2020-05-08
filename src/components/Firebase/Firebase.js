@@ -12,6 +12,9 @@ const config = {
   measurementId: "G-S797QZ8L3N"
 };
 
+/**
+ * defines functions to get and set data in cloud firestore
+ */
 class Firebase {
   constructor() {
     if (!firebase.apps.length) {
@@ -356,6 +359,15 @@ class Firebase {
       .catch(error => console.error("Error getting cached document:", error));
   };
 
+  getCoachLastName = async function() {
+    return this.db
+      .collection("users")
+      .doc(this.auth.currentUser.uid)
+      .get()
+      .then(doc => doc.data().lastName)
+      .catch(error => console.error("Error getting cached document:", error));
+  };
+
   getAdminList = async function() {
     return this.db
       .collection("users")
@@ -402,6 +414,20 @@ class Firebase {
       .catch(error => console.error("Error setting session ref: ", error));
   };
 
+  handleLOISession = async function(mEntry) {
+    this.sessionRef = this.db.collection("observations").doc();
+    this.sessionRef
+      .set({
+        observedBy: "/user/" + mEntry.observedBy,
+        start: firebase.firestore.FieldValue.serverTimestamp(),
+        teacher: "/user/" + mEntry.teacher,
+        end: firebase.firestore.FieldValue.serverTimestamp(),
+        type: mEntry.type,
+        setting: mEntry.setting
+      })
+      .catch(error => console.error("Error setting session ref: ", error));
+  };
+
   endSession = async function() {
     this.sessionRef
       .update({
@@ -416,9 +442,8 @@ class Firebase {
     return this.sessionRef
       .collection("entries")
       .add({
-        Checked: mEntry.checked.slice(1),
+        Checked: mEntry.checked,
         PeopleType: mEntry.people,
-        acType: mEntry.type,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
@@ -443,9 +468,45 @@ class Firebase {
     return this.sessionRef
       .collection("entries")
       .add({
-        Checked: mEntry.checked.slice(1),
+        Checked: mEntry.checked,
         PeopleType: mEntry.people,
-        seqType: mEntry.type,
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch(error =>
+        console.error("Error occurred adding observation: ", error)
+      );
+  };
+
+  handlePushInstruction = async function(insType) {
+    return this.sessionRef
+      .collection("entries")
+      .add({
+        instructionType: insType,
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch(error =>
+        console.error("Error occurred adding observation: ", error)
+      );
+  };
+
+  handlePushMath = async function(mEntry) {
+    return this.sessionRef
+      .collection("entries")
+      .add({
+        Checked: mEntry.checked,
+        PeopleType: mEntry.people,
+        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch(error =>
+        console.error("Error occurred adding observation: ", error)
+      );
+  };
+
+  handlePushListening = async function(mEntry) {
+    return this.sessionRef
+      .collection("entries")
+      .add({
+        Checked: mEntry.checked,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
@@ -650,6 +711,43 @@ class Firebase {
       );
   };
 
+  fetchInstructionTypeCount = async function(sessionId) {
+    const getInstructionTypeCountFirebaseFunction = this.functions.httpsCallable(
+      "funcInstructionTypeCount"
+    );
+
+    return getInstructionTypeCountFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          // Read result of the Cloud Function.
+          // var sanitizedMessage = result.data[0];
+          // console.log(sanitizedMessage);
+          // return sanitizedMessage;
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting instruction type count: ", error)
+      );
+  };
+
+  fetchInstructionTrend = async function(teacherId) {
+    const getInstructionTrendFirebaseFunction = this.functions.httpsCallable(
+      "funcInstructionTrend"
+    );
+    return getInstructionTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        result =>
+          // Read result of the Cloud Function.
+          // var sanitizedMessage = result.data[0];
+          // console.log(sanitizedMessage);
+          // return sanitizedMessage;
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting instruction trend: ", error)
+      );
+  };
+
   fetchSessionDates = async function(teacherId, sessionType) {
     const getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable(
       "funcSessionDates"
@@ -757,7 +855,7 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error("Error occurred getting AC details: ", error)
@@ -775,10 +873,24 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error("Error occurred getting sequential details: ", error)
+      );
+  };
+
+  fetchMathDetails = async function(sessionId) {
+    const getMathDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcMathDetails"
+    );
+    return getMathDetailsFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting math details: ", error)
       );
   };
 
@@ -793,7 +905,8 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
+          // console.log(result);
       )
       .catch(error =>
         console.error("Error occurred getting child AC summary: ", error)
@@ -811,13 +924,27 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error(
           "Error occurred getting child Sequential summary: ",
           error
         )
+      );
+  };
+
+  fetchChildMathSummary = async function(sessionId) {
+    const getChildMathSummaryFirebaseFunction = this.functions.httpsCallable(
+      "funcChildMathSummary"
+    );
+    return getChildMathSummaryFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting child math summary: ", error)
       );
   };
 
@@ -832,7 +959,7 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error("Error occurred getting teacher AC summary: ", error)
@@ -850,7 +977,7 @@ class Firebase {
           // var sanitizedMessage = result.data[0];
           // console.log(sanitizedMessage);
           // return sanitizedMessage;
-          result.data[0]
+          result.data[0][0]
       )
       .catch(error =>
         console.error(
@@ -859,6 +986,21 @@ class Firebase {
         )
       );
   };
+
+  fetchTeacherMathSummary = async function(sessionId) {
+    const getTeacherMathSummaryFirebaseFunction = this.functions.httpsCallable(
+      "funcTeacherMathSummary"
+    );
+    return getTeacherMathSummaryFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting teacher math summary: ", error)
+      );
+  };
+
 
   fetchChildACTrend = async function(teacherId) {
     const getChildACTrendFirebaseFunction = this.functions.httpsCallable(
@@ -896,11 +1038,26 @@ class Firebase {
       );
   };
 
-  fetchTeacherACTrend = async function(sessionId) {
+  fetchChildMathTrend = async function(teacherId) {
+    const getChildMathTrendFirebaseFunction = this.functions.httpsCallable(
+      "funcChildMathTrend"
+    );
+    console.log('fetchChildMathTrend from firebase executed');
+    return getChildMathTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        result =>
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting child math trend: ", error)
+      );
+  };
+
+  fetchTeacherACTrend = async function(teacherId) {
     const getTeacherACTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherACTrend"
     );
-    return getTeacherACTrendFirebaseFunction({ sessionId: sessionId })
+    return getTeacherACTrendFirebaseFunction({ teacherId: teacherId })
       .then(
         result =>
           // Read result of the Cloud Function.
@@ -914,11 +1071,11 @@ class Firebase {
       );
   };
 
-  fetchTeacherSeqTrend = async function(sessionId) {
+  fetchTeacherSeqTrend = async function(teacherId) {
     const getTeacherSeqTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherSeqTrend"
     );
-    return getTeacherSeqTrendFirebaseFunction({ sessionId: sessionId })
+    return getTeacherSeqTrendFirebaseFunction({ teacherId: teacherId })
       .then(
         result =>
           // Read result of the Cloud Function.
@@ -930,14 +1087,29 @@ class Firebase {
       .catch(error => console.error("Error occurred getting teacher sequential trend: ", error))
   };
 
-  createActionPlan = async function(teacherId, sessionId) {
+  fetchTeacherMathTrend = async function(teacherId) {
+    const getTeacherMathTrendFirebaseFunction = this.functions.httpsCallable(
+      "funcTeacherMathTrend"
+    );
+    return getTeacherMathTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        result =>
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting teacher math trend: ", error)
+      );
+  };
+
+  createActionPlan = async function(teacherId, sessionId, magic8) {
     const data = Object.assign(
       {},
       {
         sessionId: sessionId,
         coach: this.auth.currentUser.uid,
         teacher: teacherId,
-        date: new Date().toLocaleDateString(),
+        tool: magic8,
+        dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
         goal: '',
         benefit: ''
       }
@@ -1002,7 +1174,7 @@ class Firebase {
             id: doc.id,
             goal: doc.data().goal,
             benefit: doc.data().benefit,
-            date: doc.data().date
+            date: doc.data().dateCreated
           })
         );
         return idArr;
@@ -1060,6 +1232,117 @@ class Firebase {
     .catch((error) => {
       console.error("Error updating action plan: ", error);
     })
+  }
+
+  /**
+   * creates conference plan in cloud firestore
+   * @param {string} teacherId
+   * @param {string} sessionId
+   * @param {string} magic8
+   */
+  createConferencePlan = async function(teacherId, sessionId, magic8) {
+    const data = Object.assign(
+      {},
+      {
+        sessionId: sessionId,
+        coach: this.auth.currentUser.uid,
+        teacher: teacherId,
+        tool: magic8,
+        dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+        feedback: [''],
+        questions: [''],
+        addedQuestions: [],
+        notes: ['']
+      }
+    );
+    const conferencePlansRef = firebase.firestore().collection('conferencePlans').doc();
+    conferencePlansRef.set(data).then(() => {
+      /* const actionStepsRef = actionPlansRef.collection("actionSteps").doc('0');
+      actionStepsRef.set({
+        materials: '',
+        person: '',
+        step: '',
+        // timeline: firebase.firestore.FieldValue.serverTimestamp()
+        timeline: ''
+      }).then(() => {
+        console.log('action steps created');
+      }).catch(() => {
+        console.log('error creating action steps');
+      }) */
+      console.log('conference plan created');
+    }).catch(() => {
+      console.log('error creating conference plan');
+    })
+  }
+
+  /**
+   * gets data in conference plan
+   * @param {string} sessionId
+   */
+  getConferencePlan = async function(sessionId) {
+    this.sessionRef = this.db.collection("conferencePlans")
+      .where("sessionId", "==", sessionId)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            feedback: doc.data().feedback,
+            questions: doc.data().questions,
+            addedQuestions: doc.data().addedQuestions,
+            notes: doc.data().notes,
+            date: doc.data().dateCreated
+          })
+        );
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve conference plan')
+      })
+  }
+
+  /**
+   * @param {string} conferencePlanId
+   * @param {Array<string>} feedback
+   * @param {Array<string>} questions
+   * @param {Array<string>} addedQuestions
+   * @param {Array<string>} notes
+   */
+  saveConferencePlan = async function(conferencePlanId, feedback, questions, addedQuestions, notes) {
+    const conferencePlanRef = this.db.collection("conferencePlans").doc(conferencePlanId);
+    return conferencePlanRef.update({
+      feedback: feedback,
+      questions: questions,
+      addedQuestions: addedQuestions,
+      notes: notes
+    })
+    .then(() => {
+      console.log("Action plan updated successfully!");
+    })
+    .catch((error) => {
+      console.error("Error updating action plan: ", error);
+    })
+  }
+
+  /**
+   * @param {string} sessionId
+   * @param {string} questionText
+   */
+  saveConferencePlanQuestion = async function(sessionId, questionText) {
+    const conferencePlanRef = this.db.collection("conferencePlans").where("sessionId", "==", sessionId);
+    conferencePlanRef.get().then(querySnapshot => {
+      const conferencePlanId = [];
+      querySnapshot.forEach(doc =>
+        conferencePlanId.push(doc.id)
+      );
+      return this.db.collection("conferencePlans").doc(conferencePlanId[0]).update({
+        addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText)
+      })
+    })
+    /* return conferencePlanRef.update({
+      addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText)
+    }) */
   }
 
 }

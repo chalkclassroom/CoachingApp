@@ -39,7 +39,7 @@ const styles = theme => ({
 });
 
 const VisitCenterButton = ({ centerName, visitCount, onClick }) => {
-  const hsl = Math.max(82 - 4 * visitCount, 54);
+  const hsl = Math.max(82 - 4 * visitCount, 30);
 
   return (
     <Button
@@ -293,7 +293,7 @@ class CenterMenuSequentialActivities extends React.Component {
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: "AC"
+      type: "sequential"
     };
     this.props.firebase.handleSession(mEntry);
   }

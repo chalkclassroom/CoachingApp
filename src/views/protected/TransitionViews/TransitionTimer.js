@@ -1,18 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
-import CircularProgressbar from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
-import Button from "@material-ui/core/Button/Button";
-import Grid from "@material-ui/core/Grid/Grid";
-import ms from "pretty-ms";
-import YesNoDialog from "../../../components/Shared/YesNoDialog.tsx";
-import cyan from "@material-ui/core/colors/teal";
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import { connect } from "react-redux";
-import { pushOntoTransitionStack } from "../../../state/actions/transition-time";
-import FirebaseContext from "../../../components/Firebase/FirebaseContext";
+import React from 'react';
+import PropTypes from 'prop-types';
+import CircularProgressbar from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import Button from '@material-ui/core/Button/Button';
+import Grid from '@material-ui/core/Grid/Grid';
+import ms from 'pretty-ms';
+import YesNoDialog from '../../../components/Shared/YesNoDialog.tsx';
+import cyan from '@material-ui/core/colors/teal';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import { pushOntoTransitionStack } from '../../../state/actions/transition-time';
+import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import * as Constants from '../../../constants';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+ 
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -21,7 +24,7 @@ const theme = createMuiTheme({
     secondary: cyan
   }
 });
-
+ 
 /**
  * transition timer
  * @class TransitionTimer
@@ -32,23 +35,28 @@ class TransitionTimer extends React.Component {
    */
   constructor(props) {
     super(props);
-    // this.onCancel = this.onCancel.bind(this);
+
+    this.state = {
+      percentage: 0,
+      isOn: false,
+      time: 0,
+      start: 0,
+      opendialog: false
+    };
+
     const mEntry = {
       teacher: this.props.teacherId,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "transition"
     };
+
     this.props.firebase.handleSession(mEntry);
   }
-
-  state = {
-    anchorEl: null,
-    percentage: 0,
-    isOn: false,
-    time: 0,
-    start: 0
+ 
+  guide = () => {
+    this.setState({ opendialog: true });
   };
-
+  
   onStart = () => {
     this.setState(state => {
       if (state.isOn) {
@@ -74,7 +82,7 @@ class TransitionTimer extends React.Component {
       return { isOn: !state.isOn };
     });
   };
-
+ 
   onCancel = () => {
     clearInterval(this.timer);
     this.setState({
@@ -84,12 +92,16 @@ class TransitionTimer extends React.Component {
     });
     this.props.handleEndTransition();
   };
-
+ 
+  handleClose = () => {
+    this.setState({ opendialog: false });
+  };
+ 
   /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     clearInterval(this.timer);
   }
-
+ 
   /**
    * @param {Object} entry
    */
@@ -98,7 +110,7 @@ class TransitionTimer extends React.Component {
     const firebase = this.context;
     firebase.handlePushTransition(entry);
   };
-
+ 
   /**
    * render function
    * @return {ReactElement}
@@ -107,18 +119,18 @@ class TransitionTimer extends React.Component {
     setTimeout(() => {
       this.setState({ percentage: this.state.isOn ? 100 : 0 });
     }, 100);
-
+ 
     return (
       <MuiThemeProvider theme={theme}>
         <div style={{ width: 400, fontFamily: 'Arimo' }}>
           <CircularProgressbar
-            fill="#19468D"
+            fill={Constants.TransitionColor}
             background
             percentage={this.state.percentage}
             text={this.state.time === 0 ? "0:00" : ms(this.state.time)}
             initialAnimation={false}
             styles={{
-              path: { stroke: "#19468D" },
+              path: { stroke: Constants.TransitionColor },
               text: { fill: "white", fontSize: "16px" },
               background: { fill: Constants.TransitionColor }
             }}
@@ -128,18 +140,31 @@ class TransitionTimer extends React.Component {
             alignItems={"center"}
             justify={"space-around"}
             direction={"column"}
-          >
+          >            
             <div style={{ margin: 2 }} />
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={!this.props.typeSelected}
-              aria-label="Start"
-              onClick={this.onStart}
-              style={{fontFamily: 'Arimo'}}
-            >
-              {this.state.isOn ? "End Transition" : "Start new Transition"}
-            </Button>
+            {!this.props.typeSelected ? (
+              <Button
+                color="#E0E0E0" // graycolor
+                variant="raised"
+                opacity="0.3"
+                disableElevation
+                aria-label="Start"
+                onClick={this.guide}
+                style={{ fontFamily: 'Arimo', boxShadow: 'none' }}
+              >
+                Start New Transition
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                aria-label="Start"
+                onClick={this.onStart}
+                style={{ fontFamily: 'Arimo' }}
+              >
+                {this.state.isOn ? "End Transition" : "Start new Transition"}
+              </Button>
+            ) }
             <div style={{ margin: 2 }} />
             <YesNoDialog
               buttonVariant={"outlined"}
@@ -152,12 +177,27 @@ class TransitionTimer extends React.Component {
               shouldOpen={this.state.isOn}
             />
           </Grid>
+          <Dialog
+            open={this.state.opendialog}
+            onClose={this.handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title" style={{ fontFamily: 'Arimo' }}>
+              Please select a transition type before you start a new transition.
+            </DialogTitle>
+            <DialogActions>
+              <Button onClick={this.handleClose} color="primary" style={{ fontFamily: 'Arimo' }}>
+                Ok
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </MuiThemeProvider>
     );
   }
 }
-
+ 
 TransitionTimer.propTypes = {
   teacherId: PropTypes.string.isRequired,
   firebase: PropTypes.object.isRequired,
@@ -166,7 +206,7 @@ TransitionTimer.propTypes = {
   pushOntoTransitionStack: PropTypes.func.isRequired,
   typeSelected: PropTypes.bool.isRequired
 };
-
+ 
 const mapStateToProps = state => {
   return {
     transitionType: state.transitionTypeState.transitionType
@@ -175,4 +215,4 @@ const mapStateToProps = state => {
 TransitionTimer.contextType = FirebaseContext;
 export default connect(mapStateToProps, { pushOntoTransitionStack })(
   TransitionTimer
-);
+  );

@@ -12,12 +12,6 @@ const ChildBehaviorTrendsOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
-  // title: {
-  //     display: true,
-  //     text: 'Transition Time Trends',
-  //     fontSize: 20,
-  //     fontStyle: 'bold'
-  // },
   tooltips: {
     mode: "index",
     intersect: false
@@ -43,7 +37,7 @@ const ChildBehaviorTrendsOptions = {
           beginAtZero: true,
           min: 0,
           max: 100,
-          callback: function(value: number) {
+          callback: function(value: number): string {
             return value + "%";
           }
         },
@@ -60,7 +54,7 @@ const ChildBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value: number) {
+      formatter: function(value: number): string {
         return value + "%";
       }
     }
@@ -71,12 +65,6 @@ const TeacherBehaviorTrendsOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
-  // title: {
-  //     display: true,
-  //     text: 'Transition Time Trends',
-  //     fontSize: 20,
-  //     fontStyle: 'bold'
-  // },
   tooltips: {
     mode: "index",
     intersect: false
@@ -102,7 +90,7 @@ const TeacherBehaviorTrendsOptions = {
           beginAtZero: true,
           min: 0,
           max: 100,
-          callback: function(value: number) {
+          callback: function(value: number): string {
             return value + "%";
           }
         },
@@ -119,7 +107,7 @@ const TeacherBehaviorTrendsOptions = {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value: number) {
+      formatter: function(value: number): string {
         return value + "%";
       }
     }
@@ -127,25 +115,27 @@ const TeacherBehaviorTrendsOptions = {
 };
 
 interface Props {
-  childData(): {labels: Array<string>,
-    datasets: {
+  childData(): {
+    labels: Array<Array<string>>,
+    datasets: Array<{
       label: string,
       backgroundColor: string,
       borderColor: string,
       fill: boolean,
       lineTension: number,
       data: Array<number>
-    }
+    }>
   },
-  teacherData(): {labels: Array<string>,
-    datasets: {
+  teacherData(): {
+    labels: Array<Array<string>>,
+    datasets: Array<{
       label: string,
       backgroundColor: string,
       borderColor: string,
       fill: boolean,
       lineTension: number,
       data: Array<number>
-    }
+    }>
   }
 }
 
@@ -163,10 +153,9 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component<Props, {}> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
-    // const { classes } = this.props;
+  render(): React.ReactNode {
     const settings = {
       dots: true,
       infinite: true,
@@ -178,7 +167,9 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component<Props, {}> {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>Child Behaviors</Typography>
+            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
+              Child Behaviors
+            </Typography>
             <Line
               data={this.props.childData}
               options={ChildBehaviorTrendsOptions}
@@ -189,7 +180,9 @@ class ChildTeacherBehaviorTrendsSlider extends React.Component<Props, {}> {
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"}>Teacher Behaviors</Typography>
+            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
+              Teacher Behaviors
+            </Typography>
             <Line
               data={this.props.teacherData}
               options={TeacherBehaviorTrendsOptions}

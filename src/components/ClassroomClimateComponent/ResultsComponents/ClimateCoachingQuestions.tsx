@@ -18,27 +18,37 @@ const styles: object = {
 interface Props {
   classes: {
     categoryView: string
-  }
+  },
+  handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
+  addedToPlan: Array<{panel: string, number: number, question: string}>,
+  sessionId: string
+  teacherId: string,
+  magic8: string
 }
 
 interface State {
   categoryView: string,
   openPanel: string,
-  addedToPrep: Array<string>
 }
 
+/**
+ * data reflection question layout for classroom climate
+ * @class ClimateCoachingQuestions
+ */
 class ClimateCoachingQuestions extends React.Component<Props, State> {
+  /**
+   * @param {Props} props
+   */
   constructor(props: Props) {
     super(props);
 
     this.state = {
       categoryView: '',
       openPanel: '',
-      addedToPrep: []
     }
   }
 
-  approvalsClick = () => {
+  approvalsClick = (): void => {
     if (this.state.categoryView !== "approvals") {
       this.setState({
         categoryView: "approvals",
@@ -47,7 +57,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
     }
   }
 
-  redirectionsClick = () => {
+  redirectionsClick = (): void => {
     if (this.state.categoryView !== "redirections") {
       this.setState({
         categoryView: "redirections",
@@ -56,7 +66,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
     }
   }
 
-  disapprovalsClick = () => {
+  disapprovalsClick = (): void => {
     if (this.state.categoryView !== "disapprovals") {
       this.setState({
         categoryView: "disapprovals",
@@ -68,7 +78,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
   /**
    * @param {string} panel
    */
-  handlePanelChange = (panel: string) => {
+  handlePanelChange = (panel: string): void => {
     if (this.state.openPanel === panel) {
       this.setState({ openPanel: '' });
     } else {
@@ -77,15 +87,9 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
   };
 
   /**
-   * @param {string} panel
+   * @return {ReactNode}
    */
-  handleAddToPlan = (panel: string) => {
-    if (!this.state.addedToPrep.includes(panel)) {
-      this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
-    }
-  };
-
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return(
       <Grid container direction="column">
@@ -108,7 +112,6 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
           </Grid>
           <Grid item>
             <Button
-              // style={this.state.categoryView === "childrenWaiting" ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}
               onClick={this.disapprovalsClick}
             >
               <NotInterestedIcon fill="#ec2409" />
@@ -118,8 +121,6 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh", fontFamily: "Arimo"}}>
           <Grid
             item xs={2}
-            // className = {classes.buttonText}
-            // style={{fontWeight: this.state.categoryView === "line" ? "bold" : "normal"}}
           >
             Behavior Approvals
           </Grid>
@@ -144,24 +145,36 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
               questions={Constants.CoachingQuestions.Climate.Approvals}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
+              color={Constants.ClimateColor}
             />
           ) : this.state.categoryView === "redirections" ? (
             <DataQuestions
               questions={Constants.CoachingQuestions.Climate.Redirections}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
+              color={Constants.ClimateColor}
             />
           ) : this.state.categoryView === "disapprovals" ? (
             <DataQuestions
               questions={Constants.CoachingQuestions.Climate.Disapprovals}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
+              color={Constants.ClimateColor}
             />
           ) : <div/>}
         </Grid>

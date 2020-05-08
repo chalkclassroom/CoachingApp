@@ -1,31 +1,12 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
-
-/**
- * specifies data sets (and formatting) for child behaviors pie chart
- */
-// const teacherBehaviorsData = {
-//     labels: [
-//         'Teacher Support for Assoc./Coop. Interactions',
-//         'Teacher Present, No Support'
-//     ],
-//     datasets: [{
-//         data: [300, 50],
-//         backgroundColor: [
-//             '#0988EC',
-//             '#E99C2E'
-//         ],
-//         hoverBackgroundColor: [
-//             '#0988EC',
-//             '#E99C2E'
-//         ]
-//     }]
-// };
+import * as Constants from "../../../constants";
 
 interface Props {
-  noSupportTime: number,
-  supportTime: number
+  noSupport: number,
+  support: number,
+  noTeacherOpp: number
 }
 
 /**
@@ -42,28 +23,27 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    noSupportTime: PropTypes.number.isRequired,
-    supportTime: PropTypes.number.isRequired
+    noSupport: PropTypes.number.isRequired,
+    support: PropTypes.number.isRequired,
+    noTeacherOpp: PropTypes.number.isRequired
   }
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
-    // const { classes } = this.props;
-    // console.log("inside time: ", this.state.inside);
+  render(): React.ReactNode {
     const teacherBehaviorsData = {
       labels: [
         "Teacher Support for Assoc./Coop. Interactions",
-        "Teacher Present, No Support"
+        "Teacher Present, No Support",
+        "Teacher Not at Center"
       ],
-
       datasets: [
         {
-          data: [this.props.noSupportTime, this.props.supportTime],
-          backgroundColor: ["#0988EC", "#E99C2E"],
-          hoverBackgroundColor: ["#0988EC", "#E99C2E"]
+          data: [this.props.support, this.props.noSupport, this.props.noTeacherOpp],
+          backgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, Constants.NotPresentColor],
+          hoverBackgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, Constants.NotPresentColor]
         }
       ]
     };
@@ -75,7 +55,7 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
-                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }) {
+                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const meta = dataset._meta[Object.keys(dataset._meta)[0]];
                 const total = meta.total;
@@ -85,14 +65,26 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
                 );
                 return currentValue + " (" + percentage + "%)";
               },
-              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }) {
+              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
                 return data.labels[tooltipItem[0].index];
+              }
+            },
+            bodyFontSize: 16
+          },
+          legend: {
+            display: false,
+            position: 'bottom'
+          },
+          plugins: {
+            datalabels: {
+              color: 'white',
+              font: {
+                size: 20
               }
             }
           }
         }}
-        width={650}
-        height={400}
+        width = {260}
       />
     );
   }

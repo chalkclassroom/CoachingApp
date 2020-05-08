@@ -15,6 +15,7 @@ const styles = theme => ({
   },
   formControl: {
     // margin: theme.spacing.unit * 3,
+    fontFamily: 'Arimo'
   },
   group: {
     // margin: `${theme.spacing.unit}px 0`,
@@ -22,12 +23,14 @@ const styles = theme => ({
   correctFeedback: {
     color: '#28B10C',
     lineSpacing: '0.4em',
-    fontSize: '1em'
+    fontSize: '1em',
+    fontFamily: 'Arimo'
   },
   incorrectFeedback: {
     color: '#B1150C',
     lineSpacing: '0.4em',
-    fontSize: '1em'
+    fontSize: '1em',
+    fontFamily: 'Arimo'
   }
 });
 
@@ -73,6 +76,7 @@ class TrainingQuestion extends Component {
               <FormControlLabel checked={selected === index} value={"" + index}
                 label={option} key={index} control={<Radio />}
                 disabled={feedback !== ""}
+                style={{fontFamily: 'Arimo'}}
               />
             )}
           </RadioGroup>

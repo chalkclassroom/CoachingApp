@@ -1,10 +1,10 @@
-import { hot } from 'react-hot-loader/root';
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import "./App.css";
 import WelcomePage from "./views/WelcomeViews/WelcomePage.tsx";
 import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage";
 import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage.tsx";
+import LevelOfInstructionResultsPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionResultsPage.tsx";
 import Magic8MenuPage from "./views/protected/Magic8MenuPage";
 import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage.tsx";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
@@ -19,16 +19,21 @@ import {
   MuiThemeProvider,
   withStyles
 } from "@material-ui/core/styles";
+import LevelOfInstructionTrainingPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage.tsx";
+import LevelOfInstructionPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionPage.tsx";
+import MathInstructionTrainingPage from "./views/protected/MathInstructionViews/MathInstructionTrainingPage";
 import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage.tsx";
-import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage";
+import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage.tsx";
 import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage.tsx";
-import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage";
+import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage.tsx";
 import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage.tsx";
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
 import StudentEngagementPage from "./views/protected/StudentEngagementViews/StudentEngagementPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
 import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
+import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
+import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage';
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
@@ -61,7 +66,7 @@ const styles = createMuiTheme({
 });
 
 /**
- *
+ * 
  * @return {ReactElement}
  */
 function PrivateRoute({ component: Component, auth, ...rest }) {
@@ -105,7 +110,7 @@ function PublicRoute({ component: Component, auth, ...rest }) {
  */
 class App extends Component {
   /**
-   * @param {Props} props
+   * @param {Props} props 
    */
   constructor(props) {
     super(props);
@@ -182,8 +187,18 @@ class App extends Component {
             />
             <PrivateRoute
               auth={this.state.auth}
+              path="/LevelOfInstruction"
+              component={LevelOfInstructionPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
               path="/ClassroomClimate"
               component={ClassroomClimatePage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ListeningToChildren"
+              component={ListeningToChildrenPage}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -202,8 +217,18 @@ class App extends Component {
             />
             <PrivateRoute
               auth={this.state.auth}
+              path="/MathInstructionResults"
+              component={MathInstructionResultsPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
               path="/SequentialActivities"
               component={SequentialActivitiesPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/MathInstructionTraining"
+              component={MathInstructionTrainingPage}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -214,6 +239,11 @@ class App extends Component {
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsTraining"
               component={AssociativeCooperativeInteractionsTrainingPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/LevelOfInstructionTraining"
+              component={LevelOfInstructionTrainingPage}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -247,7 +277,7 @@ class App extends Component {
                 component={StudentEngagementPage}
             />
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
-                            the type prop into the PrivateRoute function*/}
+                          the type prop into the PrivateRoute function*/}
             <Route
               path="/Magic8Menu"
               render={props =>
@@ -277,6 +307,11 @@ class App extends Component {
               path="/ClassroomClimateResults"
               component={ClassroomClimateResultsPage}
             />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/LevelOfInstructionResults"
+              component={LevelOfInstructionResultsPage}
+            />
             <Route render={() => <h3>No Match</h3>} />
           </Switch>
         </MuiThemeProvider>
@@ -289,4 +324,4 @@ App.propTypes = {
   firebase: PropTypes.object.isRequired
 };
 
-export default hot((withStyles(styles)(App)));
+export default withStyles(styles)(App);

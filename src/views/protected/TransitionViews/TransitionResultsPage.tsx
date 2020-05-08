@@ -48,7 +48,10 @@ interface State {
   transitionTime: number,
   sessionTotal: number,
   learningActivityTime: number,
-  actionPlanExists: boolean
+  actionPlanExists: boolean,
+  conferencePlanExists: boolean,
+  addedToPlan: Array<{panel: string, number: number, question: string}>,
+  sessionDates: Array<string>
 }
 
 /**
@@ -83,16 +86,20 @@ class TransitionResultsPage extends React.Component<Props, State> {
       transitionTime: 0,
       sessionTotal: 0,
       learningActivityTime: 0,
-      actionPlanExists: false
+      actionPlanExists: false,
+      conferencePlanExists: false,
+      addedToPlan: [],
+      sessionDates: []
     };
   }
 
   
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     const teacherId = this.props.location.state.teacher.id;
     this.handleTrendsFetch(teacherId);
+    this.handleDateFetching(teacherId);
   }
 
   /**
@@ -173,8 +180,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
       datasets:  [
         {
           label: 'TOTAL',
-          backgroundColor: this.state.trendsTotalColor,
-          borderColor: this.state.trendsTotalColor,
+          backgroundColor: Constants.TransitionColor,
+          borderColor: Constants.TransitionColor,
           fill: false,
           lineTension: 0,
           data: this.state.trendsTotal,
@@ -259,65 +266,133 @@ class TransitionResultsPage extends React.Component<Props, State> {
   };
 
   /**
+   * @param {string} teacherId
+   */
+  handleDateFetching = (teacherId: string) => {
+    const firebase = this.context;
+    firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<string>) =>
+      this.setState({
+        sessionDates: dates
+      }, () => {
+        this.setState({ sessionId: this.state.sessionDates[0].id },
+          () => {
+            this.getData();
+          }
+        );
+      })
+    );
+    console.log('date fetching was called');
+  };
+
+  /**
+   * retrieves summary, details, and notes data using the session id
+   */
+  getData = (): void => {
+    const firebase = this.context;
+    this.handleNotesFetching(this.state.sessionId);
+
+    firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
+      console.log("the start date is ", summary[0].startDate.value);
+      console.log("the total transition time is ", summary[0].total);
+      console.log("the session total is ", summary[0].sessionTotal);
+      console.log("the learning activity time is ", summary[0].sessionTotal - summary[0].total);
+      this.setState({
+        transitionTime: summary[0].total,
+        sessionTotal: summary[0].sessionTotal,
+        learningActivityTime: summary[0].sessionTotal - summary[0].total
+      })
+    });
+
+    firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
+      if (actionPlanData.length>0) {
+        console.log('actionplan data: ', actionPlanData>0)
+        this.setState({
+          actionPlanExists: true
+        })
+      } else {
+        this.setState({
+          actionPlanExists: false
+        })
+      }
+    }).catch(() => {
+      console.log('unable to retrieve action plan')
+    })
+
+    firebase.getConferencePlan(this.state.sessionId)
+    .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+      if (conferencePlanData[0]) {
+        this.setState({
+          conferencePlanExists: true
+        })
+      } else {
+        this.setState({
+          conferencePlanExists: false
+        })
+      }
+    }).catch(() => {
+      console.log('unable to retrieve conference plan')
+    })
+    firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
+      this.setState({
+        sessionLine: Math.round(((type[0].line))),
+        sessionTraveling: Math.round(((type[0].traveling))),
+        sessionWaiting: Math.round(((type[0].waiting))),
+        sessionRoutines: Math.round(((type[0].routines))),
+        sessionBehaviorManagement: Math.round(((type[0].behaviorManagement))),
+        sessionOther: Math.round(((type[0].other))),
+        transitionTime: type[0].total
+      }, () => {console.log("session line is ", this.state.sessionLine)})
+    });
+  }
+
+  /**
    * @param {event} event
    */
   changeSessionId = (event) => {
     this.setState({
       sessionId: event.target.value,
     }, () => {
-      this.handleNotesFetching(this.state.sessionId);
-      const firebase = this.context;
+      this.getData();
+    }
+  )};
 
-      firebase.fetchTransitionSummary(this.state.sessionId).then(summary=>{
-        console.log("the start date is ", summary[0].startDate.value);
-        console.log("the total transition time is ", summary[0].total);
-        console.log("the session total is ", summary[0].sessionTotal);
-        console.log("the learning activity time is ", summary[0].sessionTotal - summary[0].total);
+  /**
+   * checks if question has already been added and if not, adds it
+   * @param {string} panelTitle
+   * @param {number} index
+   * @param {string} question
+   * @param {string} sessionId
+   * @param {string} teacherId
+   * @param {string} magic8
+   */
+  handleAddToPlan = (panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void => {
+    const firebase = this.context;
+    const itemIndex = this.state.addedToPlan.findIndex(e => e.panel === panelTitle && e.number === index);
+    if (itemIndex === -1) {
+      this.setState({ addedToPlan: [...this.state.addedToPlan, {panel: panelTitle, number: index, question: question}] });
+    } else {
+      const newArray = [...this.state.addedToPlan];
+      newArray.splice(itemIndex, 1);
+      this.setState({ addedToPlan: newArray });
+    }
+    firebase.getConferencePlan(sessionId)
+    .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
+      if (conferencePlanData[0]) {
+        firebase.saveConferencePlanQuestion(sessionId, question);
         this.setState({
-          transitionTime: summary[0].total,
-          sessionTotal: summary[0].sessionTotal,
-          learningActivityTime: summary[0].sessionTotal - summary[0].total
+          conferencePlanExists: true
         })
-      });
-
-      firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
-        if (actionPlanData.length>0) {
-          console.log('actionplan data: ', actionPlanData>0)
+      } else {
+        firebase.createConferencePlan(teacherId, sessionId, magic8)
+        .then(() => {
+          firebase.saveConferencePlanQuestion(sessionId, question);
           this.setState({
-            actionPlanExists: true
+            conferencePlanExists: true
           })
-        } else {
-          this.setState({
-            actionPlanExists: false
-          })
-        }
-      }).catch(() => {
-        console.log('unable to retrieve action plan')
-      })
-
-      /* firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
-        this.setState({
-          sessionLine: Math.round(((type[0].line/type[0].total)*100)),
-          sessionTraveling: Math.round(((type[0].traveling/type[0].total)*100)),
-          sessionWaiting: Math.round(((type[0].waiting/type[0].total)*100)),
-          sessionRoutines: Math.round(((type[0].routines/type[0].total)*100)),
-          sessionBehaviorManagement: Math.round(((type[0].behaviorManagement/type[0].total)*100)),
-          sessionOther: Math.round(((type[0].other/type[0].total)*100)),
-          transitionTime: type[0].total
         })
-      }); */
-      firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
-        this.setState({
-          sessionLine: Math.round(((type[0].line))),
-          sessionTraveling: Math.round(((type[0].traveling))),
-          sessionWaiting: Math.round(((type[0].waiting))),
-          sessionRoutines: Math.round(((type[0].routines))),
-          sessionBehaviorManagement: Math.round(((type[0].behaviorManagement))),
-          sessionOther: Math.round(((type[0].other))),
-          transitionTime: type[0].total
-        }, () => {console.log("session line is ", this.state.sessionLine)})
-      });
-  })};
+      }
+    })
+  };
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -330,11 +405,13 @@ class TransitionResultsPage extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
+    const chosenQuestions = this.state.addedToPlan.map((value) => {
+      return(
+        value.question
+      )
+    })
     return (
       <div className={classes.root}>
-        {console.log("transition: ", this.state.transitionTime)}
-        {console.log("learning activity: ", this.state.learningActivityTime)}
-        {console.log("session total: ", this.state.sessionTotal)}
         <ResultsLayout
           teacherId={this.props.location.state.teacher.id}
           magic8="Transition Time"
@@ -376,11 +453,22 @@ class TransitionResultsPage extends React.Component<Props, State> {
           }
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
+          sessionDates={this.state.sessionDates}
           notes={this.state.notes}
-          questions={<TransitionCoachingQuestions />}
+          questions={
+            <TransitionCoachingQuestions
+              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.state.addedToPlan}
+              sessionId={this.state.sessionId}
+              teacherId={this.props.location.state.teacher.id}
+              magic8={"Transition Time"}
+            />
+          }
+          chosenQuestions = {chosenQuestions}
           teacherFirstName={this.props.location.state.teacher.firstName}
           teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
+          conferencePlanExists={this.state.conferencePlanExists}
         />
       </div>
     );

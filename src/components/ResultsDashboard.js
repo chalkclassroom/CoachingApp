@@ -134,13 +134,15 @@ const styles = {
   viewButtons: {
     minWidth: 150,
     textAlign: "center",
-    fontFamily: "Arimo"
+    fontFamily: "Arimo",
+    width: '20vw'
   },
   viewButtonsSelected: {
     minWidth: 150,
     textAlign: "center",
     color: "#fff",
-    fontFamily: "Arimo"
+    fontFamily: "Arimo",
+    width: '20vw'
   },
 };
 
@@ -174,7 +176,7 @@ class ResultsDashboard extends React.Component {
         icon: ClassroomClimateIconImage,
         theme: ClimateTheme
       })
-    } else if (this.props.magic8 === "Math") {
+    } else if (this.props.magic8 === "Math Instruction") {
       this.setState({
         icon: MathIconImage,
         theme: MathTheme
@@ -232,13 +234,14 @@ class ResultsDashboard extends React.Component {
               <TextField
                 select
                 className={classes.viewButtons}
-                label="Date"
+                label="DATE"
                 value={this.props.sessionId}
                 onChange={this.props.changeSessionId}
-                InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
               >
                 {this.props.sessionDates.map((date, index)=> 
-                  {return <MenuItem key={index} id={date.id} value={date.id}>
+                  {return <MenuItem key={index} id={date.id} value={date.id} style={{fontFamily: 'Arimo'}}>
                     <em>{moment(date.sessionStart.value).format("MMM Do YY")}</em>
                   </MenuItem>})}
               </TextField>
@@ -291,7 +294,7 @@ class ResultsDashboard extends React.Component {
                   className={this.props.view === this.props.viewEnum.COACH_PREP ? classes.viewButtonsSelected : classes.viewButtons}
                   onClick={this.props.coachPrepClick}
                 >
-                  Coach Prep
+                  Conference Plan
                 </Button>
               </MuiThemeProvider>
             </Grid>

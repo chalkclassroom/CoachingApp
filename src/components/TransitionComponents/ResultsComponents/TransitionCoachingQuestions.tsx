@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { withStyles, createMuiTheme } from "@material-ui/core/styles";
+import { withStyles, createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants';
 import {
   lightGreen,
@@ -162,13 +162,17 @@ interface Props {
         }
       }
     }
-  }
+  },
+  handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
+  addedToPlan: Array<{panel: string, number: number, question: string}>,
+  sessionId: string
+  teacherId: string,
+  magic8: string
 }
 
 interface State {
   categoryView: string,
   openPanel: string,
-  addedToPrep: Array<string>
 }
 
 /**
@@ -176,13 +180,15 @@ interface State {
  * @class TransitionCoachingQuestions
  */
 class TransitionCoachingQuestions extends React.Component<Props, State> {
+  /**
+   * @param {Props} props 
+   */
   constructor(props: Props) {
     super(props);
 
     this.state = {
       categoryView: '',
       openPanel: '',
-      addedToPrep: []
     }
   }
   
@@ -244,15 +250,6 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
       this.setState({ openPanel: '' });
     } else {
       this.setState({ openPanel: panel });
-    }
-  };
-
-  /**
-   * @param {string} panel
-   */
-  handleAddToPlan = (panel: string): void => {
-    if (!this.state.addedToPrep.includes(panel)) {
-      this.setState({ addedToPrep: [...this.state.addedToPrep, panel] });
     }
   };
 
@@ -359,40 +356,60 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
               questions={Constants.CoachingQuestions.Transition.LineQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
+              color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "traveling" ? (
             <DataQuestions
               questions={Constants.CoachingQuestions.Transition.TravelingQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
+              color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "childrenWaiting" ? (
             <DataQuestions
               questions={Constants.CoachingQuestions.Transition.WaitingQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
+              color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "routines" ? (
             <DataQuestions
               questions={Constants.CoachingQuestions.Transition.RoutinesQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
+              color={Constants.TransitionColor}
             />
           ) : this.state.categoryView === "behavior" ? (
             <DataQuestions
               questions={Constants.CoachingQuestions.Transition.BehaviorQuestions}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
-              addedToPrep={this.state.addedToPrep}
-              handleAddToPlan={this.handleAddToPlan}
+              addedToPlan={this.props.addedToPlan}
+              handleAddToPlan={this.props.handleAddToPlan}
+              sessionId={this.props.sessionId}
+              teacherId={this.props.teacherId}
+              magic8={this.props.magic8}
+              color={Constants.TransitionColor}
             />
           ) : <div/>}
         </Grid>

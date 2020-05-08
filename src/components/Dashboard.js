@@ -11,9 +11,9 @@ import InstructionIconImage from "../assets/images/InstructionIconImage.svg";
 import ListeningIconImage from "../assets/images/ListeningIconImage.svg";
 import SequentialIconImage from "../assets/images/SequentialIconImage.svg";
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg";
-import TransitionNotesImage from "../assets/images/TransitionNotesImage.svg";
+import TransitionTimeNotesImage from "../assets/images/TransitionTimeNotesImage.svg";
 import ClassroomClimateNotesImage from "../assets/images/ClassroomClimateNotesImage.svg";
-import MathNotesImage from "../assets/images/MathNotesImage.svg";
+import MathInstructionNotesImage from "../assets/images/MathInstructionNotesImage.svg";
 import EngagementNotesImage from "../assets/images/EngagementNotesImage.svg";
 import InstructionNotesImage from "../assets/images/InstructionNotesImage.svg";
 import ListeningNotesImage from "../assets/images/ListeningNotesImage.svg";
@@ -21,7 +21,7 @@ import SequentialNotesImage from "../assets/images/SequentialNotesImage.svg";
 import AssocCoopNotesImage from "../assets/images/AssocCoopNotesImage.svg";
 import TransitionTimeLookForsImage from "../assets/images/TransitionTimeLookForsImage.svg";
 import ClassroomClimateLookForsImage from "../assets/images/ClassroomClimateLookForsImage.svg";
-import MathLookForsImage from "../assets/images/MathLookForsImage.svg";
+import MathInstructionLookForsImage from "../assets/images/MathInstructionLookForsImage.svg";
 import EngagementLookForsImage from "../assets/images/EngagementLookForsImage.svg";
 import InstructionLookForsImage from "../assets/images/InstructionLookForsImage.svg";
 import ListeningLookForsImage from "../assets/images/ListeningLookForsImage.svg";
@@ -32,8 +32,11 @@ import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from "@material-ui/core/es";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
+import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
+import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
@@ -131,10 +134,6 @@ class Dashboard extends React.Component {
       lookForsIcon: null,
       notesIcon: null
     };
-    // Assigning for scope
-    this.resetTransitionTime = resetTransitionTime;
-    this.emptyClimateStack = emptyClimateStack;
-    this.deleteAllCenters = deleteAllCenters;
   }
 
   /** lifecycle method invoked after component mounts */
@@ -143,7 +142,7 @@ class Dashboard extends React.Component {
       ? this.setState({
           icon: TransitionTimeIconImage,
           lookForsIcon: TransitionTimeLookForsImage,
-          notesIcon: TransitionNotesImage
+          notesIcon: TransitionTimeNotesImage
         })
       : this.props.magic8 === "Classroom Climate"
       ? this.setState({
@@ -154,8 +153,8 @@ class Dashboard extends React.Component {
       : this.props.magic8 === "Math Instruction"
       ? this.setState({
           icon: MathIconImage,
-          lookForsIcon: MathLookForsImage,
-          notesIcon: MathNotesImage
+          lookForsIcon: MathInstructionLookForsImage,
+          notesIcon: MathInstructionNotesImage
         })
       : this.props.magic8 === "Student Engagement"
       ? this.setState({
@@ -222,24 +221,21 @@ class Dashboard extends React.Component {
     return (
       <div>
         {this.state.help ? (
-          <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
-            {(() => {
-              switch (magic8) {
-                case "Transition Time":
-                  return <TransitionTimeHelp />;
-                case "Classroom Climate":
-                  return <ClassroomClimateHelp />;
-                case "Associative and Cooperative":
-                    return <AssocCoopHelp />;
-                case "Sequential Activities":
-                    return <SequentialActivitiesHelp />;
-                case "Student Engagement":
-                  return <StudentEngagementHelp />;
-                default:
-                  return <div />;
-              }
-            })()}
-          </ClickAwayListener>
+          magic8 === "Transition Time" ? 
+            <TransitionTimeHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : magic8 === "Classroom Climate" ?
+            <ClassroomClimateHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : magic8 === "Math Instruction" ? 
+            <MathInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : magic8 === "Associative and Cooperative" ?
+            <AssocCoopHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : magic8 === "Sequential Activities" ?
+            <SequentialActivitiesHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : magic8 === "Level of Instruction" ?
+            <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : magic8 === "Listening to Children" ? 
+            <ListeningToChildrenHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : <div />
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>
             {firebase => (
@@ -325,15 +321,15 @@ class Dashboard extends React.Component {
                       shouldOpen={true}
                       onAccept={() => {
                         magic8 === "Classroom Climate"
-                          ? this.emptyClimateStack()
+                          ? this.props.emptyClimateStack()
                           : magic8 === "Transition Time"
-                          ? this.resetTransitionTime()
-                          : this.deleteAllCenters();
-                        this.props.history.push({
-                          pathname: "/Home",
-                          state: this.props.history.state
-                        });
-                        firebase.endSession();
+                          ? this.props.resetTransitionTime()
+                          : this.props.deleteAllCenters();
+                          this.props.history.push({
+                            pathname: "/Home",
+                            state: this.props.history.state
+                          });
+                          firebase.endSession();
                       }}
                     />
                   )}
@@ -364,7 +360,14 @@ Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   infoPlacement: PropTypes.string.isRequired,
-  completeObservation: PropTypes.bool.isRequired
+  completeObservation: PropTypes.bool.isRequired,
+  // These Are mapped from Redux into Props
+  resetTransitionTime: PropTypes.func.isRequired,
+  emptyClimateStack: PropTypes.func.isRequired,
+  deleteAllCenters: PropTypes.func.isRequired
 };
 
-export default withRouter(connect()(withStyles(styles)(Dashboard)));
+export default withRouter(connect(
+    null,
+    { resetTransitionTime, emptyClimateStack, deleteAllCenters }
+)(withStyles(styles)(Dashboard)));
