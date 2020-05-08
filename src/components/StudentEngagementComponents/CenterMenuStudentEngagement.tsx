@@ -19,12 +19,13 @@ import CardContent  from '@material-ui/core/CardContent';
 import Paper  from '@material-ui/core/Paper';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
 import CircularProgressbar from "react-circular-progressbar";
-
+import Modal from "@material-ui/core/Modal"
 import grey from "@material-ui/core/colors/grey";
 import {amber} from "@material-ui/core/colors";
 import * as firebase from "firebase";
 import * as Constants from "constants";
-
+import {func} from "prop-types";
+import ObserveImage from '../../assets/images/ObserveImage.png';
 
 const styles: object = theme => ({
     root: {
@@ -44,7 +45,67 @@ const styles: object = theme => ({
     inline: {
         display: 'inline',
     },
+    paper: {
+        position: "absolute",
+        width: "67%",
+        backgroundColor: 'white',
+        padding: '2em',
+        borderRadius: 8
+    }
 });
+
+/**
+ * specifies styling for modal
+ * @return {css}
+ */
+function getModalStyle() {
+    return {
+        position: "fixed",
+        top: `50%`,
+        left: `50%`,
+        transform: `translate(-50%, -50%)`
+    } as React.CSSProperties;
+}
+
+const BootstrapButton = withStyles({
+    root: {
+        boxShadow: 'none',
+        textTransform: 'none',
+        fontSize: 16,
+        padding: '6px 12px',
+        border: '1px solid',
+        lineHeight: 1.5,
+        backgroundColor: '#e99b2e',
+        borderColor: '#e99b2e',
+        textColor: '#ffffff',
+        borderRadius: '50%',
+        fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(','),
+        '&:hover': {
+            backgroundColor: '#0069d9',
+            borderColor: '#0062cc',
+            boxShadow: 'none',
+        },
+        '&:active': {
+            boxShadow: 'none',
+            backgroundColor: '#0062cc',
+            borderColor: '#005cbf',
+        },
+        '&:focus': {
+            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+        },
+    },
+})(Button);
 
 interface Style {
     paper: string,
@@ -56,6 +117,7 @@ interface Props {
     observedBy: number,
     time: number,
     handleTimerReset(): void,
+    handleTimerStart(): void,
     firebase: {
         auth: {
             currentUser: {
@@ -63,7 +125,7 @@ interface Props {
             }
         },
         handleSession(entry: object): void,
-        handlePushSE(totalPointsPerRun: any): void
+        handlePushSEEachEntry(mEntry: object): void
     },
 }
 
@@ -74,9 +136,9 @@ interface State {
     studentTextFieldValue: string
     status: any,
     currentStudent: number,
-    nthRun: number,
-    totalPointsPerRun: Array<number>,
+    entries: number,
     selectedPoint: number,
+    modal: boolean
 }
 
 const NAME_LIST = 0;
@@ -88,7 +150,6 @@ const OBSERVATION = 1;
  */
 class CenterMenuStudentEngagement extends React.Component<Props, State> {
 
-
     /**
      * @param {Props} props
      */
@@ -97,7 +158,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
         const mEntry = {
             teacher: this.props.teacherId,
             observedBy: this.props.firebase.auth.currentUser.uid,
-            type: "SE"
+            type: "engagement",
         };
         this.props.firebase.handleSession(mEntry);
     }
@@ -109,9 +170,10 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
         studentTextFieldValue: '' as string,
         status: NAME_LIST as any,
         currentStudent: 0 as number,
-        nthRun: 0 as number,
-        totalPointsPerRun: [0] as number[],
         selectedPoint: -1 as number,
+        entryType: -1 as number,
+        entries: 0 as number,
+        modal: true as boolean,
     };
 
 
@@ -122,8 +184,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     handleClose = () => {
         this.setState({ setOpen: false });
     };
-
-
 
     handleAddStudent = (studentName: string): void => {
         if(studentName){
@@ -149,34 +209,69 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     }
 
     handleSkipRating = () => {
-        if((this.state.currentStudent +1) % this.state.students.length === 0){
-            this.setState({nthRun: this.state.nthRun +1 });
-        }
-        this.handleSelectedValue(-1);
-        this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
         this.props.handleTimerReset();
+        this.handleSelectedValue(-1);
+        let mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint};
+        this.props.firebase.handlePushSEEachEntry(mEntry);
+        this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
+        this.showModalForNextPerson();
     }
 
     handleConfirmRating = () => {
         if(this.state.selectedPoint !== -1){
-            //creates the clone of the state
-            let pointsState = this.state.totalPointsPerRun.slice();
-            pointsState[this.state.nthRun] = isNaN(pointsState[this.state.nthRun])? 0 : pointsState[this.state.nthRun]+ this.state.selectedPoint;
-            this.setState({ totalPointsPerRun: pointsState, selectedPoint: -1 });
-
-
-            if((this.state.currentStudent +1) % this.state.students.length === 0){
-                this.setState({nthRun: this.state.nthRun +1 });
-            }
+            let mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: this.state.entryType};
+            console.log(mEntry);
+            this.props.firebase.handlePushSEEachEntry(mEntry);
             this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
             this.props.handleTimerReset();
             this.handleSelectedValue(-1);
-            this.props.firebase.handlePushSE(this.state.totalPointsPerRun);
+            this.setState({entries: this.state.entries+1});
+            this.showModalForNextPerson();
         }
     }
 
+    showModalForNextPerson = () =>{
+        this.setState({modal: true});
+        this.props.handleTimerReset();
+    }
+
+    beginObservingStudent = () =>{
+        this.setState({modal: false});
+        this.props.handleTimerStart();
+    }
+
+    generateHashCodeOfStudent = function(){
+       return this.hashCode(this.state.students[this.state.currentStudent].concat(this.state.currentStudent))
+    }
+
+    /**
+     * Returns a hash code for a string.
+     * (Compatible to Java's String.hashCode())
+     *
+     * The hash code for a string object is computed as
+     *     s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
+     * using number arithmetic, where s[i] is the i th character
+     * of the given string, n is the length of the string,
+     * and ^ indicates exponentiation.
+     * (The hash value of the empty string is zero.)
+     *
+     * @param {string} s a string
+     * @return {number} a hash code value for the given string.
+     */
+    hashCode = function(s: string) {
+        let h = 0; const l = s.length; let i = 0;
+        if ( l > 0 )
+            while (i < l)
+                h = (h << 5) - h + s.charCodeAt(i++) | 0;
+        return h;
+    };
+
     handleSelectedValue=(point: number) =>{
         this.setState({ selectedPoint: point });
+    }
+
+    handleSelectedType = (type: number) => {
+        this.setState({ entryType: type });
     }
 
 
@@ -186,7 +281,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
         teacherId: PropTypes.string,
         firebase: PropTypes.object.isRequired,
         time: PropTypes.number.isRequired,
-        handleTimerReset: PropTypes.func.isRequired
+        handleTimerReset: PropTypes.func.isRequired,
+        handleTimerStart: PropTypes.func.isRequired,
     }
 
 
@@ -277,7 +373,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             alignItems="center"
                             direction="row"
                             justify="center"
-                            style={{marginTop: 50}}
                         >
                             <Grid
                                 alignItems="flex-start"
@@ -320,6 +415,45 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 );
             case OBSERVATION:
                 return (
+                    <>
+                        <Modal
+                            open={this.state.modal}>
+                            <div style={getModalStyle()} className={classes.paper}>
+                                <Grid
+                                    container
+                                    alignItems="center"
+                                    direction="column"
+                                    justify="flex-start"
+                                >
+
+                                    <Typography variant="h6" gutterBottom style={{fontFamily: "Arimo"}}>
+                                       Start Observing this Student
+                                    </Typography>
+                                    <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+                                        {this.state.students[this.state.currentStudent].charAt(0).toUpperCase()+this.state.students[this.state.currentStudent].substr(1)}
+                                    </Typography>
+                                    <Grid
+                                        alignItems="center"
+                                        direction="column"
+                                        justify="space-around"
+                                        container
+                                        item xs={6}
+                                    >
+                                        <img src={ObserveImage} onClick={() =>this.beginObservingStudent()}/>
+                                        <Button color="primary" variant="contained" className={classes.button} style={{fontFamily: "Arimo"}} onClick={() =>this.beginObservingStudent()}>
+                                            Begin Observation
+                                        </Button>
+                                        <Button variant="outlined"  style={{fontFamily: "Arimo", color: "red", }} onClick={() =>this.handleSkipRating()}>
+                                            Skip
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </div>
+                        </Modal>
+                    <Button variant="flat" style={{margin: 10}} onClick={() =>this.switchToNameList()}>
+                        <BackIcon/>  Back
+                    </Button>
+
                     <Grid
                         container
                         alignItems="center"
@@ -333,24 +467,12 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             justify="space-between"
                             container
                             item xs={12}
+                            style={{height: 10}}
                         >
                             <Grid item xs={10}>
-                            <Button variant="contained"style={{fontFamily: "Arimo"}} onClick={() =>this.switchToNameList()}>
-                                <BackIcon/>  Back
-                            </Button>
                             </Grid>
                             <Grid item xs={2}>
-                            <CircularProgressbar
-                                fill="#FFFFFF"
-                                percentage={this.state.currentStudent/this.state.students.length === 0 ? 1: (this.state.currentStudent/this.state.students.length)*100}
-                                text={`Sweep ${this.state.nthRun + 1 }`}
-                                initialAnimation={false}
-                                styles={{
-                                    path: { stroke: "#e99b2e" },
-                                    text: { fill: "#e99b2e", fontSize: "16px" },
-                                    background: { fill: "#e99b2e" }
-                                }}
-                            /></Grid>
+                            </Grid>
                         </Grid>
                         <Grid
                             alignItems="center"
@@ -380,7 +502,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             justify="space-between"
                             container
                             item xs={8}
-                            style={{marginTop: 150, marginBottom: 50}}
+                            style={{marginTop: 100, marginBottom: 50}}
                         >
                             <Button
                                 variant={this.state.selectedPoint === 0? "contained": "outlined"}
@@ -499,6 +621,92 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             </Button>
                         </Grid>
                         <Grid
+                            alignItems="stretch"
+                            direction="row"
+                            justify="space-around"
+                            container
+                            item xs={8}
+                            style={{marginTop: 20, marginBottom: 20}}
+                        >
+                            <BootstrapButton
+                                variant={this.state.entryType === 0? "contained": "outlined"}
+                                disabled={this.props.time!=0?true:false}
+                                style={{
+                                    minHeight: 100,
+                                    maxHeight: 100,
+                                    minWidth: 100,
+                                    maxWidth: 100,
+                                    fontFamily: "Arimo",
+                                    fontSize: 14
+                                }}
+                                onClick={()=>this.handleSelectedType(0)}
+                            >
+                                <Grid
+                                    alignItems="center"
+                                    direction="column"
+                                    justify="center"
+                                    container
+                                    item xs={12}
+                                >
+                                    <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
+                                        Small Group
+                                    </Typography>
+                                </Grid>
+                            </BootstrapButton>
+                            <BootstrapButton
+                                variant={this.state.entryType === 1? "contained": "outlined"}
+                                disabled={this.props.time!=0?true:false}
+                                style={{
+                                    minHeight: 100,
+                                    maxHeight: 100,
+                                    minWidth: 100,
+                                    maxWidth: 100,
+                                    fontFamily: "Arimo",
+                                    fontSize: 14
+                                }}
+                                onClick={()=>this.handleSelectedType(1)}
+
+                            >
+                                <Grid
+                                    alignItems="center"
+                                    direction="column"
+                                    justify="center"
+                                    container
+                                    item xs={12}
+                                >
+                                    <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
+                                        Whole Group
+                                    </Typography>
+                                </Grid>
+                            </BootstrapButton>
+                            <BootstrapButton
+                                disabled={this.props.time!=0?true:false}
+                                variant={this.state.entryType === 2? "contained": "outlined"}
+                                style={{
+                                    minHeight: 100,
+                                    maxHeight: 100,
+                                    minWidth: 100,
+                                    maxWidth: 100,
+                                    fontFamily: "Arimo",
+                                    fontSize: 14,
+                                }}
+                                onClick={()=>this.handleSelectedType(2)}
+
+                            >
+                                <Grid
+                                    alignItems="center"
+                                    direction="column"
+                                    justify="center"
+                                    container
+                                    item xs={12}
+                                >
+                                    <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
+                                        Transition
+                                    </Typography>
+                                </Grid>
+                            </BootstrapButton>
+                        </Grid>
+                        <Grid
                             alignItems="center"
                             direction="row"
                             justify="space-between"
@@ -512,7 +720,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                 CONFIRM RATING
                             </Button>
                         </Grid>
-                    </Grid>);
+                    </Grid>
+                        </>);
             default:
                 return <div>Unknown status value!!!</div>;
         }
@@ -528,6 +737,7 @@ CenterMenuStudentEngagement.propTypes = {
     firebase: PropTypes.object.isRequired,
     time: PropTypes.number.isRequired,
     handleTimerReset: PropTypes.func.isRequired,
+    handleTimerStart: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(CenterMenuStudentEngagement);

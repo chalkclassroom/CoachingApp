@@ -5,7 +5,6 @@ import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
-import RatingModal from "../../../components/ClassroomClimateComponent/RatingModal";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import CenterMenuStudentEngagement from "../../../components/StudentEngagementComponents/CenterMenuStudentEngagement";
 import { connect } from "react-redux";
@@ -27,17 +26,16 @@ import Countdown from "../../../components/Countdown.tsx";
 
 const RATING_INTERVAL = 5000;
 
-const styles = {
+const styles: object = {
     root: {
         flexGrow: 1,
         backgroundColor: "#ffffff",
         display: "flex",
         minHeight: "100vh",
-        flexDirection: "column",
-        overflow: 'hidden'
+        flexDirection: "column"
     },
     grow: {
-        flexGrow: 1
+        flexGrow: 0
     }
 };
 
@@ -50,7 +48,6 @@ class StudentEngagementPage extends React.Component {
         auth: true,
         time: RATING_INTERVAL,
         recs: true,
-        incompleteRating: false,
         completeEnabled: false,
     };
 
@@ -70,16 +67,9 @@ class StudentEngagementPage extends React.Component {
         this.setState({ help: false });
     };
 
-    handleIncomplete = () => {
-        this.setState({ incompleteRating: true });
-    };
-
-    handleClickAwayIncomplete = () => {
-        this.setState({ incompleteRating: false });
-    };
-
     handleTimerReset = ()=>{
         this.setState({ time: RATING_INTERVAL });
+        clearInterval(this.timer);
     }
 
     /**
@@ -89,15 +79,10 @@ class StudentEngagementPage extends React.Component {
         this.setState({ completeEnabled: enable });
     };
 
-    /** lifecycle method invoked after component mounts */
-    componentDidMount() {
+    handleTimerStart = () =>{
         this.timer = setInterval(this.tick, 1000);
     }
 
-    /** lifecycle method invoked just before component is unmounted */
-    componentWillUnmount() {
-        clearInterval(this.timer);
-    }
     /**
      * render function
      * @return {ReactElement}
@@ -108,26 +93,16 @@ class StudentEngagementPage extends React.Component {
                 <FirebaseContext.Consumer>
                     {firebase => <AppBar firebase={firebase} />}
                 </FirebaseContext.Consumer>
-                <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
-                    <RatingModal
-                        handleRatingConfirmation={this.handleRatingConfirmation}
-                        handleIncomplete={this.handleIncomplete}
-                    />
-                </Modal>
-                <Modal open={this.state.incompleteRating}>
-                </Modal>
-                <main style={{ flex: 1 }}>
                     <Grid
                         container
                         alignItems={"center"}
                         justify={"center"}
-                        direction={"column"}
-                        style={{ margin: 10 }}
+                        direction={"row"}
                     >
                         <Grid
                             container
-                            alignItems={"center"}
-                            justify={"center"}
+                            alignItems={"flex-start"}
+                            justify={"flex-start"}
                             direction={"row"}
                         >
                             <Grid item xs={3}>
@@ -149,9 +124,7 @@ class StudentEngagementPage extends React.Component {
                                     />
                                 </Grid>
                             </Grid>
-                            <Grid item xs={8}
-                                  style={{ margin: 10 }}
-                            >
+                            <Grid item xs={8}>
                                     <FirebaseContext.Consumer>
                                         {firebase => (
                                             <CenterMenuStudentEngagement
@@ -160,13 +133,13 @@ class StudentEngagementPage extends React.Component {
                                                 onStatusChange={this.handleCompleteButton}
                                                 time={this.state.time}
                                                 handleTimerReset = {this.handleTimerReset}
+                                                handleTimerStart = {this.handleTimerStart}
                                             />
                                         )}
                                     </FirebaseContext.Consumer>
                             </Grid>
                         </Grid>
                     </Grid>
-                </main>
             </div>
         );
     }

@@ -426,17 +426,14 @@ class Firebase {
       );
   };
 
-    handlePushSE = async function(totalPointsPerRun) {
-        console.log("handle push SE Called with points:", totalPointsPerRun)
-        for(let i = 0;i<totalPointsPerRun;i++){
-            if(totalPointsPerRun[i] === null){
-                totalPointsPerRun[i] = 0;
-            }
-        }
+    handlePushSEEachEntry = async function(mEntry) {
         return this.sessionRef
-            .set({
-                totalPoints: totalPointsPerRun,
-            }, { merge: true })
+            .collection("entries")
+            .add({
+                studentId: mEntry.id,
+                point: mEntry.point,
+                Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
             .catch(error =>
                 console.error("Error occurred adding observation: ", error)
             );
