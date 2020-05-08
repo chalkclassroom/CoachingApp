@@ -30,6 +30,7 @@ import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/As
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
 import StudentEngagementPage from "./views/protected/StudentEngagementViews/StudentEngagementPage.tsx";
+import StudentEngagementResultsPage from "./views/protected/StudentEngagementViews/StudentEngagementResultsPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
 import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
@@ -275,6 +276,11 @@ class App extends Component {
                 auth={this.state.auth}
                 path="/StudentEngagement"
                 component={StudentEngagementPage}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/StudentEngagementResults"
+                component={StudentEngagementResultsPage}
             />
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                           the type prop into the PrivateRoute function*/}

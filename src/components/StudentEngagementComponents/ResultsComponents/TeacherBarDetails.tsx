@@ -1,22 +1,20 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar } from "react-chartjs-2";
-import * as Constants from "../../../constants";
-
 
 interface Props {
-  math1: number,
-  math2: number,
-  math3: number,
-  math4: number
+  teacher1: number,
+  teacher2: number,
+  teacher3: number,
+  teacher4: number
 }
 
 /**
- * Horizontal Bar Graph for Math Child Behaviors
- * @class EngagementBarDetails
+ * Horizontal Bar Chart for Associative&Cooperative Teacher Behaviors
+ * @class TeacherBarDetails
  * @return {void}
  */
-class ChildBarDetails extends React.Component<Props, {}> {
+class TeacherBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -25,10 +23,10 @@ class ChildBarDetails extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    math1: PropTypes.number.isRequired,
-    math2: PropTypes.number.isRequired,
-    math3: PropTypes.number.isRequired,
-    math4: PropTypes.number.isRequired
+    teacher1: PropTypes.number.isRequired,
+    teacher2: PropTypes.number.isRequired,
+    teacher3: PropTypes.number.isRequired,
+    teacher4: PropTypes.number.isRequired
   };
 
   /**
@@ -36,34 +34,34 @@ class ChildBarDetails extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const childBehaviorsData = {
+    const teacherBehaviorsData = {
       labels: [
-        "Counting and Numbers",
-        "Shapes and Spatial Reasoning",
-        "Patterns",
-        "Measurement and Data"
+        ["Helping children do sequential", "activities with manipulatives or toys"],
+        ["Supporting children as they draw", "images or write messages"],
+        ["Demonstrating the steps to an", "activity or game"],
+        ["Supporting children as they act out", "a dramatic play scenario or book"],
       ],
       datasets: [
         {
-          data: [this.props.math1, this.props.math2, this.props.math3, this.props.math4],
-          backgroundColor: [Constants.MathColor, Constants.MathColor, Constants.MathColor, Constants.MathColor],
-          hoverBackgroundColor: [Constants.MathColor, Constants.MathColor, Constants.MathColor, Constants.MathColor]
+          data: [this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4],
+          backgroundColor: ["#459aeb", "#459aeb", "#459aeb", "#459aeb"],
+          hoverBackgroundColor: ["#459aeb", "#459aeb", "#459aeb", "#459aeb"]
         }
       ]
     };
 
     return (
       <HorizontalBar
-        data={childBehaviorsData}
+        data={teacherBehaviorsData}
         options={{
           scales: {
             xAxes: [
               {
                 ticks: {
                   min: 0,
-                  max:
-                    (Math.max(this.props.math1, this.props.math2, this.props.math3, this.props.math4) > 20) ? 
-                    Math.max(this.props.math1, this.props.math2, this.props.math3, this.props.math4) : 20,
+                  max: 
+                    (Math.max(this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4) > 20) ? 
+                    Math.max(this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4) : 20,
                   fontSize: 16,
                   fontColor: 'black'
                 },
@@ -104,5 +102,4 @@ class ChildBarDetails extends React.Component<Props, {}> {
   }
 }
 
-
-export default ChildBarDetails;
+export default TeacherBarDetails;

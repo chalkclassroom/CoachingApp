@@ -16,7 +16,7 @@ interface Props {
  * @class EngagementBarDetails
  * @return {void}
  */
-class ChildBarDetails extends React.Component<Props, {}> {
+class EngagementBarDetails extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -105,4 +105,4 @@ class ChildBarDetails extends React.Component<Props, {}> {
 }
 
 
-export default ChildBarDetails;
+export default EngagementBarDetails;

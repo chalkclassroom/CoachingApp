@@ -4,16 +4,15 @@ import { Pie } from "react-chartjs-2";
 import * as Constants from '../../../constants';
 
 interface Props {
-  math: number,
-  notMath: number,
+  avgRating: number,
 }
 
 /**
- * Pie Chart for Math Child Behaviors
- * @class AvgBarSummary
+ * Pie Chart for Associative&Cooperative Child Behaviors
+ * @class ChildBehaviorsPie
  * @return {void}
  */
-class ChildPieSummary extends React.Component<Props, {}> {
+class AvgBarSummary extends React.Component<Props, {}> {
   /**
    * @param {Props} props 
    */
@@ -22,8 +21,7 @@ class ChildPieSummary extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    math: PropTypes.number.isRequired,
-    notMath: PropTypes.number.isRequired,
+    avgRating: PropTypes.number.isRequired,
   };
 
   /**
@@ -33,14 +31,14 @@ class ChildPieSummary extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const childBehaviorsData = {
       labels: [
-        "Math",
-        "Other Activity",
+        "Sequential Activities",
+        "Non-Sequential Activities",
       ],
       datasets: [
         {
-          data: [this.props.math, this.props.notMath],
-          backgroundColor: [Constants.MathColor, Constants.RedGraphColor],
-          hoverBackgroundColor: [Constants.MathColor, Constants.RedGraphColor]
+          data: [this.props.avgRating],
+          backgroundColor: [Constants.SequentialColor, Constants.RedGraphColor],
+          hoverBackgroundColor: [Constants.SequentialColor, Constants.RedGraphColor]
         }
       ]
     };
@@ -87,4 +85,4 @@ class ChildPieSummary extends React.Component<Props, {}> {
   }
 }
 
-export default ChildPieSummary;
+export default AvgBarSummary;
