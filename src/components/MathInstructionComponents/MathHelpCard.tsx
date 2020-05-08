@@ -13,7 +13,7 @@ import * as Constants from '../../constants';
 const MathTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.MathColor
+      main: Constants.Colors.MI
     },
     secondary: {
       main: '#000000'
@@ -105,7 +105,7 @@ class MathHelpCard extends React.Component<Props, State> {
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: this.state.tabValue === 0 ? 'white' : 'black',
-                      backgroundColor: this.state.tabValue === 0 ? Constants.MathColor : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 0 ? Constants.Colors.MI : '#d3d3d3'
                     }}
                   />
                   <Tab

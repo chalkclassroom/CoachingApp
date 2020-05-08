@@ -9,7 +9,7 @@ import * as Constants from '../../../constants';
 const MathTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.MathColor
+      main: Constants.Colors.MI
     }
   }
 });
@@ -18,8 +18,7 @@ interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
-  teacherId: string,
-  magic8: string
+  teacherId: string
 }
 
 interface State {
@@ -186,8 +185,8 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.MathColor}
+              magic8={"Math Instruction"}
+              color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "measurement" ? (
             <DataQuestions
@@ -198,8 +197,8 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.MathColor}
+              magic8={"Math Instruction"}
+              color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "patterns" ? (
             <DataQuestions
@@ -210,8 +209,8 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.MathColor}
+              magic8={"Math Instruction"}
+              color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "shapes" ? (
             <DataQuestions
@@ -222,8 +221,8 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.MathColor}
+              magic8={"Math Instruction"}
+              color={Constants.Colors.MI}
             />
           ) : this.state.categoryView === "teacherSupport" ? (
             <DataQuestions
@@ -234,8 +233,8 @@ class MathCoachingQuestions extends React.Component<Props, State> {
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.MathColor}
+              magic8={"Math Instruction"}
+              color={Constants.Colors.MI}
             />
           ) : <div/>}
         </Grid>

@@ -568,7 +568,155 @@ const questionBank = {
         "two turns."
     },
   ],
-  'listening':[],
+  'listening':[
+    {
+      text: "The Listening to Children practice refers to two important behaviors " +
+        "that contribute to a high-quality ________ environment: the amount of " +
+        "teacher listening to children and the amount of ________ talk.",
+      options: new Map([
+        ["academic; teacher", false],
+        ["language; teacher", false],
+        ["language; child", true],
+        ["indoor; child", false]
+      ]),
+      feedback: "The correct answer is C. The practice of Listening to Children " +
+        "refers to two important indicators of a high-quality language environment--" +
+        "teachers listening to children and children talking."
+    },
+    {
+      text: "Which of the following is NOT one of the teacher behaviors tracked " +
+        "by the observation tool that encourages child talk?",
+      options: new Map([
+        ["Teaching in small groups", true],
+        ["Looking expectantly at children and showing warmth", false],
+        ["Asking open-ended questions", false],
+        ["Positioning oneself at eye level with children", false]
+      ]),
+      feedback: "The correct answer is A. Small group instruction might encourage " +
+        "child talk if the teacher limited her own contributions and asked " +
+        "effective questions. However, teaching in small groups does not automatically " +
+        "encourage child talk; the amount of child talk in small groups depends on " +
+        "the teacher's skill in fostering child participation."
+    },
+    {
+      text: "Which of the following is an example of an open-ended question to " +
+        "encourage child talk?",
+      options: new Map([
+        ["Tell me what that letter is.", false],
+        ["What might happen to Corduroy if Lisa doesn't come back?", true],
+        ["How many do you have?", false],
+        ["Do we need a square or a rectangle to continue our pattern?", false]
+      ]),
+      feedback: "The correct answer is B. Open-ended questions or statements invite " +
+        "children to respond with longer sentences because there is not one correct " +
+        "answer. In this example, children must use their imagination, background " +
+        "knowledge, and clues from the text ot produce a unique answer."
+    },
+    {
+      text: "Teachers play an important role in encouraging children to talk to " +
+        "each other. Which of the following is NOT an example of promoting peer talk?",
+      options: new Map([
+        ["Helping children use role speech or talk in character with each other " +
+          "during dramatic play", false],
+        ["Asking children to talk to their neighbor about a character during a read aloud", false],
+        ["Encouraging two children to talk about their building at the blocks center", false],
+        ["Asking two children to pass out glues for an art project", true]
+      ]),
+      feedback: "The correct answer is D. All of the answers except for D are examples " +
+        "of promoting peer talk. In contrast, asking children to pass out materials " +
+        "might result in one child saying, 'Here,' or 'Glue for you,' but the children " +
+        "are not likely to have a multi-turn conversation about a learning activity."
+    },
+    {
+      text: "Listening and ________ children helps teachers expand on children's play " +
+        "or talk during an activity. This can increase children's involvement level " +
+        "and lead to more child ________.",
+      options: new Map([
+        ["assessing; talk", false],
+        ["assessing; listening", false],
+        ["observing; talk", true],
+        ["observing; listening", false]
+      ]),
+      feedback: "The correct answer is C. When teachers take the time to notice " +
+        "children's actions and listen to their comments, they are better able to " +
+        "respond in ways that expand, or build on children's play or activity. " +
+        "Teacher responses encourage children to continue interacting and talking " +
+        "with teachers and peers."
+    },
+    {
+      text: "The Listening to Children practice is comprised of two related behaviors:",
+      options: new Map([
+        ["teacher listening and teacher instructing", false],
+        ["teacher listening and child talk", true],
+        ["teacher instruction and child listening", false],
+        ["teacher instruction and child talking"]
+      ]),
+      feedback: "The correct answer is B. The Listening to Children practice refers " +
+        "to two indicators of a high-quality language environment--teachers listening " +
+        "to children and children talking. Both are important for supporting children's " +
+        "learning."
+    },
+    {
+      text: "Which of the following is one of the teacher behaviors tracked by the " +
+        "observation tool that encourages child talk?",
+      options: new Map([
+        ["Teaching in small groups", false],
+        ["Giving children classroom jobs", false],
+        ["Reading books to children", false],
+        ["Looking expectantly at children and showing warmth", true]
+      ]),
+      feedback: "The correct answer is D. When teachers look expectantly at children " +
+        "with a positive expression, their body lanugage shows interest in what children " +
+        "say. This may encourage children to start talking or continue talking during " +
+        "conversation."
+    },
+    {
+      text: "During a small group lesson, children buidl shapes using rubber bands on " +
+        "geoboards. The teacher says, 'Look, Dwayne made a square and Lucy made a " + 
+        "traingle. How are their shapes different?' In this scenario, which of the " +
+        "following strategies did the teacher use?",
+      options: new Map([
+        ["Encouraging children to talk to peers", false],
+        ["Repeating or clarifying children's comments", false],
+        ["Asking open-ended questions", true],
+        ["Using questions or comments to expand on children's play or talk", false]
+      ]),
+      feedback: "The correct answer is C. Open-ended questions do not have one correct " +
+        "answer, and they typically encourage children to answer in longer sentences. " +
+        "Children can think of several ways that the shapes are different."
+    },
+    {
+      text: "A teacher observes two children in the dramatic play center silently " +
+        "taking dishes and food out of the cupboards and placing them on the table. " +
+        "She walks over to them and says, 'Louisa, why don't you ask Valerie what she " +
+        "wants for breakfast?' What kind of teacher behavior is this?",
+      options: new Map([
+        ["Encouraging children to talk to peers", true],
+        ["Repeating or clarifying children's comments", false],
+        ["Being at eye-level with children", false],
+        ["Looking expectantly at children and showing warmth", false]
+      ]),
+      feedback: "The correct answer is A. When teachers facilitate talk between " +
+        "children, they provide specific prompts to help children talk to peers or " +
+        "solve problems together during activities."
+    },
+    {
+      text: "A teacher observes two children in the dramatic play center silently " +
+        "taking dishes and food out of the cupboards and placing them on the table. " +
+        "She walks over to them and says, 'Who wants to play pet store with me?' " +
+        "This is an example of the teacher using questions or comments to expand on " +
+        "children's play or talk.",
+      options: new Map([
+        ["True", false],
+        ["False", true]
+      ]),
+      feedback: "The correct answer is False. The teacher's question about the pet store " +
+        "is not responsive to what the children are already playing; therefore, her comment " +
+        "does not expand, or add to, children's play. If she had said, 'I see you are " +
+        "getting ready for dinner. Who is coming to eat?' she would be expanding on " +
+        "their play actions."
+    }
+  ],
   'sequential':[
     {
       text: "Sequential activities can happen when",

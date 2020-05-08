@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import "./App.css";
 import WelcomePage from "./views/WelcomeViews/WelcomePage.tsx";
-import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage";
+import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage.tsx";
 import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage.tsx";
 import LevelOfInstructionResultsPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionResultsPage.tsx";
 import Magic8MenuPage from "./views/protected/Magic8MenuPage";
@@ -12,6 +12,8 @@ import TransitionTimePage from "./views/protected/TransitionViews/TransitionTime
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
 import HomePage from "./views/protected/HomeViews/HomePage";
 import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
+import ActionPlanListPage from "./views/protected/ActionPlanViews/ActionPlanListPage";
+import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView';
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -31,15 +33,21 @@ import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateView
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
 import StudentEngagementPage from "./views/protected/StudentEngagementViews/StudentEngagementPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
-import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
+import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage.tsx"; 
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
 import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage';
+import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
+import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
 import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import ReactGA from 'react-ga';
+import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
+import Grid from '@material-ui/core/Grid';
+import { getCoach } from './state/actions/coach';
+import { connect } from 'react-redux';
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -124,9 +132,12 @@ class App extends Component {
   componentDidMount() {
     this.removeListener = this.props.firebase.auth.onAuthStateChanged(user => {
       if (user) {
-        this.setState({
-          auth: true,
-          loading: false
+        this.props.firebase.getCoachFirstName().then(name => {
+          this.props.getCoach(name);
+          this.setState({
+            auth: true,
+            loading: false
+          });
         });
       } else {
         this.setState({
@@ -148,13 +159,36 @@ class App extends Component {
    */
   render() {
     return this.state.loading === true ? (
-      <h1>Loading</h1>
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        style={{height: "100vh"}}
+      >
+        <img src={CHALKLogoGIF} alt="Loading" width="80%" />
+      </Grid>
     ) : (
       <BrowserRouter>
         <MuiThemeProvider theme={styles}>
           <Switch>
-            <Route exact path="/" component={WelcomePage} />
+            <Route
+              exact
+              path="/"
+              render={props =>
+                this.state.auth === true ? (
+                  <Redirect to={{ pathname: '/Home', state: { from: props.location } }} />
+                ) : (
+                  <WelcomePage />
+                )
+              }
+            />
             <Route exact path="/forgot" component={ForgotPasswordPage} />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/Landing"
+              component={WelcomePage}
+            />
             <PrivateRoute
               auth={this.state.auth}
               path="/Invite"
@@ -182,6 +216,16 @@ class App extends Component {
             />
             <PrivateRoute
               auth={this.state.auth}
+              path="/ActionPlans"
+              component={ActionPlanListPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ActionPlan"
+              component={ActionPlanView}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
               path="/TransitionTime"
               component={TransitionTimePage}
             />
@@ -199,6 +243,16 @@ class App extends Component {
               auth={this.state.auth}
               path="/ListeningToChildren"
               component={ListeningToChildrenPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ListeningToChildrenResults"
+              component={ListeningToChildrenResultsPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ListeningToChildrenTraining"
+              component={ListeningToChildrenTrainingPage}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -321,7 +375,8 @@ class App extends Component {
 }
 
 App.propTypes = {
-  firebase: PropTypes.object.isRequired
+  firebase: PropTypes.object.isRequired,
+  getCoach: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(connect(null, {getCoach})(App));

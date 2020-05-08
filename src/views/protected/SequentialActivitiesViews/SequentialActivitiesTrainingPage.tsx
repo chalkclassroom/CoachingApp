@@ -19,7 +19,7 @@ import Grid from '@material-ui/core/Grid';
 const SequentialTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.SequentialColor
+      main: Constants.Colors.SA
     }
   }
 });

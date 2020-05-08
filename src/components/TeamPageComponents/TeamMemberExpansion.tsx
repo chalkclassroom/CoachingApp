@@ -84,7 +84,7 @@ class TeamMemberExpansion extends React.Component<Props, {}> {
                 <div style={{paddingLeft: 15}} />
                 <Grid item>
                   <a href={`mailto:${this.props.person.email}`}>
-                    <EmailIcon style={{color: Constants.TransitionColor}} />
+                    <EmailIcon style={{color: Constants.Colors.MI}} />
                   </a>
                 </Grid>
               </Grid>
@@ -103,7 +103,7 @@ class TeamMemberExpansion extends React.Component<Props, {}> {
               <a href={this.props.person.link} style={{textDecoration: 'none'}}>
                 <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                   <Grid item>
-                    <Typography variant="subtitle1" className={classes.description} style={{color: Constants.TransitionColor}}>
+                    <Typography variant="subtitle1" className={classes.description} style={{color: Constants.Colors.MI}}>
                       <strong>LEARN MORE ABOUT HER WORK</strong>
                     </Typography>
                   </Grid>

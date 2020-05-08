@@ -1,7 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
+import Button from '@material-ui/core/Button';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
@@ -14,7 +16,7 @@ import {
   emptyClimateStack
 } from "../../../state/actions/classroom-climate";
 import Dashboard from "../../../components/Dashboard";
-import Countdown from "../../../components/Countdown.tsx";
+import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
 
 /*
@@ -26,37 +28,77 @@ import EmptyToneRating from "../../../components/ClassroomClimateComponent/Empty
     and then allow for 2 full minutes in between ratings.
  */
 
-const RATING_INTERVAL = 130000;
+const RATING_INTERVAL: number = 130000;
 
-const styles = {
+const styles: object = {
   root: {
-    flexGrow: 1,
-    backgroundColor: "#ffffff",
     display: "flex",
-    minHeight: "100vh",
+    height: "100vh",
     flexDirection: "column",
-    overflow: 'hidden'
+    backgroundColor: "#ffffff",
+    overflowX: 'hidden',
+    overflowY: 'auto'
   },
   grow: {
     flexGrow: 1
+  },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
   }
 };
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
+interface Props {
+  classes: { root: string, grow: string, backButton: string },
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void
+  },
+  appendClimateRating(rating: number): void
+};
+
+interface State {
+  auth: boolean,
+  time: number,
+  ratingIsOpen: boolean,
+  recs: boolean,
+  incompleteRating: boolean
+}
 
 /**
  * classroom climate observation tool
  * @class ClassroomClimatePage
  */
-class ClassroomClimatePage extends React.Component {
+class ClassroomClimatePage extends React.Component<Props, State> {
   state = {
     auth: true,
     time: RATING_INTERVAL,
     ratingIsOpen: false,
-    ratings: [],
     recs: true,
     incompleteRating: false
   };
 
-  tick = () => {
+  tick = (): void => {
     if (this.state.time <= 0) {
       this.handleRatingModal();
       this.setState({ time: RATING_INTERVAL });
@@ -69,18 +111,18 @@ class ClassroomClimatePage extends React.Component {
     }
   };
 
-  handleRatingModal = () => {
+  /**
+   * @return {void}
+   */
+  handleRatingModal = (): void => {
     this.setState({ ratingIsOpen: true });
-  };
-
-  handleClickAway = () => {
-    this.setState({ help: false });
   };
 
   /**
    * @param {number} rating
+   * @return {void}
    */
-  handleRatingConfirmation = rating => {
+  handleRatingConfirmation = (rating: number): void => {
     this.setState({ ratingIsOpen: false });
 
     this.props.appendClimateRating(rating);
@@ -94,11 +136,17 @@ class ClassroomClimatePage extends React.Component {
     firebase.handlePushClimate(entry);
   };
 
-  handleIncomplete = () => {
+  /**
+   * @return {void}
+   */
+  handleIncomplete = (): void => {
     this.setState({ incompleteRating: true });
   };
 
-  handleClickAwayIncomplete = () => {
+  /**
+   * @return {void}
+   */
+  handleClickAwayIncomplete = (): void => {
     this.setState({ incompleteRating: false });
   };
 
@@ -111,15 +159,24 @@ class ClassroomClimatePage extends React.Component {
   componentWillUnmount() {
     clearInterval(this.timer);
   }
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    history: PropTypes.exact({
+      replace: PropTypes.func
+    }).isRequired,
+    appendClimateRating: PropTypes.func.isRequired
+  }
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
           <RatingModal
@@ -132,13 +189,34 @@ class ClassroomClimatePage extends React.Component {
             <EmptyToneRating />
           </ClickAwayListener>
         </Modal>
+        <header>
+          <Grid container direction="row" alignItems="center" justify="flex-start">
+            <Grid item xs={3}>
+              <Grid container alignItems="center" justify="center">
+                <Grid item>
+                <Button variant="contained" size="medium" className={this.props.classes.backButton}
+                    onClick={(): void => {
+                      this.props.history.replace({
+                        pathname: "/Magic8Menu",
+                        state: {
+                          type: "Observe"
+                        }
+                      })
+                    }}>
+                    <ChevronLeftRoundedIcon />
+                    <b>Back</b>
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </header>
         <main style={{ flex: 1 }}>
           <Grid
             container
             alignItems={"center"}
             justify={"center"}
             direction={"column"}
-            style={{ margin: 10 }}
           >
             <Grid
               container
@@ -146,22 +224,23 @@ class ClassroomClimatePage extends React.Component {
               justify={"center"}
               direction={"row"}
             >
-              <Grid item xs={3}>
+              <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
                 <Grid
                   container
                   alignItems={"center"}
                   justify={"center"}
                   direction={"column"}
                 >
-                  <Dashboard
-                    magic8="Classroom Climate"
-                    color="#0988ec"
-                    infoDisplay={
-                      <Countdown color="#0988ec" time={this.state.time} timerTime={RATING_INTERVAL} />
-                    }
-                    infoPlacement="center"
-                    completeObservation={true}
-                  />
+                  <Grid item>
+                    <Dashboard
+                      type="CC"
+                      infoDisplay={
+                        <Countdown type='CC' time={this.state.time} timerTime={RATING_INTERVAL} />
+                      }
+                      infoPlacement="center"
+                      completeObservation={true}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={9}>
@@ -172,9 +251,8 @@ class ClassroomClimatePage extends React.Component {
                   direction={"column"}
                 >
                   <FirebaseContext.Consumer>
-                    {firebase => (
+                    {(firebase: object): React.ReactNode => (
                       <BehaviorCounter
-                        teacherId={this.props.location.state.teacher.id}
                         firebase={firebase}
                       />
                     )}
@@ -188,12 +266,6 @@ class ClassroomClimatePage extends React.Component {
     );
   }
 }
-
-ClassroomClimatePage.propTypes = {
-  classes: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-  appendClimateRating: PropTypes.func.isRequired
-};
 
 ClassroomClimatePage.contextType = FirebaseContext;
 

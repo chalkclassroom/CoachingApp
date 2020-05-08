@@ -45,7 +45,7 @@ class TransitionTimer extends React.Component {
     };
 
     const mEntry = {
-      teacher: this.props.teacherId,
+      teacher: this.props.teacherSelected.id,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "transition"
     };
@@ -124,15 +124,15 @@ class TransitionTimer extends React.Component {
       <MuiThemeProvider theme={theme}>
         <div style={{ width: 400, fontFamily: 'Arimo' }}>
           <CircularProgressbar
-            fill={Constants.TransitionColor}
+            fill={Constants.Colors.TT}
             background
             percentage={this.state.percentage}
             text={this.state.time === 0 ? "0:00" : ms(this.state.time)}
             initialAnimation={false}
             styles={{
-              path: { stroke: Constants.TransitionColor },
+              path: { stroke: Constants.Colors.TT },
               text: { fill: "white", fontSize: "16px" },
-              background: { fill: Constants.TransitionColor }
+              background: { fill: Constants.Colors.TT }
             }}
           />
           <Grid
@@ -199,17 +199,27 @@ class TransitionTimer extends React.Component {
 }
  
 TransitionTimer.propTypes = {
-  teacherId: PropTypes.string.isRequired,
   firebase: PropTypes.object.isRequired,
   transitionType: PropTypes.string,
   handleEndTransition: PropTypes.func.isRequired,
   pushOntoTransitionStack: PropTypes.func.isRequired,
-  typeSelected: PropTypes.bool.isRequired
+  typeSelected: PropTypes.bool.isRequired,
+  teacherSelected: PropTypes.exact({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    notes: PropTypes.string,
+    id: PropTypes.string,
+    phone: PropTypes.string,
+    role: PropTypes.string,
+    school: PropTypes.string
+  }).isRequired
 };
  
 const mapStateToProps = state => {
   return {
-    transitionType: state.transitionTypeState.transitionType
+    transitionType: state.transitionTypeState.transitionType,
+    teacherSelected: state.teacherSelectedState.teacher
   };
 };
 TransitionTimer.contextType = FirebaseContext;

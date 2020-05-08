@@ -42,8 +42,8 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.ac, this.props.noAc, this.props.noChildOpp],
-          backgroundColor: [Constants.ACColor, Constants.RedGraphColor, Constants.NotPresentColor],
-          hoverBackgroundColor: [Constants.ACColor, Constants.RedGraphColor, Constants.NotPresentColor]
+          backgroundColor: [Constants.Colors.AC, Constants.Colors.RedGraph, Constants.Colors.NotPresent],
+          hoverBackgroundColor: [Constants.Colors.AC, Constants.Colors.RedGraph, Constants.Colors.NotPresent]
         }
       ]
     };

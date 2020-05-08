@@ -9,7 +9,7 @@ import * as Constants from '../../../constants';
 const InstructionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.InstructionColor
+      main: Constants.Colors.LI
     }
   }
 });
@@ -18,8 +18,7 @@ interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
-  teacherId: string,
-  magic8: string
+  teacherId: string
 }
 
 interface State {
@@ -163,8 +162,8 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.InstructionColor}
+              magic8={"Level of Instruction"}
+              color={Constants.Colors.LI}
             />
           ) : this.state.categoryView === "followUp"  ? (
             <DataQuestions
@@ -175,8 +174,8 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.InstructionColor}
+              magic8={"Level of Instruction"}
+              color={Constants.Colors.LI}
             />
           ) : this.state.categoryView === "basicSkills" ? (
             <DataQuestions
@@ -187,8 +186,8 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.InstructionColor}
+              magic8={"Level of Instruction"}
+              color={Constants.Colors.LI}
             />
           ) : this.state.categoryView === "inferentialInstruction" ? (
             <DataQuestions
@@ -199,8 +198,8 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
               handleAddToPlan={this.props.handleAddToPlan}
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.InstructionColor}
+              magic8={"Level of Instruction"}
+              color={Constants.Colors.LI}
             />
           ) : <div/>}
         </Grid>

@@ -14,7 +14,7 @@ import * as Constants from '../../constants';
 const SequentialTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.SequentialColor
+      main: Constants.Colors.SA
     },
     secondary: {
       main: '#000000'
@@ -127,7 +127,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 1 ? Constants.SequentialColor : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 1 ? Constants.Colors.SA : '#d3d3d3'
                     }}
                   />
                   <Tab

@@ -18,6 +18,8 @@ import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
 import Zoom from '@material-ui/core/Zoom';
+import { connect } from 'react-redux';
+import * as Constants from '../../constants';
 
 
 const styles: object = {
@@ -40,9 +42,7 @@ interface Props {
     root: string,
     grow: string
   },
-  magic8: string,
-  color: string,
-  checklist: {TeacherBehaviors: Array<string>},
+  type: string,
   firebase: {
     auth: {
       currentUser: {
@@ -52,7 +52,7 @@ interface Props {
     handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
     handlePushListening(mEntry: {checked: Array<number>}): Promise<void>
   },
-  teacherId: string
+  teacherSelected: Teacher
 }
 
 interface State {
@@ -62,6 +62,17 @@ interface State {
   final: boolean,
   in: boolean
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 /**
  * Teacher Checklist
@@ -76,7 +87,7 @@ class TeacherChecklist extends React.Component<Props, State> {
     super(props);
 
     const mEntry = {
-      teacher: this.props.teacherId,
+      teacher: this.props.teacherSelected.id,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "listening"
     };
@@ -96,12 +107,12 @@ class TeacherChecklist extends React.Component<Props, State> {
    */
   tick = (): void => {
     if (this.state.time <= 0) {
+      clearInterval(this.timer);
       if (this.state.final) {
         this.handleSubmit(this.state.checked);
-        this.setState({ final: false, time: 60000 })
+        this.setState({ final: false })
       } else {
         this.handleTimeUpNotification();
-        clearInterval(this.timer);
       }
     } else {
       if (this.state.time - 1000 < 0) {
@@ -155,7 +166,8 @@ class TeacherChecklist extends React.Component<Props, State> {
       this.props.firebase.handlePushListening({checked}).then(() => {
         this.setState({
           checked: [],
-          in: true
+          in: true,
+          time: 60000
         }, () => {this.timer = setInterval(this.tick, 1000)})
       });
     })
@@ -179,12 +191,27 @@ class TeacherChecklist extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    firebase: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      auth: PropTypes.exact({
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        })
+      }),
+      handleSession: PropTypes.func,
+      handlePushListening: PropTypes.func
+    }).isRequired,
     classes: PropTypes.object.isRequired,
-    magic8: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired,
-    teacherId: PropTypes.string.isRequired,
-    checklist: PropTypes.array.isRequired
+    type: PropTypes.string.isRequired,
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   }
 
   /**
@@ -202,12 +229,9 @@ class TeacherChecklist extends React.Component<Props, State> {
         >
           {this.state.checked.length > 0 ? (
             <div>
-              <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
-                Don&apos;t forget to circulate!
-              </DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
-                  Your 1 minute observation time has ended.
+                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
+                  Complete your selections or move to the next observation.
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -221,13 +245,9 @@ class TeacherChecklist extends React.Component<Props, State> {
             </div>
           ) : (
             <div>
-              <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
-                Don&apos;t forget to circulate!
-              </DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
-                  Please make your final selections, 
-                  or indicate that none of the teacher behaviors were observed.
+                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
+                  Complete your selections or move to the next observation.
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -247,9 +267,8 @@ class TeacherChecklist extends React.Component<Props, State> {
             alignItems={"center"}
             direction={"row"}
             justify={"center"}
-            style={{height: '90vh'}}
           >
-            <Grid item xs={3}>
+            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
               <Grid
                 container
                 alignItems={"center"}
@@ -257,9 +276,8 @@ class TeacherChecklist extends React.Component<Props, State> {
                 direction={"column"}
               >
                 <Dashboard
-                  magic8={this.props.magic8}
-                  color={this.props.color}
-                  infoDisplay={<Countdown color={this.props.color} time={this.state.time} timerTime={60000} />}
+                  type={this.props.type}
+                  infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                   infoPlacement="center"
                   completeObservation={true}
                 />
@@ -270,13 +288,13 @@ class TeacherChecklist extends React.Component<Props, State> {
                 <Grid container alignItems="center" direction="column" xs={12}>
                   <div style={{ height: 20 }} />
                   <Typography variant="h6" align={"center"} style={{paddingBottom: '1em'}}>
-                    Select the teacher behaviors you see:
+                    Select all the teacher behaviors you see:
                   </Typography>
                   <Grid container direction={"row"} justify="center" alignItems="center" spacing={16} xs={12}>
                     <Grid item xs={5}>
                       <Card style={{height: '45vh'}}>
                         <List>
-                          {this.props.checklist.TeacherBehaviors.slice(0, 3).map((value, index) => {
+                          {Constants.Checklist.LC.TeacherBehaviors.slice(0, 3).map((value, index) => {
                             return (<ListItem
                               key={index}
                               onClick={this.handleCheck(index+1)}
@@ -296,7 +314,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                     <Grid item xs={5}>
                       <Card style={{height: '45vh'}}>
                         <List>
-                          {this.props.checklist.TeacherBehaviors.slice(3, 6).map((value, index) => {
+                          {Constants.Checklist.LC.TeacherBehaviors.slice(3, 6).map((value, index) => {
                             return (<ListItem
                               key={index}
                               onClick={this.handleCheck(index+4)}
@@ -324,4 +342,10 @@ class TeacherChecklist extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(TeacherChecklist);
+const mapStateToProps = (state): {teacherSelected: Teacher} => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(TeacherChecklist));

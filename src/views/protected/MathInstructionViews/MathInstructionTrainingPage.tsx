@@ -18,7 +18,7 @@ import Grid from '@material-ui/core/Grid';
 const MathTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.MathColor
+      main: Constants.Colors.MI
     }
   }
 });

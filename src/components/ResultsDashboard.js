@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
-import { Button, Card, Grid } from '@material-ui/core';
+import { Button, Card, Grid, Typography } from '@material-ui/core';
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg"
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg"
 import MathIconImage from "../assets/images/MathIconImage.svg"
@@ -14,61 +14,63 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from 'moment';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { changeTeacher } from '../state/actions/teacher';
+import { connect } from 'react-redux';
 import * as Constants from '../constants';
 
 const TransitionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.TransitionColor
+      main: Constants.Colors.TT
     }
   }
 });
 const ClimateTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ClimateColor
+      main: Constants.Colors.CC
     }
   }
 });
 const MathTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.MathColor
+      main: Constants.Colors.MI
     }
   }
 });
 const EngagementTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.EngagementColor
+      main: Constants.Colors.SE
     }
   }
 });
 const InstructionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.InstructionColor
+      main: Constants.Colors.LI
     }
   }
 });
 const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ListeningColor
+      main: Constants.Colors.LC
     }
   }
 });
 const SequentialTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.SequentialColor
+      main: Constants.Colors.SA
     }
   }
 });
 const ACTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ACColor
+      main: Constants.Colors.AC
     }
   }
 });
@@ -80,7 +82,10 @@ const styles = {
     backgroundColor: "#fff",
     height: "100%",
     boxShadow: "5px",
-    width: "100%",
+    width: "90%",
+    marginRight: "5%",
+    marginLeft: "5%",
+    marginBottom: "5%",
     flexDirection: "column",
     alignItems: "center",
     justify: "space-evenly",
@@ -161,7 +166,7 @@ class ResultsDashboard extends React.Component {
     this.state = {
       auth: true,
       icon: null,
-      theme: null,
+      theme: null
     }
   }
 
@@ -210,10 +215,17 @@ class ResultsDashboard extends React.Component {
   };
 
   /**
-   * render function
-   * @return {ReactElement}
+   * @param {event} event
    */
-  render(){
+  changeTeacher = (event) => {
+    this.props.changeTeacher(event.target.value);
+  };
+
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render() {
     const { classes } = this.props;
     return(
       <div>
@@ -234,6 +246,22 @@ class ResultsDashboard extends React.Component {
               <TextField
                 select
                 className={classes.viewButtons}
+                label="TEACHER"
+                value={this.props.teacherSelected}
+                onChange={this.changeTeacher}
+                InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
+              >
+                {this.props.teacherList.map((teacher, index)=> 
+                  {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
+                    <em>{teacher.firstName + " " + teacher.lastName}</em>
+                  </MenuItem>})}
+              </TextField>
+            </Grid>
+            <Grid item className={classes.resultsButtons}>
+              <TextField
+                select
+                className={classes.viewButtons}
                 label="DATE"
                 value={this.props.sessionId}
                 onChange={this.props.changeSessionId}
@@ -242,7 +270,7 @@ class ResultsDashboard extends React.Component {
               >
                 {this.props.sessionDates.map((date, index)=> 
                   {return <MenuItem key={index} id={date.id} value={date.id} style={{fontFamily: 'Arimo'}}>
-                    <em>{moment(date.sessionStart.value).format("MMM Do YY")}</em>
+                    <em>{moment(date.sessionStart.value).format("MMMM DD YYYY")}</em>
                   </MenuItem>})}
               </TextField>
             </Grid>
@@ -253,12 +281,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.DATA
+                    this.props.view === 'data'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.DATA ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.dataClick}
+                  className={this.props.view === 'data' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('data')}
                 >
                   Data
                 </Button>
@@ -270,12 +298,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.QUESTIONS
+                    this.props.view === 'questions'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.QUESTIONS ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.questionsClick}
+                  className={this.props.view === 'questions' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('questions')}
                 >
                   Questions
                 </Button>
@@ -287,12 +315,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.COACH_PREP
+                    this.props.view === 'conferencePlan'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.COACH_PREP ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.coachPrepClick}
+                  className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('conferencePlan')}
                 >
                   Conference Plan
                 </Button>
@@ -304,12 +332,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.ACTION_PLAN
+                    this.props.view === 'actionPlan'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.ACTION_PLAN ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.actionPlanClick}
+                  className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('actionPlan')}
                 >
                   Action Plan
                 </Button>
@@ -321,12 +349,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.NOTES
+                    this.props.view === 'notes'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.NOTES ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.notesClick}
+                  className={this.props.view === 'notes' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('notes')}
                 >
                   Notes
                 </Button>
@@ -341,17 +369,32 @@ class ResultsDashboard extends React.Component {
 
 ResultsDashboard.propTypes = {
   magic8: PropTypes.string.isRequired,
-  dataClick: PropTypes.func.isRequired,
-  questionsClick: PropTypes.func.isRequired,
-  coachPrepClick: PropTypes.func.isRequired,
-  actionPlanClick: PropTypes.func.isRequired,
-  notesClick: PropTypes.func.isRequired,
+  view: PropTypes.string.isRequired,
+  viewClick: PropTypes.func.isRequired,
   changeSessionId: PropTypes.func.isRequired,
   sessionId: PropTypes.string.isRequired,
   sessionDates: PropTypes.array.isRequired,
-  viewEnum: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  view: PropTypes.number.isRequired
+  firebase: PropTypes.object.isRequired,
+  changeTeacher: PropTypes.func.isRequired,
+  teacherSelected: PropTypes.exact({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    notes: PropTypes.string,
+    id: PropTypes.string,
+    phone: PropTypes.string,
+    role: PropTypes.string,
+    school: PropTypes.string
+  }).isRequired,
+  teacherList: PropTypes.array.isRequired
 };
 
-export default withStyles(styles)(ResultsDashboard);
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher,
+    teacherList: state.teacherListState.teachers
+  };
+};
+
+export default withStyles(styles)(connect(mapStateToProps, { changeTeacher })(ResultsDashboard));
