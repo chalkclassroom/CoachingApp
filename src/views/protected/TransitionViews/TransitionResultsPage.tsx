@@ -10,6 +10,9 @@ import TransitionBarChart from "../../../components/ResultsComponents/Transition
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph.tsx";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
+import Grid from '@material-ui/core/Grid';
+import PieSliceTransitionImage from '../../../assets/images/PieSliceTransitionImage.svg';
+import PieSliceTeacherSupportImage from '../../../assets/images/PieSliceTeacherSupportImage.svg';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
@@ -21,10 +24,15 @@ const styles: object = {
     overflowX: 'hidden',
     overflowY: 'auto'
   },
+  comparisonText: {
+    paddingLeft: '1em',
+    lineHeight: '0.8em',
+    fontFamily: 'Arimo'
+  }
 };
 
 interface Props {
-  classes: { root: string },
+  classes: { root: string, comparisonText: string },
   teacherSelected: Teacher,
   history: {
     replace(
@@ -484,31 +492,85 @@ class TransitionResultsPage extends React.Component<Props, State> {
           magic8="Transition Time"
           history={this.props.history}
           summary={
-            <div>
-              <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: 'Arimo'}}>
-                Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
+            <Grid container justify={"center"} direction={"column"}>
+              <Grid item>
+                <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: 'Arimo'}}>
+                  Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
+                </Typography>
+              </Grid>
+              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                Compare how often children spent time in: 
               </Typography>
-              <TransitionTimePie
-                transitionTime={this.state.transitionTime}
-                learningActivityTime={this.state.learningActivityTime}
-                style={{overflow:"hidden", height: '80vh'}}
-              />
-            </div>
+              <Grid container direction="column" alignItems="center">
+                <Grid item style={{width: '100%'}}>
+                  <Grid container direction="row">
+                    <Grid item xs={1}>
+                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
+                        <Grid item style={{height:"50%"}}>
+                          <img alt="orange" src={PieSliceTransitionImage} height="95%"/>
+                        </Grid>
+                        <Grid item style={{height:"50%"}}>
+                          <img alt="blue" src={PieSliceTeacherSupportImage} height="95%"/>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={11}>
+                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                        <Grid item style={{height:"50%"}}>
+                          <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
+                            Transitions
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{height:"50%"}}>
+                          <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
+                            Learning activities
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <TransitionTimePie
+                  transitionTime={this.state.transitionTime}
+                  learningActivityTime={this.state.learningActivityTime}
+                  style={{overflow:"hidden", height: '80vh'}}
+                />
+              </Grid>
+            </Grid>
           }
           details={
             <div>
-              <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: 'Arimo'}}>
-                Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
-              </Typography>
-              <TransitionBarChart
-                line={this.state.sessionLine}
-                traveling={this.state.sessionTraveling}
-                waiting={this.state.sessionWaiting}
-                routines={this.state.sessionRoutines}
-                behaviorManagement={this.state.sessionBehaviorManagement}
-                other={this.state.sessionOther}
-                style={{alignItems: "center", height: '80vh'}}
-              />
+              <Grid container justify={"center"} direction={"column"}>
+                <Grid item>
+                  <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: 'Arimo'}}>
+                    Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
+                  </Typography>
+                </Grid>
+                <Grid container justify={"center"} direction={"column"}>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    What types of transitions did children spend time in during the observation?
+                  </Typography>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    Which transitions were shorter?             
+                  </Typography>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    Which transitions were longer?              
+                  </Typography>
+                </Grid>
+                <Grid item style={{paddingTop: '1em', paddingBottom: '1em'}}>
+                  <TransitionBarChart
+                    line={this.state.sessionLine}
+                    traveling={this.state.sessionTraveling}
+                    waiting={this.state.sessionWaiting}
+                    routines={this.state.sessionRoutines}
+                    behaviorManagement={this.state.sessionBehaviorManagement}
+                    other={this.state.sessionOther}
+                    style={{alignItems: "center", height: '80vh'}}
+                  />
+                </Grid>
+              </Grid>
             </div>
           }
           trendsGraph={
