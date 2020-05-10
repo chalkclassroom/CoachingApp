@@ -152,7 +152,7 @@ class Firebase {
       .then(snapshot => {
         const teacherList = [];
         snapshot.forEach(doc =>
-          teacherList.push(doc.data().then(doc => doc.data()))
+          teacherList.push(doc.data())
         );
         return teacherList;
       })

@@ -2,14 +2,19 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 
-const AttachButton: React.FC<{ acceptAttachment: () => void}> = (props) => {
+interface AttachButtonProps { 
+  acceptAttachment: () => void;
+  disabled: boolean;
+}
+
+const AttachButton: React.FC<AttachButtonProps> = (props: AttachButtonProps) => {
     return(
-        <Button 
-          variant="extended" 
-          color="primary"
-          aria-label="attach"
-          component="label"
-          onClick={() => props.acceptAttachment()}
+        <Button
+          color='primary'
+          aria-label='attach'
+          component='label'
+          onClick={props.acceptAttachment}
+          disabled={props.disabled}
         >
           <AttachFileIcon style={{marginRight: "0.2em"}}/>
           Attach

@@ -1,6 +1,5 @@
 // Sidebar to help user choose what is the intent for sending the email. 
 // Based on the intent, the EmailBody component fills up with rendered HTML.
-
 import React from 'react';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,6 +11,14 @@ import feedbackIcon from '../../assets/icons/check-mark.svg';
 import newMessageIcon from '../../assets/icons/files-and-folders.svg';
 import thankYouIcon from '../../assets/icons/chat-bubbles.svg';
 const drawerWidth = `15em`;
+
+const options = [
+  { value: 'baibhav.vatsa@vanderbilt.edu', label: 'Baibhav Vatsa' },
+  { value: 'deanna.n.meador@vanderbilt.edu', label: 'Deanna Meador' },
+  { value: 'caroline.h.christopher@vanderbilt.edu', label: 'Caroline Christopher' },
+];
+
+
 
 const getIcon = (text: string) => {
 	if(text === "Thank You") {

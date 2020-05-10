@@ -34,7 +34,7 @@ import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import ReactGA from 'react-ga';
-import MessagingView from "./views/protected/MessagingViews/Messaging.tsx";
+import MessagingView from "./views/protected/MessagingViews/MessagingView.tsx";
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);

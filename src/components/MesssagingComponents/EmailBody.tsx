@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 
-type EmailBodyProps = {
+interface EmailBodyProps = {
     emailText: JSX.Element, 
     emailTextRef: React.MutableRefObject<HTMLDivElement>
 }
@@ -17,11 +17,6 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
             </div>
         </Paper>
     );
-}
-
-EmailBody.propTypes = {
-    emailText: PropTypes.element.isRequired,
-    emailTextRef: PropTypes.instanceOf(React.MutableRefObject).isRequired,
 }
 
 export default EmailBody;
