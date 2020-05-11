@@ -23,11 +23,9 @@ const styles: object = {
 }
 
 interface Props {
-  sequential: number,
-  notSequential: number,
-  support: number,
-  noSupport: number,
-  noTeacherOpp: number,
+  offTask: number,
+  engaged: number,
+  avgRating: number,
   classes: {
     comparisonText: string,
   }
@@ -65,11 +63,8 @@ class SummarySlider extends React.Component<Props, {}> {
         <Slider {...settings}>
           <div>
             <Grid container justify={"center"} direction={"column"}>
-              <Typography align={"center"} variant="h4" style={{fontFamily: 'Arimo'}}>
-                Child Behaviors
-              </Typography>
               <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                Compare how often children:
+                Compare how often the children were:
               </Typography>
               <Grid container direction="column" alignItems="center">
                 <Grid item style={{width: '100%'}}>
@@ -88,12 +83,12 @@ class SummarySlider extends React.Component<Props, {}> {
                       <Grid container direction="column" justify="center" style={{height:'100%'}}>
                         <Grid item style={{height:"50%"}}>
                           <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Did sequential activities.
+                            Engaged
                           </Typography>
                         </Grid>
                         <Grid item style={{height:"50%"}}>
                           <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Did non-sequential activities.
+                            Off Task
                           </Typography>
                         </Grid>
                       </Grid>
@@ -103,64 +98,24 @@ class SummarySlider extends React.Component<Props, {}> {
               </Grid>
               <PieSummary
                   offTask={this.props.offTask}
-                  mildyEngaged={this.props.mildyEngaged}
                   engaged={this.props.engaged}
-                  highlyEngaged={this.props.highlyEngaged}
               />
             </Grid>
           </div>
           <div>
             <Grid container justify={"center"} direction={"column"}>
-              <Typography align={"center"} variant="h4" style={{fontFamily: 'Arimo'}}>
-                Teacher Behaviors
+              <Typography align={"center"} variant="subtitle1" style={{fontFamily: 'Arimo', marginTop: '50px'}}>
+                What do you notice about the average class room engagement?
               </Typography>
-              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                Compare how often the teacher:
+              <Typography align={"center"} variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em', marginBottom: '100px'}}>
+                Average Level of Engagement Score: {this.props.avgRating}
               </Typography>
-              <Grid container direction="column" alignItems="center">
-                <Grid item style={{width: '100%'}}>
-                  <Grid container direction="row">
-                    <Grid item xs={1}>
-                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="purple" src={PieSliceTeacherSupportImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="red" src={PieSliceTeacherNoSupportImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="orange" src={PieSliceNoOppImage} height="95%"/>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={11}>
-                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                        <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Supported children&apos;s sequential activities.
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                            Was present in the center but did not support sequential activities.
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Was not present in the centers observed.
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
               <AvgBarSummary avgRating={this.props.avgRating}/>
             </Grid>
           </div>
         </Slider>
         <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
-          Total Center Observations: {this.props.sequential + this.props.notSequential}
+          Total Engagement Observations: {this.props.offTask + this.props.engaged}
         </Typography>
       </div>
     );

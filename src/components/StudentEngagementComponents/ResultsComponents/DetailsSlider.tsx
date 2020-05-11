@@ -16,14 +16,10 @@ const styles: object = {
 }
 
 interface Props {
-  sequential1: number,
-  sequential2: number,
-  sequential3: number,
-  sequential4: number,
-  teacher1: number,
-  teacher2: number,
-  teacher3: number,
-  teacher4: number,
+  offTaskDetailSplit: Array<number>,
+  mildlyEngagedDetailSplit: Array<number>,
+  engagedDetailSplit: Array<number>,
+  highlyEngagedDetailSplit: Array<number>,
   classes: {
     questionText: string
   }
@@ -37,14 +33,10 @@ interface Props {
 class DetailsSlider extends React.Component<Props, {}> {
   
   static propTypes = {
-    sequential1: PropTypes.number.isRequired,
-    sequential2: PropTypes.number.isRequired,
-    sequential3: PropTypes.number.isRequired,
-    sequential4: PropTypes.number.isRequired,
-    teacher1: PropTypes.number.isRequired,
-    teacher2: PropTypes.number.isRequired,
-    teacher3: PropTypes.number.isRequired,
-    teacher4: PropTypes.number.isRequired,
+    offTaskDetailSplit: PropTypes.array.isRequired,
+    mildlyEngagedDetailSplit: PropTypes.array.isRequired,
+    engagedDetailSplit: PropTypes.array.isRequired,
+    highlyEngagedDetailSplit: PropTypes.array.isRequired,
   }
 
   /**
@@ -65,7 +57,7 @@ class DetailsSlider extends React.Component<Props, {}> {
         <div>
           <Grid justify={"center"} direction={"column"}>
             <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
-              Child Behaviors
+              Engagement Details
             </Typography>
             <Grid container direction="column" alignItems="center">
               <Grid item style={{width: '100%'}}>
@@ -74,12 +66,12 @@ class DetailsSlider extends React.Component<Props, {}> {
                     <Grid container direction="column" justify="center" alignItems="flex-start" style={{height:'100%'}}>
                       <Grid item style={{height:"33%", paddingBottom: '2em'}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
-                          Which behaviors did children do more often?
+                          Compare how often the children were:
                         </Typography>
                       </Grid>
                       <Grid item style={{height:"33%"}}>
                         <Typography variant="subtitle1" className={classes.questionText}>
-                          Which behaviors did children do less often?
+                          Off Task / Mildly Engaged / Engaged / Highly Engaged
                         </Typography>
                       </Grid>
                     </Grid>
@@ -88,10 +80,10 @@ class DetailsSlider extends React.Component<Props, {}> {
               </Grid>
             </Grid>
             <EngagementBarDetails
-              sequential1={this.props.sequential1}
-              sequential2={this.props.sequential2}
-              sequential3={this.props.sequential3}
-              sequential4={this.props.sequential4}
+                offTaskDetailSplit={this.props.offTaskDetailSplit}
+                mildlyEngagedDetailSplit={this.props.mildlyEngagedDetailSplit}
+                engagedDetailSplit={this.props.engagedDetailSplit}
+                highlyEngagedDetailSplit={this.props.highlyEngagedDetailSplit}
             />
           </Grid>
         </div>

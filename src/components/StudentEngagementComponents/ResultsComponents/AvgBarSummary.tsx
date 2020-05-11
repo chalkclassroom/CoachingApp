@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Pie } from "react-chartjs-2";
+import { HorizontalBar } from "react-chartjs-2";
 import * as Constants from '../../../constants';
 
 interface Props {
@@ -8,8 +8,8 @@ interface Props {
 }
 
 /**
- * Pie Chart for Associative&Cooperative Child Behaviors
- * @class ChildBehaviorsPie
+ * Bar Chart for Student Engagement
+ * @class AvgBarSummary
  * @return {void}
  */
 class AvgBarSummary extends React.Component<Props, {}> {
@@ -29,57 +29,47 @@ class AvgBarSummary extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const childBehaviorsData = {
+    const avgEngagementData = {
       labels: [
-        "Sequential Activities",
-        "Non-Sequential Activities",
+        "Avg",
       ],
       datasets: [
         {
+          label: "Avg Engagement",
           data: [this.props.avgRating],
-          backgroundColor: [Constants.SequentialColor, Constants.RedGraphColor],
-          hoverBackgroundColor: [Constants.SequentialColor, Constants.RedGraphColor]
+          backgroundColor: [Constants.EngagementColor, Constants.RedGraphColor],
+          hoverBackgroundColor: [Constants.EngagementColor, Constants.RedGraphColor]
         }
       ]
     };
 
     return (
-      <Pie
-        data={childBehaviorsData}
+      <HorizontalBar
+        data={avgEngagementData}
+        width={260}
+        height={50}
         options={{
-          tooltips: {
-            callbacks: {
-              label: function(tooltipItem: { datasetIndex: number, index: number },
-                data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
-                const dataset = data.datasets[tooltipItem.datasetIndex];
-                const meta = dataset._meta[Object.keys(dataset._meta)[0]];
-                const total = meta.total;
-                const currentValue = dataset.data[tooltipItem.index];
-                const percentage = parseFloat(
-                  ((currentValue / total) * 100).toFixed(1)
-                );
-                return currentValue + " (" + percentage + "%)";
-              },
-              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
-                return data.labels[tooltipItem[0].index];
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            xAxes: [{
+              ticks: {
+                callback: function(value: number, index:number, values: any) {
+                  switch(value){
+                    case 0: return 'off task';
+                      break;
+                    case 1: return 'mildly';
+                      break;
+                    case 2: return 'engaged';
+                      break;
+                    case 3: return 'highly engaged';
+                      break;
+                  }
+                }
               }
-            },
-            bodyFontSize: 16
-          },
-          legend: {
-            display: false,
-            position: 'bottom'
-          },
-          plugins: {
-            datalabels: {
-              color: 'white',
-              font: {
-                size: 20
-              }
-            }
+            }]
           }
         }}
-        width={260}
       />
     );
   }

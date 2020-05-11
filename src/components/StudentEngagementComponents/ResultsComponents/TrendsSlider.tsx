@@ -7,61 +7,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import { Line } from "react-chartjs-2";
 
-
-const ChildBehaviorTrendsOptions = {
-  showScale: true,
-  pointDot: true,
-  showLines: true,
-  tooltips: {
-    mode: "index",
-    intersect: false
-  },
-  hover: {
-    mode: "nearest",
-    intersect: true
-  },
-  scales: {
-    xAxes: [
-      {
-        display: true,
-        scaleLabel: {
-          display: true,
-          labelString: "Date",
-          fontStyle: "bold"
-        }
-      }
-    ],
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: true,
-          min: 0,
-          max: 100,
-          callback: function(value: number): string {
-            return value + "%";
-          }
-        },
-        scaleLabel: {
-          display: true,
-          labelString: "% of Visits",
-          fontStyle: "bold"
-        }
-      }
-    ]
-  },
-  plugins: {
-    datalabels: {
-      display: "auto",
-      color: "gray",
-      align: "top",
-      formatter: function(value: number): string {
-        return value + "%";
-      }
-    }
-  }
-};
-
-const TeacherBehaviorTrendsOptions = {
+const EngagementTrendsOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
@@ -115,17 +61,6 @@ const TeacherBehaviorTrendsOptions = {
 };
 
 interface Props {
-  childData(): {
-    labels: Array<Array<string>>,
-    datasets: Array<{
-      label: string,
-      backgroundColor: string,
-      borderColor: string,
-      fill: boolean,
-      lineTension: number,
-      data: Array<number>
-    }>
-  },
   teacherData(): {
     labels: Array<Array<string>>,
     datasets: Array<{
@@ -147,8 +82,7 @@ interface Props {
 class TrendsSlider extends React.Component<Props, {}> {
   
   static propTypes = {
-    childData: PropTypes.func.isRequired,
-    teacherData: PropTypes.func.isRequired
+    data: PropTypes.func.isRequired
   };
 
   /**
@@ -168,24 +102,11 @@ class TrendsSlider extends React.Component<Props, {}> {
         <div>
           <Grid justify={"center"} direction={"column"}>
             <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
-              Child Behaviors
+              Level of Engagement Trends
             </Typography>
             <Line
-              data={this.props.childData}
-              options={ChildBehaviorTrendsOptions}
-              width={650}
-              height={400}
-            />
-          </Grid>
-        </div>
-        <div>
-          <Grid justify={"center"} direction={"column"}>
-            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
-              Teacher Behaviors
-            </Typography>
-            <Line
-              data={this.props.teacherData}
-              options={TeacherBehaviorTrendsOptions}
+              data={this.props.data}
+              options={EngagementTrendsOptions}
               width={650}
               height={400}
             />

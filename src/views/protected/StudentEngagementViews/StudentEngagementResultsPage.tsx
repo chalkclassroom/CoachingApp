@@ -4,9 +4,9 @@ import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
-import SummarySlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/SummarySlider";
-import DetailsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/DetailsSlider";
-import TrendsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/TrendsSlider";
+import SummarySlider from "../../../components/StudentEngagementComponents/ResultsComponents/SummarySlider";
+import DetailsSlider from "../../../components/StudentEngagementComponents/ResultsComponents/DetailsSlider";
+import TrendsSlider from "../../../components/StudentEngagementComponents/ResultsComponents/TrendsSlider";
 import SequentialCoachingQuestions from "../../../components/SequentialActivitiesComponents/ResultsComponents/SequentialCoachingQuestions";
 import * as Constants from '../../../constants';
 
@@ -30,26 +30,23 @@ interface Style {
 }
 
 interface State {
-  sequential: number,
-  notSequential: number,
-  support: number,
-  noSupport: number,
-  noTeacherOpp: number,
   sessionId: string,
-  sequential1: number,
-  sequential2: number,
-  sequential3: number,
-  sequential4: number,
-  teacher1: number,
-  teacher2: number,
-  teacher3: number,
-  teacher4: number,
+
+  offTaskSummaryCount: number,
+  engagedSummaryCount: number,
+  avgEngagementSummary: number,
+
+  offTaskDetailSplit: Array<number>,
+  mildlyEngagedDetailSplit: Array<number>,
+  engagedDetailSplit: Array<number>,
+  highlyEngagedDetailSplit: Array<number>,
+
   trendsDates: Array<Array<string>>,
-  trendsNotSequential: Array<number>,
-  trendsSequential: Array<number>,
-  trendsNoTeacherOpp: Array<number>,
-  trendsNoSupport: Array<number>,
-  trendsSupport: Array<number>,
+  trendsOffTask: Array<number>,
+  trendsMildlyEngaged: Array<number>,
+  trendsEngaged: Array<number>,
+  trendsHighlyEngaged: Array<number>,
+
   notes: Array<{id: string, content: string, timestamp: Date}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
@@ -58,10 +55,10 @@ interface State {
 }
 
 /**
- * StudentEngagementResultsPage results
- * @class StudentEngagementResultsPage
+ * sequential results
+ * @class SequentialActivitiesResultsPage
  */
-class StudentEngagementResultsPage extends React.Component<Props, State> {
+class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
@@ -69,26 +66,24 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      sequential: 0,
-      notSequential: 0,
-      support: 0,
-      noSupport: 0,
-      noTeacherOpp: 0,
       sessionId: '',
-      sequential1: 0,
-      sequential2: 0,
-      sequential3: 0,
-      sequential4: 0,
-      teacher1: 0,
-      teacher2: 0,
-      teacher3: 0,
-      teacher4: 0,
+
+      offTaskSummaryCount: 0,
+      engagedSummaryCount: 0,
+      avgEngagementSummary: 0,
+
+
+      offTaskDetailSplit: [],
+      mildlyEngagedDetailSplit: [],
+      engagedDetailSplit: [],
+      highlyEngagedDetailSplit: [],
+
       trendsDates: [],
-      trendsNotSequential: [],
-      trendsSequential: [],
-      trendsNoTeacherOpp: [],
-      trendsNoSupport: [],
-      trendsSupport: [],
+      trendsOffTask: [],
+      trendsMildlyEngaged: [],
+      trendsEngaged: [],
+      trendsHighlyEngaged: [],
+
       notes: [],
       actionPlanExists: false,
       conferencePlanExists: false,
@@ -101,8 +96,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
    * @param {string} teacherId
    */
   handleTrendsFetching = (teacherId: string): void => {
-    this.handleChildTrendsFetch(teacherId);
-    this.handleTeacherTrendsFetch(teacherId);
+    this.handleEngagementTrendsFetch(teacherId);
   };
 
   /**
@@ -137,7 +131,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "sequential").then((dates: Array<string>) =>
+    firebase.fetchSessionDates(teacherId, "engagement").then((dates: Array<string>) =>
       this.setState({
         sessionDates: dates
       }, () => {
@@ -154,100 +148,41 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleChildTrendsFetch = (teacherId: string): void => {
+  handleEngagementTrendsFetch = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<Array<string>> = [];
-    const notSequentialArray: Array<number> = [];
-    const sequentialArray: Array<number> = [];
-    firebase.fetchChildSeqTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, sequential: number, notSequential: number}>) => {
+    const offTaskArray: Array<number> = [];
+    const mildlyEngagedArray: Array<number> = [];
+    const engagedArray: Array<number> = [];
+    const highlyEngagedArray: Array<number> = [];
+
+    firebase.fetchEngagementTrend(teacherId)
+    .then((dataSet: Array<{startDate: {value: string}, offTask: number, mildlyEngaged: number, engaged: number, highlyEngaged: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        notSequentialArray.push(Math.floor((data.notSequential / (data.notSequential + data.sequential)) * 100));
-        sequentialArray.push(Math.floor((data.sequential / (data.notSequential + data.sequential)) * 100));
+        offTaskArray.push(data.offTask);
+        mildlyEngagedArray.push(data.mildlyEngaged);
+        engagedArray.push(data.engaged);
+        highlyEngagedArray.push(data.highlyEngaged);
       });
-
       this.setState({
         trendsDates: dateArray,
-        trendsNotSequential: notSequentialArray,
-        trendsSequential: sequentialArray
+        trendsOffTask: offTaskArray,
+        trendsMildlyEngaged: mildlyEngagedArray,
+        trendsEngaged: engagedArray,
+        trendsHighlyEngaged: highlyEngagedArray
       });
     });
   };
 
-  /**
-   * @param {string} teacherId
-   */
-  handleTeacherTrendsFetch = (teacherId: string): void => {
-    const firebase = this.context;
-    const dateArray: Array<Array<string>> = [];
-    const noSupportArray: Array<number> = [];
-    const supportArray: Array<number> = [];
-    const noOppArray: Array<number> = [];
-    firebase.fetchTeacherSeqTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
-      dataSet.forEach(data => {
-        dateArray.push([
-          moment(data.startDate.value).format("MMM Do"),
-        ]);
-        noSupportArray.push(Math.floor((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        supportArray.push(Math.floor((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
-      });
-      this.setState({
-        trendsDates: dateArray,
-        trendsNoSupport: noSupportArray,
-        trendsSupport: supportArray,
-        trendsNoTeacherOpp: noOppArray
-      });
-    });
-  };
-
-  /**
-   * specifies formatting for child trends
-   * @return {object}
-   */
-  handleTrendsChildFormatData = (): {
-      labels: Array<Array<string>>,
-      datasets: Array<{
-        label: string,
-        backgroundColor: string,
-        borderColor: string,
-        fill: boolean,
-        lineTension: number,
-        data: Array<number>
-      }>
-    } => {
-    return {
-      labels: this.state.trendsDates,
-      datasets: [
-        {
-          label: "Non-Sequential Activities",
-          backgroundColor: '#ec2409',
-          borderColor: '#ec2409',
-          fill: false,
-          lineTension: 0,
-          data: this.state.trendsNotSequential
-        },
-        {
-          label: "Sequential Activities",
-          backgroundColor: Constants.SequentialColor,
-          borderColor: Constants.SequentialColor,
-          fill: false,
-          lineTension: 0,
-          data: this.state.trendsSequential
-        }
-      ]
-    };
-  };
 
   /**
    * specifies formatting for teacher trends
    * @return {object}
    */
-  handleTrendsTeacherFormatData = (): {
+  handleTrendsFormatData = (): {
     labels: Array<Array<string>>,
     datasets: Array<{
       label: string,
@@ -262,28 +197,36 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Teacher Not at Center",
-          backgroundColor: Constants.NotPresentColor,
-          borderColor: Constants.NotPresentColor,
-          fill: false,
-          lineTension: 0,
-          data: this.state.trendsNoTeacherOpp
-        },
-        {
-          label: "No Support",
+          label: "Off Task",
           backgroundColor: Constants.RedGraphColor,
           borderColor: Constants.RedGraphColor,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsNoSupport
+          data: this.state.trendsOffTask
         },
         {
-          label: "Teacher Support",
+          label: "Mildly Engaged",
+          backgroundColor: Constants.NotPresentColor,
+          borderColor: Constants.NotPresentColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsMildlyEngaged
+        },
+        {
+          label: "Engaged",
           backgroundColor: Constants.AppBarColor,
           borderColor: Constants.AppBarColor,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsSupport
+          data: this.state.trendsEngaged
+        },
+        {
+          label: "Highly Engaged",
+          backgroundColor: Constants.EngagementColor,
+          borderColor: Constants.EngagementColor,
+          fill: false,
+          lineTension: 0,
+          data: this.state.trendsHighlyEngaged
         },
       ]
     };
@@ -362,39 +305,37 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchChildSeqSummary(this.state.sessionId).then((summary: {notSequential: number, sequential: number}) => {
+    firebase.fetchEngagementPieSummary(this.state.sessionId).then((summary: {offTask: number, engaged: number}) => {
       this.setState({
-        notSequential: summary.notSequential,
-        sequential: summary.sequential,
+        offTaskSummaryCount: summary.offTask,
+        engagedSummaryCount: summary.engaged,
       });
     });
-    firebase.fetchTeacherSeqSummary(this.state.sessionId).then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
+    firebase.fetchEngagementAvgSummary(this.state.sessionId).then((summary: {average: number}) => {
       this.setState({
-        noTeacherOpp: summary.noOpportunity,
-        noSupport: summary.noSupport,
-        support: summary.support,
+        avgEngagementSummary: summary.average,
       });
     });
-    firebase.fetchSeqDetails(this.state.sessionId)
-    .then((summary: {
-      sequential1: number,
-      sequential2: number,
-      sequential3: number,
-      sequential4: number,
-      teacher1: number,
-      teacher2: number,
-      teacher3: number,
-      teacher4: number
+    firebase.fetchEngagementDetails(this.state.sessionId)
+    .then((detail: {
+      offTask0: number,
+      offTask1: number,
+      offTask2: number,
+      mildlyEngaged0: number,
+      mildlyEngaged1: number,
+      mildlyEngaged2: number,
+      engaged0: number,
+      engaged1: number,
+      engaged2: number,
+      highlyEngaged0: number,
+      highlyEngaged1: number,
+      highlyEngaged2: number,
     }) => {
       this.setState({
-        sequential1: summary.sequential1,
-        sequential2: summary.sequential2,
-        sequential3: summary.sequential3,
-        sequential4: summary.sequential4,
-        teacher1: summary.teacher1,
-        teacher2: summary.teacher2,
-        teacher3: summary.teacher3,
-        teacher4: summary.teacher4
+        offTaskDetailSplit: [detail.offTask0,detail.offTask1,detail.offTask2],
+        mildlyEngagedDetailSplit: [detail.mildlyEngaged0,detail.mildlyEngaged1,detail.mildlyEngaged2],
+        engagedDetailSplit: [detail.engaged0,detail.engaged1,detail.engaged2],
+        highlyEngagedDetailSplit: [detail.highlyEngaged0, detail.highlyEngaged1, detail.highlyEngaged2],
       })
     })
   }
@@ -438,34 +379,27 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       <div className={classes.root}>
         <ResultsLayout
           teacherId={this.props.location.state.teacher.id}
-          magic8="Sequential Activities"
+          magic8="Level of Engagement"
           handleTrendsFetch={this.handleTrendsFetching}
-          observationType="sequential"
+          observationType="engagement"
           summary={
             <SummarySlider
-              sequential={this.state.sequential}
-              notSequential={this.state.notSequential}
-              support={this.state.support}
-              noSupport={this.state.noSupport}
-              noTeacherOpp={this.state.noTeacherOpp}
+              offTask={this.state.offTaskSummaryCount}
+              engaged={this.state.engagedSummaryCount}
+              avgRating={this.state.avgEngagementSummary}
             />
           }
           details={
             <DetailsSlider
-              sequential1={this.state.sequential1}
-              sequential2={this.state.sequential2}
-              sequential3={this.state.sequential3}
-              sequential4={this.state.sequential4}
-              teacher1={this.state.teacher1}
-              teacher2={this.state.teacher2}
-              teacher3={this.state.teacher3}
-              teacher4={this.state.teacher4}
+                offTaskDetailSplit={this.state.offTaskDetailSplit}
+                mildlyEngagedDetailSplit={this.state.mildlyEngagedDetailSplit}
+                engagedDetailSplit={this.state.engagedDetailSplit}
+                highlyEngagedDetailSplit={this.state.highlyEngagedDetailSplit}
             />
           }
           trendsGraph={
             <TrendsSlider
-              childData={this.handleTrendsChildFormatData}
-              teacherData={this.handleTrendsTeacherFormatData}
+              data={this.handleTrendsFormatData}
             />
           }
           changeSessionId={this.changeSessionId}
@@ -493,5 +427,5 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
 }
 
 
-StudentEngagementResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(StudentEngagementResultsPage);
+SequentialActivitiesResultsPage.contextType = FirebaseContext;
+export default withStyles(styles)(SequentialActivitiesResultsPage);

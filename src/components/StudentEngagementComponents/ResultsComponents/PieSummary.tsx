@@ -4,13 +4,12 @@ import { Pie } from "react-chartjs-2";
 import * as Constants from "../../../constants";
 
 interface Props {
-  noSupport: number,
-  support: number,
-  noTeacherOpp: number
+  offTask: number,
+  engaged: number,
 }
 
 /**
- * Pie Chart for Associative&Cooperative Teacher Behaviors
+ * Pie Chart for Student Engagement
  * @class PieSummary
  * @return {void}
  */
@@ -23,9 +22,8 @@ class PieSummary extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    noSupport: PropTypes.number.isRequired,
-    support: PropTypes.number.isRequired,
-    noTeacherOpp: PropTypes.number.isRequired
+    offTask: PropTypes.number.isRequired,
+    engaged: PropTypes.number.isRequired,
   }
 
   /**
@@ -35,15 +33,14 @@ class PieSummary extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const teacherBehaviorsData = {
       labels: [
-        "Teacher Support for Assoc./Coop. Interactions",
-        "Teacher Present, No Support",
-        "Teacher Not at Center"
+        "Off Task",
+        "Engaged",
       ],
       datasets: [
         {
-          data: [this.props.support, this.props.noSupport, this.props.noTeacherOpp],
-          backgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, Constants.NotPresentColor],
-          hoverBackgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, Constants.NotPresentColor]
+          data: [this.props.offTask, this.props.engaged],
+          backgroundColor: [Constants.RedGraphColor, Constants.EngagementColor, Constants.NotPresentColor],
+          hoverBackgroundColor: [Constants.RedGraphColor, Constants.EngagementColor, Constants.NotPresentColor]
         }
       ]
     };

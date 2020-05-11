@@ -1,14 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { HorizontalBar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import * as Constants from "../../../constants";
 
 
 interface Props {
-  sequential1: number,
-  sequential2: number,
-  sequential3: number,
-  sequential4: number
+  offTaskDetailSplit: Array<number>,
+  mildlyEngagedDetailSplit: Array<number>,
+  engagedDetailSplit: Array<number>,
+  highlyEngagedDetailSplit: Array<number>,
 }
 
 /**
@@ -25,10 +25,10 @@ class EngagementBarDetails extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    sequential1: PropTypes.number.isRequired,
-    sequential2: PropTypes.number.isRequired,
-    sequential3: PropTypes.number.isRequired,
-    sequential4: PropTypes.number.isRequired
+    offTaskDetailSplit: PropTypes.array.isRequired,
+    mildlyEngagedDetailSplit: PropTypes.array.isRequired,
+    engagedDetailSplit: PropTypes.array.isRequired,
+    highlyEngagedDetailSplit: PropTypes.array.isRequired,
   };
 
   /**
@@ -36,34 +36,48 @@ class EngagementBarDetails extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const childBehaviorsData = {
+    const engagementData = {
       labels: [
-        ["Using materials in a step-by-step", "predictable way"],
-        ["Drawing recognizable images or", "writing names or messages", "(letters or letter-like forms)"],
-        ["Playing a game with set rules", "and/or taking turns"],
-        ["Speaking or acting according to", "a pretend scenario that", "follows a predictable plot"]
+        ["Off Task"],
+        ["Mildly Engaged"],
+        ["Engaged"],
+        ["Highly Engaged"]
       ],
-      datasets: [
-        {
-          data: [this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4],
-          backgroundColor: [Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor],
-          hoverBackgroundColor: [Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor, Constants.SequentialColor]
-        }
+      datasets: [{
+        label: 'small',
+        stack: '0',
+        data: [this.props.offTaskDetailSplit[0],this.props.mildlyEngagedDetailSplit[0],this.props.engagedDetailSplit[0],this.props.highlyEngagedDetailSplit[0]],
+        backgroundColor: "rgba(63,103,126,1)",
+        hoverBackgroundColor: "rgba(50,90,100,1)"
+      },{
+        label: 'whole',
+        stack: '1',
+        data: [this.props.offTaskDetailSplit[1],this.props.mildlyEngagedDetailSplit[1],this.props.engagedDetailSplit[1],this.props.highlyEngagedDetailSplit[1]],
+        backgroundColor: "rgba(163,103,126,1)",
+        hoverBackgroundColor: "rgba(140,85,100,1)"
+      },{
+        label: 'transition',
+        stack: '2',
+        data: [this.props.offTaskDetailSplit[2],this.props.mildlyEngagedDetailSplit[2],this.props.engagedDetailSplit[2],this.props.highlyEngagedDetailSplit[2]],
+        backgroundColor: "rgba(63,203,226,1)",
+        hoverBackgroundColor: "rgba(46,185,235,1)"
+      }
       ]
     };
 
     return (
-      <HorizontalBar
-        data={childBehaviorsData}
+      <Bar
+        data={engagementData}
         options={{
           scales: {
             xAxes: [
               {
+                stacked: true,
                 ticks: {
                   min: 0,
-                  max: 
-                    (Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) > 20) ? 
-                    Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) : 20,
+                  // max:
+                  //   (Math.max(Math.max(...this.props.offTaskDetailSplit), Math.max(...this.props.mildlyEngagedDetailSplit), Math.max(...this.props.engagedDetailSplit), Math.max(...this.props.highlyEngagedDetailSplit)) > 20) ?
+                  //   Math.max(Math.max(...this.props.offTaskDetailSplit), Math.max(...this.props.mildlyEngagedDetailSplit), Math.max(...this.props.engagedDetailSplit), Math.max(...this.props.highlyEngagedDetailSplit))  : 20,
                   fontSize: 16,
                   fontColor: 'black'
                 },
@@ -77,6 +91,7 @@ class EngagementBarDetails extends React.Component<Props, {}> {
             ],
             yAxes: [
               {
+                stacked: true,
                 ticks: {
                   fontSize: 16,
                   fontColor: 'black',
@@ -85,7 +100,7 @@ class EngagementBarDetails extends React.Component<Props, {}> {
             ]
           },
           legend: {
-            display: false
+            display: true
           },
           plugins: {
             datalabels: {
