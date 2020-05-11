@@ -493,8 +493,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
           history={this.props.history}
           summary={
             <Grid container justify={"center"} direction={"column"}>
-              <Grid item>
-                <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: 'Arimo'}}>
+              <Grid item style={{padding: '1em'}}>
+                <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
                   Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
                 </Typography>
               </Grid>
@@ -543,8 +543,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
           details={
             <div>
               <Grid container justify={"center"} direction={"column"}>
-                <Grid item>
-                  <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: 'Arimo'}}>
+                <Grid item style={{padding: '1em'}}>
+                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
                     Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
                   </Typography>
                 </Grid>
