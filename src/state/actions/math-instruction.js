@@ -1,6 +1,6 @@
 export const ADD_NEW_CENTER       = "add_new_mathcenter";
 export const UPDATE_CENTER_COUNT  = "update_mathcenter_count";
-export const DELETE_ALL_CENTERS   = "delete_all_mathcenters";
+export const DELETE_MI_CENTERS   = "delete_all_mathcenters";
 
 export const addNewCenter = centerName => ({
     type: ADD_NEW_CENTER,
@@ -12,8 +12,8 @@ export const addNewCenter = centerName => ({
     centerName
   });
   
-  export const deleteAllCenters = () => ({
-    type: DELETE_ALL_CENTERS
+  export const deleteMICenters = () => ({
+    type: DELETE_MI_CENTERS
   });
   
   

@@ -8,6 +8,7 @@ import SummarySlider from "../../../components/MathInstructionComponents/Results
 import DetailsSlider from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSlider";
 import TrendsSlider from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSlider";
 import MathCoachingQuestions from "../../../components/MathInstructionComponents/ResultsComponents/MathCoachingQuestions";
+import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
 const styles: object = {
@@ -22,7 +23,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
+  teacherSelected: Teacher
 }
 
 interface Style {
@@ -54,8 +55,19 @@ interface State {
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<string>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 /**
  * math results
@@ -137,18 +149,47 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "math").then((dates: Array<string>) =>
-      this.setState({
-        sessionDates: dates
-      }, () => {
-        this.setState({ sessionId: this.state.sessionDates[0].id },
-          () => {
-            this.getData();
+    this.setState({
+      math: 0,
+      notMath: 0,
+      support: 0,
+      noSupport: 0,
+      noTeacherOpp: 0,
+      sessionId: '',
+      math1: 0,
+      math2: 0,
+      math3: 0,
+      math4: 0,
+      teacher1: 0,
+      teacher2: 0,
+      teacher3: 0,
+      teacher4: 0,
+      trendsDates: [],
+      trendsMath: [],
+      trendsNotMath: [],
+      trendsNoTeacherOpp: [],
+      trendsNoSupport: [],
+      trendsSupport: [],
+      notes: [],
+      actionPlanExists: false,
+      conferencePlanExists: false,
+      addedToPlan: [],
+      sessionDates: []
+    }, () => {
+      firebase.fetchSessionDates(teacherId, "math").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+        this.setState({
+          sessionDates: dates
+        }, () => {
+          if (this.state.sessionDates[0]) {
+            this.setState({ sessionId: this.state.sessionDates[0].id },
+              () => {
+                this.getData();
+              }
+            );
           }
-        );
-      })
-    );
-    console.log('date fetching was called');
+        })
+      );
+    })
   };
 
   /**
@@ -233,8 +274,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
         },
         {
           label: "Math",
-          backgroundColor: Constants.MathColor,
-          borderColor: Constants.MathColor,
+          backgroundColor: Constants.Colors.MI,
+          borderColor: Constants.Colors.MI,
           fill: false,
           lineTension: 0,
           data: this.state.trendsMath
@@ -295,20 +336,6 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
   getData = (): void => {
     const firebase = this.context;
     this.handleNotesFetching(this.state.sessionId);
-    firebase.getActionPlan(this.state.sessionId)
-    .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
-      if (actionPlanData.length>0) {
-        this.setState({
-          actionPlanExists: true
-        })
-      } else {
-        this.setState({
-          actionPlanExists: false
-        })
-      }
-    }).catch(() => {
-      console.log('unable to retrieve action plan')
-    })
     firebase.getConferencePlan(this.state.sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
@@ -416,12 +443,33 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.location.state.teacher.id);
+    this.handleDateFetching(this.props.teacherSelected.id);
+    this.handleTrendsFetching(this.props.teacherSelected.id);
+  }
+
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    }
   }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
   /**
@@ -438,10 +486,9 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <ResultsLayout
-          teacherId={this.props.location.state.teacher.id}
+          teacher={this.props.teacherSelected}
           magic8="Math Instruction"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="math"
+          history={this.props.history}
           summary={
             <SummarySlider
               math={this.state.math}
@@ -478,13 +525,10 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
               handleAddToPlan={this.handleAddToPlan}
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
-              teacherId={this.props.location.state.teacher.id}
-              magic8={"Math Instruction"}
+              teacherId={this.props.teacherSelected.id}
             />
           }
           chosenQuestions={chosenQuestions}
-          teacherFirstName={this.props.location.state.teacher.firstName}
-          teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
         />
@@ -493,6 +537,11 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
 
 MathInstructionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(MathInstructionResultsPage);
+export default withStyles(styles)(connect(mapStateToProps)(MathInstructionResultsPage));

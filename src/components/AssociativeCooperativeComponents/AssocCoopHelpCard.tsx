@@ -13,7 +13,7 @@ import ACHelpTeacher from './ACHelpTeacher';
 const ACTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ACColor
+      main: Constants.Colors.AC
     },
     secondary: {
       main: '#000000'
@@ -104,7 +104,7 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: this.state.tabValue === 0? 'white' : 'black',
-                      backgroundColor: this.state.tabValue === 0 ? Constants.ACColor : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 0 ? Constants.Colors.AC : '#d3d3d3'
                     }}
                   />
                   <Tab

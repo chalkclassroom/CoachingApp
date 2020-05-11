@@ -11,7 +11,7 @@ import ActionPlanForm from './ActionPlanForm';
 function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
-    top: `50%`,
+    top: `55%`,
     left: `62.5%`,
     transform: `translate(-50%, -50%)`,
   } as React.CSSProperties;
@@ -20,10 +20,10 @@ function getModalStyle(): React.CSSProperties {
 const styles: object = {
   paper: {
     position: "absolute",
-    width: "60%",
-    height: "70%",
+    width: "70vw",
+    height: "80vh",
     backgroundColor: 'white',
-    padding: '2em',
+    padding: '1em',
     borderRadius: 8,
     overflow: 'auto'
   },
@@ -48,12 +48,22 @@ interface Props {
   classes: Style,
   handleClose(): void,
   firebase: {},
-  teacherFirstName: string,
-  teacherLastName: string,
-  teacherId: string,
+  teacher: Teacher,
   sessionId: string,
   actionPlanExists: boolean,
+  magic8: string
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 interface State {
   open: boolean,
@@ -83,11 +93,19 @@ class ActionPlanModal extends React.Component<Props, State> {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     firebase: PropTypes.object.isRequired,
-    teacherFirstName: PropTypes.string.isRequired,
-    teacherLastName: PropTypes.string.isRequired,
-    teacherId: PropTypes.string.isRequired,
+    teacher: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
     sessionId: PropTypes.string.isRequired,
     actionPlanExists: PropTypes.bool.isRequired,
+    magic8: PropTypes.string.isRequired
   };
 
   /**
@@ -103,13 +121,12 @@ class ActionPlanModal extends React.Component<Props, State> {
           <div style={getModalStyle()} className={classes.paper}>
             <ActionPlanForm 
               firebase={this.props.firebase}
-              teacherFirstName={this.props.teacherFirstName}
-              teacherLastName={this.props.teacherLastName}
-              teacherId={this.props.teacherId}
+              teacher={this.props.teacher}
               sessionId={this.props.sessionId}
               handleClose={this.handleClose}
               readOnly={false}
               actionPlanExists={this.props.actionPlanExists}
+              magic8={this.props.magic8}
             />
           </div>
         </Modal>

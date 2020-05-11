@@ -42,7 +42,6 @@ const styles: object = {
 };
 
 interface Props {
-  teacherId: string,
   firebase: {
     auth: {
       currentUser: {
@@ -58,7 +57,17 @@ interface Props {
     button: string
   },
   pushOntoLoiStack(insType: string): void,
-  popOffLoiStack(): void
+  popOffLoiStack(): void,
+  teacherSelected: {
+    email: string,
+    firstName: string,
+    lastName: string,
+    notes: string,
+    id: string,
+    phone: string,
+    role: string,
+    school: string
+  }
 }
 
 /**
@@ -71,7 +80,7 @@ class InstructionCounter extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
     const mEntry = {
-      teacher: this.props.teacherId,
+      teacher: this.props.teacherSelected.id,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: 'level'
     };
@@ -98,8 +107,16 @@ class InstructionCounter extends React.Component<Props, {}> {
   
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    teacherId: PropTypes.string.isRequired,
-    selected: PropTypes.string.isRequired,
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
     pushOntoLoiStack: PropTypes.func.isRequired,
     popOffLoiStack: PropTypes.func.isRequired,
     firebase: PropTypes.object.isRequired,
@@ -299,10 +316,11 @@ class InstructionCounter extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = (state): {currentSetting: string, totalVisitCount: number} => {
+const mapStateToProps = (state): {currentSetting: string, totalVisitCount: number, teacherSelected: Teacher} => {
   return {
     currentSetting: state.LOIsettingTypeState.settingType,
-    totalVisitCount: state.instructionstackstate.instructionStack.length
+    totalVisitCount: state.instructionstackstate.instructionStack.length,
+    teacherSelected: state.teacherSelectedState.teacher
   };
 };
 

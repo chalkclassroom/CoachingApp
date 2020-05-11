@@ -17,7 +17,7 @@ import { createMuiTheme } from '@material-ui/core/es';
 const InstructionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.InstructionColor
+      main: Constants.Colors.LI
     }
   }
 });

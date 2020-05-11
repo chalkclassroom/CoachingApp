@@ -10,6 +10,20 @@ import {
 import { red } from "@material-ui/core/es/colors";
 
 // Colors
+export const Colors = {
+  'AppBar': "#459aeb",
+  'TT': '#e55529',
+  'CC': '#0988ec',
+  'MI': '#094492',
+  'SE': '#e99c2e',
+  'LI': '#009365',
+  'LC': '#4fd9b3',
+  'SA': '#ffd300',
+  'AC': '#6f39c4',
+  'RedGraph': "#ec2409",
+  'NotPresent': "#bababa"
+}
+
 export const AppBarColor = "#459aeb";
 export const TransitionColor = '#e55529';
 export const ClimateColor = '#0988ec';
@@ -30,6 +44,24 @@ export const TransitionTypeColors = {
   behaviorManagementColor: red['A200'],
   otherColor: indigo['A200'],
 }
+
+export const CentersFirstHalf = [
+  "Blocks",
+  "Toys and Games",
+  "Technology/\nComputer",
+  "Sensory",
+  "Math/\nManipulatives",
+  "Science and Nature",
+];
+
+export const CentersSecondHalf = [
+  "Writing",
+  "Art",
+  "Dramatic Play",
+  "Music and Movement",
+  "Library",
+  "Small Group"
+]
 
 
 // Team Members
@@ -134,10 +166,112 @@ export const DS = {
 
 // Centers Observation Checklists
 export const Checklist = {
-  'Listening': {
+  'MI': {
+    'ChildInstructions': 'Select the types of math activities children are doing at this center.',
+    'TeacherInstructions': 'Select the types of support for math the ' +
+      'teacher is providing at this center.',
+    'ChildBehaviors': [
+      <div key={0}> <b>Counting and Numbers</b> </div>,
+      <div key={1}> <b>Shapes and Spatial reasoning</b> </div>,
+      <div key={2}> <b>Patterns</b> </div>,
+      <div key={3}> <b>Measurement and Data</b> </div>,
+      <div key={4}> None of the above </div>,
+    ],
+    'TeacherBehaviors': [
+      <div key={0}> Using <b>math vocabulary</b> </div>,
+      <div key={1}> <b>Asking questions</b> about math concepts </div>,
+      <div key={2}> <b>Demonstrating</b> math concepts </div>,
+      <div key={3}> Helping children use math to <b>problem solve</b> </div>,
+      <div key={4}> None of the above </div>,
+    ]
+  },
+  'AC': {
+    'ChildInstructions': 'Select all the activities children are doing at this center.',
+    'TeacherInstructions': 'Select the types of support for interactions the ' +
+      'teacher is providing at this center.',
+    'ChildBehaviors': [
+      <div key={0}>
+        Participating in a <b>conversation</b> about a <b>shared activity</b>
+        </div>,
+      <div key={1}>
+        Engaging <b>together</b> in an <b>open-ended activity</b> without clear {" "}
+        roles or order
+      </div>,
+      <div key={2}>
+        Following <b>formal rules of a game</b> and/or taking turns
+      </div>,
+      <div key={3}>
+        Talking about or doing an activity together that has
+        a <b>predetermined sequence</b> (e.g., acting out
+        restaurant in a dramatic play; doing pattern blocks
+        together)
+      </div>,
+      <div key={4}> None of the above </div>
+    ],
+    'TeacherBehaviors': [
+      <div key={0}> <b>Participating</b> in children’s play </div>,
+      <div key={1}>
+        Asking questions to <b>extend children’s thinking</b> {" "}
+        about their shared activity
+      </div>,
+      <div key={2}>
+        <b>Encouraging</b> children to <b>share</b>, <b>work</b>,
+        or <b>interact</b> with each other
+      </div>,
+      <div key={3}>
+        Helping children find the <b>words to communicate</b>
+      </div>,
+      <div key={4}> None of the above </div>,
+    ]
+  },
+  'SA': {
+    'ChildInstructions': 'Select all the activities children are doing at this center.',
+    'TeacherInstructions': 'Select the types of support for sequential activities the ' +
+      'teacher is providing at this center.',
+    'ChildBehaviors': [
+      <div key={0}>
+        Using materials in a{" "}
+        <b>step-by-step, predictable way</b>
+        </div>,
+      <div key={1}>
+        <b>Drawing</b> recognizable images or <b>writing</b>{" "}
+        names or messages (letters or letter-like forms)
+      </div>,
+      <div key={2}>
+        Playing a game with <b>set rules</b> and/or {" "}
+        <b>taking turns</b>
+      </div>,
+      <div key={3}>
+        Speaking or acting according to a{" "}
+        <b>pretend scenario</b> that follows a
+        predictable plot
+      </div>,
+      <div key={4}> None of the above </div>,
+    ],
+    'TeacherBehaviors': [
+      <div key={0}>
+        <b>Helping</b> children do sequential activities
+        with manipulatives or toys
+      </div>,
+      <div key={1}>
+        Supporting children as they <b>draw</b> images
+        or <b>write</b> messages
+      </div>,
+      <div key={2}>
+        <b>Demonstrating the steps</b> to an activity
+        or game
+      </div>,
+      <div key={3}>
+        Supporting children as they <b>act out</b> 
+        {" "} a dramatic play scenario or book
+      </div>,
+      <div key={4}> None of the above </div>,
+    ]
+  },
+  'LC': {
     'TeacherBehaviors': [
       <div key={0}>At <b>eye-level</b> with children</div>,
-      <div key={1}><b>Looks expectantly</b> at children and <b>shows warmth</b> to encourage child talk</div>,
+      <div key={1}><b>Looks at children</b> with a <b>positive expression</b> to encourage child talk</div>,
       <div key={2}><b>Repeats</b> or <b>clarifies</b> children&apos;s comments</div>,
       <div key={3}>Asks <b>open-ended questions</b> to encourage conversation</div>,
       <div key={4}><b>Expands on children&apos;s play or talk</b> using questions or comments</div>,
@@ -714,7 +848,7 @@ export const CoachingQuestions = {
         'name': 'InstructionPanel1A',
         'title': 'Explain Thinking',
         'text': [
-          'Which resources are the most helpful for planning math activities?',
+          'Talk about the opportunities children have to explain their thinking.',
           'What supports help children who struggle at first when ' +
           'responding to how and why questions?',
         ]
@@ -787,12 +921,12 @@ export const CoachingQuestions = {
         'name': 'InstructionPanel3A',
         'title': 'Encouraging Student Participation',
         'text': [
-          'How do some children benefit from low-level questions that have 1 or 2 - word ' +
-          'answers?', 
+          'How do some dual-language learners and/or children with language delays benefit ' + 
+          'from low-level questions that have 1 or 2 - word answers?',
           'Talk about the successes you have had using low-level questions to help children ' +
           'participate in a conversation.',		
-	        'Over time, how do children develop in their participation? Talk about your role ' +
-          'in their development.' 
+	        'Over time, how do children develop in their participation? Talk about how you as ' +
+          'the teacher support their ability to participate.' 
         ]
       },
       {
@@ -871,6 +1005,86 @@ export const CoachingQuestions = {
         ]
       },
     ],
+  },
+  'Listening': {
+    'Listening': [
+      {
+        'name': 'ListeningPanel1A',
+        'title': 'Teacher Positions',
+        'text': [
+          'Talk about how you position your body when interacting with children.',
+          'Talk about how you balance your time between interacting with children, ' +
+          'monitoring children, and/or doing managerial tasks during centers, ' +
+          'small groups, or mealtimes.'
+        ]
+      },
+      {
+        'name': 'ListeningPanel1B',
+        'title': 'Interest in Child Talk',
+        'text': [
+          'Talk about how you show children that you are interested in what ' +
+          'they say (with facial expressions, smiling, nodding, etc.).',
+          'What do you notice happening when adults give children wait time, ' +
+          'or time to respond, during conversations?'
+        ]
+      }
+    ],
+    'Supporting': [
+      {
+        'name': 'ListeningPanel2A',
+        'title': 'Repeating and Clarifying Child Comments',
+        'text': [
+          'What do you notice about children\'s responses or behaviors when you ' +
+          'repeat what they say? Are there certain activities when you find yourself ' +
+          'repeating children\'s comments more?',
+          'When do you notice yourself clarifying children\'s comments? How does it ' +
+          'help sustain the conversation?'
+        ]
+      },
+      {
+        'name': 'ListeningPanel2B',
+        'title': 'Asking Open-Ended Questions',
+        'text': [
+          'When do you find time to have conversations with children?',
+          'Talk about topics that children enjoy discussing. How do you know?',
+          'What do you notice happening when you ask children open-ended questions ' +
+          'that don\'t have one-word answers?'
+        ]
+      },
+      {
+        'name': 'ListeningPanel2C',
+        'title': 'Expanding on Child Talk and Play',
+        'text': [
+          'Talk about when you find time to observe children and follow their lead.',
+          'What are effective strategies for building on children\'s play and getting ' +
+          'children to talk about their play?',
+          'For children who talk less than their peers, how do you get them to open up?'
+        ]
+      }
+    ],
+    'Encouraging': [
+      {
+        'name': 'ListeningPanel3A',
+        'title': 'Peer Talk During Play',
+        'text': [
+          'Talk about effective strategies you use to promote children\'s communication ' +
+          'with each other during play.',
+          'Talk about how you help children use role speech with each other during ' +
+          'pretend play.',
+          'As children play with blocks or games, what strategies encourage them to ' +
+          'share ideas and create together?'
+        ]
+      },
+      {
+        'name': 'ListeningPanel3B',
+        'title': 'Solving Problems',
+        'text': [
+          'What verbal strategies do children use for solving problems like deciding ' +
+          'what to play, sharing, taking turns, etc.?',
+          'Talk about how you teach problem-solving to children.'
+        ]
+      }
+    ]
   },
   'AC': {
     'Associative': [

@@ -10,6 +10,7 @@ import TransitionBarChart from "../../../components/ResultsComponents/Transition
 import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph.tsx";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
+import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
 const styles: object = {
@@ -23,8 +24,18 @@ const styles: object = {
 };
 
 interface Props {
-  location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
-  classes: { root: string }
+  classes: { root: string },
+  teacherSelected: Teacher,
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void
+  }
 }
 
 interface State {
@@ -44,15 +55,25 @@ interface State {
   trendsBehaviorManagement: Array<number>,
   trendsOther: Array<number>,
   trendsTotal: Array<number>,
-  trendsTotalColor: string,
   transitionTime: number,
   sessionTotal: number,
   learningActivityTime: number,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<string>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
 
 /**
  * transition results
@@ -82,7 +103,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
       trendsBehaviorManagement:  [],
       trendsOther: [],
       trendsTotal: [],
-      trendsTotalColor: "#ec2409",
       transitionTime: 0,
       sessionTotal: 0,
       learningActivityTime: 0,
@@ -97,7 +117,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    const teacherId = this.props.location.state.teacher.id;
+    const teacherId = this.props.teacherSelected.id;
     this.handleTrendsFetch(teacherId);
     this.handleDateFetching(teacherId);
   }
@@ -149,7 +169,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
    * @param {number} totalTime
    * @return {number}
    */
-  handleTrendsFormatTime = (totalTime: number) => {
+  handleTrendsFormatTime = (totalTime: number): string => {
     const seconds = Math.round(totalTime / 1000 % 60);
     const minutes = Math.floor((totalTime / 1000 / 60) % 60);
     const hours = Math.floor((totalTime / 1000 / 3600) % 60);
@@ -180,8 +200,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
       datasets:  [
         {
           label: 'TOTAL',
-          backgroundColor: Constants.TransitionColor,
-          borderColor: Constants.TransitionColor,
+          backgroundColor: Constants.Colors.TT,
+          borderColor: Constants.Colors.TT,
           fill: false,
           lineTension: 0,
           data: this.state.trendsTotal,
@@ -270,18 +290,45 @@ class TransitionResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<string>) =>
-      this.setState({
-        sessionDates: dates
-      }, () => {
-        this.setState({ sessionId: this.state.sessionDates[0].id },
-          () => {
-            this.getData();
+    this.setState({
+      sessionId: "",
+      notes: [],
+      sessionLine: 0,
+      sessionTraveling: 0,
+      sessionWaiting: 0,
+      sessionRoutines: 0,
+      sessionBehaviorManagement: 0,
+      sessionOther: 0,
+      trendsDates: [[]],
+      trendsLine: [],
+      trendsTraveling: [],
+      trendsWaiting:  [],
+      trendsRoutines: [],
+      trendsBehaviorManagement:  [],
+      trendsOther: [],
+      trendsTotal: [],
+      transitionTime: 0,
+      sessionTotal: 0,
+      learningActivityTime: 0,
+      actionPlanExists: false,
+      conferencePlanExists: false,
+      addedToPlan: [],
+      sessionDates: []
+    }, () => {
+      firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+        this.setState({
+          sessionDates: dates
+        }, () => {
+          if (this.state.sessionDates[0]) {
+            this.setState({ sessionId: this.state.sessionDates[0].id },
+              () => {
+                this.getData();
+              }
+            );
           }
-        );
-      })
-    );
-    console.log('date fetching was called');
+        })
+      );
+    })
   };
 
   /**
@@ -303,21 +350,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
       })
     });
 
-    firebase.getActionPlan(this.state.sessionId).then((actionPlanData) => {
-      if (actionPlanData.length>0) {
-        console.log('actionplan data: ', actionPlanData>0)
-        this.setState({
-          actionPlanExists: true
-        })
-      } else {
-        this.setState({
-          actionPlanExists: false
-        })
-      }
-    }).catch(() => {
-      console.log('unable to retrieve action plan')
-    })
-
     firebase.getConferencePlan(this.state.sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
@@ -334,12 +366,12 @@ class TransitionResultsPage extends React.Component<Props, State> {
     })
     firebase.fetchTransitionTypeSummary(this.state.sessionId).then(type => {
       this.setState({
-        sessionLine: Math.round(((type[0].line))),
-        sessionTraveling: Math.round(((type[0].traveling))),
-        sessionWaiting: Math.round(((type[0].waiting))),
-        sessionRoutines: Math.round(((type[0].routines))),
-        sessionBehaviorManagement: Math.round(((type[0].behaviorManagement))),
-        sessionOther: Math.round(((type[0].other))),
+        sessionLine: Math.round(type[0].line),
+        sessionTraveling: Math.round(type[0].traveling),
+        sessionWaiting: Math.round(type[0].waiting),
+        sessionRoutines: Math.round(type[0].routines),
+        sessionBehaviorManagement: Math.round(type[0].behaviorManagement),
+        sessionOther: Math.round(type[0].other),
         transitionTime: type[0].total
       }, () => {console.log("session line is ", this.state.sessionLine)})
     });
@@ -394,9 +426,29 @@ class TransitionResultsPage extends React.Component<Props, State> {
     })
   };
 
+  /** 
+   * lifecycle method invoked after component updates 
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleTrendsFetch(this.props.teacherSelected.id);
+      this.handleDateFetching(this.props.teacherSelected.id);
+    }
+  }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
   /**
@@ -413,10 +465,9 @@ class TransitionResultsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <ResultsLayout
-          teacherId={this.props.location.state.teacher.id}
+          teacher={this.props.teacherSelected}
           magic8="Transition Time"
-          handleTrendsFetch={this.handleTrendsFetch}
-          observationType="transition"
+          history={this.props.history}
           summary={
             <div>
               <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: 'Arimo'}}>
@@ -460,13 +511,10 @@ class TransitionResultsPage extends React.Component<Props, State> {
               handleAddToPlan={this.handleAddToPlan}
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
-              teacherId={this.props.location.state.teacher.id}
-              magic8={"Transition Time"}
+              teacherId={this.props.teacherSelected.id}
             />
           }
           chosenQuestions = {chosenQuestions}
-          teacherFirstName={this.props.location.state.teacher.firstName}
-          teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
         />
@@ -475,5 +523,11 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
+
 TransitionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(TransitionResultsPage);
+export default withStyles(styles)(connect(mapStateToProps)(TransitionResultsPage));

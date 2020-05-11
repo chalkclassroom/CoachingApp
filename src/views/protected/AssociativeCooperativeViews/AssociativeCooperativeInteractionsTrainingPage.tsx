@@ -18,7 +18,7 @@ import Grid from '@material-ui/core/Grid';
 const ACTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ACColor
+      main: Constants.Colors.AC
     }
   }
 });

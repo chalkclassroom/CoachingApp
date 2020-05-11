@@ -438,7 +438,7 @@ class Firebase {
       );
   };
 
-  handlePushAC = async function(mEntry) {
+  handlePushCentersData = async function(mEntry) {
     return this.sessionRef
       .collection("entries")
       .add({
@@ -451,30 +451,17 @@ class Firebase {
       );
   };
 
-    handlePushSEEachEntry = async function(mEntry) {
-        return this.sessionRef
-            .collection("entries")
-            .add({
-                studentId: mEntry.id,
-                point: mEntry.point,
-                entryType: mEntry.entryType,
-                Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .catch(error =>
-                console.error("Error occurred adding observation: ", error)
-            );
-    };
-
-  handlePushSequential = async function(mEntry) {
+  handlePushSEEachEntry = async function(mEntry) {
     return this.sessionRef
       .collection("entries")
       .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          studentId: mEntry.id,
+          point: mEntry.point,
+          entryType: mEntry.entryType,
+          Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
-        console.error("Error occurred adding observation: ", error)
+          console.error("Error occurred adding observation: ", error)
       );
   };
 
@@ -483,19 +470,6 @@ class Firebase {
       .collection("entries")
       .add({
         instructionType: insType,
-        Timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .catch(error =>
-        console.error("Error occurred adding observation: ", error)
-      );
-  };
-
-  handlePushMath = async function(mEntry) {
-    return this.sessionRef
-      .collection("entries")
-      .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
@@ -950,6 +924,20 @@ class Firebase {
       );
   };
 
+  fetchListeningDetails = async function(sessionId) {
+    const getListeningDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcListeningDetails"
+    );
+    return getListeningDetailsFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting listening details: ", error)
+      );
+  };
+
   fetchChildACSummary = async function(sessionId) {
     const getChildACSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcChildACSummary"
@@ -1078,6 +1066,20 @@ class Firebase {
       );
   };
 
+  fetchListeningSummary = async function(sessionId) {
+    const getListeningSummaryFirebaseFunction = this.functions.httpsCallable(
+      "funcListeningSummary"
+    );
+    return getListeningSummaryFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting listening summary: ", error)
+      );
+  };
+
 
   fetchChildACTrend = async function(teacherId) {
     const getChildACTrendFirebaseFunction = this.functions.httpsCallable(
@@ -1178,16 +1180,31 @@ class Firebase {
       );
   };
 
-  createActionPlan = async function(teacherId, sessionId, magic8) {
+  fetchListeningTrend = async function(teacherId) {
+    const getListeningTrendFirebaseFunction = this.functions.httpsCallable(
+      "funcListeningTrend"
+    );
+    return getListeningTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        result =>
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting listening trend: ", error)
+      );
+  };
+
+  createActionPlan = async function(teacherId, magic8) {
     const data = Object.assign(
       {},
       {
-        sessionId: sessionId,
         coach: this.auth.currentUser.uid,
         teacher: teacherId,
         tool: magic8,
-        dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+        dateModified: firebase.firestore.Timestamp.now(),
+        dateCreated: firebase.firestore.Timestamp.now(),
         goal: '',
+        goalTimeline: '',
         benefit: ''
       }
     );
@@ -1198,7 +1215,6 @@ class Firebase {
         materials: '',
         person: '',
         step: '',
-        // timeline: firebase.firestore.FieldValue.serverTimestamp()
         timeline: ''
       }).then(() => {
         console.log('action steps created');
@@ -1224,36 +1240,25 @@ class Firebase {
     })
   }
 
-  findActionPlan = async function(sessionId) {
+  /**
+   * finds all action plans for coach and all their teachers
+   */
+  getCoachActionPlans = async function() {
     this.sessionRef = this.db.collection("actionPlans")
-      .where("benefit", "==", "maybe")
-    return this.sessionRef.get().then((doc) => {
-      if (doc.exists) {
-        console.log('action plan found');
-        return true;
-      } else {
-        console.log('action plan not found');
-        return false
-      }
-    }).catch((error) => {
-      console.log("error finding action plan: ", error)
-    })
-  }
-
-  getActionPlan = async function(sessionId) {
-    this.sessionRef = this.db.collection("actionPlans")
-      .where("sessionId", "==", sessionId)
+      .where("coach", "==", this.auth.currentUser.uid)
     return this.sessionRef.get()
       .then(querySnapshot => {
         const idArr = [];
         querySnapshot.forEach(doc =>
           idArr.push({
             id: doc.id,
-            goal: doc.data().goal,
-            benefit: doc.data().benefit,
-            date: doc.data().dateCreated
+            teacherId: doc.data().teacher,
+            teacherFirstName: '',
+            teacherLastName: '',
+            practice: doc.data().tool,
+            date: doc.data().dateModified
           })
-        );
+        )
         return idArr;
       })
       .catch(() => {
@@ -1261,7 +1266,69 @@ class Firebase {
       })
   }
 
-  getActionSteps = async function(actionPlanId, index) {
+  /**
+   * finds all action plans for coach and their selected teacher
+   * @param {string} practice
+   * @param {string} teacherId
+   */
+  getTeacherActionPlans = async function(practice, teacherId) {
+    this.sessionRef = this.db.collection("actionPlans")
+      .where("coach", "==", this.auth.currentUser.uid)
+      .where("teacher", "==", teacherId)
+      .where("tool", "==", practice)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            date: doc.data().dateModified
+          })
+        )
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve action plans')
+      })
+  }
+
+  getTeacherFirstName = async function(teacherId) {
+    return this.db
+      .collection("users")
+      .doc(teacherId)
+      .get()
+      .then(doc => doc.data().firstName)
+      .catch(error => console.error("Error getting cached document:", error));
+  }
+
+  getTeacherLastName = async function(teacherId) {
+    return this.db
+      .collection("users")
+      .doc(teacherId)
+      .get()
+      .then(doc => doc.data().lastName)
+      .catch(error => console.error("Error getting cached document:", error));
+  }
+
+  getAPInfo = async function(actionPlanId) {
+    return this.db
+      .collection("actionPlans")
+      .doc(actionPlanId)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return doc.data();
+        } else {
+          console.log("Doc does not exist");
+          return {};
+        }
+      })
+      .catch(error =>
+        console.error("Error occurred when getting document:", error)
+      );
+  };
+
+  getActionSteps = async function(actionPlanId) {
     this.sessionRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps");
     return this.sessionRef.get()
       .then(querySnapshot => {
@@ -1281,11 +1348,13 @@ class Firebase {
       })
   }
 
-  saveActionPlan = async function(actionPlanId, goal, benefit) {
+  saveActionPlan = async function(actionPlanId, goal, goalTimeline, benefit) {
     var actionPlanRef = this.db.collection("actionPlans").doc(actionPlanId);
     return actionPlanRef.update({
       goal: goal,
-      benefit: benefit
+      goalTimeline: goalTimeline,
+      benefit: benefit,
+      dateModified: firebase.firestore.Timestamp.now()
     })
     .then(() => {
       console.log("Action plan updated successfully!");

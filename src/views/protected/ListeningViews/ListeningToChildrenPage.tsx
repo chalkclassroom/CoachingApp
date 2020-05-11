@@ -1,18 +1,54 @@
 import * as React from 'react';
+import Grid from "@material-ui/core/Grid";
+import Button from '@material-ui/core/Button';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import TeacherChecklist from '../../../components/ListeningComponents/TeacherChecklist';
-import * as Constants from '../../../constants';
+import { withStyles } from '@material-ui/core/styles';
 
-interface Props {
-  location: {
-    state: {
-      teacher: {
-        id: string
-      }
-    }
+const styles: object = {
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
   }
 }
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
+interface Props {
+  classes: {
+    backButton: string
+  },
+  location: {
+    state: {
+      teacher: Teacher,
+      teachers: Array<Teacher>
+    }
+  },
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void
+  }
+};
 
 /**
  * @function ListeningToChildrenPage
@@ -20,21 +56,54 @@ interface Props {
  * @return {ReactElement}
  */
 function ListeningToChildrenPage(props: Props): React.ReactElement {
-  const { location } = props;
+  const { classes, location, history } = props;
   return (
     <div>
       <FirebaseContext.Consumer>
-        {(firebase: object) => (<AppBar firebase={firebase}/>)}
+        {(firebase: object): React.ReactNode => (<AppBar firebase={firebase}/>)}
       </FirebaseContext.Consumer>
-      <main style={{ flex: 1 }}>
+      <header>
+        <Grid container direction="row" alignItems="center" justify="flex-start">
+          <Grid item xs={3}>
+            <Grid container alignItems="center" justify="center">
+              <Grid item>
+                <Button variant="contained" size="medium" className={classes.backButton}
+                  onClick={(): void => {
+                    history.replace({
+                      pathname: "/Magic8Menu",
+                      state: {
+                        type: "Observe"
+                      }
+                    })
+                  }}>
+                  <ChevronLeftRoundedIcon />
+                  <b>Back</b>
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </header>
+      <main style={{ flexGrow: 1 }}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => (
+          {(firebase: {
+            auth: {
+              currentUser: {
+                uid: string
+              }
+            },
+            handleSession(mEntry: {
+              teacher: string,
+              observedBy: string,
+              type: string
+            }): void,
+            handlePushListening(mEntry: {
+              checked: Array<number>
+            }): Promise<void>
+          }): React.ReactNode => (
             <TeacherChecklist
               firebase={firebase}
-              teacherId={location.state.teacher.id}
-              magic8="Listening to Children"
-              color={Constants.ListeningColor}
-              checklist={Constants.Checklist.Listening}
+              type='LC'
             />
           )}
         </FirebaseContext.Consumer>
@@ -43,4 +112,4 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
   );
 }
 
-export default ListeningToChildrenPage;
+export default withStyles(styles)(ListeningToChildrenPage);
