@@ -5,14 +5,32 @@ import ToneSummary from './ToneSummary';
 import Slider from "react-slick";
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import { withStyles } from "@material-ui/core/styles";
+import PieSliceChildNonImage from '../../../assets/images/PieSliceChildNonImage.svg';
+import PieSliceClimateImage from '../../../assets/images/PieSliceClimateImage.svg';
+
+const styles: object = {
+  comparisonText: {
+    paddingLeft: '1em',
+    lineHeight: '0.8em',
+    fontFamily: 'Arimo'
+  }
+};
 
 interface Props {
   negativeResponses: number,
   positiveResponses: number,
-  averageToneRating: number
+  averageToneRating: number,
+  classes: {comparisonText: string}
 }
 
+/**
+ * @class ClimateSummarySlider
+ */
 class ClimateSummarySlider extends React.Component<Props, {}> {
+  /**
+   * @param {Props} props 
+   */
   constructor(props: Props) {
     super(props);
   }
@@ -20,10 +38,16 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
   static propTypes = {
     negativeResponses: PropTypes.number.isRequired,
     positiveResponses: PropTypes.number.isRequired,
-    averageToneRating: PropTypes.number
+    averageToneRating: PropTypes.number,
+    classes: PropTypes.object.isRequired
   }
 
-  render() {
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
+    const { classes } = this.props;
     const settings = {
       dots: true,
       infinite: true,
@@ -35,13 +59,45 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"} variant={"h4"}>
-              Summary
+            <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em', paddingBottom: '1em'}}>
+              Compare how often the teacher: 
             </Typography>
-            <BehaviorResponsesSummaryChart
-              negativeResponses={this.props.negativeResponses}
-              positiveResponses={this.props.positiveResponses}
-            />
+            <Grid container direction="column" alignItems="center">
+              <Grid item style={{width: '100%'}}>
+                <Grid container direction="row">
+                  <Grid item xs={1}>
+                    <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
+                      <Grid item style={{height:"50%"}}>
+                        <img alt="yellow" src={PieSliceClimateImage} height="95%"/>
+                      </Grid>
+                      <Grid item style={{height:"50%"}}>
+                        <img alt="red" src={PieSliceChildNonImage} height="95%"/>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={11}>
+                    <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                      <Grid item style={{height:"50%", paddingBottom: '1em'}}>
+                        <Typography variant="subtitle1" className={classes.comparisonText}>
+                          Approved of children&apos;s behavior.
+                        </Typography>
+                      </Grid>
+                      <Grid item style={{height:"50%"}}>
+                        <Typography variant="subtitle1" className={classes.comparisonText}>
+                          Disapproved of children&apos;s behavior.
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item style={{paddingTop: '1em'}}>
+              <BehaviorResponsesSummaryChart
+                negativeResponses={this.props.negativeResponses}
+                positiveResponses={this.props.positiveResponses}
+              />
+            </Grid>
           </Grid>
         </div>
         <div>
@@ -59,4 +115,4 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
   }
 }
 
-export default ClimateSummarySlider;
+export default withStyles(styles)(ClimateSummarySlider);

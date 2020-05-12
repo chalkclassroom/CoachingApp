@@ -9,6 +9,8 @@ import BehaviorResponsesDetailsChart from "../../../components/ClassroomClimateC
 import ClimateCoachingQuestions from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateCoachingQuestions";
 import ClimateSummarySlider from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateSummarySlider";
 import { connect } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 const styles: object = {
   root: {
@@ -361,12 +363,32 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
             />
           }
           details={
-            <BehaviorResponsesDetailsChart
-              disapprovalBehaviorCount={this.state.disapprovalBehaviorCount}
-              redirectionsBehaviorCount={this.state.redirectionsBehaviorCount}
-              nonspecificBehaviorCount={this.state.nonspecificBehaviorCount}
-              specificBehaviorCount={this.state.specificBehaviorCount}
-            />
+            <div>
+              <Grid container justify={"center"} direction={"column"}>
+                <Grid container justify={"center"} direction={"column"}>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    What behavior responses did the teacher give children
+                    during the observation?
+                  </Typography>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    Did the teacher give one type of behavior response
+                    more often than other types?          
+                  </Typography>
+                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                    Did the teacher give one type of behavior response
+                    less often than other types?            
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <BehaviorResponsesDetailsChart
+                    disapprovalBehaviorCount={this.state.disapprovalBehaviorCount}
+                    redirectionsBehaviorCount={this.state.redirectionsBehaviorCount}
+                    nonspecificBehaviorCount={this.state.nonspecificBehaviorCount}
+                    specificBehaviorCount={this.state.specificBehaviorCount}
+                  />
+                </Grid>
+              </Grid>
+            </div>
           }
           trendsGraph={<ClimateTrendsGraph data={this.trendsFormatData}/>}
           changeSessionId={this.changeSessionId}
