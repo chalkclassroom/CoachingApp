@@ -192,8 +192,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        listeningArray.push(Math.floor((data.listening / (data.listening + data.notListening)) * 100));
-        notListeningArray.push(Math.floor((data.notListening / (data.listening + data.notListening)) * 100));
+        listeningArray.push(Math.round((data.listening / (data.listening + data.notListening)) * 100));
+        notListeningArray.push(Math.round((data.notListening / (data.listening + data.notListening)) * 100));
       });
       this.setState({
         trendsDates: dateArray,

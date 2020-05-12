@@ -65,12 +65,14 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
             }
           },
           legend: {
+            display: true,
             onClick: null,
             position: "bottom",
             labels: {
               padding: 20,
               fontColor: "black",
               fontSize: 14,
+              fontFamily: 'Arimo'
             }
           },
           title: {
