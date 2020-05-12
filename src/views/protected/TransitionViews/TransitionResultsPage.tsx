@@ -151,13 +151,13 @@ class TransitionResultsPage extends React.Component<Props, State> {
           moment(data.startDate.value).format("MMM Do"),
           formattedTime
         ]);
-        lineArray.push(Math.floor(data.line / data.sessionTotal * 100));
-        travelingArray.push(Math.floor(data.traveling / data.sessionTotal * 100));
-        waitingArray.push(Math.floor(data.waiting / data.sessionTotal * 100));
-        routinesArray.push(Math.floor(data.routines / data.sessionTotal * 100));
-        behaviorManagementArray.push(Math.floor(data.behaviorManagement / data.sessionTotal * 100));
-        otherArray.push(Math.floor(data.other / data.sessionTotal * 100));
-        totalArray.push(Math.floor((data.total / data.sessionTotal) * 100));
+        lineArray.push(Math.round(data.line / data.sessionTotal * 100));
+        travelingArray.push(Math.round(data.traveling / data.sessionTotal * 100));
+        waitingArray.push(Math.round(data.waiting / data.sessionTotal * 100));
+        routinesArray.push(Math.round(data.routines / data.sessionTotal * 100));
+        behaviorManagementArray.push(Math.round(data.behaviorManagement / data.sessionTotal * 100));
+        otherArray.push(Math.round(data.other / data.sessionTotal * 100));
+        totalArray.push(Math.round((data.total / data.sessionTotal) * 100));
       });
 
       this.setState({

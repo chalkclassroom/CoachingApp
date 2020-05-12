@@ -232,9 +232,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.noac + data.ac)) * 100));
-        noACArray.push(Math.floor((data.noac / (data.noOpportunity + data.noac + data.ac)) * 100));
-        ACArray.push(Math.floor((data.ac / (data.noOpportunity + data.noac + data.ac)) * 100));
+        noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noac + data.ac)) * 100));
+        noACArray.push(Math.round((data.noac / (data.noOpportunity + data.noac + data.ac)) * 100));
+        ACArray.push(Math.round((data.ac / (data.noOpportunity + data.noac + data.ac)) * 100));
       });
 
       this.setState({
@@ -261,9 +261,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        noSupportArray.push(Math.floor((data.nosupport / (data.noOpportunity + data.nosupport + data.support)) * 100));
-        supportArray.push(Math.floor((data.support / (data.noOpportunity + data.nosupport + data.support)) * 100));
-        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.nosupport + data.support)) * 100));
+        noSupportArray.push(Math.round((data.nosupport / (data.noOpportunity + data.nosupport + data.support)) * 100));
+        supportArray.push(Math.round((data.support / (data.noOpportunity + data.nosupport + data.support)) * 100));
+        noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.nosupport + data.support)) * 100));
       });
 
       this.setState({

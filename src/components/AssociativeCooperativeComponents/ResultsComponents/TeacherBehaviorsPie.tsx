@@ -72,8 +72,15 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
             bodyFontSize: 16
           },
           legend: {
-            display: false,
-            position: 'bottom'
+            display: true,
+            position: 'bottom',
+            onClick: null,
+            labels: {
+              padding: 20,
+              fontColor: "black",
+              fontSize: 14,
+              fontFamily: 'Arimo'
+            }
           },
           plugins: {
             datalabels: {

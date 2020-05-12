@@ -206,8 +206,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        mathArray.push(Math.floor((data.math / (data.math + data.notMath)) * 100));
-        notMathArray.push(Math.floor((data.notMath / (data.math + data.notMath)) * 100));
+        mathArray.push(Math.round((data.math / (data.math + data.notMath)) * 100));
+        notMathArray.push(Math.round((data.notMath / (data.math + data.notMath)) * 100));
       });
 
       this.setState({
@@ -233,9 +233,9 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        supportArray.push(Math.floor((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        noSupportArray.push(Math.floor((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        supportArray.push(Math.round((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        noSupportArray.push(Math.round((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
       });
       this.setState({
         trendsDates: dateArray,

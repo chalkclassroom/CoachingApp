@@ -206,8 +206,8 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        notSequentialArray.push(Math.floor((data.notSequential / (data.notSequential + data.sequential)) * 100));
-        sequentialArray.push(Math.floor((data.sequential / (data.notSequential + data.sequential)) * 100));
+        notSequentialArray.push(Math.round((data.notSequential / (data.notSequential + data.sequential)) * 100));
+        sequentialArray.push(Math.round((data.sequential / (data.notSequential + data.sequential)) * 100));
       });
 
       this.setState({
@@ -233,9 +233,9 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        noSupportArray.push(Math.floor((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        supportArray.push(Math.floor((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        noSupportArray.push(Math.round((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        supportArray.push(Math.round((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
       });
       this.setState({
         trendsDates: dateArray,

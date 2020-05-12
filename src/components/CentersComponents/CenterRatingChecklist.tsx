@@ -369,11 +369,11 @@ class CenterRatingChecklist extends React.Component<Props, State> {
             </Grid>
             <Grid item xs={9}>
               <Grid container alignItems="center" direction="column" xs={12}>
-                <Typography variant="h5" style={{fontFamily: 'Arimo', paddingTop: '1em'}}>
+                <Typography variant="h5" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
                   {this.props.currentCenter[0].toUpperCase() +
                     this.props.currentCenter.substr(1)}
                 </Typography>
-                <div style={{ height: 20 }} />
+                <div style={{ height: '0.5em' }} />
                 <Typography variant={"subtitle2"} style={{fontFamily: 'Arimo', paddingBottom: '1em'}}>
                   Please select the number of children and teachers at the
                   center:
@@ -448,14 +448,14 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                             key={index}
                             onClick={this.handleChildToggle(index+1)}
                             disabled={this.childDisabled()}
-                            style={{height: '12vh'}}
+                            style={{height: '10vh'}}
                           >
                             <Checkbox
                               checked={
                                 !this.childDisabled() && this.state.childChecked.includes(index+1)
                               }
                             />
-                            <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
+                            <ListItemText disableTypography style={{fontFamily: 'Arimo', fontSize: '1em'}}>
                               {value}
                             </ListItemText>
                           </ListItem>);
@@ -482,14 +482,14 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                             key={index}
                             onClick={this.handleTeacherToggle(index+6)}
                             disabled={this.teacherDisabled()}
-                            style={{height: '12vh'}}
+                            style={{height: '10vh'}}
                           >
                             <Checkbox
                               checked={
                                 !this.teacherDisabled() && this.state.teacherChecked.includes(index+6)
                               }
                             />
-                            <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
+                            <ListItemText disableTypography style={{fontFamily: 'Arimo', fontSize: '1em'}}>
                               {value}
                             </ListItemText>
                           </ListItem>);
