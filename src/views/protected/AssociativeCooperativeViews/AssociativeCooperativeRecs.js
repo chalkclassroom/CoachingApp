@@ -43,7 +43,7 @@ const textTheme = createMuiTheme({
     primary: { main: "#00acc1" },
     secondary: { main: "#ff9800" }
   },
-  typography: { useNextVariants: true }
+  typography: {}
 });
 
 const buttonTheme = createMuiTheme({
