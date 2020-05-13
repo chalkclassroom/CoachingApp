@@ -14,7 +14,7 @@ const styles = theme => ({
     // flexGrow: 1,
   },
   formControl: {
-    // margin: theme.spacing.unit * 3,
+    // margin: theme.spacing(3),
     fontFamily: 'Arimo'
   },
   group: {

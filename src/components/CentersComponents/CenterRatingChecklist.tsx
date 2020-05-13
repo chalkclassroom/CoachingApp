@@ -428,7 +428,12 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
                 <div style={{ height: 20 }} />
-                <Grid container direction={"row"} spacing={16} xs={12}>
+                <Grid
+                  container
+                  direction={"row"}
+                  spacing={2}
+                  xs={12}
+                >
                   <Grid item xs={6}>
                     <Card>
                       <Typography variant="h6" align="center" style={{fontFamily: 'Arimo'}}>

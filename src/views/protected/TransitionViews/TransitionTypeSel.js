@@ -4,7 +4,6 @@ import Button from "@material-ui/core/Button";
 import { withStyles, createMuiTheme } from "@material-ui/core/styles";
 import {
   lightGreen,
-  white,
   deepOrange,
   orange,
   blue,
@@ -23,7 +22,7 @@ import { connect } from 'react-redux';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     width: 130,
     height: 130,
     textAlign: "center"
@@ -39,43 +38,43 @@ const raisedThemes = createMuiTheme({
     waitingColor: {
       backgroundColor: lightGreen[300],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "8px 8px #a9a9a9"
     },
     travelingColor: {
       backgroundColor: orange[400],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "8px 8px #a9a9a9"
     },
     childWaitingColor: {
       backgroundColor: deepOrange[400],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "8px 8px #a9a9a9"
     },
     classroomRoutinesColor: {
       backgroundColor: blue[300],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "8px 8px #a9a9a9"
     },
     bmiColor: {
       backgroundColor: red["A200"],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "8px 8px #a9a9a9"
     },
     otherColor: {
       backgroundColor: indigo["A200"],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white,
+      textColor: 'white',
+      primaryTextColor: 'white',
       boxShadow: "8px 8px #a9a9a9"
     }
   }
@@ -86,38 +85,38 @@ const themes = createMuiTheme({
     waitingColor: {
       backgroundColor: lightGreen[300],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     travelingColor: {
       backgroundColor: orange[400],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     childWaitingColor: {
       backgroundColor: deepOrange[400],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     classroomRoutinesColor: {
       backgroundColor: blue[300],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     bmiColor: {
       backgroundColor: red["A200"],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     otherColor: {
       backgroundColor: indigo["A200"],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     }
   },
   overrides: {
@@ -125,8 +124,8 @@ const themes = createMuiTheme({
       raisedPrimary: {
         color: "white"
       },
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     }
   }
 });
@@ -136,38 +135,38 @@ const clickedThemes = createMuiTheme({
     waitingColor: {
       backgroundColor: lightGreen[100],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     travelingColor: {
       backgroundColor: orange[100],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     childWaitingColor: {
       backgroundColor: deepOrange[100],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     classroomRoutinesColor: {
       backgroundColor: blue[100],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     bmiColor: {
       backgroundColor: red["A100"],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     },
     otherColor: {
       backgroundColor: indigo["A100"],
       color: "#000",
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     }
   },
   overrides: {
@@ -175,8 +174,8 @@ const clickedThemes = createMuiTheme({
       raisedPrimary: {
         color: "white"
       },
-      textColor: white,
-      primaryTextColor: white
+      textColor: 'white',
+      primaryTextColor: 'white'
     }
   }
 });
@@ -244,7 +243,7 @@ class TransitionTypeSel extends React.Component {
               <Button
                 onClick={() => this.handleButtonChange("waiting")}
                 classes={{ root: classes.button, label: classes.label }}
-                variant="raised"
+                // variant="raised"
                 style={
                   this.state.selected === "waiting"
                     ? raisedThemes.palette.waitingColor
@@ -271,7 +270,7 @@ class TransitionTypeSel extends React.Component {
               <Button
                 onClick={() => this.handleButtonChange("traveling")}
                 classes={{ root: classes.button, label: classes.label }}
-                variant="raised"
+                // variant="raised"
                 style={
                   this.state.selected === "traveling"
                     ? raisedThemes.palette.travelingColor
@@ -298,7 +297,7 @@ class TransitionTypeSel extends React.Component {
               <Button
                 onClick={() => this.handleButtonChange("child waiting")}
                 classes={{ root: classes.button, label: classes.label }}
-                variant="raised"
+                // variant="raised"
                 style={
                   this.state.selected === "child waiting"
                     ? raisedThemes.palette.childWaitingColor
@@ -329,7 +328,7 @@ class TransitionTypeSel extends React.Component {
               <Button
                 onClick={() => this.handleButtonChange("classroom routines")}
                 classes={{ root: classes.button, label: classes.label }}
-                variant="raised"
+                // variant="raised"
                 style={
                   this.state.selected === "classroom routines"
                     ? raisedThemes.palette.classroomRoutinesColor
@@ -355,7 +354,7 @@ class TransitionTypeSel extends React.Component {
                   this.handleButtonChange("behavior management disruption")
                 }
                 classes={{ root: classes.button, label: classes.label }}
-                variant="raised"
+                // variant="raised"
                 style={
                   this.state.selected === "behavior management disruption"
                     ? raisedThemes.palette.bmiColor
@@ -382,7 +381,7 @@ class TransitionTypeSel extends React.Component {
               <Button
                 onClick={() => this.handleButtonChange("other")}
                 classes={{ root: classes.button, label: classes.label }}
-                variant="raised"
+                // variant="raised"
                 style={
                   this.state.selected === "other"
                     ? raisedThemes.palette.otherColor

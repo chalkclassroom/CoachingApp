@@ -16,14 +16,14 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px ${theme
-      .spacing.unit * 2}px`
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme
+      .spacing(2)}px`
   },
   form: {
     width: "100%" // Fix IE 11 issue.
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   }
 });
 

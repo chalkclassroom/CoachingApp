@@ -301,7 +301,7 @@ class Dashboard extends React.Component {
               container
               className={classes.gridTopMargin}
               direction="row"
-              spacing={16}
+              spacing={2}
               alignItems="center"
               alignContent="center"
               justify="center"

@@ -10,22 +10,22 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px ${theme
-      .spacing.unit * 2}px`
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme
+      .spacing(2)}px`
   },
   paper: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px ${theme
-      .spacing.unit * 2}px`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme
+      .spacing(2)}px`,
     width: "50%"
   },
   form: {
     width: "50%" // Fix IE 11 issue.
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   }
 });
 

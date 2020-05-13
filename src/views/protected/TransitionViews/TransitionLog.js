@@ -19,8 +19,8 @@ import { red } from "@material-ui/core/es/colors";
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 1,
-    paddingBottom: theme.spacing.unit * 1,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     marginLeft: "5%",
     marginRight: "5%"
   }

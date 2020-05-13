@@ -13,7 +13,6 @@ import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import { connect } from "react-redux";
 import { resetTransitionTime } from "../../../state/actions/transition-time";
-// import TransitionTimeRecs from "./TransitionTimeRecs";
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 import * as Constants from "../../../constants";

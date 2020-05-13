@@ -290,7 +290,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                   <Typography variant="h6" align={"center"} style={{paddingBottom: '1em'}}>
                     Select all the teacher behaviors you see:
                   </Typography>
-                  <Grid container direction={"row"} justify="center" alignItems="center" spacing={16} xs={12}>
+                  <Grid container direction={"row"} justify="center" alignItems="center" spacing={2} xs={12}>
                     <Grid item xs={5}>
                       <Card style={{height: '45vh'}}>
                         <List>
