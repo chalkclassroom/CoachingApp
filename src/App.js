@@ -147,11 +147,6 @@ class App extends Component {
     });
   }
 
-  componentDidCatch(error, errorInfo) {
-    console.log('error is: ', error);
-    console.log('error info is: ', errorInfo)
-  }
-
   /** lifecycle method invoked just before component is unmounted */
   componentWillUnmount() {
     this.removeListener();
