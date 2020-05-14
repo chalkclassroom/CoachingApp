@@ -1304,7 +1304,8 @@ class Firebase {
         coach: this.auth.currentUser.uid,
         teacher: teacherId,
         tool: magic8,
-        dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+        dateCreated: firebase.firestore.Timestamp.now(),
+        dateModified: firebase.firestore.Timestamp.now(),
         feedback: [''],
         questions: [''],
         addedQuestions: [],
@@ -1356,6 +1357,42 @@ class Firebase {
       .catch(() => {
         console.log( 'unable to retrieve conference plan')
       })
+  }
+
+  /**
+   * finds all conference plans for coach and all their teachers
+   */
+  getCoachConferencePlans = async function() {
+    this.sessionRef = this.db.collection("conferencePlans")
+      .where("coach", "==", this.auth.currentUser.uid)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            teacherId: doc.data().teacher,
+            teacherFirstName: '',
+            teacherLastName: '',
+            sessionId: doc.data().sessionId,
+            practice: doc.data().tool,
+            date: doc.data().dateModified
+          })
+        )
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve conference plan info')
+      })
+  }
+
+  getObservationDate = async function(sessionId) {
+    return this.db
+      .collection("observations")
+      .doc(sessionId)
+      .get()
+      .then(doc => doc.data().start)
+      .catch(error => console.error("Error getting cached document:", error));
   }
 
   /**
