@@ -13,7 +13,6 @@ import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
-import HomeIcon from "@material-ui/icons/Home";
 import PersonIcon from "@material-ui/icons/Person";
 import CoachingIcon from "@material-ui/icons/Tablet";
 import MessagesIcon from "@material-ui/icons/MailOutline";
@@ -33,6 +32,7 @@ import { connect } from 'react-redux';
 import { clearCoach } from '../state/actions/coach';
 import TeacherModal from "../views/protected/HomeViews/TeacherModal.tsx";
 import FirebaseContext from "./Firebase/FirebaseContext";
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 const drawerWidth = 240;
 
@@ -109,7 +109,7 @@ const styles = theme => ({
     height: 320
   },
   nested: {
-    paddingLeft: 75
+    paddingLeft: 14
   }
 });
 
@@ -184,78 +184,27 @@ class BurgerMenu extends React.Component {
               onClick={() => {
                 this.setState({ menu: 0 });
               }}
+              onClick={() => this.props.history.push("/Home")} 
+              className={classes.nested}
             >
               <ListItemIcon>
-                <HomeIcon style={{ fill: "#094492" }} />
+                <DashboardIcon style={{ fill: "#094492"}} />
               </ListItemIcon>
               <ListItemText
-                primary="Home"
-                onClick={() => this.props.history.push("/Home")}
+                primary="Dashboard"
               />
             </ListItem>
-            <ListItem button onClick={this.handleOpenCoaching}>
-              <ListItemIcon>
-                <CoachingIcon style={{ fill: "#e99c2e" }} />
-              </ListItemIcon>
-              <ListItemText primary="Coaching" />
-              {this.state.coachingOpen ? (
-                <ExpandLessIcon />
-              ) : (
-                <ExpandMoreIcon />
-              )}
-            </ListItem>
-            <Collapse in={this.state.coachingOpen} timeout="auto" unMountOnExit>
               <ListItem
                 button
                 onClick={() => {
                   this.setState({ menu: 1 });
                 }}
-                className={classes.nested}
-              >
-                <ListItemIcon>
-                  <PeopleIcon style={{ fill: "#ffd300" }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="My Teachers"
-                  onClick={() => this.props.history.push("/MyTeachers")}
-                />
-              </ListItem>
-              <ListItem
-                button
-                disabled
                 onClick={() => {
-                  this.setState({ menu: 2 });
-                }}
-                className={classes.nested}
-              >
-                <ListItemIcon>
-                  <CalendarIcon style={{ fill: "#094492" }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Calendar"
-                  onClick={() => this.props.history.push("/Calendar")}
-                />
-              </ListItem>
-              <ListItem
-                button
-                disabled
-                onClick={() => {
-                  this.setState({ menu: 3 });
-                }}
-                className={classes.nested}
-              >
-                <ListItemIcon>
-                  <MessagesIcon style={{ fill: "#4fd9b3" }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Messages"
-                  onClick={() => this.props.history.push("/Messages")}
-                />
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => {
-                  this.setState({ menu: 4 });
+                  this.props.history.push({
+                      pathname: "/Magic8Menu",
+                      state: { type: "Training" }
+                  });
+                  this.props.handleClose(event);
                 }}
                 className={classes.nested}
               >
@@ -264,20 +213,17 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Training"
-                  onClick={() => {
-                    this.props.history.push({
-                      pathname: "/Magic8Menu",
-                      state: { type: "Training" }
-                    });
-                    this.props.handleClose(event);
-                  }}
                 />
               </ListItem>
               <ListItem
                 button
                 onClick={() => {
-                  this.setState({ menu: 5 });
+                  this.setState({ menu: 2 });
                 }}
+                onClick={() => {
+                  this.showTeacherModal("Observe");
+                  this.props.handleClose();
+                  }}
                 className={classes.nested}
               >
                 <ListItemIcon>
@@ -285,17 +231,32 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Observe"
-                  onClick={() => {
-                    this.showTeacherModal("Observe");
-                    this.props.handleClose();
-                  }}
                 />
               </ListItem>
               <ListItem
                 button
                 onClick={() => {
-                  this.setState({ menu: 6 });
+                  this.setState({ menu: 3 });
                 }}
+                onClick={() => this.props.history.push("/MyTeachers")}
+                className={classes.nested}
+              >
+                <ListItemIcon>
+                  <PeopleIcon style={{ fill: "#ffd300" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary="My Teachers"
+                />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => {
+                  this.setState({ menu: 4 });
+                }}
+                onClick={() => {
+                  this.showTeacherModal("Results");
+                  this.props.handleClose();
+                  }}
                 className={classes.nested}
               >
                 <ListItemIcon>
@@ -303,18 +264,15 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Results"
-                  onClick={() => {
-                    this.showTeacherModal("Results");
-                    this.props.handleClose();
-                  }}
+
                 />
               </ListItem>
               <ListItem
                 button
-                disabled
                 onClick={() => {
-                  this.setState({ menu: 7 });
+                  this.setState({ menu: 5 });
                 }}
+                onClick={() => this.props.history.push("/ActionPlans")}
                 className={classes.nested}
               >
                 <ListItemIcon>
@@ -322,23 +280,52 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Action Plans"
-                  onClick={() => this.props.history.push("/ActionPlans")}
                 />
               </ListItem>
-            </Collapse>
+            <ListItem
+              button
+              disabled
+              onClick={() => {
+                this.setState({ menu: 6 });
+              }}
+              onClick={() => this.props.history.push("/Messages")}
+              className={classes.nested}
+            >
+              <ListItemIcon>
+                <Magic8Icon style={{ fill: "#6f39c4" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Coaching Resources"
+              />
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => {
+                this.setState({ menu: 7 });
+              }}
+              onClick={() => this.props.history.push("/Account")}
+              className={classes.nested}
+            >
+              <ListItemIcon>
+                <PersonIcon style={{ fill: "#099365" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="My Account"
+              />
+            </ListItem>
             <ListItem
               button
               disabled
               onClick={() => {
                 this.setState({ menu: 8 });
               }}
+              onClick={() => this.props.history.push("/help")}
             >
               <ListItemIcon>
-                <ResourcesIcon style={{ fill: "#4fd9b3" }} />
+                <HelpIcon style={{ fill: "#e55529" }} />
               </ListItemIcon>
               <ListItemText
-                primary="Resources"
-                onClick={() => this.props.history.push("/Resources")}
+                primary="Help"
               />
             </ListItem>
             <ListItem
@@ -347,64 +334,12 @@ class BurgerMenu extends React.Component {
               onClick={() => {
                 this.setState({ menu: 9 });
               }}
-            >
-              <ListItemIcon>
-                <Magic8Icon style={{ fill: "#6f39c4" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Magic 8 Materials"
-                onClick={() => this.props.history.push("/Messages")}
-              />
-            </ListItem>
-            <ListItem
-              button
-              disabled
               onClick={() => {
-                this.setState({ menu: 10 });
-              }}
-            >
-              <ListItemIcon>
-                <ResearchIcon style={{ fill: "#0988EC" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Research"
-                onClick={() => this.props.history.push("/about")}
-              />
-            </ListItem>
-            <ListItem
-              button
-              disabled
-              onClick={() => {
-                this.setState({ menu: 11 });
-              }}
-            >
-              <ListItemIcon>
-                <PersonIcon style={{ fill: "#099365" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="My Account"
-                onClick={() => this.props.history.push("/Account")}
-              />
-            </ListItem>
-            <ListItem
-              button
-              disabled
-              onClick={() => {
-                this.setState({ menu: 12 });
-              }}
-            >
-              <ListItemIcon>
-                <HelpIcon style={{ fill: "#e55529" }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Help"
-                onClick={() => this.props.history.push("/help")}
-              />
-            </ListItem>
-            <ListItem
-              button
-              onClick={() => {
-                this.setState({ menu: 13 });
+                  this.props.firebase.firebaseSignOut().then(() => {
+                    this.props.history.push("/");
+                    this.props.clearCoach();
+                  });
+              // this.props.history.push("/");
               }}
             >
               <ListItemIcon>
@@ -412,13 +347,6 @@ class BurgerMenu extends React.Component {
               </ListItemIcon>
               <ListItemText
                 primary="Logout"
-                onClick={() => {
-                  this.props.firebase.firebaseSignOut().then(() => {
-                    this.props.history.push("/");
-                    this.props.clearCoach();
-                  });
-                  // this.props.history.push("/");
-                }}
               />
             </ListItem>
           </List>
