@@ -4,6 +4,8 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { TextField } from '@material-ui/core';
+import Popover from '@material-ui/core/Popover';
+import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import EditImage from '../assets/images/EditImage.svg';
@@ -89,7 +91,9 @@ interface State {
   coachLastName: string,
   createMode: boolean,
   saved: boolean,
-  saveModal: boolean
+  saveModal: boolean,
+  anchorEl: HTMLElement,
+  popover: string
 }
 
 interface Teacher {
@@ -137,8 +141,28 @@ class ConferencePlanForm extends React.Component<Props, State> {
       coachLastName: '',
       createMode: false,
       saved: true,
-      saveModal: false
+      saveModal: false,
+      anchorEl: null,
+      popover: '',
     }
+  }
+
+  /**
+   * @param {SyntheticEvent} event
+   * @param {string} popover
+   */
+  handlePopoverOpen = (event: React.SyntheticEvent, popover: string): void => {
+    this.setState({
+      anchorEl: event.currentTarget,
+      popover: popover
+    })
+  }
+
+  handlePopoverClose = (): void => {
+    this.setState({
+      anchorEl: null,
+      popover: ''
+    })
   }
 
   handleAddFeedback = (): void => {
@@ -415,6 +439,12 @@ class ConferencePlanForm extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
+    const feedbackOpen = Boolean(this.state.popover === 'feedback-popover');
+    const questionsOpen = Boolean(this.state.popover === 'questions-popover');
+    const notesOpen = Boolean(this.state.popover === 'notes-popover');
+    const feedbackId = feedbackOpen ? 'feedback-popover' : undefined;
+    const questionsId = questionsOpen ? 'questions-popover' : undefined;
+    const notesId = notesOpen ? 'notes-popover' : undefined;
     return (
       <div>
         {this.props.conferencePlanExists || this.state.createMode ? 
@@ -503,10 +533,74 @@ class ConferencePlanForm extends React.Component<Props, State> {
                 direction="column"
                 justify="space-between"
                 alignItems="flex-start"
-                style={{width: '100%', height: '100%'}}
+                style={{width: '100%'}}
               >
-                <Grid item xs={12} style={{width: "100%", paddingBottom: '0.1em', paddingTop: '0.5em'}}>
-                  <Card className={classes.feedbackCard}>
+                <Grid item xs={12} style={{width: "100%", marginBottom: '0.8em', marginTop: '0.4em', border: '2px solid #094492', borderRadius: '0.5em', overflow: 'auto'}}>
+                <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
+                    <Grid item>
+                      <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
+                        <Grid item xs={11}>
+                          <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
+                            Strengths-Based Feedback
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                          <Grid container justify="flex-end" direction="row" alignItems="center">
+                            <Grid item>
+                              <InfoIcon style={{ fill: "#094492", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'feedback-popover')}/>
+                              <Popover
+                                id={feedbackId}
+                                open={feedbackOpen}
+                                anchorEl={this.state.anchorEl}
+                                onClose={this.handlePopoverClose}
+                                anchorOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center'
+                                }}
+                                elevation={16}
+                              >
+                                <div style={{padding: '2em'}}>
+                                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                                    Strengths-Based Feedback
+                                  </Typography>
+                                  <ul>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Note specific examples from the classroom observation
+                                        <br />
+                                        that validate the teacher&apos;s knowledge and skills.
+                                        <br />
+                                        This helps the teacher reflect on how her practices
+                                        <br />
+                                        influence student learning.
+                                      </Typography>
+                                    </li>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        It&apos;s important to note that strengths-based feedback
+                                        <br />
+                                        does not highlight a practice that the teacher has
+                                        <br />
+                                        already mastered; rather, it draws attention to 
+                                        <br />
+                                        one strategy the teacher does well in an area for
+                                        <br />
+                                        overall growth.   
+                                      </Typography>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </Popover>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  {/* <Card className={classes.feedbackCard}> */}
                     {this.state.feedback.map((value, index) => {
                       return (
                         <TextField
@@ -514,7 +608,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                           id={"feedback" + index.toString()}
                           name={"feedback" + index.toString()}
                           type="text"
-                          label={index===0 ? "Strengths-Based Feedback" : null}
+                          // label={index===0 ? "Strengths-Based Feedback" : null}
                           placeholder={"Type your feedback here!"}
                           value={value}
                           onChange={this.handleChangeFeedback(index)}
@@ -537,10 +631,66 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         <AddCircleIcon style={{fill: '#094492'}} />
                       </Button>
                     ) : (<div />)}
-                  </Card>
+                  {/* </Card> */}
                 </Grid>
-                <Grid item xs={12} style={{width: "100%", paddingBottom: '0.1em', paddingTop: '0.5em'}}>
-                  <Card className={classes.questionsCard}>
+                </Grid>
+                <Grid item xs={12} style={{width: "100%", marginBottom: '0.8em', border: '2px solid #e55529', borderRadius: '0.5em', overflow: 'auto'}}>
+                <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
+                    <Grid item>
+                      <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
+                        <Grid item xs={11}>
+                          <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
+                            Reflection Questions
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                          <Grid container justify="flex-end" direction="row" alignItems="center">
+                            <Grid item>
+                              <InfoIcon style={{ fill: "#e55529", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'questions-popover')}/>
+                              <Popover
+                                id={questionsId}
+                                open={questionsOpen}
+                                anchorEl={this.state.anchorEl}
+                                onClose={this.handlePopoverClose}
+                                anchorOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center'
+                                }}
+                                elevation={16}
+                              >
+                                <div style={{padding: '2em'}}>
+                                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                                    Reflection Questions
+                                  </Typography>
+                                  <ul>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Select or create questions related to the observation
+                                        <br />
+                                        data that will encourage teachers to reflect on their
+                                        <br />
+                                        current classroom practices.
+                                      </Typography>
+                                    </li>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Ask questions that will help teachers reflect <i>and</i>
+                                        <br />
+                                        plan concrete steps for improvement. 
+                                      </Typography>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </Popover>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
                     {this.state.addedQuestions[0] ? this.state.addedQuestions.map((value, index) => {
                       return (
                         <TextField
@@ -548,7 +698,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                           id={"addedQuestions" + index.toString()}
                           name={"addedQuestions" + index.toString()}
                           type="text"
-                          label={index===0 ? "Reflection Questions" : null}
+                          // label={index===0 ? "Reflection Questions" : null}
                           placeholder={index===0 ? "Type your questions here, or add them from the Questions tab!": null}
                           value={value}
                           onChange={this.handleChangeAddedQuestions(index)}
@@ -573,7 +723,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                           id={"questions" + index.toString()}
                           name={"questions" + index.toString()}
                           type="text"
-                          label={!this.state.addedQuestions[0] && index===0 ? "Reflection Questions" : null}
+                          // label={!this.state.addedQuestions[0] && index===0 ? "Reflection Questions" : null}
                           placeholder={
                             !this.state.addedQuestions[0] && index===0
                               ? "Type your questions here, or add them from the Questions tab!"
@@ -600,10 +750,61 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         <AddCircleIcon style={{fill: '#e55529'}} />
                       </Button>
                     ) : (<div />)}
-                  </Card>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} style={{width: "100%", paddingBottom: '0.1em', paddingTop: '0.5em'}}>
-                  <Card className={classes.notesCard}>
+                <Grid item xs={12} style={{width: "100%", border: '2px solid #009365', borderRadius: '0.5em', overflow: 'auto'}}>
+                <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
+                    <Grid item>
+                      <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
+                        <Grid item xs={11}>
+                          <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
+                            Notes
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                          <Grid container justify="flex-end" direction="row" alignItems="center">
+                            <Grid item>
+                              <InfoIcon style={{ fill: "#009365", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'notes-popover')}/>
+                              <Popover
+                                id={notesId}
+                                open={notesOpen}
+                                anchorEl={this.state.anchorEl}
+                                onClose={this.handlePopoverClose}
+                                anchorOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'center'
+                                }}
+                                elevation={16}
+                              >
+                                <div style={{padding: '2em'}}>
+                                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                                    Notes
+                                  </Typography>
+                                  <ul>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Add an observation from the notes tab or write a 
+                                        <br />
+                                        new note.
+                                      </Typography>
+                                    </li>
+                                    {/* <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Write a new note.
+                                      </Typography>
+                                    </li> */}
+                                  </ul>
+                                </div>
+                              </Popover>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
                     {this.state.notes.map((value, index) => {
                       return (
                         <TextField
@@ -611,7 +812,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                           id={"notes" + index.toString()}
                           name={"notes" + index.toString()}
                           type="text"
-                          label={index===0 ? "Notes" : null}
+                          // label={index===0 ? "Notes" : null}
                           placeholder={"Type your note here!"}
                           value={value}
                           onChange={this.handleChangeNotes(index)}
@@ -634,7 +835,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         <AddCircleIcon style={{fill: '#009365'}} />
                       </Button>
                     ) : (<div />)}
-                  </Card>
+                  </Grid>
                 </Grid>
               </Grid>
             </div>  
