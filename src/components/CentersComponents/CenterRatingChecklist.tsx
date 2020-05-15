@@ -109,8 +109,8 @@ class CenterRatingChecklist extends React.Component<Props, State> {
    */
   tick = (): void => {
     if (this.state.time <= 0) {
+      clearInterval(this.timer);
       this.handleTimeUpNotification();
-      this.setState({ time: RATING_INTERVAL });
     } else {
       if (this.state.time - 1000 < 0) {
         this.setState({ time: 0 });
