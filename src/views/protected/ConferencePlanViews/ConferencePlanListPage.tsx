@@ -26,7 +26,8 @@ interface Props {
         pathname: string,
         state: {
           conferencePlanId: string,
-          teacherId: string
+          teacherId: string,
+          sessionId: string
         }
       }
     ): void,
@@ -286,6 +287,7 @@ class ConferencePlanListPage extends React.Component<Props, State>{
                           nanoseconds: number
                         },
                         teacherId: string,
+                        sessionId: string,
                         practice: string,
                         teacherFirstName: string,
                         teacherLastName: string,
@@ -310,7 +312,8 @@ class ConferencePlanListPage extends React.Component<Props, State>{
                               pathname: "/ConferencePlan",
                               state: {
                                 conferencePlanId: row.id,
-                                teacherId: row.teacherId
+                                teacherId: row.teacherId,
+                                sessionId: row.sessionId
                               }
                             });
                           }}

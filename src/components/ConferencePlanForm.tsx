@@ -52,7 +52,7 @@ const styles: object = {
 interface Props {
   classes: Style,
   teacher: Teacher,
-  magic8: string,
+  magic8?: string,
   firebase: {
     createConferencePlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
     getConferencePlan(sessionId: string):
@@ -67,13 +67,14 @@ interface Props {
     getCoachFirstName(): Promise<string>,
     getCoachLastName(): Promise<string>
   },
-  sessionId: string,
+  sessionId?: string,
   readOnly: boolean,
   handleEditConferencePlan(): void,
   handleClose?(): void,
   conferencePlanExists: boolean,
   editMode: boolean,
-  chosenQuestions: Array<string>
+  chosenQuestions: Array<string>,
+  conferencePlanId?: string
 }
 
 interface State {
