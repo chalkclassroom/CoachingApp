@@ -16,6 +16,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Card from "@material-ui/core/Card";
 import moment from 'moment';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 
 const styles: object = {
   textField: {
@@ -46,6 +47,13 @@ const styles: object = {
     height: '20vh',
     overflow: 'auto',
     paddingTop: '0.5em'
+  },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
   }
 }
 
@@ -74,7 +82,14 @@ interface Props {
   conferencePlanExists: boolean,
   editMode: boolean,
   chosenQuestions: Array<string>,
-  conferencePlanId?: string
+  conferencePlanId?: string,
+  history?: {
+    replace(
+      param: {
+        pathname: string
+      }
+    ): void
+  }
 }
 
 interface State {
@@ -112,7 +127,8 @@ interface Style {
   textField: string,
   feedbackCard: string,
   questionsCard: string,
-  notesCard: string
+  notesCard: string,
+  backButton: string
 }
 
 
@@ -447,7 +463,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
     const questionsId = questionsOpen ? 'questions-popover' : undefined;
     const notesId = notesOpen ? 'notes-popover' : undefined;
     return (
-      <div>
+      <div style={{width: '100%'}}>
         {this.props.conferencePlanExists || this.state.createMode ? 
           (this.state.saveModal && !this.state.saved) ? (
             <Dialog
@@ -477,34 +493,72 @@ class ConferencePlanForm extends React.Component<Props, State> {
                 style={{width: '100%'}}
               >
                 <Grid item style={{width: '100%'}}>
-                  <Grid
-                    container
-                    direction="row"
-                    justify="space-between"
-                    alignItems="center"
-                    style={{width: '100%'}}
-                  >
-                    <Grid item xs={9}>
-                      <Typography variant="h4" style={{fontFamily: "Arimo"}}>
-                        CONFERENCE PLAN
-                      </Typography>
+                  {this.props.history ? (
+                    <Grid
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="center"
+                      style={{width: '100%', paddingTop: '0.5em', paddingBottom: '1em'}}
+                    >
+                      <Grid item xs={2}>
+                        <Grid container alignItems="center" justify="flex-start">
+                          <Grid item>
+                            <Button
+                              variant="contained"
+                              size="medium"
+                              className={classes.backButton}
+                              onClick={(): void => {
+                                this.props.history.replace({
+                                  pathname: "/ConferencePlans"
+                                })
+                              }}
+                            >
+                              <ChevronLeftRoundedIcon />
+                              <b>Back</b>
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={8}>
+                        <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
+                          <Typography variant="h4" style={{fontFamily: "Arimo"}}>
+                            CONFERENCE PLAN
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={2} />
                     </Grid>
-                    <Grid item xs={1}>
-                      <Button disabled={!this.props.handleEditConferencePlan} onClick={this.props.handleEditConferencePlan}>
-                        <img alt="Edit" src={EditImage} style={{width: '100%'}}/>
-                      </Button>
+                  ) : (
+                    <Grid
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="center"
+                      style={{width: '100%'}}
+                    >
+                      <Grid item xs={9}>
+                        <Typography variant="h4" style={{fontFamily: "Arimo"}}>
+                          CONFERENCE PLAN
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <Button disabled={!this.props.handleEditConferencePlan} onClick={this.props.handleEditConferencePlan}>
+                          <img alt="Edit" src={EditImage} style={{width: '100%'}}/>
+                        </Button>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <Button onClick={this.handleSave}>
+                          <img alt="Save" src={SaveImage} style={{width: '100%'}}/>
+                        </Button>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <Button onClick={this.handleClose}>
+                          <img alt="Close" src={CloseImage} style={{width: '95%'}}/>
+                        </Button>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={1}>
-                      <Button onClick={this.handleSave}>
-                        <img alt="Save" src={SaveImage} style={{width: '100%'}}/>
-                      </Button>
-                    </Grid>
-                    <Grid item xs={1}>
-                      <Button onClick={this.handleClose}>
-                        <img alt="Close" src={CloseImage} style={{width: '95%'}}/>
-                      </Button>
-                    </Grid>
-                  </Grid>
+                  )}
                 </Grid>
                 <Grid item style={{width: '100%'}}>
                   <Grid
