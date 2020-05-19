@@ -235,12 +235,14 @@ class ConferencePlanListPage extends React.Component<Props, State>{
           firebase.getTeacherLastName(conferencePlan.teacherId).then((lastName: string) => {
             conferencePlan.teacherLastName = lastName;
           }).then(() => {
+            console.log('session id is: ', conferencePlan.sessionId);
             firebase.getObservationDate(conferencePlan.sessionId).then((date: {seconds: number, nanoseconds: number}) => {
+              console.log('is there a date', date);
               conferencePlan.observationDate = date;
             }).then(() => {
               this.setState({
                 result: answer
-              })
+              }, () => {console.log('result state', this.state.result)})
             })
           })
         })
@@ -295,6 +297,8 @@ class ConferencePlanListPage extends React.Component<Props, State>{
                         observed: Date,
                         name: string
                       }, index: number) => {
+                        console.log('row.date', row.date);
+                        console.log('row.observationDate', row.observationDate);
                       const isItemSelected = isSelected(row.id);
                       const modifiedDate = new Date(0);
                       const observationDate = new Date(0);

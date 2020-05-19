@@ -301,11 +301,17 @@ class ResultsLayout extends React.Component<Props, State> {
               ) : this.state.view === 'notes' ? (
                 <div className={classes.resultsContent}>
                   <Grid item>
-                    <NotesListDetailTable
-                      data={this.props.notes}
-                      magic8={this.props.magic8}
-                      style={{overflow:"hidden", minWidth: '100%'}}
-                    />
+                    <FirebaseContext.Consumer>
+                      {(firebase: object): React.ReactNode =>
+                        <NotesListDetailTable
+                          data={this.props.notes}
+                          magic8={this.props.magic8}
+                          sessionId={this.props.sessionId}
+                          firebase={firebase}
+                          style={{overflow:"hidden", minWidth: '100%'}}
+                        />
+                      }
+                    </FirebaseContext.Consumer>
                   </Grid>
                 </div>
               ) : this.state.view === 'questions' ? (

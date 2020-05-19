@@ -1419,6 +1419,22 @@ class Firebase {
   }
 
   /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToConferencePlan = async function(conferencePlanId, note) {
+    return this.db
+      .collection("conferencePlans")
+      .doc(conferencePlanId)
+      .update({
+        notes: firebase.firestore.FieldValue.arrayUnion(note)
+      })
+      .catch(error =>
+        console.error("Error adding note to conference plan: ", error)
+      );
+  };
+
+  /**
    * @param {string} sessionId
    * @param {string} questionText
    */

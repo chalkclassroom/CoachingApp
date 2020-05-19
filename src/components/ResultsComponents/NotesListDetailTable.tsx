@@ -7,6 +7,8 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import Paper from "@material-ui/core/Paper/Paper";
+import Button from '@material-ui/core/Button';
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import * as Constants from "../../constants";
 
 const styles: object = {
@@ -29,7 +31,11 @@ interface Style {
 interface Props {
   classes: Style,
   data: Array<{ timestamp: Date, content: string }>,
-  magic8: string
+  magic8: string,
+  sessionId: string,
+  firebase: {
+    addNoteToConferencePlan(conferencePlanId: string, note: string): void
+  }
 }
 
 /**
@@ -41,8 +47,17 @@ class NotesListDetailTable extends React.Component<Props, {}> {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     data: PropTypes.array.isRequired,
-    magic8: PropTypes.string.isRequired
+    magic8: PropTypes.string.isRequired,
+    sessionId: PropTypes.string.isRequired
   };
+
+  /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToConferencePlan = (conferencePlanId: string, note: string): void => {
+    this.props.firebase.addNoteToConferencePlan(conferencePlanId, note)
+  }
 
   /**
    * render function
@@ -76,6 +91,7 @@ class NotesListDetailTable extends React.Component<Props, {}> {
               <TableCell className={classes.tableHeader} style={{backgroundColor: color}} align="right">
                 Notes
               </TableCell>
+              <TableCell className={classes.tableHeader} style={{backgroundColor: color, width: '10%'}} />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -85,6 +101,11 @@ class NotesListDetailTable extends React.Component<Props, {}> {
                   {row.timestamp}
                 </TableCell>
                 <TableCell align="right">{row.content}</TableCell>
+                <TableCell align="center">
+                  <Button onClick={() => this.addNoteToConferencePlan('kcExtyWKyytbMnImnhPF', row.content)}>
+                    <AddCircleIcon style={{fill: color}} />
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
