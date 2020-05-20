@@ -10,6 +10,22 @@ import InstructionIconImage from "../assets/images/InstructionIconImage.svg"
 import ListeningIconImage from "../assets/images/ListeningIconImage.svg"
 import SequentialIconImage from "../assets/images/SequentialIconImage.svg"
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg"
+import TransitionTimeNotesImage from "../assets/images/TransitionTimeNotesImage.svg";
+import ClassroomClimateNotesImage from "../assets/images/ClassroomClimateNotesImage.svg";
+import MathInstructionNotesImage from "../assets/images/MathInstructionNotesImage.svg";
+import EngagementNotesImage from "../assets/images/EngagementNotesImage.svg";
+import InstructionNotesImage from "../assets/images/InstructionNotesImage.svg";
+import ListeningNotesImage from "../assets/images/ListeningNotesImage.svg";
+import SequentialNotesImage from "../assets/images/SequentialNotesImage.svg";
+import AssocCoopNotesImage from "../assets/images/AssocCoopNotesImage.svg";
+import TransitionTimeLookForsImage from "../assets/images/TransitionTimeLookForsImage.svg";
+import ClassroomClimateLookForsImage from "../assets/images/ClassroomClimateLookForsImage.svg";
+import MathInstructionLookForsImage from "../assets/images/MathInstructionLookForsImage.svg";
+import EngagementLookForsImage from "../assets/images/EngagementLookForsImage.svg";
+import InstructionLookForsImage from "../assets/images/InstructionLookForsImage.svg";
+import ListeningLookForsImage from "../assets/images/ListeningLookForsImage.svg";
+import SequentialLookForsImage from "../assets/images/SequentialLookForsImage.svg";
+import AssocCoopLookForsImage from "../assets/images/AssocCoopLookForsImage.svg";
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from 'moment';
@@ -160,6 +176,8 @@ class ResultsDashboard extends React.Component {
     this.state = {
       auth: true,
       icon: null,
+      lookForsIcon: null,
+      notesIcon: null,
       theme: null
     }
   }
@@ -168,41 +186,57 @@ class ResultsDashboard extends React.Component {
     if (this.props.magic8 === "Transition Time") {
       this.setState({
         icon: TransitionTimeIconImage,
+        lookForsIcon: TransitionTimeLookForsImage,
+        notesIcon: TransitionTimeNotesImage,
         theme: TransitionTheme
       });
     } else if (this.props.magic8 === "Classroom Climate") {
       this.setState({
         icon: ClassroomClimateIconImage,
+        lookForsIcon: ClassroomClimateLookForsImage,
+        notesIcon: ClassroomClimateNotesImage,
         theme: ClimateTheme
       })
     } else if (this.props.magic8 === "Math Instruction") {
       this.setState({
         icon: MathIconImage,
+        lookForsIcon: MathInstructionLookForsImage,
+        notesIcon: MathInstructionNotesImage,
         theme: MathTheme
       })
     } else if (this.props.magic8 === "Level of Engagement") {
       this.setState({
         icon: EngagementIconImage,
+        lookForsIcon: EngagementLookForsImage,
+        notesIcon: EngagementNotesImage,
         theme: EngagementTheme
       })
     } else if (this.props.magic8 === "Level of Instruction") {
       this.setState({
         icon: InstructionIconImage,
+        lookForsIcon: InstructionLookForsImage,
+        notesIcon: InstructionNotesImage,
         theme: InstructionTheme
       })
     } else if (this.props.magic8 === "Listening to Children") {
       this.setState({
         icon: ListeningIconImage,
+        lookForsIcon: ListeningLookForsImage,
+        notesIcon: ListeningNotesImage,
         theme: ListeningTheme
       })
     } else if (this.props.magic8 === "Sequential Activities") {
       this.setState({
         icon: SequentialIconImage,
+        lookForsIcon: SequentialLookForsImage,
+        notesIcon: SequentialNotesImage,
         theme: SequentialTheme
       })
     } else {
       this.setState({
         icon: AssocCoopIconImage,
+        lookForsIcon: AssocCoopLookForsImage,
+        notesIcon: AssocCoopNotesImage,
         theme: ACTheme
       })
     }
@@ -337,7 +371,23 @@ class ResultsDashboard extends React.Component {
                 </Button>
               </MuiThemeProvider>
             </Grid>
-            <Grid item style={{marginTop: "7vh", marginBottom: "2vh"}}>
+            <Grid item style={{marginTop: '2vh'}}>
+              <Button>
+                <img
+                  src={this.state.lookForsIcon}
+                  alt="Look-Fors"
+                  className={classes.helpIcon}
+                />
+              </Button>
+              <Button onClick={() => this.props.viewClick('notes')}>
+                <img
+                  src={this.state.notesIcon}
+                  alt="Notes"
+                  className={classes.helpIcon}
+                />
+              </Button>
+            </Grid>
+            {/* <Grid item style={{marginTop: "7vh", marginBottom: "2vh"}}>
               <MuiThemeProvider theme={this.state.theme}>
                 <Button
                   size="large"
@@ -353,7 +403,7 @@ class ResultsDashboard extends React.Component {
                   Notes
                 </Button>
               </MuiThemeProvider>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Card>
       </div>
