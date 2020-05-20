@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import EditImage from '../assets/images/EditImage.svg';
 import SaveImage from '../assets/images/SaveImage.svg';
+import SaveGrayImage from '../assets/images/SaveGrayImage.svg';
 import CloseImage from '../assets/images/CloseImage.svg';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -17,6 +18,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Card from "@material-ui/core/Card";
 import moment from 'moment';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const styles: object = {
   textField: {
@@ -98,8 +100,6 @@ interface State {
   addedQuestions: Array<string>,
   notes: Array<string>,
   date: Date,
-  actionSteps: string,
-  actionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}>,
   editMode: boolean,
   conferencePlanExists: boolean,
   conferencePlanId: string,
@@ -109,7 +109,8 @@ interface State {
   saved: boolean,
   saveModal: boolean,
   anchorEl: HTMLElement,
-  popover: string
+  popover: string,
+  dialog: boolean
 }
 
 interface Teacher {
@@ -149,8 +150,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
       addedQuestions: this.props.chosenQuestions ? this.props.chosenQuestions : [],
       notes: [''],
       date: new Date(),
-      actionSteps: '',
-      actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}],
       editMode: false,
       conferencePlanExists: this.props.conferencePlanExists,
       conferencePlanId: '',
@@ -161,6 +160,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
       saveModal: false,
       anchorEl: null,
       popover: '',
+      dialog: false
     }
   }
 
@@ -199,19 +199,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
       notes: [...this.state.notes, '']
     })
   }
-
-  /**
-   * responds to change in user-entered text
-   * @param {string} name
-   * @param {event} event
-   * @return {void}
-   */
-  handleChange = (name: string) => (event): void => {
-    this.setState({
-      [name]: event.target.value,
-      saved: false
-    });
-  };
 
   /**
    * @param {number} number
@@ -261,45 +248,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
     newArray[number] = event.target.value;
     this.setState({
       notes: newArray,
-      saved: false
-    });
-  }
-
-  /**
-   * @param {number} number
-   * @return {void}
-   */
-  handleChangeMaterials = (number: number) => (event): void => {
-    const newArray = [...this.state.actionStepsArray];
-    newArray[number].materials = event.target.value;
-    this.setState({
-      actionStepsArray: newArray,
-      saved: false
-    });
-  }
-
-  /**
-   * @param {number} number
-   * @return {void}
-   */
-  handleChangePerson = (number: number) => (event): void => {
-    const newArray = [...this.state.actionStepsArray];
-    newArray[number].person = event.target.value;
-    this.setState({
-      actionStepsArray: newArray,
-      saved: false
-    });
-  }
-
-  /**
-   * @param {number} number
-   * @return {void}
-   */
-  handleChangeTimeline = (number: number) => (event): void => {
-    const newArray = [...this.state.actionStepsArray];
-    newArray[number].timeline = event.target.value;
-    this.setState({
-      actionStepsArray: newArray,
       saved: false
     });
   }
@@ -356,7 +304,8 @@ class ConferencePlanForm extends React.Component<Props, State> {
     this.props.firebase.saveConferencePlan(this.state.conferencePlanId, this.state.feedback, this.state.questions, this.state.addedQuestions, this.state.notes).then(() => {
       console.log("conference plan saved");
       this.setState({
-        saved: true
+        saved: true,
+        dialog: false
       })
     })
     .catch(() => {
@@ -370,7 +319,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
    */
   handleSaveAndClose = (): void => {
     this.setState({
-      saveModal: false
+      saveModal: false,
     }, () => {
       this.handleSave();
       this.props.handleClose();
@@ -391,6 +340,20 @@ class ConferencePlanForm extends React.Component<Props, State> {
     this.setState({
       saveModal: false
     }, () => {this.props.handleClose()})
+  }
+
+  onClickAway = (): void => {
+    if (!this.state.saved) {
+      this.setState({dialog: true})
+    }
+  }
+
+  handleUndoChanges = (): void => {
+    this.getConferencePlan();
+    this.setState({
+      dialog: false,
+      saved: true
+    })
   }
 
   /** lifecycle method invoked after component mounts */
@@ -433,10 +396,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
     firebase: PropTypes.exact({
       createConferencePlan: PropTypes.func,
       getConferencePlan: PropTypes.func,
-      getActionSteps: PropTypes.func,
-      saveActionPlan: PropTypes.func,
-      saveActionStep: PropTypes.func,
-      createActionStep: PropTypes.func,
       getCoachFirstName: PropTypes.func,
       getCoachLastName: PropTypes.func
     }).isRequired,
@@ -485,6 +444,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
             </Dialog>
           ) : (
             <div>
+              <ClickAwayListener onClickAway={this.onClickAway}>
               <Grid
                 container
                 direction="column"
@@ -494,6 +454,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
               >
                 <Grid item style={{width: '100%'}}>
                   {this.props.history ? (
+                    // view only page
                     <Grid
                       container
                       direction="row"
@@ -530,6 +491,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                       <Grid item xs={2} />
                     </Grid>
                   ) : (
+                    // results view
                     <Grid
                       container
                       direction="row"
@@ -537,29 +499,46 @@ class ConferencePlanForm extends React.Component<Props, State> {
                       alignItems="center"
                       style={{width: '100%'}}
                     >
-                      <Grid item xs={9}>
+                      <Grid item xs={10}>
                         <Typography variant="h4" style={{fontFamily: "Arimo"}}>
                           CONFERENCE PLAN
                         </Typography>
                       </Grid>
                       <Grid item xs={1}>
-                        <Button disabled={!this.props.handleEditConferencePlan} onClick={this.props.handleEditConferencePlan}>
+                        <Button disabled={!this.props.handleEditConferencePlan}>
                           <img alt="Edit" src={EditImage} style={{width: '100%'}}/>
                         </Button>
                       </Grid>
                       <Grid item xs={1}>
                         <Button onClick={this.handleSave}>
-                          <img alt="Save" src={SaveImage} style={{width: '100%'}}/>
+                          {this.state.saved ? (
+                            <img alt="Save" src={SaveGrayImage} style={{width: '100%'}}/>
+                          ) : (
+                            <img alt="Save" src={SaveImage} style={{width: '100%'}}/>
+                          )}
                         </Button>
                       </Grid>
-                      <Grid item xs={1}>
+                      {/* <Grid item xs={1}>
                         <Button onClick={this.handleClose}>
                           <img alt="Close" src={CloseImage} style={{width: '95%'}}/>
                         </Button>
-                      </Grid>
+                      </Grid> */}
                     </Grid>
                   )}
                 </Grid>
+                <Dialog open={this.state.dialog}>
+                  <DialogTitle>
+                    You must save or undo your changes before navigating away from the page.
+                  </DialogTitle>
+                  <DialogActions>
+                    <Button onClick={this.handleUndoChanges}>
+                      Undo Changes
+                    </Button>
+                    <Button onClick={this.handleSave}>
+                      Save
+                    </Button>
+                  </DialogActions>
+                </Dialog>
                 <Grid item style={{width: '100%'}}>
                   <Grid
                     container
@@ -591,7 +570,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                 style={{width: '100%'}}
               >
                 <Grid item xs={12} style={{width: "100%", marginBottom: '0.8em', marginTop: '0.4em', border: '2px solid #094492', borderRadius: '0.5em', overflow: 'auto'}}>
-                <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
+                  <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
                     <Grid item>
                       <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                         <Grid item xs={11}>
@@ -655,7 +634,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         </Grid>
                       </Grid>
                     </Grid>
-                  {/* <Card className={classes.feedbackCard}> */}
                     {this.state.feedback.map((value, index) => {
                       return (
                         <TextField
@@ -682,15 +660,18 @@ class ConferencePlanForm extends React.Component<Props, State> {
                       )
                     })}
                     {!this.props.readOnly ? (
-                      <Button onClick={this.handleAddFeedback}>
-                        <AddCircleIcon style={{fill: '#094492'}} />
-                      </Button>
+                      <Grid item>
+                        <Grid container direction="row" justify="flex-start">
+                          <Button onClick={this.handleAddFeedback}>
+                            <AddCircleIcon style={{fill: '#094492'}} />
+                          </Button>
+                        </Grid>
+                      </Grid>
                     ) : (<div />)}
-                  {/* </Card> */}
-                </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item xs={12} style={{width: "100%", marginBottom: '0.8em', border: '2px solid #e55529', borderRadius: '0.5em', overflow: 'auto'}}>
-                <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
+                  <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
                     <Grid item>
                       <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                         <Grid item xs={11}>
@@ -801,14 +782,18 @@ class ConferencePlanForm extends React.Component<Props, State> {
                       )
                     })}
                     {!this.props.readOnly ? (
-                      <Button onClick={this.handleAddQuestion}>
-                        <AddCircleIcon style={{fill: '#e55529'}} />
-                      </Button>
+                      <Grid item>
+                        <Grid container direction="row" justify="flex-start">
+                          <Button onClick={this.handleAddQuestion}>
+                            <AddCircleIcon style={{fill: '#e55529'}} />
+                          </Button>
+                        </Grid>
+                      </Grid>
                     ) : (<div />)}
                   </Grid>
                 </Grid>
                 <Grid item xs={12} style={{width: "100%", border: '2px solid #009365', borderRadius: '0.5em', overflow: 'auto'}}>
-                <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
+                  <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
                     <Grid item>
                       <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                         <Grid item xs={11}>
@@ -886,13 +871,18 @@ class ConferencePlanForm extends React.Component<Props, State> {
                       )
                     })}
                     {!this.props.readOnly ? (
-                      <Button onClick={this.handleAddNote}>
-                        <AddCircleIcon style={{fill: '#009365'}} />
-                      </Button>
+                      <Grid item>
+                        <Grid container direction="row" justify="flex-start">
+                          <Button onClick={this.handleAddNote}>
+                            <AddCircleIcon style={{fill: '#009365'}} />
+                          </Button>
+                        </Grid>
+                      </Grid>
                     ) : (<div />)}
                   </Grid>
                 </Grid>
               </Grid>
+              </ClickAwayListener>
             </div>  
           ) : (
             <Button onClick={this.handleCreate}>

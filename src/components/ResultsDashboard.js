@@ -122,19 +122,13 @@ const styles = {
     alignContent: "flex-end",
     display: "flex"
   },
-  completeButton: {
-    color: "#d9d9d9",
-    borderColor: "#d9d9d9",
-    borderWidth: "2px",
-    fontSize: "15px",
-    alignSelf: "flex-end",
-    marginTop: "auto"
-  },
   gridTopMargin: {
     marginTop: "5px"
   },
   resultsButtons: {
-    marginTop: "2vh"
+    marginTop: "2vh",
+    marginRight: '0.5em',
+    marginLeft: '0.5em'
   },
   viewButtons: {
     minWidth: 150,

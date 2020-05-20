@@ -332,7 +332,7 @@ class ResultsLayout extends React.Component<Props, State> {
                           teacher={this.props.teacher}
                           chosenQuestions={this.props.chosenQuestions}
                           handleEditConferencePlan={this.handleEditConferencePlan}
-                          readOnly={true}
+                          readOnly={false}
                           sessionId={this.props.sessionId}
                           magic8={this.props.magic8}
                         />}
