@@ -26,8 +26,17 @@ import InstructionLookForsImage from "../assets/images/InstructionLookForsImage.
 import ListeningLookForsImage from "../assets/images/ListeningLookForsImage.svg";
 import SequentialLookForsImage from "../assets/images/SequentialLookForsImage.svg";
 import AssocCoopLookForsImage from "../assets/images/AssocCoopLookForsImage.svg";
+import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
+import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
+import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
+import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
+import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
+import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
+import NotesListDetailTable from './ResultsComponents/NotesListDetailTable';
+import FirebaseContext from "./Firebase/FirebaseContext";
 import moment from 'moment';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { changeTeacher } from '../state/actions/teacher';
@@ -178,7 +187,8 @@ class ResultsDashboard extends React.Component {
       icon: null,
       lookForsIcon: null,
       notesIcon: null,
-      theme: null
+      theme: null,
+      help: false
     }
   }
 
@@ -249,6 +259,14 @@ class ResultsDashboard extends React.Component {
     this.props.changeTeacher(event.target.value);
   };
 
+  handleCloseHelp = () => {
+    this.setState({ help: false });
+  };
+
+  handleCloseNotes = () => {
+    this.setState({ notes: false })
+  }
+
   /**
    * render function
    * @return {ReactNode}
@@ -257,6 +275,37 @@ class ResultsDashboard extends React.Component {
     const { classes } = this.props;
     return(
       <div>
+        {this.state.help ? (
+          this.props.magic8 === "Transition Time" ? 
+            <TransitionTimeHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Classroom Climate" ?
+            <ClassroomClimateHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Math Instruction" ? 
+            <MathInstructionHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "AC" ?
+            <AssocCoopHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Sequential Activities" ?
+            <SequentialActivitiesHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Level of Instruction" ?
+            <LevelOfInstructionHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Listening to Children" ? 
+            <ListeningToChildrenHelp open={this.state.help} close={this.handleCloseHelp} />
+          : <div />
+        ) : this.state.notes ? (
+          <FirebaseContext.Consumer>
+            {firebase => (
+              <NotesListDetailTable
+                data={this.props.notes}
+                magic8={this.props.magic8}
+                open={this.state.notes}
+                sessionId={this.props.sessionId}
+                firebase={firebase}
+                handleClose={this.handleCloseNotes}
+                style={{overflow:"hidden", minWidth: '100%'}}
+              />
+            )}
+          </FirebaseContext.Consumer>
+        ) : (<div />)}
         <Card className={classes.card}>
           <Grid
             container
@@ -372,14 +421,17 @@ class ResultsDashboard extends React.Component {
               </MuiThemeProvider>
             </Grid>
             <Grid item style={{marginTop: '2vh'}}>
-              <Button>
+              <Button onClick={() => this.setState({help: true})}>
                 <img
                   src={this.state.lookForsIcon}
                   alt="Look-Fors"
                   className={classes.helpIcon}
                 />
               </Button>
-              <Button onClick={() => this.props.viewClick('notes')}>
+              <Button
+                // onClick={() => this.props.viewClick('notes')}
+                onClick={() => this.setState({notes: true})}
+              >
                 <img
                   src={this.state.notesIcon}
                   alt="Notes"
@@ -420,6 +472,7 @@ ResultsDashboard.propTypes = {
   sessionDates: PropTypes.array.isRequired,
   classes: PropTypes.object.isRequired,
   firebase: PropTypes.object.isRequired,
+  notes: PropTypes.object.isRequired,
   changeTeacher: PropTypes.func.isRequired,
   teacherSelected: PropTypes.exact({
     email: PropTypes.string,

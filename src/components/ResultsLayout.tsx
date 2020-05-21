@@ -232,6 +232,7 @@ class ResultsLayout extends React.Component<Props, State> {
                     sessionId={this.props.sessionId}
                     changeSessionId={this.props.changeSessionId}
                     sessionDates={this.props.sessionDates}
+                    notes={this.props.notes}
                   />}
                 </FirebaseContext.Consumer>
               </Grid>
@@ -327,19 +328,17 @@ class ResultsLayout extends React.Component<Props, State> {
                     <div>
                       <FirebaseContext.Consumer>
                         {(firebase: object): React.ReactNode => 
-                          /* <ClickAwayListener onClickAway={() => {alert('blah')}}> */
-                            <ConferencePlanForm 
-                              conferencePlanExists={this.props.conferencePlanExists}
-                              editMode={this.state.conferencePlanEditMode}
-                              firebase={firebase}
-                              teacher={this.props.teacher}
-                              chosenQuestions={this.props.chosenQuestions}
-                              handleEditConferencePlan={this.handleEditConferencePlan}
-                              readOnly={false}
-                              sessionId={this.props.sessionId}
-                              magic8={this.props.magic8}
-                            />
-                          /* </ClickAwayListener> */
+                          <ConferencePlanForm 
+                            conferencePlanExists={this.props.conferencePlanExists}
+                            editMode={this.state.conferencePlanEditMode}
+                            firebase={firebase}
+                            teacher={this.props.teacher}
+                            chosenQuestions={this.props.chosenQuestions}
+                            handleEditConferencePlan={this.handleEditConferencePlan}
+                            readOnly={false}
+                            sessionId={this.props.sessionId}
+                            magic8={this.props.magic8}
+                          />
                         }
                       </FirebaseContext.Consumer>
                         {this.state.conferencePlanEditMode ? (
