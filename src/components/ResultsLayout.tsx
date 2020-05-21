@@ -18,6 +18,7 @@ import ActionPlanModal from './ActionPlanModal';
 import ConferencePlanForm from './ConferencePlanForm';
 import ConferencePlanModal from './ConferencePlanModal';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const styles: object = {
   root: {
@@ -325,17 +326,21 @@ class ResultsLayout extends React.Component<Props, State> {
                   {this.props.sessionId ? (
                     <div>
                       <FirebaseContext.Consumer>
-                        {(firebase: object): React.ReactNode => <ConferencePlanForm 
-                          conferencePlanExists={this.props.conferencePlanExists}
-                          editMode={this.state.conferencePlanEditMode}
-                          firebase={firebase}
-                          teacher={this.props.teacher}
-                          chosenQuestions={this.props.chosenQuestions}
-                          handleEditConferencePlan={this.handleEditConferencePlan}
-                          readOnly={false}
-                          sessionId={this.props.sessionId}
-                          magic8={this.props.magic8}
-                        />}
+                        {(firebase: object): React.ReactNode => 
+                          /* <ClickAwayListener onClickAway={() => {alert('blah')}}> */
+                            <ConferencePlanForm 
+                              conferencePlanExists={this.props.conferencePlanExists}
+                              editMode={this.state.conferencePlanEditMode}
+                              firebase={firebase}
+                              teacher={this.props.teacher}
+                              chosenQuestions={this.props.chosenQuestions}
+                              handleEditConferencePlan={this.handleEditConferencePlan}
+                              readOnly={false}
+                              sessionId={this.props.sessionId}
+                              magic8={this.props.magic8}
+                            />
+                          /* </ClickAwayListener> */
+                        }
                       </FirebaseContext.Consumer>
                         {this.state.conferencePlanEditMode ? (
                           <FirebaseContext.Consumer>
