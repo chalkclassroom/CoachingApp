@@ -27,30 +27,6 @@ const styles: object = {
     overflowY: 'auto',
     overflowX: 'hidden'
   },
-  feedbackCard: {
-    border: "3px solid #094492",
-    borderRadius: 10,
-    backgroundColor: "#fff",
-    height: '20vh',
-    overflow: 'auto',
-    paddingTop: '0.5em'
-  },
-  questionsCard: {
-    border: "3px solid #e55529",
-    borderRadius: 10,
-    backgroundColor: "#fff",
-    height: '20vh',
-    overflow: 'auto',
-    paddingTop: '0.5em'
-  },
-  notesCard: {
-    border: "3px solid #009365",
-    borderRadius: 10,
-    backgroundColor: "#fff",
-    height: '20vh',
-    overflow: 'auto',
-    paddingTop: '0.5em'
-  },
   backButton: {
     marginTop: '0.5em',
     marginBottom: '0.5em',
@@ -127,9 +103,6 @@ interface Teacher {
 
 interface Style {
   textField: string,
-  feedbackCard: string,
-  questionsCard: string,
-  notesCard: string,
   backButton: string
 }
 
@@ -569,9 +542,9 @@ class ConferencePlanForm extends React.Component<Props, State> {
                   alignItems="flex-start"
                   style={{width: '100%'}}
                 >
-                  <Grid item xs={12} style={{width: "100%", marginBottom: '0.8em', marginTop: '0.4em', border: '2px solid #094492', borderRadius: '0.5em', overflow: 'auto'}}>
-                    <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
-                      <Grid item>
+                  <Grid item style={{width: "100%", marginBottom: '0.8em', marginTop: '0.4em', border: '2px solid #094492', borderRadius: '0.5em', overflow: 'auto'}}>
+                    <Grid container direction="column" style={{width: '100%', height: '22vh'}}>
+                      <Grid item style={{width: '100%'}}>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                           <Grid item xs={11}>
                             <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
@@ -633,45 +606,48 @@ class ConferencePlanForm extends React.Component<Props, State> {
                             </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                      {this.state.feedback.map((value, index) => {
-                        return (
-                          <TextField
-                            key={index}
-                            id={"feedback" + index.toString()}
-                            name={"feedback" + index.toString()}
-                            type="text"
-                            placeholder={"Type your feedback here!"}
-                            value={value}
-                            onChange={this.handleChangeFeedback(index)}
-                            margin="none"
-                            variant="standard"
-                            fullWidth
-                            multiline
-                            InputProps={{
-                              disableUnderline: true,
-                              readOnly: this.props.readOnly,
-                              style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
-                            }}
-                            InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                            className={classes.textField}
-                          />
-                        )
-                      })}
-                      {!this.props.readOnly ? (
-                        <Grid item>
-                          <Grid container direction="row" justify="flex-start">
-                            <Button onClick={this.handleAddFeedback}>
-                              <AddCircleIcon style={{fill: '#094492'}} />
-                            </Button>
+                        <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                          {this.state.feedback.map((value, index) => {
+                            return (
+                              <li key={index}>
+                                <TextField
+                                  id={"feedback" + index.toString()}
+                                  name={"feedback" + index.toString()}
+                                  type="text"
+                                  placeholder={"Type your feedback here!"}
+                                  value={value}
+                                  onChange={this.handleChangeFeedback(index)}
+                                  margin="none"
+                                  variant="standard"
+                                  fullWidth
+                                  multiline
+                                  InputProps={{
+                                    disableUnderline: true,
+                                    readOnly: this.props.readOnly,
+                                    style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                                  }}
+                                  InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
+                                  className={classes.textField}
+                                />
+                              </li>
+                            )
+                          })}
+                        </ul>
+                        {!this.props.readOnly ? (
+                          <Grid item>
+                            <Grid container direction="row" justify="flex-start">
+                              <Button onClick={this.handleAddFeedback}>
+                                <AddCircleIcon style={{fill: '#094492'}} />
+                              </Button>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      ) : (<div />)}
+                        ) : (<div />)}
+                      </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={12} style={{width: "100%", marginBottom: '0.8em', border: '2px solid #e55529', borderRadius: '0.5em', overflow: 'auto'}}>
-                    <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
-                      <Grid item>
+                  <Grid item style={{width: "100%", marginBottom: '0.8em', border: '2px solid #e55529', borderRadius: '0.5em', overflow: 'auto'}}>
+                    <Grid container direction="column" style={{width: '100%', height: '22vh'}}>
+                      <Grid item style={{width: '100%'}}>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                           <Grid item xs={11}>
                             <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
@@ -725,72 +701,76 @@ class ConferencePlanForm extends React.Component<Props, State> {
                             </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                      {this.state.addedQuestions[0] ? this.state.addedQuestions.map((value, index) => {
-                        return (
-                          <TextField
-                            key={index}
-                            id={"addedQuestions" + index.toString()}
-                            name={"addedQuestions" + index.toString()}
-                            type="text"
-                            placeholder={index===0 ? "Type your questions here, or add them from the Questions tab!": null}
-                            value={value}
-                            onChange={this.handleChangeAddedQuestions(index)}
-                            margin="none"
-                            variant="standard"
-                            fullWidth
-                            multiline
-                            InputProps={{
-                              disableUnderline: true,
-                              readOnly: this.props.readOnly,
-                              style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
-                            }}
-                            InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                            className={classes.textField}
-                          />
-                        )
-                      }) : (<div />)}
-                      {this.state.questions.map((value, index) => {
-                        return (
-                          <TextField
-                            key={index}
-                            id={"questions" + index.toString()}
-                            name={"questions" + index.toString()}
-                            type="text"
-                            placeholder={
-                              !this.state.addedQuestions[0] && index===0
-                                ? "Type your questions here, or add them from the Questions tab!"
-                                : "Type your question here!"
-                            }
-                            value={value}
-                            onChange={this.handleChangeQuestions(index)}
-                            margin="none"
-                            variant="standard"
-                            fullWidth
-                            multiline
-                            InputProps={{
-                              disableUnderline: true,
-                              readOnly: this.props.readOnly,
-                              style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
-                            }}
-                            InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                            className={classes.textField}
-                          />
-                        )
-                      })}
-                      {!this.props.readOnly ? (
-                        <Grid item>
-                          <Grid container direction="row" justify="flex-start">
-                            <Button onClick={this.handleAddQuestion}>
-                              <AddCircleIcon style={{fill: '#e55529'}} />
-                            </Button>
+                        <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                          {this.state.addedQuestions[0] ? this.state.addedQuestions.map((value, index) => {
+                            return (
+                              <li key={index}>
+                                <TextField
+                                  id={"addedQuestions" + index.toString()}
+                                  name={"addedQuestions" + index.toString()}
+                                  type="text"
+                                  placeholder={index===0 ? "Type your questions here, or add them from the Questions tab!": null}
+                                  value={value}
+                                  onChange={this.handleChangeAddedQuestions(index)}
+                                  margin="none"
+                                  variant="standard"
+                                  fullWidth
+                                  multiline
+                                  InputProps={{
+                                    disableUnderline: true,
+                                    readOnly: this.props.readOnly,
+                                    style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                                  }}
+                                  InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
+                                  className={classes.textField}
+                                />
+                              </li>
+                            )
+                          }) : (<div />)}
+                          {this.state.questions.map((value, index) => {
+                            return (
+                              <li key={index}>
+                                <TextField
+                                  id={"questions" + index.toString()}
+                                  name={"questions" + index.toString()}
+                                  type="text"
+                                  placeholder={
+                                    !this.state.addedQuestions[0] && index===0
+                                      ? "Type your questions here, or add them from the Questions tab!"
+                                      : "Type your question here!"
+                                  }
+                                  value={value}
+                                  onChange={this.handleChangeQuestions(index)}
+                                  margin="none"
+                                  variant="standard"
+                                  fullWidth
+                                  multiline
+                                  InputProps={{
+                                    disableUnderline: true,
+                                    readOnly: this.props.readOnly,
+                                    style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                                  }}
+                                  InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
+                                  className={classes.textField}
+                                />
+                              </li>
+                            )
+                          })}
+                        </ul>
+                        {!this.props.readOnly ? (
+                          <Grid item>
+                            <Grid container direction="row" justify="flex-start">
+                              <Button onClick={this.handleAddQuestion}>
+                                <AddCircleIcon style={{fill: '#e55529'}} />
+                              </Button>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      ) : (<div />)}
+                        ) : (<div />)}
+                      </Grid>
                     </Grid>
                   </Grid>
                   <Grid item xs={12} style={{width: "100%", border: '2px solid #009365', borderRadius: '0.5em', overflow: 'auto'}}>
-                    <Grid container direction="column" style={{width: '100%', height: '21vh'}}>
+                    <Grid container direction="column" style={{width: '100%', height: '22vh'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                           <Grid item xs={11}>
@@ -824,16 +804,17 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                     <ul>
                                       <li>
                                         <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                                          Add an observation from the notes tab or write a 
-                                          <br />
-                                          new note.
+                                          Add an observation note from the Notes tab.
                                         </Typography>
                                       </li>
-                                      {/* <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo', paddingTop: '0.5em', paddingBottom: '0.5em'}}>
+                                        <b>AND/OR</b>
+                                      </Typography>
+                                      <li>
                                         <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                                           Write a new note.
                                         </Typography>
-                                      </li> */}
+                                      </li>
                                     </ul>
                                   </div>
                                 </Popover>
@@ -841,40 +822,43 @@ class ConferencePlanForm extends React.Component<Props, State> {
                             </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                      {this.state.notes.map((value, index) => {
-                        return (
-                          <TextField
-                            key={index}
-                            id={"notes" + index.toString()}
-                            name={"notes" + index.toString()}
-                            type="text"
-                            placeholder={"Type your note here!"}
-                            value={value}
-                            onChange={this.handleChangeNotes(index)}
-                            margin="none"
-                            variant="standard"
-                            fullWidth
-                            multiline
-                            InputProps={{
-                              disableUnderline: true,
-                              readOnly: this.props.readOnly,
-                              style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
-                            }}
-                            InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
-                            className={classes.textField}
-                          />
-                        )
-                      })}
-                      {!this.props.readOnly ? (
-                        <Grid item>
-                          <Grid container direction="row" justify="flex-start">
-                            <Button onClick={this.handleAddNote}>
-                              <AddCircleIcon style={{fill: '#009365'}} />
-                            </Button>
+                        <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                          {this.state.notes.map((value, index) => {
+                            return (
+                              <li key={index}>
+                                <TextField
+                                  id={"notes" + index.toString()}
+                                  name={"notes" + index.toString()}
+                                  type="text"
+                                  placeholder={"Type your note here!"}
+                                  value={value}
+                                  onChange={this.handleChangeNotes(index)}
+                                  margin="none"
+                                  variant="standard"
+                                  fullWidth
+                                  multiline
+                                  InputProps={{
+                                    disableUnderline: true,
+                                    readOnly: this.props.readOnly,
+                                    style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                                  }}
+                                  InputLabelProps={{style: {fontSize: 20, marginLeft: '0.5em', fontFamily: "Arimo"}}}
+                                  className={classes.textField}
+                                />
+                              </li>
+                            )
+                          })}
+                        </ul>
+                        {!this.props.readOnly ? (
+                          <Grid item>
+                            <Grid container direction="row" justify="flex-start">
+                              <Button onClick={this.handleAddNote}>
+                                <AddCircleIcon style={{fill: '#009365'}} />
+                              </Button>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      ) : (<div />)}
+                        ) : (<div />)}
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
