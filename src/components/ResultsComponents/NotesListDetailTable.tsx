@@ -6,7 +6,7 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
-import Paper from "@material-ui/core/Paper/Paper";
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
@@ -32,18 +32,20 @@ function getModalStyle(): React.CSSProperties {
 const styles: object = {
   paper: {
     position: "absolute",
-    width: "67%",
+    width: "70%",
     backgroundColor: 'white',
     padding: '2em',
     borderRadius: 8
   },
   tableHeader: {
     color: "white",
-    fontSize: '1.2em'
+    fontSize: '1.5em',
+    fontFamily: 'Arimo'
   },
   tableText: {
     color: 'black',
-    fontSize: '1em'
+    fontSize: '1.2em',
+    fontFamily: 'Arimo'
   }
 };
 
@@ -127,42 +129,44 @@ class NotesListDetailTable extends React.Component<Props, {}> {
                 </IconButton>
               </Grid>
             </Grid>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.tableHeader} style={{backgroundColor: color, width: '15%'}}>Time</TableCell>
-                  <TableCell className={classes.tableHeader} style={{backgroundColor: color}} align="left">
-                    Notes
-                  </TableCell>
-                  <TableCell className={classes.tableHeader} style={{backgroundColor: color, width: '10%'}}>Add to Conference Plan</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {this.props.data.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell component="th" scope="row" className={classes.tableText}>
-                      {row.timestamp}
+            {this.props.data[0] ? (
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell className={classes.tableHeader} style={{backgroundColor: color, width: '15%'}}>Time</TableCell>
+                    <TableCell className={classes.tableHeader} style={{backgroundColor: color}} align="left">
+                      Notes
                     </TableCell>
-                    <TableCell align="left" className={classes.tableText}>{row.content}</TableCell>
-                    <TableCell align="center" className={classes.tableText}>
-                      <Button onClick={() => this.addNoteToConferencePlan('kcExtyWKyytbMnImnhPF', row.content)}>
-                        <AddCircleIcon style={{fill: color}} />
-                      </Button>
-                    </TableCell>
+                    <TableCell className={classes.tableHeader} style={{backgroundColor: color, width: '10%'}}>Add to Conference Plan</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHead>
+                <TableBody>
+                  {this.props.data.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell component="th" scope="row" className={classes.tableText}>
+                        {row.timestamp}
+                      </TableCell>
+                      <TableCell align="left" className={classes.tableText}>{row.content}</TableCell>
+                      <TableCell align="center" className={classes.tableText}>
+                        <Button onClick={() => this.addNoteToConferencePlan('kcExtyWKyytbMnImnhPF', row.content)}>
+                          <AddCircleIcon style={{fill: color}} />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className={classes.tableText} style={{textAlign: 'center'}}>
+                There were no notes recorded during this observation.
+              </div>
+            )}
+            
           </div>
         </Modal>
       </div>
     );
   }
 }
-
-NotesListDetailTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-  data: PropTypes.array.isRequired
-};
 
 export default withStyles(styles)(NotesListDetailTable);

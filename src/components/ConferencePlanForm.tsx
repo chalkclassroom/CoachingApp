@@ -11,15 +11,12 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import EditImage from '../assets/images/EditImage.svg';
 import SaveImage from '../assets/images/SaveImage.svg';
 import SaveGrayImage from '../assets/images/SaveGrayImage.svg';
-import CloseImage from '../assets/images/CloseImage.svg';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Card from "@material-ui/core/Card";
 import moment from 'moment';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import {Prompt} from 'react-router-dom';
 
 const styles: object = {
   textField: {
@@ -149,6 +146,9 @@ class ConferencePlanForm extends React.Component<Props, State> {
     })
   }
 
+  /**
+   * @return {void}
+   */
   handlePopoverClose = (): void => {
     this.setState({
       anchorEl: null,
@@ -316,7 +316,10 @@ class ConferencePlanForm extends React.Component<Props, State> {
     }, () => {this.props.handleClose()})
   }
 
-  onClickAway = (e): void => {
+  /**
+   * @param {React.SyntheticEvent} e
+   */
+  onClickAway = (e: React.SyntheticEvent): void => {
     const cp = document.getElementById('cp');
     if (!this.state.saved && !cp.contains(e.target) && !this.state.popover) {
       this.setState({dialog: true})
@@ -477,16 +480,16 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         alignItems="center"
                         style={{width: '100%'}}
                       >
-                        <Grid item xs={10}>
+                        <Grid item xs={11}>
                           <Typography variant="h4" style={{fontFamily: "Arimo"}}>
                             CONFERENCE PLAN
                           </Typography>
                         </Grid>
-                        <Grid item xs={1}>
+                        {/* <Grid item xs={1}>
                           <Button disabled={!this.props.handleEditConferencePlan}>
                             <img alt="Edit" src={EditImage} style={{width: '100%'}}/>
                           </Button>
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs={1}>
                           <Button onClick={this.handleSave}>
                             {this.state.saved ? (
@@ -808,7 +811,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                         </Typography>
                                       </li>
                                       <Typography variant="h6" style={{fontFamily: 'Arimo', paddingTop: '0.5em', paddingBottom: '0.5em'}}>
-                                        <b>AND/OR</b>
+                                        <b>AND / OR</b>
                                       </Typography>
                                       <li>
                                         <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
