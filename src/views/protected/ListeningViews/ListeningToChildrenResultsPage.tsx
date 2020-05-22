@@ -44,6 +44,7 @@ interface State {
   listening: number,
   notListening: number,
   sessionId: string,
+  conferencePlanId: string,
   listening1: number,
   listening2: number,
   listening3: number,
@@ -86,6 +87,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       listening: 0,
       notListening: 0,
       sessionId: '',
+      conferencePlanId: '',
       listening1: 0,
       listening2: 0,
       listening3: 0,
@@ -146,6 +148,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       listening: 0,
       notListening: 0,
       sessionId: '',
+      conferencePlanId: '',
       listening1: 0,
       listening2: 0,
       listening3: 0,
@@ -251,11 +254,13 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         this.setState({
-          conferencePlanExists: false
+          conferencePlanExists: false,
+          conferencePlanId: ''
         })
       }
     }).catch(() => {
@@ -303,6 +308,36 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   };
 
   /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToPlan = (conferencePlanId: string, note: string): void => {
+    const firebase = this.context;
+    if (!conferencePlanId) {
+      firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Listening to Children')
+        .then(() => {
+          firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          }).then(() => {
+            firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+          })
+        })
+    } else {
+      firebase.addNoteToConferencePlan(conferencePlanId, note);
+    }
+  }
+
+  /**
    * checks if question has already been added and if not, adds it
    * @param {string} panelTitle
    * @param {number} index
@@ -326,11 +361,25 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       if (conferencePlanData[0]) {
         firebase.saveConferencePlanQuestion(sessionId, question);
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
+          firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          })
           firebase.saveConferencePlanQuestion(sessionId, question);
           this.setState({
             conferencePlanExists: true
@@ -468,6 +517,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
           }
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
+          conferencePlanId={this.state.conferencePlanId}
+          addNoteToPlan={this.addNoteToPlan}
           sessionDates={this.state.sessionDates}
           notes={this.state.notes}
           questions={

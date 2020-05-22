@@ -291,20 +291,18 @@ class ResultsDashboard extends React.Component {
           : this.props.magic8 === "Listening to Children" ? 
             <ListeningToChildrenHelp open={this.state.help} close={this.handleCloseHelp} />
           : <div />
-        ) : this.state.notes ? (
-          <FirebaseContext.Consumer>
-            {firebase => (
-              <NotesListDetailTable
-                data={this.props.notes}
-                magic8={this.props.magic8}
-                open={this.state.notes}
-                sessionId={this.props.sessionId}
-                firebase={firebase}
-                handleClose={this.handleCloseNotes}
-                style={{overflow:"hidden", minWidth: '100%'}}
-              />
-            )}
-          </FirebaseContext.Consumer>
+        ) : this.props.notesModal ? (
+          <NotesListDetailTable
+            data={this.props.notes}
+            magic8={this.props.magic8}
+            open={this.props.notesModal}
+            teacherSelected={this.props.teacherSelected}
+            sessionId={this.props.sessionId}
+            addNoteToPlan={this.props.addNoteToPlan}
+            conferencePlanId={this.props.conferencePlanId}
+            handleClose={this.props.handleCloseNotes}
+            style={{overflow:"hidden", minWidth: '100%'}}
+          />
         ) : (<div />)}
         <Card className={classes.card}>
           <Grid
@@ -428,10 +426,7 @@ class ResultsDashboard extends React.Component {
                   className={classes.helpIcon}
                 />
               </Button>
-              <Button
-                // onClick={() => this.props.viewClick('notes')}
-                onClick={() => this.setState({notes: true})}
-              >
+              <Button onClick={this.props.handleOpenNotes}>
                 <img
                   src={this.state.notesIcon}
                   alt="Notes"
@@ -439,23 +434,6 @@ class ResultsDashboard extends React.Component {
                 />
               </Button>
             </Grid>
-            {/* <Grid item style={{marginTop: "7vh", marginBottom: "2vh"}}>
-              <MuiThemeProvider theme={this.state.theme}>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant={
-                    this.props.view === 'notes'
-                      ? "contained"
-                      : "outlined"
-                  }
-                  className={this.props.view === 'notes' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={() => this.props.viewClick('notes')}
-                >
-                  Notes
-                </Button>
-              </MuiThemeProvider>
-            </Grid> */}
           </Grid>
         </Card>
       </div>
@@ -470,6 +448,8 @@ ResultsDashboard.propTypes = {
   changeSessionId: PropTypes.func.isRequired,
   sessionId: PropTypes.string.isRequired,
   sessionDates: PropTypes.array.isRequired,
+  conferencePlanId: PropTypes.string,
+  addNoteToPlan: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   firebase: PropTypes.object.isRequired,
   notes: PropTypes.object.isRequired,
@@ -484,7 +464,10 @@ ResultsDashboard.propTypes = {
     role: PropTypes.string,
     school: PropTypes.string
   }).isRequired,
-  teacherList: PropTypes.array.isRequired
+  teacherList: PropTypes.array.isRequired,
+  notesModal: PropTypes.bool.isRequired,
+  handleOpenNotes: PropTypes.func.isRequired,
+  handleCloseNotes: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {

@@ -8,7 +8,6 @@ import Popover from '@material-ui/core/Popover';
 import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import EditImage from '../assets/images/EditImage.svg';
 import SaveImage from '../assets/images/SaveImage.svg';
 import SaveGrayImage from '../assets/images/SaveGrayImage.svg';
 import Dialog from "@material-ui/core/Dialog";
@@ -53,7 +52,7 @@ interface Props {
   },
   sessionId?: string,
   readOnly: boolean,
-  handleEditConferencePlan(): void,
+  // handleEditConferencePlan(): void,
   handleClose?(): void,
   conferencePlanExists: boolean,
   editMode: boolean,
@@ -65,7 +64,8 @@ interface Props {
         pathname: string
       }
     ): void
-  }
+  },
+  notesModal: boolean
 }
 
 interface State {
@@ -363,6 +363,9 @@ class ConferencePlanForm extends React.Component<Props, State> {
     if (this.state.conferencePlanExists != prevState.conferencePlanExists) {
       this.getConferencePlan();
     }
+    if (this.props.notesModal != prevProps.notesModal) {
+      this.getConferencePlan();
+    }
   }
 
   static propTypes = {
@@ -383,11 +386,12 @@ class ConferencePlanForm extends React.Component<Props, State> {
       getCoachLastName: PropTypes.func
     }).isRequired,
     readOnly: PropTypes.bool.isRequired,
-    handleEditConferencePlan: PropTypes.func.isRequired,
+    // handleEditConferencePlan: PropTypes.func.isRequired,
     handleClose: PropTypes.func,
     conferencePlanExists: PropTypes.bool.isRequired,
     editMode: PropTypes.bool.isRequired,
     chosenQuestions: PropTypes.array.isRequired,
+    notesModal: PropTypes.bool.isRequired
   };
 
   /**

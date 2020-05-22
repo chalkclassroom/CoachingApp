@@ -10,7 +10,6 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography/Typography";
-import NotesListDetailTable from "./ResultsComponents/NotesListDetailTable";
 import "chartjs-plugin-datalabels";
 import ResultsDashboard from './ResultsDashboard';
 import ActionPlanForm from './ActionPlanForm';
@@ -18,7 +17,6 @@ import ActionPlanModal from './ActionPlanModal';
 import ConferencePlanForm from './ConferencePlanForm';
 import ConferencePlanModal from './ConferencePlanModal';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const styles: object = {
   root: {
@@ -82,6 +80,8 @@ interface Props {
   chosenQuestions: Array<string>,
   notes: Array<{timestamp: Date, content: string}>,
   actionPlanExists: boolean,
+  conferencePlanId: string,
+  addNoteToPlan(conferencePlanId: string, note: string): void,
   conferencePlanExists: boolean,
   history: {
     replace(
@@ -110,7 +110,8 @@ interface State {
   tabValue: number,
   actionPlanEditMode: boolean,
   conferencePlanEditMode: boolean,
-  count: number
+  count: number,
+  notesModal: boolean
 }
 
 /**
@@ -129,7 +130,8 @@ class ResultsLayout extends React.Component<Props, State> {
       tabValue: 0,
       actionPlanEditMode: false,
       conferencePlanEditMode: false,
-      count: 0
+      count: 0,
+      notesModal: false
     }
   }
 
@@ -178,16 +180,24 @@ class ResultsLayout extends React.Component<Props, State> {
     })
   }
 
-  handleEditConferencePlan = (): void => {
+  /* handleEditConferencePlan = (): void => {
     this.setState({
       conferencePlanEditMode: true
     })
-  }
+  } */
 
-  handleSaveAndCloseConferencePlan = (): void => {
+  /* handleSaveAndCloseConferencePlan = (): void => {
     this.setState({
       conferencePlanEditMode: false
     })
+  } */
+
+  handleOpenNotes = () => {
+    this.setState({ notesModal: true })
+  }
+
+  handleCloseNotes = () => {
+    this.setState({ notesModal: false })
   }
 
   /**
@@ -230,9 +240,14 @@ class ResultsLayout extends React.Component<Props, State> {
                     view={this.state.view}
                     viewClick = {this.viewClick}
                     sessionId={this.props.sessionId}
+                    conferencePlanId={this.props.conferencePlanId}
+                    addNoteToPlan={this.props.addNoteToPlan}
                     changeSessionId={this.props.changeSessionId}
                     sessionDates={this.props.sessionDates}
                     notes={this.props.notes}
+                    handleOpenNotes={this.handleOpenNotes}
+                    handleCloseNotes={this.handleCloseNotes}
+                    notesModal={this.state.notesModal}
                   />}
                 </FirebaseContext.Consumer>
               </Grid>
@@ -300,22 +315,6 @@ class ResultsLayout extends React.Component<Props, State> {
                     )}
                   </Grid>
                 </div>
-              ) : this.state.view === 'notes' ? (
-                <div className={classes.resultsContent}>
-                  <Grid item>
-                    <FirebaseContext.Consumer>
-                      {(firebase: object): React.ReactNode =>
-                        <NotesListDetailTable
-                          data={this.props.notes}
-                          magic8={this.props.magic8}
-                          sessionId={this.props.sessionId}
-                          firebase={firebase}
-                          style={{overflow:"hidden", minWidth: '100%'}}
-                        />
-                      }
-                    </FirebaseContext.Consumer>
-                  </Grid>
-                </div>
               ) : this.state.view === 'questions' ? (
                 <div className={classes.resultsContent}>
                   <Grid container direction="column">
@@ -334,14 +333,15 @@ class ResultsLayout extends React.Component<Props, State> {
                             firebase={firebase}
                             teacher={this.props.teacher}
                             chosenQuestions={this.props.chosenQuestions}
-                            handleEditConferencePlan={this.handleEditConferencePlan}
+                            // handleEditConferencePlan={this.handleEditConferencePlan}
                             readOnly={false}
                             sessionId={this.props.sessionId}
                             magic8={this.props.magic8}
+                            notesModal={this.state.notesModal}
                           />
                         }
                       </FirebaseContext.Consumer>
-                        {this.state.conferencePlanEditMode ? (
+                        {/* {this.state.conferencePlanEditMode ? (
                           <FirebaseContext.Consumer>
                             {(firebase: object): React.ReactNode => <ConferencePlanModal 
                               firebase={firebase}
@@ -351,7 +351,7 @@ class ResultsLayout extends React.Component<Props, State> {
                               conferencePlanExists={true}
                             />}
                           </FirebaseContext.Consumer>
-                        ) : ( <div /> )}
+                        ) : ( <div /> )} */}
                       </div>
                   ) : (
                     <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>

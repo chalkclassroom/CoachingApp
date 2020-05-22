@@ -59,10 +59,8 @@ interface Props {
   classes: Style,
   data: Array<{ timestamp: Date, content: string }>,
   magic8: string,
-  sessionId: string,
-  firebase: {
-    addNoteToConferencePlan(conferencePlanId: string, note: string): void
-  },
+  conferencePlanId: string,
+  addNoteToPlan(conferencePlanId: string, note: string): Promise<void>,
   handleClose(): void,
   open: boolean
 }
@@ -77,18 +75,11 @@ class NotesListDetailTable extends React.Component<Props, {}> {
     classes: PropTypes.object.isRequired,
     data: PropTypes.array.isRequired,
     magic8: PropTypes.string.isRequired,
-    sessionId: PropTypes.string.isRequired,
+    conferencePlanId: PropTypes.string.isRequired,
+    addNoteToPlan: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired
   };
-
-  /**
-   * @param {string} conferencePlanId
-   * @param {string} note
-   */
-  addNoteToConferencePlan = (conferencePlanId: string, note: string): void => {
-    this.props.firebase.addNoteToConferencePlan(conferencePlanId, note)
-  }
 
   /**
    * render function
@@ -133,11 +124,15 @@ class NotesListDetailTable extends React.Component<Props, {}> {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell className={classes.tableHeader} style={{backgroundColor: color, width: '15%'}}>Time</TableCell>
+                    <TableCell className={classes.tableHeader} style={{backgroundColor: color, width: '20%'}}>
+                      Time
+                    </TableCell>
                     <TableCell className={classes.tableHeader} style={{backgroundColor: color}} align="left">
                       Notes
                     </TableCell>
-                    <TableCell className={classes.tableHeader} style={{backgroundColor: color, width: '10%'}}>Add to Conference Plan</TableCell>
+                    <TableCell className={classes.tableHeader} style={{backgroundColor: color, width: '10%'}}>
+                      Add to Conference Plan
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -148,7 +143,7 @@ class NotesListDetailTable extends React.Component<Props, {}> {
                       </TableCell>
                       <TableCell align="left" className={classes.tableText}>{row.content}</TableCell>
                       <TableCell align="center" className={classes.tableText}>
-                        <Button onClick={() => this.addNoteToConferencePlan('kcExtyWKyytbMnImnhPF', row.content)}>
+                        <Button onClick={(): void => {this.props.addNoteToPlan(this.props.conferencePlanId, row.content)}}>
                           <AddCircleIcon style={{fill: color}} />
                         </Button>
                       </TableCell>
@@ -161,7 +156,6 @@ class NotesListDetailTable extends React.Component<Props, {}> {
                 There were no notes recorded during this observation.
               </div>
             )}
-            
           </div>
         </Modal>
       </div>

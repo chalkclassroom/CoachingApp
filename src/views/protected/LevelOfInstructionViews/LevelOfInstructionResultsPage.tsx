@@ -44,6 +44,7 @@ interface State {
   lowLevelInsCount: number,
   specificSkillInsCount: number,
   sessionId: string,
+  conferencePlanId: string,
   trendsDates: Array<string>,
   trendsInfer: Array<number>,
   trendsBasic: Array<number>,
@@ -82,6 +83,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       lowLevelInsCount: 0,
       specificSkillInsCount: 0,              
       sessionId: '',
+      conferencePlanId: '',
       trendsDates: [],
       trendsInfer: [],                   
       trendsBasic: [],                    
@@ -94,7 +96,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     const teacherId = this.props.teacherSelected.id;
     this.handleDateFetching(teacherId);
     this.handleTrendsFetching(teacherId);
@@ -174,6 +176,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       lowLevelInsCount: 0,
       specificSkillInsCount: 0,              
       sessionId: '',
+      conferencePlanId: '',
       trendsDates: [],
       trendsInfer: [],                   
       trendsBasic: [],                    
@@ -223,7 +226,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     };
   };
 
-  getData = () => {
+  getData = (): void => {
     const firebase = this.context;
     let specificSkillCount = 0;
     let lowLevelCount = 0;
@@ -234,11 +237,13 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         this.setState({
-          conferencePlanExists: false
+          conferencePlanExists: false,
+          conferencePlanId: ''
         })
       }
     }).catch(() => {
@@ -280,6 +285,36 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   };
 
   /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToPlan = (conferencePlanId: string, note: string): void => {
+    const firebase = this.context;
+    if (!conferencePlanId) {
+      firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Level of Instruction')
+        .then(() => {
+          firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          }).then(() => {
+            firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+          })
+        })
+    } else {
+      firebase.addNoteToConferencePlan(conferencePlanId, note);
+    }
+  }
+
+  /**
    * checks if question has already been added and if not, adds it
    * @param {string} panelTitle
    * @param {number} index
@@ -304,11 +339,25 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       if (conferencePlanData[0]) {
         firebase.saveConferencePlanQuestion(sessionId, question);
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
+          firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          })
           firebase.saveConferencePlanQuestion(sessionId, question);
           this.setState({
             conferencePlanExists: true
@@ -426,6 +475,8 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           }
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
+          conferencePlanId={this.state.conferencePlanId}
+          addNoteToPlan={this.addNoteToPlan}
           sessionDates={this.state.sessionDates}
           notes={this.state.notes}
           questions={

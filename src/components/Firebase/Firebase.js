@@ -1314,18 +1314,6 @@ class Firebase {
     );
     const conferencePlansRef = firebase.firestore().collection('conferencePlans').doc();
     conferencePlansRef.set(data).then(() => {
-      /* const actionStepsRef = actionPlansRef.collection("actionSteps").doc('0');
-      actionStepsRef.set({
-        materials: '',
-        person: '',
-        step: '',
-        // timeline: firebase.firestore.FieldValue.serverTimestamp()
-        timeline: ''
-      }).then(() => {
-        console.log('action steps created');
-      }).catch(() => {
-        console.log('error creating action steps');
-      }) */
       console.log('conference plan created');
     }).catch(() => {
       console.log('error creating conference plan');
@@ -1427,6 +1415,7 @@ class Firebase {
       .collection("conferencePlans")
       .doc(conferencePlanId)
       .update({
+        // does not add if it has already been added
         notes: firebase.firestore.FieldValue.arrayUnion(note)
       })
       .catch(error =>

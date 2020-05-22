@@ -38,6 +38,7 @@ interface State {
   specificBehaviorCount: number,
   averageToneRating: number,
   sessionId: string,
+  conferencePlanId: string,
   trendsDates: Array<string>,
   trendsPos: Array<number>,
   trendsNeg: Array<number>,
@@ -77,6 +78,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       specificBehaviorCount: 0,
       averageToneRating: 0,
       sessionId: '',
+      conferencePlanId: '',
       trendsDates: [],
       trendsPos: [],
       trendsNeg: [],
@@ -157,6 +159,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     const firebase = this.context;
     this.setState({
       sessionId: '',
+      conferencePlanId: '',
       disapprovalBehaviorCount: 0,
       redirectionsBehaviorCount: 0,
       nonspecificBehaviorCount: 0,
@@ -228,11 +231,13 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
         firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
           if (conferencePlanData[0]) {
             this.setState({
-              conferencePlanExists: true
+              conferencePlanExists: true,
+              conferencePlanId: conferencePlanData[0].id
             })
           } else {
             this.setState({
-              conferencePlanExists: false
+              conferencePlanExists: false,
+              conferencePlanId: ''
             })
           }
         }).catch(() => {
@@ -275,6 +280,36 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   };
 
   /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToPlan = (conferencePlanId: string, note: string): void => {
+    const firebase = this.context;
+    if (!conferencePlanId) {
+      firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Classroom Climate')
+        .then(() => {
+          firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          }).then(() => {
+            firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+          })
+        })
+    } else {
+      firebase.addNoteToConferencePlan(conferencePlanId, note);
+    }
+  }
+
+  /**
    * checks if question has already been added and if not, adds it
    * @param {string} panelTitle
    * @param {number} index
@@ -299,11 +334,25 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       if (conferencePlanData[0]) {
         firebase.saveConferencePlanQuestion(sessionId, question);
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
+          firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          })
           firebase.saveConferencePlanQuestion(sessionId, question);
           this.setState({
             conferencePlanExists: true
@@ -394,6 +443,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
           sessionDates={this.state.sessionDates}
+          conferencePlanId={this.state.conferencePlanId}
+          addNoteToPlan={this.addNoteToPlan}
           notes={this.state.notes}
           questions={
             <ClimateCoachingQuestions
