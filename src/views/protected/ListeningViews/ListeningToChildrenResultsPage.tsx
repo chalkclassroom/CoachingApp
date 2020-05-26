@@ -12,6 +12,7 @@ import ListeningTrendsGraph from "../../../components/ListeningComponents/Result
 import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
 import PieSliceListeningImage from '../../../assets/images/PieSliceListeningImage.svg';
 import PieSliceChildNonImage from '../../../assets/images/PieSliceChildNonImage.svg';
+import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
@@ -58,7 +59,8 @@ interface State {
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<{id: string, sessionStart: {value: string}}>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  noteAdded: boolean
 }
 
 interface Teacher {
@@ -101,7 +103,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noteAdded: false
     };
   }
 
@@ -330,10 +333,26 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
             }
           }).then(() => {
             firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+            .then(() => {
+              this.setState({ noteAdded: true }, () => {
+                console.log('noteadded state 1', this.state.noteAdded);
+                setTimeout(() => {
+                  this.setState({ noteAdded: false }, () => {console.log('noteadded state 2', this.state.noteAdded)})
+                }, 1500);
+              })
+            })
           })
         })
     } else {
-      firebase.addNoteToConferencePlan(conferencePlanId, note);
+      firebase.addNoteToConferencePlan(conferencePlanId, note)
+      .then(() => {
+        this.setState({ noteAdded: true }, () => {
+          console.log('noteadded state 1', this.state.noteAdded);
+          setTimeout(() => {
+            this.setState({ noteAdded: false }, () => {console.log('noteadded state 2', this.state.noteAdded)})
+          }, 1500);
+        })
+      })
     }
   }
 
@@ -433,6 +452,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     })
     return (
       <div className={classes.root}>
+        <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Listening to Children"

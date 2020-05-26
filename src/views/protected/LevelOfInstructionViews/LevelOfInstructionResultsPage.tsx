@@ -11,6 +11,7 @@ import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructio
 import { Grid, Typography } from "@material-ui/core";
 import PieSliceLOIBasicImage from "../../../assets/images/PieSliceLOIBasicImage.svg";
 import PieSliceLOIInferentialImage from "../../../assets/images/PieSliceLOIInferentialImage.svg";
+import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 
 const styles: object = {
@@ -52,7 +53,8 @@ interface State {
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<{id: string, sessionStart: {value: string}}>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  noteAdded: boolean
 }
 
 interface Teacher {
@@ -91,7 +93,8 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noteAdded: boolean
     };
   }
 
@@ -307,10 +310,26 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
             }
           }).then(() => {
             firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+            .then(() => {
+              this.setState({ noteAdded: true }, () => {
+                console.log('noteadded state 1', this.state.noteAdded);
+                setTimeout(() => {
+                  this.setState({ noteAdded: false }, () => {console.log('noteadded state 2', this.state.noteAdded)})
+                }, 1500);
+              })
+            })
           })
         })
     } else {
-      firebase.addNoteToConferencePlan(conferencePlanId, note);
+      firebase.addNoteToConferencePlan(conferencePlanId, note)
+      .then(() => {
+        this.setState({ noteAdded: true }, () => {
+          console.log('noteadded state 1', this.state.noteAdded);
+          setTimeout(() => {
+            this.setState({ noteAdded: false }, () => {console.log('noteadded state 2', this.state.noteAdded)})
+          }, 1500);
+        })
+      })
     }
   }
 
@@ -394,6 +413,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     })
     return (
       <div className={classes.root}>
+        <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Level of Instruction"

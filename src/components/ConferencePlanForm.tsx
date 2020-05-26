@@ -16,6 +16,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import moment from 'moment';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import FadeAwayModal from './FadeAwayModal';
 
 const styles: object = {
   textField: {
@@ -84,7 +85,8 @@ interface State {
   saveModal: boolean,
   anchorEl: HTMLElement,
   popover: string,
-  dialog: boolean
+  dialog: boolean,
+  savedAlert: boolean
 }
 
 interface Teacher {
@@ -131,7 +133,8 @@ class ConferencePlanForm extends React.Component<Props, State> {
       saveModal: false,
       anchorEl: null,
       popover: '',
-      dialog: false
+      dialog: false,
+      savedAlert: false
     }
   }
 
@@ -366,6 +369,15 @@ class ConferencePlanForm extends React.Component<Props, State> {
     if (this.props.notesModal != prevProps.notesModal) {
       this.getConferencePlan();
     }
+    if (this.state.saved != prevState.saved) {
+      if (this.state.saved) {
+        this.setState({ savedAlert: true }, () => {
+          setTimeout(() => {
+            this.setState({ savedAlert: false })
+          }, 1500);
+        })
+      }
+    }
   }
 
   static propTypes = {
@@ -430,6 +442,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
               </Dialog>
             ) : (
               <div>
+                <FadeAwayModal open={this.state.savedAlert} text="Saved!" />
                 <Grid
                   container
                   direction="column"

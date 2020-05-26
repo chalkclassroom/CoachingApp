@@ -1396,7 +1396,8 @@ class Firebase {
       feedback: feedback,
       questions: questions,
       addedQuestions: addedQuestions,
-      notes: notes
+      notes: notes,
+      dateModified: firebase.firestore.Timestamp.now()
     })
     .then(() => {
       console.log("Action plan updated successfully!");
@@ -1435,12 +1436,10 @@ class Firebase {
         conferencePlanId.push(doc.id)
       );
       return this.db.collection("conferencePlans").doc(conferencePlanId[0]).update({
-        addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText)
+        addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText),
+        dateModified: firebase.firestore.Timestamp.now()
       })
     })
-    /* return conferencePlanRef.update({
-      addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText)
-    }) */
   }
 
 }

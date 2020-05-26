@@ -8,6 +8,7 @@ import ResultsLayout from '../../../components/ResultsLayout';
 import BehaviorResponsesDetailsChart from "../../../components/ClassroomClimateComponent/ResultsComponents/BehaviorResponsesDetailsChart";
 import ClimateCoachingQuestions from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateCoachingQuestions";
 import ClimateSummarySlider from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateSummarySlider";
+import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -46,7 +47,8 @@ interface State {
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<{id: string, sessionStart: {value: string}}>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  noteAdded: boolean
 }
 
 interface Teacher {
@@ -86,7 +88,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noteAdded: false
     };
   }
 
@@ -302,10 +305,26 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
             }
           }).then(() => {
             firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+            .then(() => {
+              this.setState({ noteAdded: true }, () => {
+                console.log('noteadded state 1', this.state.noteAdded);
+                setTimeout(() => {
+                  this.setState({ noteAdded: false }, () => {console.log('noteadded state 2', this.state.noteAdded)})
+                }, 1500);
+              })
+            })
           })
         })
     } else {
-      firebase.addNoteToConferencePlan(conferencePlanId, note);
+      firebase.addNoteToConferencePlan(conferencePlanId, note)
+      .then(() => {
+        this.setState({ noteAdded: true }, () => {
+          console.log('noteadded state 1', this.state.noteAdded);
+          setTimeout(() => {
+            this.setState({ noteAdded: false }, () => {console.log('noteadded state 2', this.state.noteAdded)})
+          }, 1500);
+        })
+      })
     }
   }
 
@@ -400,6 +419,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     })
     return (
       <div className={classes.root}>
+        <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Classroom Climate"
