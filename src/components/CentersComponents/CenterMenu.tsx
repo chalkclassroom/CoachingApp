@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import CenterChecklist from './CenterChecklist';
 import NewCenterDialog from './NewCenterDialog';
@@ -69,10 +70,15 @@ const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
       }}
       onClick={props.onClick}
     >
-      {props.centerName}
-      <br />
-      <br />
-      {props.visitCount}
+      <Typography
+        variant="subtitle1"
+        style={{fontFamily: 'Arimo', color: props.type === 'SA' ? 'black' : 'white'}}
+      >
+        {props.centerName}
+        <br />
+        <br />
+        {props.visitCount}
+      </Typography>
     </Button>
   );
 };
