@@ -333,7 +333,6 @@ class ResultsLayout extends React.Component<Props, State> {
                             firebase={firebase}
                             teacher={this.props.teacher}
                             chosenQuestions={this.props.chosenQuestions}
-                            // handleEditConferencePlan={this.handleEditConferencePlan}
                             readOnly={false}
                             sessionId={this.props.sessionId}
                             magic8={this.props.magic8}
@@ -341,18 +340,7 @@ class ResultsLayout extends React.Component<Props, State> {
                           />
                         }
                       </FirebaseContext.Consumer>
-                        {/* {this.state.conferencePlanEditMode ? (
-                          <FirebaseContext.Consumer>
-                            {(firebase: object): React.ReactNode => <ConferencePlanModal 
-                              firebase={firebase}
-                              teacher={this.props.teacher}
-                              sessionId={this.props.sessionId}
-                              handleClose={this.handleSaveAndCloseConferencePlan}
-                              conferencePlanExists={true}
-                            />}
-                          </FirebaseContext.Consumer>
-                        ) : ( <div /> )} */}
-                      </div>
+                    </div>
                   ) : (
                     <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
                       Please choose a date from the dropdown menu.

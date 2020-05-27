@@ -1295,8 +1295,12 @@ class Firebase {
    * @param {string} teacherId
    * @param {string} sessionId
    * @param {string} magic8
+   * @param {Array<string>} feedback
+   * @param {Array<string>} questions
+   * @param {Array<string>} addedQuestions
+   * @param {Array<string>} notes
    */
-  createConferencePlan = async function(teacherId, sessionId, magic8) {
+  createConferencePlan = async function(teacherId, sessionId, magic8, feedback, questions, addedQuestions, notes) {
     const data = Object.assign(
       {},
       {
@@ -1306,10 +1310,10 @@ class Firebase {
         tool: magic8,
         dateCreated: firebase.firestore.Timestamp.now(),
         dateModified: firebase.firestore.Timestamp.now(),
-        feedback: [''],
-        questions: [''],
-        addedQuestions: [],
-        notes: ['']
+        feedback: feedback ? feedback : [''],
+        questions: questions ? questions : [''],
+        addedQuestions: addedQuestions ? addedQuestions : [],
+        notes: notes ? notes : ['']
       }
     );
     const conferencePlansRef = firebase.firestore().collection('conferencePlans').doc();
