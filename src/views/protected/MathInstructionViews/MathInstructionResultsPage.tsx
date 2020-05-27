@@ -53,12 +53,13 @@ interface State {
   trendsNoTeacherOpp: Array<number>,
   trendsNoSupport: Array<number>,
   trendsSupport: Array<number>,
-  notes: Array<{id: string, content: string, timestamp: Date}>,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
-  noteAdded: boolean
+  noteAdded: boolean,
+  questionAdded: boolean
 }
 
 interface Teacher {
@@ -110,7 +111,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       conferencePlanExists: false,
       addedToPlan: [],
       sessionDates: [],
-      noteAdded: false
+      noteAdded: false,
+      questionAdded: false
     };
   }
 
@@ -127,8 +129,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
    */
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: Date}>) => {
-      const formattedNotesArr: Array<{id: string, content: string, timestamp: Date}> = [];
+    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: {seconds: number, nanoseconds: number}}>) => {
+      const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -152,7 +154,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
       math: 0,
@@ -436,9 +438,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
             firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
             .then(() => {
               this.setState({ noteAdded: true }, () => {
-                console.log('noteadded state 1', this.state.noteAdded);
                 setTimeout(() => {
-                  this.setState({ noteAdded: false }, () => {console.log('noteadded state 2', this.state.noteAdded)})
+                  this.setState({ noteAdded: false })
                 }, 1500);
               })
             })
@@ -448,9 +449,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       firebase.addNoteToConferencePlan(conferencePlanId, note)
       .then(() => {
         this.setState({ noteAdded: true }, () => {
-          console.log('noteadded state 1', this.state.noteAdded);
           setTimeout(() => {
-            this.setState({ noteAdded: false }, () => {console.log('noteadded state 2', this.state.noteAdded)})
+            this.setState({ noteAdded: false })
           }, 1500);
         })
       })
@@ -479,7 +479,14 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
-        firebase.saveConferencePlanQuestion(sessionId, question);
+        firebase.saveConferencePlanQuestion(sessionId, question)
+        .then(() => {
+          this.setState({ questionAdded: true }, () => {
+            setTimeout(() => {
+              this.setState({ questionAdded: false })
+            }, 1500);
+          })
+        })
         this.setState({
           conferencePlanExists: true,
           conferencePlanId: conferencePlanData[0].id
@@ -500,7 +507,14 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
               })
             }
           })
-          firebase.saveConferencePlanQuestion(sessionId, question);
+          firebase.saveConferencePlanQuestion(sessionId, question)
+          .then(() => {
+            this.setState({ questionAdded: true }, () => {
+              setTimeout(() => {
+                this.setState({ questionAdded: false })
+              }, 1500);
+            })
+          })
           this.setState({
             conferencePlanExists: true
           })
@@ -554,6 +568,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+        <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Math Instruction"

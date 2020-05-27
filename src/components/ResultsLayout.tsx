@@ -78,7 +78,7 @@ interface Props {
   sessionDates: Array<any>,
   questions: React.ReactNode,
   chosenQuestions: Array<string>,
-  notes: Array<{timestamp: Date, content: string}>,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanId: string,
   addNoteToPlan(conferencePlanId: string, note: string): void,

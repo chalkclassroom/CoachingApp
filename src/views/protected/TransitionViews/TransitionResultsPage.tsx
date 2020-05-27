@@ -6,8 +6,8 @@ import Typography from "@material-ui/core/Typography/Typography";
 import TransitionCoachingQuestions from "../../../components/TransitionComponents/ResultsComponents/TransitionCoachingQuestions"
 import "chartjs-plugin-datalabels";
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
-import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart.tsx";
-import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph.tsx";
+import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
+import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import Grid from '@material-ui/core/Grid';
@@ -50,7 +50,7 @@ interface Props {
 interface State {
   sessionId: string,
   conferencePlanId: string,
-  notes: Array<{timestamp: Date, content: string}>,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   sessionLine: number,
   sessionTraveling: number,
   sessionWaiting: number,
@@ -72,7 +72,8 @@ interface State {
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
-  noteAdded: boolean
+  noteAdded: boolean,
+  questionAdded: boolean
 }
 
 interface Teacher {
@@ -122,7 +123,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
       conferencePlanExists: false,
       addedToPlan: [],
       sessionDates: [],
-      noteAdded: false
+      noteAdded: false,
+      questionAdded: false
     };
   }
 
@@ -207,7 +209,17 @@ class TransitionResultsPage extends React.Component<Props, State> {
     return formattedTime;
   };
 
-  handleTrendsFormatData = () => {
+  handleTrendsFormatData = (): {
+    labels: Array<Array<string>>,
+    datasets: Array<{
+      label: string,
+      backgroundColor: string,
+      borderColor: string,
+      fill: boolean,
+      lineTension: number,
+      data: Array<number>
+    }>
+  } => {
     return {
       labels: this.state.trendsDates,
       datasets:  [
@@ -284,7 +296,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
         nanoseconds: number
       }
     }>) => {
-      const formattedNotesArr: Array<{id: number, content: string, timestamp: Date}> = [];
+      const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -409,9 +421,9 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 
   /**
-   * @param {event} event
+   * @param {React.SyntheticEvent} event
    */
-  changeSessionId = (event): void => {
+  changeSessionId = (event: React.SyntheticEvent): void => {
     this.setState({
       sessionId: event.target.value,
     }, () => {
@@ -444,9 +456,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
             firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
             .then(() => {
               this.setState({ noteAdded: true }, () => {
-                console.log('noteadded state 1', this.state.noteAdded);
                 setTimeout(() => {
-                  this.setState({ noteAdded: false }, () => {console.log('noteadded state 2', this.state.noteAdded)})
+                  this.setState({ noteAdded: false })
                 }, 1500);
               })
             })
@@ -456,9 +467,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
       firebase.addNoteToConferencePlan(conferencePlanId, note)
       .then(() => {
         this.setState({ noteAdded: true }, () => {
-          console.log('noteadded state 1', this.state.noteAdded);
           setTimeout(() => {
-            this.setState({ noteAdded: false }, () => {console.log('noteadded state 2', this.state.noteAdded)})
+            this.setState({ noteAdded: false })
           }, 1500);
         })
       })
@@ -487,7 +497,14 @@ class TransitionResultsPage extends React.Component<Props, State> {
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
-        firebase.saveConferencePlanQuestion(sessionId, question);
+        firebase.saveConferencePlanQuestion(sessionId, question)
+        .then(() => {
+          this.setState({ questionAdded: true }, () => {
+            setTimeout(() => {
+              this.setState({ questionAdded: false })
+            }, 1500);
+          })
+        })
         this.setState({
           conferencePlanExists: true,
           conferencePlanId: conferencePlanData[0].id
@@ -508,7 +525,14 @@ class TransitionResultsPage extends React.Component<Props, State> {
               })
             }
           })
-          firebase.saveConferencePlanQuestion(sessionId, question);
+          firebase.saveConferencePlanQuestion(sessionId, question)
+          .then(() => {
+            this.setState({ questionAdded: true }, () => {
+              setTimeout(() => {
+                this.setState({ questionAdded: false })
+              }, 1500);
+            })
+          })
           this.setState({
             conferencePlanExists: true
           })
@@ -556,6 +580,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+        <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Transition Time"
