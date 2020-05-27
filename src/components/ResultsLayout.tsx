@@ -13,9 +13,9 @@ import Typography from "@material-ui/core/Typography/Typography";
 import "chartjs-plugin-datalabels";
 import ResultsDashboard from './ResultsDashboard';
 import ActionPlanForm from './ActionPlanForm';
-import ActionPlanModal from './ActionPlanModal';
+// import ActionPlanModal from './ActionPlanModal';
 import ConferencePlanForm from './ConferencePlanForm';
-import ConferencePlanModal from './ConferencePlanModal';
+// import ConferencePlanModal from './ConferencePlanModal';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 
 const styles: object = {
@@ -356,15 +356,15 @@ class ResultsLayout extends React.Component<Props, State> {
                           firebase={firebase}
                           teacher={this.props.teacher}
                           sessionId={this.props.sessionId}
-                          handleEditActionPlan={this.handleEditActionPlan}
-                          handleClose={null}
-                          readOnly={true}
+                          // handleEditActionPlan={this.handleEditActionPlan}
+                          // handleClose={null}
+                          readOnly={false}
                           actionPlanExists={this.props.actionPlanExists}
                           editMode={this.state.actionPlanEditMode}
                           magic8={this.props.magic8}
                         />}
                       </FirebaseContext.Consumer>
-                      {this.state.actionPlanEditMode ? (
+                      {/* {this.state.actionPlanEditMode ? (
                         <FirebaseContext.Consumer>
                           {(firebase: object): React.ReactNode => <ActionPlanModal 
                             firebase={firebase}
@@ -375,7 +375,7 @@ class ResultsLayout extends React.Component<Props, State> {
                             magic8={this.props.magic8}
                           />}
                         </FirebaseContext.Consumer>
-                      ) : ( <div /> )}
+                      ) : ( <div /> )} */}
                     </div>
                   ) : (
                     <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
