@@ -8,6 +8,7 @@ import ChildTeacherBehaviorPieSlider from "../../../components/AssociativeCooper
 import ChildTeacherBehaviorDetailsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
 import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import ACCoachingQuestions from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ACCoachingQuestions";
+import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
@@ -38,6 +39,7 @@ interface State {
   noSupport: number,
   noTeacherOpp: number,
   sessionId: string,
+  conferencePlanId: string,
   ac1: number,
   ac2: number,
   ac3: number,
@@ -53,11 +55,13 @@ interface State {
   trendsNoTeacherOpp: Array<number>,
   trendsNoSupport: Array<number>,
   trendsSupport: Array<number>,
-  notes: Array<{id: string, content: string, timestamp: Date}>,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<{id: string, sessionStart: {value: string}}>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  noteAdded: boolean,
+  questionAdded: boolean
 }
 
 interface Teacher {
@@ -90,6 +94,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       noSupport: 0,
       noTeacherOpp: 0,
       sessionId: '',
+      conferencePlanId: '',
       ac1: 0,
       ac2: 0,
       ac3: 0,
@@ -109,7 +114,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noteAdded: false,
+      questionAdded: false
     };
   }
 
@@ -143,9 +150,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
    */
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: Date}>) => {
+    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: {seconds: number, nanoseconds: number}}>) => {
       console.log(notesArr);
-      const formattedNotesArr: Array<{id: string, content: string, timestamp: Date}> = [];
+      const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -154,6 +161,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
           minute: "numeric",
           hour12: true
         });
+        console.log('newTimestamp', newTimestamp);
         formattedNotesArr.push({
           id: note.id,
           content: note.content,
@@ -170,7 +178,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
       ac: 0,
@@ -180,6 +188,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       noSupport: 0,
       noTeacherOpp: 0,
       sessionId: '',
+      conferencePlanId: '',
       ac1: 0,
       ac2: 0,
       ac3: 0,
@@ -368,6 +377,50 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   };
 
   /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToPlan = (conferencePlanId: string, note: string): void => {
+    const firebase = this.context;
+    if (!conferencePlanId) {
+      firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'AC')
+        .then(() => {
+          firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          }).then(() => {
+            firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+            .then(() => {
+              this.setState({ noteAdded: true }, () => {
+                setTimeout(() => {
+                  this.setState({ noteAdded: false })
+                }, 1500);
+              })
+            })
+          })
+        })
+    } else {
+      firebase.addNoteToConferencePlan(conferencePlanId, note)
+      .then(() => {
+        this.setState({ noteAdded: true }, () => {
+          setTimeout(() => {
+            this.setState({ noteAdded: false })
+          }, 1500);
+        })
+      })
+    }
+  }
+
+  /**
    * checks if question has already been added and if not, adds it
    * @param {string} panelTitle
    * @param {number} index
@@ -389,14 +442,42 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
-        firebase.saveConferencePlanQuestion(sessionId, question);
+        firebase.saveConferencePlanQuestion(sessionId, question)
+        .then(() => {
+          this.setState({ questionAdded: true }, () => {
+            setTimeout(() => {
+              this.setState({ questionAdded: false })
+            }, 1500);
+          })
+        })
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
-          firebase.saveConferencePlanQuestion(sessionId, question);
+          firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          })
+          firebase.saveConferencePlanQuestion(sessionId, question)
+          .then(() => {
+            this.setState({ questionAdded: true }, () => {
+              setTimeout(() => {
+                this.setState({ questionAdded: false })
+              }, 1500);
+            })
+          })
           this.setState({
             conferencePlanExists: true
           })
@@ -408,18 +489,20 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   /**
    * retrieves summary, details, and notes data using the session id
    */
-  getData = () => {
+  getData = (): void => {
     const firebase = this.context;
     this.handleNotesFetching(this.state.sessionId);
 
     firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         this.setState({
-          conferencePlanExists: false
+          conferencePlanExists: false,
+          conferencePlanId: ''
         })
       }
     }).catch(() => {
@@ -442,7 +525,16 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       });
     });
 
-    firebase.fetchACDetails(this.state.sessionId).then(summary => {
+    firebase.fetchACDetails(this.state.sessionId).then((summary: {
+      ac1: number,
+      ac2: number,
+      ac3: number,
+      ac4: number,
+      teacher1: number,
+      teacher2: number,
+      teacher3: number,
+      teacher4: number
+    }) => {
       this.setState({
         ac1: summary.ac1,
         ac2: summary.ac2,
@@ -472,7 +564,16 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
   /**
@@ -488,6 +589,8 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     })
     return (
       <div className={classes.root}>
+        <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+        <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="AC"
@@ -522,6 +625,8 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
             />
           }
           changeSessionId={this.changeSessionId}
+          conferencePlanId={this.state.conferencePlanId}
+          addNoteToPlan={this.addNoteToPlan}
           sessionId={this.state.sessionId}
           sessionDates={this.state.sessionDates}
           notes={this.state.notes}

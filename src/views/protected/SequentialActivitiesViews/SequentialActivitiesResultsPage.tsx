@@ -8,6 +8,7 @@ import SummarySlider from "../../../components/SequentialActivitiesComponents/Re
 import DetailsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/DetailsSlider";
 import TrendsSlider from "../../../components/SequentialActivitiesComponents/ResultsComponents/TrendsSlider";
 import SequentialCoachingQuestions from "../../../components/SequentialActivitiesComponents/ResultsComponents/SequentialCoachingQuestions";
+import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
@@ -37,6 +38,7 @@ interface State {
   noSupport: number,
   noTeacherOpp: number,
   sessionId: string,
+  conferencePlanId: string,
   sequential1: number,
   sequential2: number,
   sequential3: number,
@@ -51,11 +53,13 @@ interface State {
   trendsNoTeacherOpp: Array<number>,
   trendsNoSupport: Array<number>,
   trendsSupport: Array<number>,
-  notes: Array<{id: string, content: string, timestamp: Date}>,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<{id: string, sessionStart: {value: string}}>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  noteAdded: boolean,
+  questionAdded: boolean
 }
 
 interface Teacher {
@@ -87,6 +91,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       noSupport: 0,
       noTeacherOpp: 0,
       sessionId: '',
+      conferencePlanId: '',
       sequential1: 0,
       sequential2: 0,
       sequential3: 0,
@@ -105,7 +110,9 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noteAdded: false,
+      questionAdded: false
     };
   }
 
@@ -122,8 +129,8 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
    */
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: Date}>) => {
-      const formattedNotesArr: Array<{id: string, content: string, timestamp: Date}> = [];
+    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: {seconds: number, nanoseconds: number}}>) => {
+      const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -147,7 +154,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
    /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
       sequential: 0,
@@ -156,6 +163,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       noSupport: 0,
       noTeacherOpp: 0,
       sessionId: '',
+      conferencePlanId: '',
       sequential1: 0,
       sequential2: 0,
       sequential3: 0,
@@ -331,6 +339,50 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   };
 
   /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToPlan = (conferencePlanId: string, note: string): void => {
+    const firebase = this.context;
+    if (!conferencePlanId) {
+      firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Sequential Activities')
+        .then(() => {
+          firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          }).then(() => {
+            firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+            .then(() => {
+              this.setState({ noteAdded: true }, () => {
+                setTimeout(() => {
+                  this.setState({ noteAdded: false })
+                }, 1500);
+              })
+            })
+          })
+        })
+    } else {
+      firebase.addNoteToConferencePlan(conferencePlanId, note)
+      .then(() => {
+        this.setState({ noteAdded: true }, () => {
+          setTimeout(() => {
+            this.setState({ noteAdded: false })
+          }, 1500);
+        })
+      })
+    }
+  }
+
+  /**
    * checks if question has already been added and if not, adds it
    * @param {string} panelTitle
    * @param {number} index
@@ -352,14 +404,42 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
-        firebase.saveConferencePlanQuestion(sessionId, question);
+        firebase.saveConferencePlanQuestion(sessionId, question)
+        .then(() => {
+          this.setState({ questionAdded: true }, () => {
+            setTimeout(() => {
+              this.setState({ questionAdded: false })
+            }, 1500);
+          })
+        })
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
-          firebase.saveConferencePlanQuestion(sessionId, question);
+          firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          })
+          firebase.saveConferencePlanQuestion(sessionId, question)
+          .then(() => {
+            this.setState({ questionAdded: true }, () => {
+              setTimeout(() => {
+                this.setState({ questionAdded: false })
+              }, 1500);
+            })
+          })
           this.setState({
             conferencePlanExists: true
           })
@@ -379,11 +459,13 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         this.setState({
-          conferencePlanExists: false
+          conferencePlanExists: false,
+          conferencePlanId: ''
         })
       }
     }).catch(() => {
@@ -484,6 +566,8 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     })
     return (
       <div className={classes.root}>
+        <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+        <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Sequential Activities"
@@ -517,6 +601,8 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
           }
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
+          conferencePlanId={this.state.conferencePlanId}
+          addNoteToPlan={this.addNoteToPlan}
           sessionDates={this.state.sessionDates}
           notes={this.state.notes}
           questions={

@@ -25,8 +25,9 @@ interface Props {
       param: {
         pathname: string,
         state: {
-          actionPlanId: string,
-          teacherId: string
+          conferencePlanId: string,
+          teacherId: string,
+          sessionId: string
         }
       }
     ): void,
@@ -63,7 +64,7 @@ const headCells = [
   { id: 'modified', numeric: false, disablePadding: false, label: 'Last Modified' },
   { id: 'teacherLastName', numeric: false, disablePadding: false, label: 'Teacher' },
   { id: 'practice', numeric: false, disablePadding: false, label: 'CHALK Practice' },
-  { id: 'deadline', numeric: false, disablePadding: false, label: 'Achieve By:' },
+  { id: 'observationDate', numeric: false, disablePadding: false, label: 'Observation Date:' },
 ];
 
 /**
@@ -172,9 +173,9 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
 }
 
 /**
- * @class ActionPlanListPage
+ * @class ConferencePlanListPage
  */
-class ActionPlanListPage extends React.Component<Props, State>{
+class ConferencePlanListPage extends React.Component<Props, State>{
   /**
    * @param {Props} props
    */
@@ -191,6 +192,10 @@ class ActionPlanListPage extends React.Component<Props, State>{
     }
   }
 
+  /**
+   * @param {SyntheticEvent} event
+   * @param {string} property
+   */
   handleRequestSort = (event: React.SyntheticEvent, property: string): void => {
     const isAsc = this.state.orderBy === property && this.state.order === 'asc';
     isAsc ? this.setState({ order: 'desc' }) : this.setState({ order: 'asc' });
@@ -202,33 +207,40 @@ class ActionPlanListPage extends React.Component<Props, State>{
    */
   componentDidMount(): void {
     const firebase = this.context;
-    firebase.getCoachActionPlans().then(
+    firebase.getCoachConferencePlans().then(
       (answer: Array<{
         id: string,
         teacherId: string,
         date: {seconds: number, nanoseconds: number},
+        sessionId: string,
         practice: string,
         teacherFirstName: string,
         teacherLastName: string
       }>) => {
       answer.forEach((
-        actionPlan: {
+        conferencePlan: {
           id: string,
           teacherId: string,
           date: {seconds: number, nanoseconds: number},
+          sessionId: string,
           practice: string,
           teacherFirstName: string,
-          teacherLastName: string
+          teacherLastName: string,
+          observationDate: {seconds: number, nanoseconds: number}
         }
       ) => 
-        firebase.getTeacherFirstName(actionPlan.teacherId).then((firstName: string) => {
-          actionPlan.teacherFirstName = firstName;
+        firebase.getTeacherFirstName(conferencePlan.teacherId).then((firstName: string) => {
+          conferencePlan.teacherFirstName = firstName;
         }).then(() => {
-          firebase.getTeacherLastName(actionPlan.teacherId).then((lastName: string) => {
-            actionPlan.teacherLastName = lastName;
+          firebase.getTeacherLastName(conferencePlan.teacherId).then((lastName: string) => {
+            conferencePlan.teacherLastName = lastName;
           }).then(() => {
-            this.setState({
-              result: answer
+            firebase.getObservationDate(conferencePlan.sessionId).then((date: {seconds: number, nanoseconds: number}) => {
+              conferencePlan.observationDate = date;
+            }).then(() => {
+              this.setState({
+                result: answer
+              })
             })
           })
         })
@@ -249,7 +261,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
         <Grid direction="column" justify="center" alignItems="center">
           <Grid item style={{width: '100%', paddingTop: '2em'}}>
             <Typography variant="h3" align="center" style={{fontFamily: 'Arimo'}}>
-              Action Plans
+              Conference Plans
             </Typography>
           </Grid>
           <Grid item style={{width: '100%', paddingTop: '2em'}}>
@@ -265,23 +277,33 @@ class ActionPlanListPage extends React.Component<Props, State>{
                     // to limit number on each page
                     // .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
                     .map((row: {
-                        id: string,
-                        date: {
-                          seconds: number,
-                          nanoseconds: number
-                        },
-                        deadline: string,
-                        teacherId: string,
-                        practice: string,
-                        teacherFirstName: string,
-                        teacherLastName: string,
-                        modified: Date,
-                        name: string
-                      }, index: number) => {
+                      id: string,
+                      date: {
+                        seconds: number,
+                        nanoseconds: number
+                      },
+                      observationDate: {
+                        seconds: number,
+                        nanoseconds: number
+                      },
+                      teacherId: string,
+                      sessionId: string,
+                      practice: string,
+                      teacherFirstName: string,
+                      teacherLastName: string,
+                      modified: Date,
+                      observed: Date,
+                      name: string
+                    }, index: number) => {
                       const isItemSelected = isSelected(row.id);
-                      const newDate = new Date(0);
-                      newDate.setUTCSeconds(row.date.seconds);
-                      row.modified = newDate;
+                      const modifiedDate = new Date(0);
+                      const observationDate = new Date(0);
+                      modifiedDate.setUTCSeconds(row.date.seconds);
+                      row.modified = modifiedDate;
+                      if (row.observationDate) {
+                        observationDate.setUTCSeconds(row.observationDate.seconds);
+                        row.observed = observationDate;
+                      }
                       row.name = row.teacherLastName + ', ' + row.teacherFirstName;
                       return (
                         <TableRow
@@ -289,10 +311,11 @@ class ActionPlanListPage extends React.Component<Props, State>{
                           selected={isItemSelected}
                           onClick={() => {
                             this.props.history.push({
-                              pathname: "/ActionPlan",
+                              pathname: "/ConferencePlan",
                               state: {
-                                actionPlanId: row.id,
-                                teacherId: row.teacherId
+                                conferencePlanId: row.id,
+                                teacherId: row.teacherId,
+                                sessionId: row.sessionId
                               }
                             });
                           }}
@@ -362,7 +385,9 @@ class ActionPlanListPage extends React.Component<Props, State>{
                             </Typography>
                           </TableCell>
                           <TableCell padding="checkbox">
-                            {row.deadline}
+                            <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                              {moment(row.observed).format('MM/DD/YYYY')}
+                            </Typography>
                           </TableCell>
                         </TableRow>
                       )
@@ -378,5 +403,5 @@ class ActionPlanListPage extends React.Component<Props, State>{
   }
 }
 
-ActionPlanListPage.contextType = FirebaseContext;
-export default ActionPlanListPage;
+ConferencePlanListPage.contextType = FirebaseContext;
+export default ConferencePlanListPage;

@@ -14,6 +14,8 @@ import HomePage from "./views/protected/HomeViews/HomePage";
 import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
 import ActionPlanListPage from "./views/protected/ActionPlanViews/ActionPlanListPage";
 import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView';
+import ConferencePlanListPage from './views/protected/ConferencePlanViews/ConferencePlanListPage';
+import ConferencePlanView from './views/protected/ConferencePlanViews/ConferencePlanView';
 import blue from "@material-ui/core/colors/blue";
 import amber from "@material-ui/core/colors/amber";
 import {
@@ -222,6 +224,16 @@ class App extends Component {
               auth={this.state.auth}
               path="/ActionPlan"
               component={ActionPlanView}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ConferencePlans"
+              component={ConferencePlanListPage}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/ConferencePlan"
+              component={ConferencePlanView}
             />
             <PrivateRoute
               auth={this.state.auth}
