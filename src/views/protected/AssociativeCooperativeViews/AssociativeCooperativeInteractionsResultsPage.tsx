@@ -11,6 +11,7 @@ import ACCoachingQuestions from "../../../components/AssociativeCooperativeCompo
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
+import TeacherModal from '../HomeViews/TeacherModal';
 
 const styles: object = {
   root: {
@@ -61,7 +62,8 @@ interface State {
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
-  questionAdded: boolean
+  questionAdded: boolean,
+  teacherModal: boolean
 }
 
 interface Teacher {
@@ -116,14 +118,23 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       addedToPlan: [],
       sessionDates: [],
       noteAdded: false,
-      questionAdded: false
+      questionAdded: false,
+      teacherModal: false
     };
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.teacherSelected.id);
-    this.handleTrendsFetching(this.props.teacherSelected.id);
+    if (this.props.teacherSelected.id) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    } else {
+      this.setState({ teacherModal: true });
+    }
+  }
+
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
   }
 
   /** 
@@ -588,61 +599,73 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       )
     })
     return (
-      <div className={classes.root}>
-        <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
-        <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
-        <ResultsLayout
-          teacher={this.props.teacherSelected}
-          magic8="AC"
-          history={this.props.history}
-          summary={
-            <ChildTeacherBehaviorPieSlider
-              ac={this.state.ac}
-              noAc={this.state.noAc}
-              noChildOpp={this.state.noChildOpp}
-              support={this.state.support}
-              noSupport={this.state.noSupport}
-              noTeacherOpp={this.state.noTeacherOpp}
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+          <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
+          <ResultsLayout
+            teacher={this.props.teacherSelected}
+            magic8="AC"
+            history={this.props.history}
+            summary={
+              <ChildTeacherBehaviorPieSlider
+                ac={this.state.ac}
+                noAc={this.state.noAc}
+                noChildOpp={this.state.noChildOpp}
+                support={this.state.support}
+                noSupport={this.state.noSupport}
+                noTeacherOpp={this.state.noTeacherOpp}
 
+              />
+            }
+            details={
+              <ChildTeacherBehaviorDetailsSlider
+                ac1={this.state.ac1}
+                ac2={this.state.ac2}
+                ac3={this.state.ac3}
+                ac4={this.state.ac4}
+                teacher1={this.state.teacher1}
+                teacher2={this.state.teacher2}
+                teacher3={this.state.teacher3}
+                teacher4={this.state.teacher4}
+              />
+            }
+            trendsGraph={
+              <ChildTeacherBehaviorTrendsSlider
+                childData={this.handleTrendsChildFormatData}
+                teacherData={this.handleTrendsTeacherFormatData}
+              />
+            }
+            changeSessionId={this.changeSessionId}
+            conferencePlanId={this.state.conferencePlanId}
+            addNoteToPlan={this.addNoteToPlan}
+            sessionId={this.state.sessionId}
+            sessionDates={this.state.sessionDates}
+            notes={this.state.notes}
+            questions={
+              <ACCoachingQuestions
+                handleAddToPlan={this.handleAddToPlan}
+                addedToPlan={this.state.addedToPlan}
+                sessionId={this.state.sessionId}
+                teacherId={this.props.teacherSelected.id}
+              />
+            }
+            chosenQuestions={chosenQuestions}
+            actionPlanExists={this.state.actionPlanExists}
+            conferencePlanExists={this.state.conferencePlanExists}
+          />
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Results"}
             />
-          }
-          details={
-            <ChildTeacherBehaviorDetailsSlider
-              ac1={this.state.ac1}
-              ac2={this.state.ac2}
-              ac3={this.state.ac3}
-              ac4={this.state.ac4}
-              teacher1={this.state.teacher1}
-              teacher2={this.state.teacher2}
-              teacher3={this.state.teacher3}
-              teacher4={this.state.teacher4}
-            />
-          }
-          trendsGraph={
-            <ChildTeacherBehaviorTrendsSlider
-              childData={this.handleTrendsChildFormatData}
-              teacherData={this.handleTrendsTeacherFormatData}
-            />
-          }
-          changeSessionId={this.changeSessionId}
-          conferencePlanId={this.state.conferencePlanId}
-          addNoteToPlan={this.addNoteToPlan}
-          sessionId={this.state.sessionId}
-          sessionDates={this.state.sessionDates}
-          notes={this.state.notes}
-          questions={
-            <ACCoachingQuestions
-              handleAddToPlan={this.handleAddToPlan}
-              addedToPlan={this.state.addedToPlan}
-              sessionId={this.state.sessionId}
-              teacherId={this.props.teacherSelected.id}
-            />
-          }
-          chosenQuestions={chosenQuestions}
-          actionPlanExists={this.state.actionPlanExists}
-          conferencePlanExists={this.state.conferencePlanExists}
-        />
-      </div>
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }

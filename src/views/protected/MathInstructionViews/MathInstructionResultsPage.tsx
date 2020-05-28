@@ -9,6 +9,7 @@ import DetailsSlider from "../../../components/MathInstructionComponents/Results
 import TrendsSlider from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSlider";
 import MathCoachingQuestions from "../../../components/MathInstructionComponents/ResultsComponents/MathCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
+import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
@@ -59,7 +60,8 @@ interface State {
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
-  questionAdded: boolean
+  questionAdded: boolean,
+  teacherModal: boolean
 }
 
 interface Teacher {
@@ -112,7 +114,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       addedToPlan: [],
       sessionDates: [],
       noteAdded: false,
-      questionAdded: false
+      questionAdded: false,
+      teacherModal: false
     };
   }
 
@@ -523,10 +526,18 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     })
   };
 
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.teacherSelected.id);
-    this.handleTrendsFetching(this.props.teacherSelected.id);
+    if (this.props.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    } else {
+      this.setState({ teacherModal: true })
+    }
   }
 
   /** 
@@ -566,59 +577,71 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       )
     })
     return (
-      <div className={classes.root}>
-        <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
-        <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
-        <ResultsLayout
-          teacher={this.props.teacherSelected}
-          magic8="Math Instruction"
-          history={this.props.history}
-          summary={
-            <SummarySlider
-              math={this.state.math}
-              notMath={this.state.notMath}
-              support={this.state.support}
-              noSupport={this.state.noSupport}
-              noTeacherOpp={this.state.noTeacherOpp}
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+          <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
+          <ResultsLayout
+            teacher={this.props.teacherSelected}
+            magic8="Math Instruction"
+            history={this.props.history}
+            summary={
+              <SummarySlider
+                math={this.state.math}
+                notMath={this.state.notMath}
+                support={this.state.support}
+                noSupport={this.state.noSupport}
+                noTeacherOpp={this.state.noTeacherOpp}
+              />
+            }
+            details={
+              <DetailsSlider
+                math1={this.state.math1}
+                math2={this.state.math2}
+                math3={this.state.math3}
+                math4={this.state.math4}
+                teacher1={this.state.teacher1}
+                teacher2={this.state.teacher2}
+                teacher3={this.state.teacher3}
+                teacher4={this.state.teacher4}
+              />
+            }
+            trendsGraph={
+              <TrendsSlider
+                childData={this.handleTrendsChildFormatData}
+                teacherData={this.handleTrendsTeacherFormatData}
+              />
+            }
+            changeSessionId={this.changeSessionId}
+            sessionId={this.state.sessionId}
+            conferencePlanId={this.state.conferencePlanId}
+            addNoteToPlan={this.addNoteToPlan}
+            sessionDates={this.state.sessionDates}
+            notes={this.state.notes}
+            questions={
+              <MathCoachingQuestions
+                handleAddToPlan={this.handleAddToPlan}
+                addedToPlan={this.state.addedToPlan}
+                sessionId={this.state.sessionId}
+                teacherId={this.props.teacherSelected.id}
+              />
+            }
+            chosenQuestions={chosenQuestions}
+            actionPlanExists={this.state.actionPlanExists}
+            conferencePlanExists={this.state.conferencePlanExists}
+          />
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Results"}
             />
-          }
-          details={
-            <DetailsSlider
-              math1={this.state.math1}
-              math2={this.state.math2}
-              math3={this.state.math3}
-              math4={this.state.math4}
-              teacher1={this.state.teacher1}
-              teacher2={this.state.teacher2}
-              teacher3={this.state.teacher3}
-              teacher4={this.state.teacher4}
-            />
-          }
-          trendsGraph={
-            <TrendsSlider
-              childData={this.handleTrendsChildFormatData}
-              teacherData={this.handleTrendsTeacherFormatData}
-            />
-          }
-          changeSessionId={this.changeSessionId}
-          sessionId={this.state.sessionId}
-          conferencePlanId={this.state.conferencePlanId}
-          addNoteToPlan={this.addNoteToPlan}
-          sessionDates={this.state.sessionDates}
-          notes={this.state.notes}
-          questions={
-            <MathCoachingQuestions
-              handleAddToPlan={this.handleAddToPlan}
-              addedToPlan={this.state.addedToPlan}
-              sessionId={this.state.sessionId}
-              teacherId={this.props.teacherSelected.id}
-            />
-          }
-          chosenQuestions={chosenQuestions}
-          actionPlanExists={this.state.actionPlanExists}
-          conferencePlanExists={this.state.conferencePlanExists}
-        />
-      </div>
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }

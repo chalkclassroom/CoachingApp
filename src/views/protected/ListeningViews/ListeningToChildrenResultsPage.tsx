@@ -15,6 +15,7 @@ import PieSliceChildNonImage from '../../../assets/images/PieSliceChildNonImage.
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
+import TeacherModal from '../HomeViews/TeacherModal';
 
 const styles: object = {
   root: {
@@ -61,7 +62,8 @@ interface State {
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
-  questionAdded: boolean
+  questionAdded: boolean,
+  teacherModal: boolean
 }
 
 interface Teacher {
@@ -106,7 +108,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       addedToPlan: [],
       sessionDates: [],
       noteAdded: false,
-      questionAdded: false
+      questionAdded: false,
+      teacherModal: false
     };
   }
 
@@ -422,10 +425,18 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     })
   };
 
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.teacherSelected.id);
-    this.handleTrendsFetch(this.props.teacherSelected.id);
+    if (this.props.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetch(this.props.teacherSelected.id);
+    } else {
+      this.setState({ teacherModal: true })
+    }
   }
 
   /** 
@@ -465,110 +476,122 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       )
     })
     return (
-      <div className={classes.root}>
-        <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
-        <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
-        <ResultsLayout
-          teacher={this.props.teacherSelected}
-          magic8="Listening to Children"
-          history={this.props.history}
-          summary={
-            <Grid container justify={"center"} direction={"column"}>
-              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                Compare how often the teacher was: 
-              </Typography>
-              <Grid container direction="column" alignItems="center">
-                <Grid item style={{width: '100%'}}>
-                  <Grid container direction="row">
-                    <Grid item xs={1}>
-                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                        <Grid item style={{height:"50%"}}>
-                          <img alt="green" src={PieSliceListeningImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"50%"}}>
-                          <img alt="red" src={PieSliceChildNonImage} height="95%"/>
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+          <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
+          <ResultsLayout
+            teacher={this.props.teacherSelected}
+            magic8="Listening to Children"
+            history={this.props.history}
+            summary={
+              <Grid container justify={"center"} direction={"column"}>
+                <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                  Compare how often the teacher was: 
+                </Typography>
+                <Grid container direction="column" alignItems="center">
+                  <Grid item style={{width: '100%'}}>
+                    <Grid container direction="row">
+                      <Grid item xs={1}>
+                        <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
+                          <Grid item style={{height:"50%"}}>
+                            <img alt="green" src={PieSliceListeningImage} height="95%"/>
+                          </Grid>
+                          <Grid item style={{height:"50%"}}>
+                            <img alt="red" src={PieSliceChildNonImage} height="95%"/>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid item xs={11}>
-                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                        <Grid item style={{height:"50%"}}>
-                          <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
-                            Listening to children/encouraging child talk
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"50%"}}>
-                          <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                            Doing other tasks or activities
-                          </Typography>
+                      <Grid item xs={11}>
+                        <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                          <Grid item style={{height:"50%"}}>
+                            <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
+                              Listening to children/encouraging child talk
+                            </Typography>
+                          </Grid>
+                          <Grid item style={{height:"50%"}}>
+                            <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
+                              Doing other tasks or activities
+                            </Typography>
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item>
-                <ListeningSummaryChart
-                  listening={this.state.listening}
-                  notListening={this.state.notListening}
-                />
-              </Grid>
-              <Grid item>
-              <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
-                Total Observations: {this.state.listening + this.state.notListening}
-              </Typography>
-              </Grid>
-            </Grid>
-          }
-          details={
-            <div>
-              <Grid container justify={"center"} direction={"column"}>
-                <Grid container justify={"center"} direction={"column"}>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    What behaviors did the teacher use during the observation?
-                  </Typography>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Did the teacher do one type of behavior more often than the other behaviors?               
-                  </Typography>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Did the teacher do one type of behavior less often than the other behaviors?               
-                  </Typography>
+                <Grid item>
+                  <ListeningSummaryChart
+                    listening={this.state.listening}
+                    notListening={this.state.notListening}
+                  />
                 </Grid>
-                <ListeningDetailsChart
-                  listening1={this.state.listening1}
-                  listening2={this.state.listening2}
-                  listening3={this.state.listening3}
-                  listening4={this.state.listening4}
-                  listening5={this.state.listening5}
-                  listening6={this.state.listening6}
-                />
+                <Grid item>
+                <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
+                  Total Observations: {this.state.listening + this.state.notListening}
+                </Typography>
+                </Grid>
               </Grid>
-            </div>
-          }
-          trendsGraph={
-            <ListeningTrendsGraph
-              data={this.handleTrendsFormatData}
+            }
+            details={
+              <div>
+                <Grid container justify={"center"} direction={"column"}>
+                  <Grid container justify={"center"} direction={"column"}>
+                    <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                      What behaviors did the teacher use during the observation?
+                    </Typography>
+                    <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                      Did the teacher do one type of behavior more often than the other behaviors?               
+                    </Typography>
+                    <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                      Did the teacher do one type of behavior less often than the other behaviors?               
+                    </Typography>
+                  </Grid>
+                  <ListeningDetailsChart
+                    listening1={this.state.listening1}
+                    listening2={this.state.listening2}
+                    listening3={this.state.listening3}
+                    listening4={this.state.listening4}
+                    listening5={this.state.listening5}
+                    listening6={this.state.listening6}
+                  />
+                </Grid>
+              </div>
+            }
+            trendsGraph={
+              <ListeningTrendsGraph
+                data={this.handleTrendsFormatData}
+              />
+            }
+            changeSessionId={this.changeSessionId}
+            sessionId={this.state.sessionId}
+            conferencePlanId={this.state.conferencePlanId}
+            addNoteToPlan={this.addNoteToPlan}
+            sessionDates={this.state.sessionDates}
+            notes={this.state.notes}
+            questions={
+              <ListeningCoachingQuestions
+                handleAddToPlan={this.handleAddToPlan}
+                addedToPlan={this.state.addedToPlan}
+                sessionId={this.state.sessionId}
+                teacherId={this.props.teacherSelected.id}
+              />
+            }
+            chosenQuestions={chosenQuestions}
+            actionPlanExists={this.state.actionPlanExists}
+            conferencePlanExists={this.state.conferencePlanExists}
+          />
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Results"}
             />
-          }
-          changeSessionId={this.changeSessionId}
-          sessionId={this.state.sessionId}
-          conferencePlanId={this.state.conferencePlanId}
-          addNoteToPlan={this.addNoteToPlan}
-          sessionDates={this.state.sessionDates}
-          notes={this.state.notes}
-          questions={
-            <ListeningCoachingQuestions
-              handleAddToPlan={this.handleAddToPlan}
-              addedToPlan={this.state.addedToPlan}
-              sessionId={this.state.sessionId}
-              teacherId={this.props.teacherSelected.id}
-            />
-          }
-          chosenQuestions={chosenQuestions}
-          actionPlanExists={this.state.actionPlanExists}
-          conferencePlanExists={this.state.conferencePlanExists}
-        />
-      </div>
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }
