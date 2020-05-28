@@ -783,7 +783,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                       <b>OR</b>
                                     </Typography>
                                     <li>
-                                      {console.log('magic8 prop', this.props.magic8)}
                                       <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                                         Select questions from the {" "}
                                         <MuiThemeProvider

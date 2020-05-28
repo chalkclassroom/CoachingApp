@@ -342,9 +342,14 @@ class ResultsLayout extends React.Component<Props, State> {
                       </FirebaseContext.Consumer>
                     </div>
                   ) : (
-                    <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
-                      Please choose a date from the dropdown menu.
-                    </Typography>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                    </Grid>
                   )}
                 </div>
               ) : this.state.view === 'actionPlan' ? (
@@ -356,31 +361,22 @@ class ResultsLayout extends React.Component<Props, State> {
                           firebase={firebase}
                           teacher={this.props.teacher}
                           sessionId={this.props.sessionId}
-                          // handleEditActionPlan={this.handleEditActionPlan}
-                          // handleClose={null}
                           readOnly={false}
                           actionPlanExists={this.props.actionPlanExists}
                           editMode={this.state.actionPlanEditMode}
                           magic8={this.props.magic8}
                         />}
                       </FirebaseContext.Consumer>
-                      {/* {this.state.actionPlanEditMode ? (
-                        <FirebaseContext.Consumer>
-                          {(firebase: object): React.ReactNode => <ActionPlanModal 
-                            firebase={firebase}
-                            teacher={this.props.teacher}
-                            sessionId={this.props.sessionId}
-                            handleClose={this.handleSaveAndCloseActionPlan}
-                            actionPlanExists={true}
-                            magic8={this.props.magic8}
-                          />}
-                        </FirebaseContext.Consumer>
-                      ) : ( <div /> )} */}
                     </div>
                   ) : (
-                    <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
-                      Please choose a date from the dropdown menu.
-                    </Typography>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                    </Grid>
                   )}
                 </div>
               ) : null}
