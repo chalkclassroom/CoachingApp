@@ -12,6 +12,7 @@ import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import TeacherModal from '../HomeViews/TeacherModal';
 
 const styles: object = {
   root: {
@@ -49,7 +50,8 @@ interface State {
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
-  questionAdded: boolean
+  questionAdded: boolean,
+  teacherModal: boolean
 }
 
 interface Teacher {
@@ -91,18 +93,27 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       addedToPlan: [],
       sessionDates: [],
       noteAdded: false,
-      questionAdded: false
+      questionAdded: false,
+      teacherModal: false
     };
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     const firebase = this.context;
-    const teacherId = this.props.teacherSelected.id;
-    firebase.fetchBehaviourTypeCount(this.state.sessionId);
-    firebase.fetchAvgToneRating(this.state.sessionId);
-    this.handleDateFetching(teacherId);
-    this.handleTrendsFetching(teacherId);
+    if (this.props.teacherSelected) {
+      const teacherId = this.props.teacherSelected.id;
+      firebase.fetchBehaviourTypeCount(this.state.sessionId);
+      firebase.fetchAvgToneRating(this.state.sessionId);
+      this.handleDateFetching(teacherId);
+      this.handleTrendsFetching(teacherId);
+    } else {
+      this.setState({ teacherModal: true })
+    }
+  }
+
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
   }
 
   /**
@@ -442,7 +453,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       )
     })
     return (
-      <div className={classes.root}>
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
         <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
         <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
         <ResultsLayout
@@ -504,6 +516,17 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           conferencePlanExists={this.state.conferencePlanExists}
         />
       </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Results"}
+            />
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }
