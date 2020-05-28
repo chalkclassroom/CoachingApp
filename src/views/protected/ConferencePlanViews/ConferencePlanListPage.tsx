@@ -265,7 +265,7 @@ class ConferencePlanListPage extends React.Component<Props, State>{
             </Typography>
           </Grid>
           <Grid item style={{width: '100%', paddingTop: '2em'}}>
-            <Grid container justify="center" alignItems="center">
+            <Grid container justify="center" alignItems="center" style={{maxHeight: '60vh', overflow: 'auto'}}>
               <Table style={{width: '85%', border: '1px solid #a9a9a9', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
                 <TableHeadSort
                   order={this.state.order}

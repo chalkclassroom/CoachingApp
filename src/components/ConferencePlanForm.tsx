@@ -17,6 +17,72 @@ import moment from 'moment';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import FadeAwayModal from './FadeAwayModal';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import * as Constants from '../constants';
+
+const TransitionTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.TT
+    }
+  }
+});
+const ClimateTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.CC
+    }
+  }
+});
+const MathTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.MI
+    }
+  }
+});
+const EngagementTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.SE
+    }
+  }
+});
+const InstructionTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.LI
+    }
+  }
+});
+const ListeningTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.LC
+    }
+  }
+});
+const SequentialTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.SA
+    }
+  }
+});
+const ACTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.AC
+    }
+  }
+});
+const BlankTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#a3a3a3'
+    }
+  }
+});
 
 const styles: object = {
   textField: {
@@ -699,18 +765,45 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                   <ul>
                                     <li>
                                       <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                                        Select or create questions related to the observation
+                                        Ask questions that will help teachers reflect <i>and</i>
+                                        <br />
+                                        plan concrete steps for improvement. 
+                                      </Typography>
+                                    </li>
+                                    <li>
+                                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                        Create questions related to the observation
                                         <br />
                                         data that will encourage teachers to reflect on their
                                         <br />
                                         current classroom practices.
                                       </Typography>
                                     </li>
+                                    <Typography variant="h6" style={{fontFamily: 'Arimo', paddingTop: '0.5em', paddingBottom: '0.5em'}}>
+                                      <b>OR</b>
+                                    </Typography>
                                     <li>
+                                      {console.log('magic8 prop', this.props.magic8)}
                                       <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                                        Ask questions that will help teachers reflect <i>and</i>
-                                        <br />
-                                        plan concrete steps for improvement. 
+                                        Select questions from the {" "}
+                                        <MuiThemeProvider
+                                          theme={
+                                            this.props.magic8 === 'Transition Time' ? TransitionTheme
+                                            : this.props.magic8 === 'Classroom Climate' ? ClimateTheme
+                                            : this.props.magic8 === 'Math Instruction' ? MathTheme
+                                            : this.props.magic8 === 'Level of Engagement' ? EngagementTheme
+                                            : this.props.magic8 === 'Level of Instruction' ? InstructionTheme
+                                            : this.props.magic8 === 'Listening to Children' ? ListeningTheme
+                                            : this.props.magic8 === 'Sequential Activities' ? SequentialTheme
+                                            : this.props.magic8 === 'AC' ? ACTheme
+                                            : BlankTheme
+                                          }
+                                        >
+                                          <Button color="primary" size="small" variant="outlined">
+                                            Questions
+                                          </Button>
+                                        </MuiThemeProvider>
+                                        {" "} tab.
                                       </Typography>
                                     </li>
                                   </ul>
