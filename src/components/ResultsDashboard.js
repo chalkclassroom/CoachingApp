@@ -452,7 +452,12 @@ ResultsDashboard.propTypes = {
   addNoteToPlan: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   firebase: PropTypes.object.isRequired,
-  notes: PropTypes.object.isRequired,
+  notes: PropTypes.exact({
+    id: PropTypes.string,
+    sessionStart: PropTypes.exact({
+      value: PropTypes.string
+    })
+  }).isRequired,
   changeTeacher: PropTypes.func.isRequired,
   teacherSelected: PropTypes.exact({
     email: PropTypes.string,

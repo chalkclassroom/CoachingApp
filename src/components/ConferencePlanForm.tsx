@@ -13,7 +13,7 @@ import SaveGrayImage from '../assets/images/SaveGrayImage.svg';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import moment from 'moment';
+import * as  moment from 'moment';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import FadeAwayModal from './FadeAwayModal';
@@ -119,8 +119,6 @@ interface Props {
   },
   sessionId?: string,
   readOnly: boolean,
-  // handleEditConferencePlan(): void,
-  handleClose?(): void,
   conferencePlanExists: boolean,
   editMode: boolean,
   chosenQuestions: Array<string>,
@@ -247,7 +245,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
    * @param {number} number
    * @return {void}
    */
-  handleChangeFeedback = (number: number) => (event): void => {
+  handleChangeFeedback = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newArray = [...this.state.feedback];
     newArray[number] = event.target.value;
     this.setState({
@@ -260,7 +258,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
    * @param {number} number
    * @return {void}
    */
-  handleChangeAddedQuestions = (number: number) => (event): void => {
+  handleChangeAddedQuestions = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newArray = [...this.state.addedQuestions];
     newArray[number] = event.target.value;
     this.setState({
@@ -273,7 +271,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
    * @param {number} number
    * @return {void}
    */
-  handleChangeQuestions = (number: number) => (event): void => {
+  handleChangeQuestions = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newArray = [...this.state.questions];
     newArray[number] = event.target.value;
     this.setState({
@@ -286,7 +284,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
    * @param {number} number
    * @return {void}
    */
-  handleChangeNotes = (number: number) => (event): void => {
+  handleChangeNotes = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newArray = [...this.state.notes];
     newArray[number] = event.target.value;
     this.setState({
@@ -390,35 +388,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
   }
 
   /**
-   * saves action plan, action steps, and closes the action plan modal
-   * @return {void}
-   */
-  handleSaveAndClose = (): void => {
-    this.setState({
-      saveModal: false,
-    }, () => {
-      this.handleSave();
-      this.props.handleClose();
-    })
-  }
-
-  handleClose = (): void => {
-    if (this.state.saved) {
-      this.props.handleClose();
-    } else {
-      this.setState({
-        saveModal: true
-      })
-    }
-  }
-
-  handleCloseWithoutSave = (): void => {
-    this.setState({
-      saveModal: false
-    }, () => {this.props.handleClose()})
-  }
-
-  /**
    * @param {React.SyntheticEvent} e
    */
   onClickAway = (e: React.SyntheticEvent): void => {
@@ -488,7 +457,6 @@ class ConferencePlanForm extends React.Component<Props, State> {
       getCoachLastName: PropTypes.func
     }).isRequired,
     readOnly: PropTypes.bool.isRequired,
-    handleClose: PropTypes.func,
     conferencePlanExists: PropTypes.bool.isRequired,
     editMode: PropTypes.bool.isRequired,
     chosenQuestions: PropTypes.array.isRequired,

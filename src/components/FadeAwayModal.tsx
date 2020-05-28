@@ -33,6 +33,8 @@ interface Props {
 }
 
 /**
+ * small modal to alert user when they have done something
+ * use setTimeout on the open prop to close modal
  * @param {Props} props 
  * @return {ReactElement}
  */

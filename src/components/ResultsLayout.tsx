@@ -9,13 +9,10 @@ import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
-import Typography from "@material-ui/core/Typography/Typography";
 import "chartjs-plugin-datalabels";
-import ResultsDashboard from './ResultsDashboard';
+import ResultsDashboard from './ResultsDashboard.js';
 import ActionPlanForm from './ActionPlanForm';
-// import ActionPlanModal from './ActionPlanModal';
 import ConferencePlanForm from './ConferencePlanForm';
-// import ConferencePlanModal from './ConferencePlanModal';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 
 const styles: object = {
@@ -73,9 +70,9 @@ interface Props {
   summary: React.ReactNode,
   details: React.ReactNode,
   trendsGraph: React.ReactNode,
-  changeSessionId: any,
+  changeSessionId(event: React.SyntheticEvent): void,
   sessionId: string,
-  sessionDates: Array<any>,
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   questions: React.ReactNode,
   chosenQuestions: Array<string>,
   notes: Array<{id: string, content: string, timestamp: string}>,
@@ -144,7 +141,7 @@ class ResultsLayout extends React.Component<Props, State> {
     }
   }
 
-  handleSummary = () => {
+  handleSummary = (): void => {
     if (this.state.tabValue !== 0) {
       this.setState({
         tabValue: 0
@@ -152,7 +149,7 @@ class ResultsLayout extends React.Component<Props, State> {
     }
   };
 
-  handleDetails = () => {
+  handleDetails = (): void => {
     if (this.state.tabValue !== 1) {
       this.setState({
         tabValue: 1
@@ -160,7 +157,7 @@ class ResultsLayout extends React.Component<Props, State> {
     }
   };
 
-  handleTrends = () => {
+  handleTrends = (): void => {
     if (this.state.tabValue !== 2) {
       this.setState({
         tabValue: 2
@@ -168,35 +165,11 @@ class ResultsLayout extends React.Component<Props, State> {
     }
   };
 
-  handleEditActionPlan = (): void => {
-    this.setState({
-      actionPlanEditMode: true
-    })
-  }
-
-  handleSaveAndCloseActionPlan = (): void => {
-    this.setState({
-      actionPlanEditMode: false
-    })
-  }
-
-  /* handleEditConferencePlan = (): void => {
-    this.setState({
-      conferencePlanEditMode: true
-    })
-  } */
-
-  /* handleSaveAndCloseConferencePlan = (): void => {
-    this.setState({
-      conferencePlanEditMode: false
-    })
-  } */
-
-  handleOpenNotes = () => {
+  handleOpenNotes = (): void => {
     this.setState({ notesModal: true })
   }
 
-  handleCloseNotes = () => {
+  handleCloseNotes = (): void => {
     this.setState({ notesModal: false })
   }
 

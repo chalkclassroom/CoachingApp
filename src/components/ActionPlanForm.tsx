@@ -9,10 +9,8 @@ import Button from '@material-ui/core/Button';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import InfoIcon from '@material-ui/icons/Info';
-// import EditImage from '../assets/images/EditImage.svg';
 import SaveImage from '../assets/images/SaveImage.svg';
 import SaveGrayImage from '../assets/images/SaveGrayImage.svg';
-// import CloseImage from '../assets/images/CloseImage.svg';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -98,8 +96,6 @@ interface Props {
   },
   sessionId?: string,
   readOnly: boolean,
-  // handleEditActionPlan?(): void,
-  // handleClose?(): void,
   actionPlanExists: boolean,
   editMode?: boolean,
   history?: {
@@ -298,6 +294,9 @@ class ActionPlanForm extends React.Component<Props, State> {
       })
   }
 
+  /**
+   * @param {string} actionPlanId
+   */
   getActionPlan = (actionPlanId: string): void => {
     this.props.firebase.getAPInfo(actionPlanId)
     .then((actionPlanData: {
@@ -336,6 +335,10 @@ class ActionPlanForm extends React.Component<Props, State> {
     .catch((error) => console.log('getActionPlan', error))
   }
 
+  /**
+   * @param {Object} date
+   * @return {Date}
+   */
   changeDateType = (date: {seconds: number, nanoseconds: number}): Date => {
     const newDate = new Date(0);
     newDate.setUTCSeconds(date.seconds);
@@ -372,10 +375,9 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   /**
    * saves action plan by updating Cloud Firestore records
-   * @param {boolean} close
    * @return {void}
    */
-  handleSave = (close: boolean): void => {
+  handleSave = (): void => {
     this.props.firebase.saveActionPlan(
       this.state.actionPlanId,
       this.state.goal,
@@ -402,33 +404,11 @@ class ActionPlanForm extends React.Component<Props, State> {
           });
           this.getActionPlan(this.state.actionPlanId);
         })
-        /* .then(() => {
-          if (close) {
-            this.props.handleClose();
-            this.setState({saveModal: false});
-          }
-        }) */
         .catch(() => {
           console.log("error in saving action step ", index);
         })
     })
   }
-
-  /* handleClose = (): void => {
-    if (this.state.saved) {
-      this.props.handleClose();
-    } else {
-      this.setState({
-        saveModal: true
-      });
-    }
-  } */
-
-  /* handleCloseWithoutSave = (): void => {
-    this.setState({
-      saveModal: false
-    }, () => {this.props.handleClose()})
-  } */
 
   /**
    * @param {React.SyntheticEvent} e
@@ -499,8 +479,6 @@ class ActionPlanForm extends React.Component<Props, State> {
       school: PropTypes.string
     }).isRequired,
     readOnly: PropTypes.bool.isRequired,
-    // handleEditActionPlan: PropTypes.func,
-    // handleClose: PropTypes.func,
     actionPlanExists: PropTypes.bool.isRequired,
     editMode: PropTypes.bool,
   };
@@ -622,7 +600,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                     <Grid item xs={1}>
-                      <Button onClick={(): void => this.handleSave(false)}>
+                      <Button onClick={this.handleSave}>
                         {this.state.saved ? (
                             <img alt="Save" src={SaveGrayImage} style={{width: '100%'}}/>
                           ) : (
@@ -663,7 +641,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                   <Button onClick={this.handleUndoChanges}>
                     Undo Changes
                   </Button>
-                  <Button onClick={(): void => {this.handleSave(false)}}>
+                  <Button onClick={this.handleSave}>
                     Save
                   </Button>
                 </DialogActions>
