@@ -9,7 +9,7 @@ import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo.tsx";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
-import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
+import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard.js';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 
 const styles: object = {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
-import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
+import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard.js';
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
