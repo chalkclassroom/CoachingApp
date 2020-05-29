@@ -12,7 +12,10 @@ import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionna
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import ClassroomClimateHelpCard from '../../../components/ClassroomClimateComponent/ClassroomClimateHelpCard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import { createMuiTheme, Typography, Grid, Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core/es';
+// import { createMuiTheme, Typography, Grid, Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core/es';
+import {createMuiTheme} from '@material-ui/core/styles';
+// import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 
 const ClimateTheme = createMuiTheme({

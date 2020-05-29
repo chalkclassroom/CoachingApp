@@ -16,7 +16,7 @@ import WalkingImage from "../../../assets/images/WalkingImage.svg";
 import ClassroomRoutinesImage from "../../../assets/images/ClassroomRoutinesImage.svg";
 import BMDImage from "../../../assets/images/BMDImage.svg";
 import OtherImage from "../../../assets/images/OtherImage.svg";
-import { red } from "@material-ui/core/es/colors";
+import { red } from "@material-ui/core/colors";
 import { toggleNewTransitionType } from "../../../state/actions/transition-time";
 import { connect } from 'react-redux';
 

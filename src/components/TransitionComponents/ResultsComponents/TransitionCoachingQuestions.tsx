@@ -13,7 +13,7 @@ import {
   blue,
   indigo
 } from "@material-ui/core/colors";
-import { red } from "@material-ui/core/es/colors";
+import { red } from "@material-ui/core/colors";
 import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
 import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";
 import WalkingImage from "../../../assets/images/WalkingImage.svg";

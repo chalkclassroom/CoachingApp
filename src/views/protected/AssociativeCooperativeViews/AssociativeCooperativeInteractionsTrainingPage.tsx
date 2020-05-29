@@ -12,7 +12,7 @@ import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionna
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import AssocCoopHelpCard from '../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard.tsx';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import { createMuiTheme } from '@material-ui/core/es';
+import { createMuiTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 const ACTheme = createMuiTheme({

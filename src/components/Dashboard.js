@@ -29,7 +29,7 @@ import SequentialLookForsImage from "../assets/images/SequentialLookForsImage.sv
 import AssocCoopLookForsImage from "../assets/images/AssocCoopLookForsImage.svg";
 import Notes from "./Notes";
 import FirebaseContext from "./Firebase/FirebaseContext";
-import { ClickAwayListener } from "@material-ui/core/es";
+import { ClickAwayListener } from "@material-ui/core/ClickAwayListener";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
 import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
