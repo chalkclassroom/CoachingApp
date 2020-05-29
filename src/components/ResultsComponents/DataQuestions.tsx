@@ -35,8 +35,11 @@ interface Props {
   questions: Array<{name: string, title: string, text: Array<string>}>,
   openPanel: string,
   handlePanelChange(panel: string): void,
-  addedToPrep: Array<string>,
-  handleAddToPlan(panel: string): void,
+  addedToPlan: Array<{panel: string, number: number, question: string}>,
+  handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
+  sessionId: string,
+  teacherId: string,
+  magic8: string,
   color: string
 }
 
@@ -60,15 +63,19 @@ class DataQuestions extends React.Component<Props, {}> {
       text: PropTypes.array})).isRequired,
     openPanel: PropTypes.string,
     handlePanelChange: PropTypes.func.isRequired,
-    addedToPrep: PropTypes.array.isRequired,
-    handleAddToPlan: PropTypes.func.isRequired
+    addedToPlan: PropTypes.array.isRequired,
+    handleAddToPlan: PropTypes.func.isRequired,
+    sessionId: PropTypes.string.isRequired,
+    teacherId: PropTypes.string.isRequired,
+    magic8: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired
   };
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render():React.ReactNode {
     const { classes } = this.props;
     return (
       <div>
@@ -83,7 +90,7 @@ class DataQuestions extends React.Component<Props, {}> {
               <Typography
                 className={classes.expansionPanelTitle}
                 style={{
-                  textDecoration: this.props.addedToPrep.includes(item.name)
+                  textDecoration: this.props.addedToPlan.includes({panel: item.name, number: index})
                     ? "underline"
                     : null,
                   fontFamily: "Arimo"
@@ -94,18 +101,18 @@ class DataQuestions extends React.Component<Props, {}> {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Grid container direction="column">
-                {item.text.map((questions, index) => (
+                {item.text.map((question, index) => (
                   <Grid container direction="row" key={index}>
                     <Grid item xs={10}>
                       <div className={classes.expansionPanelText}>
                         <ul style={{fontFamily: "Arimo"}}>
-                          {questions}
+                          {question}
                         </ul>
                       </div>
                     </Grid>
                     <Grid item xs={1}>
                       <Button
-                        onClick={this.props.handleAddToPlan.bind(this, item.name)}
+                        onClick={this.props.handleAddToPlan.bind(this, item.name, index, question, this.props.sessionId, this.props.teacherId, this.props.magic8)}
                       >
                         <AddCircleIcon style={{fill: this.props.color}} />
                       </Button>

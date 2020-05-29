@@ -12,6 +12,9 @@ const config = {
   measurementId: "G-S797QZ8L3N"
 };
 
+/**
+ * defines functions to get and set data in cloud firestore
+ */
 class Firebase {
   constructor() {
     if (!firebase.apps.length) {
@@ -425,6 +428,20 @@ class Firebase {
       .catch(error => console.error("Error setting session ref: ", error));
   };
 
+  handleLOISession = async function(mEntry) {
+    this.sessionRef = this.db.collection("observations").doc();
+    this.sessionRef
+      .set({
+        observedBy: "/user/" + mEntry.observedBy,
+        start: firebase.firestore.FieldValue.serverTimestamp(),
+        teacher: "/user/" + mEntry.teacher,
+        end: firebase.firestore.FieldValue.serverTimestamp(),
+        type: mEntry.type,
+        setting: mEntry.setting
+      })
+      .catch(error => console.error("Error setting session ref: ", error));
+  };
+
   endSession = async function() {
     this.sessionRef
       .update({
@@ -435,7 +452,7 @@ class Firebase {
       );
   };
 
-  handlePushAC = async function(mEntry) {
+  handlePushCentersData = async function(mEntry) {
     return this.sessionRef
       .collection("entries")
       .add({
@@ -444,16 +461,15 @@ class Firebase {
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
-        console.error("Error occurred adding observation: ", error)
+        console.error("error occurred adding observation: ", error)
       );
   };
 
-  handlePushSequential = async function(mEntry) {
+  handlePushInstruction = async function(insType) {
     return this.sessionRef
       .collection("entries")
       .add({
-        Checked: mEntry.checked,
-        PeopleType: mEntry.people,
+        instructionType: insType,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
@@ -461,19 +477,17 @@ class Firebase {
       );
   };
 
-  handlePushMath = async function(mEntry) {
+  handlePushListening = async function(mEntry) {
     return this.sessionRef
       .collection("entries")
       .add({
         Checked: mEntry.checked,
-        PeopleType: mEntry.people,
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
         console.error("Error occurred adding observation: ", error)
       );
   };
-
 
   handleUnlockSection = async function(section) {
     return this.db
@@ -672,6 +686,43 @@ class Firebase {
       );
   };
 
+  fetchInstructionTypeCount = async function(sessionId) {
+    const getInstructionTypeCountFirebaseFunction = this.functions.httpsCallable(
+      "funcInstructionTypeCount"
+    );
+
+    return getInstructionTypeCountFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          // Read result of the Cloud Function.
+          // var sanitizedMessage = result.data[0];
+          // console.log(sanitizedMessage);
+          // return sanitizedMessage;
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting instruction type count: ", error)
+      );
+  };
+
+  fetchInstructionTrend = async function(teacherId) {
+    const getInstructionTrendFirebaseFunction = this.functions.httpsCallable(
+      "funcInstructionTrend"
+    );
+    return getInstructionTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        result =>
+          // Read result of the Cloud Function.
+          // var sanitizedMessage = result.data[0];
+          // console.log(sanitizedMessage);
+          // return sanitizedMessage;
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting instruction trend: ", error)
+      );
+  };
+
   fetchSessionDates = async function(teacherId, sessionType) {
     const getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable(
       "funcSessionDates"
@@ -818,6 +869,20 @@ class Firebase {
       );
   };
 
+  fetchListeningDetails = async function(sessionId) {
+    const getListeningDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcListeningDetails"
+    );
+    return getListeningDetailsFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting listening details: ", error)
+      );
+  };
+
   fetchChildACSummary = async function(sessionId) {
     const getChildACSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcChildACSummary"
@@ -925,6 +990,20 @@ class Firebase {
       );
   };
 
+  fetchListeningSummary = async function(sessionId) {
+    const getListeningSummaryFirebaseFunction = this.functions.httpsCallable(
+      "funcListeningSummary"
+    );
+    return getListeningSummaryFirebaseFunction({ sessionId: sessionId })
+      .then(
+        result =>
+          result.data[0][0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting listening summary: ", error)
+      );
+  };
+
 
   fetchChildACTrend = async function(teacherId) {
     const getChildACTrendFirebaseFunction = this.functions.httpsCallable(
@@ -1025,16 +1104,31 @@ class Firebase {
       );
   };
 
-  createActionPlan = async function(teacherId, sessionId, magic8) {
+  fetchListeningTrend = async function(teacherId) {
+    const getListeningTrendFirebaseFunction = this.functions.httpsCallable(
+      "funcListeningTrend"
+    );
+    return getListeningTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        result =>
+          result.data[0]
+      )
+      .catch(error =>
+        console.error("Error occurred getting listening trend: ", error)
+      );
+  };
+
+  createActionPlan = async function(teacherId, magic8) {
     const data = Object.assign(
       {},
       {
-        sessionId: sessionId,
         coach: this.auth.currentUser.uid,
         teacher: teacherId,
         tool: magic8,
-        dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+        dateModified: firebase.firestore.Timestamp.now(),
+        dateCreated: firebase.firestore.Timestamp.now(),
         goal: '',
+        goalTimeline: '',
         benefit: ''
       }
     );
@@ -1045,7 +1139,6 @@ class Firebase {
         materials: '',
         person: '',
         step: '',
-        // timeline: firebase.firestore.FieldValue.serverTimestamp()
         timeline: ''
       }).then(() => {
         console.log('action steps created');
@@ -1071,36 +1164,25 @@ class Firebase {
     })
   }
 
-  findActionPlan = async function(sessionId) {
+  /**
+   * finds all action plans for coach and all their teachers
+   */
+  getCoachActionPlans = async function() {
     this.sessionRef = this.db.collection("actionPlans")
-      .where("benefit", "==", "maybe")
-    return this.sessionRef.get().then((doc) => {
-      if (doc.exists) {
-        console.log('action plan found');
-        return true;
-      } else {
-        console.log('action plan not found');
-        return false
-      }
-    }).catch((error) => {
-      console.log("error finding action plan: ", error)
-    })
-  }
-
-  getActionPlan = async function(sessionId) {
-    this.sessionRef = this.db.collection("actionPlans")
-      .where("sessionId", "==", sessionId)
+      .where("coach", "==", this.auth.currentUser.uid)
     return this.sessionRef.get()
       .then(querySnapshot => {
         const idArr = [];
         querySnapshot.forEach(doc =>
           idArr.push({
             id: doc.id,
-            goal: doc.data().goal,
-            benefit: doc.data().benefit,
-            date: doc.data().date
+            teacherId: doc.data().teacher,
+            teacherFirstName: '',
+            teacherLastName: '',
+            practice: doc.data().tool,
+            date: doc.data().dateModified
           })
-        );
+        )
         return idArr;
       })
       .catch(() => {
@@ -1108,7 +1190,69 @@ class Firebase {
       })
   }
 
-  getActionSteps = async function(actionPlanId, index) {
+  /**
+   * finds all action plans for coach and their selected teacher
+   * @param {string} practice
+   * @param {string} teacherId
+   */
+  getTeacherActionPlans = async function(practice, teacherId) {
+    this.sessionRef = this.db.collection("actionPlans")
+      .where("coach", "==", this.auth.currentUser.uid)
+      .where("teacher", "==", teacherId)
+      .where("tool", "==", practice)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            date: doc.data().dateModified
+          })
+        )
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve action plans')
+      })
+  }
+
+  getTeacherFirstName = async function(teacherId) {
+    return this.db
+      .collection("users")
+      .doc(teacherId)
+      .get()
+      .then(doc => doc.data().firstName)
+      .catch(error => console.error("Error getting cached document:", error));
+  }
+
+  getTeacherLastName = async function(teacherId) {
+    return this.db
+      .collection("users")
+      .doc(teacherId)
+      .get()
+      .then(doc => doc.data().lastName)
+      .catch(error => console.error("Error getting cached document:", error));
+  }
+
+  getAPInfo = async function(actionPlanId) {
+    return this.db
+      .collection("actionPlans")
+      .doc(actionPlanId)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return doc.data();
+        } else {
+          console.log("Doc does not exist");
+          return {};
+        }
+      })
+      .catch(error =>
+        console.error("Error occurred when getting document:", error)
+      );
+  };
+
+  getActionSteps = async function(actionPlanId) {
     this.sessionRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps");
     return this.sessionRef.get()
       .then(querySnapshot => {
@@ -1128,11 +1272,13 @@ class Firebase {
       })
   }
 
-  saveActionPlan = async function(actionPlanId, goal, benefit) {
+  saveActionPlan = async function(actionPlanId, goal, goalTimeline, benefit) {
     var actionPlanRef = this.db.collection("actionPlans").doc(actionPlanId);
     return actionPlanRef.update({
       goal: goal,
-      benefit: benefit
+      goalTimeline: goalTimeline,
+      benefit: benefit,
+      dateModified: firebase.firestore.Timestamp.now()
     })
     .then(() => {
       console.log("Action plan updated successfully!");
@@ -1155,6 +1301,162 @@ class Firebase {
     })
     .catch((error) => {
       console.error("Error updating action plan: ", error);
+    })
+  }
+
+  /**
+   * creates conference plan in cloud firestore
+   * @param {string} teacherId
+   * @param {string} sessionId
+   * @param {string} magic8
+   * @param {Array<string>} feedback
+   * @param {Array<string>} questions
+   * @param {Array<string>} addedQuestions
+   * @param {Array<string>} notes
+   */
+  createConferencePlan = async function(teacherId, sessionId, magic8, feedback, questions, addedQuestions, notes) {
+    const data = Object.assign(
+      {},
+      {
+        sessionId: sessionId,
+        coach: this.auth.currentUser.uid,
+        teacher: teacherId,
+        tool: magic8,
+        dateCreated: firebase.firestore.Timestamp.now(),
+        dateModified: firebase.firestore.Timestamp.now(),
+        feedback: feedback ? feedback : [''],
+        questions: questions ? questions : [''],
+        addedQuestions: addedQuestions ? addedQuestions : [],
+        notes: notes ? notes : ['']
+      }
+    );
+    const conferencePlansRef = firebase.firestore().collection('conferencePlans').doc();
+    conferencePlansRef.set(data).then(() => {
+      console.log('conference plan created');
+    }).catch(() => {
+      console.log('error creating conference plan');
+    })
+  }
+
+  /**
+   * gets data in conference plan
+   * @param {string} sessionId
+   */
+  getConferencePlan = async function(sessionId) {
+    this.sessionRef = this.db.collection("conferencePlans")
+      .where("sessionId", "==", sessionId)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            feedback: doc.data().feedback,
+            questions: doc.data().questions,
+            addedQuestions: doc.data().addedQuestions,
+            notes: doc.data().notes,
+            date: doc.data().dateCreated
+          })
+        );
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve conference plan')
+      })
+  }
+
+  /**
+   * finds all conference plans for coach and all their teachers
+   */
+  getCoachConferencePlans = async function() {
+    this.sessionRef = this.db.collection("conferencePlans")
+      .where("coach", "==", this.auth.currentUser.uid)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            teacherId: doc.data().teacher,
+            teacherFirstName: '',
+            teacherLastName: '',
+            sessionId: doc.data().sessionId,
+            practice: doc.data().tool,
+            date: doc.data().dateModified
+          })
+        )
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve conference plan info')
+      })
+  }
+
+  getObservationDate = async function(sessionId) {
+    return this.db
+      .collection("observations")
+      .doc(sessionId)
+      .get()
+      .then(doc => doc.data().start)
+      .catch(error => console.error("Error getting cached document:", error));
+  }
+
+  /**
+   * @param {string} conferencePlanId
+   * @param {Array<string>} feedback
+   * @param {Array<string>} questions
+   * @param {Array<string>} addedQuestions
+   * @param {Array<string>} notes
+   */
+  saveConferencePlan = async function(conferencePlanId, feedback, questions, addedQuestions, notes) {
+    const conferencePlanRef = this.db.collection("conferencePlans").doc(conferencePlanId);
+    return conferencePlanRef.update({
+      feedback: feedback,
+      questions: questions,
+      addedQuestions: addedQuestions,
+      notes: notes,
+      dateModified: firebase.firestore.Timestamp.now()
+    })
+    .then(() => {
+      console.log("Action plan updated successfully!");
+    })
+    .catch((error) => {
+      console.error("Error updating action plan: ", error);
+    })
+  }
+
+  /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToConferencePlan = async function(conferencePlanId, note) {
+    return this.db
+      .collection("conferencePlans")
+      .doc(conferencePlanId)
+      .update({
+        // does not add if it has already been added
+        notes: firebase.firestore.FieldValue.arrayUnion(note)
+      })
+      .catch(error =>
+        console.error("Error adding note to conference plan: ", error)
+      );
+  };
+
+  /**
+   * @param {string} sessionId
+   * @param {string} questionText
+   */
+  saveConferencePlanQuestion = async function(sessionId, questionText) {
+    const conferencePlanRef = this.db.collection("conferencePlans").where("sessionId", "==", sessionId);
+    conferencePlanRef.get().then(querySnapshot => {
+      const conferencePlanId = [];
+      querySnapshot.forEach(doc =>
+        conferencePlanId.push(doc.id)
+      );
+      return this.db.collection("conferencePlans").doc(conferencePlanId[0]).update({
+        addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText),
+        dateModified: firebase.firestore.Timestamp.now()
+      })
     })
   }
 

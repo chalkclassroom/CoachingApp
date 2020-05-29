@@ -46,8 +46,8 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4],
-          backgroundColor: ["#c5afe7", "#c5afe7", Constants.ACColor, Constants.ACColor],
-          hoverBackgroundColor: ["#c5afe7", "#c5afe7", Constants.ACColor, Constants.ACColor]
+          backgroundColor: ["#c5afe7", "#c5afe7", Constants.Colors.AC, Constants.Colors.AC],
+          hoverBackgroundColor: ["#c5afe7", "#c5afe7", Constants.Colors.AC, Constants.Colors.AC]
         }
       ]
     };

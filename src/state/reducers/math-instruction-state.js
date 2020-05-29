@@ -1,7 +1,7 @@
 import {
     ADD_NEW_CENTER,
     UPDATE_CENTER_COUNT,
-    DELETE_ALL_CENTERS
+    DELETE_MI_CENTERS
   } from "../actions/math-instruction";
   
   const initialState = { mathCenters: [] };
@@ -40,7 +40,7 @@ import {
           ...state,
           mathCenters: newCenters
         };
-      case DELETE_ALL_CENTERS:
+      case DELETE_MI_CENTERS:
         return {
           ...state,
           mathCenters: []

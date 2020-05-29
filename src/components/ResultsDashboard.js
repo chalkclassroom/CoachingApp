@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
-import { Button, Card, Grid } from '@material-ui/core';
+import { Button, Card, Grid, Typography } from '@material-ui/core';
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg"
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg"
 import MathIconImage from "../assets/images/MathIconImage.svg"
@@ -10,65 +10,92 @@ import InstructionIconImage from "../assets/images/InstructionIconImage.svg"
 import ListeningIconImage from "../assets/images/ListeningIconImage.svg"
 import SequentialIconImage from "../assets/images/SequentialIconImage.svg"
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg"
+import TransitionTimeNotesImage from "../assets/images/TransitionTimeNotesImage.svg";
+import ClassroomClimateNotesImage from "../assets/images/ClassroomClimateNotesImage.svg";
+import MathInstructionNotesImage from "../assets/images/MathInstructionNotesImage.svg";
+import EngagementNotesImage from "../assets/images/EngagementNotesImage.svg";
+import InstructionNotesImage from "../assets/images/InstructionNotesImage.svg";
+import ListeningNotesImage from "../assets/images/ListeningNotesImage.svg";
+import SequentialNotesImage from "../assets/images/SequentialNotesImage.svg";
+import AssocCoopNotesImage from "../assets/images/AssocCoopNotesImage.svg";
+import TransitionTimeLookForsImage from "../assets/images/TransitionTimeLookForsImage.svg";
+import ClassroomClimateLookForsImage from "../assets/images/ClassroomClimateLookForsImage.svg";
+import MathInstructionLookForsImage from "../assets/images/MathInstructionLookForsImage.svg";
+import EngagementLookForsImage from "../assets/images/EngagementLookForsImage.svg";
+import InstructionLookForsImage from "../assets/images/InstructionLookForsImage.svg";
+import ListeningLookForsImage from "../assets/images/ListeningLookForsImage.svg";
+import SequentialLookForsImage from "../assets/images/SequentialLookForsImage.svg";
+import AssocCoopLookForsImage from "../assets/images/AssocCoopLookForsImage.svg";
+import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
+import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
+import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
+import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
+import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
+import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
+import NotesListDetailTable from './ResultsComponents/NotesListDetailTable';
+import FirebaseContext from "./Firebase/FirebaseContext";
 import moment from 'moment';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { changeTeacher } from '../state/actions/teacher';
+import { connect } from 'react-redux';
 import * as Constants from '../constants';
 
 const TransitionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.TransitionColor
+      main: Constants.Colors.TT
     }
   }
 });
 const ClimateTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ClimateColor
+      main: Constants.Colors.CC
     }
   }
 });
 const MathTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.MathColor
+      main: Constants.Colors.MI
     }
   }
 });
 const EngagementTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.EngagementColor
+      main: Constants.Colors.SE
     }
   }
 });
 const InstructionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.InstructionColor
+      main: Constants.Colors.LI
     }
   }
 });
 const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ListeningColor
+      main: Constants.Colors.LC
     }
   }
 });
 const SequentialTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.SequentialColor
+      main: Constants.Colors.SA
     }
   }
 });
 const ACTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.ACColor
+      main: Constants.Colors.AC
     }
   }
 });
@@ -80,7 +107,10 @@ const styles = {
     backgroundColor: "#fff",
     height: "100%",
     boxShadow: "5px",
-    width: "100%",
+    width: "90%",
+    marginRight: "5%",
+    marginLeft: "5%",
+    marginBottom: "5%",
     flexDirection: "column",
     alignItems: "center",
     justify: "space-evenly",
@@ -117,30 +147,26 @@ const styles = {
     alignContent: "flex-end",
     display: "flex"
   },
-  completeButton: {
-    color: "#d9d9d9",
-    borderColor: "#d9d9d9",
-    borderWidth: "2px",
-    fontSize: "15px",
-    alignSelf: "flex-end",
-    marginTop: "auto"
-  },
   gridTopMargin: {
     marginTop: "5px"
   },
   resultsButtons: {
-    marginTop: "2vh"
+    marginTop: "2vh",
+    marginRight: '0.5em',
+    marginLeft: '0.5em'
   },
   viewButtons: {
     minWidth: 150,
     textAlign: "center",
-    fontFamily: "Arimo"
+    fontFamily: "Arimo",
+    width: '20vw'
   },
   viewButtonsSelected: {
     minWidth: 150,
     textAlign: "center",
     color: "#fff",
-    fontFamily: "Arimo"
+    fontFamily: "Arimo",
+    width: '20vw'
   },
 };
 
@@ -159,7 +185,10 @@ class ResultsDashboard extends React.Component {
     this.state = {
       auth: true,
       icon: null,
+      lookForsIcon: null,
+      notesIcon: null,
       theme: null,
+      help: false
     }
   }
 
@@ -167,54 +196,114 @@ class ResultsDashboard extends React.Component {
     if (this.props.magic8 === "Transition Time") {
       this.setState({
         icon: TransitionTimeIconImage,
+        lookForsIcon: TransitionTimeLookForsImage,
+        notesIcon: TransitionTimeNotesImage,
         theme: TransitionTheme
       });
     } else if (this.props.magic8 === "Classroom Climate") {
       this.setState({
         icon: ClassroomClimateIconImage,
+        lookForsIcon: ClassroomClimateLookForsImage,
+        notesIcon: ClassroomClimateNotesImage,
         theme: ClimateTheme
       })
     } else if (this.props.magic8 === "Math Instruction") {
       this.setState({
         icon: MathIconImage,
+        lookForsIcon: MathInstructionLookForsImage,
+        notesIcon: MathInstructionNotesImage,
         theme: MathTheme
       })
     } else if (this.props.magic8 === "Level of Engagement") {
       this.setState({
         icon: EngagementIconImage,
+        lookForsIcon: EngagementLookForsImage,
+        notesIcon: EngagementNotesImage,
         theme: EngagementTheme
       })
     } else if (this.props.magic8 === "Level of Instruction") {
       this.setState({
         icon: InstructionIconImage,
+        lookForsIcon: InstructionLookForsImage,
+        notesIcon: InstructionNotesImage,
         theme: InstructionTheme
       })
     } else if (this.props.magic8 === "Listening to Children") {
       this.setState({
         icon: ListeningIconImage,
+        lookForsIcon: ListeningLookForsImage,
+        notesIcon: ListeningNotesImage,
         theme: ListeningTheme
       })
     } else if (this.props.magic8 === "Sequential Activities") {
       this.setState({
         icon: SequentialIconImage,
+        lookForsIcon: SequentialLookForsImage,
+        notesIcon: SequentialNotesImage,
         theme: SequentialTheme
       })
     } else {
       this.setState({
         icon: AssocCoopIconImage,
+        lookForsIcon: AssocCoopLookForsImage,
+        notesIcon: AssocCoopNotesImage,
         theme: ACTheme
       })
     }
   };
 
   /**
-   * render function
-   * @return {ReactElement}
+   * @param {event} event
    */
-  render(){
+  changeTeacher = (event) => {
+    this.props.changeTeacher(event.target.value);
+  };
+
+  handleCloseHelp = () => {
+    this.setState({ help: false });
+  };
+
+  handleCloseNotes = () => {
+    this.setState({ notes: false })
+  }
+
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render() {
     const { classes } = this.props;
     return(
       <div>
+        {this.state.help ? (
+          this.props.magic8 === "Transition Time" ? 
+            <TransitionTimeHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Classroom Climate" ?
+            <ClassroomClimateHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Math Instruction" ? 
+            <MathInstructionHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "AC" ?
+            <AssocCoopHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Sequential Activities" ?
+            <SequentialActivitiesHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Level of Instruction" ?
+            <LevelOfInstructionHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Listening to Children" ? 
+            <ListeningToChildrenHelp open={this.state.help} close={this.handleCloseHelp} />
+          : <div />
+        ) : this.props.notesModal ? (
+          <NotesListDetailTable
+            data={this.props.notes}
+            magic8={this.props.magic8}
+            open={this.props.notesModal}
+            teacherSelected={this.props.teacherSelected}
+            sessionId={this.props.sessionId}
+            addNoteToPlan={this.props.addNoteToPlan}
+            conferencePlanId={this.props.conferencePlanId}
+            handleClose={this.props.handleCloseNotes}
+            style={{overflow:"hidden", minWidth: '100%'}}
+          />
+        ) : (<div />)}
         <Card className={classes.card}>
           <Grid
             container
@@ -232,14 +321,31 @@ class ResultsDashboard extends React.Component {
               <TextField
                 select
                 className={classes.viewButtons}
-                label="Date"
+                label="TEACHER"
+                value={this.props.teacherSelected}
+                onChange={this.changeTeacher}
+                InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
+              >
+                {this.props.teacherList.map((teacher, index)=> 
+                  {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
+                    <em>{teacher.firstName + " " + teacher.lastName}</em>
+                  </MenuItem>})}
+              </TextField>
+            </Grid>
+            <Grid item className={classes.resultsButtons}>
+              <TextField
+                select
+                className={classes.viewButtons}
+                label="DATE"
                 value={this.props.sessionId}
                 onChange={this.props.changeSessionId}
-                InputLabelProps={{ shrink: true }}
+                InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
               >
                 {this.props.sessionDates.map((date, index)=> 
-                  {return <MenuItem key={index} id={date.id} value={date.id}>
-                    <em>{moment(date.sessionStart.value).format("MMM Do YY")}</em>
+                  {return <MenuItem key={index} id={date.id} value={date.id} style={{fontFamily: 'Arimo'}}>
+                    <em>{moment(date.sessionStart.value).format("MMMM DD YYYY")}</em>
                   </MenuItem>})}
               </TextField>
             </Grid>
@@ -250,12 +356,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.DATA
+                    this.props.view === 'data'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.DATA ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.dataClick}
+                  className={this.props.view === 'data' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('data')}
                 >
                   Data
                 </Button>
@@ -267,12 +373,12 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.QUESTIONS
+                    this.props.view === 'questions'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.QUESTIONS ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.questionsClick}
+                  className={this.props.view === 'questions' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('questions')}
                 >
                   Questions
                 </Button>
@@ -284,14 +390,14 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.COACH_PREP
+                    this.props.view === 'conferencePlan'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.COACH_PREP ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.coachPrepClick}
+                  className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('conferencePlan')}
                 >
-                  Coach Prep
+                  Conference Plan
                 </Button>
               </MuiThemeProvider>
             </Grid>
@@ -301,33 +407,32 @@ class ResultsDashboard extends React.Component {
                   size="large"
                   color="primary"
                   variant={
-                    this.props.view === this.props.viewEnum.ACTION_PLAN
+                    this.props.view === 'actionPlan'
                       ? "contained"
                       : "outlined"
                   }
-                  className={this.props.view === this.props.viewEnum.ACTION_PLAN ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.actionPlanClick}
+                  className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={() => this.props.viewClick('actionPlan')}
                 >
                   Action Plan
                 </Button>
               </MuiThemeProvider>
             </Grid>
-            <Grid item style={{marginTop: "7vh", marginBottom: "2vh"}}>
-              <MuiThemeProvider theme={this.state.theme}>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant={
-                    this.props.view === this.props.viewEnum.NOTES
-                      ? "contained"
-                      : "outlined"
-                  }
-                  className={this.props.view === this.props.viewEnum.NOTES ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={this.props.notesClick}
-                >
-                  Notes
-                </Button>
-              </MuiThemeProvider>
+            <Grid item style={{marginTop: '2vh'}}>
+              <Button onClick={() => this.setState({help: true})}>
+                <img
+                  src={this.state.lookForsIcon}
+                  alt="Look-Fors"
+                  className={classes.helpIcon}
+                />
+              </Button>
+              <Button onClick={this.props.handleOpenNotes}>
+                <img
+                  src={this.state.notesIcon}
+                  alt="Notes"
+                  className={classes.helpIcon}
+                />
+              </Button>
             </Grid>
           </Grid>
         </Card>
@@ -338,17 +443,43 @@ class ResultsDashboard extends React.Component {
 
 ResultsDashboard.propTypes = {
   magic8: PropTypes.string.isRequired,
-  dataClick: PropTypes.func.isRequired,
-  questionsClick: PropTypes.func.isRequired,
-  coachPrepClick: PropTypes.func.isRequired,
-  actionPlanClick: PropTypes.func.isRequired,
-  notesClick: PropTypes.func.isRequired,
+  view: PropTypes.string.isRequired,
+  viewClick: PropTypes.func.isRequired,
   changeSessionId: PropTypes.func.isRequired,
   sessionId: PropTypes.string.isRequired,
   sessionDates: PropTypes.array.isRequired,
-  viewEnum: PropTypes.object.isRequired,
+  conferencePlanId: PropTypes.string,
+  addNoteToPlan: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  view: PropTypes.number.isRequired
+  firebase: PropTypes.object.isRequired,
+  notes: PropTypes.exact({
+    id: PropTypes.string,
+    sessionStart: PropTypes.exact({
+      value: PropTypes.string
+    })
+  }).isRequired,
+  changeTeacher: PropTypes.func.isRequired,
+  teacherSelected: PropTypes.exact({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    notes: PropTypes.string,
+    id: PropTypes.string,
+    phone: PropTypes.string,
+    role: PropTypes.string,
+    school: PropTypes.string
+  }).isRequired,
+  teacherList: PropTypes.array.isRequired,
+  notesModal: PropTypes.bool.isRequired,
+  handleOpenNotes: PropTypes.func.isRequired,
+  handleCloseNotes: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(ResultsDashboard);
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher,
+    teacherList: state.teacherListState.teachers
+  };
+};
+
+export default withStyles(styles)(connect(mapStateToProps, { changeTeacher })(ResultsDashboard));

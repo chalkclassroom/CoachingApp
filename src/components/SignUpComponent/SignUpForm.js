@@ -292,4 +292,4 @@ SignUpForm.propTypes = {
   history: PropTypes.object.isRequired
 };
 
-export default withRouter(connect()(withStyles(styles)(SignUpForm)));
+export default withRouter(withStyles(styles)(SignUpForm));

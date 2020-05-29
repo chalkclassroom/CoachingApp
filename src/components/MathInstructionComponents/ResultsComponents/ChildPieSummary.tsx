@@ -39,8 +39,8 @@ class ChildPieSummary extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.math, this.props.notMath],
-          backgroundColor: [Constants.MathColor, Constants.RedGraphColor],
-          hoverBackgroundColor: [Constants.MathColor, Constants.RedGraphColor]
+          backgroundColor: [Constants.Colors.MI, Constants.Colors.RedGraph],
+          hoverBackgroundColor: [Constants.Colors.MI, Constants.Colors.RedGraph]
         }
       ]
     };
@@ -69,8 +69,15 @@ class ChildPieSummary extends React.Component<Props, {}> {
             bodyFontSize: 16
           },
           legend: {
-            display: false,
-            position: 'bottom'
+            display: true,
+            position: 'bottom',
+            onClick: null,
+            labels: {
+              padding: 20,
+              fontColor: "black",
+              fontSize: 14,
+              fontFamily: 'Arimo'
+            }
           },
           plugins: {
             datalabels: {

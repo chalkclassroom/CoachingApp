@@ -29,9 +29,10 @@ import CalendarIcon from "@material-ui/icons/CalendarToday";
 import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
+import { connect } from 'react-redux';
+import { clearCoach } from '../state/actions/coach';
 import TeacherModal from "../views/protected/HomeViews/TeacherModal.tsx";
 import FirebaseContext from "./Firebase/FirebaseContext";
-import { connect } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -237,7 +238,6 @@ class BurgerMenu extends React.Component {
               </ListItem>
               <ListItem
                 button
-                disabled
                 onClick={() => {
                   this.setState({ menu: 3 });
                 }}
@@ -248,7 +248,7 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Messages"
-                  onClick={() => this.props.history.push("/Messages")}
+                  onClick={() => this.props.history.push("/Messaging")}
                 />
               </ListItem>
               <ListItem
@@ -263,12 +263,13 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Training"
-                  onClick={() =>
+                  onClick={() => {
                     this.props.history.push({
                       pathname: "/Magic8Menu",
                       state: { type: "Training" }
-                    })
-                  }
+                    });
+                    this.props.handleClose(event);
+                  }}
                 />
               </ListItem>
               <ListItem
@@ -283,7 +284,10 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Observe"
-                  onClick={() => this.showTeacherModal("Observe")}
+                  onClick={() => {
+                    this.showTeacherModal("Observe");
+                    this.props.handleClose();
+                  }}
                 />
               </ListItem>
               <ListItem
@@ -298,7 +302,10 @@ class BurgerMenu extends React.Component {
                 </ListItemIcon>
                 <ListItemText
                   primary="Results"
-                  onClick={() => this.showTeacherModal("Results")}
+                  onClick={() => {
+                    this.showTeacherModal("Results");
+                    this.props.handleClose();
+                  }}
                 />
               </ListItem>
               <ListItem
@@ -405,8 +412,11 @@ class BurgerMenu extends React.Component {
               <ListItemText
                 primary="Logout"
                 onClick={() => {
-                  this.props.firebase.firebaseSignOut();
-                  this.props.history.push("/");
+                  this.props.firebase.firebaseSignOut().then(() => {
+                    this.props.history.push("/");
+                    this.props.clearCoach();
+                  });
+                  // this.props.history.push("/");
                 }}
               />
             </ListItem>
@@ -435,7 +445,8 @@ BurgerMenu.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
-  firebase: PropTypes.object.isRequired
+  firebase: PropTypes.object.isRequired,
+  clearCoach: PropTypes.func.isRequired
 };
 
-export default withRouter(connect()(withStyles(styles)(BurgerMenu)));
+export default withRouter(withStyles(styles)(connect(null, {clearCoach})(BurgerMenu)));

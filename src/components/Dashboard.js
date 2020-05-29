@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Button, Card, Grid } from "@material-ui/core";
+import { Button, Card, Grid, Typography } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg";
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg";
@@ -32,14 +32,21 @@ import FirebaseContext from "./Firebase/FirebaseContext";
 import { ClickAwayListener } from "@material-ui/core/es";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
+import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
+import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
-import { deleteAllCenters } from "../state/actions/associative-cooperative";
+import { deleteACCenters } from "../state/actions/associative-cooperative";
+import { deleteSACenters } from "../state/actions/sequential-activities";
+import { deleteMICenters } from "../state/actions/math-instruction";
+import { clearTeacher } from "../state/actions/teacher";
 import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
+import * as Constants from '../constants';
 
 const styles = {
   card: {
@@ -67,12 +74,10 @@ const styles = {
     height: "100px"
   },
   infoDisplayGrid: {
-    height: "41vh",
+    height: "34vh",
     width: "90%",
     marginLeft: "5px",
     marginRight: "5px",
-    marginTop: "5px",
-    marginBottom: "5px",
     display: "flex",
     justifyItems: "center"
   },
@@ -93,8 +98,8 @@ const styles = {
     borderWidth: "2px",
     fontSize: "15px",
     alignSelf: "flex-end",
-    marginTop: "auto",
-    fontFamily: "Arimo"
+    fontFamily: "Arimo",
+    margin: 10
   },
   gridTopMargin: {
     marginTop: "5px",
@@ -105,11 +110,10 @@ const styles = {
 /**
  * Dashboard for Observation Tools
  * @class Dashboard
- * @param {boolean} open
  */
 class Dashboard extends React.Component {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props) {
     super(props);
@@ -128,62 +132,67 @@ class Dashboard extends React.Component {
       incomplete: false,
       icon: null,
       lookForsIcon: null,
-      notesIcon: null
+      notesIcon: null,
+      title: ''
     };
-    // Assigning for scope
-    this.resetTransitionTime = resetTransitionTime;
-    this.emptyClimateStack = emptyClimateStack;
-    this.deleteAllCenters = deleteAllCenters;
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount = () => {
-    this.props.magic8 === "Transition Time"
+    this.props.type === "TT"
       ? this.setState({
           icon: TransitionTimeIconImage,
           lookForsIcon: TransitionTimeLookForsImage,
-          notesIcon: TransitionTimeNotesImage
+          notesIcon: TransitionTimeNotesImage,
+          title: 'Transition Time'
         })
-      : this.props.magic8 === "Classroom Climate"
+      : this.props.type === "CC"
       ? this.setState({
           icon: ClassroomClimateIconImage,
           lookForsIcon: ClassroomClimateLookForsImage,
-          notesIcon: ClassroomClimateNotesImage
+          notesIcon: ClassroomClimateNotesImage,
+          title: 'Classroom Climate'
         })
-      : this.props.magic8 === "Math Instruction"
+      : this.props.type === "MI"
       ? this.setState({
           icon: MathIconImage,
           lookForsIcon: MathInstructionLookForsImage,
-          notesIcon: MathInstructionNotesImage
+          notesIcon: MathInstructionNotesImage,
+          title: 'Math Instruction'
         })
-      : this.props.magic8 === "Level of Engagement"
+      : this.props.type === "SE"
       ? this.setState({
           icon: EngagementIconImage,
           lookForsIcon: EngagementLookForsImage,
-          notesIcon: EngagementNotesImage
+          notesIcon: EngagementNotesImage,
+          title: 'Student Engagement'
         })
-      : this.props.magic8 === "Level of Instruction"
+      : this.props.type === "LI"
       ? this.setState({
           icon: InstructionIconImage,
           lookForsIcon: InstructionLookForsImage,
-          notesIcon: InstructionNotesImage
+          notesIcon: InstructionNotesImage,
+          title: 'Level of Instruction'
         })
-      : this.props.magic8 === "Listening to Children"
+      : this.props.type === "LC"
       ? this.setState({
           icon: ListeningIconImage,
           lookForsIcon: ListeningLookForsImage,
-          notesIcon: ListeningNotesImage
+          notesIcon: ListeningNotesImage,
+          title: 'Listening to Children'
         })
-      : this.props.magic8 === "Sequential Activities"
+      : this.props.type === "SA"
       ? this.setState({
           icon: SequentialIconImage,
           lookForsIcon: SequentialLookForsImage,
-          notesIcon: SequentialNotesImage
+          notesIcon: SequentialNotesImage,
+          title: 'Sequential Activities'
         })
       : this.setState({
           icon: AssocCoopIconImage,
           lookForsIcon: AssocCoopLookForsImage,
-          notesIcon: AssocCoopNotesImage
+          notesIcon: AssocCoopNotesImage,
+          title: 'Associative and Cooperative'
         });
   };
 
@@ -195,6 +204,9 @@ class Dashboard extends React.Component {
     this.setState({ help: false });
   };
 
+  /**
+   * @param {boolean} open
+   */
   handleNotes = open => {
     if (open) {
       this.setState({ notes: true });
@@ -217,34 +229,32 @@ class Dashboard extends React.Component {
    */
   render() {
     const { classes } = this.props;
-    const magic8 = this.props.magic8;
     return (
       <div>
         {this.state.help ? (
-          <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
-            {(() => {
-              switch (magic8) {
-                case "Transition Time":
-                  return <TransitionTimeHelp />;
-                case "Classroom Climate":
-                  return <ClassroomClimateHelp />;
-                case "Associative and Cooperative":
-                    return <AssocCoopHelp />;
-                case "Sequential Activities":
-                    return <SequentialActivitiesHelp />;
-                default:
-                  return <div />;
-              }
-            })()}
-          </ClickAwayListener>
+          this.props.type === "TT" ? 
+            <TransitionTimeHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : this.props.type === "CC" ?
+            <ClassroomClimateHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : this.props.type === "MI" ? 
+            <MathInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : this.props.type === "AC" ?
+            <AssocCoopHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : this.props.type === "SA" ?
+            <SequentialActivitiesHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : this.props.type === "LI" ?
+            <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : this.props.type === "LC" ? 
+            <ListeningToChildrenHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : <div />
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>
             {firebase => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}
-                color={this.props.color}
-                text={magic8 + " Notes"}
+                color={Constants.Colors[this.props.type]}
+                text={this.state.title + " Notes"}
                 firebase={firebase}
               />
             )}
@@ -259,6 +269,7 @@ class Dashboard extends React.Component {
         <Card className={classes.card}>
           <Grid
             container
+            style={{display: 'flex', flex: 1, flexDirection: 'column'}}
             flexGrow={1}
             padding="50"
             spacing={0}
@@ -273,10 +284,16 @@ class Dashboard extends React.Component {
                 className={classes.icon}
               />
             </Grid>
+            <Grid item>
+              <Typography style={{fontFamily: 'Arimo'}}>
+                {this.props.teacherSelected.firstName} {this.props.teacherSelected.lastName}
+              </Typography>
+            </Grid>
             <Grid
               item
               className={classes.infoDisplayGrid}
               style={{ alignItems: this.props.infoPlacement }}
+              flex={1}
             >
               {this.props.infoDisplay}
             </Grid>
@@ -314,23 +331,29 @@ class Dashboard extends React.Component {
                     <YesNoDialog
                       buttonText={<b>COMPLETE OBSERVATION</b>}
                       buttonVariant={"outlined"}
-                      buttonColor={this.props.color}
+                      buttonColor={Constants.Colors[this.props.type]}
                       buttonMargin={10}
                       dialogTitle={
                         "Are you sure you want to complete this observation?"
                       }
                       shouldOpen={true}
                       onAccept={() => {
-                        magic8 === "Classroom Climate"
-                          ? this.emptyClimateStack()
-                          : magic8 === "Transition Time"
-                          ? this.resetTransitionTime()
-                          : this.deleteAllCenters();
-                        this.props.history.push({
-                          pathname: "/Home",
-                          state: this.props.history.state
-                        });
-                        firebase.endSession();
+                        this.props.type === "CC"
+                          ? this.props.emptyClimateStack()
+                          : this.props.type === "TT"
+                          ? this.props.resetTransitionTime()
+                          : this.props.type === "MI"
+                          ? this.props.deleteMICenters()
+                          : this.props.type === "SA"
+                          ? this.props.deleteSACenters()
+                          : this.props.type === "AC"
+                          ? this.props.deleteACCenters()
+                          : null;
+                          this.props.history.push({
+                            pathname: "/Home"
+                          });
+                          this.props.clearTeacher();
+                          firebase.endSession();
                       }}
                     />
                   )}
@@ -355,13 +378,38 @@ class Dashboard extends React.Component {
 }
 
 Dashboard.propTypes = {
-  magic8: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
   infoDisplay: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   infoPlacement: PropTypes.string.isRequired,
-  completeObservation: PropTypes.bool.isRequired
+  completeObservation: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired,
+  // These Are mapped from Redux into Props
+  resetTransitionTime: PropTypes.func.isRequired,
+  emptyClimateStack: PropTypes.func.isRequired,
+  deleteMICenters: PropTypes.func.isRequired,
+  deleteSACenters: PropTypes.func.isRequired,
+  deleteACCenters: PropTypes.func.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  teacherSelected: PropTypes.exact({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    notes: PropTypes.string,
+    id: PropTypes.string,
+    phone: PropTypes.string,
+    role: PropTypes.string,
+    school: PropTypes.string
+  }).isRequired,
 };
 
-export default withRouter(connect()(withStyles(styles)(Dashboard)));
+const mapStateToProps = state => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  }
+}
+
+export default withRouter(connect(
+    mapStateToProps,
+    { clearTeacher, resetTransitionTime, emptyClimateStack, deleteMICenters, deleteSACenters, deleteACCenters }
+)(withStyles(styles)(Dashboard)));

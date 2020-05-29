@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
+import Button from '@material-ui/core/Button';
+import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { withStyles } from "@material-ui/core/styles";
 import TransitionTimeHelp from "./TransitionTimeHelp";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -18,25 +20,49 @@ import * as Constants from "../../../constants";
 
 const styles: object = {
   root: {
-    flexGrow: 1,
     display: "flex",
-    minHeight: "100vh",
+    height: "100vh",
     flexDirection: "column",
     overflowY: 'auto',
     overflowX: 'hidden'
   },
+  backButton: {
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    color: '#333333',
+    borderRadius: 3,
+    textTransform: 'none'
+  },
+};
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
 };
 
 interface Props {
-  classes: { root: string },
-  location: { state: { teacher: { id: string }}}
+  classes: { root: string, backButton: string },
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void
+  }
 };
 
 interface State {
   auth: boolean,
-  help: boolean,
   notes: boolean,
-  recs: boolean,
   transitionType: string,
   open: boolean,
   transitionEnded: boolean
@@ -55,9 +81,7 @@ class TransitionTimePage extends React.Component<Props, State> {
 
     this.state = {
       auth: true,
-      help: false,
       notes: false,
-      recs: true,
       transitionType: null,
       open: false,
       transitionEnded: false
@@ -76,17 +100,6 @@ class TransitionTimePage extends React.Component<Props, State> {
     this.setState({ transitionType: type });
   };
 
-  /**
-   * @param {boolean} open
-   */
-  handleRecsModal = (open: boolean): void => {
-    if (open) {
-      this.setState({ recs: true });
-    } else {
-      this.setState({ recs: false });
-    }
-  };
-
   handleEndTransition = (): void => {
     this.setState({ transitionEnded: true });
     this.setState({ transitionType: null });
@@ -103,13 +116,8 @@ class TransitionTimePage extends React.Component<Props, State> {
     }
   };
 
-  handleClickAwayHelp = (): void => {
-    this.setState({ help: false });
-  };
-
   static propTypes = {
-    classes: PropTypes.object.isRequired,
-    location: PropTypes.exact({ state: PropTypes.exact({ teacher: PropTypes.exact({ id: PropTypes.string})})}).isRequired
+    classes: PropTypes.object.isRequired
   };
 
   /**
@@ -121,54 +129,61 @@ class TransitionTimePage extends React.Component<Props, State> {
 
     return (
       <div className={classes.root}>
-        <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase} />}
-        </FirebaseContext.Consumer>
-        {this.state.help ? (
-          <ClickAwayListener onClickAway={this.handleClickAwayHelp}>
-            <TransitionTimeHelp />
-          </ClickAwayListener>
-        ) : this.state.notes ? (
+        {this.state.notes ? (
           <FirebaseContext.Consumer>
-            {(firebase: object) => (
+            {firebase => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}
-                color="#094492"
-                text="Transition Time Notes"
-                firebase={firebase}
-              />
-            )}
-          </FirebaseContext.Consumer> /* : this.state.recs ? (
-          <FirebaseContext.Consumer>
-            {firebase => (
-              <Recs
-                open={true}
-                onClose={this.handleRecsModal}
+                color={Constants.Colors.TT}
+                text={"Transition Time" + " Notes"}
                 firebase={firebase}
               />
             )}
           </FirebaseContext.Consumer>
-        )  */
-        ) : (
-          <div />
-        )}
-        <main style={{ flex: 1 }}>
-          <Grid container spacing={16} alignItems="center">
+        ) : (<div />)}
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+        </FirebaseContext.Consumer>
+        <header>
+          <Grid container direction="row" alignItems="center" justify="flex-start">
             <Grid item xs={3}>
+              <Grid container alignItems="center" justify="center">
+                <Grid item>
+                  <Button variant="contained" size="medium" className={classes.backButton}
+                    onClick={(): void => {
+                      this.props.history.replace({
+                        pathname: "/Magic8Menu",
+                        state: {
+                          type: "Observe"
+                        }
+                      })
+                    }}>
+                    <ChevronLeftRoundedIcon />
+                    <b>Back</b>
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </header>
+        <main style={{ flexGrow: 1 }}>
+          <Grid container alignItems="center">
+            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
               <Grid
                 container
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}
               >
-                <Dashboard
-                  magic8="Transition Time"
-                  color={Constants.TransitionColor}
-                  infoDisplay={<TransitionLog />}
-                  infoPlacement="center"
-                  completeObservation={true}
-                />
+                <Grid item>
+                  <Dashboard
+                    type="TT"
+                    infoDisplay={<TransitionLog />}
+                    infoPlacement="center"
+                    completeObservation={true}
+                  />
+                </Grid>
               </Grid>
             </Grid>
             <Grid item xs={4} justify="center">
@@ -194,9 +209,8 @@ class TransitionTimePage extends React.Component<Props, State> {
                 direction={"column"}
               >
                 <FirebaseContext.Consumer>
-                  {(firebase: object) => (
+                  {(firebase: object): React.ReactNode => (
                     <TransitionTimer
-                      teacherId={this.props.location.state.teacher.id}
                       firebase={firebase}
                       typeSelected={
                         this.state.transitionType === null ? false : true

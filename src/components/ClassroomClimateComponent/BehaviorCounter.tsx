@@ -14,7 +14,6 @@ const styles = {
 };
 
 interface Props {
-  teacherId: string,
   firebase: {
     auth: {
       currentUser: {
@@ -26,7 +25,17 @@ interface Props {
   },
   pushOntoClimateStack(entry: object): void,
   popOffClimateStack(): void,
-  climateStackSize: number
+  climateStackSize: number,
+  teacherSelected: {
+    email: string,
+    firstName: string,
+    lastName: string,
+    notes: string,
+    id: string,
+    phone: string,
+    role: string,
+    school: string
+  }
 }
 
 /**
@@ -41,7 +50,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
     const mEntry = {
-      teacher: this.props.teacherId,
+      teacher: this.props.teacherSelected.id,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "climate"
     };
@@ -430,7 +439,16 @@ class BehaviorCounter extends React.Component<Props, {}> {
   };
 
   static propTypes = {
-    teacherId: PropTypes.string.isRequired,
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
     climateStackSize: PropTypes.number.isRequired,
     firebase: PropTypes.object.isRequired,
     pushOntoClimateStack: PropTypes.func.isRequired,
@@ -446,19 +464,10 @@ class BehaviorCounter extends React.Component<Props, {}> {
   }
 }
 
-BehaviorCounter.propTypes = {
-  // climateType: PropTypes.string.isRequired,
-  teacherId: PropTypes.string.isRequired,
-  climateStackSize: PropTypes.number.isRequired,
-  firebase: PropTypes.object.isRequired,
-  pushOntoClimateStack: PropTypes.func.isRequired,
-  popOffClimateStack: PropTypes.func.isRequired
-};
-
 const mapStateToProps = state => {
   return {
-    // climateType: state.climateTypeState.climateType,
-    climateStackSize: state.climateStackState.climateStack.length
+    climateStackSize: state.climateStackState.climateStack.length,
+    teacherSelected: state.teacherSelectedState.teacher
   };
 };
 
