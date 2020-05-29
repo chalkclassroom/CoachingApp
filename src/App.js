@@ -23,7 +23,7 @@ import AssociativeCooperativeInteractionsResultsPage from "./views/protected/Ass
 import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage.tsx";
 import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage.tsx";
 import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage.tsx";
-import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
+import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage.js";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
 import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage"; 

@@ -13,7 +13,7 @@ import MessagesImage from "../../../assets/images/MessagesImage.svg";
 import TeacherModal from "./TeacherModal.tsx";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { withRouter } from "react-router-dom";
-import MessagingView from "../MessagingViews/Messaging.tsx";
+import MessagingView from "../MessagingViews/MessagingView.tsx";
 
 const styles = {
   root: {
