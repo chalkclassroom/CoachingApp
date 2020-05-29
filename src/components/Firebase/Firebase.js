@@ -27,6 +27,20 @@ class Firebase {
     }
   }
 
+  sendEmail = async function(msg) {
+    const sendEmailFirebaseFunction = this.functions.httpsCallable(
+      "funcSendEmail"
+    );
+    return sendEmailFirebaseFunction(msg)
+      .then(
+        result =>
+          result
+      )
+      .catch(error =>
+          error
+      );  
+  }
+
   firebasePilotSignUp = async function(userData) {
     const data = Object.assign(
       {},
@@ -138,7 +152,7 @@ class Firebase {
       .then(snapshot => {
         const teacherList = [];
         snapshot.forEach(doc =>
-          teacherList.push(doc.data().then(doc => doc.data()))
+          teacherList.push(doc.data())
         );
         return teacherList;
       })

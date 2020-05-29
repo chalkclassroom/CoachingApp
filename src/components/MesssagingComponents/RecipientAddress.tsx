@@ -1,44 +1,43 @@
-// A simple To: bar to input email address of the recipient
-// Connected to database to show the list of the teachers the user can send to
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
+import { SelectOption } from './MessagingTypes';
 
-/*
-const options = [
-  { value: 'johnsmith@vanderbilt.edu', label: 'John Smith' },
-  { value: 'craig@test.com', label: 'Craig' },
-  { value: 'daniel@yahoo.com', label: 'Daniel' },
-];
-*/
+interface RecipentAddressProps {
+  selectedOption: SelectOption; 
+  setOption: (newOption: SelectOption) => void; 
+  firebase: any;
+}
 
-const RecipentAddress: React.FC<{selectedOption: any, setOption: any, firebase: any}> = (props: {selectedOption: any, setOption: any, firebase: any}) => {
+interface Teacher {
+  email: string;
+  id: string;
+  label: string;
+  firstName: string;
+  lastName: string;
+}
 
-	const [teacherList, setTeacherList] = useState([{value: '', label: ''}])
-  /*
-  console.log(teacherList);
-	console.log(teacherList[0]);
-	console.log(teacherList[0].value);
-	console.log(teacherList[0].label);
-  if (teacherList[0].value === "" && teacherList[0].label === "") {
-	props.firebase.getTeacherList().then(teacherList =>
-    teacherList.map(teacher => {return {value: teacher.email, label: teacher.firstName+teacher.lastName}})).then(options => { console.log(options); setTeacherList(options); });
-  }
-  */
-  props.firebase.collection("partners").get().then(function(querySnapshot: any[]) {
-    querySnapshot.forEach(function(doc) {
-      teacherList.push(doc.id,doc.data)
-    });
+const RecipentAddress: React.FC<RecipentAddressProps> = (props: RecipentAddressProps) => {
+  const [teacherList, setTeacherList] = useState([]);
+  useEffect(() => {
+    if (teacherList.length === 0) {
+      props.firebase.getFullTeacherList()
+        .then((teachers: Teacher[]) => {
+          setTeacherList(teachers.map((teacher: Teacher) => {
+            return {
+              value: teacher.email,
+              id: teacher.id,
+              label: (teacher.firstName + ' ' + teacher.lastName),
+            };
+          }));
+        })
+        .catch((err: any) => console.log(err));
+    }
   });
 
-  const handleChange = newSelectedOption => {
-    props.setOption(newSelectedOption);
-    console.log(`Option selected:`, props.selectedOption);
-  };
-  
-    return (
+  return (
       <Select
         value={props.selectedOption}
-        onChange={handleChange}
+        onChange={props.setOption}
         options={teacherList}
       />
     );
