@@ -180,7 +180,7 @@ interface State {
  */
 class TransitionCoachingQuestions extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -190,7 +190,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
       openPanel: '',
     }
   }
-  
+
   /** opens line expansion panel */
   lineClick = (): void => {
     if (this.state.categoryView !== "line") {
@@ -272,7 +272,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
         </Grid>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
           <Grid item>
-            <Button 
+            <Button
               style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
               onClick={this.lineClick}
             >

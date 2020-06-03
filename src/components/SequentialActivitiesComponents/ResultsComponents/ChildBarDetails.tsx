@@ -18,7 +18,7 @@ interface Props {
  */
 class ChildBarDetails extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -61,8 +61,8 @@ class ChildBarDetails extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: 
-                    (Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) > 20) ? 
+                  max:
+                    (Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) > 20) ?
                     Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) : 20,
                   fontSize: 16,
                   fontColor: 'black'

@@ -37,7 +37,7 @@ interface Props {
  * @return {void}
  */
 class SummarySlider extends React.Component<Props, {}> {
-  
+
   static propTypes = {
     sequential: PropTypes.number.isRequired,
     notSequential: PropTypes.number.isRequired,
@@ -108,7 +108,7 @@ class SummarySlider extends React.Component<Props, {}> {
                 What do you notice about the average class room engagement?
               </Typography>
               <Typography align={"center"} variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em', marginBottom: '100px'}}>
-                Average Level of Engagement Score: {this.props.avgRating}
+                Average Level of Engagement Score: {Math.round((this.props.avgRating + Number.EPSILON) * 100) / 100}
               </Typography>
               <AvgBarSummary avgRating={this.props.avgRating}/>
             </Grid>

@@ -4,8 +4,6 @@ import { withStyles } from "@material-ui/core/styles";
 import StudentEngagementHelpCard from './StudentEngagementHelpCard';
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
-import Typography from "@material-ui/core/Typography";
-import StudentEngagementPage from '../../views/protected/StudentEngagementViews/StudentEngagementPage'
 
 /**
  * specifies styling for modal
@@ -80,13 +78,6 @@ class StudentEngagementHelp extends React.Component<Props, State> {
                             direction="column"
                             justify="flex-start"
                         >
-                            <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                                Sequential Activities
-                            </Typography>
-                            <Typography variant="subtitle2" gutterBottom style={{fontFamily: "Arimo"}}>
-                                Remember, sequential activities require children to follow
-                                a <strong>logical order</strong> or <strong>sequence</strong>.
-                            </Typography>
                             <StudentEngagementHelpCard />
                         </Grid>
                     </div>

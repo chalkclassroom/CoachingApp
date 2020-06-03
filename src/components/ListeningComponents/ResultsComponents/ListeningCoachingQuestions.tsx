@@ -90,7 +90,7 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
           <Grid item>
             <MuiThemeProvider theme={ListeningTheme}>
-              <Button 
+              <Button
                 onClick={this.listeningClick}
                 variant="contained"
                 color="primary"

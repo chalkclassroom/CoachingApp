@@ -18,7 +18,7 @@ interface Props {
  */
 class TransitionBarChart extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -42,7 +42,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
       labels: [
         "Waiting in Line",
         "Traveling",
-        "Children Waiting", 
+        "Children Waiting",
         "Classroom Routines",
         "Behavior Management",
         "Other"

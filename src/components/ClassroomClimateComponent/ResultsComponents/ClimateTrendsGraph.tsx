@@ -37,7 +37,7 @@ const climateTrendOptions = {
  * @class ClimateTrendsGraph
  */
 class ClimateTrendsGraph extends React.Component<Props, {}> {
-  
+
   static propTypes = {
     data: PropTypes.func.isRequired
   };

@@ -35,7 +35,7 @@ interface Props {
  * @return {void}
  */
 class DetailsSlider extends React.Component<Props, {}> {
-  
+
   static propTypes = {
     math1: PropTypes.number.isRequired,
     math2: PropTypes.number.isRequired,

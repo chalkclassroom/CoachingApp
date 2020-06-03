@@ -202,7 +202,7 @@ class ResultsLayout extends React.Component<Props, State> {
         </FirebaseContext.Consumer>
         <Grid container justify="flex-start" direction="row" alignItems="flex-start">
           <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
-            <Grid container 
+            <Grid container
               alignItems="center"
               justify="center"
               direction="column"
@@ -319,7 +319,7 @@ class ResultsLayout extends React.Component<Props, State> {
                   {this.props.sessionId ? (
                     <div>
                       <FirebaseContext.Consumer>
-                        {(firebase: object): React.ReactNode => <ConferencePlanForm 
+                        {(firebase: object): React.ReactNode => <ConferencePlanForm
                           conferencePlanExists={this.props.conferencePlanExists}
                           editMode={this.state.conferencePlanEditMode}
                           firebase={firebase}
@@ -333,7 +333,7 @@ class ResultsLayout extends React.Component<Props, State> {
                       </FirebaseContext.Consumer>
                         {this.state.conferencePlanEditMode ? (
                           <FirebaseContext.Consumer>
-                            {(firebase: object): React.ReactNode => <ConferencePlanModal 
+                            {(firebase: object): React.ReactNode => <ConferencePlanModal
                               firebase={firebase}
                               teacher={this.props.teacher}
                               sessionId={this.props.sessionId}
@@ -354,7 +354,7 @@ class ResultsLayout extends React.Component<Props, State> {
                   {this.props.sessionId ? (
                     <div>
                       <FirebaseContext.Consumer>
-                        {(firebase: object): React.ReactNode => <ActionPlanForm 
+                        {(firebase: object): React.ReactNode => <ActionPlanForm
                           firebase={firebase}
                           teacher={this.props.teacher}
                           sessionId={this.props.sessionId}
@@ -368,7 +368,7 @@ class ResultsLayout extends React.Component<Props, State> {
                       </FirebaseContext.Consumer>
                       {this.state.actionPlanEditMode ? (
                         <FirebaseContext.Consumer>
-                          {(firebase: object): React.ReactNode => <ActionPlanModal 
+                          {(firebase: object): React.ReactNode => <ActionPlanModal
                             firebase={firebase}
                             teacher={this.props.teacher}
                             sessionId={this.props.sessionId}

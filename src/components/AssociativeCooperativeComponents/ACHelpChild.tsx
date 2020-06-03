@@ -47,7 +47,7 @@ interface Props {
 }
 
 /**
- * @param {Props} props 
+ * @param {Props} props
  * @return {ReactElement}
  */
 function ACHelpChild(props: Props): React.ReactElement {

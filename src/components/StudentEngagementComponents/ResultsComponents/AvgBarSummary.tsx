@@ -30,13 +30,10 @@ class AvgBarSummary extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const avgEngagementData = {
-      labels: [
-        "Avg",
-      ],
       datasets: [
         {
           label: "Avg Engagement",
-          data: [this.props.avgRating],
+          data: [Math.round((this.props.avgRating + Number.EPSILON) * 100) / 100],
           backgroundColor: [Constants.EngagementColor, Constants.RedGraphColor],
           hoverBackgroundColor: [Constants.EngagementColor, Constants.RedGraphColor]
         }
@@ -54,15 +51,21 @@ class AvgBarSummary extends React.Component<Props, {}> {
           scales: {
             xAxes: [{
               ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 3,
+                stepSize:1,
                 callback: function(value: number, index:number, values: any) {
-                  switch(value){
+                  switch(index){
                     case 0: return 'off task';
                       break;
-                    case 1: return 'mildly';
+                    case 1: return 'mildly engaged';
                       break;
                     case 2: return 'engaged';
                       break;
                     case 3: return 'highly engaged';
+                      break;
+                    default:
                       break;
                   }
                 }

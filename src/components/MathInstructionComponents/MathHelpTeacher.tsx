@@ -31,7 +31,7 @@ interface Props {
 }
 
 /**
- * @param {Props} props 
+ * @param {Props} props
  * @return {ReactElement}
  */
 function MathHelpTeacher(props: Props): React.ReactElement {
@@ -95,7 +95,7 @@ function MathHelpTeacher(props: Props): React.ReactElement {
             How many buttons do you have?
           </TableCell>
           <TableCell padding="checkbox" className={classes.teacherExample}>
-            Shows how to say one number as each object is counted. 
+            Shows how to say one number as each object is counted.
           </TableCell>
           <TableCell padding="checkbox" className={classes.teacherExample}>
             Highlights how classroom objects (clock, class schedule, blocks)
@@ -120,11 +120,11 @@ function MathHelpTeacher(props: Props): React.ReactElement {
             How many do you need to get to five?
           </TableCell>
           <TableCell padding="checkbox" className={classes.teacherExample}>
-            Shows how to create a repeating pattern with cubes. 
+            Shows how to create a repeating pattern with cubes.
           </TableCell>
           <TableCell padding="checkbox" className={classes.teacherExample}>
             Suggests alternative strategies when student is
-            struggling with math problem. 
+            struggling with math problem.
           </TableCell>
         </TableRow>
         <TableRow>
@@ -135,7 +135,7 @@ function MathHelpTeacher(props: Props): React.ReactElement {
             Demonstrates how to compare the length of two blocks.
           </TableCell>
           <TableCell padding="checkbox" className={classes.teacherExample}>
-            Prompts children to come up with multiple strategies to solve math problem. 
+            Prompts children to come up with multiple strategies to solve math problem.
           </TableCell>
         </TableRow>
         <TableRow>

@@ -36,8 +36,8 @@ interface Props {
 }
 
 /**
- * 
- * @param {Props} props 
+ *
+ * @param {Props} props
  * @return {ReactElement}
  */
 function LOIHelpCardInferential(props: Props): React.ReactElement {

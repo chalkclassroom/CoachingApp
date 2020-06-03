@@ -37,7 +37,7 @@ interface Props {
 }
 
 /**
- * @param {Props} props 
+ * @param {Props} props
  * @return {ReactElement}
  */
 function ACHelpTeacher(props: Props): React.ReactElement {

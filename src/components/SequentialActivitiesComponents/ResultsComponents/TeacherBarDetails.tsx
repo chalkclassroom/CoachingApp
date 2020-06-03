@@ -16,7 +16,7 @@ interface Props {
  */
 class TeacherBarDetails extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -59,8 +59,8 @@ class TeacherBarDetails extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: 
-                    (Math.max(this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4) > 20) ? 
+                  max:
+                    (Math.max(this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4) > 20) ?
                     Math.max(this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4) : 20,
                   fontSize: 16,
                   fontColor: 'black'

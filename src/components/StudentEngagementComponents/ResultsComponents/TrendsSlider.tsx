@@ -30,32 +30,38 @@ const EngagementTrendsOptions = {
         }
       }
     ],
-    yAxes: [
-      {
+    yAxes: [{
         ticks: {
           beginAtZero: true,
           min: 0,
-          max: 100,
-          callback: function(value: number): string {
-            return value + "%";
+          max: 3,
+          stepSize: 1,
+          callback: function (value: number, index: number, values: any) {
+            switch (value) {
+              case 0:
+                return 'off task';
+                break;
+              case 1:
+                return 'mildly engaged';
+                break;
+              case 2:
+                return 'engaged';
+                break;
+              case 3:
+                return 'highly engaged';
+                break;
+              default:
+                break;
+            }
           }
-        },
-        scaleLabel: {
-          display: true,
-          labelString: "% of Visits",
-          fontStyle: "bold"
         }
-      }
-    ]
+    }]
   },
   plugins: {
     datalabels: {
       display: "auto",
       color: "gray",
       align: "top",
-      formatter: function(value: number): string {
-        return value + "%";
-      }
     }
   }
 };
@@ -80,7 +86,7 @@ interface Props {
  * @return {void}
  */
 class TrendsSlider extends React.Component<Props, {}> {
-  
+
   static propTypes = {
     data: PropTypes.func.isRequired
   };

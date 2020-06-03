@@ -49,6 +49,7 @@ import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
 import Grid from '@material-ui/core/Grid';
 import { getCoach } from './state/actions/coach';
 import { connect } from 'react-redux';
+import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -336,6 +337,12 @@ class App extends Component {
                 path="/StudentEngagementResults"
                 component={StudentEngagementResultsPage}
             />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/StudentEngagementTraining"
+                component={StudentEngagementTrainingPage}
+            />
+
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                           the type prop into the PrivateRoute function*/}
             <Route

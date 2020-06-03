@@ -75,12 +75,12 @@ interface Props {
  */
 class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
   }
-  
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     teacherSelected: PropTypes.exact({

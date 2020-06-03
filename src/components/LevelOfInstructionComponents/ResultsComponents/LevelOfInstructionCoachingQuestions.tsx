@@ -97,7 +97,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
           <Grid item>
             <MuiThemeProvider theme={InstructionTheme}>
-              <Button 
+              <Button
                 onClick={this.highLevelClick}
                 variant="contained"
                 color="primary"

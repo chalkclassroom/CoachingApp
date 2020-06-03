@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Bar } from "react-chartjs-2";
+import { HorizontalBar } from "react-chartjs-2";
 import * as Constants from "../../../constants";
 
 
@@ -18,7 +18,7 @@ interface Props {
  */
 class EngagementBarDetails extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -44,29 +44,29 @@ class EngagementBarDetails extends React.Component<Props, {}> {
         ["Highly Engaged"]
       ],
       datasets: [{
-        label: 'small',
+        label: 'Small Group',
         stack: '0',
         data: [this.props.offTaskDetailSplit[0],this.props.mildlyEngagedDetailSplit[0],this.props.engagedDetailSplit[0],this.props.highlyEngagedDetailSplit[0]],
-        backgroundColor: "rgba(63,103,126,1)",
-        hoverBackgroundColor: "rgba(50,90,100,1)"
+        backgroundColor: Constants.EngagementColor,
+        hoverBackgroundColor:  Constants.EngagementColor
       },{
-        label: 'whole',
-        stack: '1',
+        label: 'Whole Group',
+        stack: '0',
         data: [this.props.offTaskDetailSplit[1],this.props.mildlyEngagedDetailSplit[1],this.props.engagedDetailSplit[1],this.props.highlyEngagedDetailSplit[1]],
-        backgroundColor: "rgba(163,103,126,1)",
-        hoverBackgroundColor: "rgba(140,85,100,1)"
+        backgroundColor:  Constants.TransitionColor,
+        hoverBackgroundColor:  Constants.TransitionColor
       },{
-        label: 'transition',
-        stack: '2',
+        label: 'Transition',
+        stack: '0',
         data: [this.props.offTaskDetailSplit[2],this.props.mildlyEngagedDetailSplit[2],this.props.engagedDetailSplit[2],this.props.highlyEngagedDetailSplit[2]],
-        backgroundColor: "rgba(63,203,226,1)",
-        hoverBackgroundColor: "rgba(46,185,235,1)"
+        backgroundColor:  Constants.NotPresentColor,
+        hoverBackgroundColor: Constants.NotPresentColor,
       }
       ]
     };
 
     return (
-      <Bar
+      <HorizontalBar
         data={engagementData}
         options={{
           scales: {
@@ -74,15 +74,16 @@ class EngagementBarDetails extends React.Component<Props, {}> {
               {
                 stacked: true,
                 ticks: {
+                  stepSize: 5,
                   min: 0,
-                  // max:
-                  //   (Math.max(Math.max(...this.props.offTaskDetailSplit), Math.max(...this.props.mildlyEngagedDetailSplit), Math.max(...this.props.engagedDetailSplit), Math.max(...this.props.highlyEngagedDetailSplit)) > 20) ?
-                  //   Math.max(Math.max(...this.props.offTaskDetailSplit), Math.max(...this.props.mildlyEngagedDetailSplit), Math.max(...this.props.engagedDetailSplit), Math.max(...this.props.highlyEngagedDetailSplit))  : 20,
+                  max:
+                    (Math.max(Math.max(...this.props.offTaskDetailSplit), Math.max(...this.props.mildlyEngagedDetailSplit), Math.max(...this.props.engagedDetailSplit), Math.max(...this.props.highlyEngagedDetailSplit)) > 20) ?
+                    Math.max(Math.max(...this.props.offTaskDetailSplit), Math.max(...this.props.mildlyEngagedDetailSplit), Math.max(...this.props.engagedDetailSplit), Math.max(...this.props.highlyEngagedDetailSplit))  : 20,
                   fontSize: 16,
                   fontColor: 'black'
                 },
                 scaleLabel: {
-                  display: true,
+                  display: false,
                   labelString: 'Number of Times Observed',
                   fontSize: 16,
                   fontColor: 'black'
@@ -109,6 +110,13 @@ class EngagementBarDetails extends React.Component<Props, {}> {
               font: {
                 size: 16,
                 weight: 'bold'
+              },
+              formatter: function(value: number) {
+                if (value > 0) {
+                  return value;
+                } else {
+                  return null;
+                }
               }
             }
           }

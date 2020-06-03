@@ -26,7 +26,7 @@ interface Props {
 }
 
 /**
- * @param {Props} props 
+ * @param {Props} props
  * @return {ReactElement}
  */
 function SequentialHelpDefinitions(props: Props): React.ReactElement {
@@ -50,7 +50,7 @@ function SequentialHelpDefinitions(props: Props): React.ReactElement {
               </strong>
               <ul>
                 <li>
-                  Using manipulatives in a sequenced manner (counting, 
+                  Using manipulatives in a sequenced manner (counting,
                   sorting, making shapes, etc.)
                 </li>
                 <li>

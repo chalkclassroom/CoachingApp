@@ -42,7 +42,7 @@ interface State {
  */
 class TeamMemberCard extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);

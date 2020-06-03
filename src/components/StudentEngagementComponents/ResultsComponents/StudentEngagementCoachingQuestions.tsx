@@ -6,10 +6,10 @@ import DataQuestions from '../../ResultsComponents/DataQuestions';
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants';
 
-const SequentialTheme = createMuiTheme({
+const EngagementTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.SequentialColor
+      main: Constants.EngagementColor
     }
   }
 });
@@ -28,7 +28,7 @@ interface State {
 }
 
 /**
- * data reflection question layout for sequential activities
+ * data reflection question layout for Student Engagement
  * @class StudentEngagementCoachingQuestions
  */
 class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
@@ -44,28 +44,28 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
     }
   }
 
-  drawingWritingClick = (): void => {
-    if (this.state.categoryView !== "drawingAndWriting") {
+  offTaskBehaviorClick = (): void => {
+    if (this.state.categoryView !== "offTaskBehavior") {
       this.setState({
-        categoryView: "drawingAndWriting",
+        categoryView: "offTaskBehavior",
         openPanel: null
       })
     }
   }
 
-  gamesClick = (): void => {
-    if (this.state.categoryView !== "games") {
+  mildEngagementClick = (): void => {
+    if (this.state.categoryView !== "mildEngagement") {
       this.setState({
-        categoryView: "games",
+        categoryView: "mildEngagement",
         openPanel: null
       })
     }
   }
 
-  teacherSupportClick = (): void => {
-    if (this.state.categoryView !== "teacherSupport") {
+  highEngagementClick = (): void => {
+    if (this.state.categoryView !== "highEngagement") {
       this.setState({
-        categoryView: "teacherSupport",
+        categoryView: "highEngagement",
         openPanel: null
       })
     }
@@ -90,52 +90,52 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
       <Grid container direction="column">
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
           <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
-              <Button 
-                onClick={this.drawingWritingClick}
+            <MuiThemeProvider theme={EngagementTheme}>
+              <Button
+                onClick={this.offTaskBehaviorClick}
                 variant="contained"
                 color="primary"
                 style={{width:'10em', height: '10em'}}
               >
                 <Typography>
-                  Drawing and Writing
+                  Off Task Behavior
                 </Typography>
               </Button >
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
+            <MuiThemeProvider theme={EngagementTheme}>
               <Button
-                onClick={this.gamesClick}
+                onClick={this.mildEngagementClick}
                 variant="contained"
                 color="primary"
                 style={{width:'10em', height: '10em'}}
               >
                 <Typography style={{color: 'black'}}>
-                  Games and Pretend Play
+                 Mild Engagement
                 </Typography>
               </Button>
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
+            <MuiThemeProvider theme={EngagementTheme}>
               <Button
-                onClick={this.teacherSupportClick}
+                onClick={this.highEngagementClick}
                 variant="contained"
                 color="primary"
                 style={{width:'10em', height: '10em'}}
               >
                 <Typography>
-                  Teacher Support for Sequential Activities
+                  High Engagement
                 </Typography>
               </Button>
             </MuiThemeProvider>
           </Grid>
         </Grid>
         <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "drawingAndWriting" ? (
+          {this.state.categoryView === "offTaskBehavior" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Sequential.DrawingAndWriting}
+              questions={Constants.CoachingQuestions.Engagement.OffTask}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
@@ -143,11 +143,11 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.SequentialColor}
+              color={Constants.EngagementColor}
             />
-          ) : this.state.categoryView === "games" ? (
+          ) : this.state.categoryView === "mildEngagement" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Sequential.GamesAndPretendPlay}
+              questions={Constants.CoachingQuestions.Engagement.MildEngagement}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
@@ -155,11 +155,11 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.SequentialColor}
+              color={Constants.EngagementColor}
             />
-          ) : this.state.categoryView === "teacherSupport" ? (
+          ) : this.state.categoryView === "highEngagement" ? (
             <DataQuestions
-              questions={Constants.CoachingQuestions.Sequential.TeacherSupport}
+              questions={Constants.CoachingQuestions.Engagement.HighEngagement}
               openPanel={this.state.openPanel}
               handlePanelChange={this.handlePanelChange}
               addedToPlan={this.props.addedToPlan}
@@ -167,7 +167,7 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.SequentialColor}
+              color={Constants.EngagementColor}
             />
           ) : <div/>}
         </Grid>

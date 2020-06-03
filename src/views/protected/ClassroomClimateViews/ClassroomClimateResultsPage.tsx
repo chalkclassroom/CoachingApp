@@ -63,7 +63,7 @@ interface Teacher {
  */
 class ClassroomClimateResultsPage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -311,8 +311,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     })
   };
 
-  /** 
-   * lifecycle method invoked after component updates 
+  /**
+   * lifecycle method invoked after component updates
    * @param {Props} prevProps
    */
   componentDidUpdate(prevProps: Props): void {

@@ -24,14 +24,14 @@ interface Props {
 class WelcomePage extends React.Component<Props, {}> {
   static propTypes = {
     classes: PropTypes.object.isRequired
-  }  
+  }
   /**
    * render function
    * @return {ReactElement}
    */
   render() {
     const {classes} = this.props;
-    return ( 
+    return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
           {(firebase: object) => <AppBar firebase={firebase}/>}

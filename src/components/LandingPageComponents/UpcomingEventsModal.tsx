@@ -18,7 +18,7 @@ function getModalStyle() {
     transform: `translate(-50%, -50%)`
   } as React.CSSProperties;
 }
-  
+
 const styles: object = {
   root: {
     backgroundColor: '#ffffff'

@@ -7,8 +7,10 @@ import ResultsLayout from '../../../components/ResultsLayout';
 import SummarySlider from "../../../components/StudentEngagementComponents/ResultsComponents/SummarySlider";
 import DetailsSlider from "../../../components/StudentEngagementComponents/ResultsComponents/DetailsSlider";
 import TrendsSlider from "../../../components/StudentEngagementComponents/ResultsComponents/TrendsSlider";
-import SequentialCoachingQuestions from "../../../components/SequentialActivitiesComponents/ResultsComponents/SequentialCoachingQuestions";
 import * as Constants from '../../../constants';
+import {connect} from "react-redux";
+import StudentEngagementCoachingQuestions
+  from "../../../components/StudentEngagementComponents/ResultsComponents/StudentEngagementCoachingQuestions";
 
 const styles: object = {
   root: {
@@ -20,9 +22,22 @@ const styles: object = {
   },
 };
 
+
+interface Teacher {
+    email: string,
+    firstName: string,
+    lastName: string,
+    notes: string,
+    id: string,
+    phone: string,
+    role: string,
+    school: string
+};
+
 interface Props {
   classes: Style,
   location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
+  teacherSelected: Teacher
 }
 
 interface Style {
@@ -42,10 +57,7 @@ interface State {
   highlyEngagedDetailSplit: Array<number>,
 
   trendsDates: Array<Array<string>>,
-  trendsOffTask: Array<number>,
-  trendsMildlyEngaged: Array<number>,
-  trendsEngaged: Array<number>,
-  trendsHighlyEngaged: Array<number>,
+  trendsAvg: Array<number>,
 
   notes: Array<{id: string, content: string, timestamp: Date}>,
   actionPlanExists: boolean,
@@ -55,10 +67,10 @@ interface State {
 }
 
 /**
- * sequential results
- * @class SequentialActivitiesResultsPage
+ * Student Engagement results
+ * @class StudentEngagementResultsPage
  */
-class SequentialActivitiesResultsPage extends React.Component<Props, State> {
+class StudentEngagementResultsPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
@@ -79,10 +91,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       highlyEngagedDetailSplit: [],
 
       trendsDates: [],
-      trendsOffTask: [],
-      trendsMildlyEngaged: [],
-      trendsEngaged: [],
-      trendsHighlyEngaged: [],
+      trendsAvg: [],
 
       notes: [],
       actionPlanExists: false,
@@ -151,28 +160,19 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   handleEngagementTrendsFetch = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<Array<string>> = [];
-    const offTaskArray: Array<number> = [];
-    const mildlyEngagedArray: Array<number> = [];
-    const engagedArray: Array<number> = [];
-    const highlyEngagedArray: Array<number> = [];
+    const avgArray: Array<number> = [];
 
     firebase.fetchEngagementTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, offTask: number, mildlyEngaged: number, engaged: number, highlyEngaged: number}>) => {
+    .then((dataSet: Array<{startDate: {value: string}, average: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        offTaskArray.push(data.offTask);
-        mildlyEngagedArray.push(data.mildlyEngaged);
-        engagedArray.push(data.engaged);
-        highlyEngagedArray.push(data.highlyEngaged);
+          avgArray.push(Math.round((data.average + Number.EPSILON) * 100) / 100);
       });
       this.setState({
         trendsDates: dateArray,
-        trendsOffTask: offTaskArray,
-        trendsMildlyEngaged: mildlyEngagedArray,
-        trendsEngaged: engagedArray,
-        trendsHighlyEngaged: highlyEngagedArray
+        trendsAvg: avgArray,
       });
     });
   };
@@ -197,36 +197,12 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Off Task",
-          backgroundColor: Constants.RedGraphColor,
-          borderColor: Constants.RedGraphColor,
-          fill: false,
-          lineTension: 0,
-          data: this.state.trendsOffTask
-        },
-        {
-          label: "Mildly Engaged",
-          backgroundColor: Constants.NotPresentColor,
-          borderColor: Constants.NotPresentColor,
-          fill: false,
-          lineTension: 0,
-          data: this.state.trendsMildlyEngaged
-        },
-        {
-          label: "Engaged",
-          backgroundColor: Constants.AppBarColor,
-          borderColor: Constants.AppBarColor,
-          fill: false,
-          lineTension: 0,
-          data: this.state.trendsEngaged
-        },
-        {
-          label: "Highly Engaged",
+          label: "Average",
           backgroundColor: Constants.EngagementColor,
           borderColor: Constants.EngagementColor,
           fill: false,
           lineTension: 0,
-          data: this.state.trendsHighlyEngaged
+          data: this.state.trendsAvg
         },
       ]
     };
@@ -277,20 +253,20 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     const firebase = this.context;
 
     this.handleNotesFetching(this.state.sessionId);
-    firebase.getActionPlan(this.state.sessionId)
-    .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
-      if (actionPlanData.length>0) {
-        this.setState({
-          actionPlanExists: true
-        })
-      } else {
-        this.setState({
-          actionPlanExists: false
-        })
-      }
-    }).catch(() => {
-      console.log('unable to retrieve action plan')
-    })
+    // firebase.getActionPlan(this.state.sessionId)
+    // .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
+    //   if (actionPlanData.length>0) {
+    //     this.setState({
+    //       actionPlanExists: true
+    //     })
+    //   } else {
+    //     this.setState({
+    //       actionPlanExists: false
+    //     })
+    //   }
+    // }).catch(() => {
+    //   console.log('unable to retrieve action plan')
+    // })
     firebase.getConferencePlan(this.state.sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
@@ -356,12 +332,23 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.location.state.teacher.id);
+    this.handleDateFetching(this.props.teacherSelected.id);
+    this.handleTrendsFetching(this.props.teacherSelected.id);
   }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired,
+      teacherSelected: PropTypes.exact({
+          email: PropTypes.string,
+          firstName: PropTypes.string,
+          lastName: PropTypes.string,
+          notes: PropTypes.string,
+          id: PropTypes.string,
+          phone: PropTypes.string,
+          role: PropTypes.string,
+          school: PropTypes.string
+      }).isRequired
   };
 
   /**
@@ -378,7 +365,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <ResultsLayout
-          teacherId={this.props.location.state.teacher.id}
+          teacher={this.props.teacherSelected}
           magic8="Level of Engagement"
           handleTrendsFetch={this.handleTrendsFetching}
           observationType="engagement"
@@ -407,17 +394,15 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
           sessionDates={this.state.sessionDates}
           notes={this.state.notes}
           questions={
-            <SequentialCoachingQuestions
+            <StudentEngagementCoachingQuestions
               handleAddToPlan={this.handleAddToPlan}
               addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
-              teacherId={this.props.location.state.teacher.id}
-              magic8={"Sequential Activities"}
+              teacherId={this.props.teacherSelected.id}
+              magic8={"Student Engagement"}
             />
           }
           chosenQuestions={chosenQuestions}
-          teacherFirstName={this.props.location.state.teacher.firstName}
-          teacherLastName={this.props.location.state.teacher.lastName}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
         />
@@ -426,6 +411,13 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = state => {
+    return {
+        teacherSelected: state.teacherSelectedState.teacher
+    };
+};
 
-SequentialActivitiesResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(SequentialActivitiesResultsPage);
+StudentEngagementResultsPage.contextType = FirebaseContext;
+export default connect(mapStateToProps, {})(
+    withStyles(styles)(StudentEngagementResultsPage)
+);

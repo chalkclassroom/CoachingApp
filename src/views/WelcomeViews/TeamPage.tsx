@@ -63,13 +63,13 @@ interface State {
   open: string
 };
 
-/** 
- * class for the team page 
+/**
+ * class for the team page
  * @class TeamPage
 */
 class TeamPage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);

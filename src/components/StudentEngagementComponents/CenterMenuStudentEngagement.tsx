@@ -18,15 +18,8 @@ import Card from '@material-ui/core/Card';
 import CardContent  from '@material-ui/core/CardContent';
 import Paper  from '@material-ui/core/Paper';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
-import CircularProgressbar from "react-circular-progressbar";
 import Modal from "@material-ui/core/Modal"
-import grey from "@material-ui/core/colors/grey";
-import {amber} from "@material-ui/core/colors";
-import * as firebase from "firebase";
-import * as Constants from "constants";
-import {func} from "prop-types";
 import ObserveImage from '../../assets/images/ObserveImage.png';
-import {switchAll} from "rxjs/operators";
 
 const styles: object = theme => ({
     root: {
@@ -165,7 +158,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     }
 
     state = {
-        students: ['harsha','josh'] as string[],
+        students: [] as string[],
         open: false,
         setOpen: false,
         studentTextFieldValue: '' as string,
@@ -386,7 +379,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             <Grid
                                 alignItems="flex-end"
                                 direction="row"
-                                justify="center"
+                                justify="flex-end"
                                 container
                                 item
                                 xs={8}
@@ -495,6 +488,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                 variant="contained"
                                 className={classes.button}
                                 onClick={() => this.switchToObservationPage()}
+                                disabled={this.state.students.length === 0}
                             >
                                 Begin Observation
                             </Button>

@@ -33,7 +33,7 @@ const styles = {
  */
 class TrainingQuestionnaire extends Component {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props) {  // section -> one of ('transition','climate','ac',etc...)
     super(props);
@@ -168,8 +168,8 @@ class TrainingQuestionnaire extends Component {
       answerIndex: selectedOption,
       isCorrect: isCorrect
     })
-      .catch(error => console.error("Was unable to record knowledge check in dB: ", error))
-    
+      .catch(error => console.error("Was unable to record knowledge check in DB: ", error))
+
     if (isCorrect) { // correct answer
       this.setState({
         feedback: "Correct! " + feedback,
@@ -301,7 +301,7 @@ class TrainingQuestionnaire extends Component {
     return (
       <div className={classes.root}>
         <Stepper activeStep={currentQuestion}>
-          {this.getStepLabels().map((label, index) => 
+          {this.getStepLabels().map((label, index) =>
             <Step key={index} >
               <StepLabel>{label}</StepLabel>
             </Step>

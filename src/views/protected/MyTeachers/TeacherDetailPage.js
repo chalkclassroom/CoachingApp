@@ -259,7 +259,7 @@ const sortedSvg = [
  */
 class TeacherDetailPage extends Component {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props) {
     super(props);

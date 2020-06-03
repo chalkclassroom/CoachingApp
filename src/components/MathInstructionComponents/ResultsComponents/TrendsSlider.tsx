@@ -145,7 +145,7 @@ interface Props {
  * @return {void}
  */
 class TrendsSlider extends React.Component<Props, {}> {
-  
+
   static propTypes = {
     childData: PropTypes.func.isRequired,
     teacherData: PropTypes.func.isRequired

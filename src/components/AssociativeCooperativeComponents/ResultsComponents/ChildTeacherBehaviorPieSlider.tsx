@@ -40,7 +40,7 @@ interface Props {
  * @return {void}
  */
 class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
-  
+
   static propTypes = {
     ac: PropTypes.number.isRequired,
     noAc: PropTypes.number.isRequired,

@@ -15,7 +15,7 @@ interface Props {
  */
 class PieSummary extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);

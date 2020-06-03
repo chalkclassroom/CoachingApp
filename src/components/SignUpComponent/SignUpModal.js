@@ -142,7 +142,7 @@ class SignUpModal extends React.Component {
                           justify="flex-start"
                         >
                           <Grid item>
-                            <img 
+                            <img
                               src={GrayedCoachImage}
                               alt="Coach"
                               className={classes.photoIcon}

@@ -34,7 +34,7 @@ interface Props {
 }
 
 /**
- * @param {Props} props 
+ * @param {Props} props
  * @return {ReactElement}
  */
 function MathHelpChild(props: Props): React.ReactElement {

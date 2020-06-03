@@ -1,9 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import CenterMenuStudentEngagement from "../../../components/StudentEngagementComponents/CenterMenuStudentEngagement";
@@ -21,6 +19,7 @@ import Countdown from "../../../components/Countdown.tsx";
  */
 
 const RATING_INTERVAL = 5000;
+
 
 const styles: object = {
   root: {
