@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ChooseTheme from './ChooseTheme';
 import EmailBody from './EmailBody';
@@ -12,6 +14,7 @@ import ChooseActionPlanDialog from './ChooseActionPlanDialog';
 import { Alerts, ThemeOptions, Message, Attachment } from './MessagingTypes';
 import CryptoJS from 'crypto-js';
 import ActionPlanForm from '../ActionPlanForm';
+
 
 interface NewMessageViewProps {
   firebase: any;
@@ -62,6 +65,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [alertEnum, setAlertEnum] = useState(Alerts.NO_ERROR);
   // state to store the current recipient
   const [recipient, setRecipient] = useState(null);
+  const [recipientName, setRecipientName] = useState("Katherine");
   // ref to get value from EmailBody
 	const textRef = useRef();
   // state to store the current list of attachments
@@ -112,20 +116,29 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 
       // create the message object to send to funcSendEmail
       const msg: Message = {
-        id: props.draft.id,
-        from: userEmail,
-        to: (props.draft.to !== '' ? props.draft.to : recipient.value),
-        subject: theme,
-        theme: theme,
-        textContent: textRef.current.textContent,
-        content: textRef.current.innerHTML,
+        // id: props.draft.id,
+        // from: userEmail,
+        // to: (props.draft.to !== '' ? props.draft.to : recipient.value),
+        // subject: theme,
+        // theme: theme,
+        // textContent: textRef.current.textContent,
+        // content: textRef.current.innerHTML,
+        id: '0000001',
+        from: 'clare.e.speer@vanderbilt.edu',
+        to: 'clare.e.speer@vanderbilt.edu',
+        subject: 'idk',
+        theme: ThemeOptions.FEEDBACK,
+        // html: textRef.current,
+        textContent: 'test',
+        content: 'testing this',
         delivered: false,
-        attachments: sendAttachments,
+        // attachments: sendAttachments,
       };
      
       // encrypted with the user's uid from firebase
       const encryptedMsg = CryptoJS.AES
                           .encrypt(JSON.stringify(msg), firebase.auth.currentUser.uid)
+                          // .encrypt('test', firebase.auth.currentUser.uid)
                           .toString();
 
       firebase.sendEmail(encryptedMsg)
@@ -202,7 +215,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     Best,
     <br />
     	{userName}
-	</div>;
+  </div>;
  
   const actionPlan = (name: string | null): JSX.Element => <div style={{padding: "5em"}}>
     <h4>Hi {name || ""},</h4>
@@ -215,7 +228,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     Best,
     <br />
     {userName}
-  </div>;   
+  </div>;  
+  
+  const greetingText = "Hi " + recipientName;
 
   const chooseOptions = (): JSX.Element => <div style={{padding: '5em'}}>
 	    <h1>Please choose message topic and the teacher on top</h1>
@@ -246,48 +261,111 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   };
 
   return (
-    <div style={gridContainer}>
-      <div style={themeClass}>
-        <ChooseTheme currentTheme={theme} changeTheme={(newTheme: ThemeOptions): void => setTheme(newTheme)}/>
-      </div>
-      <div style={recipientClass}>
-        <RecipientAddress selectedOption={recipient} setOption={(newOption: object): void => setRecipient(newOption)} firebase={firebase}/>
-      </div>
-      <div style={emailbodyClass}>
-        <EmailBody emailText={getEmailText()} emailTextRef={textRef} />
-      </div>
-      <div style={submitButtonClass}>
-        <SendButton sendMail={sendMail}/>
-      </div>
-      <div style={attachButtonClass}>
-        {/* AttachButton only becomes clickable when the user is typing a message of Action Plan theme */}
-        <AttachButton 
-            acceptAttachment={(): void => setActionPlanDisplay(true)} 
-            disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
-        />
-      </div>
-      <div>
-        <DeleteButton deleteDraft={(): void => setActionPlanDisplay(true)}/>
-      </div>
-      <div>
-        <SaveButton saveDraft={(): void => setActionPlanDisplay(true)} />
-      </div>
-      <>
-        <AlertDialog open={alertEnum !== Alerts.NO_ERROR} text={alertEnum} handleYes={(): void => setAlertEnum(Alerts.NO_ERROR)}/>
-        <ChooseActionPlanDialog 
-          open={actionPlanDisplay} 
-          handleAdd={(newActionPlan: string): void => { 
-            createAddAttachment(newActionPlan);
-            setActionPlanDisplay(false);
-          }} 
-          handleDelete={(existActionPlan: string): void => {
-            removeAttachment(existActionPlan);
-            setActionPlanDisplay(false);
-          }}
-          firebase={props.firebase}
-          attachmentList={attachments}
-        />
-      </>
+    <div style={{width: '100%'}}>
+      {/* <div style={gridContainer}>
+        <div style={themeClass}>
+          <ChooseTheme currentTheme={theme} changeTheme={(newTheme: ThemeOptions): void => setTheme(newTheme)}/>
+        </div>
+        <div style={recipientClass}>
+          <RecipientAddress selectedOption={recipient} setOption={(newOption: object): void => setRecipient(newOption)} firebase={firebase}/>
+        </div>
+        <div style={emailbodyClass}>
+          <EmailBody emailText={getEmailText()} emailTextRef={textRef} />
+        </div>
+        <div style={submitButtonClass}>
+          <SendButton sendMail={sendMail}/>
+        </div>
+        <div style={attachButtonClass}> */}
+          {/* AttachButton only becomes clickable when the user is typing a message of Action Plan theme */}
+          {/* <AttachButton 
+              acceptAttachment={(): void => setActionPlanDisplay(true)} 
+              disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
+          />
+        </div>
+        <div>
+          <DeleteButton deleteDraft={(): void => setActionPlanDisplay(true)}/>
+        </div>
+        <div>
+          <SaveButton saveDraft={(): void => setActionPlanDisplay(true)} />
+        </div>
+        <>
+          <AlertDialog open={alertEnum !== Alerts.NO_ERROR} text={alertEnum} handleYes={(): void => setAlertEnum(Alerts.NO_ERROR)}/>
+          <ChooseActionPlanDialog 
+            open={actionPlanDisplay} 
+            handleAdd={(newActionPlan: string): void => { 
+              createAddAttachment(newActionPlan);
+              setActionPlanDisplay(false);
+            }} 
+            handleDelete={(existActionPlan: string): void => {
+              removeAttachment(existActionPlan);
+              setActionPlanDisplay(false);
+            }}
+            firebase={props.firebase}
+            attachmentList={attachments}
+          />
+        </>
+      </div> */}
+      <Grid direction="column" justify="center" alignItems="center" style={{width: '100%', border: '1px solid green'}}>
+        <Grid item style={{width: '100%', border: '1px solid red'}}>
+          <Grid container direction="row" alignItems="flex-start" justify="center" style={{border: '1px solid blue', width: '80%'}}>
+            <Grid item xs={6}>
+              <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                Write a new message to:
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <RecipientAddress
+                selectedOption={recipient}
+                setOption={(newOption: object): void => setRecipient(newOption)}
+                firebase={firebase}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="row">
+            <Grid item xs={6}>
+              <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                Select message template:
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <ChooseTheme
+                currentTheme={theme}
+                changeTheme={(newTheme: ThemeOptions): void => setTheme(newTheme)}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item style={{width: '100%', backgroundColor: '#d8ecff'}}>
+          <Grid container direction="column">
+            <Grid item>
+              close
+            </Grid>
+            <Grid item style={{width: '80%', height: '50%'}}>
+              <EmailBody emailText={getEmailText()} emailTextRef={textRef} greetingText={greetingText} />
+            </Grid>
+            <Grid item>
+              <Grid container direction="row">
+                <Grid item>
+                  <SendButton sendMail={sendMail}/>
+                </Grid>
+                <Grid item>
+                  <AttachButton 
+                    acceptAttachment={(): void => setActionPlanDisplay(true)} 
+                    disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
+                  />
+                </Grid>
+                <Grid item>
+                  <SaveButton saveDraft={(): void => setActionPlanDisplay(true)} />
+                </Grid>
+                <Grid item>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </div>
   );
 }

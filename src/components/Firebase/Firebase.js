@@ -31,6 +31,7 @@ class Firebase {
   }
 
   sendEmail = async function(msg) {
+    console.log('send email was called');
     const sendEmailFirebaseFunction = this.functions.httpsCallable(
       "funcSendEmail"
     );

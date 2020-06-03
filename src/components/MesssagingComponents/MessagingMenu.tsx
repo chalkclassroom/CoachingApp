@@ -23,7 +23,7 @@ const MessagingMenu: React.FC<MessagingMenuProps> = (props: MessagingMenuProps) 
   };
 
   return (
-    <List style={{height: '100vh', backgroundColor: '#D8ECFF'}}>
+    <List style={{height: '100%', backgroundColor: '#D8ECFF'}}>
       {
         Object.keys(MenuOptions).map((option, _) => (
           <ListItem 

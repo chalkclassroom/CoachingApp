@@ -96,7 +96,8 @@ export interface Message {
   // the text content of the message: required by sendgrid
   textContent: string;
   // the html content of the message: required for styling 
-  content: JSX.Element;
+  // content: JSX.Element;
+  content: string;
   // boolean for if the message has been delivered or not
   // false implies it should be returned when draft messages are required
   // while true implies should be returned when sent messages are required

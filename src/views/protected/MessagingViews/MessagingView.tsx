@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import AppBar from '../../../components/AppBar';
+import Grid from '@material-ui/core/Grid';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'; 
 import MessagingMenu from '../../../components/MesssagingComponents/MessagingMenu';
 import NewMessageView from '../../../components/MesssagingComponents/NewMessageView';
@@ -65,17 +66,32 @@ const MessagingView: React.FC<{}> = () => {
   };
 
   return (
-    <div style={gridContainer}>
-	    <div style={appbar}>
-	      <AppBar firebase={firebase} />
-	    </div>
-      <div style={menu}>
-        <MessagingMenu currentOption={menuOption} changeOption={(newOption: MenuOptions): void => { console.log(newOption); setMenuOption(newOption);}} />
-      </div>
-      <div style={chosenView}>
-        {getBody()}
-      </div>
-    </div>
+    <Grid container direction="column" style={{height: '100vh', display: 'flex', flexDirection: 'column', overflowX: 'hidden', overflowY: 'auto'}}>
+      <Grid item style={{width: '100%'}}>
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactNode => (
+            <AppBar firebase={firebase} />
+          )}
+        </FirebaseContext.Consumer>
+      </Grid>
+      <Grid item style={{flexGrow: 1}}>
+        <Grid container direction="row" justify="center" alignItems="flex-start" style={{height: '100%'}}>
+          <Grid item xs={3} style={{height: '100%', paddingRight: '1.5em'}}>
+            <MessagingMenu
+              currentOption={menuOption}
+              changeOption={(newOption: MenuOptions): void => { console.log(newOption); setMenuOption(newOption);}}
+            />
+          </Grid>
+          <Grid item xs={9} style={{border: '1px solid red'}}>
+            <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%'}}>
+              <Grid item style={{width: '100%'}}>
+              {getBody()}
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 
