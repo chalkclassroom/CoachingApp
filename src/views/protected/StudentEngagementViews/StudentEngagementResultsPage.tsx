@@ -12,6 +12,7 @@ import {connect} from "react-redux";
 import StudentEngagementCoachingQuestions
   from "../../../components/StudentEngagementComponents/ResultsComponents/StudentEngagementCoachingQuestions";
 import TeacherModal from '../HomeViews/TeacherModal';
+import FadeAwayModal from '../../../components/FadeAwayModal';
 
 const styles: object = {
   root: {
@@ -37,7 +38,6 @@ interface Teacher {
 
 interface Props {
   classes: Style,
-  location: { state: { teacher: { id: string, firstName: string, lastName: string }}},
   teacherSelected: Teacher
 }
 
@@ -47,6 +47,7 @@ interface Style {
 
 interface State {
   sessionId: string,
+  conferencePlanId: string,
   offTaskSummaryCount: number,
   engagedSummaryCount: number,
   avgEngagementSummary: number,
@@ -61,7 +62,9 @@ interface State {
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
-  teacherModal: boolean
+  teacherModal: boolean,
+  noteAdded: boolean,
+  questionAdded: boolean
 }
 
 /**
@@ -77,6 +80,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
 
     this.state = {
       sessionId: '',
+      conferencePlanId: '',
       offTaskSummaryCount: 0,
       engagedSummaryCount: 0,
       avgEngagementSummary: 0,
@@ -91,7 +95,9 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       conferencePlanExists: false,
       addedToPlan: [],
       sessionDates: [],
-      teacherModal: false
+      teacherModal: false,
+      noteAdded: false,
+      questionAdded: false
     };
   }
 
@@ -134,18 +140,36 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
    */
   handleDateFetching = (teacherId: string) => {
     const firebase = this.context;
-    firebase.fetchSessionDates(teacherId, "engagement").then((dates: Array<string>) =>
-      this.setState({
-        sessionDates: dates
-      }, () => {
-        this.setState({ sessionId: this.state.sessionDates[0].id },
-          () => {
-            this.getData();
-          }
-        );
-      })
-    );
-    console.log('date fetching was called');
+    this.setState({
+      sessionId: '',
+      conferencePlanId: '',
+      offTaskSummaryCount: 0,
+      engagedSummaryCount: 0,
+      avgEngagementSummary: 0,
+      offTaskDetailSplit: [],
+      mildlyEngagedDetailSplit: [],
+      engagedDetailSplit: [],
+      highlyEngagedDetailSplit: [],
+      trendsDates: [],
+      trendsAvg: [],
+      notes: [],
+      actionPlanExists: false,
+      conferencePlanExists: false,
+      addedToPlan: [],
+      sessionDates: [],
+    }, () => {
+      firebase.fetchSessionDates(teacherId, "engagement").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+        this.setState({
+          sessionDates: dates
+        }, () => {
+          this.setState({ sessionId: this.state.sessionDates[0].id },
+            () => {
+              this.getData();
+            }
+          );
+        })
+      );
+    })
   };
 
   /**
@@ -203,6 +227,50 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
   };
 
   /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToPlan = (conferencePlanId: string, note: string): void => {
+    const firebase = this.context;
+    if (!conferencePlanId) {
+      firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Level of Engagement')
+        .then(() => {
+          firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          }).then(() => {
+            firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+            .then(() => {
+              this.setState({ noteAdded: true }, () => {
+                setTimeout(() => {
+                  this.setState({ noteAdded: false })
+                }, 1500);
+              })
+            })
+          })
+        })
+    } else {
+      firebase.addNoteToConferencePlan(conferencePlanId, note)
+      .then(() => {
+        this.setState({ noteAdded: true }, () => {
+          setTimeout(() => {
+            this.setState({ noteAdded: false })
+          }, 1500);
+        })
+      })
+    }
+  }
+
+  /**
    * checks if question has already been added and if not, adds it
    * @param {string} panelTitle
    * @param {number} index
@@ -224,14 +292,42 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
-        firebase.saveConferencePlanQuestion(sessionId, question);
+        firebase.saveConferencePlanQuestion(sessionId, question)
+        .then(() => {
+          this.setState({ questionAdded: true }, () => {
+            setTimeout(() => {
+              this.setState({ questionAdded: false })
+            }, 1500);
+          })
+        })
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
-          firebase.saveConferencePlanQuestion(sessionId, question);
+          firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          })
+          firebase.saveConferencePlanQuestion(sessionId, question)
+          .then(() => {
+            this.setState({ questionAdded: true }, () => {
+              setTimeout(() => {
+                this.setState({ questionAdded: false })
+              }, 1500);
+            })
+          })
           this.setState({
             conferencePlanExists: true
           })
@@ -247,29 +343,18 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
     const firebase = this.context;
 
     this.handleNotesFetching(this.state.sessionId);
-    // firebase.getActionPlan(this.state.sessionId)
-    // .then((actionPlanData: Array<{id: string, goal: string, benefit: string, date: string}>) => {
-    //   if (actionPlanData.length>0) {
-    //     this.setState({
-    //       actionPlanExists: true
-    //     })
-    //   } else {
-    //     this.setState({
-    //       actionPlanExists: false
-    //     })
-    //   }
-    // }).catch(() => {
-    //   console.log('unable to retrieve action plan')
-    // })
+    
     firebase.getConferencePlan(this.state.sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         this.setState({
-          conferencePlanExists: false
+          conferencePlanExists: false,
+          conferencePlanId: ''
         })
       }
     }).catch(() => {
@@ -340,7 +425,6 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -367,11 +451,12 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
     return (
       this.props.teacherSelected ? (
         <div className={classes.root}>
+          <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+          <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
           <ResultsLayout
             teacher={this.props.teacherSelected}
             magic8="Level of Engagement"
-            handleTrendsFetch={this.handleTrendsFetching}
-            observationType="engagement"
+            history={this.props.history}
             summary={
               <SummarySlider
                 offTask={this.state.offTaskSummaryCount}
@@ -396,6 +481,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
             sessionId={this.state.sessionId}
             sessionDates={this.state.sessionDates}
             notes={this.state.notes}
+            addNoteToPlan={this.addNoteToPlan}
             questions={
               <StudentEngagementCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
@@ -408,6 +494,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
             chosenQuestions={chosenQuestions}
             actionPlanExists={this.state.actionPlanExists}
             conferencePlanExists={this.state.conferencePlanExists}
+            conferencePlanId={this.state.conferencePlanId}
           />
         </div>
       ) : (
