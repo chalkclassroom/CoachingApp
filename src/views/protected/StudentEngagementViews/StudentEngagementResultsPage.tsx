@@ -24,14 +24,14 @@ const styles: object = {
 
 
 interface Teacher {
-    email: string,
-    firstName: string,
-    lastName: string,
-    notes: string,
-    id: string,
-    phone: string,
-    role: string,
-    school: string
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
 };
 
 interface Props {
@@ -46,19 +46,15 @@ interface Style {
 
 interface State {
   sessionId: string,
-
   offTaskSummaryCount: number,
   engagedSummaryCount: number,
   avgEngagementSummary: number,
-
   offTaskDetailSplit: Array<number>,
   mildlyEngagedDetailSplit: Array<number>,
   engagedDetailSplit: Array<number>,
   highlyEngagedDetailSplit: Array<number>,
-
   trendsDates: Array<Array<string>>,
   trendsAvg: Array<number>,
-
   notes: Array<{id: string, content: string, timestamp: Date}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
@@ -79,20 +75,15 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
 
     this.state = {
       sessionId: '',
-
       offTaskSummaryCount: 0,
       engagedSummaryCount: 0,
       avgEngagementSummary: 0,
-
-
       offTaskDetailSplit: [],
       mildlyEngagedDetailSplit: [],
       engagedDetailSplit: [],
       highlyEngagedDetailSplit: [],
-
       trendsDates: [],
       trendsAvg: [],
-
       notes: [],
       actionPlanExists: false,
       conferencePlanExists: false,
@@ -339,16 +330,16 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-      teacherSelected: PropTypes.exact({
-          email: PropTypes.string,
-          firstName: PropTypes.string,
-          lastName: PropTypes.string,
-          notes: PropTypes.string,
-          id: PropTypes.string,
-          phone: PropTypes.string,
-          role: PropTypes.string,
-          school: PropTypes.string
-      }).isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
   /**
@@ -378,10 +369,10 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
           }
           details={
             <DetailsSlider
-                offTaskDetailSplit={this.state.offTaskDetailSplit}
-                mildlyEngagedDetailSplit={this.state.mildlyEngagedDetailSplit}
-                engagedDetailSplit={this.state.engagedDetailSplit}
-                highlyEngagedDetailSplit={this.state.highlyEngagedDetailSplit}
+              offTaskDetailSplit={this.state.offTaskDetailSplit}
+              mildlyEngagedDetailSplit={this.state.mildlyEngagedDetailSplit}
+              engagedDetailSplit={this.state.engagedDetailSplit}
+              highlyEngagedDetailSplit={this.state.highlyEngagedDetailSplit}
             />
           }
           trendsGraph={
@@ -412,12 +403,12 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
 }
 
 const mapStateToProps = state => {
-    return {
-        teacherSelected: state.teacherSelectedState.teacher
-    };
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
 };
 
 StudentEngagementResultsPage.contextType = FirebaseContext;
 export default connect(mapStateToProps, {})(
-    withStyles(styles)(StudentEngagementResultsPage)
+  withStyles(styles)(StudentEngagementResultsPage)
 );
