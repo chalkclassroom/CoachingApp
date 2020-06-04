@@ -13,6 +13,7 @@ import KeyboardArrowLeft from "@material-ui/core/internal/svg-icons/KeyboardArro
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
@@ -300,9 +301,11 @@ class TeacherChecklist extends React.Component<Props, State> {
                               onClick={this.handleCheck(index+1)}
                               style={{height: '15vh'}}
                             >
-                              <Checkbox
-                                checked={this.state.checked.includes(index+1)}
-                              />
+                              <ListItemIcon>
+                                <Checkbox
+                                  checked={this.state.checked.includes(index+1)}
+                                />
+                              </ListItemIcon>
                               <ListItemText disableTypography>
                                 {value}
                               </ListItemText>
@@ -320,9 +323,11 @@ class TeacherChecklist extends React.Component<Props, State> {
                               onClick={this.handleCheck(index+4)}
                               style={{height: '15vh'}}
                             >
-                              <Checkbox
-                                checked={this.state.checked.includes(index+4)}
-                              />
+                              <ListItemIcon>
+                                <Checkbox
+                                  checked={this.state.checked.includes(index+4)}
+                                />
+                              </ListItemIcon>
                               <ListItemText disableTypography>
                                 {value}
                               </ListItemText>

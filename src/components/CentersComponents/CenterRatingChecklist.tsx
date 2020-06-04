@@ -13,6 +13,7 @@ import KeyboardArrowLeft from "@material-ui/core/internal/svg-icons/KeyboardArro
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
@@ -455,11 +456,13 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                             disabled={this.childDisabled()}
                             style={{height: '12vh'}}
                           >
-                            <Checkbox
-                              checked={
-                                !this.childDisabled() && this.state.childChecked.includes(index+1)
-                              }
-                            />
+                            <ListItemIcon>
+                              <Checkbox
+                                checked={
+                                  !this.childDisabled() && this.state.childChecked.includes(index+1)
+                                }
+                              />
+                            </ListItemIcon>
                             <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
                               {value}
                             </ListItemText>
@@ -489,11 +492,13 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                             disabled={this.teacherDisabled()}
                             style={{height: '12vh'}}
                           >
-                            <Checkbox
-                              checked={
-                                !this.teacherDisabled() && this.state.teacherChecked.includes(index+6)
-                              }
-                            />
+                            <ListItemIcon>
+                              <Checkbox
+                                checked={
+                                  !this.teacherDisabled() && this.state.teacherChecked.includes(index+6)
+                                }
+                              />
+                            </ListItemIcon>
                             <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
                               {value}
                             </ListItemText>
