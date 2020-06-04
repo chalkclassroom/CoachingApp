@@ -11,6 +11,7 @@ import * as Constants from '../../../constants';
 import {connect} from "react-redux";
 import StudentEngagementCoachingQuestions
   from "../../../components/StudentEngagementComponents/ResultsComponents/StudentEngagementCoachingQuestions";
+import TeacherModal from '../HomeViews/TeacherModal';
 
 const styles: object = {
   root: {
@@ -55,11 +56,12 @@ interface State {
   highlyEngagedDetailSplit: Array<number>,
   trendsDates: Array<Array<string>>,
   trendsAvg: Array<number>,
-  notes: Array<{id: string, content: string, timestamp: Date}>,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<string>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  teacherModal: boolean
 }
 
 /**
@@ -88,7 +90,8 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      teacherModal: false
     };
   }
 
@@ -104,8 +107,8 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
    */
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: Date}>) => {
-      const formattedNotesArr: Array<{id: string, content: string, timestamp: Date}> = [];
+    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: {seconds: number, nanoseconds: number}}>) => {
+      const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -321,10 +324,18 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
     );
   };
 
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.teacherSelected.id);
-    this.handleTrendsFetching(this.props.teacherSelected.id);
+    if (this.props.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    } else {
+      this.setState({ teacherModal: true })
+    }
   }
 
   static propTypes = {
@@ -354,50 +365,62 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       )
     })
     return (
-      <div className={classes.root}>
-        <ResultsLayout
-          teacher={this.props.teacherSelected}
-          magic8="Level of Engagement"
-          handleTrendsFetch={this.handleTrendsFetching}
-          observationType="engagement"
-          summary={
-            <SummarySlider
-              offTask={this.state.offTaskSummaryCount}
-              engaged={this.state.engagedSummaryCount}
-              avgRating={this.state.avgEngagementSummary}
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          <ResultsLayout
+            teacher={this.props.teacherSelected}
+            magic8="Level of Engagement"
+            handleTrendsFetch={this.handleTrendsFetching}
+            observationType="engagement"
+            summary={
+              <SummarySlider
+                offTask={this.state.offTaskSummaryCount}
+                engaged={this.state.engagedSummaryCount}
+                avgRating={this.state.avgEngagementSummary}
+              />
+            }
+            details={
+              <DetailsSlider
+                offTaskDetailSplit={this.state.offTaskDetailSplit}
+                mildlyEngagedDetailSplit={this.state.mildlyEngagedDetailSplit}
+                engagedDetailSplit={this.state.engagedDetailSplit}
+                highlyEngagedDetailSplit={this.state.highlyEngagedDetailSplit}
+              />
+            }
+            trendsGraph={
+              <TrendsSlider
+                data={this.handleTrendsFormatData}
+              />
+            }
+            changeSessionId={this.changeSessionId}
+            sessionId={this.state.sessionId}
+            sessionDates={this.state.sessionDates}
+            notes={this.state.notes}
+            questions={
+              <StudentEngagementCoachingQuestions
+                handleAddToPlan={this.handleAddToPlan}
+                addedToPlan={this.state.addedToPlan}
+                sessionId={this.state.sessionId}
+                teacherId={this.props.teacherSelected.id}
+                magic8={"Student Engagement"}
+              />
+            }
+            chosenQuestions={chosenQuestions}
+            actionPlanExists={this.state.actionPlanExists}
+            conferencePlanExists={this.state.conferencePlanExists}
+          />
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Results"}
             />
-          }
-          details={
-            <DetailsSlider
-              offTaskDetailSplit={this.state.offTaskDetailSplit}
-              mildlyEngagedDetailSplit={this.state.mildlyEngagedDetailSplit}
-              engagedDetailSplit={this.state.engagedDetailSplit}
-              highlyEngagedDetailSplit={this.state.highlyEngagedDetailSplit}
-            />
-          }
-          trendsGraph={
-            <TrendsSlider
-              data={this.handleTrendsFormatData}
-            />
-          }
-          changeSessionId={this.changeSessionId}
-          sessionId={this.state.sessionId}
-          sessionDates={this.state.sessionDates}
-          notes={this.state.notes}
-          questions={
-            <StudentEngagementCoachingQuestions
-              handleAddToPlan={this.handleAddToPlan}
-              addedToPlan={this.state.addedToPlan}
-              sessionId={this.state.sessionId}
-              teacherId={this.props.teacherSelected.id}
-              magic8={"Student Engagement"}
-            />
-          }
-          chosenQuestions={chosenQuestions}
-          actionPlanExists={this.state.actionPlanExists}
-          conferencePlanExists={this.state.conferencePlanExists}
-        />
-      </div>
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }
