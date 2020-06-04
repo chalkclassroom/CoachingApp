@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { Line } from "react-chartjs-2";
 
 interface Props {
-  data: {labels: Array<string>, datasets: Array<{label: string, data: number, backgroundColor: string}>}
+  data: {labels: Array<string>, datasets: Array<{label: string, data: number, backgroundColor: string, borderColor: string, fill: boolean, lineTension: number}>}
 }
 
 /**
@@ -46,7 +46,7 @@ class ClimateTrendsGraph extends React.Component<Props, {}> {
    * render function
    * @return {ReactElement}
    */
-  render() {
+  render(): React.ReactElement {
     // const { classes } = this.props;
 
     return (

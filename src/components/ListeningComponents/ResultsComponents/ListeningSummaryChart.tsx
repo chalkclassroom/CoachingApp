@@ -65,7 +65,14 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
             },
             legend: {
               display: true,
-              position: 'bottom'
+              position: 'bottom',
+              onClick: null,
+              labels: {
+                padding: 20,
+                fontColor: "black",
+                fontSize: 14,
+                fontFamily: 'Arimo'
+              }
             },
             title: {
               display: true,

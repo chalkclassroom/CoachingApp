@@ -12,8 +12,10 @@ import ListeningTrendsGraph from "../../../components/ListeningComponents/Result
 import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
 import PieSliceListeningImage from '../../../assets/images/PieSliceListeningImage.svg';
 import PieSliceChildNonImage from '../../../assets/images/PieSliceChildNonImage.svg';
+import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
+import TeacherModal from '../HomeViews/TeacherModal';
 
 const styles: object = {
   root: {
@@ -44,6 +46,7 @@ interface State {
   listening: number,
   notListening: number,
   sessionId: string,
+  conferencePlanId: string,
   listening1: number,
   listening2: number,
   listening3: number,
@@ -53,11 +56,14 @@ interface State {
   trendsDates: Array<Array<string>>,
   trendsListening: Array<number>,
   trendsNotListening: Array<number>,
-  notes: Array<{id: string, content: string, timestamp: Date}>,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<{id: string, sessionStart: {value: string}}>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  noteAdded: boolean,
+  questionAdded: boolean,
+  teacherModal: boolean
 }
 
 interface Teacher {
@@ -86,6 +92,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       listening: 0,
       notListening: 0,
       sessionId: '',
+      conferencePlanId: '',
       listening1: 0,
       listening2: 0,
       listening3: 0,
@@ -99,7 +106,10 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noteAdded: false,
+      questionAdded: false,
+      teacherModal: false
     };
   }
 
@@ -115,8 +125,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
    */
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: Date}>) => {
-      const formattedNotesArr: Array<{id: string, content: string, timestamp: Date}> = [];
+    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: {seconds: number, nanoseconds: number}}>) => {
+      const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -140,12 +150,13 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
       listening: 0,
       notListening: 0,
       sessionId: '',
+      conferencePlanId: '',
       listening1: 0,
       listening2: 0,
       listening3: 0,
@@ -192,8 +203,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        listeningArray.push(Math.floor((data.listening / (data.listening + data.notListening)) * 100));
-        notListeningArray.push(Math.floor((data.notListening / (data.listening + data.notListening)) * 100));
+        listeningArray.push(Math.round((data.listening / (data.listening + data.notListening)) * 100));
+        notListeningArray.push(Math.round((data.notListening / (data.listening + data.notListening)) * 100));
       });
       this.setState({
         trendsDates: dateArray,
@@ -251,11 +262,13 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         this.setState({
-          conferencePlanExists: false
+          conferencePlanExists: false,
+          conferencePlanId: ''
         })
       }
     }).catch(() => {
@@ -303,6 +316,50 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   };
 
   /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToPlan = (conferencePlanId: string, note: string): void => {
+    const firebase = this.context;
+    if (!conferencePlanId) {
+      firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Listening to Children')
+        .then(() => {
+          firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          }).then(() => {
+            firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+            .then(() => {
+              this.setState({ noteAdded: true }, () => {
+                setTimeout(() => {
+                  this.setState({ noteAdded: false })
+                }, 1500);
+              })
+            })
+          })
+        })
+    } else {
+      firebase.addNoteToConferencePlan(conferencePlanId, note)
+      .then(() => {
+        this.setState({ noteAdded: true }, () => {
+          setTimeout(() => {
+            this.setState({ noteAdded: false })
+          }, 1500);
+        })
+      })
+    }
+  }
+
+  /**
    * checks if question has already been added and if not, adds it
    * @param {string} panelTitle
    * @param {number} index
@@ -324,14 +381,42 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
-        firebase.saveConferencePlanQuestion(sessionId, question);
+        firebase.saveConferencePlanQuestion(sessionId, question)
+        .then(() => {
+          this.setState({ questionAdded: true }, () => {
+            setTimeout(() => {
+              this.setState({ questionAdded: false })
+            }, 1500);
+          })
+        })
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
-          firebase.saveConferencePlanQuestion(sessionId, question);
+          firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          })
+          firebase.saveConferencePlanQuestion(sessionId, question)
+          .then(() => {
+            this.setState({ questionAdded: true }, () => {
+              setTimeout(() => {
+                this.setState({ questionAdded: false })
+              }, 1500);
+            })
+          })
           this.setState({
             conferencePlanExists: true
           })
@@ -340,10 +425,18 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     })
   };
 
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.teacherSelected.id);
-    this.handleTrendsFetch(this.props.teacherSelected.id);
+    if (this.props.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetch(this.props.teacherSelected.id);
+    } else {
+      this.setState({ teacherModal: true })
+    }
   }
 
   /** 
@@ -383,106 +476,122 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       )
     })
     return (
-      <div className={classes.root}>
-        <ResultsLayout
-          teacher={this.props.teacherSelected}
-          magic8="Listening to Children"
-          history={this.props.history}
-          summary={
-            <Grid container justify={"center"} direction={"column"}>
-              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                Compare how often the teacher was: 
-              </Typography>
-              <Grid container direction="column" alignItems="center">
-                <Grid item style={{width: '100%'}}>
-                  <Grid container direction="row">
-                    <Grid item xs={1}>
-                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                        <Grid item style={{height:"50%"}}>
-                          <img alt="green" src={PieSliceListeningImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"50%"}}>
-                          <img alt="red" src={PieSliceChildNonImage} height="95%"/>
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+          <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
+          <ResultsLayout
+            teacher={this.props.teacherSelected}
+            magic8="Listening to Children"
+            history={this.props.history}
+            summary={
+              <Grid container justify={"center"} direction={"column"}>
+                <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                  Compare how often the teacher was: 
+                </Typography>
+                <Grid container direction="column" alignItems="center">
+                  <Grid item style={{width: '100%'}}>
+                    <Grid container direction="row">
+                      <Grid item xs={1}>
+                        <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
+                          <Grid item style={{height:"50%"}}>
+                            <img alt="green" src={PieSliceListeningImage} height="95%"/>
+                          </Grid>
+                          <Grid item style={{height:"50%"}}>
+                            <img alt="red" src={PieSliceChildNonImage} height="95%"/>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid item xs={11}>
-                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                        <Grid item style={{height:"50%"}}>
-                          <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
-                            Listening to children/encouraging child talk
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"50%"}}>
-                          <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                            Doing other tasks or activities
-                          </Typography>
+                      <Grid item xs={11}>
+                        <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                          <Grid item style={{height:"50%"}}>
+                            <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
+                              Listening to children/encouraging child talk
+                            </Typography>
+                          </Grid>
+                          <Grid item style={{height:"50%"}}>
+                            <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
+                              Doing other tasks or activities
+                            </Typography>
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item>
-                <ListeningSummaryChart
-                  listening={this.state.listening}
-                  notListening={this.state.notListening}
-                />
-              </Grid>
-              <Grid item>
-              <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
-                Total Observations: {this.state.listening + this.state.notListening}
-              </Typography>
-              </Grid>
-            </Grid>
-          }
-          details={
-            <div>
-              <Grid container justify={"center"} direction={"column"}>
-                <Grid container justify={"center"} direction={"column"}>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    What behaviors did the teacher use during the observation?
-                  </Typography>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Did the teacher do one type of behavior more often than the other behaviors?               
-                  </Typography>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Did the teacher do one type of behavior less often than the other behaviors?               
-                  </Typography>
+                <Grid item>
+                  <ListeningSummaryChart
+                    listening={this.state.listening}
+                    notListening={this.state.notListening}
+                  />
                 </Grid>
-                <ListeningDetailsChart
-                  listening1={this.state.listening1}
-                  listening2={this.state.listening2}
-                  listening3={this.state.listening3}
-                  listening4={this.state.listening4}
-                  listening5={this.state.listening5}
-                  listening6={this.state.listening6}
-                />
+                <Grid item>
+                <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
+                  Total Observations: {this.state.listening + this.state.notListening}
+                </Typography>
+                </Grid>
               </Grid>
-            </div>
-          }
-          trendsGraph={
-            <ListeningTrendsGraph
-              data={this.handleTrendsFormatData}
+            }
+            details={
+              <div>
+                <Grid container justify={"center"} direction={"column"}>
+                  <Grid container justify={"center"} direction={"column"}>
+                    <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                      What behaviors did the teacher use during the observation?
+                    </Typography>
+                    <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                      Did the teacher do one type of behavior more often than the other behaviors?               
+                    </Typography>
+                    <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                      Did the teacher do one type of behavior less often than the other behaviors?               
+                    </Typography>
+                  </Grid>
+                  <ListeningDetailsChart
+                    listening1={this.state.listening1}
+                    listening2={this.state.listening2}
+                    listening3={this.state.listening3}
+                    listening4={this.state.listening4}
+                    listening5={this.state.listening5}
+                    listening6={this.state.listening6}
+                  />
+                </Grid>
+              </div>
+            }
+            trendsGraph={
+              <ListeningTrendsGraph
+                data={this.handleTrendsFormatData}
+              />
+            }
+            changeSessionId={this.changeSessionId}
+            sessionId={this.state.sessionId}
+            conferencePlanId={this.state.conferencePlanId}
+            addNoteToPlan={this.addNoteToPlan}
+            sessionDates={this.state.sessionDates}
+            notes={this.state.notes}
+            questions={
+              <ListeningCoachingQuestions
+                handleAddToPlan={this.handleAddToPlan}
+                addedToPlan={this.state.addedToPlan}
+                sessionId={this.state.sessionId}
+                teacherId={this.props.teacherSelected.id}
+              />
+            }
+            chosenQuestions={chosenQuestions}
+            actionPlanExists={this.state.actionPlanExists}
+            conferencePlanExists={this.state.conferencePlanExists}
+          />
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Results"}
             />
-          }
-          changeSessionId={this.changeSessionId}
-          sessionId={this.state.sessionId}
-          sessionDates={this.state.sessionDates}
-          notes={this.state.notes}
-          questions={
-            <ListeningCoachingQuestions
-              handleAddToPlan={this.handleAddToPlan}
-              addedToPlan={this.state.addedToPlan}
-              sessionId={this.state.sessionId}
-              teacherId={this.props.teacherSelected.id}
-            />
-          }
-          chosenQuestions={chosenQuestions}
-          actionPlanExists={this.state.actionPlanExists}
-          conferencePlanExists={this.state.conferencePlanExists}
-        />
-      </div>
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }

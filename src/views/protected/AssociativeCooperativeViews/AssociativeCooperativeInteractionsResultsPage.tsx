@@ -8,8 +8,10 @@ import ChildTeacherBehaviorPieSlider from "../../../components/AssociativeCooper
 import ChildTeacherBehaviorDetailsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
 import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorTrendsSlider";
 import ACCoachingQuestions from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ACCoachingQuestions";
+import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
+import TeacherModal from '../HomeViews/TeacherModal';
 
 const styles: object = {
   root: {
@@ -38,6 +40,7 @@ interface State {
   noSupport: number,
   noTeacherOpp: number,
   sessionId: string,
+  conferencePlanId: string,
   ac1: number,
   ac2: number,
   ac3: number,
@@ -53,11 +56,14 @@ interface State {
   trendsNoTeacherOpp: Array<number>,
   trendsNoSupport: Array<number>,
   trendsSupport: Array<number>,
-  notes: Array<{id: string, content: string, timestamp: Date}>,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<{id: string, sessionStart: {value: string}}>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  noteAdded: boolean,
+  questionAdded: boolean,
+  teacherModal: boolean
 }
 
 interface Teacher {
@@ -90,6 +96,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       noSupport: 0,
       noTeacherOpp: 0,
       sessionId: '',
+      conferencePlanId: '',
       ac1: 0,
       ac2: 0,
       ac3: 0,
@@ -109,14 +116,25 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noteAdded: false,
+      questionAdded: false,
+      teacherModal: false
     };
   }
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.teacherSelected.id);
-    this.handleTrendsFetching(this.props.teacherSelected.id);
+    if (this.props.teacherSelected.id) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    } else {
+      this.setState({ teacherModal: true });
+    }
+  }
+
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
   }
 
   /** 
@@ -143,9 +161,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
    */
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: Date}>) => {
+    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: {seconds: number, nanoseconds: number}}>) => {
       console.log(notesArr);
-      const formattedNotesArr: Array<{id: string, content: string, timestamp: Date}> = [];
+      const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -154,6 +172,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
           minute: "numeric",
           hour12: true
         });
+        console.log('newTimestamp', newTimestamp);
         formattedNotesArr.push({
           id: note.id,
           content: note.content,
@@ -170,7 +189,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
       ac: 0,
@@ -180,6 +199,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       noSupport: 0,
       noTeacherOpp: 0,
       sessionId: '',
+      conferencePlanId: '',
       ac1: 0,
       ac2: 0,
       ac3: 0,
@@ -232,9 +252,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.noac + data.ac)) * 100));
-        noACArray.push(Math.floor((data.noac / (data.noOpportunity + data.noac + data.ac)) * 100));
-        ACArray.push(Math.floor((data.ac / (data.noOpportunity + data.noac + data.ac)) * 100));
+        noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noac + data.ac)) * 100));
+        noACArray.push(Math.round((data.noac / (data.noOpportunity + data.noac + data.ac)) * 100));
+        ACArray.push(Math.round((data.ac / (data.noOpportunity + data.noac + data.ac)) * 100));
       });
 
       this.setState({
@@ -261,9 +281,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        noSupportArray.push(Math.floor((data.nosupport / (data.noOpportunity + data.nosupport + data.support)) * 100));
-        supportArray.push(Math.floor((data.support / (data.noOpportunity + data.nosupport + data.support)) * 100));
-        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.nosupport + data.support)) * 100));
+        noSupportArray.push(Math.round((data.nosupport / (data.noOpportunity + data.nosupport + data.support)) * 100));
+        supportArray.push(Math.round((data.support / (data.noOpportunity + data.nosupport + data.support)) * 100));
+        noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.nosupport + data.support)) * 100));
       });
 
       this.setState({
@@ -368,6 +388,50 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   };
 
   /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToPlan = (conferencePlanId: string, note: string): void => {
+    const firebase = this.context;
+    if (!conferencePlanId) {
+      firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'AC')
+        .then(() => {
+          firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          }).then(() => {
+            firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+            .then(() => {
+              this.setState({ noteAdded: true }, () => {
+                setTimeout(() => {
+                  this.setState({ noteAdded: false })
+                }, 1500);
+              })
+            })
+          })
+        })
+    } else {
+      firebase.addNoteToConferencePlan(conferencePlanId, note)
+      .then(() => {
+        this.setState({ noteAdded: true }, () => {
+          setTimeout(() => {
+            this.setState({ noteAdded: false })
+          }, 1500);
+        })
+      })
+    }
+  }
+
+  /**
    * checks if question has already been added and if not, adds it
    * @param {string} panelTitle
    * @param {number} index
@@ -389,14 +453,42 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
-        firebase.saveConferencePlanQuestion(sessionId, question);
+        firebase.saveConferencePlanQuestion(sessionId, question)
+        .then(() => {
+          this.setState({ questionAdded: true }, () => {
+            setTimeout(() => {
+              this.setState({ questionAdded: false })
+            }, 1500);
+          })
+        })
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
-          firebase.saveConferencePlanQuestion(sessionId, question);
+          firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          })
+          firebase.saveConferencePlanQuestion(sessionId, question)
+          .then(() => {
+            this.setState({ questionAdded: true }, () => {
+              setTimeout(() => {
+                this.setState({ questionAdded: false })
+              }, 1500);
+            })
+          })
           this.setState({
             conferencePlanExists: true
           })
@@ -408,18 +500,20 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   /**
    * retrieves summary, details, and notes data using the session id
    */
-  getData = () => {
+  getData = (): void => {
     const firebase = this.context;
     this.handleNotesFetching(this.state.sessionId);
 
     firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         this.setState({
-          conferencePlanExists: false
+          conferencePlanExists: false,
+          conferencePlanId: ''
         })
       }
     }).catch(() => {
@@ -442,7 +536,16 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       });
     });
 
-    firebase.fetchACDetails(this.state.sessionId).then(summary => {
+    firebase.fetchACDetails(this.state.sessionId).then((summary: {
+      ac1: number,
+      ac2: number,
+      ac3: number,
+      ac4: number,
+      teacher1: number,
+      teacher2: number,
+      teacher3: number,
+      teacher4: number
+    }) => {
       this.setState({
         ac1: summary.ac1,
         ac2: summary.ac2,
@@ -472,7 +575,16 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
   /**
@@ -487,57 +599,73 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       )
     })
     return (
-      <div className={classes.root}>
-        <ResultsLayout
-          teacher={this.props.teacherSelected}
-          magic8="AC"
-          history={this.props.history}
-          summary={
-            <ChildTeacherBehaviorPieSlider
-              ac={this.state.ac}
-              noAc={this.state.noAc}
-              noChildOpp={this.state.noChildOpp}
-              support={this.state.support}
-              noSupport={this.state.noSupport}
-              noTeacherOpp={this.state.noTeacherOpp}
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+          <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
+          <ResultsLayout
+            teacher={this.props.teacherSelected}
+            magic8="AC"
+            history={this.props.history}
+            summary={
+              <ChildTeacherBehaviorPieSlider
+                ac={this.state.ac}
+                noAc={this.state.noAc}
+                noChildOpp={this.state.noChildOpp}
+                support={this.state.support}
+                noSupport={this.state.noSupport}
+                noTeacherOpp={this.state.noTeacherOpp}
 
+              />
+            }
+            details={
+              <ChildTeacherBehaviorDetailsSlider
+                ac1={this.state.ac1}
+                ac2={this.state.ac2}
+                ac3={this.state.ac3}
+                ac4={this.state.ac4}
+                teacher1={this.state.teacher1}
+                teacher2={this.state.teacher2}
+                teacher3={this.state.teacher3}
+                teacher4={this.state.teacher4}
+              />
+            }
+            trendsGraph={
+              <ChildTeacherBehaviorTrendsSlider
+                childData={this.handleTrendsChildFormatData}
+                teacherData={this.handleTrendsTeacherFormatData}
+              />
+            }
+            changeSessionId={this.changeSessionId}
+            conferencePlanId={this.state.conferencePlanId}
+            addNoteToPlan={this.addNoteToPlan}
+            sessionId={this.state.sessionId}
+            sessionDates={this.state.sessionDates}
+            notes={this.state.notes}
+            questions={
+              <ACCoachingQuestions
+                handleAddToPlan={this.handleAddToPlan}
+                addedToPlan={this.state.addedToPlan}
+                sessionId={this.state.sessionId}
+                teacherId={this.props.teacherSelected.id}
+              />
+            }
+            chosenQuestions={chosenQuestions}
+            actionPlanExists={this.state.actionPlanExists}
+            conferencePlanExists={this.state.conferencePlanExists}
+          />
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Results"}
             />
-          }
-          details={
-            <ChildTeacherBehaviorDetailsSlider
-              ac1={this.state.ac1}
-              ac2={this.state.ac2}
-              ac3={this.state.ac3}
-              ac4={this.state.ac4}
-              teacher1={this.state.teacher1}
-              teacher2={this.state.teacher2}
-              teacher3={this.state.teacher3}
-              teacher4={this.state.teacher4}
-            />
-          }
-          trendsGraph={
-            <ChildTeacherBehaviorTrendsSlider
-              childData={this.handleTrendsChildFormatData}
-              teacherData={this.handleTrendsTeacherFormatData}
-            />
-          }
-          changeSessionId={this.changeSessionId}
-          sessionId={this.state.sessionId}
-          sessionDates={this.state.sessionDates}
-          notes={this.state.notes}
-          questions={
-            <ACCoachingQuestions
-              handleAddToPlan={this.handleAddToPlan}
-              addedToPlan={this.state.addedToPlan}
-              sessionId={this.state.sessionId}
-              teacherId={this.props.teacherSelected.id}
-            />
-          }
-          chosenQuestions={chosenQuestions}
-          actionPlanExists={this.state.actionPlanExists}
-          conferencePlanExists={this.state.conferencePlanExists}
-        />
-      </div>
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }

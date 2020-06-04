@@ -119,7 +119,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
               ): string {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
-                return (Math.floor(currentValue) + 'm ' + Math.floor((currentValue % 1) * 60) + 's');
+                return (Math.floor(currentValue) + 'm ' + Math.round((currentValue % 1) * 60) + 's');
               }
             }
           },
@@ -136,9 +136,9 @@ class TransitionBarChart extends React.Component<Props, {}> {
               },
               fontFamily: 'Arimo',
               formatter: function(value: number) {
-                if (value > 0) {
+                if (value > 3.5) {
                   // return value + '%';
-                  return (Math.floor(value) + 'm ' + Math.floor((value % 1) * 60) + 's');
+                  return (Math.floor(value) + 'm ' + Math.round((value % 1) * 60) + 's');
                 } else {
                   return null;
                 }

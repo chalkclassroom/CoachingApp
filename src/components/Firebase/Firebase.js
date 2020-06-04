@@ -1385,8 +1385,12 @@ class Firebase {
    * @param {string} teacherId
    * @param {string} sessionId
    * @param {string} magic8
+   * @param {Array<string>} feedback
+   * @param {Array<string>} questions
+   * @param {Array<string>} addedQuestions
+   * @param {Array<string>} notes
    */
-  createConferencePlan = async function(teacherId, sessionId, magic8) {
+  createConferencePlan = async function(teacherId, sessionId, magic8, feedback, questions, addedQuestions, notes) {
     const data = Object.assign(
       {},
       {
@@ -1394,27 +1398,16 @@ class Firebase {
         coach: this.auth.currentUser.uid,
         teacher: teacherId,
         tool: magic8,
-        dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
-        feedback: [''],
-        questions: [''],
-        addedQuestions: [],
-        notes: ['']
+        dateCreated: firebase.firestore.Timestamp.now(),
+        dateModified: firebase.firestore.Timestamp.now(),
+        feedback: feedback ? feedback : [''],
+        questions: questions ? questions : [''],
+        addedQuestions: addedQuestions ? addedQuestions : [],
+        notes: notes ? notes : ['']
       }
     );
     const conferencePlansRef = firebase.firestore().collection('conferencePlans').doc();
     conferencePlansRef.set(data).then(() => {
-      /* const actionStepsRef = actionPlansRef.collection("actionSteps").doc('0');
-      actionStepsRef.set({
-        materials: '',
-        person: '',
-        step: '',
-        // timeline: firebase.firestore.FieldValue.serverTimestamp()
-        timeline: ''
-      }).then(() => {
-        console.log('action steps created');
-      }).catch(() => {
-        console.log('error creating action steps');
-      }) */
       console.log('conference plan created');
     }).catch(() => {
       console.log('error creating conference plan');
@@ -1449,6 +1442,42 @@ class Firebase {
   }
 
   /**
+   * finds all conference plans for coach and all their teachers
+   */
+  getCoachConferencePlans = async function() {
+    this.sessionRef = this.db.collection("conferencePlans")
+      .where("coach", "==", this.auth.currentUser.uid)
+    return this.sessionRef.get()
+      .then(querySnapshot => {
+        const idArr = [];
+        querySnapshot.forEach(doc =>
+          idArr.push({
+            id: doc.id,
+            teacherId: doc.data().teacher,
+            teacherFirstName: '',
+            teacherLastName: '',
+            sessionId: doc.data().sessionId,
+            practice: doc.data().tool,
+            date: doc.data().dateModified
+          })
+        )
+        return idArr;
+      })
+      .catch(() => {
+        console.log( 'unable to retrieve conference plan info')
+      })
+  }
+
+  getObservationDate = async function(sessionId) {
+    return this.db
+      .collection("observations")
+      .doc(sessionId)
+      .get()
+      .then(doc => doc.data().start)
+      .catch(error => console.error("Error getting cached document:", error));
+  }
+
+  /**
    * @param {string} conferencePlanId
    * @param {Array<string>} feedback
    * @param {Array<string>} questions
@@ -1461,7 +1490,8 @@ class Firebase {
       feedback: feedback,
       questions: questions,
       addedQuestions: addedQuestions,
-      notes: notes
+      notes: notes,
+      dateModified: firebase.firestore.Timestamp.now()
     })
     .then(() => {
       console.log("Action plan updated successfully!");
@@ -1470,6 +1500,23 @@ class Firebase {
       console.error("Error updating action plan: ", error);
     })
   }
+
+  /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToConferencePlan = async function(conferencePlanId, note) {
+    return this.db
+      .collection("conferencePlans")
+      .doc(conferencePlanId)
+      .update({
+        // does not add if it has already been added
+        notes: firebase.firestore.FieldValue.arrayUnion(note)
+      })
+      .catch(error =>
+        console.error("Error adding note to conference plan: ", error)
+      );
+  };
 
   /**
    * @param {string} sessionId
@@ -1483,12 +1530,10 @@ class Firebase {
         conferencePlanId.push(doc.id)
       );
       return this.db.collection("conferencePlans").doc(conferencePlanId[0]).update({
-        addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText)
+        addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText),
+        dateModified: firebase.firestore.Timestamp.now()
       })
     })
-    /* return conferencePlanRef.update({
-      addedQuestions: firebase.firestore.FieldValue.arrayUnion(questionText)
-    }) */
   }
 
 }

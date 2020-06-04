@@ -63,8 +63,15 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
               }
             },
             legend: {
-              display: false,
-              position: 'bottom'
+              display: true,
+              position: 'bottom',
+              onClick: null,
+              labels: {
+                padding: 20,
+                fontColor: "black",
+                fontSize: 14,
+                fontFamily: 'Arimo'
+              }
             },
             title: {
               display: true,

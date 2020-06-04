@@ -202,9 +202,10 @@ export const Checklist = {
       </div>,
       <div key={3}>
         Talking about or doing an activity together that has
-        a <b>predetermined sequence</b> (e.g., acting out
+        a <b>predetermined sequence</b> 
+        {/* (e.g., acting out
         restaurant in a dramatic play; doing pattern blocks
-        together)
+        together) */}
       </div>,
       <div key={4}> None of the above </div>
     ],
