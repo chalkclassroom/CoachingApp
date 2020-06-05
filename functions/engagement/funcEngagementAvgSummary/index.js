@@ -13,7 +13,7 @@ const bigquery = new BigQuery();
  */
 
 exports.funcEngagementAvgSummary = functions.https.onCall(async(data, context) => {
-  const sqlQuery = `SELECT AVG(point) AS average FROM cqrefpwa.observations.engagement WHERE id = '`+req.query.id+`' AND point = 0 OR point = 1 OR point = 2 OR point = 3`;
+  const sqlQuery = `SELECT AVG(point) AS average FROM cqrefpwa.observations.engagement WHERE id = '`+req.query.id+`' AND (point = 0 OR point = 1 OR point = 2 OR point = 3)`;
 
     console.log(sqlQuery); 
   
