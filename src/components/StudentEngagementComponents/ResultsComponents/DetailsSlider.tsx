@@ -4,7 +4,6 @@ import Slider from "react-slick";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import EngagementBarDetails from "./EngagementBarDetails";
-import TeacherBarDetails from "./TeacherBarDetails";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles: object = {

@@ -36,9 +36,6 @@ const styles: object = theme => ({
     width: 500,
     height: 360,
   },
-  inline: {
-    display: 'inline',
-  },
   paper: {
     position: "absolute",
     width: "67%",
@@ -52,7 +49,7 @@ const styles: object = theme => ({
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -103,6 +100,9 @@ const BootstrapButton = withStyles({
 
 interface Style {
   paper: string,
+  button: string,
+  gridList: string,
+  root: string
 }
 
 interface Props {
@@ -121,6 +121,7 @@ interface Props {
     handleSession(entry: object): void,
     handlePushSEEachEntry(mEntry: object): void
   },
+  onStatusChange(enable: boolean): void
 }
 
 interface State {
@@ -130,6 +131,7 @@ interface State {
   studentTextFieldValue: string
   status: any,
   currentStudent: number,
+  entryType: number,
   entries: number,
   selectedPoint: number,
   modal: boolean
@@ -146,7 +148,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   /**
    * @param {Props} props
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     const mEntry = {
       teacher: this.props.teacherId,
@@ -170,14 +172,17 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   };
 
 
-  handleClickOpen = () => {
+  handleClickOpen = (): void => {
     this.setState({ setOpen: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ setOpen: false });
   };
 
+  /**
+   * @param {string} studentName
+   */
   handleAddStudent = (studentName: string): void => {
     if(studentName){
       const newList = this.state.students.concat(studentName);
@@ -185,23 +190,26 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     }
   };
 
+  /**
+   * @param {React.ChangeEvent} e
+   */
   handleStudentTextFieldChange = (e : React.ChangeEvent<{}>): void =>{
     this.setState({
       studentTextFieldValue: e.target.value
     });
   }
 
-  switchToObservationPage = () => {
+  switchToObservationPage = (): void => {
     this.setState({ status: OBSERVATION });
     this.props.onStatusChange(true);
   }
 
-  switchToNameList = () => {
+  switchToNameList = (): void => {
     this.setState({ status: NAME_LIST });
     this.props.onStatusChange(false);
   }
 
-  handleSkipRating = () => {
+  handleSkipRating = (): void => {
     this.props.handleTimerReset();
     this.handleSelectedValue(-1);
     let entryType = 'none';
@@ -215,13 +223,13 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
       default:
         entryType = 'none';
     }
-    let mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
+    const mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
     this.props.firebase.handlePushSEEachEntry(mEntry);
     this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
     this.showModalForNextPerson();
   }
 
-  handleConfirmRating = () => {
+  handleConfirmRating = (): void => {
     if(this.state.selectedPoint !== -1){
       let entryType = 'none';
       switch(this.state.entryType){
@@ -234,7 +242,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
         default:
           entryType = 'none';
       }
-      let mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
+      const mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
       console.log(mEntry);
       this.props.firebase.handlePushSEEachEntry(mEntry);
       this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
@@ -245,17 +253,17 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     }
   }
 
-  showModalForNextPerson = () =>{
+  showModalForNextPerson = (): void =>{
     this.setState({modal: true});
     this.props.handleTimerReset();
   }
 
-  beginObservingStudent = () =>{
+  beginObservingStudent = (): void =>{
     this.setState({modal: false});
     this.props.handleTimerStart();
   }
 
-  generateHashCodeOfStudent = function(){
+  generateHashCodeOfStudent = function(): void {
     return this.hashCode(this.state.students[this.state.currentStudent].concat(this.state.currentStudent))
   }
 
@@ -273,7 +281,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
    * @param {string} s a string
    * @return {number} a hash code value for the given string.
    */
-  hashCode = function(s: string) {
+  hashCode = function(s: string): number {
     let h = 0; const l = s.length; let i = 0;
     if ( l > 0 )
       while (i < l)
@@ -281,11 +289,17 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     return h;
   };
 
-  handleSelectedValue=(point: number) =>{
+  /**
+   * @param {number} point
+   */
+  handleSelectedValue=(point: number): void =>{
     this.setState({ selectedPoint: point });
   }
 
-  handleSelectedType = (type: number) => {
+  /**
+   * @param {number} type
+   */
+  handleSelectedType = (type: number): void => {
     this.setState({ entryType: type });
   }
 
@@ -306,7 +320,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes, time } = this.props;
+    const { classes } = this.props;
     switch (this.state.status) {
       case NAME_LIST:
         return (
@@ -318,7 +332,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
           >
             <Dialog
               open={this.state.setOpen}
-              onClose={() => this.handleClose()}
+              onClose={(): void => this.handleClose()}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
@@ -344,13 +358,13 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               </DialogContent>
               <DialogActions>
                 <Button
-                  onClick={() => this.handleClose()}
+                  onClick={(): void => this.handleClose()}
                   color="secondary"
                 >
                   Cancel
                 </Button>
                 <Button
-                  onClick={() =>
+                  onClick={(): void =>
                     this.handleAddStudent(
                       this.state.studentTextFieldValue.toString()
                     )
@@ -404,7 +418,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 <Fab
                   className={classes.button}
                   aria-label="add"
-                  onClick={() => this.handleClickOpen()}
+                  onClick={(): void => this.handleClickOpen()}
                 >
                   <AddIcon />
                 </Fab>
@@ -469,7 +483,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 key={'Begin'}
                 variant="contained"
                 className={classes.button}
-                onClick={() => this.switchToObservationPage()}
+                onClick={(): void => this.switchToObservationPage()}
                 disabled={this.state.students.length === 0}
               >
                 Begin Observation
@@ -501,18 +515,28 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     container
                     item xs={6}
                   >
-                    <img src={ObserveImage} onClick={() =>this.beginObservingStudent()}/>
-                    <Button color="primary" variant="contained" className={classes.button} style={{fontFamily: "Arimo"}} onClick={() =>this.beginObservingStudent()}>
+                    <img src={ObserveImage} onClick={(): void =>this.beginObservingStudent()}/>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      className={classes.button}
+                      style={{fontFamily: "Arimo"}}
+                      onClick={(): void => this.beginObservingStudent()}
+                    >
                       Begin Observation
                     </Button>
-                    <Button variant="outlined"  style={{fontFamily: "Arimo", color: "red", }} onClick={() =>this.handleSkipRating()}>
+                    <Button
+                      variant="outlined"
+                      style={{fontFamily: "Arimo", color: "red"}}
+                      onClick={(): void => this.handleSkipRating()}
+                    >
                       Skip
                     </Button>
                   </Grid>
                 </Grid>
               </div>
             </Modal>
-            <Button variant="flat" style={{margin: 10}} onClick={() =>this.switchToNameList()}>
+            <Button variant="flat" style={{margin: 10}} onClick={(): void =>this.switchToNameList()}>
               <BackIcon/>  Back
             </Button>
             <Grid
@@ -543,7 +567,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 item xs={12}
               >
                 <Typography variant="h6" gutterBottom style={{fontFamily: "Arimo"}}>
-                  {this.props.time != 0?"Please observe ":"Now Rate "}this Student's level of Engagement.
+                  {this.props.time != 0?"Please observe ":"Now Rate "}this student&apos;s level of engagement.
                 </Typography>
               </Grid>
               <Grid
@@ -576,7 +600,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     fontFamily: "Arimo",
                     fontSize: 14
                   }}
-                  onClick={()=>this.handleSelectedValue(0)}
+                  onClick={(): void => this.handleSelectedValue(0)}
                 >
                   <Grid
                     alignItems="center"
@@ -604,7 +628,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     fontFamily: "Arimo",
                     fontSize: 14
                   }}
-                  onClick={()=>this.handleSelectedValue(1)}
+                  onClick={(): void => this.handleSelectedValue(1)}
                 >
                   <Grid
                     alignItems="center"
@@ -632,7 +656,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     fontFamily: "Arimo",
                     fontSize: 14,
                   }}
-                  onClick={()=>this.handleSelectedValue(2)}
+                  onClick={(): void => this.handleSelectedValue(2)}
                 >
                   <Grid
                     alignItems="center"
@@ -660,7 +684,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     fontFamily: "Arimo",
                     fontSize: 14
                   }}
-                  onClick={()=>this.handleSelectedValue(3)}
+                  onClick={(): void => this.handleSelectedValue(3)}
                 >
                   <Grid
                     alignItems="center"
@@ -698,7 +722,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     backgroundColor: this.state.entryType === 0 && "#0069d9",
                     borderColor: this.state.entryType === 0 && "#005cbf",
                   }}
-                  onClick={()=>this.handleSelectedType(0)}
+                  onClick={(): void => this.handleSelectedType(0)}
                 >
                   <Grid
                     alignItems="center"
@@ -724,7 +748,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     backgroundColor: this.state.entryType === 1 && "#0069d9",
                     borderColor: this.state.entryType === 1 && "#005cbf",
                   }}
-                  onClick={()=>this.handleSelectedType(1)}
+                  onClick={(): void => this.handleSelectedType(1)}
                 >
                   <Grid
                     alignItems="center"
@@ -750,7 +774,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     backgroundColor: this.state.entryType === 2 && "#0069d9",
                     borderColor: this.state.entryType === 2 && "#005cbf",
                   }}
-                  onClick={()=>this.handleSelectedType(2)}
+                  onClick={(): void => this.handleSelectedType(2)}
                 >
                   <Grid
                     alignItems="center"
@@ -775,7 +799,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 <Button
                   variant="outlined"
                   style={{fontFamily: "Arimo", color: "red"}}
-                  onClick={() =>this.handleSkipRating()}
+                  onClick={(): void => this.handleSkipRating()}
                 >
                   SKIP RATING
                 </Button>
@@ -788,7 +812,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     this.state.selectedPoint === -1 || 
                     this.props.time !==0
                   }
-                  onClick={() =>this.handleConfirmRating()}
+                  onClick={(): void => this.handleConfirmRating()}
                 >
                   CONFIRM RATING
                 </Button>

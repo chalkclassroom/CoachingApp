@@ -36,7 +36,7 @@ const EngagementTrendsOptions = {
           min: 0,
           max: 3,
           stepSize: 1,
-          callback: function (value: number, index: number, values: any) {
+          callback: function (value: number): string | void {
             switch (value) {
               case 0:
                 return 'off task';
@@ -67,7 +67,7 @@ const EngagementTrendsOptions = {
 };
 
 interface Props {
-  teacherData(): {
+  data(): {
     labels: Array<Array<string>>,
     datasets: Array<{
       label: string,

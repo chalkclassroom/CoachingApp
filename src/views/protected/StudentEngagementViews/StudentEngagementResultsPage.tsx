@@ -38,7 +38,17 @@ interface Teacher {
 
 interface Props {
   classes: Style,
-  teacherSelected: Teacher
+  teacherSelected: Teacher,
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void
+  }
 }
 
 interface Style {
@@ -138,7 +148,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
    /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
       sessionId: '',

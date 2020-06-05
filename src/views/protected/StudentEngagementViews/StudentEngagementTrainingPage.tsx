@@ -8,7 +8,7 @@ import { withStyles } from "@material-ui/core/styles/index";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import "chartjs-plugin-datalabels";
-import TrainingVideo from "../../../components/Shared/TrainingVideo.tsx";
+import TrainingVideo from "../../../components/Shared/TrainingVideo";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
@@ -150,7 +150,18 @@ const ViewEnum = {
 };
 
 interface Props {
-  classes: Style
+  classes: Style,
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void,
+    goBack(): void
+  }
 }
 
 interface Style {
@@ -182,37 +193,37 @@ class StudentEngagementTrainingPage extends React.Component<Props, State> {
     };
   }
 
-  conceptsClick = () => {
+  conceptsClick = (): void => {
     if (this.state.view !== ViewEnum.CONCEPTS) {
       this.setState({ view: ViewEnum.CONCEPTS })
     }
   }
 
-  definitionsClick = () => {
+  definitionsClick = (): void => {
     if (this.state.view !== ViewEnum.DEFINITIONS) {
       this.setState({ view: ViewEnum.DEFINITIONS })
     }
   }
 
-  exampleClick = () => {
+  exampleClick = (): void => {
     if (this.state.view !== ViewEnum.EXAMPLE) {
       this.setState({ view: ViewEnum.EXAMPLE })
     }
   }
 
-  demonstrationClick = () => {
+  demonstrationClick = (): void => {
     if (this.state.view !== ViewEnum.DEMONSTRATION) {
       this.setState({ view: ViewEnum.DEMONSTRATION })
     }
   }
 
-  tryItClick = () => {
+  tryItClick = (): void => {
     if (this.state.view !== ViewEnum.TRYIT) {
       this.setState({ view: ViewEnum.TRYIT })
     }
   }
 
-  knowledgeCheckClick = () => {
+  knowledgeCheckClick = (): void => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
       this.setState({ view: ViewEnum.KNOWLEDGECHECK })
     }

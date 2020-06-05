@@ -55,7 +55,7 @@ class AvgBarSummary extends React.Component<Props, {}> {
                 min: 0,
                 max: 3,
                 stepSize:1,
-                callback: function(value: number, index:number, values: any) {
+                callback: function(index:number): string | void {
                   switch(index){
                     case 0: return 'off task';
                       break;
@@ -71,6 +71,16 @@ class AvgBarSummary extends React.Component<Props, {}> {
                 }
               }
             }]
+          },
+          plugins: {
+            datalabels: {
+              display: 'auto',
+              color: 'white',
+              font: {
+                size: 16,
+                weight: 'bold'
+              }
+            }
           }
         }}
       />

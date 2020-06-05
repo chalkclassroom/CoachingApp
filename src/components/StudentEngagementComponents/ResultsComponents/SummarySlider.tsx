@@ -6,11 +6,8 @@ import 'slick-carousel/slick/slick.css';
 import PieSummary from "./PieSummary";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import PieSliceChildSequentialImage from "../../../assets/images/PieSliceChildSequentialImage.svg";
+import PieSliceEngagementImage from "../../../assets/images/PieSliceEngagementImage.svg";
 import PieSliceChildNonImage from "../../../assets/images/PieSliceChildNonImage.svg";
-import PieSliceTeacherSupportImage from "../../../assets/images/PieSliceTeacherSupportImage.svg";
-import PieSliceTeacherNoSupportImage from "../../../assets/images/PieSliceTeacherNoSupportImage.svg";
-import PieSliceNoOppImage from "../../../assets/images/PieSliceNoOppImage.svg";
 import { withStyles } from "@material-ui/core/styles";
 import AvgBarSummary from "../../StudentEngagementComponents/ResultsComponents/AvgBarSummary";
 
@@ -39,11 +36,10 @@ interface Props {
 class SummarySlider extends React.Component<Props, {}> {
 
   static propTypes = {
-    sequential: PropTypes.number.isRequired,
-    notSequential: PropTypes.number.isRequired,
-    support: PropTypes.number.isRequired,
-    noSupport: PropTypes.number.isRequired,
-    noTeacherOpp: PropTypes.number.isRequired
+    offTask: PropTypes.number.isRequired,
+    engaged: PropTypes.number.isRequired,
+    avgRating: PropTypes.number.isRequired,
+    classes: PropTypes.object.isRequired,
   }
   /**
    * render function
@@ -72,7 +68,7 @@ class SummarySlider extends React.Component<Props, {}> {
                     <Grid item xs={1}>
                       <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
                         <Grid item style={{height:"50%"}}>
-                          <img alt="yellow" src={PieSliceChildSequentialImage} height="95%"/>
+                          <img alt="yellow" src={PieSliceEngagementImage} height="95%"/>
                         </Grid>
                         <Grid item style={{height:"50%"}}>
                           <img alt="red" src={PieSliceChildNonImage} height="95%"/>

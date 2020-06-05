@@ -1468,7 +1468,7 @@ export const CoachingQuestions = {
         'text': [
           'Talk about children’s opportunities for investigating and exploring  ' +
           'materials.',
-          'What do you notice about how children in your classroom interact with new materials during activities?' +
+          'What do you notice about how children in your classroom interact with new materials during activities? ' +
           'Do they take turns, share, or do they each get to use some of the new materials--how does ' +
           'this affect their engagement?'
         ]

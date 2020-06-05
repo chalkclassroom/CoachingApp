@@ -71,4 +71,10 @@ function StudentEngagementHelp(props: Props): React.ReactElement {
   );
 }
 
+StudentEngagementHelp.propTypes = {
+  classes: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  close: PropTypes.func.isRequired
+}
+
 export default withStyles(styles)(StudentEngagementHelp);

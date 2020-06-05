@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
@@ -7,7 +7,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import CenterMenuStudentEngagement from "../../../components/StudentEngagementComponents/CenterMenuStudentEngagement";
 import { connect } from "react-redux";
 import Dashboard from "../../../components/Dashboard";
-import Countdown from "../../../components/Countdown.tsx";
+import Countdown from "../../../components/Countdown";
 
 /*
     N.B. Time measured in milliseconds.
@@ -34,19 +34,42 @@ const styles: object = {
   }
 };
 
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
+interface Props {
+  classes: {
+    root: string,
+    grow: string
+  },
+  teacherSelected: Teacher
+}
+
+interface State {
+  time: number,
+  completeEnabled: boolean
+}
+
 /**
  * classroom climate observation tool
  * @class ClassroomClimatePage
  */
-class StudentEngagementPage extends React.Component {
+class StudentEngagementPage extends React.Component<Props, State> {
   state = {
-    auth: true,
     time: RATING_INTERVAL,
     recs: true,
     completeEnabled: false,
   };
 
-  tick = () => {
+  tick = (): void => {
     if (this.state.time <= 0) {
       this.setState({ time: 0 });
     } else {
@@ -58,11 +81,7 @@ class StudentEngagementPage extends React.Component {
     }
   };
 
-  handleClickAway = () => {
-    this.setState({ help: false });
-  };
-
-  handleTimerReset = ()=>{
+  handleTimerReset = (): void => {
     this.setState({ time: RATING_INTERVAL });
     clearInterval(this.timer);
   }
@@ -70,17 +89,16 @@ class StudentEngagementPage extends React.Component {
   /**
    * @param {boolean} enable
    */
-  handleCompleteButton = (enable: boolean) => {
+  handleCompleteButton = (enable: boolean): void => {
     this.setState({ completeEnabled: enable });
   };
 
-  handleTimerStart = () =>{
+  handleTimerStart = (): void => {
     this.timer = setInterval(this.tick, 1000);
   }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -97,11 +115,11 @@ class StudentEngagementPage extends React.Component {
    * render function
    * @return {ReactElement}
    */
-  render() {
+  render(): React.ReactElement {
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid
           container
@@ -125,17 +143,16 @@ class StudentEngagementPage extends React.Component {
                 <Dashboard
                   type="SE"
                   infoDisplay={
-                      this.state.completeEnabled && <Countdown color="#e99b2e" timerTime={RATING_INTERVAL} time={this.state.time} />
+                      this.state.completeEnabled && <Countdown type="SE" timerTime={RATING_INTERVAL} time={this.state.time} />
                   }
                   infoPlacement="center"
-                  uploadStudentEngagement = {this.handleUploadingStudentEngagement}
                   completeObservation={this.state.completeEnabled}
                 />
               </Grid>
             </Grid>
             <Grid item xs={8}>
               <FirebaseContext.Consumer>
-                {firebase => (
+                {(firebase: object): React.ReactNode => (
                   <CenterMenuStudentEngagement
                     teacherId={this.props.teacherSelected.id}
                     firebase={firebase}
