@@ -25,7 +25,7 @@ interface State {
  */
 class CenterChecklist extends React.Component<Props, State> {
   /**
-   * 
+   *
    * @param {Props} props
    */
   constructor(props: Props){

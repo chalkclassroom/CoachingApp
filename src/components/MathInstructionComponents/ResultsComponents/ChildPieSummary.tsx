@@ -10,12 +10,12 @@ interface Props {
 
 /**
  * Pie Chart for Math Child Behaviors
- * @class ChildPieSummary
+ * @class AvgBarSummary
  * @return {void}
  */
 class ChildPieSummary extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);

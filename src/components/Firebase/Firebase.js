@@ -399,7 +399,7 @@ class Firebase {
         isCorrect: isCorrect
       })
     .catch(error => console.error("Error occurred recording knowlegde check answer: ", error))
-  }
+  };
 
   handleSession = async function(mEntry) {
     this.sessionRef = this.db.collection("observations").doc();
@@ -447,7 +447,21 @@ class Firebase {
         Timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
-        console.error("error occurred adding observation: ", error)
+        console.error("Error occurred adding observation: ", error)
+      );
+  };
+
+  handlePushSEEachEntry = async function(mEntry) {
+    return this.sessionRef
+      .collection("entries")
+      .add({
+          studentId: mEntry.id,
+          point: mEntry.point,
+          entryType: mEntry.entryType,
+          Timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .catch(error =>
+          console.error("Error occurred adding observation: ", error)
       );
   };
 
@@ -635,6 +649,24 @@ class Firebase {
       );
   };
 
+    fetchEngagementAvgSummary = async function(sessionId) {
+        const getEngagementAvgSummaryFirebaseFunction = this.functions.httpsCallable(
+            "funcEngagementAvgSummary"
+        );
+        return getEngagementAvgSummaryFirebaseFunction({ sessionId: sessionId })
+            .then(
+                result =>
+                    // Read result of the Cloud Function.
+                    // const sanitizedMessage = result.data[0];
+                    // console.log(sanitizedMessage);
+                    // return sanitizedMessage;
+                    result.data[0][0]
+            )
+            .catch(error =>
+                console.error("Error occurred getting average tone rating: ", error)
+            );
+    };
+
   fetchBehaviourTypeCount = async function(sessionId) {
     const getBehaviourTypeCountFirebaseFunction = this.functions.httpsCallable(
       "funcBehaviourTypeCount"
@@ -670,6 +702,24 @@ class Firebase {
       .catch(error =>
         console.error("Error occurred getting behavior trend: ", error)
       );
+  };
+
+  fetchEngagementTrend = async function(teacherId) {
+        const getEngagementTrendFirebaseFunction = this.functions.httpsCallable(
+            "funcEngagementTrend"
+        );
+        return getEngagementTrendFirebaseFunction({ teacherId: teacherId })
+            .then(
+                result =>
+                    // Read result of the Cloud Function.
+                    // var sanitizedMessage = result.data[0];
+                    // console.log(sanitizedMessage);
+                    // return sanitizedMessage;
+                    result.data[0]
+            )
+            .catch(error =>
+                console.error("Error occurred getting engagement trend: ", error)
+            );
   };
 
   fetchInstructionTypeCount = async function(sessionId) {
@@ -841,7 +891,26 @@ class Firebase {
       );
   };
 
-  fetchMathDetails = async function(sessionId) {
+    fetchEngagementDetails = async function(sessionId) {
+        const getEngagementDetailsFirebaseFunction = this.functions.httpsCallable(
+            "funcEngagementDetails"
+        );
+        return getEngagementDetailsFirebaseFunction({ sessionId: sessionId })
+            .then(
+                result =>
+                    // Read result of the Cloud Function.
+                    // var sanitizedMessage = result.data[0];
+                    // console.log(sanitizedMessage);
+                    // return sanitizedMessage;
+                    result.data[0][0]
+            )
+            .catch(error =>
+                console.error("Error occurred getting sequential details: ", error)
+            );
+    };
+
+
+    fetchMathDetails = async function(sessionId) {
     const getMathDetailsFirebaseFunction = this.functions.httpsCallable(
       "funcMathDetails"
     );
@@ -908,6 +977,27 @@ class Firebase {
         )
       );
   };
+
+    fetchEngagementPieSummary = async function(sessionId) {
+        const getEngagementPieSummaryFirebaseFunction = this.functions.httpsCallable(
+            "funcEngagementPieSummary"
+        );
+        return getEngagementPieSummaryFirebaseFunction({ sessionId: sessionId })
+            .then(
+                result =>
+                    // Read result of the Cloud Function.
+                    // var sanitizedMessage = result.data[0];
+                    // console.log(sanitizedMessage);
+                    // return sanitizedMessage;
+                    result.data[0][0]
+            )
+            .catch(error =>
+                console.error(
+                    "Error occurred getting child Sequential summary: ",
+                    error
+                )
+            );
+    };
 
   fetchChildMathSummary = async function(sessionId) {
     const getChildMathSummaryFirebaseFunction = this.functions.httpsCallable(

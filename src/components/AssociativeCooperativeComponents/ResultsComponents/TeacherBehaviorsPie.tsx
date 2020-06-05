@@ -16,7 +16,7 @@ interface Props {
  */
 class TeacherBehaviorsPie extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);

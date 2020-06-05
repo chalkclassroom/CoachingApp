@@ -5,8 +5,8 @@ import FirebaseContext from "../../Firebase/FirebaseContext";
 import * as Constants from '../../../constants';
 
 interface Props {
-  listening: number, 
-  notListening: number, 
+  listening: number,
+  notListening: number,
 }
 
 /**
@@ -14,14 +14,14 @@ interface Props {
  */
 class ListeningSummaryChart extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
-   */ 
+   * @param {Props} props
+   */
   constructor(props: Props) {
     super(props);
   }
 
   static propTypes = {
-    listening: PropTypes.number.isRequired, 
+    listening: PropTypes.number.isRequired,
     notListening: PropTypes.number.isRequired,
   }
 
@@ -36,7 +36,7 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
         {
           data: [this.props.listening, this.props.notListening],
           backgroundColor: [Constants.Colors.LC, Constants.Colors.RedGraph],
-          hoverBackgroundColor: [Constants.Colors.LC, Constants.Colors.RedGraph] 
+          hoverBackgroundColor: [Constants.Colors.LC, Constants.Colors.RedGraph]
         }
       ]
     };
@@ -44,7 +44,7 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
       <div>
         <Pie
           data={listeningData}
-          options={{ 
+          options={{
             tooltips: {
               callbacks: {
                 label: function(tooltipItem: { datasetIndex: number, index: number },

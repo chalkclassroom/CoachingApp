@@ -29,6 +29,7 @@ import AssocCoopLookForsImage from "../assets/images/AssocCoopLookForsImage.svg"
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
 import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
+import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp';
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
@@ -282,6 +283,8 @@ class ResultsDashboard extends React.Component {
             <ClassroomClimateHelp open={this.state.help} close={this.handleCloseHelp} />
           : this.props.magic8 === "Math Instruction" ? 
             <MathInstructionHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Level of Engagement" ?
+            <StudentEngagementHelp open={this.state.help} close={this.handleCloseHelp} />
           : this.props.magic8 === "AC" ?
             <AssocCoopHelp open={this.state.help} close={this.handleCloseHelp} />
           : this.props.magic8 === "Sequential Activities" ?

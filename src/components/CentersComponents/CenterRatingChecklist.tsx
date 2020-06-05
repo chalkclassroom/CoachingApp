@@ -89,7 +89,7 @@ interface State {
  */
 class CenterRatingChecklist extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -170,7 +170,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     }
     const { childChecked } = this.state;
     const newChecked: Array<number> = [];
-    if (((childChecked.includes(5) && value != 5) || 
+    if (((childChecked.includes(5) && value != 5) ||
     (childChecked.includes(1) || childChecked.includes(2) ||
     childChecked.includes(3) || childChecked.includes(4)) && value === 5)) {
       newChecked.splice(0, newChecked.length);
@@ -184,7 +184,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       } else {
         newChecked.splice(currentIndex, 1);
       }
-      
+
     }
     this.setState({childChecked: newChecked});
   }
@@ -199,7 +199,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     }
     const { teacherChecked } = this.state;
     const newChecked: Array<number> = [];
-    if (((teacherChecked.includes(10) && value != 10) || 
+    if (((teacherChecked.includes(10) && value != 10) ||
     (teacherChecked.includes(6) || teacherChecked.includes(7) ||
     teacherChecked.includes(8) || teacherChecked.includes(9)) && value === 10)) {
       newChecked.splice(0, newChecked.length);
@@ -213,7 +213,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       } else {
         newChecked.splice(currentIndex, 1);
       }
-      
+
     }
     this.setState({teacherChecked: newChecked});
   }

@@ -96,7 +96,7 @@ const MAP = {
  */
 class Magic8MenuPage extends Component {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props) {
     super(props);
@@ -117,8 +117,8 @@ class Magic8MenuPage extends Component {
   }
 
   /**
-   * @param {string} selected 
-   * @param {string} title 
+   * @param {string} selected
+   * @param {string} title
    * @return {void}
    */
   onClick = (selected, title) => {
@@ -192,8 +192,8 @@ class Magic8MenuPage extends Component {
   }
 
   /**
-   * 
-   * @param {Props} prevProps 
+   *
+   * @param {Props} prevProps
    */
   componentDidUpdate(prevProps) {
     if (this.props.location.state.type !== prevProps.location.state.type) {
@@ -261,7 +261,7 @@ class Magic8MenuPage extends Component {
                         InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
                         InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
                       >
-                        {this.props.teacherList.map((teacher, index)=> 
+                        {this.props.teacherList.map((teacher, index)=>
                           {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
                             <em>{teacher.firstName + " " + teacher.lastName}</em>
                           </MenuItem>})}

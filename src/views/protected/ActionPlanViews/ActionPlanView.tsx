@@ -43,14 +43,14 @@ class ActionPlanView extends React.Component<Props, State>{
    */
   constructor(props: Props) {
     super(props);
-    
+
     this.state={
       teacher: null
     }
   }
 
   /**
-   * 
+   *
    */
   componentDidMount(): void {
     const firebase = this.context;
@@ -82,7 +82,7 @@ class ActionPlanView extends React.Component<Props, State>{
               <Grid container justify="center" alignItems="center" style={{width: '100%'}}>
                 {this.state.teacher ? (
                   <FirebaseContext.Consumer>
-                    {(firebase: object): React.ReactNode => <ActionPlanForm 
+                    {(firebase: object): React.ReactNode => <ActionPlanForm
                       firebase={firebase}
                       actionPlanId={this.props.location.state.actionPlanId}
                       teacher={this.state.teacher}

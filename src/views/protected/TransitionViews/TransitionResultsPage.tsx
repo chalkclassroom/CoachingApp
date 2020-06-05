@@ -131,7 +131,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     };
   }
 
-  
+
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
@@ -552,8 +552,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
     })
   };
 
-  /** 
-   * lifecycle method invoked after component updates 
+  /**
+   * lifecycle method invoked after component updates
    * @param {Props} prevProps
    */
   componentDidUpdate(prevProps: Props): void {

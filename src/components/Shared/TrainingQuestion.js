@@ -45,7 +45,7 @@ class TrainingQuestion extends Component {
   getFeedback = () => {
     if (!!this.props.feedback) {
       if (this.props.recentlyCorrect) {
-        return <FormHelperText className={this.props.classes.correctFeedback}>{this.props.feedback}</FormHelperText> 
+        return <FormHelperText className={this.props.classes.correctFeedback}>{this.props.feedback}</FormHelperText>
       } else {
         return <FormHelperText className={this.props.classes.incorrectFeedback}>{this.props.feedback}</FormHelperText>
       }

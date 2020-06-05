@@ -28,7 +28,7 @@ const styles = {
  * @class AboutPage
  */
 class AboutPage extends React.Component {
-  /** 
+  /**
    * @param {Props} props
    * @return {ReactElement}
    */
@@ -101,7 +101,7 @@ class AboutPage extends React.Component {
       </svg>
     );
   };
-  /** 
+  /**
    * @param {Props} props
    * @return {ReactElement}
    */
@@ -545,7 +545,7 @@ class AboutPage extends React.Component {
       </svg>
     );
   };
-  /** 
+  /**
    * @param {Props} props
    * @return {ReactElement}
    */
@@ -753,7 +753,7 @@ class AboutPage extends React.Component {
     );
   };
 
-  /** 
+  /**
    * @param {Props} props
    * @return {ReactElement}
    */
@@ -995,7 +995,7 @@ class AboutPage extends React.Component {
       </svg>
     );
   };
-  
+
   gallery = () => {
     return (
       <InfiniteCarousel

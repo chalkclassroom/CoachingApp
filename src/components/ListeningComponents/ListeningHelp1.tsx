@@ -45,7 +45,7 @@ interface Props {
 }
 
 /**
- * @param {Props} props 
+ * @param {Props} props
  * @return {ReactElement}
  */
 function ListeningHelp1(props: Props): React.ReactElement {

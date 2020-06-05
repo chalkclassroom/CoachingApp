@@ -33,6 +33,8 @@ import SequentialActivitiesResultsPage from "./views/protected/SequentialActivit
 import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage.tsx";
 import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage.tsx";
+import StudentEngagementPage from "./views/protected/StudentEngagementViews/StudentEngagementPage.tsx";
+import StudentEngagementResultsPage from "./views/protected/StudentEngagementViews/StudentEngagementResultsPage.tsx";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage.tsx";
 import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage.tsx"; 
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
@@ -49,6 +51,7 @@ import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
 import Grid from '@material-ui/core/Grid';
 import { getCoach } from './state/actions/coach';
 import { connect } from 'react-redux';
+import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -336,6 +339,22 @@ class App extends Component {
               path={`/MyTeachers/:teacherid`}
               component={TeacherDetailPage}
             />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/StudentEngagement"
+                component={StudentEngagementPage}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/StudentEngagementResults"
+                component={StudentEngagementResultsPage}
+            />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/StudentEngagementTraining"
+                component={StudentEngagementTrainingPage}
+            />
+
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
                           the type prop into the PrivateRoute function*/}
             <Route

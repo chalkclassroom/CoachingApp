@@ -67,10 +67,10 @@ const headCells = [
 ];
 
 /**
- * 
- * @param {any} a 
- * @param {any} b 
- * @param {string} orderBy 
+ *
+ * @param {any} a
+ * @param {any} b
+ * @param {string} orderBy
  * @return {number}
  */
 function descendingComparator(a, b, orderBy: string): number {
@@ -84,9 +84,9 @@ function descendingComparator(a, b, orderBy: string): number {
 }
 
 /**
- * @param {'desc' | 'asc'} order 
+ * @param {'desc' | 'asc'} order
  * @param {string} orderBy
- * @return {any} 
+ * @return {any}
  */
 function getComparator(order: string, orderBy: string) {
   return order === 'desc'
@@ -95,9 +95,9 @@ function getComparator(order: string, orderBy: string) {
 }
 
 /**
- * 
- * @param {Array<any>} array 
- * @param {any} comparator 
+ *
+ * @param {Array<any>} array
+ * @param {any} comparator
  * @return {any}
  */
 function stableSort(array, comparator) {
@@ -117,7 +117,7 @@ interface TableHeadProps {
 }
 
 /**
- * 
+ *
  * @param {TableHeadProps} props
  * @return {ReactElement}
  */
@@ -146,7 +146,7 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
               <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
               {headCell.label}
               {orderBy === headCell.id ? (
-                <span 
+                <span
                   style={{
                     border: 0,
                     clip: 'rect(0 0 0 0)',
@@ -180,7 +180,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
    */
   constructor(props: Props) {
     super(props);
-    
+
     this.state={
       result: null,
       order: 'desc',
@@ -198,7 +198,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
   };
 
   /**
-   * 
+   *
    */
   componentDidMount(): void {
     const firebase = this.context;
@@ -331,7 +331,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
                                       src={MathIconImage}
                                       alt="Magic 8 Icon"
                                     />
-                                  ) : row.practice === 'Student Engagement' ? (
+                                  ) : row.practice === 'Level of Engagement' ? (
                                     <img
                                       src={EngagementIconImage}
                                       alt="Magic 8 Icon"

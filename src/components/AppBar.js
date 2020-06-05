@@ -194,7 +194,7 @@ class AppBar extends React.Component {
                     </Typography>
                   </Grid>
                   <Grid item>
-                    <Typography 
+                    <Typography
                       variant="h6"
                       className={classes.coachingText}
                       onClick = {() => this.props.history.push("/Landing")}
@@ -268,7 +268,7 @@ class AppBar extends React.Component {
                     </Typography>
                   </Grid>
                   <Grid item>
-                    <Typography 
+                    <Typography
                       variant="h6"
                       className={classes.coachingText}
                       onClick = {() => this.props.history.push("/")}
@@ -313,8 +313,8 @@ class AppBar extends React.Component {
                         About
                       </Button>
                     </Link> */}
-                  </div>   
-                </Router>        
+                  </div>
+                </Router>
               </Toolbar>
               {this.state.loginModal ? (
                 <LoginModal
