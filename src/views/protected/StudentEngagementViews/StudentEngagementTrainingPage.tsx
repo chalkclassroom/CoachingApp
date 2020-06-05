@@ -286,7 +286,7 @@ class StudentEngagementTrainingPage extends React.Component<Props, State> {
           <div className={classes.trainingContentCard}>
             {view === ViewEnum.CONCEPTS ?
               <TrainingVideo
-                videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Sequential_Concepts.mp4?alt=media&token=44a1fe64-2e44-46e6-9c3f-cd8fd873b3e0'}
+                videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Student%20Engagement%20Concepts.mp4?alt=media&token=201b9f73-32c1-4842-aac5-f70a6eb0e375'}
               />
             : view === ViewEnum.DEFINITIONS ?
               <StudentEngagementHelpCard />
