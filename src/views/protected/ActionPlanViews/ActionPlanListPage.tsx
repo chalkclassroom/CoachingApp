@@ -331,7 +331,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
                                       src={MathIconImage}
                                       alt="Magic 8 Icon"
                                     />
-                                  ) : row.practice === 'Student Engagement' ? (
+                                  ) : row.practice === 'Level of Engagement' ? (
                                     <img
                                       src={EngagementIconImage}
                                       alt="Magic 8 Icon"

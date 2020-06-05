@@ -162,11 +162,13 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
         this.setState({
           sessionDates: dates
         }, () => {
-          this.setState({ sessionId: this.state.sessionDates[0].id },
-            () => {
-              this.getData();
-            }
-          );
+          if (this.state.sessionDates[0]) {
+            this.setState({ sessionId: this.state.sessionDates[0].id },
+              () => {
+                this.getData();
+              }
+            );
+          }
         })
       );
     })
@@ -420,6 +422,17 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       this.handleTrendsFetching(this.props.teacherSelected.id);
     } else {
       this.setState({ teacherModal: true })
+    }
+  }
+
+  /**
+   * lifecycle method invoked after component updates
+   * @param {Props} prevProps
+   */
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.teacherSelected != prevProps.teacherSelected) {
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+      this.handleDateFetching(this.props.teacherSelected.id);
     }
   }
 
