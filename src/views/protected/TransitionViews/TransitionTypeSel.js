@@ -245,6 +245,7 @@ class TransitionTypeSel extends React.Component {
                 onClick={() => this.handleButtonChange("waiting")}
                 classes={{ root: classes.button, label: classes.label }}
                 variant="raised"
+                disabled={this.props.transitionType}
                 style={
                   this.state.selected === "waiting"
                     ? raisedThemes.palette.waitingColor
@@ -272,6 +273,7 @@ class TransitionTypeSel extends React.Component {
                 onClick={() => this.handleButtonChange("traveling")}
                 classes={{ root: classes.button, label: classes.label }}
                 variant="raised"
+                disabled={this.props.transitionType}
                 style={
                   this.state.selected === "traveling"
                     ? raisedThemes.palette.travelingColor
@@ -299,6 +301,7 @@ class TransitionTypeSel extends React.Component {
                 onClick={() => this.handleButtonChange("child waiting")}
                 classes={{ root: classes.button, label: classes.label }}
                 variant="raised"
+                disabled={this.props.transitionType}
                 style={
                   this.state.selected === "child waiting"
                     ? raisedThemes.palette.childWaitingColor
@@ -330,6 +333,7 @@ class TransitionTypeSel extends React.Component {
                 onClick={() => this.handleButtonChange("classroom routines")}
                 classes={{ root: classes.button, label: classes.label }}
                 variant="raised"
+                disabled={this.props.transitionType}
                 style={
                   this.state.selected === "classroom routines"
                     ? raisedThemes.palette.classroomRoutinesColor
@@ -356,6 +360,7 @@ class TransitionTypeSel extends React.Component {
                 }
                 classes={{ root: classes.button, label: classes.label }}
                 variant="raised"
+                disabled={this.props.transitionType}
                 style={
                   this.state.selected === "behavior management disruption"
                     ? raisedThemes.palette.bmiColor
@@ -383,6 +388,7 @@ class TransitionTypeSel extends React.Component {
                 onClick={() => this.handleButtonChange("other")}
                 classes={{ root: classes.button, label: classes.label }}
                 variant="raised"
+                disabled={this.props.transitionType}
                 style={
                   this.state.selected === "other"
                     ? raisedThemes.palette.otherColor
@@ -406,6 +412,7 @@ class TransitionTypeSel extends React.Component {
 TransitionTypeSel.propTypes = {
   classes: PropTypes.object.isRequired,
   transitionEnded: PropTypes.bool.isRequired,
+  transitionType: PropTypes.string.isRequired,
   handleTransitionType: PropTypes.func.isRequired,
   toggleNewTransitionType: PropTypes.func.isRequired,
   handleNotes: PropTypes.func.isRequired
