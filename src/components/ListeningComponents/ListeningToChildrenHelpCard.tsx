@@ -18,6 +18,9 @@ const ListeningTheme = createMuiTheme({
     secondary: {
       main: '#000000'
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

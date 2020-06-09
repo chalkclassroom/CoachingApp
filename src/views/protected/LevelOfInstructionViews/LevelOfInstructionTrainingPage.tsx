@@ -19,6 +19,9 @@ const InstructionTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.LI
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

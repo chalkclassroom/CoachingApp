@@ -11,6 +11,9 @@ const AssociativeTheme = createMuiTheme({
     primary: {
       main: "#c5afe7"
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 
@@ -19,6 +22,9 @@ const CooperativeTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.AC
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

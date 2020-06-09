@@ -75,6 +75,9 @@ const raisedThemes = createMuiTheme({
       primaryTextColor: 'white',
       boxShadow: "4px 4px #a9a9a9"
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 
@@ -125,6 +128,9 @@ const themes = createMuiTheme({
       textColor: 'white',
       primaryTextColor: 'white'
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

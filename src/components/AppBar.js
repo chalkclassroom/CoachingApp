@@ -88,7 +88,10 @@ const theme = createMuiTheme({
       main: "#FFFFFF"
     }
   },
-  shadows: ["none"]
+  shadows: Array(25).fill('none'),
+  typography: {
+    useNextVariants: true
+  }
 });
 
 /**

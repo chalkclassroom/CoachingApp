@@ -20,6 +20,9 @@ const TransitionTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.TT
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

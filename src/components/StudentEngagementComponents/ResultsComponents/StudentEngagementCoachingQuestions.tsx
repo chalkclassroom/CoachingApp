@@ -11,6 +11,9 @@ const EngagementTheme = createMuiTheme({
     primary: {
       main: Constants.EngagementColor
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

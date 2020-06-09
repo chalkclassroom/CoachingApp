@@ -11,6 +11,9 @@ const SequentialTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.SA
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

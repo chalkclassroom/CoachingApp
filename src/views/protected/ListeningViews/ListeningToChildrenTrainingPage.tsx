@@ -20,6 +20,9 @@ const ListeningTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.LC
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

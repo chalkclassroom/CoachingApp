@@ -74,6 +74,9 @@ const styles = createMuiTheme({
       dark: amber[700],
       contrastText: "#000"
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

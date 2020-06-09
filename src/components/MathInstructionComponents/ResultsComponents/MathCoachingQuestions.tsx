@@ -11,6 +11,9 @@ const MathTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.MI
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 
