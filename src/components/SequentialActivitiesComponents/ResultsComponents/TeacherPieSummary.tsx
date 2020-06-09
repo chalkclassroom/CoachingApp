@@ -16,7 +16,7 @@ interface Props {
  */
 class TeacherPieSummary extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -72,8 +72,15 @@ class TeacherPieSummary extends React.Component<Props, {}> {
             bodyFontSize: 16
           },
           legend: {
-            display: false,
-            position: 'bottom'
+            display: true,
+            position: 'bottom',
+            onClick: null,
+            labels: {
+              padding: 20,
+              fontColor: "black",
+              fontSize: 14,
+              fontFamily: 'Arimo'
+            }
           },
           plugins: {
             datalabels: {

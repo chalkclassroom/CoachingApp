@@ -10,8 +10,34 @@ import InstructionIconImage from "../assets/images/InstructionIconImage.svg"
 import ListeningIconImage from "../assets/images/ListeningIconImage.svg"
 import SequentialIconImage from "../assets/images/SequentialIconImage.svg"
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg"
+import TransitionTimeNotesImage from "../assets/images/TransitionTimeNotesImage.svg";
+import ClassroomClimateNotesImage from "../assets/images/ClassroomClimateNotesImage.svg";
+import MathInstructionNotesImage from "../assets/images/MathInstructionNotesImage.svg";
+import EngagementNotesImage from "../assets/images/EngagementNotesImage.svg";
+import InstructionNotesImage from "../assets/images/InstructionNotesImage.svg";
+import ListeningNotesImage from "../assets/images/ListeningNotesImage.svg";
+import SequentialNotesImage from "../assets/images/SequentialNotesImage.svg";
+import AssocCoopNotesImage from "../assets/images/AssocCoopNotesImage.svg";
+import TransitionTimeLookForsImage from "../assets/images/TransitionTimeLookForsImage.svg";
+import ClassroomClimateLookForsImage from "../assets/images/ClassroomClimateLookForsImage.svg";
+import MathInstructionLookForsImage from "../assets/images/MathInstructionLookForsImage.svg";
+import EngagementLookForsImage from "../assets/images/EngagementLookForsImage.svg";
+import InstructionLookForsImage from "../assets/images/InstructionLookForsImage.svg";
+import ListeningLookForsImage from "../assets/images/ListeningLookForsImage.svg";
+import SequentialLookForsImage from "../assets/images/SequentialLookForsImage.svg";
+import AssocCoopLookForsImage from "../assets/images/AssocCoopLookForsImage.svg";
+import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
+import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
+import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
+import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp';
+import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
+import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
+import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
+import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
+import NotesListDetailTable from './ResultsComponents/NotesListDetailTable';
+import FirebaseContext from "./Firebase/FirebaseContext";
 import moment from 'moment';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { changeTeacher } from '../state/actions/teacher';
@@ -122,19 +148,13 @@ const styles = {
     alignContent: "flex-end",
     display: "flex"
   },
-  completeButton: {
-    color: "#d9d9d9",
-    borderColor: "#d9d9d9",
-    borderWidth: "2px",
-    fontSize: "15px",
-    alignSelf: "flex-end",
-    marginTop: "auto"
-  },
   gridTopMargin: {
     marginTop: "5px"
   },
   resultsButtons: {
-    marginTop: "2vh"
+    marginTop: "2vh",
+    marginRight: '0.5em',
+    marginLeft: '0.5em'
   },
   viewButtons: {
     minWidth: 150,
@@ -166,7 +186,10 @@ class ResultsDashboard extends React.Component {
     this.state = {
       auth: true,
       icon: null,
-      theme: null
+      lookForsIcon: null,
+      notesIcon: null,
+      theme: null,
+      help: false
     }
   }
 
@@ -174,41 +197,57 @@ class ResultsDashboard extends React.Component {
     if (this.props.magic8 === "Transition Time") {
       this.setState({
         icon: TransitionTimeIconImage,
+        lookForsIcon: TransitionTimeLookForsImage,
+        notesIcon: TransitionTimeNotesImage,
         theme: TransitionTheme
       });
     } else if (this.props.magic8 === "Classroom Climate") {
       this.setState({
         icon: ClassroomClimateIconImage,
+        lookForsIcon: ClassroomClimateLookForsImage,
+        notesIcon: ClassroomClimateNotesImage,
         theme: ClimateTheme
       })
     } else if (this.props.magic8 === "Math Instruction") {
       this.setState({
         icon: MathIconImage,
+        lookForsIcon: MathInstructionLookForsImage,
+        notesIcon: MathInstructionNotesImage,
         theme: MathTheme
       })
     } else if (this.props.magic8 === "Level of Engagement") {
       this.setState({
         icon: EngagementIconImage,
+        lookForsIcon: EngagementLookForsImage,
+        notesIcon: EngagementNotesImage,
         theme: EngagementTheme
       })
     } else if (this.props.magic8 === "Level of Instruction") {
       this.setState({
         icon: InstructionIconImage,
+        lookForsIcon: InstructionLookForsImage,
+        notesIcon: InstructionNotesImage,
         theme: InstructionTheme
       })
     } else if (this.props.magic8 === "Listening to Children") {
       this.setState({
         icon: ListeningIconImage,
+        lookForsIcon: ListeningLookForsImage,
+        notesIcon: ListeningNotesImage,
         theme: ListeningTheme
       })
     } else if (this.props.magic8 === "Sequential Activities") {
       this.setState({
         icon: SequentialIconImage,
+        lookForsIcon: SequentialLookForsImage,
+        notesIcon: SequentialNotesImage,
         theme: SequentialTheme
       })
     } else {
       this.setState({
         icon: AssocCoopIconImage,
+        lookForsIcon: AssocCoopLookForsImage,
+        notesIcon: AssocCoopNotesImage,
         theme: ACTheme
       })
     }
@@ -221,6 +260,14 @@ class ResultsDashboard extends React.Component {
     this.props.changeTeacher(event.target.value);
   };
 
+  handleCloseHelp = () => {
+    this.setState({ help: false });
+  };
+
+  handleCloseNotes = () => {
+    this.setState({ notes: false })
+  }
+
   /**
    * render function
    * @return {ReactNode}
@@ -229,6 +276,37 @@ class ResultsDashboard extends React.Component {
     const { classes } = this.props;
     return(
       <div>
+        {this.state.help ? (
+          this.props.magic8 === "Transition Time" ? 
+            <TransitionTimeHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Classroom Climate" ?
+            <ClassroomClimateHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Math Instruction" ? 
+            <MathInstructionHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Level of Engagement" ?
+            <StudentEngagementHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "AC" ?
+            <AssocCoopHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Sequential Activities" ?
+            <SequentialActivitiesHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Level of Instruction" ?
+            <LevelOfInstructionHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Listening to Children" ? 
+            <ListeningToChildrenHelp open={this.state.help} close={this.handleCloseHelp} />
+          : <div />
+        ) : this.props.notesModal ? (
+          <NotesListDetailTable
+            data={this.props.notes}
+            magic8={this.props.magic8}
+            open={this.props.notesModal}
+            teacherSelected={this.props.teacherSelected}
+            sessionId={this.props.sessionId}
+            addNoteToPlan={this.props.addNoteToPlan}
+            conferencePlanId={this.props.conferencePlanId}
+            handleClose={this.props.handleCloseNotes}
+            style={{overflow:"hidden", minWidth: '100%'}}
+          />
+        ) : (<div />)}
         <Card className={classes.card}>
           <Grid
             container
@@ -343,22 +421,21 @@ class ResultsDashboard extends React.Component {
                 </Button>
               </MuiThemeProvider>
             </Grid>
-            <Grid item style={{marginTop: "7vh", marginBottom: "2vh"}}>
-              <MuiThemeProvider theme={this.state.theme}>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant={
-                    this.props.view === 'notes'
-                      ? "contained"
-                      : "outlined"
-                  }
-                  className={this.props.view === 'notes' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={() => this.props.viewClick('notes')}
-                >
-                  Notes
-                </Button>
-              </MuiThemeProvider>
+            <Grid item style={{marginTop: '2vh'}}>
+              <Button onClick={() => this.setState({help: true})}>
+                <img
+                  src={this.state.lookForsIcon}
+                  alt="Look-Fors"
+                  className={classes.helpIcon}
+                />
+              </Button>
+              <Button onClick={this.props.handleOpenNotes}>
+                <img
+                  src={this.state.notesIcon}
+                  alt="Notes"
+                  className={classes.helpIcon}
+                />
+              </Button>
             </Grid>
           </Grid>
         </Card>
@@ -374,8 +451,16 @@ ResultsDashboard.propTypes = {
   changeSessionId: PropTypes.func.isRequired,
   sessionId: PropTypes.string.isRequired,
   sessionDates: PropTypes.array.isRequired,
+  conferencePlanId: PropTypes.string,
+  addNoteToPlan: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   firebase: PropTypes.object.isRequired,
+  notes: PropTypes.exact({
+    id: PropTypes.string,
+    sessionStart: PropTypes.exact({
+      value: PropTypes.string
+    })
+  }).isRequired,
   changeTeacher: PropTypes.func.isRequired,
   teacherSelected: PropTypes.exact({
     email: PropTypes.string,
@@ -387,7 +472,10 @@ ResultsDashboard.propTypes = {
     role: PropTypes.string,
     school: PropTypes.string
   }).isRequired,
-  teacherList: PropTypes.array.isRequired
+  teacherList: PropTypes.array.isRequired,
+  notesModal: PropTypes.bool.isRequired,
+  handleOpenNotes: PropTypes.func.isRequired,
+  handleCloseNotes: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {

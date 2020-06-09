@@ -33,7 +33,7 @@ import Grid from "@material-ui/core/Grid";
 */
 class Notes extends React.Component {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props) {
     super(props);

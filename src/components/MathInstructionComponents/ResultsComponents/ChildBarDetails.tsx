@@ -13,7 +13,7 @@ interface Props {
 
 /**
  * Horizontal Bar Graph for Math Child Behaviors
- * @class ChildBarDetails
+ * @class EngagementBarDetails
  * @return {void}
  */
 class ChildBarDetails extends React.Component<Props, {}> {

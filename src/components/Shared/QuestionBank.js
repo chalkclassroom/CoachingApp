@@ -424,7 +424,152 @@ const questionBank = {
       "also engaged in the counting and number type of math."
     }
   ],
-  'student':[],
+  'student':
+      [
+        {
+          text: " Student engagement refers to which of the following: " ,
+          options: new Map([
+              ["The number of times a student correctly answers teacher questions", false],
+              ["The extent to which a student is interested in learning activities", false],
+              ["How involved a student is in learning activities", false],
+              ["B and C", true],
+            ]),
+          feedback: "The correct answer is D. Engagement in learning refers to one’s degree of interest, attention, " +
+              "curiosity, motivation, or passion related to a learning task."
+        },
+        {
+          text: "  Engagement in learning refers to a student’s degree of _________ related to a learning task. " ,
+          options: new Map([
+            ["Attention", false],
+            ["Motivation", false],
+            ["Curiosity", false],
+            ["All of the Above", true],
+          ]),
+          feedback: "The correct answer is D. A student’s engagement level refers to how invested and interested he " +
+              "or she is in learning activities or tasks."
+        },
+
+
+        {
+          text: " Indicators of off task behavior include: " ,
+          options: new Map([
+            ["Sitting with materials but staring into space", false],
+            ["Challenging behavior like singing loudly during a read aloud", false],
+            ["Looking at what other children are doing with little interest", false],
+            ["All of the above", true],
+          ]),
+          feedback: "The correct answer is D. “Off task” behavior refers to the lowest level of engagement in learning" +
+              " tasks. Depending on the situation, low engagement may look like engaging in challenging behavior," +
+              " a slouched body position, lack of persistence, flat affect, or staring into space."
+        },
+
+
+        {
+          text: " Children who are rated as showing high engagement might be: " ,
+          options: new Map([
+            ["Concentrating and seriously pursuing an activity", true],
+            ["Showing some signs of distraction during an activity", false],
+            ["Wandering around the classroom to look at different materials", false],
+            ["Having a lively, off-topic conversation with a peer while the teacher gives a lesson.", false],
+          ]),
+          feedback: "The correct answer is A. Highly engaged students do not show signs of distraction and are often " +
+              "oblivious to noise and behaviors of other children. They also show persistence and intense concentration" +
+              " during learning tasks or lessons. D is incorrect because the children’s conversation, while engaging, " +
+              "is off-topic; however, if the conversation were on topic it could be showing high engagement."
+        },
+
+
+        {
+          text: " A student at the sand and water table begins to excitedly fill up a bucket with sand, " +
+              "then walks over to look at a peer’s new sticker. His level of engagement would be: " ,
+          options: new Map([
+            ["Off Task", false],
+            ["Mildly Engaged", true],
+            ["Engaged", false],
+            ["Highly Engaged", false],
+          ]),
+          feedback: "The correct answer is B. Mildly engaged students are often inconsistent in their concentration" +
+              " and attention. They tend to seem interested in the activity, but could also " +
+              "easily give it up for another activity. "
+        },
+
+
+        {
+          text: " When a child volunteers responses, shows an eager expression, or persistently looks at " +
+              "learning materials, her level of engagement would be characterized as: " ,
+          options: new Map([
+            ["Off Task", false],
+            ["Mildly Engaged", false],
+            ["Engaged", true],
+            ["Highly Engaged", false],
+          ]),
+          feedback: "The correct answer is C. Students who demonstrate engaged behaviors are focused" +
+              " and interested in learning tasks. High engagement is characterized by intense focus " +
+              "and concentration on learning tasks, even around distracting noises or behaviors. "
+        },
+
+
+        {
+          text: " If a student was sitting on the carpet playing with her shoelaces while" +
+              " the teacher read a book, her level of engagement would be: " ,
+          options: new Map([
+            ["Off Task", true],
+            ["Mildly Engaged", false],
+            ["Engaged", false],
+            ["Highly Engaged", false],
+          ]),
+          feedback: "The correct answer is A. When students exhibit very low interest in " +
+              "learning tasks, we refer to this level of engagement as “off task.” " +
+              "If the student in this example played with her shoelace for a few seconds, " +
+              "and then returned her attention to the read aloud, she would exhibit mild engagement, " +
+              "which is characterized by inconsistent attention. "
+        },
+
+
+        {
+          text: " A student in the blocks center is building a house. He seems oblivious to his peers next" +
+              " to him who are crashing cars and speaking very loudly. His level of engagement is: " ,
+          options: new Map([
+            ["Off Task", false],
+            ["Mildly Engaged", false],
+            ["Engaged", false],
+            ["Highly Engaged", true],
+          ]),
+          feedback: "The correct answer is D. This student demonstrates a high level of engagement" +
+              " because he is not distracted by his noisy peers and instead remains intensely focused" +
+              " on building a structure. "
+        },
+
+
+        {
+          text: " Which of the following best characterizes a mildly engaged student? " ,
+          options: new Map([
+            ["Consistently pays attention while the teacher demonstrates an activity", false],
+            ["Looks at what other children are doing with little interest", false],
+            ["Looks up now and then to see what others are doing, but then returns to the activity", true],
+            ["Seems oblivious to noise and the behaviors of other children", false],
+          ]),
+          feedback: "The correct answer is C. Mildly engaged students do not show deep interest in learning " +
+              "activities. Instead, they pay attention inconsistently and are easily distracted" +
+              " from the task at hand."
+        },
+
+
+        {
+          text: " Students who are engaged in learning tasks look  _______ at the teacher and learning materials;" +
+              " whereas students who are mildly engaged are _________ interested in the teacher’s" +
+              " instruction and learning materials. " ,
+          options: new Map([
+            ["attentively; consistently", false],
+            ["consistently; inconsistently", true],
+            ["attentively; always", false],
+            ["inconsistently; consistently", false],
+          ]),
+          feedback: "The correct answer is B. Students who are solidly engaged in learning activities or " +
+              "lessons are not easily distracted and are consistently attentive. In contrast," +
+              " mildly engaged students’ attention wanders"
+        },
+      ],
   'level':[
     {
       text: "Level of instruction depends on the ________ of interactions between children " +

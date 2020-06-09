@@ -181,7 +181,7 @@ interface State {
  */
 class ListeningToChildrenTrainingPage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -267,7 +267,7 @@ class ListeningToChildrenTrainingPage extends React.Component<Props, State> {
           </Grid>
         </div>
         <div className={classes.main}>
-          <div className={classes.dashboardContainer}> 
+          <div className={classes.dashboardContainer}>
             <TrainingDashboard
               ViewEnum={ViewEnum}
               view={view}

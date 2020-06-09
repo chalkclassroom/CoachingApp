@@ -10,12 +10,12 @@ interface Props {
 
 /**
  * Pie Chart for Math Child Behaviors
- * @class ChildPieSummary
+ * @class AvgBarSummary
  * @return {void}
  */
 class ChildPieSummary extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -69,8 +69,15 @@ class ChildPieSummary extends React.Component<Props, {}> {
             bodyFontSize: 16
           },
           legend: {
-            display: false,
-            position: 'bottom'
+            display: true,
+            position: 'bottom',
+            onClick: null,
+            labels: {
+              padding: 20,
+              fontColor: "black",
+              fontSize: 14,
+              fontFamily: 'Arimo'
+            }
           },
           plugins: {
             datalabels: {

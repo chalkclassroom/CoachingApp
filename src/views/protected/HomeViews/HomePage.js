@@ -247,6 +247,7 @@ class HomePage extends React.Component {
                     alignItems="center"
                     direction="column"
                     justify="flex-start"
+                    onClick={() => this.props.history.push("/ConferencePlans")}
                   >
                     <Grid item>
                       <ConferencePlansIcon style={{ fill: "#0988ec", width: '12vw', height: '12vh' }} />

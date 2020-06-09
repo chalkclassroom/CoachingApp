@@ -102,7 +102,7 @@ interface Teacher {
  */
 class TeacherModal extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -136,7 +136,7 @@ class TeacherModal extends React.Component<Props, State> {
   }
 
   /**
-   * @param {object} teacherInfo 
+   * @param {object} teacherInfo
    */
   selectTeacher(teacherInfo: Teacher): void {
     this.props.history.push({

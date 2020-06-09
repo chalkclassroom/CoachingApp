@@ -94,7 +94,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
       <Grid container direction="column">
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
           <Grid item>
-            <Button 
+            <Button
               // style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
               onClick={this.approvalsClick}
             >

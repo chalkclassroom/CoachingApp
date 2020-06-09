@@ -23,7 +23,7 @@ export default function SequentialActivitiesObservationPopUp(): React.ReactEleme
                 Visit each center or activity for one minute at a time.
               </li>
               <li>
-                Observe whether or not children&apos;s activities follow a 
+                Observe whether or not children&apos;s activities follow a
                 logical order or sequence of steps that build on each other.
               </li>
               <li>

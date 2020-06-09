@@ -75,7 +75,7 @@ interface Props {
  */
 class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -111,6 +111,7 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
             />
           )}
         </FirebaseContext.Consumer>
+
         <main style={{ flexGrow: 1 }}>
           <FirebaseContext.Consumer>
             {(firebase: object): React.ReactNode => (

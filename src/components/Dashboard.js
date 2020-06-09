@@ -46,6 +46,7 @@ import { deleteMICenters } from "../state/actions/math-instruction";
 import { clearTeacher } from "../state/actions/teacher";
 import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
+import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp'
 import * as Constants from '../constants';
 
 const styles = {
@@ -232,19 +233,21 @@ class Dashboard extends React.Component {
     return (
       <div>
         {this.state.help ? (
-          this.props.type === "TT" ? 
+          this.props.type === "TT" ?
             <TransitionTimeHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : this.props.type === "CC" ?
             <ClassroomClimateHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.props.type === "MI" ? 
+          : this.props.type === "MI" ?
             <MathInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : this.props.type === "SE" ?
+            <StudentEngagementHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : this.props.type === "AC" ?
             <AssocCoopHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : this.props.type === "SA" ?
             <SequentialActivitiesHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : this.props.type === "LI" ?
             <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.props.type === "LC" ? 
+          : this.props.type === "LC" ?
             <ListeningToChildrenHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : <div />
         ) : this.state.notes ? (

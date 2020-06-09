@@ -117,7 +117,7 @@ class ConferencePlanModal extends React.Component<Props, State> {
       <div>
         <Modal open={this.state.open}>
           <div style={getModalStyle()} className={classes.paper}>
-            <ConferencePlanForm 
+            <ConferencePlanForm
               firebase={this.props.firebase}
               teacher={this.props.teacher}
               sessionId={this.props.sessionId}

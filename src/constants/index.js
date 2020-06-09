@@ -202,9 +202,10 @@ export const Checklist = {
       </div>,
       <div key={3}>
         Talking about or doing an activity together that has
-        a <b>predetermined sequence</b> (e.g., acting out
+        a <b>predetermined sequence</b> 
+        {/* (e.g., acting out
         restaurant in a dramatic play; doing pattern blocks
-        together)
+        together) */}
       </div>,
       <div key={4}> None of the above </div>
     ],
@@ -1385,6 +1386,93 @@ export const CoachingQuestions = {
           'spelling) help writers at all stages of development?'
         ]
       },
+    ]
+  },
+  'Engagement' : {
+    'OffTask': [
+      {
+        'name': 'EngagementPanel1A',
+        'title': 'Responding to Off Task Behavior',
+        'text': [
+          'Talk about how you re-engage children when they are off task. ',
+          'What have you noticed about the reasons for your students’ off task behavior? ',
+          'In your experience, what strategies address students’ off-task behavior that '+
+          'is due to social-emotional needs?',
+        ]
+      },
+      {
+        'name': 'EngagementPanel1B',
+        'title': 'Preventing Off Task Behavior',
+        'text': [
+          'Talk about your students’ opportunities '+
+          'to move, sing, dance, and generally use their energy throughout the day.',
+          'Talk about the time of day that children your students engage '+
+          'in off task behavior most often. Why might that be?',
+        ]
+      },
+    ],
+    'MildEngagement': [
+      {
+        'name': 'EngagementPanel2A',
+        'title': 'Increasing Child Involvement',
+        'text': [
+          'Talk about the variety of materials in the classroom that could be ' +
+          'used in a sequential or step-by-step way.',
+          'Talk about the types of manipulatives or games that encourage ' +
+          'children to follow rules and take turns.'
+        ]
+      },
+      {
+        'name': 'EngagementPanel2B',
+        'title': 'Using Different Modalities',
+        'text': [
+          'Talk about the different modalities you use to share information ' +
+          'with your students during an activity (auditory, visual, movement, etc.)',
+          'What do you notice about your students’ engagement when lessons incorporate different modalities?',
+        ]
+      },
+      {
+        'name': 'EngagementPanel2C',
+        'title': 'Presenting Materials',
+        'text': [
+          'Talk about how you present materials to children in your classroom. For example, do you ask children' +
+          ' to explore materials first, teach them how to interact with materials, etc.? ',
+          'How does modeling what you can do with materials improve children’s engagement?',
+          'Talk about how you rotate materials throughout the year to maintain children’s engagement.',
+        ]
+      },
+    ],
+    'HighEngagement': [
+      {
+        'name': 'EngagementPanel3A',
+        'title': 'Building on Child Engagement',
+        'text': [
+          'When your students are playing independently, talk about strategies ' +
+          'you use to encourage them to share or interact with each other.',
+          'Talk about opportunities your students have for playing cooperative games with each other. ',
+          'Talk about how building on your students’ interests ' +
+          'and home experiences might lead to higher engagement in learning activities.'
+        ]
+      },
+      {
+        'name': 'EngagementPanel3B',
+        'title': 'Fostering Child Independence',
+        'text': [
+          'Talk about opportunities children have for exploring materials independently. ',
+          'Talk about how you encourage children to lead parts of lessons or transitions.'
+        ]
+      },
+      {
+        'name': 'EngagementPanel3C',
+        'title': 'Active Learning',
+        'text': [
+          'Talk about children’s opportunities for investigating and exploring  ' +
+          'materials.',
+          'What do you notice about how children in your classroom interact with new materials during activities? ' +
+          'Do they take turns, share, or do they each get to use some of the new materials--how does ' +
+          'this affect their engagement?'
+        ]
+      }
     ]
   }
 }

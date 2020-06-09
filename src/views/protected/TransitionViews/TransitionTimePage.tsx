@@ -73,7 +73,7 @@ interface State {
  */
 class TransitionTimePage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);

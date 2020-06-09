@@ -75,7 +75,7 @@ interface Props {
  */
 class InstructionCounter extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -104,7 +104,7 @@ class InstructionCounter extends React.Component<Props, {}> {
       this.props.firebase.handlePushInstruction('UNDO');
     }
   };
-  
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     teacherSelected: PropTypes.exact({

@@ -42,7 +42,7 @@ interface State {
 
 /**
  * hints and reminders for sequential activities observation
- * @param {Props} props 
+ * @param {Props} props
  */
 class SequentialHelpCard extends React.Component<Props, State> {
   /**

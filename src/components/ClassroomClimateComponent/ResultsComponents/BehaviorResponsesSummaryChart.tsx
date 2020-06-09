@@ -15,7 +15,7 @@ interface Props {
  */
 class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -45,7 +45,7 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
     return (
       <Pie
         data={behaviorResponseData}
-        options={{ 
+        options={{
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
@@ -65,12 +65,14 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
             }
           },
           legend: {
+            display: true,
             onClick: null,
             position: "bottom",
             labels: {
               padding: 20,
               fontColor: "black",
               fontSize: 14,
+              fontFamily: 'Arimo'
             }
           },
           title: {

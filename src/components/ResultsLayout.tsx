@@ -9,14 +9,10 @@ import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
-import Typography from "@material-ui/core/Typography/Typography";
-import NotesListDetailTable from "./ResultsComponents/NotesListDetailTable";
 import "chartjs-plugin-datalabels";
-import ResultsDashboard from './ResultsDashboard';
+import ResultsDashboard from './ResultsDashboard.js';
 import ActionPlanForm from './ActionPlanForm';
-import ActionPlanModal from './ActionPlanModal';
 import ConferencePlanForm from './ConferencePlanForm';
-import ConferencePlanModal from './ConferencePlanModal';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 
 const styles: object = {
@@ -74,13 +70,15 @@ interface Props {
   summary: React.ReactNode,
   details: React.ReactNode,
   trendsGraph: React.ReactNode,
-  changeSessionId: any,
+  changeSessionId(event: React.SyntheticEvent): void,
   sessionId: string,
-  sessionDates: Array<any>,
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   questions: React.ReactNode,
   chosenQuestions: Array<string>,
-  notes: Array<{timestamp: Date, content: string}>,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
+  conferencePlanId: string,
+  addNoteToPlan(conferencePlanId: string, note: string): void,
   conferencePlanExists: boolean,
   history: {
     replace(
@@ -109,7 +107,8 @@ interface State {
   tabValue: number,
   actionPlanEditMode: boolean,
   conferencePlanEditMode: boolean,
-  count: number
+  count: number,
+  notesModal: boolean
 }
 
 /**
@@ -128,7 +127,8 @@ class ResultsLayout extends React.Component<Props, State> {
       tabValue: 0,
       actionPlanEditMode: false,
       conferencePlanEditMode: false,
-      count: 0
+      count: 0,
+      notesModal: false
     }
   }
 
@@ -141,7 +141,7 @@ class ResultsLayout extends React.Component<Props, State> {
     }
   }
 
-  handleSummary = () => {
+  handleSummary = (): void => {
     if (this.state.tabValue !== 0) {
       this.setState({
         tabValue: 0
@@ -149,7 +149,7 @@ class ResultsLayout extends React.Component<Props, State> {
     }
   };
 
-  handleDetails = () => {
+  handleDetails = (): void => {
     if (this.state.tabValue !== 1) {
       this.setState({
         tabValue: 1
@@ -157,7 +157,7 @@ class ResultsLayout extends React.Component<Props, State> {
     }
   };
 
-  handleTrends = () => {
+  handleTrends = (): void => {
     if (this.state.tabValue !== 2) {
       this.setState({
         tabValue: 2
@@ -165,28 +165,12 @@ class ResultsLayout extends React.Component<Props, State> {
     }
   };
 
-  handleEditActionPlan = (): void => {
-    this.setState({
-      actionPlanEditMode: true
-    })
+  handleOpenNotes = (): void => {
+    this.setState({ notesModal: true })
   }
 
-  handleSaveAndCloseActionPlan = (): void => {
-    this.setState({
-      actionPlanEditMode: false
-    })
-  }
-
-  handleEditConferencePlan = (): void => {
-    this.setState({
-      conferencePlanEditMode: true
-    })
-  }
-
-  handleSaveAndCloseConferencePlan = (): void => {
-    this.setState({
-      conferencePlanEditMode: false
-    })
+  handleCloseNotes = (): void => {
+    this.setState({ notesModal: false })
   }
 
   /**
@@ -202,7 +186,7 @@ class ResultsLayout extends React.Component<Props, State> {
         </FirebaseContext.Consumer>
         <Grid container justify="flex-start" direction="row" alignItems="flex-start">
           <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
-            <Grid container 
+            <Grid container
               alignItems="center"
               justify="center"
               direction="column"
@@ -229,8 +213,14 @@ class ResultsLayout extends React.Component<Props, State> {
                     view={this.state.view}
                     viewClick = {this.viewClick}
                     sessionId={this.props.sessionId}
+                    conferencePlanId={this.props.conferencePlanId}
+                    addNoteToPlan={this.props.addNoteToPlan}
                     changeSessionId={this.props.changeSessionId}
                     sessionDates={this.props.sessionDates}
+                    notes={this.props.notes}
+                    handleOpenNotes={this.handleOpenNotes}
+                    handleCloseNotes={this.handleCloseNotes}
+                    notesModal={this.state.notesModal}
                   />}
                 </FirebaseContext.Consumer>
               </Grid>
@@ -298,16 +288,6 @@ class ResultsLayout extends React.Component<Props, State> {
                     )}
                   </Grid>
                 </div>
-              ) : this.state.view === 'notes' ? (
-                <div className={classes.resultsContent}>
-                  <Grid item>
-                    <NotesListDetailTable
-                      data={this.props.notes}
-                      magic8={this.props.magic8}
-                      style={{overflow:"hidden", minWidth: '100%'}}
-                    />
-                  </Grid>
-                </div>
               ) : this.state.view === 'questions' ? (
                 <div className={classes.resultsContent}>
                   <Grid container direction="column">
@@ -319,34 +299,30 @@ class ResultsLayout extends React.Component<Props, State> {
                   {this.props.sessionId ? (
                     <div>
                       <FirebaseContext.Consumer>
-                        {(firebase: object): React.ReactNode => <ConferencePlanForm 
-                          conferencePlanExists={this.props.conferencePlanExists}
-                          editMode={this.state.conferencePlanEditMode}
-                          firebase={firebase}
-                          teacher={this.props.teacher}
-                          chosenQuestions={this.props.chosenQuestions}
-                          handleEditConferencePlan={this.handleEditConferencePlan}
-                          readOnly={true}
-                          sessionId={this.props.sessionId}
-                          magic8={this.props.magic8}
-                        />}
+                        {(firebase: object): React.ReactNode => 
+                          <ConferencePlanForm 
+                            conferencePlanExists={this.props.conferencePlanExists}
+                            editMode={this.state.conferencePlanEditMode}
+                            firebase={firebase}
+                            teacher={this.props.teacher}
+                            chosenQuestions={this.props.chosenQuestions}
+                            readOnly={false}
+                            sessionId={this.props.sessionId}
+                            magic8={this.props.magic8}
+                            notesModal={this.state.notesModal}
+                          />
+                        }
                       </FirebaseContext.Consumer>
-                        {this.state.conferencePlanEditMode ? (
-                          <FirebaseContext.Consumer>
-                            {(firebase: object): React.ReactNode => <ConferencePlanModal 
-                              firebase={firebase}
-                              teacher={this.props.teacher}
-                              sessionId={this.props.sessionId}
-                              handleClose={this.handleSaveAndCloseConferencePlan}
-                              conferencePlanExists={true}
-                            />}
-                          </FirebaseContext.Consumer>
-                        ) : ( <div /> )}
-                      </div>
+                    </div>
                   ) : (
-                    <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
-                      Please choose a date from the dropdown menu.
-                    </Typography>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                    </Grid>
                   )}
                 </div>
               ) : this.state.view === 'actionPlan' ? (
@@ -354,35 +330,26 @@ class ResultsLayout extends React.Component<Props, State> {
                   {this.props.sessionId ? (
                     <div>
                       <FirebaseContext.Consumer>
-                        {(firebase: object): React.ReactNode => <ActionPlanForm 
+                        {(firebase: object): React.ReactNode => <ActionPlanForm
                           firebase={firebase}
                           teacher={this.props.teacher}
                           sessionId={this.props.sessionId}
-                          handleEditActionPlan={this.handleEditActionPlan}
-                          handleClose={null}
-                          readOnly={true}
+                          readOnly={false}
                           actionPlanExists={this.props.actionPlanExists}
                           editMode={this.state.actionPlanEditMode}
                           magic8={this.props.magic8}
                         />}
                       </FirebaseContext.Consumer>
-                      {this.state.actionPlanEditMode ? (
-                        <FirebaseContext.Consumer>
-                          {(firebase: object): React.ReactNode => <ActionPlanModal 
-                            firebase={firebase}
-                            teacher={this.props.teacher}
-                            sessionId={this.props.sessionId}
-                            handleClose={this.handleSaveAndCloseActionPlan}
-                            actionPlanExists={true}
-                            magic8={this.props.magic8}
-                          />}
-                        </FirebaseContext.Consumer>
-                      ) : ( <div /> )}
                     </div>
                   ) : (
-                    <Typography variant="h5" style={{padding: 15, textAlign: "center", fontFamily: "Arimo"}}>
-                      Please choose a date from the dropdown menu.
-                    </Typography>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                    </Grid>
                   )}
                 </div>
               ) : null}

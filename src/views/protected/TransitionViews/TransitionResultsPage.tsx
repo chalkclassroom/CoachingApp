@@ -6,13 +6,15 @@ import Typography from "@material-ui/core/Typography/Typography";
 import TransitionCoachingQuestions from "../../../components/TransitionComponents/ResultsComponents/TransitionCoachingQuestions"
 import "chartjs-plugin-datalabels";
 import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
-import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart.tsx";
-import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph.tsx";
+import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
+import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import Grid from '@material-ui/core/Grid';
 import PieSliceTransitionImage from '../../../assets/images/PieSliceTransitionImage.svg';
 import PieSliceTeacherSupportImage from '../../../assets/images/PieSliceTeacherSupportImage.svg';
+import FadeAwayModal from '../../../components/FadeAwayModal';
+import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
@@ -48,7 +50,8 @@ interface Props {
 
 interface State {
   sessionId: string,
-  notes: Array<{timestamp: Date, content: string}>,
+  conferencePlanId: string,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   sessionLine: number,
   sessionTraveling: number,
   sessionWaiting: number,
@@ -69,7 +72,10 @@ interface State {
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<{id: string, sessionStart: {value: string}}>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  noteAdded: boolean,
+  questionAdded: boolean,
+  teacherModal: boolean
 }
 
 interface Teacher {
@@ -96,6 +102,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
 
     this.state = {
       sessionId: "",
+      conferencePlanId: '',
       notes: [],
       sessionLine: 0,
       sessionTraveling: 0,
@@ -117,17 +124,28 @@ class TransitionResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noteAdded: false,
+      questionAdded: false,
+      teacherModal: false
     };
   }
 
-  
+
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    const teacherId = this.props.teacherSelected.id;
-    this.handleTrendsFetch(teacherId);
-    this.handleDateFetching(teacherId);
+    if (this.props.teacherSelected) {
+      const teacherId = this.props.teacherSelected.id;
+      this.handleTrendsFetch(teacherId);
+      this.handleDateFetching(teacherId);
+    } else {
+      this.setState({ teacherModal: true })
+    }
+  }
+
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
   }
 
   /**
@@ -151,13 +169,13 @@ class TransitionResultsPage extends React.Component<Props, State> {
           moment(data.startDate.value).format("MMM Do"),
           formattedTime
         ]);
-        lineArray.push(Math.floor(data.line / data.sessionTotal * 100));
-        travelingArray.push(Math.floor(data.traveling / data.sessionTotal * 100));
-        waitingArray.push(Math.floor(data.waiting / data.sessionTotal * 100));
-        routinesArray.push(Math.floor(data.routines / data.sessionTotal * 100));
-        behaviorManagementArray.push(Math.floor(data.behaviorManagement / data.sessionTotal * 100));
-        otherArray.push(Math.floor(data.other / data.sessionTotal * 100));
-        totalArray.push(Math.floor((data.total / data.sessionTotal) * 100));
+        lineArray.push(Math.round(data.line / data.sessionTotal * 100));
+        travelingArray.push(Math.round(data.traveling / data.sessionTotal * 100));
+        waitingArray.push(Math.round(data.waiting / data.sessionTotal * 100));
+        routinesArray.push(Math.round(data.routines / data.sessionTotal * 100));
+        behaviorManagementArray.push(Math.round(data.behaviorManagement / data.sessionTotal * 100));
+        otherArray.push(Math.round(data.other / data.sessionTotal * 100));
+        totalArray.push(Math.round((data.total / data.sessionTotal) * 100));
       });
 
       this.setState({
@@ -202,7 +220,17 @@ class TransitionResultsPage extends React.Component<Props, State> {
     return formattedTime;
   };
 
-  handleTrendsFormatData = () => {
+  handleTrendsFormatData = (): {
+    labels: Array<Array<string>>,
+    datasets: Array<{
+      label: string,
+      backgroundColor: string,
+      borderColor: string,
+      fill: boolean,
+      lineTension: number,
+      data: Array<number>
+    }>
+  } => {
     return {
       labels: this.state.trendsDates,
       datasets:  [
@@ -279,7 +307,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
         nanoseconds: number
       }
     }>) => {
-      const formattedNotesArr: Array<{id: number, content: string, timestamp: Date}> = [];
+      const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -307,6 +335,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
     const firebase = this.context;
     this.setState({
       sessionId: "",
+      conferencePlanId: '',
       notes: [],
       sessionLine: 0,
       sessionTraveling: 0,
@@ -369,11 +398,13 @@ class TransitionResultsPage extends React.Component<Props, State> {
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         this.setState({
-          conferencePlanExists: false
+          conferencePlanExists: false,
+          conferencePlanId: ''
         })
       }
     }).catch(() => {
@@ -401,15 +432,59 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 
   /**
-   * @param {event} event
+   * @param {React.SyntheticEvent} event
    */
-  changeSessionId = (event): void => {
+  changeSessionId = (event: React.SyntheticEvent): void => {
     this.setState({
       sessionId: event.target.value,
     }, () => {
       this.getData();
     }
   )};
+
+  /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToPlan = (conferencePlanId: string, note: string): void => {
+    const firebase = this.context;
+    if (!conferencePlanId) {
+      firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Transition Time')
+        .then(() => {
+          firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          }).then(() => {
+            firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+            .then(() => {
+              this.setState({ noteAdded: true }, () => {
+                setTimeout(() => {
+                  this.setState({ noteAdded: false })
+                }, 1500);
+              })
+            })
+          })
+        })
+    } else {
+      firebase.addNoteToConferencePlan(conferencePlanId, note)
+      .then(() => {
+        this.setState({ noteAdded: true }, () => {
+          setTimeout(() => {
+            this.setState({ noteAdded: false })
+          }, 1500);
+        })
+      })
+    }
+  }
 
   /**
    * checks if question has already been added and if not, adds it
@@ -433,14 +508,42 @@ class TransitionResultsPage extends React.Component<Props, State> {
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
-        firebase.saveConferencePlanQuestion(sessionId, question);
+        firebase.saveConferencePlanQuestion(sessionId, question)
+        .then(() => {
+          this.setState({ questionAdded: true }, () => {
+            setTimeout(() => {
+              this.setState({ questionAdded: false })
+            }, 1500);
+          })
+        })
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
-          firebase.saveConferencePlanQuestion(sessionId, question);
+          firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          })
+          firebase.saveConferencePlanQuestion(sessionId, question)
+          .then(() => {
+            this.setState({ questionAdded: true }, () => {
+              setTimeout(() => {
+                this.setState({ questionAdded: false })
+              }, 1500);
+            })
+          })
           this.setState({
             conferencePlanExists: true
           })
@@ -449,8 +552,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
     })
   };
 
-  /** 
-   * lifecycle method invoked after component updates 
+  /**
+   * lifecycle method invoked after component updates
    * @param {Props} prevProps
    */
   componentDidUpdate(prevProps: Props): void {
@@ -486,116 +589,132 @@ class TransitionResultsPage extends React.Component<Props, State> {
       )
     })
     return (
-      <div className={classes.root}>
-        <ResultsLayout
-          teacher={this.props.teacherSelected}
-          magic8="Transition Time"
-          history={this.props.history}
-          summary={
-            <Grid container justify={"center"} direction={"column"}>
-              <Grid item style={{padding: '1em'}}>
-                <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
-                  Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+          <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
+          <ResultsLayout
+            teacher={this.props.teacherSelected}
+            magic8="Transition Time"
+            history={this.props.history}
+            summary={
+              <Grid container justify={"center"} direction={"column"}>
+                <Grid item style={{padding: '1em'}}>
+                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                    Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
+                  </Typography>
+                </Grid>
+                <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                  Compare how often children spent time in: 
                 </Typography>
-              </Grid>
-              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                Compare how often children spent time in: 
-              </Typography>
-              <Grid container direction="column" alignItems="center">
-                <Grid item style={{width: '100%'}}>
-                  <Grid container direction="row">
-                    <Grid item xs={1}>
-                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                        <Grid item style={{height:"50%"}}>
-                          <img alt="orange" src={PieSliceTransitionImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"50%"}}>
-                          <img alt="blue" src={PieSliceTeacherSupportImage} height="95%"/>
+                <Grid container direction="column" alignItems="center">
+                  <Grid item style={{width: '100%'}}>
+                    <Grid container direction="row">
+                      <Grid item xs={1}>
+                        <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
+                          <Grid item style={{height:"50%"}}>
+                            <img alt="orange" src={PieSliceTransitionImage} height="95%"/>
+                          </Grid>
+                          <Grid item style={{height:"50%"}}>
+                            <img alt="blue" src={PieSliceTeacherSupportImage} height="95%"/>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid item xs={11}>
-                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                        <Grid item style={{height:"50%"}}>
-                          <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
-                            Transitions
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"50%"}}>
-                          <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                            Learning activities
-                          </Typography>
+                      <Grid item xs={11}>
+                        <Grid container direction="column" justify="center" style={{height:'100%'}}>
+                          <Grid item style={{height:"50%"}}>
+                            <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
+                              Transitions
+                            </Typography>
+                          </Grid>
+                          <Grid item style={{height:"50%"}}>
+                            <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
+                              Learning activities
+                            </Typography>
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item>
-                <TransitionTimePie
-                  transitionTime={this.state.transitionTime}
-                  learningActivityTime={this.state.learningActivityTime}
-                  style={{overflow:"hidden", height: '80vh'}}
-                />
-              </Grid>
-            </Grid>
-          }
-          details={
-            <div>
-              <Grid container justify={"center"} direction={"column"}>
-                <Grid item style={{padding: '1em'}}>
-                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
-                    Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
-                  </Typography>
-                </Grid>
-                <Grid container justify={"center"} direction={"column"}>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    What types of transitions did children spend time in during the observation?
-                  </Typography>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Which transitions were shorter?             
-                  </Typography>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Which transitions were longer?              
-                  </Typography>
-                </Grid>
-                <Grid item style={{paddingTop: '1em', paddingBottom: '1em'}}>
-                  <TransitionBarChart
-                    line={this.state.sessionLine}
-                    traveling={this.state.sessionTraveling}
-                    waiting={this.state.sessionWaiting}
-                    routines={this.state.sessionRoutines}
-                    behaviorManagement={this.state.sessionBehaviorManagement}
-                    other={this.state.sessionOther}
-                    style={{alignItems: "center", height: '80vh'}}
+                <Grid item>
+                  <TransitionTimePie
+                    transitionTime={this.state.transitionTime}
+                    learningActivityTime={this.state.learningActivityTime}
+                    style={{overflow:"hidden", height: '80vh'}}
                   />
                 </Grid>
               </Grid>
-            </div>
-          }
-          trendsGraph={
-            <TransitionTrendsGraph
-              data={this.handleTrendsFormatData}
-              style={{overflow:"hidden", height: '80vh'}}
+            }
+            details={
+              <div>
+                <Grid container justify={"center"} direction={"column"}>
+                  <Grid item style={{padding: '1em'}}>
+                    <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                      Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
+                    </Typography>
+                  </Grid>
+                  <Grid container justify={"center"} direction={"column"}>
+                    <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                      What types of transitions did children spend time in during the observation?
+                    </Typography>
+                    <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                      Which transitions were shorter?             
+                    </Typography>
+                    <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+                      Which transitions were longer?              
+                    </Typography>
+                  </Grid>
+                  <Grid item style={{paddingTop: '1em', paddingBottom: '1em'}}>
+                    <TransitionBarChart
+                      line={this.state.sessionLine}
+                      traveling={this.state.sessionTraveling}
+                      waiting={this.state.sessionWaiting}
+                      routines={this.state.sessionRoutines}
+                      behaviorManagement={this.state.sessionBehaviorManagement}
+                      other={this.state.sessionOther}
+                      style={{alignItems: "center", height: '80vh'}}
+                    />
+                  </Grid>
+                </Grid>
+              </div>
+            }
+            trendsGraph={
+              <TransitionTrendsGraph
+                data={this.handleTrendsFormatData}
+                style={{overflow:"hidden", height: '80vh'}}
+              />
+            }
+            changeSessionId={this.changeSessionId}
+            sessionId={this.state.sessionId}
+            conferencePlanId={this.state.conferencePlanId}
+            addNoteToPlan={this.addNoteToPlan}
+            sessionDates={this.state.sessionDates}
+            notes={this.state.notes}
+            questions={
+              <TransitionCoachingQuestions
+                handleAddToPlan={this.handleAddToPlan}
+                addedToPlan={this.state.addedToPlan}
+                sessionId={this.state.sessionId}
+                teacherId={this.props.teacherSelected.id}
+              />
+            }
+            chosenQuestions = {chosenQuestions}
+            actionPlanExists={this.state.actionPlanExists}
+            conferencePlanExists={this.state.conferencePlanExists}
+          />
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Results"}
             />
-          }
-          changeSessionId={this.changeSessionId}
-          sessionId={this.state.sessionId}
-          sessionDates={this.state.sessionDates}
-          notes={this.state.notes}
-          questions={
-            <TransitionCoachingQuestions
-              handleAddToPlan={this.handleAddToPlan}
-              addedToPlan={this.state.addedToPlan}
-              sessionId={this.state.sessionId}
-              teacherId={this.props.teacherSelected.id}
-            />
-          }
-          chosenQuestions = {chosenQuestions}
-          actionPlanExists={this.state.actionPlanExists}
-          conferencePlanExists={this.state.conferencePlanExists}
-        />
-      </div>
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }

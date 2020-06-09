@@ -174,11 +174,11 @@ interface State {
  */
 class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
-    
+
     this.state = {
       view: ViewEnum.CONCEPTS
     };

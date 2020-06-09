@@ -21,6 +21,15 @@ import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
 
 interface Props {
   history: {
+    push(
+      param: {
+        pathname: string,
+        state: {
+          actionPlanId: string,
+          teacherId: string
+        }
+      }
+    ): void,
     replace(
       param: {
         pathname: string,
@@ -58,10 +67,10 @@ const headCells = [
 ];
 
 /**
- * 
- * @param {any} a 
- * @param {any} b 
- * @param {string} orderBy 
+ *
+ * @param {any} a
+ * @param {any} b
+ * @param {string} orderBy
  * @return {number}
  */
 function descendingComparator(a, b, orderBy: string): number {
@@ -75,9 +84,9 @@ function descendingComparator(a, b, orderBy: string): number {
 }
 
 /**
- * @param {'desc' | 'asc'} order 
+ * @param {'desc' | 'asc'} order
  * @param {string} orderBy
- * @return {any} 
+ * @return {any}
  */
 function getComparator(order: string, orderBy: string) {
   return order === 'desc'
@@ -86,9 +95,9 @@ function getComparator(order: string, orderBy: string) {
 }
 
 /**
- * 
- * @param {Array<any>} array 
- * @param {any} comparator 
+ *
+ * @param {Array<any>} array
+ * @param {any} comparator
  * @return {any}
  */
 function stableSort(array, comparator) {
@@ -108,7 +117,7 @@ interface TableHeadProps {
 }
 
 /**
- * 
+ *
  * @param {TableHeadProps} props
  * @return {ReactElement}
  */
@@ -137,7 +146,7 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
               <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
               {headCell.label}
               {orderBy === headCell.id ? (
-                <span 
+                <span
                   style={{
                     border: 0,
                     clip: 'rect(0 0 0 0)',
@@ -171,7 +180,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
    */
   constructor(props: Props) {
     super(props);
-    
+
     this.state={
       result: null,
       order: 'desc',
@@ -189,7 +198,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
   };
 
   /**
-   * 
+   *
    */
   componentDidMount(): void {
     const firebase = this.context;
@@ -202,8 +211,6 @@ class ActionPlanListPage extends React.Component<Props, State>{
         teacherFirstName: string,
         teacherLastName: string
       }>) => {
-      let firstName = '';
-      let lastName = '';
       answer.forEach((
         actionPlan: {
           id: string,
@@ -214,14 +221,10 @@ class ActionPlanListPage extends React.Component<Props, State>{
           teacherLastName: string
         }
       ) => 
-        firebase.getTeacherFirstName(actionPlan.teacherId).then((name: string) => {
-          firstName = name;
-        }).then(() => {
+        firebase.getTeacherFirstName(actionPlan.teacherId).then((firstName: string) => {
           actionPlan.teacherFirstName = firstName;
         }).then(() => {
-          firebase.getTeacherLastName(actionPlan.teacherId).then((name: string) => {
-            lastName = name;
-          }).then(() => {
+          firebase.getTeacherLastName(actionPlan.teacherId).then((lastName: string) => {
             actionPlan.teacherLastName = lastName;
           }).then(() => {
             this.setState({
@@ -250,7 +253,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
             </Typography>
           </Grid>
           <Grid item style={{width: '100%', paddingTop: '2em'}}>
-            <Grid container justify="center" alignItems="center">
+            <Grid container justify="center" alignItems="center" style={{maxHeight: '60vh', overflow: 'auto'}}>
               <Table style={{width: '85%', border: '1px solid #a9a9a9', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
                 <TableHeadSort
                   order={this.state.order}
@@ -328,7 +331,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
                                       src={MathIconImage}
                                       alt="Magic 8 Icon"
                                     />
-                                  ) : row.practice === 'Student Engagement' ? (
+                                  ) : row.practice === 'Level of Engagement' ? (
                                     <img
                                       src={EngagementIconImage}
                                       alt="Magic 8 Icon"
@@ -348,7 +351,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
                                       src={SequentialIconImage}
                                       alt="Magic 8 Icon"
                                     />
-                                  ) : row.practice === 'Associative and Cooperative Interactions' ? (
+                                  ) : row.practice === 'AC' ? (
                                     <img
                                       src={AssocCoopIconImage}
                                       alt="Magic 8 Icon"

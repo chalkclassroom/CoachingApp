@@ -8,6 +8,8 @@ import SummarySlider from "../../../components/MathInstructionComponents/Results
 import DetailsSlider from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSlider";
 import TrendsSlider from "../../../components/MathInstructionComponents/ResultsComponents/TrendsSlider";
 import MathCoachingQuestions from "../../../components/MathInstructionComponents/ResultsComponents/MathCoachingQuestions";
+import FadeAwayModal from '../../../components/FadeAwayModal';
+import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 
@@ -36,6 +38,7 @@ interface State {
   support: number,
   noSupport: number,
   noTeacherOpp: number,
+  conferencePlanId: string,
   sessionId: string,
   math1: number,
   math2: number,
@@ -51,11 +54,14 @@ interface State {
   trendsNoTeacherOpp: Array<number>,
   trendsNoSupport: Array<number>,
   trendsSupport: Array<number>,
-  notes: Array<{id: string, content: string, timestamp: Date}>,
+  notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<{id: string, sessionStart: {value: string}}>
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  noteAdded: boolean,
+  questionAdded: boolean,
+  teacherModal: boolean
 }
 
 interface Teacher {
@@ -87,6 +93,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       noSupport: 0,
       noTeacherOpp: 0,
       sessionId: '',
+      conferencePlanId: '',
       math1: 0,
       math2: 0,
       math3: 0,
@@ -105,7 +112,10 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noteAdded: false,
+      questionAdded: false,
+      teacherModal: false
     };
   }
 
@@ -122,8 +132,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
    */
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
-    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: Date}>) => {
-      const formattedNotesArr: Array<{id: string, content: string, timestamp: Date}> = [];
+    firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: {seconds: number, nanoseconds: number}}>) => {
+      const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -147,7 +157,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleDateFetching = (teacherId: string) => {
+  handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
       math: 0,
@@ -156,6 +166,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       noSupport: 0,
       noTeacherOpp: 0,
       sessionId: '',
+      conferencePlanId: '',
       math1: 0,
       math2: 0,
       math3: 0,
@@ -206,8 +217,8 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        mathArray.push(Math.floor((data.math / (data.math + data.notMath)) * 100));
-        notMathArray.push(Math.floor((data.notMath / (data.math + data.notMath)) * 100));
+        mathArray.push(Math.round((data.math / (data.math + data.notMath)) * 100));
+        notMathArray.push(Math.round((data.notMath / (data.math + data.notMath)) * 100));
       });
 
       this.setState({
@@ -233,9 +244,9 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-        supportArray.push(Math.floor((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        noSupportArray.push(Math.floor((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        noOppArray.push(Math.floor((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        supportArray.push(Math.round((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        noSupportArray.push(Math.round((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
       });
       this.setState({
         trendsDates: dateArray,
@@ -340,11 +351,13 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         this.setState({
-          conferencePlanExists: false
+          conferencePlanExists: false,
+          conferencePlanId: ''
         })
       }
     }).catch(() => {
@@ -404,6 +417,50 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
   };
 
   /**
+   * @param {string} conferencePlanId
+   * @param {string} note
+   */
+  addNoteToPlan = (conferencePlanId: string, note: string): void => {
+    const firebase = this.context;
+    if (!conferencePlanId) {
+      firebase.createConferencePlan(this.props.teacherSelected.id, this.state.sessionId, 'Math Instruction')
+        .then(() => {
+          firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          }).then(() => {
+            firebase.addNoteToConferencePlan(this.state.conferencePlanId, note)
+            .then(() => {
+              this.setState({ noteAdded: true }, () => {
+                setTimeout(() => {
+                  this.setState({ noteAdded: false })
+                }, 1500);
+              })
+            })
+          })
+        })
+    } else {
+      firebase.addNoteToConferencePlan(conferencePlanId, note)
+      .then(() => {
+        this.setState({ noteAdded: true }, () => {
+          setTimeout(() => {
+            this.setState({ noteAdded: false })
+          }, 1500);
+        })
+      })
+    }
+  }
+
+  /**
    * checks if question has already been added and if not, adds it
    * @param {string} panelTitle
    * @param {number} index
@@ -425,14 +482,42 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
-        firebase.saveConferencePlanQuestion(sessionId, question);
+        firebase.saveConferencePlanQuestion(sessionId, question)
+        .then(() => {
+          this.setState({ questionAdded: true }, () => {
+            setTimeout(() => {
+              this.setState({ questionAdded: false })
+            }, 1500);
+          })
+        })
         this.setState({
-          conferencePlanExists: true
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
       } else {
         firebase.createConferencePlan(teacherId, sessionId, magic8)
         .then(() => {
-          firebase.saveConferencePlanQuestion(sessionId, question);
+          firebase.getConferencePlan(sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+            if (conferencePlanData[0]) {
+              this.setState({
+                conferencePlanExists: true,
+                conferencePlanId: conferencePlanData[0].id
+              })
+            } else {
+              this.setState({
+                conferencePlanExists: false,
+                conferencePlanId: ''
+              })
+            }
+          })
+          firebase.saveConferencePlanQuestion(sessionId, question)
+          .then(() => {
+            this.setState({ questionAdded: true }, () => {
+              setTimeout(() => {
+                this.setState({ questionAdded: false })
+              }, 1500);
+            })
+          })
           this.setState({
             conferencePlanExists: true
           })
@@ -441,10 +526,18 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     })
   };
 
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.handleDateFetching(this.props.teacherSelected.id);
-    this.handleTrendsFetching(this.props.teacherSelected.id);
+    if (this.props.teacherSelected) {
+      this.handleDateFetching(this.props.teacherSelected.id);
+      this.handleTrendsFetching(this.props.teacherSelected.id);
+    } else {
+      this.setState({ teacherModal: true })
+    }
   }
 
   /** 
@@ -484,55 +577,71 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       )
     })
     return (
-      <div className={classes.root}>
-        <ResultsLayout
-          teacher={this.props.teacherSelected}
-          magic8="Math Instruction"
-          history={this.props.history}
-          summary={
-            <SummarySlider
-              math={this.state.math}
-              notMath={this.state.notMath}
-              support={this.state.support}
-              noSupport={this.state.noSupport}
-              noTeacherOpp={this.state.noTeacherOpp}
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          <FadeAwayModal open={this.state.noteAdded} text="Note added to conference plan." />
+          <FadeAwayModal open={this.state.questionAdded} text="Question added to conference plan." />
+          <ResultsLayout
+            teacher={this.props.teacherSelected}
+            magic8="Math Instruction"
+            history={this.props.history}
+            summary={
+              <SummarySlider
+                math={this.state.math}
+                notMath={this.state.notMath}
+                support={this.state.support}
+                noSupport={this.state.noSupport}
+                noTeacherOpp={this.state.noTeacherOpp}
+              />
+            }
+            details={
+              <DetailsSlider
+                math1={this.state.math1}
+                math2={this.state.math2}
+                math3={this.state.math3}
+                math4={this.state.math4}
+                teacher1={this.state.teacher1}
+                teacher2={this.state.teacher2}
+                teacher3={this.state.teacher3}
+                teacher4={this.state.teacher4}
+              />
+            }
+            trendsGraph={
+              <TrendsSlider
+                childData={this.handleTrendsChildFormatData}
+                teacherData={this.handleTrendsTeacherFormatData}
+              />
+            }
+            changeSessionId={this.changeSessionId}
+            sessionId={this.state.sessionId}
+            conferencePlanId={this.state.conferencePlanId}
+            addNoteToPlan={this.addNoteToPlan}
+            sessionDates={this.state.sessionDates}
+            notes={this.state.notes}
+            questions={
+              <MathCoachingQuestions
+                handleAddToPlan={this.handleAddToPlan}
+                addedToPlan={this.state.addedToPlan}
+                sessionId={this.state.sessionId}
+                teacherId={this.props.teacherSelected.id}
+              />
+            }
+            chosenQuestions={chosenQuestions}
+            actionPlanExists={this.state.actionPlanExists}
+            conferencePlanExists={this.state.conferencePlanExists}
+          />
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: object): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Results"}
             />
-          }
-          details={
-            <DetailsSlider
-              math1={this.state.math1}
-              math2={this.state.math2}
-              math3={this.state.math3}
-              math4={this.state.math4}
-              teacher1={this.state.teacher1}
-              teacher2={this.state.teacher2}
-              teacher3={this.state.teacher3}
-              teacher4={this.state.teacher4}
-            />
-          }
-          trendsGraph={
-            <TrendsSlider
-              childData={this.handleTrendsChildFormatData}
-              teacherData={this.handleTrendsTeacherFormatData}
-            />
-          }
-          changeSessionId={this.changeSessionId}
-          sessionId={this.state.sessionId}
-          sessionDates={this.state.sessionDates}
-          notes={this.state.notes}
-          questions={
-            <MathCoachingQuestions
-              handleAddToPlan={this.handleAddToPlan}
-              addedToPlan={this.state.addedToPlan}
-              sessionId={this.state.sessionId}
-              teacherId={this.props.teacherSelected.id}
-            />
-          }
-          chosenQuestions={chosenQuestions}
-          actionPlanExists={this.state.actionPlanExists}
-          conferencePlanExists={this.state.conferencePlanExists}
-        />
-      </div>
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }
