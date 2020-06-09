@@ -48,6 +48,7 @@ import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
 import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp'
 import * as Constants from '../constants';
+import ResultsDialog from './ResultsDialog';
 
 const styles = {
   card: {
@@ -134,7 +135,8 @@ class Dashboard extends React.Component {
       icon: null,
       lookForsIcon: null,
       notesIcon: null,
-      title: ''
+      title: '',
+      resultsDialog: false
     };
   }
 
@@ -232,6 +234,7 @@ class Dashboard extends React.Component {
     const { classes } = this.props;
     return (
       <div>
+      <ResultsDialog open={this.state.resultsDialog} />
         {this.state.help ? (
           this.props.type === "TT" ?
             <TransitionTimeHelp open={this.state.help} close={this.handleClickAwayHelp} />
@@ -341,9 +344,9 @@ class Dashboard extends React.Component {
                       }
                       shouldOpen={true}
                       onAccept={() => {
-                        this.props.type === "CC"
-                          ? this.props.emptyClimateStack()
-                          : this.props.type === "TT"
+                        // this.props.type === "CC"
+                          // ? this.props.emptyClimateStack()
+                           this.props.type === "TT"
                           ? this.props.resetTransitionTime()
                           : this.props.type === "MI"
                           ? this.props.deleteMICenters()
@@ -352,10 +355,11 @@ class Dashboard extends React.Component {
                           : this.props.type === "AC"
                           ? this.props.deleteACCenters()
                           : null;
-                          this.props.history.push({
-                            pathname: "/Home"
-                          });
-                          this.props.clearTeacher();
+                          // this.props.history.push({
+                          // pathname: "/Home"
+                          // });
+                          this.setState({resultsDialog: true});
+                          // this.props.clearTeacher();
                           firebase.endSession();
                       }}
                     />
