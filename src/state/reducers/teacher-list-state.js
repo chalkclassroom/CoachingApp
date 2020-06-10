@@ -1,15 +1,15 @@
-import { GET_TEACHER_LIST } from "../actions/teacher";
+import {GET_TEACHER_LIST} from "../actions/teacher";
 
-const initialState = { teachers: [] };
+const initialState = {teachers: []};
 
 export default (state = initialState, action) => {
-  switch (action.type) {
-    case GET_TEACHER_LIST:
-      return {
-        ...state,
-        teachers: action.teachers
-      };
-    default:
-      return state;
-  }
+    switch (action.type) {
+        case GET_TEACHER_LIST:
+            return {
+                ...state,
+                teachers: action.teachers
+            };
+        default:
+            return state;
+    }
 };

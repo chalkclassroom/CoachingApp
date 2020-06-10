@@ -8,52 +8,52 @@ import SmallGroupIconImage from '../assets/images/SmallGroupIconImage.svg'
  * @return {ReactElement}
  */
 export default function ListeningToChildrenObservationPopUp(): React.ReactElement {
-  return (
-    <div>
-      <Grid container direction="column" justify="center" alignItems="center">
-        <Grid item>
-          <Typography variant="h4" align="center">
-            Listening to Children Observation
-          </Typography>
-        </Grid>
-        <Grid item style={{paddingTop: '1em'}}>
-          <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
-            <ul>
-              <li>
-                Observe the teacher interacting with children.
-              </li>
-              <li>
-                Select the types of behaviors that show teachers
-                <ul>
-                  <li>
-                    listening to children
-                  </li>
-                  <li>
-                    encouraging child talk
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </Typography>
-        </Grid>
-        <Grid item style={{paddingTop: '0.5em'}}>
-          <Grid container direction="column" justify="center" alignItems="center">
-            <Grid item>
-              <Typography variant="h6">
-                ACTIVITY SETTING:
-              </Typography>
+    return (
+        <div>
+            <Grid container direction="column" justify="center" alignItems="center">
+                <Grid item>
+                    <Typography variant="h4" align="center">
+                        Listening to Children Observation
+                    </Typography>
+                </Grid>
+                <Grid item style={{paddingTop: '1em'}}>
+                    <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
+                        <ul>
+                            <li>
+                                Observe the teacher interacting with children.
+                            </li>
+                            <li>
+                                Select the types of behaviors that show teachers
+                                <ul>
+                                    <li>
+                                        listening to children
+                                    </li>
+                                    <li>
+                                        encouraging child talk
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </Typography>
+                </Grid>
+                <Grid item style={{paddingTop: '0.5em'}}>
+                    <Grid container direction="column" justify="center" alignItems="center">
+                        <Grid item>
+                            <Typography variant="h6">
+                                ACTIVITY SETTING:
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <img src={SmallGroupIconImage} width={150}/>
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h6">
+                                Centers / Small Groups / Table Activities / Mealtimes
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </Grid>
-              <Grid item>
-              <img src={SmallGroupIconImage} width={150}/>
-              </Grid>
-            <Grid item>
-              <Typography variant="h6">
-                Centers / Small Groups / Table Activities / Mealtimes
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </div>
-  )
+        </div>
+    )
 }

@@ -11,26 +11,26 @@ export const EMPTY_CLIMATE_STACK = "empty_classroom_climate_stack";
 // });
 
 export const pushOntoClimateStack = entry => ({
-  type: PUSH_CLIMATE_STACK,
-  entry: {
-    timestamp: Date.now(),
-    observation: entry.BehaviorResponse
-    // climateType: entry.climateType
-  }
+    type: PUSH_CLIMATE_STACK,
+    entry: {
+        timestamp: Date.now(),
+        observation: entry.BehaviorResponse
+        // climateType: entry.climateType
+    }
 });
 
 export const popOffClimateStack = () => ({
-  type: POP_CLIMATE_STACK
+    type: POP_CLIMATE_STACK
 });
 
 export const appendClimateRating = rating => ({
-  type: CLIMATE_APPEND_RATING,
-  entry: {
-    timestamp: Date.now(),
-    rating
-  }
+    type: CLIMATE_APPEND_RATING,
+    entry: {
+        timestamp: Date.now(),
+        rating
+    }
 });
 
 export const emptyClimateStack = () => ({
-  type: EMPTY_CLIMATE_STACK
+    type: EMPTY_CLIMATE_STACK
 });

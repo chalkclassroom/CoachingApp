@@ -24,11 +24,13 @@ module.exports = (env, argv) => {
                 rules: [
                     {
                         test: /\.tsx?$/,
+                        exclude: /node_modules/,
                         loader: 'babel-loader',
                     },
                     {
                         test: /\.js$/,
                         use: ["source-map-loader"],
+                        exclude: /node_modules/,
                         enforce:    "pre"
                     },
                     {//Should remove this rule after JS Migration to TS is Done.

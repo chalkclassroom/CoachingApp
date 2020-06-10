@@ -8,44 +8,44 @@ import AnytimeIconImage from '../assets/images/AnytimeIconImage.svg';
  * @return {ReactElement}
  */
 export default function StudentEngagementObservationPopUp(): React.ReactElement {
-  return (
-    <div>
-      <Grid container direction="column" justify="center" alignItems="center">
-        <Grid item>
-          <Typography variant="h4">
-            Student Engagement Observation
-          </Typography>
-        </Grid>
-        <Grid item style={{paddingTop: '1em'}}>
-          <Typography variant="h6" align="left">
-            <ul>
-              <li>
-                Observe each child for 3 seconds.
-              </li>
-              <li>
-                Rate each child's level of engagement in the learning activity when prompted.
-              </li>
-            </ul>
-          </Typography>
-        </Grid>
-        <Grid item style={{paddingTop: '0.5em'}}>
-          <Grid container direction="column" justify="center" alignItems="center">
-            <Grid item>
-              <Typography variant="h6">
-                ACTIVITY SETTING:
-              </Typography>
+    return (
+        <div>
+            <Grid container direction="column" justify="center" alignItems="center">
+                <Grid item>
+                    <Typography variant="h4">
+                        Student Engagement Observation
+                    </Typography>
+                </Grid>
+                <Grid item style={{paddingTop: '1em'}}>
+                    <Typography variant="h6" align="left">
+                        <ul>
+                            <li>
+                                Observe each child for 3 seconds.
+                            </li>
+                            <li>
+                                Rate each child's level of engagement in the learning activity when prompted.
+                            </li>
+                        </ul>
+                    </Typography>
+                </Grid>
+                <Grid item style={{paddingTop: '0.5em'}}>
+                    <Grid container direction="column" justify="center" alignItems="center">
+                        <Grid item>
+                            <Typography variant="h6">
+                                ACTIVITY SETTING:
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <img src={AnytimeIconImage} width={150}/>
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h6">
+                                Any time of the day!
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </Grid>
-              <Grid item>
-              <img src={AnytimeIconImage} width={150}/>
-              </Grid>
-            <Grid item>
-              <Typography variant="h6">
-                Any time of the day!
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </div>
-  )
+        </div>
+    )
 }

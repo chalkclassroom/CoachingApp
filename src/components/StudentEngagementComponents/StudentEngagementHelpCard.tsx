@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles/index";
+import {withStyles} from "@material-ui/core/styles/index";
 import Table from '@material-ui/core/Table/index';
 import TableHead from '@material-ui/core/TableHead/index';
 import TableRow from '@material-ui/core/TableRow/index';
@@ -55,7 +55,7 @@ interface Props {
  * @return {ReactNode}
  */
 function StudentEngagementHelpCard(props: Props): React.ReactNode {
-    const { classes } = props;
+    const {classes} = props;
     return (
         <div>
 
@@ -85,7 +85,7 @@ function StudentEngagementHelpCard(props: Props): React.ReactNode {
                         </TableCell>
                         <TableCell padding="checkbox" className={classes.taskTitle}>
                             <strong>
-                                3 <br/>  Highly Engaged
+                                3 <br/> Highly Engaged
                             </strong>
                         </TableCell>
                     </TableRow>

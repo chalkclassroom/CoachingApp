@@ -3,15 +3,15 @@ export const UPDATE_CENTER_COUNT = "update_ac_center_count";
 export const DELETE_AC_CENTERS = "delete_all_ac_centers";
 
 export const addNewCenter = centerName => ({
-  type: ADD_NEW_CENTER,
-  centerName
+    type: ADD_NEW_CENTER,
+    centerName
 });
 
 export const incrementCenterCount = centerName => ({
-  type: UPDATE_CENTER_COUNT,
-  centerName
+    type: UPDATE_CENTER_COUNT,
+    centerName
 });
 
 export const deleteACCenters = () => ({
-  type: DELETE_AC_CENTERS
+    type: DELETE_AC_CENTERS
 });

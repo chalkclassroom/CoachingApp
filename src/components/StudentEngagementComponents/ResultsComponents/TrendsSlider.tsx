@@ -5,80 +5,88 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import { Line } from "react-chartjs-2";
+import {Line} from "react-chartjs-2";
 
 const EngagementTrendsOptions = {
-  showScale: true,
-  pointDot: true,
-  showLines: true,
-  tooltips: {
-    mode: "index",
-    intersect: false
-  },
-  hover: {
-    mode: "nearest",
-    intersect: true
-  },
-  scales: {
-    xAxes: [
-      {
-        display: true,
-        scaleLabel: {
-          display: true,
-          labelString: "Date",
-          fontStyle: "bold"
-        }
-      }
-    ],
-    yAxes: [{
-        ticks: {
-          beginAtZero: true,
-          min: 0,
-          max: 3,
-          stepSize: 1,
-          callback: function (value: number): string | void {
-            switch (value) {
-              case 0:
-                return 'off task';
-                break;
-              case 1:
-                return 'mildly engaged';
-                break;
-              case 2:
-                return 'engaged';
-                break;
-              case 3:
-                return 'highly engaged';
-                break;
-              default:
-                break;
+    showScale: true,
+    pointDot: true,
+    showLines: true,
+    tooltips: {
+        mode: "index",
+        intersect: false
+    },
+    hover: {
+        mode: "nearest",
+        intersect: true
+    },
+    scales: {
+        xAxes: [
+            {
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: "Date",
+                    fontStyle: "bold"
+                }
             }
-          }
+        ],
+        yAxes: [{
+            ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 3,
+                stepSize: 1,
+                callback: function (value: number): string | void {
+                    switch (value) {
+                        case 0:
+                            return 'off task';
+                            break;
+                        case 1:
+                            return 'mildly engaged';
+                            break;
+                        case 2:
+                            return 'engaged';
+                            break;
+                        case 3:
+                            return 'highly engaged';
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }]
+    },
+    plugins: {
+        datalabels: {
+            display: "auto",
+            color: "gray",
+            align: "top",
         }
-    }]
-  },
-  plugins: {
-    datalabels: {
-      display: "auto",
-      color: "gray",
-      align: "top",
     }
-  }
 };
 
 interface Props {
-  data(): {
-    labels: Array<Array<string>>,
-    datasets: Array<{
-      label: string,
-      backgroundColor: string,
-      borderColor: string,
-      fill: boolean,
-      lineTension: number,
-      data: Array<number>
-    }>
-  }
+    data(): {
+        labels: Array<Array<string>>,
+        datasets: Array<{
+            label: string,
+            backgroundColor: string,
+            borderColor: string,
+            fill: boolean,
+            lineTension: number,
+            data: Array<number>
+        }>
+    }
 }
+
+const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1
+};
 
 /**
  * Swipe View for Child and Teacher Sequential Trends Graphs
@@ -87,40 +95,33 @@ interface Props {
  */
 class TrendsSlider extends React.Component<Props, {}> {
 
-  static propTypes = {
-    data: PropTypes.func.isRequired
-  };
-
-  /**
-   * render function
-   * @return {ReactNode}
-   */
-  render(): React.ReactNode {
-    const settings = {
-      dots: true,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1
+    static propTypes = {
+        data: PropTypes.func.isRequired
     };
-    return (
-      <Slider {...settings}>
-        <div>
-          <Grid justify={"center"} direction={"column"}>
-            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
-              Level of Engagement Trends
-            </Typography>
-            <Line
-              data={this.props.data}
-              options={EngagementTrendsOptions}
-              width={650}
-              height={400}
-            />
-          </Grid>
-        </div>
-      </Slider>
-    );
-  }
+
+    /**
+     * render function
+     * @return {ReactNode}
+     */
+    render(): React.ReactNode {
+        return (
+            <Slider {...settings}>
+                <div>
+                    <Grid justify={"center"} direction={"column"}>
+                        <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
+                            Level of Engagement Trends
+                        </Typography>
+                        <Line
+                            data={this.props.data}
+                            options={EngagementTrendsOptions}
+                            width={650}
+                            height={400}
+                        />
+                    </Grid>
+                </div>
+            </Slider>
+        );
+    }
 }
 
 export default TrendsSlider;
