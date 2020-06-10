@@ -21,8 +21,7 @@ interface Props {
   negativeResponses: number,
   positiveResponses: number,
   averageToneRating: number,
-  classes: {comparisonText: string},
-  noText?: boolean
+  classes: {comparisonText: string}
 }
 
 /**
@@ -40,8 +39,7 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
     negativeResponses: PropTypes.number.isRequired,
     positiveResponses: PropTypes.number.isRequired,
     averageToneRating: PropTypes.number,
-    classes: PropTypes.object.isRequired,
-    noText: PropTypes.bool
+    classes: PropTypes.object.isRequired
   }
 
   /**
@@ -61,8 +59,6 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            {!this.props.noText ? (
-            <div>
             <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em', paddingBottom: '1em'}}>
               Compare how often the teacher: 
             </Typography>
@@ -96,7 +92,6 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
                 </Grid>
               </Grid>
             </Grid>
-            </div>) : (null)}
             <Grid item style={{paddingTop: '1em'}}>
               <BehaviorResponsesSummaryChart
                 negativeResponses={this.props.negativeResponses}

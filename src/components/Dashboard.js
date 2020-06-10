@@ -48,7 +48,8 @@ import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
 import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp'
 import * as Constants from '../constants';
-import ResultsDialog from './ResultsDialog';
+import ClimateResultsDialog from './ClassroomClimateComponent/ClimateResultsDialog';
+import MathResultsDialog from './MathInstructionComponents/MathResultsDialog';
 
 const styles = {
   card: {
@@ -136,7 +137,7 @@ class Dashboard extends React.Component {
       lookForsIcon: null,
       notesIcon: null,
       title: '',
-      resultsDialog: false
+      resultsDialog: null
     };
   }
 
@@ -234,7 +235,11 @@ class Dashboard extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-      <ResultsDialog open={this.state.resultsDialog} />
+        <ClimateResultsDialog open={this.state.resultsDialog === 'CC'} history={this.props.history} />
+        <MathResultsDialog
+          open={this.state.resultsDialog === "MI"}
+          history={this.props.history}
+        />
         {this.state.help ? (
           this.props.type === "TT" ?
             <TransitionTimeHelp open={this.state.help} close={this.handleClickAwayHelp} />
@@ -348,8 +353,8 @@ class Dashboard extends React.Component {
                           // ? this.props.emptyClimateStack()
                            this.props.type === "TT"
                           ? this.props.resetTransitionTime()
-                          : this.props.type === "MI"
-                          ? this.props.deleteMICenters()
+                          // : this.props.type === "MI"
+                          // ? this.props.deleteMICenters()
                           : this.props.type === "SA"
                           ? this.props.deleteSACenters()
                           : this.props.type === "AC"
@@ -358,7 +363,7 @@ class Dashboard extends React.Component {
                           // this.props.history.push({
                           // pathname: "/Home"
                           // });
-                          this.setState({resultsDialog: true});
+                          this.setState({resultsDialog: this.props.type});
                           // this.props.clearTeacher();
                           firebase.endSession();
                       }}

@@ -8,7 +8,8 @@ import { deleteMICenters } from "../../../state/actions/math-instruction";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import {
   addNewCenter,
-  incrementCenterCount
+  incrementCenterCount,
+  updateMathCount
 } from "../../../state/actions/math-instruction.js";
 
 
@@ -53,6 +54,7 @@ interface Props {
   classes: Style,
   addNewCenter(): void,
   incrementCenterCount(): void,
+  updateMathCount(math: boolean): void,
   centers: Array<{
     name: string,
     count: number
@@ -92,7 +94,8 @@ class MathInstructionPage extends React.Component<Props, {}> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    updateMathCount: PropTypes.func.isRequired
   };
 
   /**
@@ -120,6 +123,7 @@ class MathInstructionPage extends React.Component<Props, {}> {
                 firebase={firebase}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
+                updateCount={this.props.updateMathCount}
                 type="MI"
                 centers={this.props.centers}
               />
@@ -138,6 +142,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { deleteMICenters, addNewCenter, incrementCenterCount })(
+export default connect(mapStateToProps, { deleteMICenters, addNewCenter, incrementCenterCount, updateMathCount })(
   withStyles(styles)(MathInstructionPage)
 );

@@ -59,6 +59,7 @@ const RATING_INTERVAL = 60000;
 interface Props {
   toggleScreen(): void,
   finishVisit(centerName: string): void,
+  updateCount(math: boolean): void,
   currentCenter: string,
   classes: {
     root: string,
@@ -156,6 +157,11 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       };
       this.props.firebase.handlePushCentersData(mEntry);
       this.props.finishVisit(this.props.currentCenter);
+      if (this.state.childChecked.includes(5)){
+        this.props.updateCount(false)
+      } else {
+        this.props.updateCount(true)
+      }
       this.props.toggleScreen();
     }
   };
@@ -295,6 +301,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     classes: PropTypes.object.isRequired,
     toggleScreen: PropTypes.func.isRequired,
     finishVisit: PropTypes.func.isRequired,
+    updateCount: PropTypes.func.isRequired,
     currentCenter: PropTypes.string.isRequired,
     backToCenterMenu: PropTypes.func.isRequired
   }
