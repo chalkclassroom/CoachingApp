@@ -54,7 +54,7 @@ interface Props {
   classes: Style,
   addNewCenter(): void,
   incrementCenterCount(): void,
-  updateMathCount(math: boolean): void,
+  updateMathCount(behavior: string): void,
   centers: Array<{
     name: string,
     count: number

@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
 import associativeCenterState from "./reducers/associative-center-state";
+import associativeCountState from "./reducers/associative-count-state";
 import climateRatingsState from "./reducers/climate-ratings-state";
 import climateStackState from "./reducers/climate-stack-state";
 import sequentialCenterState from "./reducers/sequential-center-state";
+import sequentialCountState from "./reducers/sequential-count-state";
 import transitionLogState from "./reducers/transition-log-state";
 import transitionTypeState from "./reducers/transition-type-state";
 import mathCentersState from "./reducers/math-instruction-state";
@@ -15,9 +17,11 @@ import coachState from './reducers/coach-state';
 
 export default combineReducers({
   associativeCenterState,
+  associativeCountState,
   climateRatingsState,
   climateStackState,
   sequentialCenterState,
+  sequentialCountState,
   transitionLogState,
   transitionTypeState,
   mathCentersState,

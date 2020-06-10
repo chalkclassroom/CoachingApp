@@ -8,7 +8,8 @@ import { deleteACCenters } from "../../../state/actions/associative-cooperative"
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import {
   addNewCenter,
-  incrementCenterCount
+  incrementCenterCount,
+  updateACCount
 } from "../../../state/actions/associative-cooperative.js";
 
 
@@ -53,6 +54,7 @@ interface Props {
   classes: Style,
   addNewCenter(): void,
   incrementCenterCount(): void,
+  updateACCount(behavior: string): void,
   centers: Array<{
     name: string,
     count: number
@@ -121,6 +123,7 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
                 firebase={firebase}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
+                updateCount={this.props.updateACCount}
                 type="AC"
                 centers={this.props.centers}
               />
@@ -139,6 +142,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { deleteACCenters, addNewCenter, incrementCenterCount })(
+export default connect(mapStateToProps, { deleteACCenters, addNewCenter, incrementCenterCount, updateACCount })(
   withStyles(styles)(AssociativeCooperativeInteractionsPage)
 );

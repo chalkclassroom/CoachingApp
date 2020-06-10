@@ -111,7 +111,7 @@ interface Props {
   type: string,
   addNewCenter(centerName: string): void,
   incrementCenterCount(centerName: string): void,
-  updateCount(math: boolean): void,
+  updateCount(behavior: string): void,
   centers: Array<{
     name: string,
     count: number

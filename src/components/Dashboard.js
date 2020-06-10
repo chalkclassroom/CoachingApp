@@ -50,6 +50,8 @@ import StudentEngagementHelp from './StudentEngagementComponents/StudentEngageme
 import * as Constants from '../constants';
 import ClimateResultsDialog from './ClassroomClimateComponent/ClimateResultsDialog';
 import MathResultsDialog from './MathInstructionComponents/MathResultsDialog';
+import SequentialResultsDialog from './SequentialActivitiesComponents/SequentialResultsDialog';
+import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog';
 
 const styles = {
   card: {
@@ -235,9 +237,17 @@ class Dashboard extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <ClimateResultsDialog open={this.state.resultsDialog === 'CC'} history={this.props.history} />
+        <ClimateResultsDialog open={this.state.resultsDialog==='CC'} history={this.props.history} />
         <MathResultsDialog
-          open={this.state.resultsDialog === "MI"}
+          open={this.state.resultsDialog==="MI"}
+          history={this.props.history}
+        />
+        <SequentialResultsDialog
+          open={this.state.resultsDialog==="SA"}
+          history={this.props.history}
+        />
+        <ACResultsDialog
+          open={this.state.resultsDialog==="AC"}
           history={this.props.history}
         />
         {this.state.help ? (
@@ -355,10 +365,10 @@ class Dashboard extends React.Component {
                           ? this.props.resetTransitionTime()
                           // : this.props.type === "MI"
                           // ? this.props.deleteMICenters()
-                          : this.props.type === "SA"
-                          ? this.props.deleteSACenters()
-                          : this.props.type === "AC"
-                          ? this.props.deleteACCenters()
+                          // : this.props.type === "SA"
+                          // ? this.props.deleteSACenters()
+                          // : this.props.type === "AC"
+                          // ? this.props.deleteACCenters()
                           : null;
                           // this.props.history.push({
                           // pathname: "/Home"

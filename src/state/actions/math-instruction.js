@@ -18,9 +18,9 @@ export const addNewCenter = centerName => ({
     type: DELETE_MI_CENTERS
   });
 
-  export const updateMathCount = math => ({
+  export const updateMathCount = behavior => ({
     type: UPDATE_MATH_COUNT,
-    math
+    behavior
   })
 
   export const clearMathCount = () => ({
