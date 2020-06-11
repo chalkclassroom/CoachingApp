@@ -51,6 +51,7 @@ import * as Constants from '../constants';
 import ClimateResultsDialog from './ClassroomClimateComponent/ClimateResultsDialog';
 import MathResultsDialog from './MathInstructionComponents/MathResultsDialog';
 import InstructionResultsDialog from './LevelOfInstructionComponents/InstructionResultsDialog';
+import ListeningResultsDialog from './ListeningComponents/ListeningResultsDialog';
 import SequentialResultsDialog from './SequentialActivitiesComponents/SequentialResultsDialog';
 import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog';
 
@@ -245,6 +246,10 @@ class Dashboard extends React.Component {
         />
         <InstructionResultsDialog
           open={this.state.resultsDialog==="LI"}
+          history={this.props.history}
+        />
+        <ListeningResultsDialog
+          open={this.state.resultsDialog==="LC"}
           history={this.props.history}
         />
         <SequentialResultsDialog
