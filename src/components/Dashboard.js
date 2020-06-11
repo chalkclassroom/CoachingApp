@@ -50,6 +50,7 @@ import StudentEngagementHelp from './StudentEngagementComponents/StudentEngageme
 import * as Constants from '../constants';
 import ClimateResultsDialog from './ClassroomClimateComponent/ClimateResultsDialog';
 import MathResultsDialog from './MathInstructionComponents/MathResultsDialog';
+import InstructionResultsDialog from './LevelOfInstructionComponents/InstructionResultsDialog';
 import SequentialResultsDialog from './SequentialActivitiesComponents/SequentialResultsDialog';
 import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog';
 
@@ -240,6 +241,10 @@ class Dashboard extends React.Component {
         <ClimateResultsDialog open={this.state.resultsDialog==='CC'} history={this.props.history} />
         <MathResultsDialog
           open={this.state.resultsDialog==="MI"}
+          history={this.props.history}
+        />
+        <InstructionResultsDialog
+          open={this.state.resultsDialog==="LI"}
           history={this.props.history}
         />
         <SequentialResultsDialog
