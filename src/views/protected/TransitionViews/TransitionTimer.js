@@ -41,6 +41,7 @@ class TransitionTimer extends React.Component {
       isOn: false,
       time: 0,
       start: 0,
+      startMilliseconds: 0,
       opendialog: false
     };
 
@@ -61,10 +62,12 @@ class TransitionTimer extends React.Component {
     this.setState(state => {
       if (state.isOn) {
         clearInterval(this.timer);
-        const end = new Date();
+        const end = this.state.startMilliseconds + this.state.time;
+        const startDate = new Date(this.state.startMilliseconds);
+        const endDate = new Date(end);
         const entry = {
-          start: this.state.start.toISOString(),
-          end: end.toISOString(),
+          start: startDate.toISOString(),
+          end: endDate.toISOString(),
           duration: ms(this.state.time),
           transitionType: this.props.transitionType
         };
@@ -72,9 +75,8 @@ class TransitionTimer extends React.Component {
         this.handleAppend(entry);
         this.props.handleEndTransition();
       } else {
-        const startTime = Date.now() - this.state.time;
-        const mStart = new Date();
-        this.setState({ start: mStart });
+        const startTime = Date.now();
+        this.setState({ start: new Date(startTime), startMilliseconds: startTime });
         this.timer = setInterval(() => {
           this.setState({ time: Math.round(Date.now() - startTime) });
         }, 1000);
