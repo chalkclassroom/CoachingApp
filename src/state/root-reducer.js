@@ -9,6 +9,7 @@ import transitionLogState from "./reducers/transition-log-state";
 import transitionTypeState from "./reducers/transition-type-state";
 import mathCentersState from "./reducers/math-instruction-state";
 import mathCountState from "./reducers/math-count-state";
+import engagementCountState from "./reducers/engagement-count-state";
 import instructionStackState from "./reducers/instruction-stack-state";
 import listeningCountState from "./reducers/listening-count-state";
 import teacherSelectedState from "./reducers/teacher-selected-state";
@@ -26,6 +27,7 @@ export default combineReducers({
   transitionTypeState,
   mathCentersState,
   mathCountState,
+  engagementCountState,
   instructionStackState,
   listeningCountState,
   teacherSelectedState,

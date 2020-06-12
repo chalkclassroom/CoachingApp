@@ -20,6 +20,8 @@ import Paper  from '@material-ui/core/Paper';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
 import Modal from "@material-ui/core/Modal"
 import ObserveImage from '../../assets/images/ObserveImage.png';
+import { updateEngagementCount } from '../../state/actions/student-engagement';
+import { connect } from 'react-redux';
 
 const styles: object = theme => ({
   root: {
@@ -121,7 +123,8 @@ interface Props {
     handleSession(entry: object): void,
     handlePushSEEachEntry(mEntry: object): void
   },
-  onStatusChange(enable: boolean): void
+  onStatusChange(enable: boolean): void,
+  updateEngagementCount(engaged: boolean): void
 }
 
 interface State {
@@ -245,6 +248,11 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
       const mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
       console.log(mEntry);
       this.props.firebase.handlePushSEEachEntry(mEntry);
+      /* if (this.state.selectedPoint > 0) {
+        this.props.updateEngagementCount(true);
+      } else {
+        this.props.updateEngagementCount(false);
+      } */
       this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
       this.props.handleTimerReset();
       this.handleSelectedValue(-1);
@@ -312,6 +320,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     time: PropTypes.number.isRequired,
     handleTimerReset: PropTypes.func.isRequired,
     handleTimerStart: PropTypes.func.isRequired,
+    updateEngagementCount: PropTypes.func.isRequired
   }
 
 
@@ -812,7 +821,14 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     this.state.selectedPoint === -1 || 
                     this.props.time !==0
                   }
-                  onClick={(): void => this.handleConfirmRating()}
+                  onClick={(): void => {
+                    this.handleConfirmRating();
+                    if(this.state.selectedPoint > 0) {
+                      this.props.updateEngagementCount(true)
+                    } else {
+                      this.props.updateEngagementCount(false)
+                    }
+                  }}
                 >
                   CONFIRM RATING
                 </Button>
@@ -834,6 +850,7 @@ CenterMenuStudentEngagement.propTypes = {
   time: PropTypes.number.isRequired,
   handleTimerReset: PropTypes.func.isRequired,
   handleTimerStart: PropTypes.func.isRequired,
+  updateEngagementCount: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(CenterMenuStudentEngagement);
+export default connect(null, { updateEngagementCount })(withStyles(styles)(CenterMenuStudentEngagement));
