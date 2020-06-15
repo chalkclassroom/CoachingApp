@@ -139,7 +139,7 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
                 size: 16,
                 weight: 'bold'
               },
-              formatter: function(value: number) {
+              formatter: function(value: number): number | void {
                 if (value > 0) {
                   return value;
                 } else {
