@@ -82,11 +82,15 @@ class TransitionTimePie extends React.Component<Props, {}> {
                 size: 20
               },
               fontFamily: 'Arimo',
-              formatter: function(value: number) {
-                return (
-                  Math.floor((value/1000)/60) + "m "
-                  + Math.round((((value/1000)/60) % 1) * 60) + "s"
-                );
+              formatter: function(value: number): string | void {
+                if (value > 0) {
+                  return (
+                    Math.floor((value/1000)/60) + "m "
+                    + Math.round((((value/1000)/60) % 1) * 60) + "s"
+                  );
+                } else {
+                  return null;
+                }
               }
             }
           }
