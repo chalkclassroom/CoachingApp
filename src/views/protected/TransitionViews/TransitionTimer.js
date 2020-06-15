@@ -9,7 +9,7 @@ import YesNoDialog from '../../../components/Shared/YesNoDialog.tsx';
 import cyan from '@material-ui/core/colors/teal';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { pushOntoTransitionStack } from '../../../state/actions/transition-time';
+import { pushOntoTransitionStack, updateTransitionTime, updateSessionTime } from '../../../state/actions/transition-time';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import * as Constants from '../../../constants';
 import Dialog from '@material-ui/core/Dialog';
@@ -41,10 +41,14 @@ class TransitionTimer extends React.Component {
       isOn: false,
       time: 0,
       start: 0,
+      startMilliseconds: 0,
       opendialog: false
     };
 
+    const sessionStart = Date.now();
+    this.props.updateSessionTime(sessionStart);
     const mEntry = {
+      start: new Date(sessionStart),
       teacher: this.props.teacherSelected.id,
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "transition"
@@ -61,10 +65,13 @@ class TransitionTimer extends React.Component {
     this.setState(state => {
       if (state.isOn) {
         clearInterval(this.timer);
-        const end = new Date();
+        this.props.updateTransitionTime(this.state.time);
+        const end = this.state.startMilliseconds + this.state.time;
+        const startDate = new Date(this.state.startMilliseconds);
+        const endDate = new Date(end);
         const entry = {
-          start: this.state.start.toISOString(),
-          end: end.toISOString(),
+          start: startDate.toISOString(),
+          end: endDate.toISOString(),
           duration: ms(this.state.time),
           transitionType: this.props.transitionType
         };
@@ -72,9 +79,8 @@ class TransitionTimer extends React.Component {
         this.handleAppend(entry);
         this.props.handleEndTransition();
       } else {
-        const startTime = Date.now() - this.state.time;
-        const mStart = new Date();
-        this.setState({ start: mStart });
+        const startTime = Date.now();
+        this.setState({ start: new Date(startTime), startMilliseconds: startTime });
         this.timer = setInterval(() => {
           this.setState({ time: Math.round(Date.now() - startTime) });
         }, 1000);
@@ -203,6 +209,8 @@ TransitionTimer.propTypes = {
   transitionType: PropTypes.string,
   handleEndTransition: PropTypes.func.isRequired,
   pushOntoTransitionStack: PropTypes.func.isRequired,
+  updateTransitionTime: PropTypes.func.isRequired,
+  updateSessionTime: PropTypes.func.isRequired,
   typeSelected: PropTypes.bool.isRequired,
   teacherSelected: PropTypes.exact({
     email: PropTypes.string,
@@ -223,6 +231,6 @@ const mapStateToProps = state => {
   };
 };
 TransitionTimer.contextType = FirebaseContext;
-export default connect(mapStateToProps, { pushOntoTransitionStack })(
+export default connect(mapStateToProps, { pushOntoTransitionStack, updateTransitionTime, updateSessionTime })(
   TransitionTimer
   );

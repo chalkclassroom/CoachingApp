@@ -19,6 +19,7 @@ import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
 import Zoom from '@material-ui/core/Zoom';
 import { connect } from 'react-redux';
+import { updateListeningCount } from "../../state/actions/listening-to-children.js";
 import * as Constants from '../../constants';
 
 
@@ -52,7 +53,8 @@ interface Props {
     handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
     handlePushListening(mEntry: {checked: Array<number>}): Promise<void>
   },
-  teacherSelected: Teacher
+  teacherSelected: Teacher,
+  updateListeningCount(behavior: boolean): void
 }
 
 interface State {
@@ -109,7 +111,11 @@ class TeacherChecklist extends React.Component<Props, State> {
     if (this.state.time <= 0) {
       clearInterval(this.timer);
       if (this.state.final) {
-        this.handleSubmit(this.state.checked);
+        if (this.state.checked.length > 0) {
+          this.handleSubmit(this.state.checked);
+        } else {
+          this.handleSubmit([7]);
+        }
         this.setState({ final: false })
       } else {
         this.handleTimeUpNotification();
@@ -162,6 +168,11 @@ class TeacherChecklist extends React.Component<Props, State> {
    * @param {Array<number>} checked
    */
   handleSubmit = (checked: Array<number>): void => {
+    if (checked.indexOf(7)===0){
+      this.props.updateListeningCount(false)
+    } else {
+      this.props.updateListeningCount(true)
+    }
     this.setState({in: false}, () => {
       this.props.firebase.handlePushListening({checked}).then(() => {
         this.setState({
@@ -211,7 +222,8 @@ class TeacherChecklist extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    updateListeningCount: PropTypes.func.isRequired
   }
 
   /**
@@ -348,4 +360,4 @@ const mapStateToProps = (state): {teacherSelected: Teacher} => {
   };
 };
 
-export default connect(mapStateToProps)(withStyles(styles)(TeacherChecklist));
+export default connect(mapStateToProps, { updateListeningCount })(withStyles(styles)(TeacherChecklist));

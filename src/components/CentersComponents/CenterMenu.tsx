@@ -111,6 +111,7 @@ interface Props {
   type: string,
   addNewCenter(centerName: string): void,
   incrementCenterCount(centerName: string): void,
+  updateCount(behavior: string): void,
   centers: Array<{
     name: string,
     count: number
@@ -221,6 +222,7 @@ class CenterMenu extends React.Component<Props, State> {
     firebase: PropTypes.object.isRequired,
     addNewCenter: PropTypes.func.isRequired,
     incrementCenterCount: PropTypes.func.isRequired,
+    updateCount: PropTypes.func.isRequired,
     centers: PropTypes.array.isRequired,
     type: PropTypes.string.isRequired,
   }
@@ -333,6 +335,7 @@ class CenterMenu extends React.Component<Props, State> {
           <CenterRatingChecklist
             currentCenter={this.state.currentCenter}
             toggleScreen={this.switchToCenterMenu}
+            updateCount={this.props.updateCount}
             finishVisit={centerName => this.finishCenterVisit(centerName)}
             backToCenterMenu={this.backToCenterMenu}
             firebase={this.props.firebase}

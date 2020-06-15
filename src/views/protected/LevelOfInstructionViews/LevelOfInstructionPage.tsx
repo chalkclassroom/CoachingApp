@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import { connect } from 'react-redux';
-import { toggleLOISettingType } from '../../../state/actions/level-of-instruction';
 import Dashboard from '../../../components/Dashboard';
 import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
 import Button from '@material-ui/core/Button';
@@ -149,4 +148,4 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
   }
 }
 
-export default connect(toggleLOISettingType)(withStyles(styles)(LevelOfInstructionPage));
+export default withStyles(styles)(LevelOfInstructionPage);

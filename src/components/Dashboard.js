@@ -39,6 +39,7 @@ import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/L
 import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
+import { updateSessionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
 import { deleteACCenters } from "../state/actions/associative-cooperative";
 import { deleteSACenters } from "../state/actions/sequential-activities";
@@ -48,6 +49,14 @@ import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
 import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp'
 import * as Constants from '../constants';
+import TransitionResultsDialog from './TransitionComponents/TransitionResultsDialog';
+import ClimateResultsDialog from './ClassroomClimateComponent/ClimateResultsDialog';
+import MathResultsDialog from './MathInstructionComponents/MathResultsDialog';
+import EngagementResultsDialog from './StudentEngagementComponents/EngagementResultsDialog';
+import InstructionResultsDialog from './LevelOfInstructionComponents/InstructionResultsDialog';
+import ListeningResultsDialog from './ListeningComponents/ListeningResultsDialog';
+import SequentialResultsDialog from './SequentialActivitiesComponents/SequentialResultsDialog';
+import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog';
 
 const styles = {
   card: {
@@ -134,7 +143,8 @@ class Dashboard extends React.Component {
       icon: null,
       lookForsIcon: null,
       notesIcon: null,
-      title: ''
+      title: '',
+      resultsDialog: null
     };
   }
 
@@ -232,6 +242,38 @@ class Dashboard extends React.Component {
     const { classes } = this.props;
     return (
       <div>
+        <TransitionResultsDialog
+          open={this.state.resultsDialog==="TT"}
+          history={this.props.history}
+        />
+        <ClimateResultsDialog
+          open={this.state.resultsDialog==='CC'}
+          history={this.props.history}
+        />
+        <MathResultsDialog
+          open={this.state.resultsDialog==="MI"}
+          history={this.props.history}
+        />
+        <EngagementResultsDialog 
+          open={this.state.resultsDialog==="SE"} 
+          history={this.props.history}
+        />
+        <InstructionResultsDialog
+          open={this.state.resultsDialog==="LI"}
+          history={this.props.history}
+        />
+        <ListeningResultsDialog
+          open={this.state.resultsDialog==="LC"}
+          history={this.props.history}
+        />
+        <SequentialResultsDialog
+          open={this.state.resultsDialog==="SA"}
+          history={this.props.history}
+        />
+        <ACResultsDialog
+          open={this.state.resultsDialog==="AC"}
+          history={this.props.history}
+        />
         {this.state.help ? (
           this.props.type === "TT" ?
             <TransitionTimeHelp open={this.state.help} close={this.handleClickAwayHelp} />
@@ -341,22 +383,14 @@ class Dashboard extends React.Component {
                       }
                       shouldOpen={true}
                       onAccept={() => {
-                        this.props.type === "CC"
-                          ? this.props.emptyClimateStack()
-                          : this.props.type === "TT"
-                          ? this.props.resetTransitionTime()
-                          : this.props.type === "MI"
-                          ? this.props.deleteMICenters()
-                          : this.props.type === "SA"
-                          ? this.props.deleteSACenters()
-                          : this.props.type === "AC"
-                          ? this.props.deleteACCenters()
-                          : null;
-                          this.props.history.push({
-                            pathname: "/Home"
-                          });
-                          this.props.clearTeacher();
+                        this.setState({resultsDialog: this.props.type});
+                        if (this.props.type === "TT") {
+                          const sessionEnd = Date.now();
+                          this.props.updateSessionTime(sessionEnd);
+                          firebase.endSession(new Date(sessionEnd));
+                        } else {
                           firebase.endSession();
+                        }
                       }}
                     />
                   )}
@@ -389,6 +423,7 @@ Dashboard.propTypes = {
   type: PropTypes.string.isRequired,
   // These Are mapped from Redux into Props
   resetTransitionTime: PropTypes.func.isRequired,
+  updateSessionTime: PropTypes.func.isRequired,
   emptyClimateStack: PropTypes.func.isRequired,
   deleteMICenters: PropTypes.func.isRequired,
   deleteSACenters: PropTypes.func.isRequired,
@@ -414,5 +449,5 @@ const mapStateToProps = state => {
 
 export default withRouter(connect(
     mapStateToProps,
-    { clearTeacher, resetTransitionTime, emptyClimateStack, deleteMICenters, deleteSACenters, deleteACCenters }
+    { clearTeacher, resetTransitionTime, updateSessionTime, emptyClimateStack, deleteMICenters, deleteSACenters, deleteACCenters }
 )(withStyles(styles)(Dashboard)));

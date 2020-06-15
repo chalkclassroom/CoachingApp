@@ -84,11 +84,19 @@ class ChildPieSummary extends React.Component<Props, {}> {
               color: 'white',
               font: {
                 size: 20
+              },
+              formatter: function(value: number): number | void {
+                if (value > 0) {
+                  return value;
+                } else {
+                  return null;
+                }
               }
             }
           }
         }}
-        width={260}
+        width={650}
+        height={400}
       />
     );
   }

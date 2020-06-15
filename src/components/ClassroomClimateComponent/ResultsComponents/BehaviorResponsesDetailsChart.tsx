@@ -111,7 +111,7 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
                 size: 14,
                 weight: 'bold'
               },
-              formatter: function(value: number) {
+              formatter: function(value: number): number | void {
                 if (value > 0) {
                   return value;
                 } else {

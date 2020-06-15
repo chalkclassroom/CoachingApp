@@ -8,7 +8,8 @@ import { deleteSACenters } from "../../../state/actions/sequential-activities";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import {
   addNewCenter,
-  incrementCenterCount
+  incrementCenterCount,
+  updateSequentialCount
 } from "../../../state/actions/sequential-activities.js";
 
 
@@ -53,6 +54,7 @@ interface Props {
   classes: Style,
   addNewCenter(): void,
   incrementCenterCount(): void,
+  updateSequentialCount(behavior: string): void,
   centers: Array<{
     name: string,
     count: number
@@ -92,7 +94,8 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    updateSequentialCount: PropTypes.func.isRequired
   };
 
   /**
@@ -120,6 +123,7 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
                 firebase={firebase}
                 addNewCenter={this.props.addNewCenter}
                 incrementCenterCount={this.props.incrementCenterCount}
+                updateCount={this.props.updateSequentialCount}
                 type="SA"
                 centers={this.props.centers}
               />
@@ -138,6 +142,6 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { deleteSACenters, addNewCenter, incrementCenterCount })(
+export default connect(mapStateToProps, { deleteSACenters, addNewCenter, incrementCenterCount, updateSequentialCount })(
   withStyles(styles)(SequentialActivitiesPage)
 );

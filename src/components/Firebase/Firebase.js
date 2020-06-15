@@ -406,7 +406,7 @@ class Firebase {
     this.sessionRef
       .set({
         observedBy: "/user/" + mEntry.observedBy,
-        start: firebase.firestore.FieldValue.serverTimestamp(),
+        start: mEntry.start ? mEntry.start : firebase.firestore.FieldValue.serverTimestamp(),
         teacher: "/user/" + mEntry.teacher,
         end: firebase.firestore.FieldValue.serverTimestamp(),
         type: mEntry.type
@@ -428,10 +428,10 @@ class Firebase {
       .catch(error => console.error("Error setting session ref: ", error));
   };
 
-  endSession = async function() {
+  endSession = async function(time = null) {
     this.sessionRef
       .update({
-        end: firebase.firestore.FieldValue.serverTimestamp()
+        end: time ? time : firebase.firestore.FieldValue.serverTimestamp()
       })
       .catch(error =>
         console.error("Error occurred updating session ref: ", error)

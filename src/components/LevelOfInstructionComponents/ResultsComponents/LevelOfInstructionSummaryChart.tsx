@@ -86,10 +86,12 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
                 font: {
                   size: 20
                 },
-                formatter: function(value: number) {
-                  return (
-                    value
-                  );
+                formatter: function(value: number): number | void {
+                  if (value > 0) {
+                    return value;
+                  } else {
+                    return null;
+                  }
                 }
               }
             }

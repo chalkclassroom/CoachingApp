@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { Fab } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { toggleLOISettingType } from '../../state/actions/level-of-instruction';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import ReplySharpIcon from '@material-ui/icons/ReplySharp';
@@ -39,6 +38,17 @@ const styles: object = {
     paddingRight: '0.5em',
     paddingLeft: '0.5em'
   }
+};
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
 };
 
 interface Props {
@@ -316,14 +326,13 @@ class InstructionCounter extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = (state): {currentSetting: string, totalVisitCount: number, teacherSelected: Teacher} => {
+const mapStateToProps = (state): {totalVisitCount: number, teacherSelected: Teacher} => {
   return {
-    currentSetting: state.LOIsettingTypeState.settingType,
-    totalVisitCount: state.instructionstackstate.instructionStack.length,
+    totalVisitCount: state.instructionStackState.instructionStack.length,
     teacherSelected: state.teacherSelectedState.teacher
   };
 };
 
 export default withStyles(styles)(
-  connect(mapStateToProps, { toggleLOISettingType, pushOntoLoiStack, popOffLoiStack })(InstructionCounter)
+  connect(mapStateToProps, { pushOntoLoiStack, popOffLoiStack })(InstructionCounter)
 );
