@@ -91,8 +91,8 @@ class TransitionTimePie extends React.Component<Props, {}> {
             }
           }
         }}
-        // width={520}
-        // height={'100%'}
+        width={650}
+        height={400}
       />
     );
   }

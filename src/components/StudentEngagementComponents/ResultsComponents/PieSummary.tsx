@@ -81,7 +81,8 @@ class PieSummary extends React.Component<Props, {}> {
             }
           }
         }}
-        width = {260}
+        width={650}
+        height={400}
       />
     );
   }
