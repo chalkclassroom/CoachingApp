@@ -5,7 +5,7 @@ import WelcomePage from "./views/WelcomeViews/WelcomePage.tsx";
 import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage.tsx";
 import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage.tsx";
 import LevelOfInstructionResultsPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionResultsPage.tsx";
-import Magic8MenuPage from "./views/protected/Magic8MenuPage";
+import Magic8MenuPage from "./views/protected/Magic8MenuPage.tsx";
 import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage.tsx";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage.tsx";
@@ -41,7 +41,6 @@ import MathInstructionResultsPage from "./views/protected/MathInstructionViews/M
 import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage';
 import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
 import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
-import AboutPage from "./views/WelcomeViews/AboutPage";
 import TeamPage from "./views/WelcomeViews/TeamPage.tsx";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import LogRocket from 'logrocket';
@@ -207,11 +206,6 @@ class App extends Component {
               auth={this.state.auth}
               path="/Home"
               component={HomePage}
-            />
-            <PrivateRoute
-              auth={this.state.auth || !this.state.auth}
-              path="/about"
-              component={AboutPage}
             />
             <PrivateRoute
               auth={this.state.auth || !this.state.auth}

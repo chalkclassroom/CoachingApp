@@ -1,9 +1,8 @@
-import React, { Component } from "react";
+import * as React from "react";
 import "../../App.css";
-import PropTypes from "prop-types";
-import Magic8Card from "../../components/Magic8Card.tsx";
+import * as PropTypes from "prop-types";
+import Magic8Card from "../../components/Magic8Card";
 import { Typography } from "@material-ui/core";
-import styled from "styled-components";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import AppBar from "../../components/AppBar";
 import { withStyles } from "@material-ui/core/styles";
@@ -30,19 +29,10 @@ import LockedModal from '../../components/LockedModal';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
-import { changeTeacher } from '../../state/actions/teacher';
+import { changeTeacher } from '../../state/actions/teacher.js';
 import { connect } from 'react-redux';
 
-const CardRow = styled.div`
-  position: relative;
-  display: block;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-`;
-
-const styles = {
+const styles: object = {
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -74,9 +64,9 @@ const styles = {
     marginTop: "2%",
     marginBottom: "2vh",
     fontFamily: "Arimo"
-  },
-
+  }
 };
+
 
 const MAP = {
   None: 0,
@@ -90,17 +80,155 @@ const MAP = {
   AssociativeCooperativeInteractions: 8
 };
 
+interface ReduxState {
+  associativeCenterState: {
+    associativeCenters: Array<{
+      name: string,
+      count: number
+    }>
+  },
+  associativeCountState: {
+    acCount: number,
+    noACCount: number,
+    noOppCount: number
+  },
+  climateRatingsState: {
+    climateRatings: Array<{
+      timestamp: number,
+      rating: number
+    }>
+  },
+  climateStackState: {
+    climateStack: Array<{
+      observation: string,
+      timestamp: number
+    }>
+  },
+  coachState: {
+    coachName: string
+  },
+  engagementCountState: {
+    engagedCount: number,
+    notEngagedCount: number
+  },
+  instructionStackState: {
+    instructionStack: Array<{
+      timestamp: number,
+      observation: string
+    }>
+  },
+  listeningCountState: {
+    listeningCount: number,
+    noListeningCount: number
+  },
+  mathCountState: {
+    mathCount: number,
+    noMathCount: number
+  },
+  mathCentersState: {
+    mathCenters: Array<{
+      name: string,
+      count: number
+    }>
+  },
+  sequentialCenterState: {
+    sequentialCenters: Array<{
+      name: string,
+      count: number
+    }>
+  },
+  sequentialCountState: {
+    noSequentialCount: number,
+    sequentialCount: number
+  },
+  sessionTimeState: {
+    endTime: number,
+    startTime: number
+  },
+  teacherListState: {
+    teachers: Array<Teacher>
+  },
+  teacherSelectedState: {
+    teacher: Teacher
+  },
+  transitionLogState: {
+    transitionStack: Array<{
+      duration: string,
+      end: string,
+      start: string,
+      transitionType: string
+    }>
+  },
+  transitionTimeState: {
+    transitionTime: number
+  },
+  transitionTypeState: {
+    transitionType: string
+  }
+}
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+}
+
+interface Style {
+  root: string,
+  grow: string,
+  goButton: string,
+  titleText: string,
+  instructionText: string
+}
+
+interface Props {
+  classes: Style,
+  history: {
+    push(param: {pathname: string}): void,
+    location: {
+      state: {
+        type: string
+      }
+    }
+  },
+  location: {
+    state: {
+      type: string
+    }
+  },
+  changeTeacher(teacher: string): void,
+  teacherSelected: Teacher,
+  teacherList: Array<Teacher>
+}
+
+interface State {
+  allowed: boolean,
+  numSelected: number,
+  selected: string,
+  unlocked: Array<number>,
+  unlockedData: boolean,
+  page: string,
+  teacherId: string,
+  teacherName: string,
+  teacher: {}
+}
+
 /**
  * magic 8 menu
  * @class Magic8MenuPage
  */
-class Magic8MenuPage extends Component {
+class Magic8MenuPage extends React.Component<Props, State> {
   /**
    * @param {Props} props
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
-    this.onClick = this.onClick.bind(this);
+    // this.onClick = this.onClick.bind(this);
     this.state = {
       allowed: false,
       numSelected: 0,
@@ -113,7 +241,7 @@ class Magic8MenuPage extends Component {
       teacher: {}
     };
 
-    this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this);
+    // this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this);
   }
 
   /**
@@ -121,7 +249,7 @@ class Magic8MenuPage extends Component {
    * @param {string} title
    * @return {void}
    */
-  onClick = (selected, title) => {
+  onClick = (selected: string, title: string): void => {
     if (selected && this.state.numSelected > 0) {
       this.setState({
         numSelected: this.state.numSelected - 1,
@@ -139,7 +267,7 @@ class Magic8MenuPage extends Component {
     }
   }
 
-  handleGoButton = () => {
+  handleGoButton = (): void => {
     if (this.state.page === "Training") {
       this.props.history.push({
         pathname: `/${this.state.selected}Training`,
@@ -160,9 +288,9 @@ class Magic8MenuPage extends Component {
   /**
    * @return {void}
    */
-  setUnlockedSectionsState() {
+  setUnlockedSectionsState = (): void => {
     const firebase = this.context;
-    firebase.getUnlockedSections().then(unlocked => {
+    firebase.getUnlockedSections().then((unlocked: Array<number>) => {
       this.setState({
         unlocked: unlocked,
         unlockedData: true
@@ -173,14 +301,14 @@ class Magic8MenuPage extends Component {
   /**
    * @return {void}
    */
-  handleCloseModal = () => {
+  handleCloseModal = (): void => {
     this.setState({
       numSelected: 0
     })
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     this.setUnlockedSectionsState();
     this.setState({
       page: this.props.history.location.state.type === "Training"
@@ -195,7 +323,7 @@ class Magic8MenuPage extends Component {
    *
    * @param {Props} prevProps
    */
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props): void {
     if (this.props.location.state.type !== prevProps.location.state.type) {
       this.setState({
         page: this.props.location.state.type,
@@ -204,17 +332,46 @@ class Magic8MenuPage extends Component {
   }
 
   /**
-   * @param {event} event
+   * @param {ChangeEvent} event
    */
-  changeTeacher = (event) => {
+  changeTeacher = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.props.changeTeacher(event.target.value);
+  };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    history: PropTypes.exact({
+      push: PropTypes.func,
+      location: PropTypes.exact({
+        state: PropTypes.exact({
+          state: PropTypes.string
+        })
+      })
+    }).isRequired,
+    location: PropTypes.exact({
+      state: PropTypes.exact({
+        state: PropTypes.string
+      })
+    }).isRequired,
+    changeTeacher: PropTypes.func.isRequired,
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
+    teacherList: PropTypes.array.isRequired
   };
 
   /**
    * render function
    * @return {ReactElement}
    */
-  render() {
+  render(): React.ReactElement {
     const { classes } = this.props;
     const ObservationPopUp = {
       'TransitionTime': <TransitionTimeObservationPopUp />,
@@ -230,7 +387,7 @@ class Magic8MenuPage extends Component {
       <div className={classes.root}>
         <div>
           <FirebaseContext.Consumer>
-            {firebase => <AppBar firebase={firebase} />}
+            {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
         </div>
         <div style={{flexGrow: 1}}>
@@ -417,25 +574,7 @@ class Magic8MenuPage extends Component {
   }
 }
 
-Magic8MenuPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-  changeTeacher: PropTypes.func.isRequired,
-  teacherSelected: PropTypes.exact({
-    email: PropTypes.string,
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    notes: PropTypes.string,
-    id: PropTypes.string,
-    phone: PropTypes.string,
-    role: PropTypes.string,
-    school: PropTypes.string
-  }).isRequired,
-  teacherList: PropTypes.array.isRequired
-};
-
-const mapStateToProps = state => {
+const mapStateToProps = (state: ReduxState): {teacherSelected: Teacher, teacherList: Array<Teacher>} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,
     teacherList: state.teacherListState.teachers

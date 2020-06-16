@@ -42,7 +42,6 @@ interface Style {
 
 interface Props {
   classes: Style,
-  content: React.ReactNode,
   handleBegin(): void,
   handleClose(): void,
   open: boolean,

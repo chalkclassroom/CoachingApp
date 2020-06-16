@@ -40,11 +40,12 @@ interface Style {
 interface Props {
   classes: Style,
   position: string,
-  paddingTop: string,
+  paddingTop?: string,
   color: string,
   icon: string,
   title: string,
-  text: string | object
+  text: string | object,
+  list?: Array<string>
 }
 
 /**
@@ -69,7 +70,8 @@ class Impact extends React.Component<Props, {}> {
     text: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object
-    ])
+    ]),
+    list: PropTypes.array
   }
   /**
    * render function
@@ -101,6 +103,19 @@ class Impact extends React.Component<Props, {}> {
                 <Typography className={classes.bodyText}>
                   {this.props.text}
                 </Typography>
+                {this.props.list ? (
+                  <ul>
+                    {this.props.list.map((value, index) => {
+                      return (
+                        <li key={index}>
+                          <Typography className={classes.bodyText}>
+                            {value}
+                          </Typography>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                ) : (null)}
               </Grid>
             </Grid>
             <Grid item xs={2} />
@@ -127,6 +142,19 @@ class Impact extends React.Component<Props, {}> {
                 <Typography className={classes.bodyText}>
                   {this.props.text}
                 </Typography>
+                {this.props.list ? (
+                  <ul>
+                    {this.props.list.map((value, index) => {
+                      return (
+                        <li key={index}>
+                          <Typography className={classes.bodyText}>
+                            {value}
+                          </Typography>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                ) : (null)}
               </Grid>
             </Grid>
           </Grid>
@@ -135,18 +163,5 @@ class Impact extends React.Component<Props, {}> {
     );
   }
 }
-
-Impact.propTypes = {
-  classes: PropTypes.object.isRequired,
-  position: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired,
-  paddingTop: PropTypes.string,
-  color: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  text: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object
-  ])
-};
 
 export default withStyles(styles)(Impact);

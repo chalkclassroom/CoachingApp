@@ -1,6 +1,6 @@
-import React from "react";
+import * as React from "react";
 import { withStyles } from "@material-ui/core";
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid/Grid';
 import LogoImage from '../../assets/images/LogoImage.svg';
 import PieChartImage from '../../assets/images/PieChartImage.svg';
@@ -24,9 +24,9 @@ import UnitedWayLogoImage from '../../assets/images/UnitedWayLogoImage.jpg';
 import VanderbiltPeabodyLogoImage from '../../assets/images/VanderbiltPeabodyLogoImage.png';
 import WondryLogoImage from '../../assets/images/WondryLogoImage.png';
 import Typography from '@material-ui/core/Typography/Typography';
-import LandingDetail from '../../components/LandingPageComponents/LandingDetail.tsx';
-import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard.tsx';
-import Impact from '../../components/LandingPageComponents/Impact.tsx';
+import LandingDetail from '../../components/LandingPageComponents/LandingDetail';
+import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard';
+import Impact from '../../components/LandingPageComponents/Impact';
 import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
 import iPadImage from '../../assets/images/iPadImage.svg';
@@ -35,12 +35,12 @@ import CoachingCycleFullMobileImage from '../../assets/images/CoachingCycleFullM
 import CoachLandingImage from '../../assets/images/CoachLandingImage.jpg';
 import CoachLandingLargeImage from '../../assets/images/CoachLandingLargeImage.jpg';
 import CoachLandingMobileImage from '../../assets/images/CoachLandingMobileImage.jpg';
-import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal.tsx';
-import PilotModal from '../../components/LandingPageComponents/PilotModal.tsx';
-import DemoModal from '../../components/LandingPageComponents/DemoModal.tsx';
+import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal';
+import PilotModal from '../../components/LandingPageComponents/PilotModal';
+import DemoModal from '../../components/LandingPageComponents/DemoModal';
 import { ClickAwayListener } from '@material-ui/core/es';
 
-const styles = {
+const styles: object = {
   root: {
     backgroundColor: '#ffffff'
   },
@@ -60,12 +60,6 @@ const styles = {
     fontSize: 'calc(12px + (36 - 12) * ((100vw - 300px) / (1600 - 300)))',
     color: 'white',
     textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)'
-  },
-  blueMask: {
-    position: 'absolute',
-    bottom: 0,
-    background: 'linear-gradient(to right, rgba(69, 154, 235, 0.3), rgba(69, 154, 235, 0.3))',
-    width: '100%',
   },
   section: {
     paddingTop: 10,
@@ -179,15 +173,52 @@ const styles = {
   },
 };
 
+interface Style {
+  root: string,
+  mobileRoot: string,
+  chalkTitle: string,
+  tagline: string,
+  section: string,
+  partnersText: string,
+  input: string,
+  demoButton: string,
+  sectionTitle: string,
+  getInvolvedTitle: string,
+  mailingListText: string,
+  textField: string,
+  mailingListButton: string,
+  partnerLogo: string,
+  largeRoot: string,
+  largeImage: string,
+  rootImage: string
+}
+
+interface Props {
+  classes: Style,
+  firebase: {
+    emailListSignUp(email: string): Promise<void>,
+  }
+}
+
+interface State {
+  events: boolean,
+  pilotModal: boolean,
+  demo: boolean,
+  email: string,
+  emailAdded: boolean,
+  errors: boolean,
+  emailError: string
+}
+
 /**
  * landing page
  * @class LandingPage
  */
-class LandingPage extends React.Component {
+class LandingPage extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -201,24 +232,23 @@ class LandingPage extends React.Component {
     }
   }
 
-  handleEventsButton = () => {
+  handleEventsButton = (): void => {
     this.setState({ events: true });
   };
 
-  handlePilotButton = () => {
+  handlePilotButton = (): void => {
     this.setState({ pilotModal: true });
-    console.log("handle pilot button executed");
   };
 
-  handleDemoButton = () => {
+  handleDemoButton = (): void => {
     this.setState({ demo: true });
   };
 
-  handleClickAwayEvents = () => {
+  handleClickAwayEvents = (): void => {
     this.setState({ events: false });
   }
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ 
       pilotModal: false,
       demo: false,
@@ -226,13 +256,14 @@ class LandingPage extends React.Component {
     });
   };
 
-  handleSubmit = () =>{
-    this.validateEmail();
+  /**
+   * submits user-entered email to firebase
+   */
+  handleSubmit = (): void =>{
+    this.validateEmail(this.state.email);
     if (!this.state.errors){
-      this.props.firebase.emailListSignUp({
-        email: this.state.email,
-      })
-      .then(() => {
+      this.props.firebase.emailListSignUp(this.state.email)
+      .then((): void => {
         this.setState({ emailAdded: true });
       });
     }
@@ -243,7 +274,7 @@ class LandingPage extends React.Component {
    * @param {string} name
    * @param {value} value
    */
-  validateState = (name, value) => {
+  validateState = (name: string, value: string): void => {
     switch (name) {
       case 'email':
         if (value.length === 0) {
@@ -273,7 +304,7 @@ class LandingPage extends React.Component {
    * @param {string} email
    * @return {boolean}
    */
-  validateEmail = (email) => {
+  validateEmail = (email: string): boolean => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
@@ -281,21 +312,28 @@ class LandingPage extends React.Component {
   /**
    * responds to change in user-entered text
    * @param {string} name
-   * @param {event} event
+   * @param {React.ChangeEvent<HTMLInputElement>} event
    * @return {void}
    */
-  handleChange = name => event => {
+  handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({
-      [name]: event.target.value,
+      email: event.target.value,
     });
     this.validateState(name, event.target.value);
   };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      emailListSignUp: PropTypes.func
+    }).isRequired
+  }
 
   /**
    * render function
    * @return {ReactElement}
    */
-  render() {
+  render(): React.ReactElement {
     const { classes } = this.props;
     return(
       <div>
@@ -313,11 +351,11 @@ class LandingPage extends React.Component {
           )}
           <Grid container direction="column" justify="center" alignItems="center">
             <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 10}}>
-              <img src={CoachLandingImage} alt = "Coach and Teacher" width="100%" style={{postion: 'relative'}} className={classes.rootImage}/>
-              <img src={CoachLandingLargeImage} alt = "Coach and Teacher" width="100%" style={{postion: 'relative'}} className={classes.largeImage}/>
+              <img src={CoachLandingImage} alt = "Coach and Teacher" width="100%" className={classes.rootImage}/>
+              <img src={CoachLandingLargeImage} alt = "Coach and Teacher" width="100%" className={classes.largeImage}/>
               <Grid item xs={10} style={{position: 'absolute'}}>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
-                  <Grid xs={7} style={{paddingTop: '2vh'}}>
+                  <Grid item xs={7} style={{paddingTop: '2vh'}}>
                     <Typography className={classes.chalkTitle}>
                       <strong>C</strong>oaching to
                     </Typography>
@@ -343,7 +381,7 @@ class LandingPage extends React.Component {
                       to benefit young children
                     </Typography>
                   </Grid>
-                  <Grid xs={5}>
+                  <Grid item xs={5}>
                     <Grid container direction="column" justify="center" alignItems="center" style={{}}>
                       <Grid item alignItems="center">
                         <img src={iPadImage} alt="tablet" width='100%'/>
@@ -391,15 +429,13 @@ class LandingPage extends React.Component {
                   title="MISSION"
                   position="flex-start"
                   paddingTop='1em'
-                  text={<div>
-                          CHALK&apos;s mission is to advance pre-k quality with an easy-to-use 
-                          tool for coaches and teachers that:
-                          <ul>
-                            <li>Focuses classroom observations on effective practices</li>
-                            <li>Links results to coaching strategies</li>
-                            <li>Accelerates professional growth through teacher-created action plans</li>
-                          </ul>
-                        </div>}
+                  text="CHALK's mission is to advance pre-k quality with an easy-to-use
+                    tool for coaches and teachers that:"
+                  list={[
+                    "Focuses classroom observations on effective practices",
+                    "Links results to coaching strategies",
+                    "Accelerates professional growth through teacher-created action plans"
+                  ]}
                 />
               </Grid>
             </Grid>
@@ -654,10 +690,10 @@ class LandingPage extends React.Component {
           )}
           <Grid container direction="column" justify="center" alignItems="center">
             <Grid container direction="row" justify="center" alignItems="center" style={{paddingBottom: 10}}>
-              <img src={CoachLandingMobileImage} alt = "Coach and Teacher" width="100%" style={{postion: 'relative'}}/>
+              <img src={CoachLandingMobileImage} alt = "Coach and Teacher" width="100%"/>
               <Grid item xs={10} style={{position: 'absolute'}}>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
-                  <Grid xs={8} style={{paddingTop: '0vh'}}>
+                  <Grid item xs={8} style={{paddingTop: '0vh'}}>
                     <Typography className={classes.chalkTitle}>
                       <strong>C</strong>oaching to
                     </Typography>
@@ -683,7 +719,7 @@ class LandingPage extends React.Component {
                       to benefit young children
                     </Typography>
                   </Grid>
-                  <Grid xs={4}>
+                  <Grid item xs={4}>
                     <Grid container direction="column" justify="center" alignItems="center" style={{width: '100%'}}>
                       <Grid item alignItems="center">
                         <img src={iPadImage} alt="tablet" width='100%'/>
@@ -731,15 +767,13 @@ class LandingPage extends React.Component {
                   title="MISSION"
                   position="flex-start"
                   paddingTop='1em'
-                  text={<div>
-                          CHALK&apos;s mission is to advance pre-k quality with an easy-to-use 
-                          tool for coaches and teachers that:
-                          <ul>
-                            <li>Focuses classroom observations on effective practices</li>
-                            <li>Links results to coaching strategies</li>
-                            <li>Accelerates professional growth through teacher-created action plans</li>
-                          </ul>
-                        </div>}
+                  text="CHALK's mission is to advance pre-k quality with an easy-to-use
+                    tool for coaches and teachers that:"
+                  list={[
+                    "Focuses classroom observations on effective practices",
+                    "Links results to coaching strategies",
+                    "Accelerates professional growth through teacher-created action plans"
+                  ]}
                 />
               </Grid>
             </Grid>
@@ -980,10 +1014,5 @@ class LandingPage extends React.Component {
     );
   }
 }
-
-LandingPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-  firebase: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(LandingPage);

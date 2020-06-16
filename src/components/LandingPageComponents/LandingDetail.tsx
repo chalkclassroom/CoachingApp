@@ -49,24 +49,24 @@ interface Style {
 
 interface Props {
   classes: Style,
-  iconAlt1: string,
-  icon1: string,
-  title1: string,
-  iconAlt2: string,
-  icon2: string,
-  title2: string,
-  text1: string,
-  text2: string,
-  button1: string,
-  button2: string,
-  onClick1(): void,
-  onClick2(): void,
-  iconAlt: string,
-  icon: string,
-  title: string,
-  text: string,
-  button: string,
-  onClick(): void
+  iconAlt1?: string,
+  icon1?: string,
+  title1?: string,
+  iconAlt2?: string,
+  icon2?: string,
+  title2?: string,
+  text1?: string,
+  text2?: string,
+  button1?: string,
+  button2?: string,
+  onClick1?(): void,
+  onClick2?(): void,
+  iconAlt?: string,
+  icon?: string,
+  title?: string,
+  text?: string,
+  button?: string,
+  onClick?(): void
 }
 
 /**
