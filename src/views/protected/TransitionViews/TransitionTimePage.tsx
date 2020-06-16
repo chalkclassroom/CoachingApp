@@ -4,19 +4,103 @@ import Grid from "@material-ui/core/Grid";
 import Button from '@material-ui/core/Button';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { withStyles } from "@material-ui/core/styles";
-import TransitionTimeHelp from "./TransitionTimeHelp";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import { connect } from "react-redux";
-import { resetTransitionTime } from "../../../state/actions/transition-time";
-// import TransitionTimeRecs from "./TransitionTimeRecs";
-import TransitionTypeSel from "./TransitionTypeSel";
+import { resetTransitionTime, toggleNewTransitionType } from "../../../state/actions/transition-time";
+import TransitionTypeSel from "./TransitionTypeSel.tsx";
 import Dashboard from "../../../components/Dashboard";
-import * as Constants from "../../../constants";
+import * as Constants from "../../../constants/Constants";
+
+interface ReduxState {
+  associativeCenterState: {
+    associativeCenters: Array<{
+      name: string,
+      count: number
+    }>
+  },
+  associativeCountState: {
+    acCount: number,
+    noACCount: number,
+    noOppCount: number
+  },
+  climateRatingsState: {
+    climateRatings: Array<{
+      timestamp: number,
+      rating: number
+    }>
+  },
+  climateStackState: {
+    climateStack: Array<{
+      observation: string,
+      timestamp: number
+    }>
+  },
+  coachState: {
+    coachName: string
+  },
+  engagementCountState: {
+    engagedCount: number,
+    notEngagedCount: number
+  },
+  instructionStackState: {
+    instructionStack: Array<{
+      timestamp: number,
+      observation: string
+    }>
+  },
+  listeningCountState: {
+    listeningCount: number,
+    noListeningCount: number
+  },
+  mathCountState: {
+    mathCount: number,
+    noMathCount: number
+  },
+  mathCentersState: {
+    mathCenters: Array<{
+      name: string,
+      count: number
+    }>
+  },
+  sequentialCenterState: {
+    sequentialCenters: Array<{
+      name: string,
+      count: number
+    }>
+  },
+  sequentialCountState: {
+    noSequentialCount: number,
+    sequentialCount: number
+  },
+  sessionTimeState: {
+    endTime: number,
+    startTime: number
+  },
+  teacherListState: {
+    teachers: Array<Teacher>
+  },
+  teacherSelectedState: {
+    teacher: Teacher
+  },
+  transitionLogState: {
+    transitionStack: Array<{
+      duration: string,
+      end: string,
+      start: string,
+      transitionType: string
+    }>
+  },
+  transitionTimeState: {
+    transitionTime: number
+  },
+  transitionTypeState: {
+    transitionType: string
+  }
+}
 
 const styles: object = {
   root: {
@@ -57,11 +141,12 @@ interface Props {
         }
       }
     ): void
-  }
+  },
+  toggleNewTransitionType(transitionType: string | null): void,
+  transitionType: string | null
 };
 
 interface State {
-  auth: boolean,
   notes: boolean,
   transitionType: string,
   open: boolean,
@@ -80,14 +165,11 @@ class TransitionTimePage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      auth: true,
       notes: false,
       transitionType: null,
       open: false,
       transitionEnded: false
     };
-
-    // this.handleTransitionType = this.handleTransitionType.bind(this);
   }
 
   /**
@@ -97,12 +179,12 @@ class TransitionTimePage extends React.Component<Props, State> {
     if (this.state.transitionEnded) {
       this.setState({ transitionEnded: false });
     }
-    this.setState({ transitionType: type });
+    this.props.toggleNewTransitionType(type);
   };
 
   handleEndTransition = (): void => {
     this.setState({ transitionEnded: true });
-    this.setState({ transitionType: null });
+    this.props.toggleNewTransitionType(null);
   };
 
   /**
@@ -117,7 +199,8 @@ class TransitionTimePage extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    toggleNewTransitionType: PropTypes.func.isRequired
   };
 
   /**
@@ -131,7 +214,7 @@ class TransitionTimePage extends React.Component<Props, State> {
       <div className={classes.root}>
         {this.state.notes ? (
           <FirebaseContext.Consumer>
-            {firebase => (
+            {(firebase: object): React.ReactElement => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}
@@ -196,8 +279,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                 <TransitionTypeSel
                   handleTransitionType={this.handleTransitionType}
                   handleNotes={this.handleNotes}
-                  transitionType={this.state.transitionType}
-                  transitionEnded={this.state.transitionEnded}
+                  transitionType={this.props.transitionType}
                 />
               </Grid>
             </Grid>
@@ -213,7 +295,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                     <TransitionTimer
                       firebase={firebase}
                       typeSelected={
-                        this.state.transitionType === null ? false : true
+                        this.props.transitionType === null ? false : true
                       }
                       handleEndTransition={this.handleEndTransition}
                     />
@@ -228,6 +310,13 @@ class TransitionTimePage extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { resetTransitionTime })(
+const mapStateToProps = (state: ReduxState): {transitionType: string | null} => {
+  return {
+    transitionType: state.transitionTypeState.transitionType,
+  };
+};
+
+
+export default connect(mapStateToProps, { resetTransitionTime, toggleNewTransitionType })(
   withStyles(styles)(TransitionTimePage)
 );
