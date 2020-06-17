@@ -15,16 +15,16 @@ const styles: object = {
 
 interface Props {
   classes: { button: string },
-  shouldOpen: boolean,
-  onAccept(param: number | void): void,
-  buttonText: string | React.ReactElement,
+  shouldOpen?: boolean,
+  onAccept?(param: number | void): void,
+  buttonText?: string | React.ReactElement,
   buttonVariant: string,
-  buttonColor: string,
-  backgroundColor: string,
-  buttonWidth: string,
-  buttonMargin: number,
-  dialogTitle: string,
-  onAcceptParams: number
+  buttonColor?: string,
+  backgroundColor?: string,
+  buttonWidth?: string,
+  buttonMargin?: number,
+  dialogTitle?: string,
+  onAcceptParams?: number
 }
 
 interface State {
