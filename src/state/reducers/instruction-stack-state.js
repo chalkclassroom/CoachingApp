@@ -1,4 +1,4 @@
-import { EMPTY_LOI_STACK, POP_LOI_STACK, PUSH_LOI_STACK } from '../actions/level-of-instruction';
+import { EMPTY_LOI_STACK, POP_LOI_STACK, PUSH_LOI_STACK } from '../actions/level-of-instruction.ts';
 
 const initialState = { instructionStack: [] };
 

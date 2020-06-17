@@ -2,7 +2,7 @@ import {
     ADD_NEW_CENTER,
     UPDATE_CENTER_COUNT,
     DELETE_MI_CENTERS
-  } from "../actions/math-instruction";
+  } from "../actions/math-instruction.ts";
   
   const initialState = { mathCenters: [] };
   

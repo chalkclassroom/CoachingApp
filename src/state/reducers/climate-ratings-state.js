@@ -1,4 +1,4 @@
-import { CLIMATE_APPEND_RATING } from "../actions/classroom-climate";
+import { CLIMATE_APPEND_RATING } from "../actions/classroom-climate.ts";
 
 const initialState = { climateRatings: [] };
 

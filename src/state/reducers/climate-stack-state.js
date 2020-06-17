@@ -2,7 +2,7 @@ import {
   EMPTY_CLIMATE_STACK,
   POP_CLIMATE_STACK,
   PUSH_CLIMATE_STACK
-} from "../actions/classroom-climate";
+} from "../actions/classroom-climate.ts";
 
 const initialState = { climateStack: [] };
 

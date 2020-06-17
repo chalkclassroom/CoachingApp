@@ -1,7 +1,7 @@
 import {
   UPDATE_LISTENING_COUNT,
   CLEAR_LISTENING_COUNT
-} from "../actions/listening-to-children";
+} from "../actions/listening-to-children.ts";
 
 const initialState = { listeningCount: 0, noListeningCount: 0 };
 

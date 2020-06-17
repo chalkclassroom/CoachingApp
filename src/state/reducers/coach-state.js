@@ -1,7 +1,7 @@
 import {
   GET_COACH,
   CLEAR_COACH
-} from "../actions/coach";
+} from "../actions/coach.tsx";
 
 const initialState = { coachName: null };
 

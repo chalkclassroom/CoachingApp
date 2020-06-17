@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import ChildBehaviorsPie from './ResultsComponents/ChildBehaviorsPie';
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
-import { deleteACCenters, clearACCount } from "../../state/actions/associative-cooperative";
+import { deleteACCenters, clearACCount } from "../../state/actions/associative-cooperative.tsx";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants';
 

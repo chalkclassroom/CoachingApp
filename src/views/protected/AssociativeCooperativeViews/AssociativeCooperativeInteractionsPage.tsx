@@ -4,13 +4,13 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import { deleteACCenters } from "../../../state/actions/associative-cooperative";
+import { deleteACCenters } from "../../../state/actions/associative-cooperative.tsx";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import {
   addNewCenter,
   incrementCenterCount,
   updateACCount
-} from "../../../state/actions/associative-cooperative.js";
+} from "../../../state/actions/associative-cooperative.tsx";
 
 
 const styles: object = {

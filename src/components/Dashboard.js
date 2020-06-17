@@ -40,10 +40,10 @@ import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHe
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
 import { resetTransitionTime } from "../state/actions/transition-time";
 import { updateSessionTime } from "../state/actions/transition-time";
-import { emptyClimateStack } from "../state/actions/classroom-climate";
-import { deleteACCenters } from "../state/actions/associative-cooperative";
+import { emptyClimateStack } from "../state/actions/classroom-climate.ts";
+import { deleteACCenters } from "../state/actions/associative-cooperative.tsx";
 import { deleteSACenters } from "../state/actions/sequential-activities";
-import { deleteMICenters } from "../state/actions/math-instruction";
+import { deleteMICenters } from "../state/actions/math-instruction.ts";
 import { clearTeacher } from "../state/actions/teacher";
 import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";

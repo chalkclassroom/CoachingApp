@@ -48,7 +48,7 @@ import setupLogRocketReact from 'logrocket-react';
 import ReactGA from 'react-ga';
 import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
 import Grid from '@material-ui/core/Grid';
-import { getCoach } from './state/actions/coach';
+import { getCoach } from './state/actions/coach.tsx';
 import { connect } from 'react-redux';
 import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 

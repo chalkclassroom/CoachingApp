@@ -23,7 +23,7 @@ import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
-import { clearCoach } from '../state/actions/coach';
+import { clearCoach } from '../state/actions/coach.tsx';
 import TeacherModal from "../views/protected/HomeViews/TeacherModal.tsx";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import DashboardIcon from '@material-ui/icons/Dashboard';

@@ -1,7 +1,7 @@
 import {
   UPDATE_MATH_COUNT,
   CLEAR_MATH_COUNT
-} from "../actions/math-instruction";
+} from "../actions/math-instruction.ts";
 
 const initialState = { mathCount: 0, noMathCount: 0 };
 

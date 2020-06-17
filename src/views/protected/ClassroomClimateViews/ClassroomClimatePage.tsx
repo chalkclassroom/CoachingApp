@@ -14,7 +14,7 @@ import { connect } from "react-redux";
 import {
   appendClimateRating,
   emptyClimateStack
-} from "../../../state/actions/classroom-climate";
+} from "../../../state/actions/classroom-climate.ts";
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";

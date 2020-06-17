@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import ListeningSummaryChart from './ResultsComponents/ListeningSummaryChart';
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
-import { clearListeningCount } from "../../state/actions/listening-to-children";
+import { clearListeningCount } from "../../state/actions/listening-to-children.ts";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants';
 
