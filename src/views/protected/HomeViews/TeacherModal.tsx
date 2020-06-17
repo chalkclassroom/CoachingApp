@@ -62,7 +62,7 @@ interface Style {
 interface Props {
   classes: Style,
   type: string,
-  history: { push(object: Push): void },
+  history: { push(param: string | Push): void },
   firebase: { getTeacherList(): Promise<Teacher[]> },
   handleClose(): void,
   changeTeacher(teacher: Teacher): Teacher,
@@ -74,8 +74,8 @@ interface Props {
 interface Push {
   pathname: string,
   state: {
-    teacher: Teacher,
-    teachers: Array<Teacher>,
+    teacher?: Teacher,
+    teachers?: Array<Teacher>,
     type: string
   }
 }

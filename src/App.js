@@ -10,7 +10,7 @@ import TransitionResultsPage from "./views/protected/TransitionViews/TransitionR
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage.tsx";
 import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
-import HomePage from "./views/protected/HomeViews/HomePage";
+import HomePage from "./views/protected/HomeViews/HomePage.tsx";
 import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
 import ActionPlanListPage from "./views/protected/ActionPlanViews/ActionPlanListPage";
 import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView';
