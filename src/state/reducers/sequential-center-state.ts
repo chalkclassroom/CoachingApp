@@ -1,13 +1,20 @@
 import {
   ADD_NEW_CENTER,
   UPDATE_CENTER_COUNT,
-  TOGGLE_SEQUENTIAL_MATERIALS,
-  DELETE_SA_CENTERS
-} from "../actions/sequential-activities.ts";
+  DELETE_SA_CENTERS,
+  SequentialActivitiesTypes
+} from "../actions/sequential-activities";
 
-const initialState = { sequentialCenters: [] };
+interface SequentialCenterState {
+  sequentialCenters: Array<{
+    name: string,
+    count: number
+  }>
+}
 
-export default (state = initialState, action) => {
+const initialState: SequentialCenterState = { sequentialCenters: [] };
+
+export default (state = initialState, action: SequentialActivitiesTypes): SequentialCenterState => {
   switch (action.type) {
     case ADD_NEW_CENTER:
       if (
@@ -27,7 +34,6 @@ export default (state = initialState, action) => {
           {
             name: action.centerName.toLowerCase(),
             count: 0,
-            sequentialMaterialsPresent: false
           }
         ]
       };
@@ -45,21 +51,6 @@ export default (state = initialState, action) => {
         ...state,
         sequentialCenters: newCenters
       };
-    case TOGGLE_SEQUENTIAL_MATERIALS:
-      const new_centers = [...state.sequentialCenters];
-      new_centers.some(center => {
-        if (center.name === action.centerName.toLowerCase()) {
-          center.sequentialMaterialsPresent = !center.sequentialMaterialsPresent;
-          return true;
-        }
-        return false;
-      });
-
-      return {
-        ...state,
-        sequentialCenters: new_centers
-      };
-
     case DELETE_SA_CENTERS:
       return {
         ...state,

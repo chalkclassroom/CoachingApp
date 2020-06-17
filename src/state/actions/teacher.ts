@@ -13,16 +13,35 @@ interface Teacher {
   school: string
 }
 
-export const changeTeacher = (teacher: Teacher): {type: string, teacher: Teacher} => ({
+export const changeTeacher = (teacher: Teacher): ChangeTeacher => ({
   type: CHANGE_TEACHER,
   teacher
 });
 
-export const clearTeacher = (): {type: string} => ({
+export const clearTeacher = (): ClearTeacher => ({
   type: CLEAR_TEACHER
 });
 
-export const getTeacherList = (teachers: Array<Teacher>): {type: string, teachers: Array<Teacher>} => ({
+export const getTeacherList = (teachers: Array<Teacher>): GetTeacherList => ({
   type: GET_TEACHER_LIST,
   teachers
 })
+
+interface ChangeTeacher {
+  type: typeof CHANGE_TEACHER,
+  teacher: Teacher
+}
+
+interface ClearTeacher {
+  type: typeof CLEAR_TEACHER
+}
+
+interface GetTeacherList {
+  type: typeof GET_TEACHER_LIST,
+  teachers: Array<Teacher>
+}
+
+export type TeacherTypes =
+  ChangeTeacher |
+  ClearTeacher |
+  GetTeacherList

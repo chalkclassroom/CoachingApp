@@ -1,11 +1,17 @@
 import {
   UPDATE_SESSION_TIME,
-  CLEAR_SESSION_TIME
-} from "../actions/transition-time.ts";
+  CLEAR_SESSION_TIME,
+  TransitionTimeTypes
+} from "../actions/transition-time";
 
-const initialState = { startTime: 0, endTime: 0 };
+interface SessionTimeState {
+  startTime: number,
+  endTime: number
+}
 
-export default (state = initialState, action) => {
+const initialState: SessionTimeState = { startTime: 0, endTime: 0 };
+
+export default (state = initialState, action: TransitionTimeTypes): SessionTimeState => {
   switch (action.type) {
     case UPDATE_SESSION_TIME:
       if (state.startTime === 0) {

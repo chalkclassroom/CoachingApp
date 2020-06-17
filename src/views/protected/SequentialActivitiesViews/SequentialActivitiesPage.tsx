@@ -4,13 +4,13 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import { deleteSACenters } from "../../../state/actions/sequential-activities.ts";
+import { deleteSACenters } from "../../../state/actions/sequential-activities";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import {
   addNewCenter,
   incrementCenterCount,
   updateSequentialCount
-} from "../../../state/actions/sequential-activities.ts";
+} from "../../../state/actions/sequential-activities";
 
 
 const styles: object = {

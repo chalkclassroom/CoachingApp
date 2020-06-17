@@ -13,7 +13,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import { withRouter } from "react-router-dom";
 import StarsIcon from '@material-ui/icons/Stars';
-import { changeTeacher, getTeacherList } from '../../../state/actions/teacher.ts';
+import { changeTeacher, getTeacherList } from '../../../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants';
 

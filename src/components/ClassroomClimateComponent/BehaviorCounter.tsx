@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import {
   popOffClimateStack,
   pushOntoClimateStack
-} from "../../state/actions/classroom-climate.ts";
+} from "../../state/actions/classroom-climate";
 
 const styles = {
   root: {

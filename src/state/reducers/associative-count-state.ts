@@ -1,11 +1,18 @@
 import {
   UPDATE_AC_COUNT,
-  CLEAR_AC_COUNT
-} from "../actions/associative-cooperative.ts";
+  CLEAR_AC_COUNT,
+  AssociativeCooperativeTypes
+} from "../actions/associative-cooperative";
 
-const initialState = { acCount: 0, noACCount: 0, noOppCount: 0 };
+interface AssociativeCountState {
+  acCount: number,
+  noACCount: number,
+  noOppCount: number
+}
 
-export default (state = initialState, action) => {
+const initialState: AssociativeCountState = { acCount: 0, noACCount: 0, noOppCount: 0 };
+
+export default (state = initialState, action: AssociativeCooperativeTypes): AssociativeCountState => {
   switch (action.type) {
     case UPDATE_AC_COUNT:
       if (action.behavior==="true") {

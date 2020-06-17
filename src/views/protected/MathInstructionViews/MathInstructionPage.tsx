@@ -4,13 +4,13 @@ import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
-import { deleteMICenters } from "../../../state/actions/math-instruction.ts";
+import { deleteMICenters } from "../../../state/actions/math-instruction";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
 import {
   addNewCenter,
   incrementCenterCount,
   updateMathCount
-} from "../../../state/actions/math-instruction.ts";
+} from "../../../state/actions/math-instruction";
 
 
 const styles: object = {

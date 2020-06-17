@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import ReplySharpIcon from '@material-ui/icons/ReplySharp';
 import { connect } from 'react-redux';
-import { pushOntoLoiStack, popOffLoiStack } from '../../state/actions/level-of-instruction.ts';
+import { pushOntoLoiStack, popOffLoiStack } from '../../state/actions/level-of-instruction';
 
 const styles: object = {
   category: {

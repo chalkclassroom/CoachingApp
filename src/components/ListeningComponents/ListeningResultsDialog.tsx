@@ -6,8 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ListeningSummaryChart from './ResultsComponents/ListeningSummaryChart';
 import {connect} from 'react-redux';
-import { clearTeacher } from "../../state/actions/teacher.ts";
-import { clearListeningCount } from "../../state/actions/listening-to-children.ts";
+import { clearTeacher } from "../../state/actions/teacher";
+import { clearListeningCount } from "../../state/actions/listening-to-children";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants';
 

@@ -1,11 +1,16 @@
 import {
   CHANGE_TRANSITION_TYPE,
-  RESET_TRANSITION_TIME
-} from "../actions/transition-time.ts";
+  RESET_TRANSITION_TIME,
+  TransitionTimeTypes
+} from "../actions/transition-time";
 
-const initialState = { transitionType: null };
+interface TransitionTypeState {
+  transitionType: string
+}
 
-export default (state = initialState, action) => {
+const initialState: TransitionTypeState = { transitionType: null };
+
+export default (state = initialState, action: TransitionTimeTypes): TransitionTypeState => {
   switch (action.type) {
     case CHANGE_TRANSITION_TYPE:
       return {

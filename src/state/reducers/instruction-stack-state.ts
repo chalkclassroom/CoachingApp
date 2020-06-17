@@ -1,8 +1,20 @@
-import { EMPTY_LOI_STACK, POP_LOI_STACK, PUSH_LOI_STACK } from '../actions/level-of-instruction.ts';
+import { 
+  EMPTY_LOI_STACK,
+  POP_LOI_STACK,
+  PUSH_LOI_STACK,
+  LevelOfInstructionTypes
+} from '../actions/level-of-instruction';
 
-const initialState = { instructionStack: [] };
+interface InstructionStackState {
+  instructionStack: Array<{
+    timestamp: number,
+    observation: string
+  }>
+}
 
-export default (state = initialState, action) => {
+const initialState: InstructionStackState = { instructionStack: [] };
+
+export default (state = initialState, action: LevelOfInstructionTypes): InstructionStackState => {
   switch (action.type) {
     case PUSH_LOI_STACK:
       return {

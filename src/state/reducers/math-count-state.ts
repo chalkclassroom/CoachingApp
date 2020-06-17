@@ -1,11 +1,17 @@
 import {
   UPDATE_MATH_COUNT,
-  CLEAR_MATH_COUNT
-} from "../actions/math-instruction.ts";
+  CLEAR_MATH_COUNT,
+  MathInstructionTypes
+} from "../actions/math-instruction";
 
-const initialState = { mathCount: 0, noMathCount: 0 };
+interface MathCountState {
+  mathCount: number,
+  noMathCount: number
+}
 
-export default (state = initialState, action) => {
+const initialState: MathCountState = { mathCount: 0, noMathCount: 0 };
+
+export default (state = initialState, action: MathInstructionTypes): MathCountState => {
   switch (action.type) {
     case UPDATE_MATH_COUNT:
       if (action.behavior==="true") {

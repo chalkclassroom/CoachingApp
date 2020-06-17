@@ -6,8 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import PieSummary from './ResultsComponents/PieSummary';
 import {connect} from 'react-redux';
-import { clearTeacher } from "../../state/actions/teacher.ts";
-import { clearEngagementCount } from "../../state/actions/student-engagement.ts";
+import { clearTeacher } from "../../state/actions/teacher";
+import { clearEngagementCount } from "../../state/actions/student-engagement";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants';
 

@@ -10,8 +10,8 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import Notes from "../../../components/Notes";
 import { connect } from "react-redux";
-import { resetTransitionTime, toggleNewTransitionType } from "../../../state/actions/transition-time.ts";
-import TransitionTypeSel from "./TransitionTypeSel.tsx";
+import { resetTransitionTime, toggleNewTransitionType } from "../../../state/actions/transition-time";
+import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 import * as Constants from "../../../constants/Constants";
 

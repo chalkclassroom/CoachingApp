@@ -1,12 +1,20 @@
 import {
   EMPTY_CLIMATE_STACK,
   POP_CLIMATE_STACK,
-  PUSH_CLIMATE_STACK
-} from "../actions/classroom-climate.ts";
+  PUSH_CLIMATE_STACK,
+  ClassroomClimateTypes
+} from "../actions/classroom-climate";
 
-const initialState = { climateStack: [] };
+interface ClassroomClimateState {
+  climateStack: Array<{
+    observation: string,
+    timestamp: number
+  }>
+}
 
-export default (state = initialState, action) => {
+const initialState: ClassroomClimateState = { climateStack: [] };
+
+export default (state = initialState, action: ClassroomClimateTypes): ClassroomClimateState => {
   switch (action.type) {
     case PUSH_CLIMATE_STACK:
       return {

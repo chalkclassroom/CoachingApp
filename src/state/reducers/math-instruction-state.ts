@@ -1,17 +1,25 @@
 import {
   ADD_NEW_CENTER,
   UPDATE_CENTER_COUNT,
-  DELETE_AC_CENTERS
-} from "../actions/associative-cooperative.ts";
+  DELETE_MI_CENTERS,
+  MathInstructionTypes
+} from "../actions/math-instruction";
+  
+interface MathInstructionState {
+  mathCenters: Array<{
+    name: string,
+    count: number
+  }>
+}
 
-const initialState = { associativeCenters: [] };
+const initialState: MathInstructionState = { mathCenters: [] };
 
-export default (state = initialState, action) => {
+export default (state = initialState, action: MathInstructionTypes): MathInstructionState => {
   switch (action.type) {
     case ADD_NEW_CENTER:
       if (
         action.centerName === "" ||
-        state.associativeCenters.some(
+        state.mathCenters.some(
           center => center.name === action.centerName.toLowerCase()
         )
       ) {
@@ -21,13 +29,13 @@ export default (state = initialState, action) => {
       }
       return {
         ...state,
-        associativeCenters: [
-          ...state.associativeCenters,
+        mathCenters: [
+          ...state.mathCenters,
           { name: action.centerName.toLowerCase(), count: 0 }
         ]
       };
     case UPDATE_CENTER_COUNT:
-      const newCenters = [...state.associativeCenters];
+      const newCenters = [...state.mathCenters];
       newCenters.some(center => {
         if (center.name === action.centerName.toLowerCase()) {
           ++center.count;
@@ -38,14 +46,15 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        associativeCenters: newCenters
+        mathCenters: newCenters
       };
-    case DELETE_AC_CENTERS:
+    case DELETE_MI_CENTERS:
       return {
         ...state,
-        associativeCenters: []
+        mathCenters: []
       };
     default:
       return state;
   }
 };
+  

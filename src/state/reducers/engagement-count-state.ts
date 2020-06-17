@@ -1,11 +1,17 @@
 import {
   UPDATE_ENGAGEMENT_COUNT,
-  CLEAR_ENGAGEMENT_COUNT
-} from "../actions/student-engagement.ts";
+  CLEAR_ENGAGEMENT_COUNT,
+  StudentEngagementTypes
+} from "../actions/student-engagement";
 
-const initialState = { engagedCount: 0, notEngagedCount: 0 };
+interface EngagementCountState {
+  engagedCount: number,
+  notEngagedCount: number
+}
 
-export default (state = initialState, action) => {
+const initialState: EngagementCountState = { engagedCount: 0, notEngagedCount: 0 };
+
+export default (state = initialState, action: StudentEngagementTypes): EngagementCountState => {
   switch (action.type) {
     case UPDATE_ENGAGEMENT_COUNT:
       if (action.engaged) {

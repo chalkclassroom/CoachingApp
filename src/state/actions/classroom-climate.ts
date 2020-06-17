@@ -6,7 +6,7 @@ export const EMPTY_CLIMATE_STACK = "empty_classroom_climate_stack";
 export const pushOntoClimateStack = (entry: {
   BehaviorResponse: string,
   Type: string
-}): {type: string, entry: {timestamp: number, observation: string}} => ({
+}): PushOntoClimateStack => ({
   type: PUSH_CLIMATE_STACK,
   entry: {
     timestamp: Date.now(),
@@ -14,17 +14,11 @@ export const pushOntoClimateStack = (entry: {
   }
 });
 
-export const popOffClimateStack = (): {type: string} => ({
+export const popOffClimateStack = (): PopOffClimateStack => ({
   type: POP_CLIMATE_STACK
 });
 
-export const appendClimateRating = (rating: number): {
-  type: string,
-  entry: {
-    timestamp: number,
-    rating: number
-  }
-} => ({
+export const appendClimateRating = (rating: number): AppendClimateRating => ({
   type: CLIMATE_APPEND_RATING,
   entry: {
     timestamp: Date.now(),
@@ -32,6 +26,36 @@ export const appendClimateRating = (rating: number): {
   }
 });
 
-export const emptyClimateStack = (): {type: string} => ({
+export const emptyClimateStack = (): EmptyClimateStack => ({
   type: EMPTY_CLIMATE_STACK
 });
+
+interface PushOntoClimateStack {
+  type: typeof PUSH_CLIMATE_STACK,
+  entry: {
+    timestamp: number,
+    observation: string
+  }
+}
+
+interface PopOffClimateStack {
+  type: typeof POP_CLIMATE_STACK
+}
+
+interface AppendClimateRating {
+  type: typeof CLIMATE_APPEND_RATING,
+  entry: {
+    timestamp: number,
+    rating: number
+  }
+}
+
+interface EmptyClimateStack {
+  type: typeof EMPTY_CLIMATE_STACK
+}
+
+export type ClassroomClimateTypes = 
+  PushOntoClimateStack |
+  PopOffClimateStack |
+  AppendClimateRating |
+  EmptyClimateStack;

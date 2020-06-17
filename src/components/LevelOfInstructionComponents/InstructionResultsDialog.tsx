@@ -6,8 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import LevelOfInstructionSummaryChart from './ResultsComponents/LevelOfInstructionSummaryChart';
 import {connect} from 'react-redux';
-import { clearTeacher } from "../../state/actions/teacher.ts";
-import { emptyLoiStack } from "../../state/actions/level-of-instruction.ts";
+import { clearTeacher } from "../../state/actions/teacher";
+import { emptyLoiStack } from "../../state/actions/level-of-instruction";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants';
 

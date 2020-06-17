@@ -6,7 +6,7 @@ export const CLEAR_TRANSITION_TIME = "clear_transition_time";
 export const UPDATE_SESSION_TIME = "update_session_time";
 export const CLEAR_SESSION_TIME = "clear_session_time";
 
-export const toggleNewTransitionType = (transitionType: string): {type: string, transitionType: string} => ({
+export const toggleNewTransitionType = (transitionType: string): ToggleNewTransitionType => ({
   type: CHANGE_TRANSITION_TYPE,
   transitionType
 });
@@ -16,37 +16,75 @@ export const pushOntoTransitionStack = (entry: {
   end: string,
   duration: string,
   transitionType: string
-}): {
-  type: string,
+}): PushOntoTransitionStack => ({
+  type: TRANSITION_APPEND_LOG,
+  entry
+});
+
+export const resetTransitionTime = (): ResetTransitionTime => ({
+  type: RESET_TRANSITION_TIME
+});
+
+export const updateTransitionTime = (time: number): UpdateTransitionTime => ({
+  type: UPDATE_TRANSITION_TIME,
+  time
+});
+
+export const clearTransitionTime = (): ClearTransitionTime => ({
+  type: CLEAR_TRANSITION_TIME
+});
+
+export const updateSessionTime = (time: number): UpdateSessionTime => ({
+  type: UPDATE_SESSION_TIME,
+  time
+});
+
+export const clearSessionTime = (): ClearSessionTime => ({
+  type: CLEAR_SESSION_TIME
+});
+
+interface ToggleNewTransitionType {
+  type: typeof CHANGE_TRANSITION_TYPE,
+  transitionType: string
+}
+
+interface PushOntoTransitionStack {
+  type: typeof TRANSITION_APPEND_LOG,
   entry: {
     start: string,
     end: string,
     duration: string,
     transitionType: string
   }
-} => ({
-  type: TRANSITION_APPEND_LOG,
-  entry
-});
+}
 
-export const resetTransitionTime = (): {type: string} => ({
-  type: RESET_TRANSITION_TIME
-});
+interface ResetTransitionTime {
+  type: typeof RESET_TRANSITION_TIME
+}
 
-export const updateTransitionTime = (time: number): {type: string, time: number} => ({
-  type: UPDATE_TRANSITION_TIME,
-  time
-});
+interface UpdateTransitionTime {
+  type: typeof UPDATE_TRANSITION_TIME,
+  time: number
+}
 
-export const clearTransitionTime = (): {type: string} => ({
-  type: CLEAR_TRANSITION_TIME
-});
+interface ClearTransitionTime {
+  type: typeof CLEAR_TRANSITION_TIME
+}
 
-export const updateSessionTime = (time: number): {type: string, time: number} => ({
-  type: UPDATE_SESSION_TIME,
-  time
-});
+interface UpdateSessionTime {
+  type: typeof UPDATE_SESSION_TIME,
+  time: number
+}
 
-export const clearSessionTime = (): {type: string} => ({
-  type: CLEAR_SESSION_TIME
-});
+interface ClearSessionTime {
+  type: typeof CLEAR_SESSION_TIME
+}
+
+export type TransitionTimeTypes =
+  ToggleNewTransitionType |
+  PushOntoTransitionStack |
+  ResetTransitionTime |
+  UpdateTransitionTime |
+  ClearTransitionTime |
+  UpdateSessionTime |
+  ClearSessionTime

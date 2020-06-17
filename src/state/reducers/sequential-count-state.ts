@@ -1,11 +1,17 @@
 import {
   UPDATE_SEQUENTIAL_COUNT,
-  CLEAR_SEQUENTIAL_COUNT
-} from "../actions/sequential-activities.ts";
+  CLEAR_SEQUENTIAL_COUNT,
+  SequentialActivitiesTypes
+} from "../actions/sequential-activities";
 
-const initialState = { sequentialCount: 0, noSequentialCount: 0 };
+interface SequentialCountState {
+  sequentialCount: number,
+  noSequentialCount: number
+}
 
-export default (state = initialState, action) => {
+const initialState: SequentialCountState = { sequentialCount: 0, noSequentialCount: 0 };
+
+export default (state = initialState, action: SequentialActivitiesTypes): SequentialCountState => {
   switch (action.type) {
     case UPDATE_SEQUENTIAL_COUNT:
       if (action.behavior==="true") {

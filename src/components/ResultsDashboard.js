@@ -40,7 +40,7 @@ import NotesListDetailTable from './ResultsComponents/NotesListDetailTable';
 import FirebaseContext from "./Firebase/FirebaseContext";
 import moment from 'moment';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { changeTeacher } from '../state/actions/teacher.ts';
+import { changeTeacher } from '../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Constants from '../constants';
 

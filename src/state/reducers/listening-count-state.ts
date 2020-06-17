@@ -1,11 +1,17 @@
 import {
   UPDATE_LISTENING_COUNT,
-  CLEAR_LISTENING_COUNT
-} from "../actions/listening-to-children.ts";
+  CLEAR_LISTENING_COUNT,
+  ListeningToChildrenTypes
+} from "../actions/listening-to-children";
 
-const initialState = { listeningCount: 0, noListeningCount: 0 };
+interface ListeningCountState {
+  listeningCount: number,
+  noListeningCount: number
+}
 
-export default (state = initialState, action) => {
+const initialState: ListeningCountState = { listeningCount: 0, noListeningCount: 0 };
+
+export default (state = initialState, action: ListeningToChildrenTypes): ListeningCountState => {
   switch (action.type) {
     case UPDATE_LISTENING_COUNT:
       if (action.behavior) {

@@ -1,11 +1,16 @@
 import {
   GET_COACH,
-  CLEAR_COACH
-} from "../actions/coach.ts";
+  CLEAR_COACH,
+  CoachTypes
+} from "../actions/coach";
 
-const initialState = { coachName: null };
+interface CoachState {
+  coachName: string
+}
 
-export default (state = initialState, action) => {
+const initialState: CoachState = { coachName: null };
+
+export default (state = initialState, action: CoachTypes): CoachState => {
   switch (action.type) {
     case GET_COACH:
       return {
