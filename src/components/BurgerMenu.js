@@ -351,7 +351,6 @@ class BurgerMenu extends React.Component {
             </ListItem>
             <ListItem
               button
-              disabled
               onClick={() => {
                 this.setState({ menu: 9 });
                 this.props.firebase.firebaseSignOut().then(() => {
