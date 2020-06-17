@@ -1,7 +1,7 @@
 import {
   TRANSITION_APPEND_LOG,
   RESET_TRANSITION_TIME
-} from "../actions/transition-time";
+} from "../actions/transition-time.ts";
 
 const initialState = { transitionStack: [] };
 

@@ -3,7 +3,7 @@ import {
   UPDATE_CENTER_COUNT,
   TOGGLE_SEQUENTIAL_MATERIALS,
   DELETE_SA_CENTERS
-} from "../actions/sequential-activities";
+} from "../actions/sequential-activities.ts";
 
 const initialState = { sequentialCenters: [] };
 

@@ -17,7 +17,7 @@ import ConferencePlansIcon from "@material-ui/icons/ListAlt";
 import TeacherModal from "./TeacherModal";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
-import { getCoach } from '../../../state/actions/coach.tsx';
+import { getCoach } from '../../../state/actions/coach.ts';
 import { connect } from 'react-redux';
 import TeacherBarDetails from "../../../components/MathInstructionComponents/ResultsComponents/TeacherBarDetails";
 

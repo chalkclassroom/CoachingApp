@@ -29,7 +29,7 @@ import LockedModal from '../../components/LockedModal';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
-import { changeTeacher } from '../../state/actions/teacher.js';
+import { changeTeacher } from '../../state/actions/teacher.ts';
 import { connect } from 'react-redux';
 
 const styles: object = {

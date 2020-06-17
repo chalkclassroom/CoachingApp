@@ -8,7 +8,7 @@ import ms from 'pretty-ms';
 import YesNoDialog from '../../../components/Shared/YesNoDialog';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { pushOntoTransitionStack, updateTransitionTime, updateSessionTime } from '../../../state/actions/transition-time';
+import { pushOntoTransitionStack, updateTransitionTime, updateSessionTime } from '../../../state/actions/transition-time.ts';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import * as Constants from '../../../constants/Constants';
 import Dialog from '@material-ui/core/Dialog';

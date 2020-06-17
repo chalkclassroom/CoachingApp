@@ -1,7 +1,7 @@
 import {
   UPDATE_ENGAGEMENT_COUNT,
   CLEAR_ENGAGEMENT_COUNT
-} from "../actions/student-engagement";
+} from "../actions/student-engagement.ts";
 
 const initialState = { engagedCount: 0, notEngagedCount: 0 };
 

@@ -1,7 +1,7 @@
 import {
   CHANGE_TEACHER,
   CLEAR_TEACHER
-} from "../actions/teacher";
+} from "../actions/teacher.ts";
 
 const initialState = { teacher: null };
 

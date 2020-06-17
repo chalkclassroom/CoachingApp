@@ -2,7 +2,7 @@ import {
   ADD_NEW_CENTER,
   UPDATE_CENTER_COUNT,
   DELETE_AC_CENTERS
-} from "../actions/associative-cooperative.tsx";
+} from "../actions/associative-cooperative.ts";
 
 const initialState = { associativeCenters: [] };
 

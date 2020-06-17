@@ -1,7 +1,7 @@
 import {
   UPDATE_SEQUENTIAL_COUNT,
   CLEAR_SEQUENTIAL_COUNT
-} from "../actions/sequential-activities";
+} from "../actions/sequential-activities.ts";
 
 const initialState = { sequentialCount: 0, noSequentialCount: 0 };
 

@@ -1,7 +1,7 @@
 import {
   UPDATE_AC_COUNT,
   CLEAR_AC_COUNT
-} from "../actions/associative-cooperative.tsx";
+} from "../actions/associative-cooperative.ts";
 
 const initialState = { acCount: 0, noACCount: 0, noOppCount: 0 };
 

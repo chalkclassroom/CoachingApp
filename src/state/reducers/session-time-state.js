@@ -1,7 +1,7 @@
 import {
   UPDATE_SESSION_TIME,
   CLEAR_SESSION_TIME
-} from "../actions/transition-time";
+} from "../actions/transition-time.ts";
 
 const initialState = { startTime: 0, endTime: 0 };
 

@@ -1,7 +1,7 @@
 import {
   UPDATE_TRANSITION_TIME,
   CLEAR_TRANSITION_TIME
-} from "../actions/transition-time";
+} from "../actions/transition-time.ts";
 
 const initialState = { transitionTime: 0 };
 

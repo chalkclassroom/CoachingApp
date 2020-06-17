@@ -20,7 +20,7 @@ import Paper  from '@material-ui/core/Paper';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
 import Modal from "@material-ui/core/Modal"
 import ObserveImage from '../../assets/images/ObserveImage.png';
-import { updateEngagementCount } from '../../state/actions/student-engagement';
+import { updateEngagementCount } from '../../state/actions/student-engagement.ts';
 import { connect } from 'react-redux';
 
 const styles: object = theme => ({

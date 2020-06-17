@@ -1,4 +1,4 @@
-import { GET_TEACHER_LIST } from "../actions/teacher";
+import { GET_TEACHER_LIST } from "../actions/teacher.ts";
 
 const initialState = { teachers: [] };
 

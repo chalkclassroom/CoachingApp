@@ -1,7 +1,7 @@
 import {
   CHANGE_TRANSITION_TYPE,
   RESET_TRANSITION_TIME
-} from "../actions/transition-time";
+} from "../actions/transition-time.ts";
 
 const initialState = { transitionType: null };
 

@@ -6,34 +6,47 @@ export const CLEAR_TRANSITION_TIME = "clear_transition_time";
 export const UPDATE_SESSION_TIME = "update_session_time";
 export const CLEAR_SESSION_TIME = "clear_session_time";
 
-export const toggleNewTransitionType = transitionType => ({
+export const toggleNewTransitionType = (transitionType: string): {type: string, transitionType: string} => ({
   type: CHANGE_TRANSITION_TYPE,
   transitionType
 });
 
-export const pushOntoTransitionStack = entry => ({
+export const pushOntoTransitionStack = (entry: {
+  start: string,
+  end: string,
+  duration: string,
+  transitionType: string
+}): {
+  type: string,
+  entry: {
+    start: string,
+    end: string,
+    duration: string,
+    transitionType: string
+  }
+} => ({
   type: TRANSITION_APPEND_LOG,
   entry
 });
 
-export const resetTransitionTime = () => ({
+export const resetTransitionTime = (): {type: string} => ({
   type: RESET_TRANSITION_TIME
 });
 
-export const updateTransitionTime = time => ({
+export const updateTransitionTime = (time: number): {type: string, time: number} => ({
   type: UPDATE_TRANSITION_TIME,
   time
 });
 
-export const clearTransitionTime = () => ({
+export const clearTransitionTime = (): {type: string} => ({
   type: CLEAR_TRANSITION_TIME
 });
 
-export const updateSessionTime = time => ({
+export const updateSessionTime = (time: number): {type: string, time: number} => ({
   type: UPDATE_SESSION_TIME,
   time
 });
 
-export const clearSessionTime = () => ({
+export const clearSessionTime = (): {type: string} => ({
   type: CLEAR_SESSION_TIME
 });
