@@ -54,6 +54,7 @@ module.exports = {
     ]
   },
   'rules': {
-    "no-invalid-this": 0
+    "no-invalid-this": 0,
+    "@typescript-eslint/require-await": "off"
   },
 };

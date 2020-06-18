@@ -225,8 +225,8 @@ class HomePage extends React.Component<Props, State> {
         this.props.getCoach(name);
       })
     }
-    firebase.handleFetchTrainingStatus();
-    firebase.handleFetchQuestions("transition");
+    // firebase.handleFetchTrainingStatus();
+    // firebase.handleFetchQuestions("transition");
   }
 
   static propTypes = {
