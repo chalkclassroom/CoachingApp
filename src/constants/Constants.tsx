@@ -24,18 +24,6 @@ export const Colors = {
   'NotPresent': "#bababa"
 }
 
-export const AppBarColor = "#459aeb";
-export const TransitionColor = '#e55529';
-export const ClimateColor = '#0988ec';
-export const MathColor = '#094492';
-export const EngagementColor = '#e99c2e';
-export const InstructionColor = '#009365';
-export const ListeningColor = '#4fd9b3';
-export const SequentialColor = '#ffd300';
-export const ACColor = '#6f39c4';
-export const RedGraphColor = "#ec2409";
-export const NotPresentColor = "#bababa";
-
 export const TransitionTypeColors = {
   lineColor: lightGreen[300],
   travelingColor: orange[400],

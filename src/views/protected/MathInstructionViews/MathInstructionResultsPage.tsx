@@ -11,7 +11,7 @@ import MathCoachingQuestions from "../../../components/MathInstructionComponents
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 
 const styles: object = {
   root: {
@@ -315,24 +315,24 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       datasets: [
         {
           label: "Teacher Not at Center",
-          backgroundColor: Constants.NotPresentColor,
-          borderColor: Constants.NotPresentColor,
+          backgroundColor: Constants.Colors.NotPresent,
+          borderColor: Constants.Colors.NotPresent,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoTeacherOpp
         },
         {
           label: "No Support",
-          backgroundColor: Constants.RedGraphColor,
-          borderColor: Constants.RedGraphColor,
+          backgroundColor: Constants.Colors.RedGraph,
+          borderColor: Constants.Colors.RedGraph,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoSupport
         },
         {
           label: "Teacher Support",
-          backgroundColor: Constants.AppBarColor,
-          borderColor: Constants.AppBarColor,
+          backgroundColor: Constants.Colors.AppBar,
+          borderColor: Constants.Colors.AppBar,
           fill: false,
           lineTension: 0,
           data: this.state.trendsSupport

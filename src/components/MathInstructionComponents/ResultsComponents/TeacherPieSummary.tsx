@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
-import * as Constants from "../../../constants";
+import * as Constants from "../../../constants/Constants";
 
 interface Props {
   support: number,
@@ -42,8 +42,8 @@ class TeacherPieSummary extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.support, this.props.noSupport, this.props.noTeacherOpp],
-          backgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, Constants.NotPresentColor],
-          hoverBackgroundColor: [Constants.AppBarColor, Constants.RedGraphColor, Constants.NotPresentColor]
+          backgroundColor: [Constants.Colors.AppBar, Constants.Colors.RedGraph, Constants.Colors.NotPresent],
+          hoverBackgroundColor: [Constants.Colors.AppBar, Constants.Colors.RedGraph, Constants.Colors.NotPresent]
         }
       ]
     };

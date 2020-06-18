@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
 import FirebaseContext from "../../Firebase/FirebaseContext";
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 
 interface Props {
   listening: number,

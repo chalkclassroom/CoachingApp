@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Line } from "rc-progress";
 import ms from "pretty-ms";
-import * as Constants from '../constants';
+import * as Constants from '../constants/Constants';
 
 const styles: object = {
   line: {

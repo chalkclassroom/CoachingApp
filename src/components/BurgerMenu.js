@@ -27,7 +27,7 @@ import { clearCoach } from '../state/actions/coach';
 import TeacherModal from "../views/protected/HomeViews/TeacherModal.tsx";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import * as Constants from '../constants';
+import * as Constants from '../constants/Constants';
 
 const drawerWidth = 240;
 

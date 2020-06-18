@@ -4,12 +4,12 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 
 const EngagementTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.EngagementColor
+      main: Constants.Colors.SE
     }
   }
 });
@@ -143,7 +143,7 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.EngagementColor}
+              color={Constants.Colors.SE}
             />
           ) : this.state.categoryView === "mildEngagement" ? (
             <DataQuestions
@@ -155,7 +155,7 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.EngagementColor}
+              color={Constants.Colors.SE}
             />
           ) : this.state.categoryView === "highEngagement" ? (
             <DataQuestions
@@ -167,7 +167,7 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
               sessionId={this.props.sessionId}
               teacherId={this.props.teacherId}
               magic8={this.props.magic8}
-              color={Constants.EngagementColor}
+              color={Constants.Colors.SE}
             />
           ) : <div/>}
         </Grid>

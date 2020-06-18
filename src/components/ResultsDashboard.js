@@ -42,7 +42,7 @@ import moment from 'moment';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { changeTeacher } from '../state/actions/teacher';
 import { connect } from 'react-redux';
-import * as Constants from '../constants';
+import * as Constants from '../constants/Constants';
 
 const TransitionTheme = createMuiTheme({
   palette: {

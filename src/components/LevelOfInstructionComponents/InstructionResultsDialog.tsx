@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { emptyLoiStack } from "../../state/actions/level-of-instruction";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 
 const InstructionTheme = createMuiTheme({
   palette: {

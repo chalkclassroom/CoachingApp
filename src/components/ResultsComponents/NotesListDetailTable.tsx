@@ -14,7 +14,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import * as Constants from "../../constants";
+import * as Constants from "../../constants/Constants";
 
 /**
  * specifies styling for modal

@@ -7,7 +7,7 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
 import { withStyles } from "@material-ui/core/styles";
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 
 const styles: object = {
   categoryView: {

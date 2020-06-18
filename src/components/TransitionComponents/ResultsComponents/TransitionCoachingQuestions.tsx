@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
 import { withStyles, createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 import {
   lightGreen,
   deepOrange,

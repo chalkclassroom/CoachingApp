@@ -18,7 +18,7 @@ import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import FadeAwayModal from './FadeAwayModal';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import * as Constants from '../constants';
+import * as Constants from '../constants/Constants';
 
 const TransitionTheme = createMuiTheme({
   palette: {

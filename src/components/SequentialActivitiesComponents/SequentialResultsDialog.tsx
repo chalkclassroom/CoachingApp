@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { deleteSACenters, clearSequentialCount } from "../../state/actions/sequential-activities";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 
 const SequentialTheme = createMuiTheme({
   palette: {

@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { resetTransitionTime, clearTransitionTime, clearSessionTime } from "../../state/actions/transition-time";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 
 const TransitionTheme = createMuiTheme({
   palette: {

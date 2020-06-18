@@ -6,7 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 import ACHelpChild from './ACHelpChild';
 import ACHelpTeacher from './ACHelpTeacher';
 
@@ -113,7 +113,7 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
                     style={{
                       fontFamily: "Arimo",
                       fontSize: '1em',
-                      backgroundColor: this.state.tabValue === 1 ? Constants.AppBarColor: '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 1 ? Constants.Colors.AppBar: '#d3d3d3'
                     }}
                   />
                 </Tabs>

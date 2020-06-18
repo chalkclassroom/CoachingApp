@@ -16,7 +16,7 @@ import PieSliceTeacherSupportImage from '../../../assets/images/PieSliceTeacherS
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 
 const styles: object = {
   root: {

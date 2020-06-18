@@ -14,7 +14,7 @@ import PieSliceListeningImage from '../../../assets/images/PieSliceListeningImag
 import PieSliceChildNonImage from '../../../assets/images/PieSliceChildNonImage.svg';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 import TeacherModal from '../HomeViews/TeacherModal';
 
 const styles: object = {

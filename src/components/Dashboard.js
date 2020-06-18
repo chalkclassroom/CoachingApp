@@ -47,7 +47,7 @@ import { clearTeacher } from "../state/actions/teacher";
 import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
 import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp'
-import * as Constants from '../constants';
+import * as Constants from '../constants/Constants';
 import TransitionResultsDialog from './TransitionComponents/TransitionResultsDialog';
 import ClimateResultsDialog from './ClassroomClimateComponent/ClimateResultsDialog';
 import MathResultsDialog from './MathInstructionComponents/MathResultsDialog';
