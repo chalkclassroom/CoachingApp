@@ -1044,159 +1044,297 @@ class Firebase {
     );
   };
 
-  fetchTransitionLog = async function(sessionId) {
+  /* fetchTransitionLog = async function(sessionId) {
       const getTransitionsFirebaseFunction = this.functions.httpsCallable(
         'funcTransitionLogNew'
       );
       return getTransitionsFirebaseFunction({ sessionId: sessionId })
       .then(
         result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
           result.data[0]
       )
       .catch(error =>
         console.error("Error occurred getting transition log: ", error)
       );
-  };
+  }; */
 
-  fetchTransitionTrend = async function(teacherId) {
-      const getTransitionTrendFirebaseFunction = this.functions.httpsCallable(
-        'funcTransitionTrendNew'
-      );
-      return getTransitionTrendFirebaseFunction({ teacherId: teacherId })
-        .then(
-          result =>
-
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+  /**
+   * Transition Time cloud function
+   * gets totals of each transition type for each observation
+   * @param {string} teacherId
+   */
+  fetchTransitionTrend = async function(teacherId: string): Promise<Array<{
+    id: string,
+    line: number,
+    traveling: number,
+    waiting: number,
+    routines: number,
+    behaviorManagement: number,
+    other: number,
+    total: number,
+    sessionTotal: number,
+    startDate: {value: string}
+  }>> {
+    const getTransitionTrendFirebaseFunction = this.functions.httpsCallable(
+      'funcTransitionTrendNew'
+    );
+    return getTransitionTrendFirebaseFunction({ teacherId: teacherId })
+      .then(
+        (result: {data: Array<Array<{
+          id: string,
+          line: number,
+          traveling: number,
+          waiting: number,
+          routines: number,
+          behaviorManagement: number,
+          other: number,
+          total: number,
+          sessionTotal: number,
+          startDate: {value: string}
+        }>>}) => {
+          console.log('transition trend', result);
           result.data[0]
-      )
-      .catch(error =>
-        console.error("Error occurred getting transition trend: ", error)
-      );
+        }
+    )
+    .catch((error: Error) =>
+      console.error("Error occurred getting transition trend: ", error)
+    );
   };
 
-  fetchACDetails = async function(sessionId) {
+  /**
+   * Associative Cooperative cloud function
+   * gets counts of each type of child & teacher behaviors
+   * @param {string} sessionId
+   */
+  fetchACDetails = async function(sessionId: string): Promise<{
+    ac1: number,
+    ac2: number,
+    ac3: number,
+    ac4: number,
+    teacher1: number,
+    teacher2: number,
+    teacher3: number,
+    teacher4: number
+  }> {
     const getACDetailsFirebaseFunction = this.functions.httpsCallable(
       "funcACDetails"
     );
     return getACDetailsFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+        (result: {data: Array<Array<{
+          ac1: number,
+          ac2: number,
+          ac3: number,
+          ac4: number,
+          teacher1: number,
+          teacher2: number,
+          teacher3: number,
+          teacher4: number
+        }>>}) =>
           result.data[0][0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting AC details: ", error)
       );
   };
 
-  fetchSeqDetails = async function(sessionId) {
+  /**
+   * Sequential Activities cloud function
+   * gets counts of each type of child & teacher behaviors
+   * @param {string} sessionId
+   */
+  fetchSeqDetails = async function(sessionId: string): Promise<{
+    sequential1: number,
+    sequential2: number,
+    sequential3: number,
+    sequential4: number,
+    teacher1: number,
+    teacher2: number,
+    teacher3: number,
+    teacher4: number
+  }> {
     const getSeqDetailsFirebaseFunction = this.functions.httpsCallable(
       "funcSeqDetails"
     );
     return getSeqDetailsFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+        (result: {data: Array<Array<{
+          sequential1: number,
+          sequential2: number,
+          sequential3: number,
+          sequential4: number,
+          teacher1: number,
+          teacher2: number,
+          teacher3: number,
+          teacher4: number
+        }>>}) =>
           result.data[0][0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting sequential details: ", error)
       );
   };
 
-    fetchEngagementDetails = async function(sessionId) {
-        const getEngagementDetailsFirebaseFunction = this.functions.httpsCallable(
-            "funcEngagementDetails"
-        );
-        return getEngagementDetailsFirebaseFunction({ sessionId: sessionId })
-            .then(
-                result =>
-                    // Read result of the Cloud Function.
-                    // var sanitizedMessage = result.data[0];
-                    // console.log(sanitizedMessage);
-                    // return sanitizedMessage;
-                    result.data[0][0]
-            )
-            .catch(error =>
-                console.error("Error occurred getting sequential details: ", error)
-            );
-    };
-
-
-    fetchMathDetails = async function(sessionId) {
-    const getMathDetailsFirebaseFunction = this.functions.httpsCallable(
-      "funcMathDetails"
+  /**
+   * Student Engagement cloud function
+   * gets counts of engagement ratings by activity type
+   * @param {string} sessionId
+   */
+  fetchEngagementDetails = async function(sessionId: string): Promise<{
+    offTask0: number,
+    offTask1: number,
+    offTask2: number,
+    mildlyEngaged0: number,
+    mildlyEngaged1: number,
+    mildlyEngaged2: number,
+    engaged0: number,
+    engaged1: number,
+    engaged2: number,
+    highlyEngaged0: number,
+    highlyEngaged1: number,
+    highlyEngaged2: number,
+  }> {
+    const getEngagementDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcEngagementDetails"
     );
-    return getMathDetailsFirebaseFunction({ sessionId: sessionId })
+    return getEngagementDetailsFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
+        (result: {data: Array<Array<{
+          offTask0: number,
+          offTask1: number,
+          offTask2: number,
+          mildlyEngaged0: number,
+          mildlyEngaged1: number,
+          mildlyEngaged2: number,
+          engaged0: number,
+          engaged1: number,
+          engaged2: number,
+          highlyEngaged0: number,
+          highlyEngaged1: number,
+          highlyEngaged2: number,
+        }>>}) =>
           result.data[0][0]
       )
-      .catch(error =>
-        console.error("Error occurred getting math details: ", error)
+      .catch((error: Error) =>
+        console.error("Error occurred getting sequential details: ", error)
       );
   };
 
-  fetchListeningDetails = async function(sessionId) {
+  /**
+   * Math Instruction cloud function
+   * gets counts of each type of child & teacher behaviors
+   * @param {string} sessionId 
+   */
+  fetchMathDetails = async function(sessionId: string): Promise<{
+    math1: number,
+    math2: number,
+    math3: number,
+    math4: number,
+    teacher1: number,
+    teacher2: number,
+    teacher3: number,
+    teacher4: number
+  }> {
+  const getMathDetailsFirebaseFunction = this.functions.httpsCallable(
+    "funcMathDetails"
+  );
+  return getMathDetailsFirebaseFunction({ sessionId: sessionId })
+    .then(
+      (result: {data: Array<Array<{
+        math1: number,
+        math2: number,
+        math3: number,
+        math4: number,
+        teacher1: number,
+        teacher2: number,
+        teacher3: number,
+        teacher4: number
+      }>>}) =>
+        result.data[0][0]
+    )
+    .catch((error: Error) =>
+      console.error("Error occurred getting math details: ", error)
+    );
+  };
+
+  /**
+   * Listening to Children cloud function
+   * gets counts of each listening behavior type
+   * @param {string} sessionId
+   */
+  fetchListeningDetails = async function(sessionId: string): Promise<{
+    listening1: number,
+    listening2: number,
+    listening3: number,
+    listening4: number,
+    listening5: number,
+    listening6: number,
+  }> {
     const getListeningDetailsFirebaseFunction = this.functions.httpsCallable(
       "funcListeningDetails"
     );
     return getListeningDetailsFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
+        (result: {data: Array<Array<{
+          listening1: number,
+          listening2: number,
+          listening3: number,
+          listening4: number,
+          listening5: number,
+          listening6: number,
+        }>>}) =>
           result.data[0][0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting listening details: ", error)
       );
   };
 
-  fetchChildACSummary = async function(sessionId) {
+  /**
+   * Associative Cooperative cloud function
+   * gets counts of child summary data
+   * @param {string} sessionId
+   */
+  fetchChildACSummary = async function(sessionId: string): Promise<{
+    noOpportunity: number,
+    noac: number,
+    ac: number
+  }> {
     const getChildACSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcChildACSummary"
     );
     return getChildACSummaryFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+        (result: {data: Array<Array<{
+          noOpportunity: number,
+          noac: number,
+          ac: number
+        }>>}) =>
           result.data[0][0]
-          // console.log(result);
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting child AC summary: ", error)
       );
   };
 
-  fetchChildSeqSummary = async function(sessionId) {
+  /**
+   * Sequential Activities cloud function
+   * gets counts of child summary data
+   * @param {string} sessionId
+   */
+  fetchChildSeqSummary = async function(sessionId: string): Promise<{
+    notSequential: number,
+    sequential: number
+  }> {
     const getChildSeqSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcChildSeqSummary"
     );
     return getChildSeqSummaryFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+        (result: {data: Array<Array<{notSequential: number, sequential: number}>>}) =>
           result.data[0][0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error(
           "Error occurred getting child Sequential summary: ",
           error
@@ -1204,73 +1342,109 @@ class Firebase {
       );
   };
 
-    fetchEngagementPieSummary = async function(sessionId) {
-        const getEngagementPieSummaryFirebaseFunction = this.functions.httpsCallable(
-            "funcEngagementPieSummary"
-        );
-        return getEngagementPieSummaryFirebaseFunction({ sessionId: sessionId })
-            .then(
-                result =>
-                    // Read result of the Cloud Function.
-                    // var sanitizedMessage = result.data[0];
-                    // console.log(sanitizedMessage);
-                    // return sanitizedMessage;
-                    result.data[0][0]
-            )
-            .catch(error =>
-                console.error(
-                    "Error occurred getting child Sequential summary: ",
-                    error
-                )
-            );
-    };
+  /**
+   * Student Engagement cloud function
+   * gets counts of summary data
+   * @param {string} sessionId
+   */
+  fetchEngagementPieSummary = async function(sessionId: string): Promise<{
+    offTask: number,
+    engaged: number
+  }> {
+    const getEngagementPieSummaryFirebaseFunction = this.functions.httpsCallable(
+      "funcEngagementPieSummary"
+    );
+    return getEngagementPieSummaryFirebaseFunction({ sessionId: sessionId })
+      .then(
+        (result: {data: Array<Array<{
+          offTask: number,
+          engaged: number
+        }>>}) =>
+          result.data[0][0]
+      )
+      .catch((error: Error) =>
+        console.error(
+          "Error occurred getting child Sequential summary: ",
+          error
+        )
+      );
+  };
 
-  fetchChildMathSummary = async function(sessionId) {
+  /**
+   * Math Instruction cloud function
+   * gets counts of child summary data
+   * @param {string} sessionId
+   */
+  fetchChildMathSummary = async function(sessionId: string): Promise<{
+    math: number,
+    notMath: number
+  }> {
     const getChildMathSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcChildMathSummary"
     );
     return getChildMathSummaryFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
+        (result: {data: Array<Array<{
+          math: number,
+          notMath: number
+        }>>}) =>
           result.data[0][0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting child math summary: ", error)
       );
   };
 
-  fetchTeacherACSummary = async function(sessionId) {
+  /**
+   * Associative Cooperative cloud function
+   * gets counts of teacher summary data
+   * @param {string} sessionId
+   */
+  fetchTeacherACSummary = async function(sessionId: string): Promise<{
+    noOpportunity: number,
+    noSupport: number,
+    support: number
+  }> {
     const getTeacherACSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherACSummary"
     );
     return getTeacherACSummaryFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+        (result: {data: Array<Array<{
+          noOpportunity: number,
+          noSupport: number,
+          support: number
+        }>>}) =>
           result.data[0][0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting teacher AC summary: ", error)
       );
   };
 
-  fetchTeacherSeqSummary = async function(sessionId) {
+  /**
+   * Sequential Activities cloud function
+   * gets counts of teacher summary data
+   * @param {string} sessionId
+   */
+  fetchTeacherSeqSummary = async function(sessionId: string): Promise<{
+    noOpportunity: number,
+    noSupport: number,
+    support: number
+  }> {
     const getTeacherSeqSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherSeqSummary"
     );
     return getTeacherSeqSummaryFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+        (result: {data: Array<Array<{
+          noOpportunity: number,
+          noSupport: number,
+          support: number
+        }>>}) =>
           result.data[0][0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error(
           "Error occurred getting teacher sequential summary: ",
           error
