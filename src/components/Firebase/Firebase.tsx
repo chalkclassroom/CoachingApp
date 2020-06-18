@@ -68,8 +68,12 @@ interface UserCredential {
 class Firebase {
   auth: any;
   db: any;
-  functions: any;
-  sessionRef: any;
+  /* db: {
+    enablePersistence(param: object): Promise<void>,
+    collection
+  } */
+  functions: object;
+  sessionRef: {set(param: object): void};
   /**
    * initializes firebase
    */
@@ -1452,149 +1456,257 @@ class Firebase {
       );
   };
 
-  fetchTeacherMathSummary = async function(sessionId) {
+  /**
+   * Math Instruction cloud function
+   * gets counts of teacher summary data
+   * @param {string} sessionId
+   */
+  fetchTeacherMathSummary = async function(sessionId: string): Promise<{
+    noOpportunity: number,
+    noSupport: number,
+    support: number
+  }> {
     const getTeacherMathSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherMathSummary"
     );
     return getTeacherMathSummaryFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
+        (result: {data: Array<Array<{
+          noOpportunity: number,
+          noSupport: number,
+          support: number
+        }>>}) =>
           result.data[0][0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting teacher math summary: ", error)
       );
   };
 
-  fetchListeningSummary = async function(sessionId) {
+  /**
+   * Listening to Children cloud function
+   * gets counts of summary data
+   * @param {string} sessionId
+   */
+  fetchListeningSummary = async function(sessionId: string): Promise<{
+    listening: number,
+    notListening: number
+  }> {
     const getListeningSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcListeningSummary"
     );
     return getListeningSummaryFirebaseFunction({ sessionId: sessionId })
       .then(
-        result =>
+        (result: {data: Array<Array<{listening: number, notListening: number}>>}) =>
           result.data[0][0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting listening summary: ", error)
       );
   };
 
-
-  fetchChildACTrend = async function(teacherId) {
+  /**
+   * Associative Cooperative cloud function
+   * gets counts of child data for each observation
+   * @param {string} teacherId 
+   */
+  fetchChildACTrend = async function(teacherId: string): Promise<Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    ac: number,
+    noac: number
+  }>> {
     const getChildACTrendFirebaseFunction = this.functions.httpsCallable(
       "funcChildACTrend"
     );
     return getChildACTrendFirebaseFunction({ teacherId: teacherId })
       .then(
-        result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          noOpportunity: number,
+          ac: number,
+          noac: number
+        }>>}) =>
           result.data[0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting child AC trend: ", error)
       );
   };
 
-  fetchChildSeqTrend = async function(teacherId) {
+  /**
+   * Sequential Activities cloud function
+   * gets counts of child data for each observation
+   * @param {string} teacherId
+   */
+  fetchChildSeqTrend = async function(teacherId: string): Promise<Array<{
+    startDate: {value: string},
+    sequential: number,
+    notSequential: number
+  }>> {
     const getChildSeqTrendFirebaseFunction = this.functions.httpsCallable(
       "funcChildSeqTrend"
     );
     return getChildSeqTrendFirebaseFunction({ teacherId: teacherId })
       .then(
-        result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          sequential: number,
+          notSequential: number
+        }>>}) =>
           result.data[0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting child sequential trend: ", error)
       );
   };
 
-  fetchChildMathTrend = async function(teacherId) {
+  /**
+   * Math Instruction cloud function
+   * gets counts of child data for each observation
+   * @param {string} teacherId
+   */
+  fetchChildMathTrend = async function(teacherId: string): Promise<Array<{
+    startDate: {value: string},
+    math: number,
+    notMath: number
+  }>> {
     const getChildMathTrendFirebaseFunction = this.functions.httpsCallable(
       "funcChildMathTrend"
     );
     console.log('fetchChildMathTrend from firebase executed');
     return getChildMathTrendFirebaseFunction({ teacherId: teacherId })
       .then(
-        result =>
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          math: number,
+          notMath: number
+        }>>}) =>
           result.data[0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting child math trend: ", error)
       );
   };
 
-  fetchTeacherACTrend = async function(teacherId) {
+  /**
+   * Associative Cooperative cloud function
+   * gets counts of teacher data for each observation
+   * @param {string} teacherId
+   */
+  fetchTeacherACTrend = async function(teacherId: string): Promise<Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    support: number,
+    nosupport: number
+  }>> {
     const getTeacherACTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherACTrend"
     );
     return getTeacherACTrendFirebaseFunction({ teacherId: teacherId })
       .then(
-        result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          noOpportunity: number,
+          support: number,
+          nosupport: number
+        }>>}) =>
           result.data[0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting teacher AC trend: ", error)
       );
   };
 
-  fetchTeacherSeqTrend = async function(teacherId) {
+  /**
+   * Sequential Activities cloud function
+   * gets counts of teacher data for each observation
+   * @param {string} teacherId
+   */
+  fetchTeacherSeqTrend = async function(teacherId: string): Promise<Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    support: number,
+    noSupport: number
+  }>> {
     const getTeacherSeqTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherSeqTrend"
     );
     return getTeacherSeqTrendFirebaseFunction({ teacherId: teacherId })
       .then(
-        result =>
-          // Read result of the Cloud Function.
-          // var sanitizedMessage = result.data[0];
-          // console.log(sanitizedMessage);
-          // return sanitizedMessage;
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          noOpportunity: number,
+          support: number,
+          noSupport: number
+        }>>}) =>
           result.data[0]
       )
-      .catch(error => console.error("Error occurred getting teacher sequential trend: ", error))
+      .catch((error: Error) => console.error("Error occurred getting teacher sequential trend: ", error))
   };
 
-  fetchTeacherMathTrend = async function(teacherId) {
+  /**
+   * Math Instruction cloud function
+   * gets counts of teacher data for each observation
+   * @param {string} teacherId
+   */
+  fetchTeacherMathTrend = async function(teacherId: string): Promise<Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    support: number,
+    noSupport: number
+  }>> {
     const getTeacherMathTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherMathTrend"
     );
     return getTeacherMathTrendFirebaseFunction({ teacherId: teacherId })
       .then(
-        result =>
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          noOpportunity: number,
+          support: number,
+          noSupport: number
+        }>>}) =>
           result.data[0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting teacher math trend: ", error)
       );
   };
 
-  fetchListeningTrend = async function(teacherId) {
+  /**
+   * Listening to Children cloud function
+   * gets listening counts for each observation
+   * @param {string} teacherId
+   */
+  fetchListeningTrend = async function(teacherId: string): Promise<Array<{
+    startDate: {value: string},
+    listening: number,
+    notListening: number
+  }>> {
     const getListeningTrendFirebaseFunction = this.functions.httpsCallable(
       "funcListeningTrend"
     );
     return getListeningTrendFirebaseFunction({ teacherId: teacherId })
       .then(
-        result =>
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          listening: number,
+          notListening: number
+        }>>}) =>
           result.data[0]
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred getting listening trend: ", error)
       );
   };
 
-  createActionPlan = async function(teacherId, magic8) {
+  /**
+   * adds action plan entry to database
+   * @param {string} teacherId
+   * @param {string} magic8
+   */
+  createActionPlan = async function(teacherId: string, magic8: string): Promise<string | void> {
     const data = Object.assign(
       {},
       {
@@ -1626,7 +1738,12 @@ class Firebase {
     })
   }
   
-  createActionStep = async function(actionPlanId, index) {
+  /**
+   * adds action step to database
+   * @param {string} actionPlanId
+   * @param {string} index
+   */
+  createActionStep = async function(actionPlanId: string, index: string): Promise<string|void> {
     const actionStepsRef = this.db.collection('actionPlans').doc(actionPlanId).collection("actionSteps").doc(index);
     actionStepsRef.set({
       step: '',
@@ -1643,12 +1760,33 @@ class Firebase {
   /**
    * finds all action plans for coach and all their teachers
    */
-  getCoachActionPlans = async function() {
+  getCoachActionPlans = async function(): Promise<Array<{
+    id: string,
+    teacherId: string,
+    date: {seconds: number, nanoseconds: number},
+    practice: string,
+    teacherFirstName: string,
+    teacherLastName: string
+  }>> {
     this.sessionRef = this.db.collection("actionPlans")
       .where("coach", "==", this.auth.currentUser.uid)
     return this.sessionRef.get()
-      .then(querySnapshot => {
-        const idArr = [];
+      .then((querySnapshot: Array<{
+        id: string,
+        data(): {
+          teacher: string,
+          tool: string,
+          dateModified: {seconds: number, nanoseconds: number}
+        }
+      }>) => {
+        const idArr: Array<{
+          id: string,
+          teacherId: string,
+          date: {seconds: number, nanoseconds: number},
+          practice: string,
+          teacherFirstName: string,
+          teacherLastName: string
+        }> = [];
         querySnapshot.forEach(doc =>
           idArr.push({
             id: doc.id,
@@ -1671,14 +1809,27 @@ class Firebase {
    * @param {string} practice
    * @param {string} teacherId
    */
-  getTeacherActionPlans = async function(practice, teacherId) {
+  getTeacherActionPlans = async function(practice: string, teacherId: string): Promise<Array<{
+    id: string,
+    date: {seconds: number, nanoseconds: number},
+    newDate: Date
+  }>> {
     this.sessionRef = this.db.collection("actionPlans")
       .where("coach", "==", this.auth.currentUser.uid)
       .where("teacher", "==", teacherId)
       .where("tool", "==", practice)
     return this.sessionRef.get()
-      .then(querySnapshot => {
-        const idArr = [];
+      .then((querySnapshot: Array<{
+        id: string,
+        data(): {
+          dateModified: {seconds: number, nanoseconds: number}
+        }
+      }>) => {
+        const idArr: Array<{
+          id: string,
+          date: {seconds: number, nanoseconds: number},
+          // newDate: Date
+        }> = [];
         querySnapshot.forEach(doc =>
           idArr.push({
             id: doc.id,
@@ -1692,30 +1843,62 @@ class Firebase {
       })
   }
 
-  getTeacherFirstName = async function(teacherId) {
+  /**
+   * gets first name of teacher
+   * @param {string} teacherId
+   */
+  getTeacherFirstName = async function(teacherId: string): Promise<string> {
     return this.db
       .collection("users")
       .doc(teacherId)
       .get()
-      .then(doc => doc.data().firstName)
-      .catch(error => console.error("Error getting cached document:", error));
+      .then((doc: {data(): {firstName: string}}) => doc.data().firstName)
+      .catch((error: Error) => console.error("Error getting cached document:", error));
   }
 
-  getTeacherLastName = async function(teacherId) {
+  /**
+   * gets last name of teacher
+   * @param {string} teacherId
+   */
+  getTeacherLastName = async function(teacherId: string): Promise<string> {
     return this.db
       .collection("users")
       .doc(teacherId)
       .get()
-      .then(doc => doc.data().lastName)
-      .catch(error => console.error("Error getting cached document:", error));
+      .then((doc: {data(): {lastName: string}}) => doc.data().lastName)
+      .catch((error: Error) => console.error("Error getting cached document:", error));
   }
 
-  getAPInfo = async function(actionPlanId) {
+  /**
+   * gets action plan data
+   * @param {string} actionPlanId
+   */
+  getAPInfo = async function(actionPlanId: string): Promise<{
+    sessionId: string,
+    goal: string,
+    goalTimeline: string,
+    benefit: string,
+    dateModified: {seconds: number, nanoseconds: number},
+    dateCreated: {seconds: number, nanoseconds: number},
+    coach: string,
+    teacher: string,
+    tool: string
+  }> {
     return this.db
       .collection("actionPlans")
       .doc(actionPlanId)
       .get()
-      .then(doc => {
+      .then((doc: {exists: boolean, id: string, data(): {
+        sessionId: string,
+        goal: string,
+        goalTimeline: string,
+        benefit: string,
+        dateModified: {seconds: number, nanoseconds: number},
+        dateCreated: {seconds: number, nanoseconds: number},
+        coach: string,
+        teacher: string,
+        tool: string
+      }}) => {
         if (doc.exists) {
           return doc.data();
         } else {
@@ -1723,16 +1906,38 @@ class Firebase {
           return {};
         }
       })
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred when getting document:", error)
       );
   };
 
-  getActionSteps = async function(actionPlanId) {
+  /**
+   * gets action steps
+   * @param {string} actionPlanId
+   */
+  getActionSteps = async function(actionPlanId: string): Promise<Array<{
+    step: string,
+    materials: string,
+    person: string,
+    timeline: string
+  }>> {
     this.sessionRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps");
     return this.sessionRef.get()
-      .then(querySnapshot => {
-        const actionStepsArr = [];
+      .then((querySnapshot: Array<{
+        id: string,
+        data(): {
+          step: string,
+          materials: string,
+          person: string,
+          timeline: string
+        }
+      }>) => {
+        const actionStepsArr: Array<{
+          step: string,
+          materials: string,
+          person: string,
+          timeline: string
+        }> = [];
         querySnapshot.forEach(doc => 
           actionStepsArr.push({
             step: doc.data().step,
@@ -1748,8 +1953,20 @@ class Firebase {
       })
   }
 
-  saveActionPlan = async function(actionPlanId, goal, goalTimeline, benefit) {
-    var actionPlanRef = this.db.collection("actionPlans").doc(actionPlanId);
+  /**
+   * saves action plan data
+   * @param {string} actionPlanId
+   * @param {string} goal
+   * @param {string} goalTimeline
+   * @param {string} benefit
+   */
+  saveActionPlan = async function(
+    actionPlanId: string,
+    goal: string,
+    goalTimeline: string,
+    benefit: string
+  ): Promise<void> {
+    const actionPlanRef = this.db.collection("actionPlans").doc(actionPlanId);
     return actionPlanRef.update({
       goal: goal,
       goalTimeline: goalTimeline,
@@ -1759,13 +1976,29 @@ class Firebase {
     .then(() => {
       console.log("Action plan updated successfully!");
     })
-    .catch((error) => {
+    .catch((error: Error) => {
       console.error("Error updating action plan: ", error);
     })
   }
 
-  saveActionStep = async function(actionPlanId, index, step, materials, person, timeline) {
-    var actionStepsRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps").doc(index);
+  /**
+   * saves action steps
+   * @param {string} actionPlanId
+   * @param {string} index
+   * @param {string} step
+   * @param {string} materials
+   * @param {string} person
+   * @param {string} timeline
+   */
+  saveActionStep = async function(
+    actionPlanId: string,
+    index: string,
+    step: string,
+    materials: string,
+    person: string,
+    timeline: string
+  ): Promise<void> {
+    const actionStepsRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps").doc(index);
     return actionStepsRef.update({
       step: step, 
       materials: materials,
@@ -1775,7 +2008,7 @@ class Firebase {
     .then(() => {
       console.log("Action step updated successfully!");
     })
-    .catch((error) => {
+    .catch((error: Error) => {
       console.error("Error updating action plan: ", error);
     })
   }
@@ -1790,7 +2023,15 @@ class Firebase {
    * @param {Array<string>} addedQuestions
    * @param {Array<string>} notes
    */
-  createConferencePlan = async function(teacherId, sessionId, magic8, feedback, questions, addedQuestions, notes) {
+  createConferencePlan = async function(
+    teacherId: string,
+    sessionId: string,
+    magic8: string,
+    feedback?: Array<string>,
+    questions?: Array<string>,
+    addedQuestions?: Array<string>,
+    notes?: Array<string>
+  ): Promise<string|void> {
     const data = Object.assign(
       {},
       {
@@ -1818,12 +2059,35 @@ class Firebase {
    * gets data in conference plan
    * @param {string} sessionId
    */
-  getConferencePlan = async function(sessionId) {
+  getConferencePlan = async function(sessionId: string): Promise<Array<{
+    id: string,
+    feedback: Array<string>,
+    questions: Array<string>,
+    addedQuestions: Array<string>,
+    notes: Array<string>,
+    date: {seconds: number, nanoseconds: number}
+  }>> {
     this.sessionRef = this.db.collection("conferencePlans")
       .where("sessionId", "==", sessionId)
     return this.sessionRef.get()
-      .then(querySnapshot => {
-        const idArr = [];
+      .then((querySnapshot: Array<{
+        id: string,
+        data(): {
+          feedback: Array<string>,
+          questions: Array<string>,
+          addedQuestions: Array<string>,
+          notes: Array<string>,
+          dateCreated: {seconds: number, nanoseconds: number}
+        }
+      }>) => {
+        const idArr: Array<{
+          id: string,
+          feedback: Array<string>,
+          questions: Array<string>,
+          addedQuestions: Array<string>,
+          notes: Array<string>,
+          date: {seconds: number, nanoseconds: number}
+        }> = [];
         querySnapshot.forEach(doc =>
           idArr.push({
             id: doc.id,
@@ -1844,12 +2108,36 @@ class Firebase {
   /**
    * finds all conference plans for coach and all their teachers
    */
-  getCoachConferencePlans = async function() {
+  getCoachConferencePlans = async function(): Promise<Array<{
+    id: string,
+    teacherId: string,
+    date: {seconds: number, nanoseconds: number},
+    sessionId: string,
+    practice: string,
+    teacherFirstName: string,
+    teacherLastName: string
+  }>> {
     this.sessionRef = this.db.collection("conferencePlans")
       .where("coach", "==", this.auth.currentUser.uid)
     return this.sessionRef.get()
-      .then(querySnapshot => {
-        const idArr = [];
+      .then((querySnapshot: Array<{
+        id: string,
+        data(): {
+          teacher: string,
+          sessionId: string,
+          tool: string,
+          dateModified: {seconds: number, nanoseconds: number}
+        }
+      }>) => {
+        const idArr: Array<{
+          id: string,
+          teacherId: string,
+          date: {seconds: number, nanoseconds: number},
+          sessionId: string,
+          practice: string,
+          teacherFirstName: string,
+          teacherLastName: string
+        }> = [];
         querySnapshot.forEach(doc =>
           idArr.push({
             id: doc.id,
@@ -1868,13 +2156,19 @@ class Firebase {
       })
   }
 
-  getObservationDate = async function(sessionId) {
+  /**
+   * gets observation date for conference plan
+   * @param {string} sessionId
+   */
+  getObservationDate = async function(sessionId: string):
+    Promise<{seconds: number, nanoseconds: number}>
+  {
     return this.db
       .collection("observations")
       .doc(sessionId)
       .get()
-      .then(doc => doc.data().start)
-      .catch(error => console.error("Error getting cached document:", error));
+      .then((doc: {data(): {start: {seconds: number, nanoseconds: number}}}) => doc.data().start)
+      .catch((error: Error) => console.error("Error getting cached document:", error));
   }
 
   /**
@@ -1884,7 +2178,13 @@ class Firebase {
    * @param {Array<string>} addedQuestions
    * @param {Array<string>} notes
    */
-  saveConferencePlan = async function(conferencePlanId, feedback, questions, addedQuestions, notes) {
+  saveConferencePlan = async function(
+    conferencePlanId: string,
+    feedback: Array<string>,
+    questions: Array<string>,
+    addedQuestions: Array<string>,
+    notes: Array<string>
+  ): Promise<void> {
     const conferencePlanRef = this.db.collection("conferencePlans").doc(conferencePlanId);
     return conferencePlanRef.update({
       feedback: feedback,
@@ -1896,16 +2196,17 @@ class Firebase {
     .then(() => {
       console.log("Action plan updated successfully!");
     })
-    .catch((error) => {
+    .catch((error: Error) => {
       console.error("Error updating action plan: ", error);
     })
   }
 
   /**
+   * adds note from observation to conference plan
    * @param {string} conferencePlanId
    * @param {string} note
    */
-  addNoteToConferencePlan = async function(conferencePlanId, note) {
+  addNoteToConferencePlan = async function(conferencePlanId: string, note: string): Promise<void> {
     return this.db
       .collection("conferencePlans")
       .doc(conferencePlanId)
@@ -1913,19 +2214,22 @@ class Firebase {
         // does not add if it has already been added
         notes: firebase.firestore.FieldValue.arrayUnion(note)
       })
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error adding note to conference plan: ", error)
       );
   };
 
   /**
+   * adds coaching question to conference plan
    * @param {string} sessionId
    * @param {string} questionText
    */
-  saveConferencePlanQuestion = async function(sessionId, questionText) {
+  saveConferencePlanQuestion = async function(sessionId: string, questionText: string): Promise<void> {
     const conferencePlanRef = this.db.collection("conferencePlans").where("sessionId", "==", sessionId);
-    conferencePlanRef.get().then(querySnapshot => {
-      const conferencePlanId = [];
+    conferencePlanRef.get().then((querySnapshot: Array<{
+      id: string
+    }>) => {
+      const conferencePlanId: Array<string> = [];
       querySnapshot.forEach(doc =>
         conferencePlanId.push(doc.id)
       );
