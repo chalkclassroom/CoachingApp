@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import AppBar from "../../components/AppBar";
-import FirebaseContext from "../../components/Firebase/FirebaseContext.js";
+import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
