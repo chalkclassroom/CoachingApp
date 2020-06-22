@@ -14,7 +14,7 @@ import { withRouter } from "react-router-dom";
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
-import BurgerMenu from "./BurgerMenu";
+import BurgerMenu from "./BurgerMenu.tsx";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
@@ -103,7 +103,14 @@ interface Props {
     },
   },
   history: {
-    push(param: string): void
+    push(
+      param: (string | {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }),
+    ): void
   }
 }
 

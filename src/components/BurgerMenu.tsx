@@ -1,6 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
@@ -18,95 +17,72 @@ import Magic8Icon from "@material-ui/icons/Stars";
 import PeopleIcon from "@material-ui/icons/People";
 import ResultsIcon from "@material-ui/icons/PieChart";
 import TutorialIcon from "@material-ui/icons/School";
-import CalendarIcon from "@material-ui/icons/CalendarToday";
 import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
 import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { clearCoach } from '../state/actions/coach';
-import TeacherModal from "../views/protected/HomeViews/TeacherModal.tsx";
+import TeacherModal from "../views/protected/HomeViews/TeacherModal";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import * as Constants from '../constants/Constants';
 
-const drawerWidth = 240;
-
-const styles = theme => ({
-  root: {
-    display: "flex"
-  },
+const styles: object = {
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
-    ...theme.mixins.toolbar
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 36
-  },
-  menuButtonHidden: {
-    display: "none"
-  },
-  title: {
-    flexGrow: 1
-  },
-  leftTitle: {
-    padding: "1em"
-  },
-  drawerPaper: {
-    position: "relative",
-    whiteSpace: "nowrap",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  drawerPaperClose: {
-    overflowX: "hidden",
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    width: theme.spacing.unit * 7,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing.unit * 9
-    }
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing.unit * 3,
-    height: "100vh",
-    overflow: "auto"
-  },
-  chartContainer: {
-    marginLeft: -22
-  },
-  tableContainer: {
-    height: 320
   },
   nested: {
     paddingLeft: 14
   }
-});
+};
+
+interface Style {
+  toolbarIcon: string,
+  nested: string
+}
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
+interface Props {
+  open: boolean,
+  classes: Style,
+  handleClose(event: React.MouseEvent<HTMLElement, MouseEvent>): void,
+  history: {
+    push(
+      param: (string | {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }),
+    ): void
+  },
+  firebase: {
+    firebaseSignOut(): Promise<void>,
+    getTeacherList(): Promise<Teacher[]>
+  },
+  clearCoach(): void
+}
+
+interface State {
+  menu: number,
+  open: boolean,
+  coachingOpen: boolean,
+  teacherModal: boolean,
+  type: string
+}
 
 /**
  * Navigation Menu
@@ -114,7 +90,7 @@ const styles = theme => ({
  * @param {type} type
  * 
  */
-class BurgerMenu extends React.Component {
+class BurgerMenu extends React.Component<Props, State>{
   state = {
     menu: 0,
     open: this.props.open,
@@ -122,26 +98,26 @@ class BurgerMenu extends React.Component {
     teacherModal: false,
     type: ""
   };
-  handleDrawerOpen = () => {
+  handleDrawerOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleDrawerClose = () => {
+  handleDrawerClose = (): void => {
     this.setState({ open: false });
   };
 
-  showTeacherModal = type => {
+  showTeacherModal = (type: string): void => {
     this.setState({ teacherModal: true, type: type });
   };
 
-  handleTeacherModalClose = () => {
+  handleTeacherModalClose = (): void => {
     this.setState({
       teacherModal: false,
       type: ""
     });
   };
 
-  handleOpenCoaching = () => {
+  handleOpenCoaching = (): void => {
     if (this.state.coachingOpen) {
       this.setState({ coachingOpen: false });
     } else {
@@ -149,26 +125,39 @@ class BurgerMenu extends React.Component {
     }
   };
 
+  static propTypes = {
+    classes: PropTypes.exact({
+      toolbarIcon: PropTypes.string,
+      drawerPaper: PropTypes.string,
+      drawerPaperClose: PropTypes.string,
+      nested: PropTypes.string
+    }).isRequired,
+    handleClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
+    history: PropTypes.exact({
+      push: PropTypes.func
+    }).isRequired,
+    firebase: PropTypes.exact({
+      getTeacherList: PropTypes.func,
+      firebaseSignOut: PropTypes.func
+    }).isRequired,
+    clearCoach: PropTypes.func.isRequired
+  }
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div>
         <Drawer
           variant="temporary"
-          classes={{
-            paper: classNames(
-              classes.drawerPaper,
-              !this.props.open && classes.drawerPaperClose
-            )
-          }}
           open={this.props.open}
         >
           <div className={classes.toolbarIcon}>
-            <IconButton onClick={event => this.props.handleClose(event)}>
+            <IconButton onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => this.props.handleClose(event)}>
               <ChevronLeftIcon />
             </IconButton>
           </div>
@@ -176,7 +165,7 @@ class BurgerMenu extends React.Component {
           <List>
             <ListItem
               button
-              onClick={() => {
+              onClick={(): void => {
                 this.setState({ menu: 0 });
                 this.props.history.push("/Home");
               }}
@@ -191,7 +180,7 @@ class BurgerMenu extends React.Component {
             </ListItem>
             <ListItem
               button
-              onClick={() => {
+              onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
                 this.setState({ menu: 1 });
                 this.props.history.push({
                     pathname: "/Magic8Menu",
@@ -210,10 +199,10 @@ class BurgerMenu extends React.Component {
             </ListItem>
             <ListItem
               button
-              onClick={() => {
+              onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
                 this.setState({ menu: 2 });
                 this.showTeacherModal("Observe");
-                this.props.handleClose();
+                this.props.handleClose(event);
               }}
               className={classes.nested}
             >
@@ -226,7 +215,7 @@ class BurgerMenu extends React.Component {
             </ListItem>
             <ListItem
               button
-              onClick={() => {
+              onClick={(): void => {
                 this.setState({ menu: 3 });
                 this.props.history.push("/MyTeachers");
               }}
@@ -241,10 +230,10 @@ class BurgerMenu extends React.Component {
             </ListItem>
             <ListItem
               button
-              onClick={() => {
+              onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
                 this.setState({ menu: 4 });
                 this.showTeacherModal("Results");
-                this.props.handleClose();
+                this.props.handleClose(event);
               }}
               className={classes.nested}
             >
@@ -258,7 +247,7 @@ class BurgerMenu extends React.Component {
             </ListItem>
             <ListItem
               button
-              onClick={() => {
+              onClick={(): void => {
                 this.setState({ menu: 5 });
                 this.props.history.push("/ActionPlans")
               }}
@@ -274,7 +263,7 @@ class BurgerMenu extends React.Component {
             <ListItem
               button
               disabled
-              onClick={() => {
+              onClick={(): void => {
                 this.setState({ menu: 3 });
               }}
               className={classes.nested}
@@ -284,29 +273,13 @@ class BurgerMenu extends React.Component {
               </ListItemIcon>
               <ListItemText
                 primary="Messages"
-                onClick={() => this.props.history.push("/Messages")}
+                onClick={(): void => this.props.history.push("/Messages")}
               />
             </ListItem>
-            {/* <ListItem
-              button
-              disabled
-              onClick={() => {
-                this.setState({ menu: 2 });
-              }}
-              className={classes.nested}
-            >
-              <ListItemIcon>
-                <CalendarIcon style={{ fill: Constants.Colors.MI }} />
-              </ListItemIcon>
-              <ListItemText
-                primary="Calendar"
-                onClick={() => this.props.history.push("/Calendar")}
-              />
-            </ListItem> */}
             <ListItem
               button
               disabled
-              onClick={() => {
+              onClick={(): void => {
                 this.setState({ menu: 6 });
                 this.props.history.push("/Messages")
               }}
@@ -321,7 +294,7 @@ class BurgerMenu extends React.Component {
             </ListItem>
             <ListItem
               button
-              onClick={() => {
+              onClick={(): void => {
                 this.setState({ menu: 7 });
                 this.props.history.push("/Account");
               }}
@@ -337,7 +310,7 @@ class BurgerMenu extends React.Component {
             <ListItem
               button
               disabled
-              onClick={() => {
+              onClick={(): void => {
                 this.setState({ menu: 8 });
                 this.props.history.push("/help");
               }}
@@ -352,7 +325,7 @@ class BurgerMenu extends React.Component {
             <ListItem
               button
               disabled
-              onClick={() => {
+              onClick={(): void => {
                 this.setState({ menu: 9 });
                 this.props.firebase.firebaseSignOut().then(() => {
                   this.props.history.push("/");
@@ -371,7 +344,7 @@ class BurgerMenu extends React.Component {
         </Drawer>
         {this.state.teacherModal ? (
           <FirebaseContext.Consumer>
-            {firebase => (
+            {(firebase: object): React.ReactNode => (
               <TeacherModal
                 handleClose={this.handleTeacherModalClose}
                 firebase={firebase}
@@ -387,13 +360,5 @@ class BurgerMenu extends React.Component {
   }
 }
 
-BurgerMenu.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  history: PropTypes.object.isRequired,
-  firebase: PropTypes.object.isRequired,
-  clearCoach: PropTypes.func.isRequired
-};
 
 export default withRouter(withStyles(styles)(connect(null, {clearCoach})(BurgerMenu)));
