@@ -1,6 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import {
   withStyles,
   Toolbar,
@@ -12,7 +11,6 @@ import { AppBar as NavBar } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import LogoImage from "../assets/images/LogoImage.svg";
 import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -22,10 +20,7 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 // import * as Constants from '../constants';
 
-const styles = {
-  root: {
-    // flexGrow: 1
-  },
+const styles: object = {
   grow: {
     flexGrow: 1
   },
@@ -40,10 +35,6 @@ const styles = {
   },
   link: {
     textDecoration: "none"
-  },
-  logoButton: {
-    backgroundColor: "#FFFFFF",
-    margin: 10
   },
   menuText: {
     color:'#FFFFFF',
@@ -88,8 +79,40 @@ const theme = createMuiTheme({
       main: "#FFFFFF"
     }
   },
-  shadows: ["none"]
+  typography: {
+    useNextVariants: true
+  }
 });
+
+interface Style {
+  grow: string,
+  menuButton: string,
+  link: string,
+  logoButton: string,
+  menuText: string,
+  chalkText: string,
+  coachingText: string
+}
+
+interface Props {
+  classes: Style,
+  firebase: {
+    auth: {
+      currentUser: firebase.User | null,
+      onAuthStateChanged(arg: any): firebase.User | null
+    },
+  },
+  history: {
+    push(param: string): void
+  }
+}
+
+interface State {
+  auth: boolean,
+  loginModal: boolean,
+  signupModal: boolean,
+  open: boolean
+}
 
 /**
  * App bar
@@ -98,88 +121,104 @@ const theme = createMuiTheme({
  * @param {event} event
  * @return {void}
  */
-class AppBar extends React.Component {
+class AppBar extends React.Component<Props, State> {
   /** @param {Props} props */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
-      auth: this.checkAuth,
-      anchorEl: null,
+      auth: !(
+        this.props.firebase.auth.currentUser === undefined ||
+        this.props.firebase.auth.currentUser === null
+      ),
       loginModal: false,
       signupModal: false,
       open: false
     };
   }
 
-  checkAuth = () => {
+  /* checkAuth = () => {
     return !(
       this.props.firebase.auth.currentUser === undefined ||
       this.props.firebase.auth.currentUser === null
     );
-  };
+  }; */
 
-  handleMenu = () => {
+  handleMenu = (): void => {
     this.setState({ open: !this.state.open });
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
+  handleClose = (): void => {
     this.setState({ loginModal: false });
     this.setState({ signupModal: false });
     this.setState({ open: false });
   };
 
-  handleLoginModal = () => {
+  handleLoginModal = (): void => {
     this.setState({ loginModal: true });
   };
 
-  handleSignupModal = () => {
+  handleSignupModal = (): void => {
     this.setState({ signupModal: true });
   };
 
-  handleDrawerClickAway = () => {
+  handleDrawerClickAway = (): void => {
     this.setState({ open: false });
   };
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
-    this.props.firebase.auth.onAuthStateChanged(authUser => {
+  componentDidMount(): void {
+    this.props.firebase.auth.onAuthStateChanged((authUser: firebase.User | null) => {
       authUser ? this.setState({ auth: true }) : this.setState({ auth: false });
     });
   }
 
+  static propTypes = {
+    classes: PropTypes.exact({
+      grow: PropTypes.string,
+      menuButton: PropTypes.string,
+      link: PropTypes.string,
+      logoButton: PropTypes.string,
+      menuText: PropTypes.string,
+      chalkText: PropTypes.string,
+      coachingText: PropTypes.string
+    }).isRequired,
+    firebase: PropTypes.exact({
+      auth: PropTypes.exact({
+        currentUser: PropTypes.object,
+        onAuthStateChanged: PropTypes.func
+      }).isRequired
+    }).isRequired,
+    history: PropTypes.exact({
+      push: PropTypes.func
+    }).isRequired
+  }
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <MuiThemeProvider theme={theme}>
-        <div className={classes.root}>
+        <div>
           {this.state.auth ? (
             <NavBar position="static" color={"primary"}>
               <Toolbar>
                 <IconButton
                   color="inherit"
                   aria-label="menu"
-                  className={classNames(
-                    classes.menuButton,
-                    classes.menuButtonHidden
-                  )}
-                  onClick={() => this.handleMenu()}
+                  className={classes.menuButton}
+                  onClick={(): void => this.handleMenu()}
                 >
                   <MenuIcon color="secondary" />
                 </IconButton>
                 <IconButton
                   color="inherit"
                   aria-label="Logo"
-                  className={classNames(
-                    classes.menuButton,
-                    classes.menuButtonHidden,
-                    classes.logoButton
-                  )}
-                  onClick = {() => this.props.history.push("/Landing")}
+                  className={classes.menuButton}
+                  style={{backgroundColor: "#FFFFFF", margin: 10}}
+                  onClick = {(): void => this.props.history.push("/Landing")}
                 >
                   <img src={LogoImage} height={'36'} alt={""}/>
                 </IconButton>
@@ -188,7 +227,7 @@ class AppBar extends React.Component {
                     <Typography
                       variant="h6"
                       className={classes.chalkText}
-                      onClick = {() => this.props.history.push("/Landing")}
+                      onClick = {(): void => this.props.history.push("/Landing")}
                     >
                       CHALK
                     </Typography>
@@ -197,7 +236,7 @@ class AppBar extends React.Component {
                     <Typography
                       variant="h6"
                       className={classes.coachingText}
-                      onClick = {() => this.props.history.push("/Landing")}
+                      onClick = {(): void => this.props.history.push("/Landing")}
                     >
                       COACHING
                     </Typography>
@@ -210,7 +249,7 @@ class AppBar extends React.Component {
                       <Button
                         color="secondary"
                         className={classes.menuButton}
-                        onClick={() => this.props.history.push("/")}
+                        onClick={(): void => this.props.history.push("/")}
                       >
                         Home
                       </Button>
@@ -219,7 +258,7 @@ class AppBar extends React.Component {
                       <Button
                         color="secondary"
                         className={classes.menuButton}
-                        onClick={() => this.props.history.push("/team")}
+                        onClick={(): void => this.props.history.push("/team")}
                       >
                         Team
                       </Button>
@@ -248,12 +287,9 @@ class AppBar extends React.Component {
                 <IconButton
                   color="inherit"
                   aria-label="Logo"
-                  className={classNames(
-                    classes.menuButton,
-                    classes.menuButtonHidden,
-                    classes.logoButton
-                  )}
-                  onClick = {() => this.props.history.push("/")}
+                  className={classes.menuButton}
+                  style={{backgroundColor: "#FFFFFF", margin: 10}}
+                  onClick = {(): void => this.props.history.push("/")}
                 >
                   <img src={LogoImage} height={'36'} alt={""}/>
                 </IconButton>
@@ -262,7 +298,7 @@ class AppBar extends React.Component {
                     <Typography
                       variant="h6"
                       className={classes.chalkText}
-                      onClick = {() => this.props.history.push("/")}
+                      onClick = {(): void => this.props.history.push("/")}
                     >
                       CHALK
                     </Typography>
@@ -271,7 +307,7 @@ class AppBar extends React.Component {
                     <Typography
                       variant="h6"
                       className={classes.coachingText}
-                      onClick = {() => this.props.history.push("/")}
+                      onClick = {(): void => this.props.history.push("/")}
                     >
                       COACHING
                     </Typography>
@@ -288,7 +324,6 @@ class AppBar extends React.Component {
                 <Button
                   color="secondary"
                   onClick={this.handleSignupModal}
-                  onHover
                   className={classes.menuButton}
                 >
                   Sign Up
@@ -299,7 +334,7 @@ class AppBar extends React.Component {
                       <Button
                         color="secondary"
                         className={classes.menuButton}
-                        onClick={() => this.props.history.push("/team")}
+                        onClick={(): void => this.props.history.push("/team")}
                       >
                         Team
                       </Button>
@@ -339,11 +374,5 @@ class AppBar extends React.Component {
     );
   }
 }
-
-AppBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  firebase: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
-};
 
 export default withRouter(withStyles(styles)(AppBar));
