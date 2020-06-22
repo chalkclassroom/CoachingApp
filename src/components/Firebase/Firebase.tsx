@@ -1,4 +1,6 @@
 import * as firebase from "firebase";
+import {FirebaseFunctions}  from '@firebase/functions-types';
+// import 'firebase/auth';
 
 // Need to find a new place for this...
 // ask Jules about where to put it
@@ -62,18 +64,15 @@ interface UserCredential {
   }
 }
 
+
 /**
  * defines functions to get and set data in cloud firestore
  */
 class Firebase {
-  auth: any;
-  db: any;
-  /* db: {
-    enablePersistence(param: object): Promise<void>,
-    collection
-  } */
-  functions: object;
-  sessionRef: {set(param: object): void};
+  auth: firebase.auth.Auth;
+  db: firebase.firestore.Firestore;
+  functions: FirebaseFunctions;
+  sessionRef: firebase.firestore.DocumentReference;
   /**
    * initializes firebase
    */
