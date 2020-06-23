@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import FirebaseContext from '../Firebase/FirebaseContext';
-import questionBank from './QuestionBank';
+import QuestionBank from './QuestionBank';
 import TrainingQuestion from './TrainingQuestion';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -14,7 +14,7 @@ import DialogContentText from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 
 
-const styles = {
+const styles: object = {
   root: {
     display: 'flex',
     flexDirection: 'column'
@@ -27,15 +27,52 @@ const styles = {
   }
 };
 
+type Selection = 'transition' | 'climate' | 'math' | 'student' | 'level' | 'listening' | 'sequential' | 'ac';
+
+interface Props {
+  section: Selection,
+  classes: {
+    root: string,
+    button: string,
+    nextButton: string
+  }
+}
+
+interface State {
+  questions: Array<{
+    text: string,
+    options: Map<string, boolean>,
+    feedback: string
+  }>,
+  batch: Array<{
+    text: string,
+    options: Map<string, boolean>,
+    feedback: string
+  }>,
+  currentBatch: number,
+  currentQuestion: number,
+  numCorrect: number,
+  selectedOption: number,
+  feedback: string,
+  recentlySubmitted: boolean,
+  recentlyCorrect: boolean,
+  answeredBatch: boolean,
+  modalOpen: boolean,
+  passed: boolean,
+  // failed: false
+}
+
 /**
  * knowledge check questionnaire
  * @class TrainingQuestionnaire
  */
-class TrainingQuestionnaire extends Component {
+class TrainingQuestionnaire extends React.Component<Props, State> {
+  BATCH_LENGTH: number;
+  magic8Number: number;
   /**
    * @param {Props} props
    */
-  constructor(props) {  // section -> one of ('transition','climate','ac',etc...)
+  constructor(props: Props) {  // section -> one of ('transition','climate','ac',etc...)
     super(props);
     this.state = {
       questions: [],
@@ -54,7 +91,7 @@ class TrainingQuestionnaire extends Component {
     };
 
     this.BATCH_LENGTH = 5;
-    this.componentDidMount = this.componentDidMount.bind(this);
+
     if (this.props.section === 'transition'){
       this.magic8Number = 1
     } else if (this.props.section === 'climate'){
@@ -75,8 +112,8 @@ class TrainingQuestionnaire extends Component {
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
-    const questions = questionBank[this.props.section];
+  componentDidMount(): void {
+    const questions = QuestionBank[this.props.section];
     this.setState({
       questions: questions,
       batch: questions.slice(0, this.BATCH_LENGTH),
@@ -84,20 +121,28 @@ class TrainingQuestionnaire extends Component {
     });
   }
 
-  setSelection = selection => this.setState({ selectedOption: selection })
+  /**
+   * @param {number} selection
+   * @return {void}
+   */
+  setSelection = (selection: number): void => this.setState({ selectedOption: selection })
 
-  getStepLabels = () => {
+  getStepLabels = (): Array<string> => {
     const { batch } = this.state;
-    const stepLabels = [];
+    const stepLabels: Array<string> = [];
     if (batch !== undefined && batch.length !== 0) {
-      for (var i in batch) {
-        stepLabels.push("Q:" + (Number(i) + 1));
-      }
+      batch.forEach((value, index) => {
+        stepLabels.push("Q:" + (Number(index) + 1))
+      })
     }
     return stepLabels;
   }
 
-  getStepContent = step => {
+  /**
+   * @param {number} step
+   * @return {void}
+   */
+  getStepContent = (step: number): React.ReactNode | HTMLElement => {
     const { batch, selectedOption, feedback, recentlyCorrect } = this.state;
     if (batch === undefined || batch.length === 0) {
       return <div> Loading... </div>
@@ -108,7 +153,7 @@ class TrainingQuestionnaire extends Component {
     }
   }
 
-  getSubmitButton = () => {
+  getSubmitButton = (): React.ReactElement => {
     return <Button
       variant="contained"
       color="primary"
@@ -121,7 +166,7 @@ class TrainingQuestionnaire extends Component {
     </Button>
   }
 
-  getButtons = () => {
+  getButtons = (): React.ReactElement => {
     const { currentQuestion, recentlySubmitted, answeredBatch } = this.state;
     const { classes } = this.props;
     if (recentlySubmitted && currentQuestion < this.BATCH_LENGTH - 1) {
@@ -157,7 +202,7 @@ class TrainingQuestionnaire extends Component {
     }
   }
 
-  handleSubmit = () => {
+  handleSubmit = (): void => {
     const firebase = this.context;
     const { batch, currentQuestion, selectedOption, numCorrect } = this.state;
     const { options, feedback } = batch[currentQuestion];
@@ -168,7 +213,7 @@ class TrainingQuestionnaire extends Component {
       answerIndex: selectedOption,
       isCorrect: isCorrect
     })
-      .catch(error => console.error("Was unable to record knowledge check in DB: ", error))
+      .catch((error: Error) => console.error("Was unable to record knowledge check in DB: ", error))
 
     if (isCorrect) { // correct answer
       this.setState({
@@ -193,7 +238,7 @@ class TrainingQuestionnaire extends Component {
     }
   }
 
-  handleNext = () => {
+  handleNext = (): void => {
     const { currentQuestion, recentlyCorrect } = this.state;
     if (recentlyCorrect) {
       this.setState({
@@ -212,7 +257,7 @@ class TrainingQuestionnaire extends Component {
     }
   }
 
-  handleFinish = () => {
+  handleFinish = (): void => {
     const { numCorrect } = this.state;
     console.log('num correct is: ', numCorrect);
     this.unlockBasedOnGrade();
@@ -234,7 +279,7 @@ class TrainingQuestionnaire extends Component {
     }
   }
 
-  unlockBasedOnGrade = () => {
+  unlockBasedOnGrade = (): void => {
     if (this.state.numCorrect / this.BATCH_LENGTH >= 0.8) {
       console.log("passed");
       const firebase = this.context;
@@ -244,7 +289,7 @@ class TrainingQuestionnaire extends Component {
     }
   }
 
-  getModalContent = () => {
+  getModalContent = (): React.ReactElement => {
     if (this.state.passed) {
       return <DialogContentText style={{fontFamily: 'Arimo'}}>
         Congrats! You&apos;ve passed the knowledge check! Your observation tool has been unlocked.
@@ -262,10 +307,10 @@ class TrainingQuestionnaire extends Component {
     }
   }
 
-  getModalAction = () => {
-    if (this.state.passed ) { //|| this.state.failed) {
+  getModalAction = (): React.ReactElement => {
+    if (this.state.passed ) { // || this.state.failed) {
       return <DialogActions>
-        <Button onClick={() => this.setState({ modalOpen: false })} style={{fontFamily: 'Arimo'}}>
+        <Button onClick={(): void => this.setState({ modalOpen: false })} style={{fontFamily: 'Arimo'}}>
           OK
         </Button>
       </DialogActions>
@@ -278,7 +323,7 @@ class TrainingQuestionnaire extends Component {
     }
   }
 
-  loadNextBatch = () => {
+  loadNextBatch = (): void => {
     const { questions, currentBatch } = this.state;
     const batchToLoad = ((currentBatch + 1) % 2) * 5;
     this.setState({
@@ -295,7 +340,16 @@ class TrainingQuestionnaire extends Component {
     });
   }
 
-  render() {
+  static propTypes = {
+    section: PropTypes.oneOf<Selection>(['transition', 'climate', 'math', 'student', 'level', 'listening', 'sequential', 'ac']).isRequired,
+    classes: PropTypes.object.isRequired
+  }
+
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
     const { classes } = this.props;
     const { currentQuestion, modalOpen } = this.state;
     return (
@@ -307,9 +361,9 @@ class TrainingQuestionnaire extends Component {
             </Step>
           )}
         </Stepper>
-        <div className={classes.stepContentContainer}>
+        <div>
           {this.getStepContent(currentQuestion)}
-          <div className={classes.buttonContainer}>
+          <div>
             {this.getButtons()}
           </div>
         </div>
@@ -324,11 +378,6 @@ class TrainingQuestionnaire extends Component {
     )
   }
 }
-
-TrainingQuestionnaire.propTypes = {
-  classes: PropTypes.object,
-  section: PropTypes.string.isRequired
-};
 
 TrainingQuestionnaire.contextType = FirebaseContext;
 export default withStyles(styles)(TrainingQuestionnaire);
