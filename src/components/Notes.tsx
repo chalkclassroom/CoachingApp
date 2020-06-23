@@ -1,16 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-// import classNames from "classnames";
-import {
-  // withStyles,
-  // AppBar,
-  // Toolbar,
-  // Typography,
-  // Button,
-  IconButton
-} from "@material-ui/core";
-// import { withRouter } from "react-router-dom";
-// import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import * as React from "react";
+import * as PropTypes from "prop-types";
+import { IconButton } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper/Paper";
 import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
@@ -26,33 +16,56 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/es/DialogActions/DialogActions";
 import Grid from "@material-ui/core/Grid";
 
+interface Props {
+  open: boolean,
+  firebase: {
+    handleFetchNotes(): Promise<Array<{
+      id: string,
+      content: string,
+      timestamp: {seconds: number, nanoseconds: number}
+    }>>,
+    handlePushNotes(note: string): Promise<void>
+  },
+  onClose(value: boolean): void,
+  text: string,
+  color: string
+}
+
+interface State {
+  notes: Array<{
+    content: string,
+    timestamp: string
+  }>,
+  open: boolean,
+  newNote: string
+}
+
 /**
 * formatting and functionalty for notes function in observation tools
 * @class Notes
 * @param {event} event
 */
-class Notes extends React.Component {
+class Notes extends React.Component<Props, State> {
   /**
    * @param {Props} props
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
       notes: [],
-      // [
-      // eventually get call to firebase using firebase id for id field
-      // {id: 1, content: "Mr. Williams spent too much time gathering students after recess", timestamp: "12:00 PM"},
-      // ],
       open: this.props.open,
       newNote: ""
     };
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     this.props.firebase.handleFetchNotes().then(notesArr => {
-      const formattedNotesArr = [];
+      const formattedNotesArr: Array<{
+        content: string,
+        timestamp: string
+      }> = [];
       notesArr.map(note => {
         const newTimestamp = new Date(
           note.timestamp.seconds * 1000
@@ -62,7 +75,6 @@ class Notes extends React.Component {
           hour12: true
         });
         formattedNotesArr.push({
-          id: note.id,
           content: note.content,
           timestamp: newTimestamp
         });
@@ -72,28 +84,27 @@ class Notes extends React.Component {
         notes: formattedNotesArr,
         open: this.props.open
       });
-      // console.log(this.state);
     });
   }
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
     this.props.onClose(false);
   };
 
   /**
-   * @param {event} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    * @return {void}
    */
-  handleChange = event => {
+  handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     this.setState({ newNote: event.target.value });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     // submit to firebase DB
     this.props.firebase
       .handlePushNotes(this.state.newNote)
@@ -105,7 +116,10 @@ class Notes extends React.Component {
       });
 
     // update local state for UI
-    const notesArr = [];
+    const notesArr: Array<{
+      content: string,
+      timestamp: string
+    }> = [];
     this.state.notes.map(note => {
       notesArr.push(note);
     });
@@ -115,7 +129,6 @@ class Notes extends React.Component {
       hour12: true
     });
     notesArr.push({
-      id: Math.random(),
       content: this.state.newNote,
       timestamp: newNoteTimestamp
     });
@@ -129,11 +142,22 @@ class Notes extends React.Component {
     event.preventDefault();
   };
 
+  static propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    color: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+    firebase: PropTypes.exact({
+      handleFetchNotes: PropTypes.func,
+      handlePushNotes: PropTypes.func
+    }).isRequired
+  }
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return (
       <div>
         <Dialog
@@ -149,7 +173,7 @@ class Notes extends React.Component {
             alignItems="center"
           >
             <Grid container item xs={11}>
-              <DialogTitle onClose={this.handleClose} style={{fontFamily: 'Arimo'}}>
+              <DialogTitle style={{fontFamily: 'Arimo'}}>
                 {this.props.text}
               </DialogTitle>
             </Grid>
@@ -228,8 +252,8 @@ class Notes extends React.Component {
                 </TableHead>
                 <TableBody>
                   {this.state.notes ? (
-                    this.state.notes.map(note => (
-                      <TableRow className="note" key={note.id}>
+                    this.state.notes.map((note, index) => (
+                      <TableRow className="note" key={index}>
                         <TableCell component="th" scope="row">
                           <Grid
                             container
@@ -246,7 +270,6 @@ class Notes extends React.Component {
                               justify={"center"}
                               style={{fontFamily: 'Arimo'}}
                             >
-                              {/* <em>{moment(note.timestamp.toDate()).format("MMM Do YY HH:mm A")}</em>*/}
                               {note.timestamp}
                             </Grid>
                           </Grid>
@@ -298,7 +321,7 @@ class Notes extends React.Component {
                     placeholder="Type new note here..."
                     multiline
                     className="newNote"
-                    margin="5%"
+                    margin="normal"
                     variant="standard"
                     style={{ width: "95%" }}
                     onChange={this.handleChange}
@@ -324,13 +347,5 @@ class Notes extends React.Component {
     );
   }
 }
-
-Notes.propTypes = {
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  color: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  firebase: PropTypes.object.isRequired
-};
 
 export default Notes;
