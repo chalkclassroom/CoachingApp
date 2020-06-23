@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Button, Card, Grid, Typography } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
@@ -35,17 +35,12 @@ import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHe
 import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
-import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
+import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp";
 import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
-import YesNoDialog from "./Shared/YesNoDialog.tsx";
-import { resetTransitionTime, updateSessionTime } from "../state/actions/transition-time";
-import { emptyClimateStack } from "../state/actions/classroom-climate";
-import { deleteACCenters } from "../state/actions/associative-cooperative";
-import { deleteSACenters } from "../state/actions/sequential-activities";
-import { deleteMICenters } from "../state/actions/math-instruction";
-import { clearTeacher } from "../state/actions/teacher";
+import YesNoDialog from "./Shared/YesNoDialog";
+import { updateSessionTime } from "../state/actions/transition-time";
 import { connect } from "react-redux";
-import IncompleteObservation from "./IncompleteObservation.tsx";
+import IncompleteObservation from "./IncompleteObservation";
 import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp'
 import * as Constants from '../constants/Constants';
 import TransitionResultsDialog from './TransitionComponents/TransitionResultsDialog';
@@ -67,12 +62,9 @@ const styles = {
     width: "90%",
     marginRight: "5%",
     marginLeft: "5%",
-    flexDirection: "column",
     alignItems: "center",
     justify: "space-evenly",
     display: "flex",
-    flex: "1",
-    flexWrap: "nowrap"
   },
   iconGrid: {
     marginTop: "10px",
@@ -116,15 +108,65 @@ const styles = {
   }
 };
 
+interface Style {
+  card: string,
+  iconGrid: string,
+  icon: string,
+  infoDisplayGrid: string,
+  helpIcon: string,
+  completeGrid: string,
+  completeButton: string,
+  gridTopMargin: string
+}
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
+interface Props {
+  classes: Style,
+  type: keyof typeof Constants.Colors,
+  history: {
+    push(pathname: string): void
+  },
+  teacherSelected: Teacher,
+  infoPlacement: string,
+  infoDisplay: React.ReactElement,
+  completeObservation: boolean,
+  updateSessionTime(time: number): void
+}
+
+interface State {
+  notes: boolean,
+  help: boolean,
+  auth: boolean,
+  time: string,
+  alignFormat: string,
+  incomplete: boolean,
+  icon: string,
+  lookForsIcon: string,
+  notesIcon: string,
+  title: string,
+  resultsDialog: string
+}
+
 /**
  * Dashboard for Observation Tools
  * @class Dashboard
  */
-class Dashboard extends React.Component {
+class Dashboard extends React.Component<Props, State> {
+  typeString: string = this.props.type;
   /**
    * @param {Props} props
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -136,7 +178,6 @@ class Dashboard extends React.Component {
         minute: "numeric",
         hour12: true
       }),
-      submitFunc: null,
       alignFormat: "center",
       incomplete: false,
       icon: null,
@@ -148,50 +189,50 @@ class Dashboard extends React.Component {
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount = () => {
-    this.props.type === "TT"
+  componentDidMount(): void {
+    this.typeString === "TT"
       ? this.setState({
           icon: TransitionTimeIconImage,
           lookForsIcon: TransitionTimeLookForsImage,
           notesIcon: TransitionTimeNotesImage,
           title: 'Transition Time'
         })
-      : this.props.type === "CC"
+      : this.typeString === "CC"
       ? this.setState({
           icon: ClassroomClimateIconImage,
           lookForsIcon: ClassroomClimateLookForsImage,
           notesIcon: ClassroomClimateNotesImage,
           title: 'Classroom Climate'
         })
-      : this.props.type === "MI"
+      : this.typeString === "MI"
       ? this.setState({
           icon: MathIconImage,
           lookForsIcon: MathInstructionLookForsImage,
           notesIcon: MathInstructionNotesImage,
           title: 'Math Instruction'
         })
-      : this.props.type === "SE"
+      : this.typeString === "SE"
       ? this.setState({
           icon: EngagementIconImage,
           lookForsIcon: EngagementLookForsImage,
           notesIcon: EngagementNotesImage,
           title: 'Student Engagement'
         })
-      : this.props.type === "LI"
+      : this.typeString === "LI"
       ? this.setState({
           icon: InstructionIconImage,
           lookForsIcon: InstructionLookForsImage,
           notesIcon: InstructionNotesImage,
           title: 'Level of Instruction'
         })
-      : this.props.type === "LC"
+      : this.typeString === "LC"
       ? this.setState({
           icon: ListeningIconImage,
           lookForsIcon: ListeningLookForsImage,
           notesIcon: ListeningNotesImage,
           title: 'Listening to Children'
         })
-      : this.props.type === "SA"
+      : this.typeString === "SA"
       ? this.setState({
           icon: SequentialIconImage,
           lookForsIcon: SequentialLookForsImage,
@@ -206,18 +247,18 @@ class Dashboard extends React.Component {
         });
   };
 
-  handleHelpModal = () => {
+  handleHelpModal = (): void => {
     this.setState({ help: true });
   };
 
-  handleClickAwayHelp = () => {
+  handleClickAwayHelp = (): void => {
     this.setState({ help: false });
   };
 
   /**
    * @param {boolean} open
    */
-  handleNotes = open => {
+  handleNotes = (open?: boolean): void => {
     if (open) {
       this.setState({ notes: true });
     } else {
@@ -225,19 +266,50 @@ class Dashboard extends React.Component {
     }
   };
 
-  handleIncomplete = () => {
+  handleIncomplete = (): void => {
     this.setState({ incomplete: true });
   };
 
-  handleClickAwayIncomplete = () => {
+  handleClickAwayIncomplete = (): void => {
     this.setState({ incomplete: false });
   };
 
+  static propTypes = {
+    infoDisplay: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      card: PropTypes.string,
+      iconGrid: PropTypes.string,
+      icon: PropTypes.string,
+      infoDisplayGrid: PropTypes.string,
+      helpIcon: PropTypes.string,
+      completeGrid: PropTypes.string,
+      completeButton: PropTypes.string,
+      gridTopMargin: PropTypes.string
+    }).isRequired,
+    history: PropTypes.exact({
+      push: PropTypes.func
+    }).isRequired,
+    infoPlacement: PropTypes.string.isRequired,
+    completeObservation: PropTypes.bool.isRequired,
+    type: PropTypes.string.isRequired,
+    updateSessionTime: PropTypes.func.isRequired,
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
+  }
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div>
@@ -274,26 +346,26 @@ class Dashboard extends React.Component {
           history={this.props.history}
         />
         {this.state.help ? (
-          this.props.type === "TT" ?
+          this.typeString === "TT" ?
             <TransitionTimeHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.props.type === "CC" ?
+          : this.typeString === "CC" ?
             <ClassroomClimateHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.props.type === "MI" ?
+          : this.typeString === "MI" ?
             <MathInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.props.type === "SE" ?
+          : this.typeString === "SE" ?
             <StudentEngagementHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.props.type === "AC" ?
+          : this.typeString === "AC" ?
             <AssocCoopHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.props.type === "SA" ?
+          : this.typeString === "SA" ?
             <SequentialActivitiesHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.props.type === "LI" ?
+          : this.typeString === "LI" ?
             <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.props.type === "LC" ?
+          : this.typeString === "LC" ?
             <ListeningToChildrenHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : <div />
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>
-            {firebase => (
+            {(firebase: object): React.ReactNode => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}
@@ -314,8 +386,6 @@ class Dashboard extends React.Component {
           <Grid
             container
             style={{display: 'flex', flex: 1, flexDirection: 'column'}}
-            flexGrow={1}
-            padding="50"
             spacing={0}
             direction="column"
             justify="center"
@@ -337,7 +407,6 @@ class Dashboard extends React.Component {
               item
               className={classes.infoDisplayGrid}
               style={{ alignItems: this.props.infoPlacement }}
-              flex={1}
             >
               {this.props.infoDisplay}
             </Grid>
@@ -357,7 +426,7 @@ class Dashboard extends React.Component {
                   className={classes.helpIcon}
                 />
               </Button>
-              <Button className="notes" onClick={this.handleNotes}>
+              <Button className="notes" onClick={(): void => this.handleNotes()}>
                 <img
                   src={this.state.notesIcon}
                   alt="Notes"
@@ -371,7 +440,9 @@ class Dashboard extends React.Component {
             {this.props.completeObservation ? (
               <Grid item className={classes.completeGrid}>
                 <FirebaseContext.Consumer>
-                  {firebase => (
+                  {(firebase: {
+                    endSession(time?: Date): void
+                  }): React.ReactNode => (
                     <YesNoDialog
                       buttonText={<b>COMPLETE OBSERVATION</b>}
                       buttonVariant={"outlined"}
@@ -381,7 +452,7 @@ class Dashboard extends React.Component {
                         "Are you sure you want to complete this observation?"
                       }
                       shouldOpen={true}
-                      onAccept={() => {
+                      onAccept={(): void => {
                         this.setState({resultsDialog: this.props.type});
                         if (this.props.type === "TT") {
                           const sessionEnd = Date.now();
@@ -413,33 +484,6 @@ class Dashboard extends React.Component {
   }
 }
 
-Dashboard.propTypes = {
-  infoDisplay: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
-  infoPlacement: PropTypes.string.isRequired,
-  completeObservation: PropTypes.bool.isRequired,
-  type: PropTypes.string.isRequired,
-  // These Are mapped from Redux into Props
-  resetTransitionTime: PropTypes.func.isRequired,
-  updateSessionTime: PropTypes.func.isRequired,
-  emptyClimateStack: PropTypes.func.isRequired,
-  deleteMICenters: PropTypes.func.isRequired,
-  deleteSACenters: PropTypes.func.isRequired,
-  deleteACCenters: PropTypes.func.isRequired,
-  clearTeacher: PropTypes.func.isRequired,
-  teacherSelected: PropTypes.exact({
-    email: PropTypes.string,
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    notes: PropTypes.string,
-    id: PropTypes.string,
-    phone: PropTypes.string,
-    role: PropTypes.string,
-    school: PropTypes.string
-  }).isRequired,
-};
-
 const mapStateToProps = state => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
@@ -448,5 +492,5 @@ const mapStateToProps = state => {
 
 export default withRouter(connect(
     mapStateToProps,
-    { clearTeacher, resetTransitionTime, updateSessionTime, emptyClimateStack, deleteMICenters, deleteSACenters, deleteACCenters }
+    { updateSessionTime }
 )(withStyles(styles)(Dashboard)));
