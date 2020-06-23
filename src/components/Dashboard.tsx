@@ -426,7 +426,7 @@ class Dashboard extends React.Component<Props, State> {
                   className={classes.helpIcon}
                 />
               </Button>
-              <Button className="notes" onClick={(): void => this.handleNotes()}>
+              <Button className="notes" onClick={(): void => this.handleNotes(true)}>
                 <img
                   src={this.state.notesIcon}
                   alt="Notes"
