@@ -1,8 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { Button, Card } from '@material-ui/core'; import ListItem from "@material-ui/core/ListItem/index";
 import { withStyles } from '@material-ui/core/styles';
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { MuiThemeProvider, Theme } from '@material-ui/core/styles';
 
 const styles = {
   card: {
@@ -82,7 +82,7 @@ const styles = {
     },
   },
 
-  //iPad-Mini Landscape
+  // iPad-Mini Landscape
   '@media only screen and (max-width:1024px) and (orientation:landscape)': {
     container: {
       fontSize: '0.9em'
@@ -125,12 +125,38 @@ const styles = {
   }
 };
 
+interface Props {
+  classes: {
+    container: string,
+    card: string,
+    iconContainer: string,
+    buttonsListContainer: string
+  },
+  ViewEnum: {
+    CONCEPTS: number,
+    DEFINITIONS: number,
+    EXAMPLE: number,
+    DEMONSTRATION: number,
+    TRYIT: number,
+    KNOWLEDGECHECK: number
+  },
+  view: number,
+  Icon: string,
+  conceptsClick(): void,
+  definitionsClick(): void,
+  exampleClick(): void,
+  demonstrationClick(): void,
+  tryItClick(): void,
+  knowledgeCheckClick(): void,
+  colorTheme: Theme
+}
+
 /**
  * dashboard for all training pages
  * @param {Props} props
  * @return {ReactElement}
  */
-function TrainingDashboard(props) {
+function TrainingDashboard(props: Props): React.ReactElement {
   const {
     classes,
     ViewEnum,
@@ -151,7 +177,7 @@ function TrainingDashboard(props) {
           <img src={Icon} width={"100px"} alt="Magic Eight" />
         </ListItem>
         <div className={classes.buttonsListContainer} style={{width:'90%'}}>
-          <ListItem className={classes.viewButtons}>
+          <ListItem>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -165,7 +191,7 @@ function TrainingDashboard(props) {
               </Button>
             </MuiThemeProvider>
           </ListItem>
-          <ListItem className={classes.viewButtons}>
+          <ListItem>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -179,7 +205,7 @@ function TrainingDashboard(props) {
               </Button>
             </MuiThemeProvider>
           </ListItem>
-          <ListItem className={classes.viewButtons}>
+          <ListItem>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -194,7 +220,7 @@ function TrainingDashboard(props) {
               </Button>
             </MuiThemeProvider>
           </ListItem>
-          <ListItem className={classes.viewButtons}>
+          <ListItem>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -208,7 +234,7 @@ function TrainingDashboard(props) {
               </Button>
             </MuiThemeProvider>
           </ListItem>
-          <ListItem className={classes.viewButtons}>
+          <ListItem>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -223,7 +249,7 @@ function TrainingDashboard(props) {
               </Button>
             </MuiThemeProvider>
           </ListItem>
-          <ListItem className={classes.viewButtons}>
+          <ListItem>
             <MuiThemeProvider theme={colorTheme}>
               <Button
                 size="large"
@@ -244,10 +270,22 @@ function TrainingDashboard(props) {
 }
 
 TrainingDashboard.propTypes = {
-  classes: PropTypes.object.isRequired,
-  ViewEnum: PropTypes.object.isRequired,
+  classes: PropTypes.exact({
+    container: PropTypes.string,
+    card: PropTypes.string,
+    iconContainer: PropTypes.string,
+    buttonsListContainer: PropTypes.string
+  }).isRequired,
+  ViewEnum: PropTypes.exact({
+    CONCEPTS: PropTypes.number,
+    DEFINITIONS: PropTypes.number,
+    EXAMPLE: PropTypes.number,
+    DEMONSTRATION: PropTypes.number,
+    TRYIT: PropTypes.number,
+    KNOWLEDGECHECK: PropTypes.number
+  }).isRequired,
   view: PropTypes.number.isRequired,
-  Icon: PropTypes.object.isRequired,
+  Icon: PropTypes.string.isRequired,
   conceptsClick: PropTypes.func.isRequired,
   definitionsClick: PropTypes.func.isRequired,
   exampleClick: PropTypes.func.isRequired,

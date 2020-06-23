@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles/index';
 import Radio from '@material-ui/core/Radio/index';
 import RadioGroup from '@material-ui/core/RadioGroup/index';
@@ -7,18 +7,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel/index';
 import FormControl from '@material-ui/core/FormControl/index';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-const styles = theme => ({
-  root: {
-    //border: '1px solid #FF0046',
-    // display: 'flex',
-    // flexGrow: 1,
-  },
+const styles: object = {
   formControl: {
-    // margin: theme.spacing.unit * 3,
     fontFamily: 'Arimo'
-  },
-  group: {
-    // margin: `${theme.spacing.unit}px 0`,
   },
   correctFeedback: {
     color: '#28B10C',
@@ -32,17 +23,36 @@ const styles = theme => ({
     fontSize: '1em',
     fontFamily: 'Arimo'
   }
-});
+};
 
+interface Props {
+  classes: {
+    formControl: string,
+    correctFeedback: string,
+    incorrectFeedback: string
+  },
+  setSelection(selection: number): void,
+  feedback: string,
+  recentlyCorrect: boolean,
+  question: string,
+  options: Map<string, boolean>,
+  selected: number
+}
 
-class TrainingQuestion extends Component {
+/**
+ * @class TrainingQuestion
+ */
+class TrainingQuestion extends React.Component<Props, {}> {
 
-  handleChange = event => {
+  /**
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
+   */
+  handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     console.log(event.target.value);
     this.props.setSelection(Number(event.target.value));
   }
 
-  getFeedback = () => {
+  getFeedback = (): React.ReactElement | null => {
     if (!!this.props.feedback) {
       if (this.props.recentlyCorrect) {
         return <FormHelperText className={this.props.classes.correctFeedback}>{this.props.feedback}</FormHelperText>
@@ -54,21 +64,30 @@ class TrainingQuestion extends Component {
     }
   }
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    setSelection: PropTypes.func.isRequired,
+    feedback: PropTypes.string.isRequired,
+    recentlyCorrect: PropTypes.bool.isRequired,
+    question: PropTypes.string.isRequired,
+    options: PropTypes.instanceOf(Map).isRequired,
+    selected: PropTypes.number.isRequired
+  }
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes, question, options, selected, feedback } = this.props;
     console.log(question, feedback);
     return (
-      <div className={classes.root}>
-        <FormControl component="fieldset" className={classes.formControl}>
+      <div>
+        <FormControl className={classes.formControl}>
           <p>{question}</p>
           <RadioGroup
             aria-label="Multiple Choice Question"
             name="knowledge-check-question"
-            className={classes.group}
             value={"" + selected}
             onChange={this.handleChange}
           >
@@ -87,10 +106,5 @@ class TrainingQuestion extends Component {
     );
   }
 }
-
-TrainingQuestion.propTypes = {
-  classes: PropTypes.object.isRequired,
-  setSelection: PropTypes.func.isRequired,
-};
 
 export default withStyles(styles)(TrainingQuestion);
