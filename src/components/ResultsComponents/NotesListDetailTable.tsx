@@ -57,10 +57,10 @@ interface Style {
 
 interface Props {
   classes: Style,
-  data: Array<{ timestamp: Date, content: string }>,
+  data: Array<{ timestamp: string, content: string }>,
   magic8: string,
   conferencePlanId: string,
-  addNoteToPlan(conferencePlanId: string, note: string): Promise<void>,
+  addNoteToPlan(conferencePlanId: string, note: string): void,
   handleClose(): void,
   open: boolean
 }
