@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
-import * as Constants from "../../../constants";
+import * as Constants from "../../../constants/Constants";
 
 interface Props {
   offTask: number,
@@ -39,8 +39,8 @@ class PieSummary extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.offTask, this.props.engaged],
-          backgroundColor: [Constants.RedGraphColor, Constants.EngagementColor, Constants.NotPresentColor],
-          hoverBackgroundColor: [Constants.RedGraphColor, Constants.EngagementColor, Constants.NotPresentColor]
+          backgroundColor: [Constants.Colors.RedGraph, Constants.Colors.SE, Constants.Colors.NotPresent],
+          hoverBackgroundColor: [Constants.Colors.RedGraph, Constants.Colors.SE, Constants.Colors.NotPresent]
         }
       ]
     };

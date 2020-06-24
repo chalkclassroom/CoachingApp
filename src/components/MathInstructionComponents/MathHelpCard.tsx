@@ -8,7 +8,7 @@ import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
 import MathHelpChild from './MathHelpChild';
 import MathHelpTeacher from './MathHelpTeacher';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 
 const MathTheme = createMuiTheme({
   palette: {
@@ -115,7 +115,7 @@ class MathHelpCard extends React.Component<Props, State> {
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 1 ? Constants.AppBarColor : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 1 ? Constants.Colors.AppBar : '#d3d3d3'
                     }}
                   />
                 </Tabs>

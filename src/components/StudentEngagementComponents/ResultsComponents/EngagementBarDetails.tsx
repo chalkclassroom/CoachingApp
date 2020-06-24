@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar } from "react-chartjs-2";
-import * as Constants from "../../../constants";
+import * as Constants from "../../../constants/Constants";
 
 
 interface Props {
@@ -47,20 +47,20 @@ class EngagementBarDetails extends React.Component<Props, {}> {
         label: 'Small Group',
         stack: '0',
         data: [this.props.offTaskDetailSplit[0],this.props.mildlyEngagedDetailSplit[0],this.props.engagedDetailSplit[0],this.props.highlyEngagedDetailSplit[0]],
-        backgroundColor: Constants.EngagementColor,
-        hoverBackgroundColor:  Constants.EngagementColor
+        backgroundColor: Constants.Colors.SE,
+        hoverBackgroundColor:  Constants.Colors.SE
       },{
         label: 'Whole Group',
         stack: '0',
         data: [this.props.offTaskDetailSplit[1],this.props.mildlyEngagedDetailSplit[1],this.props.engagedDetailSplit[1],this.props.highlyEngagedDetailSplit[1]],
-        backgroundColor:  Constants.TransitionColor,
-        hoverBackgroundColor:  Constants.TransitionColor
+        backgroundColor:  Constants.Colors.TT,
+        hoverBackgroundColor:  Constants.Colors.TT
       },{
         label: 'Transition',
         stack: '0',
         data: [this.props.offTaskDetailSplit[2],this.props.mildlyEngagedDetailSplit[2],this.props.engagedDetailSplit[2],this.props.highlyEngagedDetailSplit[2]],
-        backgroundColor:  Constants.NotPresentColor,
-        hoverBackgroundColor: Constants.NotPresentColor,
+        backgroundColor:  Constants.Colors.NotPresent,
+        hoverBackgroundColor: Constants.Colors.NotPresent,
       }
       ]
     };

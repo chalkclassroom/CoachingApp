@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar } from "react-chartjs-2";
-import * as Constants from "../../../constants";
+import * as Constants from "../../../constants/Constants";
 
 interface Props {
   teacher1: number,
@@ -45,8 +45,8 @@ class TeacherBarDetails extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4],
-          backgroundColor: [Constants.AppBarColor, Constants.AppBarColor, Constants.AppBarColor, Constants.AppBarColor],
-          hoverBackgroundColor: [Constants.AppBarColor, Constants.AppBarColor, Constants.AppBarColor, Constants.AppBarColor]
+          backgroundColor: [Constants.Colors.AppBar, Constants.Colors.AppBar, Constants.Colors.AppBar, Constants.Colors.AppBar],
+          hoverBackgroundColor: [Constants.Colors.AppBar, Constants.Colors.AppBar, Constants.Colors.AppBar, Constants.Colors.AppBar]
         }
       ]
     };

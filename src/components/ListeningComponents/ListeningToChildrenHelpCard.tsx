@@ -6,7 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 import ListeningHelp1 from './ListeningHelp1';
 import ListeningHelp2 from './ListeningHelp2';
 

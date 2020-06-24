@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography/Typography';
 import { withStyles } from "@material-ui/core/styles";
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import EmailIcon from '@material-ui/icons/Email';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 
 const styles: object = {
   name: {

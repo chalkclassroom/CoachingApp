@@ -10,7 +10,7 @@ import {
   addNewCenter,
   incrementCenterCount,
   updateACCount
-} from "../../../state/actions/associative-cooperative.js";
+} from "../../../state/actions/associative-cooperative";
 
 
 const styles: object = {

@@ -7,7 +7,7 @@ import ResultsLayout from '../../../components/ResultsLayout';
 import SummarySlider from "../../../components/StudentEngagementComponents/ResultsComponents/SummarySlider";
 import DetailsSlider from "../../../components/StudentEngagementComponents/ResultsComponents/DetailsSlider";
 import TrendsSlider from "../../../components/StudentEngagementComponents/ResultsComponents/TrendsSlider";
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 import {connect} from "react-redux";
 import StudentEngagementCoachingQuestions
   from "../../../components/StudentEngagementComponents/ResultsComponents/StudentEngagementCoachingQuestions";
@@ -228,8 +228,8 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       datasets: [
         {
           label: "Average",
-          backgroundColor: Constants.EngagementColor,
-          borderColor: Constants.EngagementColor,
+          backgroundColor: Constants.Colors.SE,
+          borderColor: Constants.Colors.SE,
           fill: false,
           lineTension: 0,
           data: this.state.trendsAvg

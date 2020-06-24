@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import SequentialHelpDefinitions from './SequentialHelpDefinitions';
 import SequentialHelpChild from './SequentialHelpChild';
 import SequentialHelpTeacher from './SequentialHelpTeacher';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 
 const SequentialTheme = createMuiTheme({
   palette: {
@@ -137,7 +137,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 2 ? Constants.AppBarColor : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 2 ? Constants.Colors.AppBar : '#d3d3d3'
                     }}
                   />
                 </Tabs>

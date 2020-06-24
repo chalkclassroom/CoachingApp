@@ -10,7 +10,7 @@ import {
   addNewCenter,
   incrementCenterCount,
   updateMathCount
-} from "../../../state/actions/math-instruction.js";
+} from "../../../state/actions/math-instruction";
 
 
 const styles: object = {

@@ -6,7 +6,7 @@ import TableHead from '@material-ui/core/TableHead/index';
 import TableRow from '@material-ui/core/TableRow/index';
 import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
-import * as Constants from "../../constants";
+import * as Constants from "../../constants/Constants";
 
 
 const styles: object = {

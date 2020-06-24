@@ -5,7 +5,7 @@ import Table from '@material-ui/core/Table/index';
 import TableRow from '@material-ui/core/TableRow/index';
 import TableBody from '@material-ui/core/TableBody/index';
 import TableCell from '@material-ui/core/TableCell/index';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 
 const styles: object = {
   header: {
@@ -53,7 +53,7 @@ function ListeningHelp2(props: Props): React.ReactElement {
     <Table>
       <TableBody>
         <TableRow>
-          <TableCell align="center" padding="checkbox" className={classes.header} style={{backgroundColor: Constants.AppBarColor}}>
+          <TableCell align="center" padding="checkbox" className={classes.header} style={{backgroundColor: Constants.Colors.AppBar}}>
             Teacher Behaviors
           </TableCell>
           <TableCell align="center" padding="checkbox" className={classes.header} style={{backgroundColor: '#b4d6f7'}}>

@@ -10,7 +10,7 @@ import {
   addNewCenter,
   incrementCenterCount,
   updateSequentialCount
-} from "../../../state/actions/sequential-activities.js";
+} from "../../../state/actions/sequential-activities";
 
 
 const styles: object = {

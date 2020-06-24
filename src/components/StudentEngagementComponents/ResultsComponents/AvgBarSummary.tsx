@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar } from "react-chartjs-2";
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 
 interface Props {
   avgRating: number,
@@ -34,8 +34,8 @@ class AvgBarSummary extends React.Component<Props, {}> {
         {
           label: "Avg Engagement",
           data: [Math.round((this.props.avgRating + Number.EPSILON) * 100) / 100],
-          backgroundColor: [Constants.EngagementColor, Constants.RedGraphColor],
-          hoverBackgroundColor: [Constants.EngagementColor, Constants.RedGraphColor]
+          backgroundColor: [Constants.Colors.SE, Constants.Colors.RedGraph],
+          hoverBackgroundColor: [Constants.Colors.SE, Constants.Colors.RedGraph]
         }
       ]
     };

@@ -16,7 +16,7 @@ import WondryLogoImage from "../../assets/images/WondryLogoImage.png";
 import VanderbiltEngineeringLogoImage from "../../assets/images/VanderbiltEngineeringLogoImage.png";
 import AbtLogoImage from "../../assets/images/AbtLogoImage.png";
 import MNPSLogoImage from "../../assets/images/MNPSLogoImage.jpg";
-import * as Constants from "../../constants";
+import * as Constants from "../../constants/Constants";
 
 const styles: object = {
   root: {

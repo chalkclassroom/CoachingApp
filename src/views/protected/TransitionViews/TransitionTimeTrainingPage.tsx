@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 import Button from "@material-ui/core/Button/Button";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";

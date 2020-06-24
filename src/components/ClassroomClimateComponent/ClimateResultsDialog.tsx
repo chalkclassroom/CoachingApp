@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { emptyClimateStack } from "../../state/actions/classroom-climate";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 
 const ClimateTheme = createMuiTheme({
   palette: {

@@ -38,8 +38,7 @@ import SequentialActivitiesHelp from './SequentialActivitiesComponents/Sequentia
 import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
 import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import YesNoDialog from "./Shared/YesNoDialog.tsx";
-import { resetTransitionTime } from "../state/actions/transition-time";
-import { updateSessionTime } from "../state/actions/transition-time";
+import { resetTransitionTime, updateSessionTime } from "../state/actions/transition-time";
 import { emptyClimateStack } from "../state/actions/classroom-climate";
 import { deleteACCenters } from "../state/actions/associative-cooperative";
 import { deleteSACenters } from "../state/actions/sequential-activities";
@@ -48,7 +47,7 @@ import { clearTeacher } from "../state/actions/teacher";
 import { connect } from "react-redux";
 import IncompleteObservation from "./IncompleteObservation.tsx";
 import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp'
-import * as Constants from '../constants';
+import * as Constants from '../constants/Constants';
 import TransitionResultsDialog from './TransitionComponents/TransitionResultsDialog';
 import ClimateResultsDialog from './ClassroomClimateComponent/ClimateResultsDialog';
 import MathResultsDialog from './MathInstructionComponents/MathResultsDialog';

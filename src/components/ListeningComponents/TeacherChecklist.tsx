@@ -19,8 +19,8 @@ import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
 import Zoom from '@material-ui/core/Zoom';
 import { connect } from 'react-redux';
-import { updateListeningCount } from "../../state/actions/listening-to-children.js";
-import * as Constants from '../../constants';
+import { updateListeningCount } from "../../state/actions/listening-to-children";
+import * as Constants from '../../constants/Constants';
 
 
 const styles: object = {
