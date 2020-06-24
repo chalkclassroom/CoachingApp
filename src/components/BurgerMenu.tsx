@@ -324,11 +324,7 @@ class BurgerMenu extends React.Component<Props, State>{
             </ListItem>
             <ListItem
               button
-<<<<<<< HEAD:src/components/BurgerMenu.tsx
               onClick={(): void => {
-=======
-              onClick={() => {
->>>>>>> develop:src/components/BurgerMenu.js
                 this.setState({ menu: 9 });
                 this.props.firebase.firebaseSignOut().then(() => {
                   this.props.history.push("/");
