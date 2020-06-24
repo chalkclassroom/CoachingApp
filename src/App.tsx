@@ -9,7 +9,7 @@ import Magic8MenuPage from "./views/protected/Magic8MenuPage";
 import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage";
-import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
+import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage.tsx";
 import HomePage from "./views/protected/HomeViews/HomePage";
 import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
 import ActionPlanListPage from "./views/protected/ActionPlanViews/ActionPlanListPage";

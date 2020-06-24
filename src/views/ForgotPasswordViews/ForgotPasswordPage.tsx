@@ -1,11 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../components/AppBar";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
-import ResetForm from "./ResetForm";
+import ResetForm from "./ResetForm.tsx";
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     backgroundColor: "#2196f3",
@@ -16,13 +16,32 @@ const styles = {
   }
 };
 
-class ForgotPasswordPage extends React.Component {
-  render() {
+interface Props {
+  classes: {
+    root: string,
+    grow: string
+  }
+}
+
+/**
+ * @class ForgotPasswordPage
+ */
+class ForgotPasswordPage extends React.Component<Props, {}> {
+  
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
+
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => (
+          {(firebase: object): React.ReactElement => (
             <div>
               <AppBar firebase={firebase} />
               <ResetForm firebase={firebase} />
@@ -33,9 +52,5 @@ class ForgotPasswordPage extends React.Component {
     );
   }
 }
-
-ForgotPasswordPage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(ForgotPasswordPage);
