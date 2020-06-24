@@ -1,15 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import SignUpForm from "./SignUpForm";
+import SignUpForm from "./SignUpForm.tsx";
 import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 import Card from "@material-ui/core/Card";
-//import CoachImage from "../../assets/images/CoachImage.svg";
+// import CoachImage from "../../assets/images/CoachImage.svg";
 // import NewTeacherImage from "../../assets/images/NewTeacherImage.svg";
 // import NewAdministratorImage from "../../assets/images/NewAdministratorImage.svg";
 import GrayedAdminImage from "../../assets/images/GrayedAdminImage.svg";
@@ -17,22 +17,22 @@ import GrayedTeacherImage from "../../assets/images/GrayedTeacherImage.svg";
 import GrayedCoachImage from "../../assets/images/GrayedCoachImage.svg";
 import CardContent from "@material-ui/core/CardContent";
 
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles: object = {
   paper: {
     position: "absolute",
     width: "60%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    boxShadow: '0 2px 2px 0 rgba(0, 0, 0, 0.2)',
+    padding: '2em',
     borderRadius: 8
   },
   root: {
@@ -61,31 +61,72 @@ const styles = theme => ({
       display: "none"
     }
   }
-});
+};
 
-class SignUpModal extends React.Component {
+interface Style {
+  paper: string,
+  root: string,
+  mobileRoot: string,
+  photoIcon: string
+}
+
+interface Props {
+  classes: Style,
+  handleClose(): void,
+  firebase: {
+    firebaseEmailSignUp(
+      info: {
+        email: string,
+        password: string,
+        firstName: string,
+        lastName: string
+      },
+      role: string
+    ): Promise<void> 
+  }
+}
+
+interface State {
+  open: boolean,
+  role: number
+}
+
+/**
+ * @class SignUpModal
+ */
+class SignUpModal extends React.Component<Props, State> {
   state = {
     open: true,
     role: 0
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  handleChangeRole = role => {
+  /**
+   * @param {number} role
+   */
+  handleChangeRole = (role: number) => {
     this.setState({ role: role });
   };
 
-  render() {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      firebaseEmailSignUp: PropTypes.func
+    }).isRequired
+  }
+
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
@@ -232,10 +273,5 @@ class SignUpModal extends React.Component {
     );
   }
 }
-
-SignUpModal.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(SignUpModal);
