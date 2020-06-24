@@ -231,6 +231,72 @@ const sortedAltText = [
   "Assoc Coop Interactions"
 ];
 
+interface Style {
+  root: string,
+  container: string,
+  title: string,
+  actionContainer: string,
+  search: string,
+  actionButton: string,
+  tableContainer: string,
+  nameCellHeader: string,
+  emailCellHeader: string,
+  magicEightCell: string,
+  magicEightIcon: string,
+  row: string,
+  nameField: string,
+  emailField: string,
+  unlockedIcon: string,
+  legendContainer: string,
+  legendItem: string,
+  legendIcon: string
+}
+
+interface Props {
+  history: {
+    push(
+      param: (string | {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }),
+    ): void
+  }
+  classes: Style
+}
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
+interface State {
+  teachers: Array<Teacher>,
+  searched: Array<Teacher>,
+  isAdding: boolean,
+  inputFirstName: string,
+  inputLastName: string,
+  inputSchool: string,
+  inputEmail: string,
+  inputPhone: string,
+  inputNotes: string,
+  fnErrorText: string,
+  lnErrorText: string,
+  schoolErrorText: string,
+  emailErrorText: string,
+  phoneErrorText: string,
+  notesErrorText: string,
+  addAlert: boolean,
+  alertText: string
+}
+
 class TeacherListPage extends Component {
   constructor(props) {
     super(props);
