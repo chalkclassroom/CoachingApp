@@ -60,7 +60,9 @@ interface UserCredential {
     signInMethod: string
   },
   user: {
-    uid: string
+    uid: string,
+    displayName: string,
+    email: string
   }
 }
 

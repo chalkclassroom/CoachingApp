@@ -1,10 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import LoginForm from "./LoginForm";
+import LoginForm from "./LoginForm.tsx";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/es/IconButton";
 import Tooltip from "@material-ui/core/es/Tooltip";
@@ -13,22 +13,22 @@ import Tooltip from "@material-ui/core/es/Tooltip";
  * specifies styling for modal
  * @return {css}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `35%`,
     left: `50%`,
     transform: `translate(-50%, -50%)`
-  };
+  } as React.CSSProperties;
 }
 
-const styles = theme => ({
+const styles = {
   paper: {
     position: "absolute",
     width: "40%",
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    backgroundColor: 'white',
+    boxShadow: '0 2px 2px 0 rgba(0, 0, 0, 0.2)',
+    padding: '2em',
     borderRadius: 8
   },
   "@media (max-width: 700px)": {
@@ -38,31 +38,68 @@ const styles = theme => ({
       width: '75%'
     },
   },
-});
+};
+
+interface UserCredential {
+  credential: {
+    providerId: string,
+    signInMethod: string
+  },
+  user: {
+    uid: string,
+    displayName: string,
+    email: string
+  }
+}
+
+interface Props {
+  classes: {
+    paper: string
+  },
+  handleClose(): void,
+  firebase: {
+    firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<UserCredential>
+  }
+}
+
+interface State {
+  open: boolean,
+  value: number
+}
 
 /**
  * login modal
  * @class LoginModal
  */
-class LoginModal extends React.Component {
+class LoginModal extends React.Component <Props, State> {
   state = {
     open: true,
     value: 0
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
+  static propTypes = {
+    classes: PropTypes.exact({
+      paper: PropTypes.string
+    }).isRequired,
+    handleClose: PropTypes.func.isRequired,
+    firebase: PropTypes.exact({
+      firebaseEmailSignIn: PropTypes.func
+    }).isRequired
+  }
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
@@ -98,11 +135,5 @@ class LoginModal extends React.Component {
     );
   }
 }
-
-LoginModal.propTypes = {
-  classes: PropTypes.object.isRequired,
-  handleClose: PropTypes.object.isRequired,
-  firebase: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(LoginModal);

@@ -1,14 +1,14 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
-import LogRocket from 'logrocket';
+import * as LogRocket from 'logrocket';
 
-const styles = theme => ({
+const styles: object = {
   main: {
     width: "100%"
   },
@@ -16,26 +16,60 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px ${theme
-      .spacing.unit * 2}px`
+    padding: '1em'
   },
   form: {
     width: "100%" // Fix IE 11 issue.
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: '1.5em'
   }
-});
+};
+
+interface UserCredential {
+  credential: {
+    providerId: string,
+    signInMethod: string
+  },
+  user: {
+    uid: string,
+    displayName: string,
+    email: string
+  }
+}
+
+interface Props {
+  classes: {
+    main: string,
+    paper: string,
+    form: string,
+    submit: string
+  },
+  firebase: {
+    firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<UserCredential>
+  },
+  history: {
+    push(param: string): void
+  }
+}
+
+interface State {
+  email: string,
+  emailError: string,
+  password: string,
+  passwordError: string,
+  errors: boolean
+}
 
 /**
  * Login Form
  * @class LoginForm
  */
-class LoginForm extends React.Component {
+class LoginForm extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       email: "",
@@ -48,13 +82,19 @@ class LoginForm extends React.Component {
 
   /**
    * @param {string} name
-   * @param {event} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    * @return {void}
    */
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value
-    });
+  handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
+    if (name === 'email'){
+      this.setState({
+        email: event.target.value
+      })
+    } else if (name === 'password') {
+      this.setState({
+        password: event.target.value
+      })
+    }
     this.validateState(name, event.target.value);
   };
 
@@ -62,7 +102,7 @@ class LoginForm extends React.Component {
    * @param {string} name
    * @param {value} value
    */
-  validateState = (name, value) => {
+  validateState = (name: string, value: string): void => {
     switch (name) {
       case "email":
         if (value.length === 0) {
@@ -105,18 +145,16 @@ class LoginForm extends React.Component {
    * @param {string} email
    * @return {boolean}
    */
-  validateEmail = email => {
+  validateEmail = (email: string): boolean => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
-  handleSubmit = () => {
-    this.validateState();
+  handleSubmit = (): void => {
     if (!this.state.errors) {
       this.props.firebase
         .firebaseEmailSignIn(
-          { email: this.state.email, password: this.state.password },
-          this.props.role
+          { email: this.state.email, password: this.state.password }
         )
         .then(userCredential=>{
             LogRocket.identify(userCredential.user.uid, {
@@ -128,11 +166,17 @@ class LoginForm extends React.Component {
     }
   };
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    firebase: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  }
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
@@ -183,12 +227,5 @@ class LoginForm extends React.Component {
     );
   }
 }
-
-LoginForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  firebase: PropTypes.object.isRequired,
-  role: PropTypes.string.isRequired,
-  history: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(withRouter(LoginForm));

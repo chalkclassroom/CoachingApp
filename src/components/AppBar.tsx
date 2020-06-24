@@ -11,7 +11,7 @@ import { AppBar as NavBar } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import LogoImage from "../assets/images/LogoImage.svg";
 import { withRouter } from "react-router-dom";
-import LoginModal from "./LoginComponent/LoginModal";
+import LoginModal from "./LoginComponent/LoginModal.tsx";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
 import BurgerMenu from "./BurgerMenu.tsx";
