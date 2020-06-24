@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { FirebaseContext } from "../../../components/Firebase/index";
 import AppBar from "../../../components/AppBar";
-import LabeledInfo from "../../../components/MyTeachersComponents/LabeledInfo";
+import LabeledInfo from "../../../components/MyTeachersComponents/LabeledInfo.tsx";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import EngagementIconImage from "../../../assets/images/EngagementIconImage.svg";
 import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
