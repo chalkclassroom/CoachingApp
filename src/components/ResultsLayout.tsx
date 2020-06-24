@@ -10,7 +10,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
 import "chartjs-plugin-datalabels";
-import ResultsDashboard from './ResultsDashboard.js';
+import ResultsDashboard from './ResultsDashboard';
 import ActionPlanForm from './ActionPlanForm';
 import ConferencePlanForm from './ConferencePlanForm';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
@@ -206,23 +206,20 @@ class ResultsLayout extends React.Component<Props, State> {
                 </Button>
               </Grid>
               <Grid item>
-                <FirebaseContext.Consumer>
-                  {(firebase: object): React.ReactNode => <ResultsDashboard
-                    firebase={firebase}
-                    magic8={this.props.magic8}
-                    view={this.state.view}
-                    viewClick = {this.viewClick}
-                    sessionId={this.props.sessionId}
-                    conferencePlanId={this.props.conferencePlanId}
-                    addNoteToPlan={this.props.addNoteToPlan}
-                    changeSessionId={this.props.changeSessionId}
-                    sessionDates={this.props.sessionDates}
-                    notes={this.props.notes}
-                    handleOpenNotes={this.handleOpenNotes}
-                    handleCloseNotes={this.handleCloseNotes}
-                    notesModal={this.state.notesModal}
-                  />}
-                </FirebaseContext.Consumer>
+                <ResultsDashboard
+                  magic8={this.props.magic8}
+                  view={this.state.view}
+                  viewClick = {this.viewClick}
+                  sessionId={this.props.sessionId}
+                  conferencePlanId={this.props.conferencePlanId}
+                  addNoteToPlan={this.props.addNoteToPlan}
+                  changeSessionId={this.props.changeSessionId}
+                  sessionDates={this.props.sessionDates}
+                  notes={this.props.notes}
+                  handleOpenNotes={this.handleOpenNotes}
+                  handleCloseNotes={this.handleCloseNotes}
+                  notesModal={this.state.notesModal}
+                />
               </Grid>
             </Grid>
           </Grid>

@@ -1,36 +1,59 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
 
-const styles = theme => ({
+const styles: object = {
   main: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px ${theme
-      .spacing.unit * 2}px`
+    padding: '1em'
   },
   paper: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px ${theme
-      .spacing.unit * 2}px`,
+    padding: '1em',
     width: "50%"
   },
   form: {
     width: "50%" // Fix IE 11 issue.
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: '1.5em'
   }
-});
+};
 
-class ResetForm extends React.Component {
-  constructor(props) {
+interface Props {
+  classes: {
+    main: string,
+    paper: string,
+    form: string,
+    submit: string
+  },
+  firebase: {
+    resetPassword(email: string): Promise<void>
+  }
+}
+
+interface State {
+  email: string,
+  emailError: string,
+  errors: boolean,
+  sent: boolean
+}
+
+/**
+ * @class ResetForm
+ */
+class ResetForm extends React.Component<Props, State> {
+  /**
+   * @param {Props} props
+   */
+  constructor(props: Props) {
     super(props);
     this.state = {
       email: "",
@@ -40,14 +63,25 @@ class ResetForm extends React.Component {
     };
   }
 
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value
-    });
+  /**
+   * @param {string} name
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
+   * @return {void}
+   */
+  handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
+    if (name === 'email') {
+      this.setState({
+        email: event.target.value
+      })
+    }
     this.validateState(name, event.target.value);
   };
 
-  validateState = (name, value) => {
+  /**
+   * @param {string} name
+   * @param {string} value
+   */
+  validateState = (name: string, value: string): void => {
     switch (name) {
       case "email":
         if (value.length === 0) {
@@ -72,20 +106,34 @@ class ResetForm extends React.Component {
     }
   };
 
-  validateEmail = email => {
+  /**
+   * @param {string} email
+   * @return {boolean}
+   */
+  validateEmail = (email: string): boolean => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
-  handleSubmit = event => {
-    this.validateState();
+  handleSubmit = (): void => {
     if (!this.state.errors) {
       this.props.firebase.resetPassword(this.state.email);
       this.setState({ sent: true });
     }
   };
 
-  render() {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      resetPassword: PropTypes.func
+    }).isRequired
+  }
+
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
@@ -122,9 +170,5 @@ class ResetForm extends React.Component {
     );
   }
 }
-
-ResetForm.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(ResetForm);

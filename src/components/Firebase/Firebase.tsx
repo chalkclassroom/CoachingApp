@@ -60,7 +60,9 @@ interface UserCredential {
     signInMethod: string
   },
   user: {
-    uid: string
+    uid: string,
+    displayName: string,
+    email: string
   }
 }
 
@@ -249,7 +251,9 @@ class Firebase {
       .get()
       .then((doc: {exists: boolean, id: string, data(): UserData}) => {
         if (doc.exists) {
+          console.log('teacher info', doc.data());
           return doc.data();
+          
         } else {
           console.log("Partner's ID is 'undefined' in dB.");
         }
@@ -296,7 +300,7 @@ class Firebase {
    * adds teacher to the database and to the coach's partners list
    * @param {TeacherInfo} teacherInfo
    */
-  addTeacher = async function(teacherInfo: TeacherInfo): Promise<void> {
+  addTeacher = async function(teacherInfo: TeacherInfo): Promise<string> {
     const { firstName, lastName, school, email, notes, phone } = teacherInfo;
     const newTeacherRef = this.db.collection("users").doc(); // auto-generated iD
     return newTeacherRef

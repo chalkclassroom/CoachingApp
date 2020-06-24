@@ -1,6 +1,6 @@
 import * as React from 'react';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
-import AppBar from '../../../components/AppBar.js';
+import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';

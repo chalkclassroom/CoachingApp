@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { FirebaseContext } from "../../../components/Firebase/index";
 import AppBar from "../../../components/AppBar";
-import LabeledInfo from "../../../components/MyTeachersComponents/LabeledInfo";
+import LabeledInfo from "../../../components/MyTeachersComponents/LabeledInfo.tsx";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import EngagementIconImage from "../../../assets/images/EngagementIconImage.svg";
 import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
@@ -26,7 +26,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
-const styles = {
+const styles: object = {
   root: {
     flexGrow: 1,
     width: "100%",
@@ -253,15 +253,88 @@ const sortedSvg = [
   AssocCoopIconImage
 ];
 
+interface Style {
+  root: string,
+  container: string,
+  button: string,
+  teacherHeader: string,
+  actionButton: string,
+  contentContainer: string,
+  teacherCard: string,
+  magicEightCard: string,
+  magicEightItem: string,
+  magicEightButton: string,
+  img: string,
+  deleteModalButtonContainer: string,
+  deleteModalButton: string
+}
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string,
+};
+
+interface Props {
+  match: {
+    params: {
+      teacherid: string
+    }
+  },
+  location: {
+    state: {
+      teacher: Teacher
+    }
+  },
+  history: {
+    goBack(): void,
+    replace(param: string): void
+  },
+  classes: Style
+}
+
+interface State {
+  teacherUID: string,
+  firstName: string,
+  lastName: string,
+  school: string,
+  email: string,
+  phone: string,
+  notes: string,
+  inputFirstName: string,
+  inputLastName: string,
+  inputSchool: string,
+  inputEmail: string,
+  inputPhone: string,
+  inputNotes: string,
+  fnErrorText: string,
+  lnErrorText: string,
+  schoolErrorText: string,
+  phoneErrorText: string,
+  emailErrorText: string,
+  notesErrorText: string,
+  isEditing: boolean,
+  isDeleting: boolean,
+  editAlert: boolean,
+  alertText: string,
+  recentObs: Array<string>
+}
+
 /**
  * page with details about a teacher
  * @class TeacherDetailPage
  */
-class TeacherDetailPage extends Component {
+class TeacherDetailPage extends React.Component<Props, State> {
+  initialState: State;
   /**
    * @param {Props} props
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     const id = this.props.match.params.teacherid;
     this.initialState = {
@@ -281,6 +354,7 @@ class TeacherDetailPage extends Component {
       fnErrorText: "",
       lnErrorText: "",
       schoolErrorText: "",
+      phoneErrorText: "",
       emailErrorText: "",
       notesErrorText: "",
       isEditing: false,
@@ -330,6 +404,7 @@ class TeacherDetailPage extends Component {
         fnErrorText: "",
         lnErrorText: "",
         schoolErrorText: "",
+        phoneErrorText: "",
         emailErrorText: "",
         notesErrorText: "",
         isEditing: false,
@@ -348,16 +423,14 @@ class TeacherDetailPage extends Component {
         ]
       };
     }
-
-    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     const firebase = this.context;
     firebase
       .getTeacherInfo(this.state.teacherUID)
-      .then(teacherInfo => {
+      .then((teacherInfo: Teacher) => {
         this.setState({
           firstName: teacherInfo.firstName,
           lastName: teacherInfo.lastName,
@@ -374,21 +447,21 @@ class TeacherDetailPage extends Component {
         }); // Automatically forces a re-render
         firebase
           .getRecentObservations(this.state.teacherUID)
-          .then(recentObs =>
+          .then((recentObs: Array<string>) =>
             this.setState({
               recentObs: recentObs
             })
           )
-          .catch(error =>
+          .catch((error: Error) =>
             console.error("Error occurred getting recent observations: ", error)
           );
       })
-      .catch(error => {
+      .catch((error: Error) => {
         console.error("Error fetching Teacher's Info: ", error);
       });
   }
 
-  handleCloseModal = () => {
+  handleCloseModal = (): void => {
     const { firstName, lastName, school, email, phone, notes } = this.state;
     this.setState({
       inputFirstName: firstName,
@@ -410,9 +483,9 @@ class TeacherDetailPage extends Component {
   };
 
   /**
-   * @param {event} e
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} e
    */
-  handleEditText = e => {
+  handleEditText = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const type = e.target.name;
     const val = e.target.value;
     this.setState(
@@ -425,10 +498,10 @@ class TeacherDetailPage extends Component {
 
   /**
    * validates user-entered text
-   * @param {type} type
-   * @param {value} val
+   * @param {string} type
+   * @param {string} val
    */
-  validateInputText = (type, val) => {
+  validateInputText = (type: string, val: string): void => {
     switch (type) {
       case "inputFirstName":
         if (!/^[a-zA-Z ]{2,30}$/.test(val)) {
@@ -483,7 +556,7 @@ class TeacherDetailPage extends Component {
     }
   };
 
-  handleEditConfirm = () => {
+  handleEditConfirm = (): void => {
     const {
       teacherUID,
       inputFirstName,
@@ -558,7 +631,7 @@ class TeacherDetailPage extends Component {
   /**
    * @param {boolean} successful
    */
-  handleEditAlert = successful => {
+  handleEditAlert = (successful: boolean): void => {
     if (successful) {
       this.setState(
         {
@@ -579,7 +652,7 @@ class TeacherDetailPage extends Component {
     }
   };
 
-  handleDeleteConfirm = () => {
+  handleDeleteConfirm = (): void => {
     const firebase = this.context;
     firebase
       .removePartner(this.state.teacherUID)
@@ -606,11 +679,18 @@ class TeacherDetailPage extends Component {
       );
   };
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  }
+
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     const {
       firstName,
@@ -635,14 +715,14 @@ class TeacherDetailPage extends Component {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.container}>
           <Button
             variant="contained"
             size="medium"
             className={classes.button}
-            onClick={() => {
+            onClick={(): void => {
               if (this.props.location.state !== undefined) {
                 // came from MyTeachers
                 this.props.history.goBack();
@@ -668,7 +748,7 @@ class TeacherDetailPage extends Component {
                   aria-label="Edit"
                   name="Edit"
                   size="small"
-                  onClick={() => this.setState({ isEditing: true })}
+                  onClick={(): void => this.setState({ isEditing: true })}
                   className={classes.actionButton}
                   style={{ backgroundColor: "#F9FE49" }}
                 >
@@ -676,7 +756,7 @@ class TeacherDetailPage extends Component {
                 </Fab>
                 <Fab
                   aria-label="Delete"
-                  onClick={() => this.setState({ isDeleting: true })}
+                  onClick={(): void => this.setState({ isDeleting: true })}
                   className={classes.actionButton}
                   size="small"
                   style={{ backgroundColor: "#FF3836" }}
@@ -777,7 +857,7 @@ class TeacherDetailPage extends Component {
             </DialogTitle>
             <DialogActions className={classes.deleteModalButtonContainer}>
               <Button
-                onClick={() => this.setState({ isDeleting: false })}
+                onClick={(): void => this.setState({ isDeleting: false })}
                 className={classes.deleteModalButton}
                 autoFocus
                 style={{ borderColor: "#2196F3" }}
@@ -908,7 +988,7 @@ class TeacherDetailPage extends Component {
           </Dialog>
           <Dialog
             open={editAlert}
-            onClose={() => this.setState({ editAlert: false, alertText: "" })}
+            onClose={(): void => this.setState({ editAlert: false, alertText: "" })}
             aria-labelledby="edit-alert-label"
             aria-describedby="edit-alert-description"
           >
@@ -919,13 +999,6 @@ class TeacherDetailPage extends Component {
     );
   }
 }
-
-TeacherDetailPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
-};
 
 TeacherDetailPage.contextType = FirebaseContext;
 export default withStyles(styles)(withRouter(TeacherDetailPage));

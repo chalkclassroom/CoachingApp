@@ -148,14 +148,14 @@ class TeacherModal extends React.Component<Props, State> {
     this.props.changeTeacher(teacherInfo);
   }
 
-  /* static propTypes = {
+  static propTypes = {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
     firebase: PropTypes.exact({getTeacherList: PropTypes.func}).isRequired,
     history: PropTypes.exact({push: PropTypes.func}).isRequired,
     changeTeacher: PropTypes.func.isRequired
-  } */
+  }
 
   /**
    * render function

@@ -1,17 +1,16 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
-import * as serviceWorker from "./serviceWorker";
+import App from "./App.tsx";
 import Firebase, { FirebaseContext } from "./components/Firebase";
 import { Provider } from "react-redux";
-import { store } from "./state/store.ts";
+import { store } from "./state/store";
 
 ReactDOM.render(
   <Provider store={store}>
     <FirebaseContext.Provider value={new Firebase()}>
       <FirebaseContext.Consumer>
-        {firebase => <App firebase={firebase} />}
+        {(firebase: object): React.ReactNode => <App firebase={firebase} />}
       </FirebaseContext.Consumer>
     </FirebaseContext.Provider>
   </Provider>,

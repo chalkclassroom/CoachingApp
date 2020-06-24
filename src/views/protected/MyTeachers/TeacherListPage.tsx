@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
@@ -13,7 +13,7 @@ import ClassroomClimateIconImage from "../../../assets/images/ClassroomClimateIc
 import AssocCoopIconImage from "../../../assets/images/AssocCoopIconImage.svg";
 import ConferencePlanImage from "../../../assets/images/ConferencePlanImage.png";
 import ActionPlanImage from "../../../assets/images/ActionPlanImage.png";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
@@ -30,7 +30,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
 
-const styles = theme => ({
+const styles = (theme: Theme): object => ({
   root: {
     // border: '1px solid #000000',
     flexGrow: 1,
@@ -231,8 +231,84 @@ const sortedAltText = [
   "Assoc Coop Interactions"
 ];
 
-class TeacherListPage extends Component {
-  constructor(props) {
+interface Style {
+  root: string,
+  container: string,
+  title: string,
+  actionContainer: string,
+  search: string,
+  actionButton: string,
+  tableContainer: string,
+  nameCellHeader: string,
+  emailCellHeader: string,
+  magicEightCell: string,
+  magicEightIcon: string,
+  row: string,
+  nameField: string,
+  emailField: string,
+  unlockedIcon: string,
+  legendContainer: string,
+  legendItem: string,
+  legendIcon: string
+}
+
+interface Props {
+  history: {
+    push(
+      param: (string | {
+        pathname: string,
+        state: {
+          teacher: Teacher,
+          type: string
+        }
+      }),
+    ): void
+  }
+  classes: Style,
+  type: string
+}
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string,
+  unlocked: Array<number>
+};
+
+interface State {
+  teachers: Array<Teacher>,
+  searched: Array<Teacher>,
+  isAdding: boolean,
+  inputFirstName: string,
+  inputLastName: string,
+  inputSchool: string,
+  inputEmail: string,
+  inputPhone: string,
+  inputNotes: string,
+  fnErrorText: string,
+  lnErrorText: string,
+  schoolErrorText: string,
+  emailErrorText: string,
+  phoneErrorText: string,
+  notesErrorText: string,
+  addAlert: boolean,
+  alertText: string,
+  // type: string
+}
+
+/**
+ * @class TeacherListPage
+ */
+class TeacherListPage extends React.Component<Props, State> {
+  /**
+   * @param {Props} props
+   */
+  constructor(props: Props) {
     super(props);
     this.state = {
       teachers: [],
@@ -251,61 +327,77 @@ class TeacherListPage extends Component {
       phoneErrorText: "",
       notesErrorText: "",
       addAlert: false,
-      alertText: ""
+      alertText: "",
+      // type: ''
     };
-
-    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
-  componentDidMount() {
+  /** lifecycle method invoked after component mounts */
+  componentDidMount(): void {
     const firebase = this.context;
     firebase
       .getTeacherList()
-      .then(teachers =>
-        teachers.forEach(teacher =>
-          teacher.then(data =>
+      .then((teachers: Array<Promise<Teacher>>) => {
+        console.log('teachers', teachers);
+        teachers.forEach((teacher: Promise<Teacher>) => {
+          console.log('teacher', teacher);
+          teacher.then((data: Teacher) => {
+            console.log('data', data);
             this.setState(prevState => {
               return {
                 teachers: prevState.teachers.concat(data),
                 searched: prevState.teachers.concat(data)
               };
             })
+          }
           )
+        }
         )
+          }
       )
-      .catch(error =>
+      .catch((error: Error) =>
         console.error("Error occurred fetching teacher list: ", error)
       );
   }
 
-  onChangeText = event => {
+  /**
+   * function for editing teacher name or email
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
+   */
+  onChangeText = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const text = event.target.value.toLowerCase();
     if (text === "") {
-      this.setState(prevState => {
+      this.setState((prevState: State) => {
         return { searched: prevState.teachers }; // original teacher list
       });
     } else {
-      this.setState(prevState => {
+      this.setState((prevState: State) => {
         return {
           searched: prevState.teachers.filter(
             item =>
-              item.lastName.toLowerCase().indexOf(text) !== -1 ||
-              item.firstName.toLowerCase().indexOf(text) !== -1 ||
-              item.email.toLowerCase().indexOf(text) !== -1
+              item.lastName.toLowerCase().includes(text) ||
+              item.firstName.toLowerCase().includes(text) ||
+              item.email.toLowerCase().includes(text)
           )
         };
       });
     }
   };
 
-  selectTeacher = teacherInfo => {
+  /**
+   * @param {Teacher} teacherInfo
+   */
+  selectTeacher = (teacherInfo: Teacher): void => {
     this.props.history.push({
       pathname: `/MyTeachers/${teacherInfo.id}`,
       state: { teacher: teacherInfo, type: this.props.type }
     });
   };
 
-  handleAddText = event => {
+  /**
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
+   */
+  handleAddText = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const type = event.target.name;
     const val = event.target.value;
     this.setState(
@@ -316,7 +408,12 @@ class TeacherListPage extends Component {
     );
   };
 
-  validateInputText = (type, val) => {
+  /**
+   * 
+   * @param {string} type
+   * @param {string} val
+   */
+  validateInputText = (type: string, val: string): void => {
     switch (type) {
       case "inputFirstName":
         if (!/^[a-zA-Z ]{2,30}$/.test(val)) {
@@ -371,7 +468,7 @@ class TeacherListPage extends Component {
     }
   };
 
-  handleAddConfirm = () => {
+  handleAddConfirm = (): void => {
     const {
       inputFirstName,
       inputLastName,
@@ -416,10 +513,10 @@ class TeacherListPage extends Component {
           notes: inputNotes,
           phone: inputPhone
         })
-        .then(id =>
+        .then((id: string) =>
           firebase
             .getTeacherInfo(id)
-            .then(teacherInfo =>
+            .then((teacherInfo: Teacher) =>
               this.setState(
                 prevState => {
                   return {
@@ -433,7 +530,7 @@ class TeacherListPage extends Component {
                 }
               )
             )
-            .catch(error => {
+            .catch((error: Error) => {
               console.error(
                 "Error occurred fetching new teacher's info: ",
                 error
@@ -442,7 +539,7 @@ class TeacherListPage extends Component {
               this.handleAddAlert(false);
             })
         )
-        .catch(error => {
+        .catch((error: Error) => {
           console.error("Error occurred adding teacher to dB: ", error);
           this.handleCloseModal();
           this.handleAddAlert(false);
@@ -450,7 +547,10 @@ class TeacherListPage extends Component {
     }
   };
 
-  handleAddAlert = successful => {
+  /**
+   * @param {boolean} successful
+   */
+  handleAddAlert = (successful: boolean): void => {
     if (successful) {
       this.setState(
         {
@@ -479,7 +579,7 @@ class TeacherListPage extends Component {
     }
   };
 
-  handleCloseModal = () => {
+  handleCloseModal = (): void => {
     this.setState({
       inputFirstName: "",
       inputLastName: "",
@@ -497,7 +597,17 @@ class TeacherListPage extends Component {
     });
   };
 
-  render() {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    type: PropTypes.string.isRequired
+  }
+
+  /**
+   * render function
+   * @return {ReactNode}
+   */
+  render(): React.ReactNode {
     const { classes } = this.props;
     const {
       isAdding,
@@ -514,7 +624,7 @@ class TeacherListPage extends Component {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {firebase => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>
@@ -529,7 +639,7 @@ class TeacherListPage extends Component {
             />
             <Fab
               aria-label="Add Teacher"
-              onClick={() => this.setState({ isAdding: true })}
+              onClick={(): void => this.setState({ isAdding: true })}
               className={classes.actionButton}
               size="small"
             >
@@ -553,7 +663,7 @@ class TeacherListPage extends Component {
                   <TableCell className={classes.emailCellHeader}>
                     Email
                   </TableCell>
-                  {sortedSvg.map((item, key) => (
+                  {sortedSvg.map((item, index) => (
                     <TableCell
                       className={classes.magicEightCell}
                       style={{
@@ -561,10 +671,11 @@ class TeacherListPage extends Component {
                         top: 0,
                         backgroundColor: "#FFFFFF"
                       }}
+                      key={index}
                     >
                       <img
                         src={item}
-                        alt={sortedAltText[key]}
+                        alt={sortedAltText[index]}
                         className={classes.magicEightIcon}
                       />
                     </TableCell>
@@ -581,7 +692,7 @@ class TeacherListPage extends Component {
                   <TableRow
                     className={classes.row}
                     key={index}
-                    onClick={() => this.selectTeacher(teacher)}
+                    onClick={(): void => this.selectTeacher(teacher)}
                   >
                     <TableCell className={classes.nameField}>
                       {teacher.lastName}
@@ -592,10 +703,10 @@ class TeacherListPage extends Component {
                     <TableCell className={classes.emailField}>
                       {teacher.email}
                     </TableCell>
-                    {[...Array(8).keys()].map(key => (
-                      <TableCell className={classes.magicEightCell}>
+                    {[...Array(8).keys()].map((value, index) => (
+                      <TableCell className={classes.magicEightCell} key={index}>
                         {teacher.unlocked !== undefined &&
-                          teacher.unlocked.indexOf(key + 1) !== -1 && (
+                          teacher.unlocked.includes(index + 1) && (
                             <VisibilityOutlinedIcon
                               className={classes.unlockedIcon}
                             />
@@ -603,7 +714,7 @@ class TeacherListPage extends Component {
                       </TableCell>
                     ))}
                     <TableCell className={classes.nameField}>
-                      {teacher.goals !== undefined && teacher.goals}
+                      {/* {teacher.goals !== undefined && teacher.goals} */}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -735,7 +846,7 @@ class TeacherListPage extends Component {
           </Dialog>
           <Dialog
             open={addAlert}
-            onClose={() => this.setState({ addAlert: false, alertText: "" })}
+            onClose={(): void => this.setState({ addAlert: false, alertText: "" })}
             aria-labelledby="add-alert-label"
             aria-describedby="add-alert-description"
           >
@@ -746,10 +857,6 @@ class TeacherListPage extends Component {
     );
   }
 }
-
-TeacherListPage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 TeacherListPage.contextType = FirebaseContext;
 export default withStyles(styles)(withRouter(TeacherListPage));

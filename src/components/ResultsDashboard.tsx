@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
-import { Button, Card, Grid, Typography } from '@material-ui/core';
+import { Button, Card, Grid } from '@material-ui/core';
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg"
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg"
 import MathIconImage from "../assets/images/MathIconImage.svg"
@@ -32,14 +32,13 @@ import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp
 import StudentEngagementHelp from './StudentEngagementComponents/StudentEngagementHelp';
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
-import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp.tsx";
+import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp";
 import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
 import NotesListDetailTable from './ResultsComponents/NotesListDetailTable';
-import FirebaseContext from "./Firebase/FirebaseContext";
-import moment from 'moment';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import * as moment from 'moment';
+import { MuiThemeProvider, createMuiTheme, Theme } from '@material-ui/core/styles';
 import { changeTeacher } from '../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Constants from '../constants/Constants';
@@ -49,6 +48,9 @@ const TransitionTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.TT
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const ClimateTheme = createMuiTheme({
@@ -56,6 +58,9 @@ const ClimateTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.CC
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const MathTheme = createMuiTheme({
@@ -63,6 +68,9 @@ const MathTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.MI
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const EngagementTheme = createMuiTheme({
@@ -70,6 +78,9 @@ const EngagementTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.SE
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const InstructionTheme = createMuiTheme({
@@ -77,6 +88,9 @@ const InstructionTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.LI
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const ListeningTheme = createMuiTheme({
@@ -84,6 +98,9 @@ const ListeningTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.LC
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const SequentialTheme = createMuiTheme({
@@ -91,6 +108,9 @@ const SequentialTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.SA
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const ACTheme = createMuiTheme({
@@ -98,6 +118,9 @@ const ACTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.AC
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 
@@ -112,12 +135,12 @@ const styles = {
     marginRight: "5%",
     marginLeft: "5%",
     marginBottom: "5%",
-    flexDirection: "column",
     alignItems: "center",
     justify: "space-evenly",
     display: "flex",
+    flexDirection: 'column',
     flex: "1",
-    flexWrap: "nowrap"
+    flexWrap: 'nowrap'
   },
   iconGrid: {
     marginTop:"10px",
@@ -158,29 +181,78 @@ const styles = {
   },
   viewButtons: {
     minWidth: 150,
-    textAlign: "center",
     fontFamily: "Arimo",
     width: '20vw'
   },
   viewButtonsSelected: {
     minWidth: 150,
-    textAlign: "center",
     color: "#fff",
     fontFamily: "Arimo",
     width: '20vw'
   },
 };
 
+interface Style {
+  card: string,
+  iconGrid: string,
+  icon: string,
+  infoDisplayGrid: string,
+  helpIcon: string,
+  completeGrid: string,
+  gridTopMargin: string,
+  resultsButtons: string,
+  viewButtons: string,
+  viewButtonsSelected: string
+}
+
+interface Teacher {
+  email: string,
+  firstName: string,
+  lastName: string,
+  notes: string,
+  id: string,
+  phone: string,
+  role: string,
+  school: string
+};
+
+interface Props {
+  magic8: string,
+  changeTeacher(teacher: string): void,
+  classes: Style,
+  view: string,
+  viewClick(name: string): void,
+  sessionId: string,
+  conferencePlanId?: string,
+  addNoteToPlan(conferencePlanId: string, note: string): void,
+  changeSessionId(event: React.SyntheticEvent): void,
+  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  notes: Array<{content: string, timestamp: string}>,
+  handleOpenNotes(): void,
+  handleCloseNotes(): void,
+  notesModal: boolean,
+  teacherSelected: Teacher,
+  teacherList: Array<Teacher>
+}
+
+interface State {
+  auth: boolean,
+  icon: string,
+  lookForsIcon: string,
+  notesIcon: string,
+  theme: Theme,
+  help: boolean
+}
 
 /**
  * formatting and functionality for dashboard on results screens
  * @class ResultsDashboard
  */
-class ResultsDashboard extends React.Component {
+class ResultsDashboard extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -193,7 +265,8 @@ class ResultsDashboard extends React.Component {
     }
   }
 
-  componentDidMount = () => {
+  /** lifecycle method invoked after component mounts */
+  componentDidMount(): void {
     if (this.props.magic8 === "Transition Time") {
       this.setState({
         icon: TransitionTimeIconImage,
@@ -254,25 +327,60 @@ class ResultsDashboard extends React.Component {
   };
 
   /**
-   * @param {event} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    */
-  changeTeacher = (event) => {
+  changeTeacher = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     this.props.changeTeacher(event.target.value);
   };
 
-  handleCloseHelp = () => {
+  handleCloseHelp = (): void => {
     this.setState({ help: false });
   };
 
-  handleCloseNotes = () => {
-    this.setState({ notes: false })
+  static propTypes = {
+    magic8: PropTypes.string.isRequired,
+    view: PropTypes.string.isRequired,
+    viewClick: PropTypes.func.isRequired,
+    changeSessionId: PropTypes.func.isRequired,
+    sessionId: PropTypes.string.isRequired,
+    sessionDates: PropTypes.array.isRequired,
+    conferencePlanId: PropTypes.string,
+    addNoteToPlan: PropTypes.func.isRequired,
+    classes: PropTypes.exact({
+      card: PropTypes.string,
+      iconGrid: PropTypes.string,
+      icon: PropTypes.string,
+      infoDisplayGrid: PropTypes.string,
+      helpIcon: PropTypes.string,
+      completeGrid: PropTypes.string,
+      gridTopMargin: PropTypes.string,
+      resultsButtons: PropTypes.string,
+      viewButtons: PropTypes.string,
+      viewButtonsSelected: PropTypes.string
+    }).isRequired,
+    notes: PropTypes.array.isRequired,
+    changeTeacher: PropTypes.func.isRequired,
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
+    teacherList: PropTypes.array.isRequired,
+    notesModal: PropTypes.bool.isRequired,
+    handleOpenNotes: PropTypes.func.isRequired,
+    handleCloseNotes: PropTypes.func.isRequired
   }
 
   /**
    * render function
    * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return(
       <div>
@@ -299,18 +407,14 @@ class ResultsDashboard extends React.Component {
             data={this.props.notes}
             magic8={this.props.magic8}
             open={this.props.notesModal}
-            teacherSelected={this.props.teacherSelected}
-            sessionId={this.props.sessionId}
             addNoteToPlan={this.props.addNoteToPlan}
             conferencePlanId={this.props.conferencePlanId}
             handleClose={this.props.handleCloseNotes}
-            style={{overflow:"hidden", minWidth: '100%'}}
           />
         ) : (<div />)}
         <Card className={classes.card}>
           <Grid
             container
-            padding={12}
             spacing={0}
             direction="column"
             justify="center"
@@ -364,7 +468,7 @@ class ResultsDashboard extends React.Component {
                       : "outlined"
                   }
                   className={this.props.view === 'data' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={() => this.props.viewClick('data')}
+                  onClick={(): void => this.props.viewClick('data')}
                 >
                   Data
                 </Button>
@@ -381,7 +485,7 @@ class ResultsDashboard extends React.Component {
                       : "outlined"
                   }
                   className={this.props.view === 'questions' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={() => this.props.viewClick('questions')}
+                  onClick={(): void => this.props.viewClick('questions')}
                 >
                   Questions
                 </Button>
@@ -398,7 +502,7 @@ class ResultsDashboard extends React.Component {
                       : "outlined"
                   }
                   className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={() => this.props.viewClick('conferencePlan')}
+                  onClick={(): void => this.props.viewClick('conferencePlan')}
                 >
                   Conference Plan
                 </Button>
@@ -415,14 +519,14 @@ class ResultsDashboard extends React.Component {
                       : "outlined"
                   }
                   className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={() => this.props.viewClick('actionPlan')}
+                  onClick={(): void => this.props.viewClick('actionPlan')}
                 >
                   Action Plan
                 </Button>
               </MuiThemeProvider>
             </Grid>
             <Grid item style={{marginTop: '2vh'}}>
-              <Button onClick={() => this.setState({help: true})}>
+              <Button onClick={(): void => this.setState({help: true})}>
                 <img
                   src={this.state.lookForsIcon}
                   alt="Look-Fors"
@@ -443,40 +547,6 @@ class ResultsDashboard extends React.Component {
     );
   }
 }
-
-ResultsDashboard.propTypes = {
-  magic8: PropTypes.string.isRequired,
-  view: PropTypes.string.isRequired,
-  viewClick: PropTypes.func.isRequired,
-  changeSessionId: PropTypes.func.isRequired,
-  sessionId: PropTypes.string.isRequired,
-  sessionDates: PropTypes.array.isRequired,
-  conferencePlanId: PropTypes.string,
-  addNoteToPlan: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
-  firebase: PropTypes.object.isRequired,
-  notes: PropTypes.exact({
-    id: PropTypes.string,
-    sessionStart: PropTypes.exact({
-      value: PropTypes.string
-    })
-  }).isRequired,
-  changeTeacher: PropTypes.func.isRequired,
-  teacherSelected: PropTypes.exact({
-    email: PropTypes.string,
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    notes: PropTypes.string,
-    id: PropTypes.string,
-    phone: PropTypes.string,
-    role: PropTypes.string,
-    school: PropTypes.string
-  }).isRequired,
-  teacherList: PropTypes.array.isRequired,
-  notesModal: PropTypes.bool.isRequired,
-  handleOpenNotes: PropTypes.func.isRequired,
-  handleCloseNotes: PropTypes.func.isRequired
-};
 
 const mapStateToProps = state => {
   return {

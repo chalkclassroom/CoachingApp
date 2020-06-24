@@ -7,7 +7,7 @@ import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import CenterChecklist from './CenterChecklist';
 import NewCenterDialog from './NewCenterDialog';
 import CenterRatingChecklist from './CenterRatingChecklist';
-import Dashboard from '../Dashboard.js';
+import Dashboard from '../Dashboard';
 import TotalVisitCount from '../TotalVisitCount';
 import grey from "@material-ui/core/colors/grey";
 import { withStyles } from "@material-ui/core/styles";
