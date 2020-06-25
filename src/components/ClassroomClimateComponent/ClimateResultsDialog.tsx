@@ -16,6 +16,9 @@ const ClimateTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.CC
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

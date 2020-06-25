@@ -16,6 +16,9 @@ const ACTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.AC
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 
