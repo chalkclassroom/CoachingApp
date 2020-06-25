@@ -1,13 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
+import * as PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
 
-const styles = theme => ({
+const styles: object = {
   main: {
     width: "100%",
     display: "block"
@@ -16,26 +15,63 @@ const styles = theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px ${theme
-      .spacing.unit * 2}px`
+    padding: '1em'
   },
   form: {
     width: "100%" // Fix IE 11 issue.
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: '1.5em'
   }
-});
+};
+
+interface Props {
+  firebase: {
+    firebaseEmailSignUp(
+      info: {
+        email: string,
+        password: string,
+        firstName: string,
+        lastName: string
+      },
+      role: string
+    ): Promise<void> 
+  },
+  mRole: string,
+  history: {
+    push(param: string): void
+  },
+  classes: {
+    main: string,
+    paper: string,
+    form: string,
+    submit: string
+  }
+}
+
+interface State {
+  firstName: string,
+  firstNameError: string,
+  lastName: string,
+  lastNameError: string,
+  email: string,
+  emailError: string,
+  password: string,
+  passwordError: string,
+  confirmPassword: string,
+  confirmPasswordError: string,
+  errors: boolean
+}
 
 /**
  * form to create account on chalkcoaching.com
  * @class SignUpForm
  */
-class SignUpForm extends React.Component {
+class SignUpForm extends React.Component<Props, State> {
   /**
    * @param {Props} props 
    */
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       firstName: "",
@@ -47,29 +83,48 @@ class SignUpForm extends React.Component {
       password: "",
       passwordError: "",
       confirmPassword: "",
-      confirmPasswordError: ""
+      confirmPasswordError: "",
+      errors: false
     };
   }
 
   /**
    * responds to change in user-entered text
    * @param {string} name
-   * @param {event} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    * @return {void}
    */
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value
-    });
+  handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
+    if (name === "firstName") {
+      this.setState({
+        firstName: event.target.value
+      })
+    } else if (name === "lastName") {
+      this.setState({
+        lastName: event.target.value
+      })
+    } else if (name === "email") {
+      this.setState({
+        email: event.target.value
+      })
+    } else if (name === "password") {
+      this.setState({
+        password: event.target.value
+      })
+    } else if (name === "confirmPassword") {
+      this.setState({
+        confirmPassword: event.target.value
+      })
+    }
     this.validateState(name, event.target.value);
   };
 
   /**
    * validates user-entered text
    * @param {string} name
-   * @param {value} value
+   * @param {string} value
    */
-  validateState = (name, value) => {
+  validateState = (name: string, value: string) => {
     switch (name) {
       case "firstName":
         if (value.length < 1) {
@@ -161,13 +216,12 @@ class SignUpForm extends React.Component {
    * @param {string} email
    * @return {boolean}
    */
-  validateEmail = email => {
+  validateEmail = (email: string): boolean => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
   handleSubmit = () => {
-    this.validateState();
     if (!this.state.errors) {
       this.props.firebase
         .firebaseEmailSignUp(
@@ -179,13 +233,22 @@ class SignUpForm extends React.Component {
           },
           this.props.mRole
         )
-        .then(function(isSuccess) {
-          if (isSuccess) {
-            this.props.history.push("/Home");
-          }
+        .then(() =>  {
+          this.props.history.push("/Home");
         });
     }
   };
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    mRole: PropTypes.string.isRequired,
+    firebase: PropTypes.exact({
+      firebaseEmailSignUp: PropTypes.func
+    }).isRequired,
+    history: PropTypes.exact({
+      push: PropTypes.func
+    }).isRequired
+  }
 
   /**
    * render function
@@ -284,12 +347,5 @@ class SignUpForm extends React.Component {
     );
   }
 }
-
-SignUpForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  mRole: PropTypes.string.isRequired,
-  firebase: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
-};
 
 export default withRouter(withStyles(styles)(SignUpForm));
