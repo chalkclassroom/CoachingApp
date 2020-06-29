@@ -14,93 +14,7 @@ import * as Constants from '../../../constants/Constants';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
- 
-interface ReduxState {
-  associativeCenterState: {
-    associativeCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  associativeCountState: {
-    acCount: number,
-    noACCount: number,
-    noOppCount: number
-  },
-  climateRatingsState: {
-    climateRatings: Array<{
-      timestamp: number,
-      rating: number
-    }>
-  },
-  climateStackState: {
-    climateStack: Array<{
-      observation: string,
-      timestamp: number
-    }>
-  },
-  coachState: {
-    coachName: string
-  },
-  engagementCountState: {
-    engagedCount: number,
-    notEngagedCount: number
-  },
-  instructionStackState: {
-    instructionStack: Array<{
-      timestamp: number,
-      observation: string
-    }>
-  },
-  listeningCountState: {
-    listeningCount: number,
-    noListeningCount: number
-  },
-  mathCountState: {
-    mathCount: number,
-    noMathCount: number
-  },
-  mathCentersState: {
-    mathCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  sequentialCenterState: {
-    sequentialCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  sequentialCountState: {
-    noSequentialCount: number,
-    sequentialCount: number
-  },
-  sessionTimeState: {
-    endTime: number,
-    startTime: number
-  },
-  teacherListState: {
-    teachers: Array<Teacher>
-  },
-  teacherSelectedState: {
-    teacher: Teacher
-  },
-  transitionLogState: {
-    transitionStack: Array<{
-      duration: string,
-      end: string,
-      start: string,
-      transitionType: string
-    }>
-  },
-  transitionTimeState: {
-    transitionTime: number
-  },
-  transitionTypeState: {
-    transitionType: string
-  }
-}
+import * as Types from '../../../constants/Types';
 
 const theme = createMuiTheme({
   palette: {
@@ -116,20 +30,9 @@ const theme = createMuiTheme({
   }
 });
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-}
-
 interface Props {
   updateSessionTime(time: number): void,
-  teacherSelected: Teacher,
+  teacherSelected: Types.Teacher,
   firebase: {
     auth: {
       currentUser: {
@@ -378,7 +281,10 @@ class TransitionTimer extends React.Component<Props, State> {
   }
 }
  
-const mapStateToProps = (state: ReduxState): {transitionType: string, teacherSelected: Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {
+  transitionType: string,
+  teacherSelected: Types.Teacher
+} => {
   return {
     transitionType: state.transitionTypeState.transitionType,
     teacherSelected: state.teacherSelectedState.teacher

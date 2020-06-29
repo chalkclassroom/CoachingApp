@@ -11,6 +11,7 @@ import Dashboard from '../Dashboard';
 import TotalVisitCount from '../TotalVisitCount';
 import grey from "@material-ui/core/colors/grey";
 import { withStyles } from "@material-ui/core/styles";
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   root: {
@@ -68,7 +69,7 @@ const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
         ,
         fontFamily: 'Arimo'
       }}
-      onClick={props.onClick}
+      onClick={(): void => props.onClick()}
     >
       <Typography
         variant="subtitle1"
@@ -108,7 +109,7 @@ interface Props {
     handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
   },
-  type: string,
+  type: Types.DashboardType,
   addNewCenter(centerName: string): void,
   incrementCenterCount(centerName: string): void,
   updateCount(behavior: string): void,
@@ -120,6 +121,9 @@ interface Props {
     root: string,
     grow: string,
     backButton: string
+  },
+  history: {
+    replace(param: {pathname: string, state: {type: string}}): void
   }
 }
 
@@ -203,7 +207,7 @@ class CenterMenu extends React.Component<Props, State> {
     }
   };
 
-  backToCenterMenu = () => {
+  backToCenterMenu = (): void => {
     this.setState({ status: CENTER_MENU })
   }
 
@@ -219,12 +223,23 @@ class CenterMenu extends React.Component<Props, State> {
       school: PropTypes.string
     }).isRequired,
     classes: PropTypes.object.isRequired,
-    firebase: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      auth: PropTypes.exact({
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        })
+      }).isRequired,
+      handleSession: PropTypes.func,
+      handlePushCentersData: PropTypes.func
+    }).isRequired,
     addNewCenter: PropTypes.func.isRequired,
     incrementCenterCount: PropTypes.func.isRequired,
     updateCount: PropTypes.func.isRequired,
     centers: PropTypes.array.isRequired,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,
+    history: PropTypes.exact({
+      replace: PropTypes.func
+    }).isRequired
   }
 
   /**
@@ -336,7 +351,7 @@ class CenterMenu extends React.Component<Props, State> {
             currentCenter={this.state.currentCenter}
             toggleScreen={this.switchToCenterMenu}
             updateCount={this.props.updateCount}
-            finishVisit={centerName => this.finishCenterVisit(centerName)}
+            finishVisit={(centerName): void => this.finishCenterVisit(centerName)}
             backToCenterMenu={this.backToCenterMenu}
             firebase={this.props.firebase}
             type={this.props.type}

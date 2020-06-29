@@ -9,7 +9,6 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import Grid from "@material-ui/core/Grid";
-import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
@@ -18,6 +17,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
 import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   root: {
@@ -70,7 +70,7 @@ interface Props {
   firebase: {
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
   },
-  type: string,
+  type: Types.DashboardType,
   backToCenterMenu(): void
 }
 
@@ -89,6 +89,7 @@ interface State {
  * @return {void}
  */
 class CenterRatingChecklist extends React.Component<Props, State> {
+  timer: NodeJS.Timeout;
   /**
    * @param {Props} props
    */
@@ -305,7 +306,8 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     finishVisit: PropTypes.func.isRequired,
     updateCount: PropTypes.func.isRequired,
     currentCenter: PropTypes.string.isRequired,
-    backToCenterMenu: PropTypes.func.isRequired
+    backToCenterMenu: PropTypes.func.isRequired,
+    type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired
   }
 
   /**

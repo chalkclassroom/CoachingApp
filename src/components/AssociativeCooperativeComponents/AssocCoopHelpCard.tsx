@@ -80,7 +80,9 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.exact({
+      tabBar: PropTypes.string
+    }).isRequired
   }
 
   /**

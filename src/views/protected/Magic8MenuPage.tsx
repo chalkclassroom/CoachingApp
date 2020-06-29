@@ -31,6 +31,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
 import { changeTeacher } from '../../state/actions/teacher';
 import { connect } from 'react-redux';
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   root: {
@@ -80,104 +81,6 @@ const MAP = {
   AssociativeCooperativeInteractions: 8
 };
 
-interface ReduxState {
-  associativeCenterState: {
-    associativeCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  associativeCountState: {
-    acCount: number,
-    noACCount: number,
-    noOppCount: number
-  },
-  climateRatingsState: {
-    climateRatings: Array<{
-      timestamp: number,
-      rating: number
-    }>
-  },
-  climateStackState: {
-    climateStack: Array<{
-      observation: string,
-      timestamp: number
-    }>
-  },
-  coachState: {
-    coachName: string
-  },
-  engagementCountState: {
-    engagedCount: number,
-    notEngagedCount: number
-  },
-  instructionStackState: {
-    instructionStack: Array<{
-      timestamp: number,
-      observation: string
-    }>
-  },
-  listeningCountState: {
-    listeningCount: number,
-    noListeningCount: number
-  },
-  mathCountState: {
-    mathCount: number,
-    noMathCount: number
-  },
-  mathCentersState: {
-    mathCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  sequentialCenterState: {
-    sequentialCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  sequentialCountState: {
-    noSequentialCount: number,
-    sequentialCount: number
-  },
-  sessionTimeState: {
-    endTime: number,
-    startTime: number
-  },
-  teacherListState: {
-    teachers: Array<Teacher>
-  },
-  teacherSelectedState: {
-    teacher: Teacher
-  },
-  transitionLogState: {
-    transitionStack: Array<{
-      duration: string,
-      end: string,
-      start: string,
-      transitionType: string
-    }>
-  },
-  transitionTimeState: {
-    transitionTime: number
-  },
-  transitionTypeState: {
-    transitionType: string
-  }
-}
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-}
-
 interface Style {
   root: string,
   grow: string,
@@ -202,8 +105,8 @@ interface Props {
     }
   },
   changeTeacher(teacher: string): void,
-  teacherSelected: Teacher,
-  teacherList: Array<Teacher>
+  teacherSelected: Types.Teacher,
+  teacherList: Array<Types.Teacher>
 }
 
 interface State {
@@ -574,7 +477,10 @@ class Magic8MenuPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: ReduxState): {teacherSelected: Teacher, teacherList: Array<Teacher>} => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  teacherList: Array<Types.Teacher>
+} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,
     teacherList: state.teacherListState.teachers

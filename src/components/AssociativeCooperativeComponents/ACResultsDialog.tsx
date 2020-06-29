@@ -10,6 +10,7 @@ import { clearTeacher } from "../../state/actions/teacher";
 import { deleteACCenters, clearACCount } from "../../state/actions/associative-cooperative";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 const ACTheme = createMuiTheme({
   palette: {
@@ -105,7 +106,11 @@ function ACResultsDialog(props: Props): React.ReactElement {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  acCount: number,
+  noACCount: number,
+  noOppCount: number
+} => {
   return {
     acCount: state.associativeCountState.acCount,
     noACCount: state.associativeCountState.noACCount,

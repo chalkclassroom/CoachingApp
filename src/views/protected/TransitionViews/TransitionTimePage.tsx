@@ -14,93 +14,7 @@ import { resetTransitionTime, toggleNewTransitionType } from "../../../state/act
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 import * as Constants from "../../../constants/Constants";
-
-interface ReduxState {
-  associativeCenterState: {
-    associativeCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  associativeCountState: {
-    acCount: number,
-    noACCount: number,
-    noOppCount: number
-  },
-  climateRatingsState: {
-    climateRatings: Array<{
-      timestamp: number,
-      rating: number
-    }>
-  },
-  climateStackState: {
-    climateStack: Array<{
-      observation: string,
-      timestamp: number
-    }>
-  },
-  coachState: {
-    coachName: string
-  },
-  engagementCountState: {
-    engagedCount: number,
-    notEngagedCount: number
-  },
-  instructionStackState: {
-    instructionStack: Array<{
-      timestamp: number,
-      observation: string
-    }>
-  },
-  listeningCountState: {
-    listeningCount: number,
-    noListeningCount: number
-  },
-  mathCountState: {
-    mathCount: number,
-    noMathCount: number
-  },
-  mathCentersState: {
-    mathCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  sequentialCenterState: {
-    sequentialCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  sequentialCountState: {
-    noSequentialCount: number,
-    sequentialCount: number
-  },
-  sessionTimeState: {
-    endTime: number,
-    startTime: number
-  },
-  teacherListState: {
-    teachers: Array<Teacher>
-  },
-  teacherSelectedState: {
-    teacher: Teacher
-  },
-  transitionLogState: {
-    transitionStack: Array<{
-      duration: string,
-      end: string,
-      start: string,
-      transitionType: string
-    }>
-  },
-  transitionTimeState: {
-    transitionTime: number
-  },
-  transitionTypeState: {
-    transitionType: string
-  }
-}
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -117,17 +31,6 @@ const styles: object = {
     borderRadius: 3,
     textTransform: 'none'
   },
-};
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
 };
 
 interface Props {
@@ -310,7 +213,7 @@ class TransitionTimePage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: ReduxState): {transitionType: string | null} => {
+const mapStateToProps = (state: Types.ReduxState): {transitionType: string | null} => {
   return {
     transitionType: state.transitionTypeState.transitionType,
   };

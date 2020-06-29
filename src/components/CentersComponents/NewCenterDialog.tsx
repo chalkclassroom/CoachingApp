@@ -54,7 +54,7 @@ class NewCenterDialog extends React.Component<Props, {}> {
           </DialogContentText>
           <TextField
             autoFocus
-            inputRef={cn => (centerName = cn)}
+            inputRef={(cn): void => (centerName = cn)}
             margin="dense"
             id="center-name"
             label="Center Name"
@@ -67,7 +67,7 @@ class NewCenterDialog extends React.Component<Props, {}> {
             Cancel
           </Button>
           <Button
-            onClick={() => this.props.handleSubmit(centerName.value)}
+            onClick={(): void => this.props.handleSubmit(centerName.value)}
             color="primary"
             style={{fontFamily: 'Arimo'}}
           >
