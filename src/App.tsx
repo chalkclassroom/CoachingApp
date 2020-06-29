@@ -85,17 +85,26 @@ const styles = createMuiTheme({
  */
 function PrivateRoute({ component: Component, auth, ...rest }): React.ReactElement {
   return (
-    <Route
-      {...rest}
-      render={(props): React.ReactElement =>
-        auth === true ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to={{ pathname: "/", state: { from: props.location } }} />
-        )
-      }
-    />
-  );
+    auth === true ? (
+      <Route
+        {...rest}
+        render={(props): React.ReactNode => {
+          return (
+            <Route component={Component} {...props} />
+          )
+        }}
+      />
+    ) : (
+      <Route
+        {...rest}
+        render={(props): React.ReactNode => {
+          return (
+            <Redirect to={{ pathname: '/', state: {from: props.location}}} />
+          )
+        }}
+      />
+    )
+  )
 }
 
 PrivateRoute.propTypes = {
@@ -103,22 +112,6 @@ PrivateRoute.propTypes = {
   auth: PropTypes.bool.isRequired,
   location: PropTypes.object
 }
-/*
-function PublicRoute({ component: Component, auth, ...rest }) {
-    return (
-        <Route
-            {...rest}
-            render={props =>
-                auth === false ? (
-                    <Component {...props} />
-                ) : (
-                    <Redirect to="/Home" />
-                )
-            }
-        />
-    );
-}
-*/
 
 interface Props {
   firebase: {
