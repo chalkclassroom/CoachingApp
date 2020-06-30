@@ -25,6 +25,9 @@ const TransitionTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.TT
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const ClimateTheme = createMuiTheme({
@@ -32,6 +35,9 @@ const ClimateTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.CC
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const MathTheme = createMuiTheme({
@@ -39,6 +45,9 @@ const MathTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.MI
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const EngagementTheme = createMuiTheme({
@@ -46,6 +55,9 @@ const EngagementTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.SE
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const InstructionTheme = createMuiTheme({
@@ -53,6 +65,9 @@ const InstructionTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.LI
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const ListeningTheme = createMuiTheme({
@@ -60,6 +75,9 @@ const ListeningTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.LC
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const SequentialTheme = createMuiTheme({
@@ -67,6 +85,9 @@ const SequentialTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.SA
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const ACTheme = createMuiTheme({
@@ -74,6 +95,9 @@ const ACTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.AC
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 const BlankTheme = createMuiTheme({
@@ -81,6 +105,9 @@ const BlankTheme = createMuiTheme({
     primary: {
       main: '#a3a3a3'
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

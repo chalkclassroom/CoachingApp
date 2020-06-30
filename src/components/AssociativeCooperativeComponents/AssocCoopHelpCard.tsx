@@ -18,6 +18,9 @@ const ACTheme = createMuiTheme({
     secondary: {
       main: '#000000'
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 
@@ -77,7 +80,9 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.exact({
+      tabBar: PropTypes.string
+    }).isRequired
   }
 
   /**

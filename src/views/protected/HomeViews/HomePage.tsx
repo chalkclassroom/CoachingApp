@@ -20,93 +20,7 @@ import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
 import { getCoach } from '../../../state/actions/coach';
 import { connect } from 'react-redux';
 import TeacherBarDetails from "../../../components/MathInstructionComponents/ResultsComponents/TeacherBarDetails";
-
-interface ReduxState {
-  associativeCenterState: {
-    associativeCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  associativeCountState: {
-    acCount: number,
-    noACCount: number,
-    noOppCount: number
-  },
-  climateRatingsState: {
-    climateRatings: Array<{
-      timestamp: number,
-      rating: number
-    }>
-  },
-  climateStackState: {
-    climateStack: Array<{
-      observation: string,
-      timestamp: number
-    }>
-  },
-  coachState: {
-    coachName: string
-  },
-  engagementCountState: {
-    engagedCount: number,
-    notEngagedCount: number
-  },
-  instructionStackState: {
-    instructionStack: Array<{
-      timestamp: number,
-      observation: string
-    }>
-  },
-  listeningCountState: {
-    listeningCount: number,
-    noListeningCount: number
-  },
-  mathCountState: {
-    mathCount: number,
-    noMathCount: number
-  },
-  mathCentersState: {
-    mathCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  sequentialCenterState: {
-    sequentialCenters: Array<{
-      name: string,
-      count: number
-    }>
-  },
-  sequentialCountState: {
-    noSequentialCount: number,
-    sequentialCount: number
-  },
-  sessionTimeState: {
-    endTime: number,
-    startTime: number
-  },
-  teacherListState: {
-    teachers: Array<Teacher>
-  },
-  teacherSelectedState: {
-    teacher: Teacher
-  },
-  transitionLogState: {
-    transitionStack: Array<{
-      duration: string,
-      end: string,
-      start: string,
-      transitionType: string
-    }>
-  },
-  transitionTimeState: {
-    transitionTime: number
-  },
-  transitionTypeState: {
-    transitionType: string
-  }
-}
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -150,17 +64,6 @@ interface Style {
   buttonGrid: string
 }
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-}
-
 interface Props {
   classes: Style,
   coachName: string,
@@ -172,7 +75,7 @@ interface Props {
         state: {
           type: string,
           teacher?: TeacherBarDetails,
-          teachers?: Array<Teacher>
+          teachers?: Array<Types.Teacher>
         }
       },
     ): void
@@ -506,7 +409,7 @@ class HomePage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: ReduxState): {coachName: string} => {
+const mapStateToProps = (state: Types.ReduxState): {coachName: string} => {
   return {
     coachName: state.coachState.coachName
   };

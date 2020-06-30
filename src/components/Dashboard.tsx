@@ -51,6 +51,7 @@ import InstructionResultsDialog from './LevelOfInstructionComponents/Instruction
 import ListeningResultsDialog from './ListeningComponents/ListeningResultsDialog';
 import SequentialResultsDialog from './SequentialActivitiesComponents/SequentialResultsDialog';
 import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog';
+import * as Types from '../constants/Types';
 
 const styles = {
   card: {
@@ -119,24 +120,13 @@ interface Style {
   gridTopMargin: string
 }
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   classes: Style,
-  type: keyof typeof Constants.Colors,
+  type: Types.DashboardType,
   history: {
     push(pathname: string): void
   },
-  teacherSelected: Teacher,
+  teacherSelected: Types.Teacher,
   infoPlacement: string,
   infoDisplay: React.ReactElement,
   completeObservation: boolean,
@@ -275,7 +265,7 @@ class Dashboard extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    infoDisplay: PropTypes.object.isRequired,
+    infoDisplay: PropTypes.element.isRequired,
     classes: PropTypes.exact({
       card: PropTypes.string,
       iconGrid: PropTypes.string,
@@ -291,7 +281,7 @@ class Dashboard extends React.Component<Props, State> {
     }).isRequired,
     infoPlacement: PropTypes.string.isRequired,
     completeObservation: PropTypes.bool.isRequired,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,
     updateSessionTime: PropTypes.func.isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
@@ -484,7 +474,7 @@ class Dashboard extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   }

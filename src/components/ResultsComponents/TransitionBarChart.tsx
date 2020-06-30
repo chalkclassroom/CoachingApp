@@ -85,7 +85,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
                   fontColor: "#000000",
                   fontFamily: 'Arimo'
                 },
-                afterFit: function(scale: { height: number }) {
+                afterFit: function(scale: { height: number }): void {
                   scale.height = 100 // creates pading between ticks and scaleLabel
                 }
               }
@@ -103,7 +103,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
                   fontColor: "#000000",
                   fontFamily: 'Arimo'
                 },
-                afterFit: function(scale: { width: number }) {
+                afterFit: function(scale: { width: number }): void {
                   scale.width = 260
                 },
               }
@@ -115,8 +115,9 @@ class TransitionBarChart extends React.Component<Props, {}> {
             callbacks: {
               label: function(
                   tooltipItem: {xLabel: number, yLabel: string, label: string, index: number, datasetIndex: number, x: number, y: number},
-                  data: {labels: Array<string>, datasets: Array<any>}
+                  data: {labels: Array<string>, datasets: Array<{backgroundColor: Array<string>, data: Array<number>, hoverBackgroundColor: Array<string>}>}
               ): string {
+                console.log('transition bar chart data datasets', data.datasets);
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const currentValue = dataset.data[tooltipItem.index];
                 return (Math.floor(currentValue) + 'm ' + Math.round((currentValue % 1) * 60) + 's');
@@ -135,7 +136,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
                 weight: 'bold'
               },
               fontFamily: 'Arimo',
-              formatter: function(value: number) {
+              formatter: function(value: number): string | void {
                 if (value > 3.5) {
                   // return value + '%';
                   return (Math.floor(value) + 'm ' + Math.round((value % 1) * 60) + 's');

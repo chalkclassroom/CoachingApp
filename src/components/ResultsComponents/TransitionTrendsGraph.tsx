@@ -62,7 +62,7 @@ const transitionTrendOptions = {
           beginAtZero: true,
           min: 0,
           max: 100,
-          callback: function(value: number) {
+          callback: function(value: number): string {
             return value + "%";
           }
         },
@@ -82,7 +82,7 @@ const transitionTrendOptions = {
       display: 'auto',
       color: 'black',
       align: 'top',
-      formatter: function(value: number) {
+      formatter: function(value: number): string {
         return value + "%";
       }
     }
@@ -103,9 +103,9 @@ class TransitionTrendsGraph extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return (
       <Line
         data={this.props.data}

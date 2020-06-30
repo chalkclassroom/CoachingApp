@@ -17,6 +17,9 @@ const LOITheme = createMuiTheme({
     secondary: {
       main: "#1155cc"
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

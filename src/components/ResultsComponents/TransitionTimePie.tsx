@@ -28,9 +28,9 @@ class TransitionTimePie extends React.Component<Props, {}> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const transitionData = {
       labels: ["Transition Time", "Learning Activity (No Transition)"],
       datasets: [
@@ -49,7 +49,7 @@ class TransitionTimePie extends React.Component<Props, {}> {
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
-                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }) {
+                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
                 const meta = dataset._meta[Object.keys(dataset._meta)[0]];
                 const total = meta.total;
@@ -59,7 +59,7 @@ class TransitionTimePie extends React.Component<Props, {}> {
                 );
                 return currentValue + " (" + percentage + "%)";
               },
-              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }) {
+              title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
                 return data.labels[tooltipItem[0].index];
               }
             }

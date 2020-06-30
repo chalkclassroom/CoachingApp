@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
+import Grid, { GridItemsAlignment } from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from "@material-ui/core/styles";
 
@@ -39,7 +39,7 @@ interface Style {
 
 interface Props {
   classes: Style,
-  position: string,
+  position: GridItemsAlignment,
   paddingTop?: string,
   color: string,
   icon: string,
@@ -62,7 +62,7 @@ class Impact extends React.Component<Props, {}> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    position: PropTypes.string.isRequired,
+    position: PropTypes.oneOf<GridItemsAlignment>(['baseline', 'center', 'flex-end', 'flex-start', 'stretch']).isRequired,
     icon: PropTypes.string.isRequired,
     paddingTop: PropTypes.string,
     color: PropTypes.string.isRequired,
@@ -75,9 +75,9 @@ class Impact extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return(
       <div>

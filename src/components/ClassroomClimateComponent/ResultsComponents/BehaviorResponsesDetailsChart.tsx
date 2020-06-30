@@ -68,7 +68,7 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
                   fontSize: 18,
                   fontColor: "#000000",
                 },
-                afterFit: function(scale: { height: number }) {
+                afterFit: function(scale: { height: number }): void {
                   scale.height = 100 // creates pading between ticks and scaleLabel
                 }
               }
@@ -84,7 +84,7 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
                   fontSize: 18,
                   fontColor: "#000000"
                 },
-                afterFit: function(scale: { width: number }) {
+                afterFit: function(scale: { width: number }): void {
                   scale.width = 260
                 },
               }

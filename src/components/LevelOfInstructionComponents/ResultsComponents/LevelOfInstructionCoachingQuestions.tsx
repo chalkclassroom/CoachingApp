@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -11,6 +12,9 @@ const InstructionTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.LI
     }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 
@@ -68,7 +72,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
     }
   }
 
-    inferentialInstructionClick = (): void => {
+  inferentialInstructionClick = (): void => {
     if (this.state.categoryView !== "inferentialInstruction") {
       this.setState({
         categoryView: "inferentialInstruction",
@@ -87,6 +91,13 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
       this.setState({ openPanel: panel });
     }
   };
+
+  static propTypes = {
+    handleAddToPlan: PropTypes.func.isRequired,
+    addedToPlan: PropTypes.array.isRequired,
+    sessionId: PropTypes.string.isRequired,
+    teacherId: PropTypes.string.isRequired
+  }
 
   /**
    * @return {ReactNode}

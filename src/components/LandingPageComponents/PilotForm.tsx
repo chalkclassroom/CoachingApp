@@ -7,7 +7,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import {withRouter} from "react-router-dom";
 import Typography from '@material-ui/core/Typography/Typography';
 import Grid from "@material-ui/core/Grid";
-import { connect } from 'react-redux';
 
 const styles: object = {
   main: {
@@ -37,8 +36,12 @@ interface Style {
 
 interface Props {
   classes: Style,
-  firebase: { firebasePilotSignUp(userData: object, mRole: string): Promise<void>}
-  mRole: string
+  firebase: { firebasePilotSignUp(userData: {
+    email: string,
+    program: string,
+    firstName: string,
+    lastName: string
+  }): Promise<void> }
 }
 
 interface State {
@@ -87,13 +90,31 @@ class PilotForm extends React.Component<Props, State>{
   /**
    * responds to change in user-entered text
    * @param {string} name
-   * @param {event} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    * @return {void}
    */
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
+  handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
+    if (name === 'firstName') {
+      this.setState({
+        firstName: event.target.value
+      })
+    } else if (name === 'lastName') {
+      this.setState({
+        lastName: event.target.value
+      })
+    } else if (name === 'email') {
+      this.setState({
+        email: event.target.value
+      })
+    } else if (name === 'password') {
+      this.setState({
+        password: event.target.value
+      })
+    } else if (name === 'confirmPassword') {
+      this.setState({
+        confirmPassword: event.target.value
+      })
+    }
     this.validateState(name, event.target.value);
   };
 
@@ -102,7 +123,7 @@ class PilotForm extends React.Component<Props, State>{
    * @param {string} name
    * @param {value} value
    */
-  validateState = (name: string, value: string) => {
+  validateState = (name: string, value: string): void => {
     console.log('name: ', name, ' value: ', value)
     switch (name) {
       case 'firstName':
@@ -195,7 +216,7 @@ class PilotForm extends React.Component<Props, State>{
    * @param {string} email
    * @return {boolean}
    */
-  validateEmail = (email: string) => {
+  validateEmail = (email: string): boolean => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
@@ -203,15 +224,14 @@ class PilotForm extends React.Component<Props, State>{
   /**
    * submits pilot form to firebase
    */
-  handleSubmit = () =>{
-    this.validateState();
+  handleSubmit = (): void =>{
     if (!this.state.errors){
       this.props.firebase.firebasePilotSignUp({
         email: this.state.email,
         program: this.state.program,
         firstName: this.state.firstName,
         lastName: this.state.lastName
-      }, this.props.mRole)
+      })
       .then( () => {
           this.setState({
             pilotSignUp: true
@@ -222,16 +242,22 @@ class PilotForm extends React.Component<Props, State>{
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
-    mRole: PropTypes.string,
-    firebase: PropTypes.exact({firebasePilotSignUp: PropTypes.func}).isRequired
+    classes: PropTypes.exact({
+      main: PropTypes.string,
+      paper: PropTypes.string,
+      form: PropTypes.string,
+      submit: PropTypes.string
+    }).isRequired,
+    firebase: PropTypes.exact({
+      firebasePilotSignUp: PropTypes.func
+    }).isRequired
   };
 
   /**
    * render function
    * @return {ReactElement}
    */
-  render(){
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

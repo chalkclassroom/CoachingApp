@@ -18,16 +18,16 @@ class DemoVideo extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return (
       <Video 
         autoPlay
         muted
         controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}
         poster="http://sourceposter.jpg"
-        onCanPlayThrough={() => {
+        onCanPlayThrough={(): void => {
           // Do stuff
         }}
       >
