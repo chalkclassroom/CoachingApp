@@ -10,6 +10,7 @@ import { clearTeacher } from "../../state/actions/teacher";
 import { deleteMICenters, clearMathCount } from "../../state/actions/math-instruction";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 const MathTheme = createMuiTheme({
   palette: {
@@ -99,7 +100,7 @@ function MathResultsDialog(props: Props): React.ReactElement {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {mathCount: number, noMathCount: number} => {
   return {
     mathCount: state.mathCountState.mathCount,
     noMathCount: state.mathCountState.noMathCount

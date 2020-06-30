@@ -4,14 +4,14 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import LoginForm from "./LoginForm.tsx";
+import LoginForm from "./LoginForm";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/es/IconButton";
 import Tooltip from "@material-ui/core/es/Tooltip";
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
 function getModalStyle(): React.CSSProperties {
   return {

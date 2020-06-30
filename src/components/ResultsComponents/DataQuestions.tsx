@@ -90,9 +90,9 @@ class DataQuestions extends React.Component<Props, {}> {
               <Typography
                 className={classes.expansionPanelTitle}
                 style={{
-                  textDecoration: this.props.addedToPlan.includes({panel: item.name, number: index})
+                  /* textDecoration: this.props.addedToPlan.includes({panel: item.name, number: index})
                     ? "underline"
-                    : null,
+                    : null, */
                   fontFamily: "Arimo"
                 }}
               >
