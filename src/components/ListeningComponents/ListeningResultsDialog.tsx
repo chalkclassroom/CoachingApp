@@ -10,6 +10,7 @@ import { clearTeacher } from "../../state/actions/teacher";
 import { clearListeningCount } from "../../state/actions/listening-to-children";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 const ListeningTheme = createMuiTheme({
   palette: {
@@ -95,7 +96,10 @@ function ListeningResultsDialog(props: Props): React.ReactElement {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  listeningCount: number,
+  noListeningCount: number
+} => {
   return {
     listeningCount: state.listeningCountState.listeningCount,
     noListeningCount: state.listeningCountState.noListeningCount

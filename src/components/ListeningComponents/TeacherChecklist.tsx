@@ -7,9 +7,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import Grid from "@material-ui/core/Grid";
-import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
@@ -21,6 +19,7 @@ import Zoom from '@material-ui/core/Zoom';
 import { connect } from 'react-redux';
 import { updateListeningCount } from "../../state/actions/listening-to-children";
 import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 
 const styles: object = {
@@ -43,7 +42,7 @@ interface Props {
     root: string,
     grow: string
   },
-  type: string,
+  type: Types.DashboardType,
   firebase: {
     auth: {
       currentUser: {
@@ -53,7 +52,7 @@ interface Props {
     handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
     handlePushListening(mEntry: {checked: Array<number>}): Promise<void>
   },
-  teacherSelected: Teacher,
+  teacherSelected: Types.Teacher,
   updateListeningCount(behavior: boolean): void
 }
 
@@ -65,23 +64,13 @@ interface State {
   in: boolean
 }
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 /**
  * Teacher Checklist
  * @class TeacherChecklist
  * @return {void}
  */
 class TeacherChecklist extends React.Component<Props, State> {
+  timer: NodeJS.Timeout;
   /**
    * @param {Props} props
    */
@@ -212,7 +201,7 @@ class TeacherChecklist extends React.Component<Props, State> {
       handlePushListening: PropTypes.func
     }).isRequired,
     classes: PropTypes.object.isRequired,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -354,7 +343,7 @@ class TeacherChecklist extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state): {teacherSelected: Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };
