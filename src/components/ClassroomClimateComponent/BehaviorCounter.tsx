@@ -6,6 +6,7 @@ import {
   popOffClimateStack,
   pushOntoClimateStack
 } from "../../state/actions/classroom-climate";
+import * as Types from '../../constants/Types';
 
 const styles = {
   root: {
@@ -60,7 +61,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
   /**
    * @param {string} type
    */
-  handlePushFire = (type: string) => {
+  handlePushFire = (type: string): void => {
     const mEntry = {
       BehaviorResponse: type,
       // Type: this.props.climateType
@@ -70,7 +71,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
     this.props.pushOntoClimateStack(mEntry);
   };
 
-  handleUndo = () => {
+  handleUndo = (): void => {
     if (this.props.climateStackSize > 0) {
       this.props.popOffClimateStack();
       // <<<<<<< Updated upstream
@@ -82,7 +83,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
     }
   };
 
-  customUI2 = (props: Props) => {
+  customUI2 = (props: Props): React.ReactElement => {
     return (
       // <<<<<<< Updated upstream
       <svg width={595.172} height={555.055} {...props}>
@@ -243,7 +244,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
             data-name="Specific Approval"
             transform="translate(185 445.275)"
             // data-name="Group 1"
-            onClick={() => this.handlePushFire("specificapproval")}
+            onClick={(): void => this.handlePushFire("specificapproval")}
           >
             <g
               transform="translate(-209.12 -465.63)"
@@ -280,7 +281,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
             id="prefix__Redirection"
             transform="translate(-9.117 -9.35)"
             data-name="Group 1"
-            onClick={() => this.handlePushFire("redirection")}
+            onClick={(): void => this.handlePushFire("redirection")}
           >
             <g
               transform="translate(-15 -11)"
@@ -314,7 +315,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
             id="prefix__Non-Specific_Approval"
             data-name="Non-Specific Approval"
             transform="translate(9.883 359.705)"
-            onClick={() => this.handlePushFire("nonspecificapproval")}
+            onClick={(): void => this.handlePushFire("nonspecificapproval")}
           >
             <g
               transform="translate(-34 -380.06)"
@@ -350,7 +351,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
             data-name="Disapproval"
             transform="translate(487 -123.198)"
             // data-name="Group 1"
-            onClick={() => this.handlePushFire("disapproval")}
+            onClick={(): void => this.handlePushFire("disapproval")}
           >
             <g
               transform="translate(-511.12 102.85)"
@@ -382,7 +383,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
           <g
             id="prefix__undo-arrow-in-a-black-circle"
             transform="translate(246.5 296.275)"
-            onClick={() => this.handleUndo()}
+            onClick={(): void => this.handleUndo()}
           >
             <svg width={50} height={50} {...props}>
               <path
@@ -450,21 +451,29 @@ class BehaviorCounter extends React.Component<Props, {}> {
       school: PropTypes.string
     }).isRequired,
     climateStackSize: PropTypes.number.isRequired,
-    firebase: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      auth: PropTypes.exact({
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        })
+      }).isRequired,
+      handleSession: PropTypes.func,
+      handlePushClimate: PropTypes.func
+    }).isRequired,
     pushOntoClimateStack: PropTypes.func.isRequired,
     popOffClimateStack: PropTypes.func.isRequired
   }
   
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return <>{this.customUI2(this.props)}</>;
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {climateStackSize: number, teacherSelected: Types.Teacher} => {
   return {
     climateStackSize: state.climateStackState.climateStack.length,
     teacherSelected: state.teacherSelectedState.teacher

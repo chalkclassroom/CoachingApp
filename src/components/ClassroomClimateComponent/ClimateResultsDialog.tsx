@@ -10,6 +10,7 @@ import { clearTeacher } from "../../state/actions/teacher";
 import { emptyClimateStack } from "../../state/actions/classroom-climate";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 const ClimateTheme = createMuiTheme({
   palette: {
@@ -99,7 +100,7 @@ function ClimateResultsDialog(props: Props): React.ReactElement {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {climateStack: Array<{timestamp: number, observation: string}>} => {
   return {
     climateStack: state.climateStackState.climateStack,
   };

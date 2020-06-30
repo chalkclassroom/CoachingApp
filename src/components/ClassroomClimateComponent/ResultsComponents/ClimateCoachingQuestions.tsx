@@ -6,19 +6,9 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { withStyles } from "@material-ui/core/styles";
 import * as Constants from '../../../constants/Constants';
 
-const styles: object = {
-  categoryView: {
-
-  }
-}
-
 interface Props {
-  classes: {
-    categoryView: string
-  },
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
@@ -85,11 +75,17 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
     }
   };
 
+  static propTypes = {
+    handleAddToPlan: PropTypes.func.isRequired,
+    addedToPlan: PropTypes.array.isRequired,
+    sessionId: PropTypes.string.isRequired,
+    teacherId: PropTypes.string.isRequired
+  }
+
   /**
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
     return(
       <Grid container direction="column">
         <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
@@ -182,4 +178,4 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(ClimateCoachingQuestions);
+export default ClimateCoachingQuestions;
