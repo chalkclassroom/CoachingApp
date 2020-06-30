@@ -1,3 +1,4 @@
+import { hot } from 'react-hot-loader/root';
 import * as React from "react";
 import * as PropTypes from 'prop-types';
 import "./App.css";
@@ -415,4 +416,5 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(connect(null, {getCoach})(App));
+export default hot(withStyles(styles)(connect(null, {getCoach})(App)));
+
