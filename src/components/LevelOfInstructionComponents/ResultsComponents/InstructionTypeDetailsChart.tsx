@@ -81,7 +81,7 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
                   fontSize: 18,
                   fontColor: "#000000",
                 },
-                afterFit: function(scale: { height: number }) {
+                afterFit: function(scale: { height: number }): void {
                   scale.height = 100 // creates padding between ticks and scaleLabel
                 }
               }
@@ -97,7 +97,7 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
                   fontSize: 18,
                   fontColor: "#000000"
                 },
-                afterFit: function(scale: { width: number }) {
+                afterFit: function(scale: { width: number }): void {
                   scale.width = 260
                 },
               }

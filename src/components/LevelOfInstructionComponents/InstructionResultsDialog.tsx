@@ -10,6 +10,7 @@ import { clearTeacher } from "../../state/actions/teacher";
 import { emptyLoiStack } from "../../state/actions/level-of-instruction";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 const InstructionTheme = createMuiTheme({
   palette: {
@@ -99,7 +100,7 @@ function InstructionResultsDialog(props: Props): React.ReactElement {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {instructionStack: Array<{timestamp: number, observation: string}>} => {
   return {
     instructionStack: state.instructionStackState.instructionStack,
   };

@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import ReplySharpIcon from '@material-ui/icons/ReplySharp';
 import { connect } from 'react-redux';
 import { pushOntoLoiStack, popOffLoiStack } from '../../state/actions/level-of-instruction';
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   category: {
@@ -116,7 +117,10 @@ class InstructionCounter extends React.Component<Props, {}> {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      category: PropTypes.string,
+      button: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -129,7 +133,15 @@ class InstructionCounter extends React.Component<Props, {}> {
     }).isRequired,
     pushOntoLoiStack: PropTypes.func.isRequired,
     popOffLoiStack: PropTypes.func.isRequired,
-    firebase: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      auth: PropTypes.exact({
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        })
+      }),
+      handleSession: PropTypes.func,
+      handlePushInstruction: PropTypes.func
+    }).isRequired,
     totalVisitCount: PropTypes.number.isRequired
   }
 
@@ -217,7 +229,7 @@ class InstructionCounter extends React.Component<Props, {}> {
               md={5}
               style={{ fontFamily: 'Arimo' }}
             >
-              <div width={100} height={100} style={{ fontSize: '80px' }}>
+              <div style={{ width: 100, height: 100, fontSize: '80px', textAlign: 'center' }}>
                 {this.props.totalVisitCount}
               </div>
             </Grid>
@@ -326,7 +338,7 @@ class InstructionCounter extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = (state): {totalVisitCount: number, teacherSelected: Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {totalVisitCount: number, teacherSelected: Teacher} => {
   return {
     totalVisitCount: state.instructionStackState.instructionStack.length,
     teacherSelected: state.teacherSelectedState.teacher
