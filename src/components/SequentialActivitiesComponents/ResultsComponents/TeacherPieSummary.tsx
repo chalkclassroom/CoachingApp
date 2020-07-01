@@ -47,6 +47,7 @@ class TeacherPieSummary extends React.Component<Props, {}> {
         }
       ]
     };
+    const total = this.props.support + this.props.noSupport + this.props.noTeacherOpp;
 
     return (
       <Pie
@@ -57,13 +58,9 @@ class TeacherPieSummary extends React.Component<Props, {}> {
               label: function(tooltipItem: { datasetIndex: number, index: number },
                   data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
-                let datasetTotal = 0;
-                dataset.data.forEach((count) => {
-                  datasetTotal = datasetTotal + count;
-                })
                 const currentValue = dataset.data[tooltipItem.index];
                 const percentage = parseFloat(
-                  ((currentValue / datasetTotal) * 100).toFixed(1)
+                  ((currentValue / total) * 100).toFixed(1)
                 );
                 return currentValue + " (" + percentage + "%)";
               },

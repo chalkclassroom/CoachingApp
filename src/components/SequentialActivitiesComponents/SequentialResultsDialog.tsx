@@ -10,6 +10,7 @@ import { clearTeacher } from "../../state/actions/teacher";
 import { deleteSACenters, clearSequentialCount } from "../../state/actions/sequential-activities";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 const SequentialTheme = createMuiTheme({
   palette: {
@@ -99,7 +100,7 @@ function SequentialResultsDialog(props: Props): React.ReactElement {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {sequentialCount: number, noSequentialCount: number} => {
   return {
     sequentialCount: state.sequentialCountState.sequentialCount,
     noSequentialCount: state.sequentialCountState.noSequentialCount

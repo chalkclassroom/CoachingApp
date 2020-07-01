@@ -47,7 +47,7 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
         }
       ]
     };
-
+    const total = this.props.ac + this.props.noAc + this.props.noChildOpp;
     return (
       <Pie
         data={childBehaviorsData}
@@ -57,8 +57,6 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
               label: function(tooltipItem: { datasetIndex: number, index: number },
                 data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
                 const dataset = data.datasets[tooltipItem.datasetIndex];
-                const meta = dataset._meta[Object.keys(dataset._meta)[0]];
-                const total = meta.total;
                 const currentValue = dataset.data[tooltipItem.index];
                 const percentage = parseFloat(
                   ((currentValue / total) * 100).toFixed(1)

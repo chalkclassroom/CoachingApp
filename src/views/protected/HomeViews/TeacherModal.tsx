@@ -19,7 +19,7 @@ import * as Constants from '../../../constants/Constants';
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
 function getModalStyle(): React.CSSProperties {
   return {

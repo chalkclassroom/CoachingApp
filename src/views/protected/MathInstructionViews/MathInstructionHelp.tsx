@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
 function getModalStyle() {
   return {

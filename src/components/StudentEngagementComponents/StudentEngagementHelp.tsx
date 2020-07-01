@@ -10,7 +10,7 @@ import IconButton from "@material-ui/core/es/IconButton/IconButton";
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
 function getModalStyle(): React.CSSProperties {
   return {

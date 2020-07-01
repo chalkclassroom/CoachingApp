@@ -18,7 +18,7 @@ interface Props {
   shouldOpen?: boolean,
   onAccept?(param: number | void): void,
   buttonText?: string | React.ReactElement,
-  buttonVariant: string,
+  buttonVariant: ButtonVariant,
   buttonColor?: string,
   backgroundColor?: string,
   buttonWidth?: string,
@@ -30,6 +30,8 @@ interface Props {
 interface State {
   open: boolean
 }
+
+type ButtonVariant = 'text' | 'flat' | 'outlined' | 'contained' | 'raised' | 'fab';
 
 /**
  * dialog for buttons with yes/no option
@@ -52,17 +54,17 @@ class YesNoDialog extends React.Component<Props, State> {
     open: false
   };
 
-  handleClickOpen = () => {
+  handleClickOpen = (): void => {
     if (this.props.shouldOpen) {
       this.setState({ open: true });
     }
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
-  handleAccept = () => {
+  handleAccept = (): void => {
     if (this.props.onAcceptParams !== null) {
       this.props.onAccept(this.props.onAcceptParams);
     } else {
@@ -79,7 +81,7 @@ class YesNoDialog extends React.Component<Props, State> {
       PropTypes.element,
       PropTypes.string
     ]),
-    buttonVariant: PropTypes.string.isRequired,
+    buttonVariant: PropTypes.oneOf<ButtonVariant>(['text', 'flat', 'outlined', 'contained', 'raised', 'fab']).isRequired,
     buttonColor: PropTypes.string,
     backgroundColor: PropTypes.string,
     buttonWidth: PropTypes.string,
@@ -90,9 +92,9 @@ class YesNoDialog extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div>

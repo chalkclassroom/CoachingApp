@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
@@ -23,7 +23,7 @@ import ObserveImage from '../../assets/images/ObserveImage.png';
 import { updateEngagementCount } from '../../state/actions/student-engagement';
 import { connect } from 'react-redux';
 
-const styles: object = theme => ({
+const styles: object = (theme: Theme) => ({
   root: {
     width: '100%',
     maxWidth: 360,
@@ -49,7 +49,7 @@ const styles: object = theme => ({
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
 function getModalStyle(): React.CSSProperties {
   return {
@@ -132,7 +132,7 @@ interface State {
   open: boolean,
   setOpen: boolean,
   studentTextFieldValue: string
-  status: any,
+  status: Status,
   currentStudent: number,
   entryType: number,
   entries: number,
@@ -142,6 +142,8 @@ interface State {
 
 const NAME_LIST = 0;
 const OBSERVATION = 1;
+
+type Status = typeof NAME_LIST | typeof OBSERVATION;
 
 /**
  * Student Engagement Name Collection Page
@@ -166,7 +168,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     open: false,
     setOpen: false,
     studentTextFieldValue: '' as string,
-    status: NAME_LIST as any,
+    status: NAME_LIST as Status,
     currentStudent: 0 as number,
     selectedPoint: -1 as number,
     entryType: -1 as number,
@@ -194,9 +196,9 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   };
 
   /**
-   * @param {React.ChangeEvent} e
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} e
    */
-  handleStudentTextFieldChange = (e : React.ChangeEvent<{}>): void =>{
+  handleStudentTextFieldChange = (e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void =>{
     this.setState({
       studentTextFieldValue: e.target.value
     });
@@ -215,7 +217,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   handleSkipRating = (): void => {
     this.props.handleTimerReset();
     this.handleSelectedValue(-1);
-    let entryType = 'none';
+    let entryType: string;
     switch(this.state.entryType){
       case 0: entryType = 'small';
         break;
@@ -234,7 +236,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
 
   handleConfirmRating = (): void => {
     if(this.state.selectedPoint !== -1){
-      let entryType = 'none';
+      let entryType: string;
       switch(this.state.entryType){
         case 0: entryType = 'small';
           break;
@@ -846,7 +848,15 @@ CenterMenuStudentEngagement.propTypes = {
   classes: PropTypes.object.isRequired,
   onStatusChange: PropTypes.func.isRequired,
   teacherId: PropTypes.string,
-  firebase: PropTypes.object.isRequired,
+  firebase: PropTypes.exact({
+    auth: PropTypes.exact({
+      currentUser: PropTypes.exact({
+        uid: PropTypes.string
+      })
+    }).isRequired,
+    handleSession: PropTypes.func.isRequired,
+    handlePushSEEachEntry: PropTypes.func.isRequired
+  }).isRequired,
   time: PropTypes.number.isRequired,
   handleTimerReset: PropTypes.func.isRequired,
   handleTimerStart: PropTypes.func.isRequired,

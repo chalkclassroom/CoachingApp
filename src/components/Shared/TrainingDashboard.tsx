@@ -1,10 +1,11 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Button, Card } from '@material-ui/core'; import ListItem from "@material-ui/core/ListItem/index";
+import { Button, Card } from '@material-ui/core';
+import ListItem from "@material-ui/core/ListItem/index";
 import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider, Theme } from '@material-ui/core/styles';
 
-const styles = {
+const styles: object = {
   card: {
     border: '3px solid #d9d9d9',
     borderRadius: 10,
@@ -292,7 +293,6 @@ TrainingDashboard.propTypes = {
   demonstrationClick: PropTypes.func.isRequired,
   tryItClick: PropTypes.func.isRequired,
   knowledgeCheckClick: PropTypes.func.isRequired,
-  colorTheme: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(TrainingDashboard);

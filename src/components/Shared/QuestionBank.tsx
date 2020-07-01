@@ -794,7 +794,7 @@ const questionBank = {
         ["teacher listening and teacher instructing", false],
         ["teacher listening and child talk", true],
         ["teacher instruction and child listening", false],
-        ["teacher instruction and child talking"]
+        ["teacher instruction and child talking", false]
       ]),
       feedback: "The correct answer is B. The Listening to Children practice refers " +
         "to two indicators of a high-quality language environment--teachers listening " +
