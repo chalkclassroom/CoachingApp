@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
-import { withStyles, createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { withStyles, MuiThemeProvider } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
 import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";
@@ -23,90 +23,6 @@ const styles: object = {
     textAlign: "center"
   }
 };
-
-const LineTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.TransitionTypeColors.lineColor
-    },
-    action: {
-      disabledBackground: Constants.UnselectedTransitionTypeColors.lineColor
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-
-const TravelingTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.TransitionTypeColors.travelingColor
-    },
-    action: {
-      disabledBackground: Constants.UnselectedTransitionTypeColors.travelingColor
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-
-const WaitingTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.TransitionTypeColors.waitingColor
-    },
-    action: {
-      disabledBackground: Constants.UnselectedTransitionTypeColors.waitingColor
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-
-const RoutinesTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.TransitionTypeColors.routinesColor
-    },
-    action: {
-      disabledBackground: Constants.UnselectedTransitionTypeColors.routinesColor
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-
-const BehaviorManagementTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.TransitionTypeColors.behaviorManagementColor
-    },
-    action: {
-      disabledBackground: Constants.UnselectedTransitionTypeColors.behaviorManagementColor
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-
-const OtherTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.TransitionTypeColors.otherColor
-    },
-    action: {
-      disabledBackground: Constants.UnselectedTransitionTypeColors.otherColor
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   classes: {
@@ -152,7 +68,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
         >
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
-              <MuiThemeProvider theme={LineTheme}>
+              <MuiThemeProvider theme={Constants.LineTheme}>
                 <Button
                   onClick={(): void => handleButtonChange("waiting")}
                   classes={{ root: classes.button, label: classes.label }}
@@ -187,7 +103,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
           <br></br>
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
-              <MuiThemeProvider theme={TravelingTheme}>
+              <MuiThemeProvider theme={Constants.TravelingTheme}>
                 <Button
                   onClick={(): void => handleButtonChange("traveling")}
                   classes={{ root: classes.button, label: classes.label }}
@@ -222,7 +138,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
           <br></br>
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
-              <MuiThemeProvider theme={WaitingTheme}>
+              <MuiThemeProvider theme={Constants.WaitingTheme}>
                 <Button
                   onClick={(): void => handleButtonChange("child waiting")}
                   classes={{ root: classes.button, label: classes.label }}
@@ -261,7 +177,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
         >
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
-              <MuiThemeProvider theme={RoutinesTheme}>
+              <MuiThemeProvider theme={Constants.RoutinesTheme}>
                 <Button
                   onClick={(): void => handleButtonChange("classroom routines")}
                   classes={{ root: classes.button, label: classes.label }}
@@ -294,7 +210,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
           <br></br>
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
-              <MuiThemeProvider theme={BehaviorManagementTheme}>
+              <MuiThemeProvider theme={Constants.BehaviorManagementTheme}>
                 <Button
                   onClick={(): void =>
                     handleButtonChange("behavior management disruption")
@@ -331,7 +247,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
           <br></br>
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
-              <MuiThemeProvider theme={OtherTheme}>
+              <MuiThemeProvider theme={Constants.OtherTheme}>
                 <Button
                   onClick={(): void => handleButtonChange("other")}
                   classes={{ root: classes.button, label: classes.label }}

@@ -16,6 +16,7 @@ import StarsIcon from '@material-ui/icons/Stars';
 import { changeTeacher, getTeacherList } from '../../../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
+import * as Types from '../../../constants/Types';
 
 /**
  * specifies styling for modal
@@ -63,38 +64,27 @@ interface Props {
   classes: Style,
   type: string,
   history: { push(param: string | Push): void },
-  firebase: { getTeacherList(): Promise<Teacher[]> },
+  firebase: { getTeacherList(): Promise<Types.Teacher[]> },
   handleClose(): void,
-  changeTeacher(teacher: Teacher): Teacher,
-  getTeacherList(teachers: Array<Teacher>): Array<Teacher>,
-  teacherSelected: Teacher,
-  teacherList: Array<Teacher>
+  changeTeacher(teacher: Types.Teacher): Types.Teacher,
+  getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>,
+  teacherSelected: Types.Teacher,
+  teacherList: Array<Types.Teacher>
 }
 
 interface Push {
   pathname: string,
   state: {
-    teacher?: Teacher,
-    teachers?: Array<Teacher>,
+    teacher?: Types.Teacher,
+    teachers?: Array<Types.Teacher>,
     type: string
   }
 }
 
 interface State {
   open: boolean,
-  teachers: Array<Teacher>
+  teachers: Array<Types.Teacher>
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * modal to select teacher before observation or results
@@ -120,10 +110,10 @@ class TeacherModal extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Teacher>) => {
+    this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Types.Teacher>) => {
       const teacherList = [];
       teacherPromiseList.forEach(tpromise => {
-        tpromise.then((data: Teacher) => {
+        tpromise.then((data: Types.Teacher) => {
           teacherList.push(data);
           this.setState((previousState) => {
             return {
@@ -138,7 +128,7 @@ class TeacherModal extends React.Component<Props, State> {
   /**
    * @param {object} teacherInfo
    */
-  selectTeacher(teacherInfo: Teacher): void {
+  selectTeacher(teacherInfo: Types.Teacher): void {
     this.props.history.push({
       pathname: "/Magic8Menu",
       state: { teacher: this.props.teacherSelected, type: this.props.type, teachers: this.props.teacherList}

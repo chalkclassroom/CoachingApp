@@ -10,6 +10,7 @@ import { clearTeacher } from "../../state/actions/teacher";
 import { resetTransitionTime, clearTransitionTime, clearSessionTime } from "../../state/actions/transition-time";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 const TransitionTheme = createMuiTheme({
   palette: {
@@ -108,7 +109,11 @@ function TransitionResultsDialog(props: Props): React.ReactElement {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  transitionTime: number,
+  startTime: number,
+  endTime: number
+} => {
   return {
     transitionTime: state.transitionTimeState.transitionTime,
     startTime: state.sessionTimeState.startTime,

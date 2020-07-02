@@ -53,7 +53,7 @@ import SequentialResultsDialog from './SequentialActivitiesComponents/Sequential
 import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog';
 import * as Types from '../constants/Types';
 
-const styles = {
+const styles: object = {
   card: {
     border: "3px solid #d9d9d9",
     borderRadius: 10,
@@ -355,7 +355,14 @@ class Dashboard extends React.Component<Props, State> {
           : <div />
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => (
+            {(firebase: {
+              handleFetchNotes(): Promise<Array<{
+                id: string,
+                content: string,
+                timestamp: {seconds: number, nanoseconds: number}
+              }>>,
+              handlePushNotes(note: string): Promise<void>
+            }): React.ReactNode => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}

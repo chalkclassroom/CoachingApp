@@ -51,17 +51,6 @@ const styles: object = {
   }
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   classes: { root: string, grow: string, backButton: string },
   history: {

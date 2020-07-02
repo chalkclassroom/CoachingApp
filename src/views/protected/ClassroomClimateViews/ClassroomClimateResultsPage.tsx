@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TeacherModal from '../HomeViews/TeacherModal';
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -26,7 +27,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -53,17 +54,6 @@ interface State {
   questionAdded: boolean,
   teacherModal: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * classroom climate results

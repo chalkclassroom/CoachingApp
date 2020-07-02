@@ -12,13 +12,15 @@ import Grid from "@material-ui/core/Grid";
 import LogoImage from "../assets/images/LogoImage.svg";
 import { withRouter } from "react-router-dom";
 import LoginModal from "./LoginComponent/LoginModal";
-import SignUpModal from "./SignUpComponent/SignUpModal.tsx";
+import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
 import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 // import * as Constants from '../constants';
+import * as Types from '../constants/Types';
+import * as firebase from 'firebase/app';
 
 const styles: object = {
   grow: {
@@ -98,9 +100,21 @@ interface Props {
   classes: Style,
   firebase: {
     auth: {
-      currentUser: firebase.User | null,
-      onAuthStateChanged(arg: any): firebase.User | null
+      currentUser: null | {
+        uid: string
+      },
+      onAuthStateChanged(arg: any): firebase.User | null,
     },
+    firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>,
+    firebaseEmailSignUp(
+      info: {
+        email: string,
+        password: string,
+        firstName: string,
+        lastName: string
+      },
+      role: string
+    ): Promise<void>
   },
   history: {
     push(
@@ -112,6 +126,7 @@ interface Props {
       }),
     ): void
   }
+  // history: History
 }
 
 interface State {
@@ -191,13 +206,18 @@ class AppBar extends React.Component<Props, State> {
     }).isRequired,
     firebase: PropTypes.exact({
       auth: PropTypes.exact({
-        currentUser: PropTypes.object,
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        }),
         onAuthStateChanged: PropTypes.func
-      }).isRequired
+      }).isRequired,
+      firebaseEmailSignIn: PropTypes.func,
+      firebaseEmailSignUp: PropTypes.func
     }).isRequired,
-    history: PropTypes.exact({
+    /* history: PropTypes.exact({
       push: PropTypes.func
-    }).isRequired
+    }).isRequired */
+    // history: PropTypes.
   }
 
   /**

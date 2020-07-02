@@ -3,6 +3,7 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import ActionPlanForm from '../../../components/ActionPlanForm';
+import * as Types from '../../../constants/Types';
 
 interface Props {
   actionPlanId: string,
@@ -20,19 +21,8 @@ interface Props {
 }
 
 interface State {
-  teacher: Teacher
+  teacher: Types.Teacher
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * @class ActionPlanView

@@ -21,8 +21,8 @@ import TransitionTimeObservationPopUp from '../../components/TransitionComponent
 import ClassroomClimateObservationPopUp from '../../components/ClassroomClimateComponent/ClassroomClimateObservationPopUp';
 import MathInstructionObservationPopUp from '../../components/MathInstructionComponents/MathInstructionObservationPopUp';
 import StudentEngagementObservationPopUp from '../../components/StudentEngagementObservationPopUp';
-import LevelOfInstructionObservationPopUp from '../../components/LevelOfInstructionObservationPopUp';
-import ListeningToChildrenObservationPopUp from '../../components/ListeningToChildrenObservationPopUp';
+import LevelOfInstructionObservationPopUp from '../../components/LevelOfInstructionComponents/LevelOfInstructionObservationPopUp';
+import ListeningToChildrenObservationPopUp from '../../components/ListeningComponents/ListeningToChildrenObservationPopUp';
 import SequentialActivitiesObservationPopUp from '../../components/SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
 import AssociativeCooperativeInteractionsObservationPopUp from '../../components/AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
 import LockedModal from '../../components/LockedModal';

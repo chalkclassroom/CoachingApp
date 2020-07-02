@@ -9,6 +9,7 @@ import Dashboard from '../../../components/Dashboard';
 import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
 import Button from '@material-ui/core/Button';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -28,20 +29,9 @@ const styles: object = {
   }
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   classes: { root: string, backButton: string },
-  location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
+  location: { state: { teacher: Types.Teacher, teachers: Array<Types.Teacher>}},
   history: {
     replace(
       param: {

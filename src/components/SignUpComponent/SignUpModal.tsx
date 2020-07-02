@@ -86,7 +86,7 @@ interface Props {
         lastName: string
       },
       role: string
-    ): Promise<void> 
+    ): Promise<void>
   }
 }
 
