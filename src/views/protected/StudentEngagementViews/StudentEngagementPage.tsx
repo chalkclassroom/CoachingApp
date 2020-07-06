@@ -8,6 +8,7 @@ import CenterMenuStudentEngagement from "../../../components/StudentEngagementCo
 import { connect } from "react-redux";
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
+import * as Types from '../../../constants/Types';
 
 /*
     N.B. Time measured in milliseconds.
@@ -34,23 +35,12 @@ const styles: object = {
   }
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   classes: {
     root: string,
     grow: string
   },
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 interface State {

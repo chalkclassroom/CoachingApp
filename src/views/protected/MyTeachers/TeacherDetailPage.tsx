@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { FirebaseContext } from "../../../components/Firebase/index";
 import AppBar from "../../../components/AppBar";
-import LabeledInfo from "../../../components/MyTeachersComponents/LabeledInfo.tsx";
+import LabeledInfo from "../../../components/MyTeachersComponents/LabeledInfo";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import EngagementIconImage from "../../../assets/images/EngagementIconImage.svg";
 import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
@@ -25,6 +25,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -269,17 +270,6 @@ interface Style {
   deleteModalButton: string
 }
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string,
-};
-
 interface Props {
   match: {
     params: {
@@ -288,7 +278,7 @@ interface Props {
   },
   location: {
     state: {
-      teacher: Teacher
+      teacher: Types.Teacher
     }
   },
   history: {
@@ -430,7 +420,7 @@ class TeacherDetailPage extends React.Component<Props, State> {
     const firebase = this.context;
     firebase
       .getTeacherInfo(this.state.teacherUID)
-      .then((teacherInfo: Teacher) => {
+      .then((teacherInfo: Types.Teacher) => {
         this.setState({
           firstName: teacherInfo.firstName,
           lastName: teacherInfo.lastName,

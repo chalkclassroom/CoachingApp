@@ -11,6 +11,7 @@ import {
   incrementCenterCount,
   updateMathCount
 } from "../../../state/actions/math-instruction";
+import * as Types from '../../../constants/Types';
 
 
 const styles: object = {
@@ -31,17 +32,6 @@ const styles: object = {
     borderRadius: 3,
     textTransform: 'none'
   }
-};
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
 };
 
 interface Style {
@@ -69,7 +59,7 @@ interface Props {
       }
     ): void
   },
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 /**

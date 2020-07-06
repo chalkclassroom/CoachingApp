@@ -12,6 +12,7 @@ import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -25,7 +26,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -63,17 +64,6 @@ interface State {
   questionAdded: boolean,
   teacherModal: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * sequential results

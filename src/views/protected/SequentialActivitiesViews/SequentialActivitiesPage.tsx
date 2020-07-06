@@ -11,7 +11,7 @@ import {
   incrementCenterCount,
   updateSequentialCount
 } from "../../../state/actions/sequential-activities";
-
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -31,17 +31,6 @@ const styles: object = {
     borderRadius: 3,
     textTransform: 'none'
   }
-};
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
 };
 
 interface Style {
@@ -69,7 +58,7 @@ interface Props {
       }
     ): void
   },
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 /**
