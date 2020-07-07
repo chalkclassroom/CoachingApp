@@ -20,7 +20,7 @@ import TrainingModal from '../../components/TrainingModal';
 import TransitionTimeObservationPopUp from '../../components/TransitionComponents/TransitionTimeObservationPopUp';
 import ClassroomClimateObservationPopUp from '../../components/ClassroomClimateComponent/ClassroomClimateObservationPopUp';
 import MathInstructionObservationPopUp from '../../components/MathInstructionComponents/MathInstructionObservationPopUp';
-import StudentEngagementObservationPopUp from '../../components/StudentEngagementObservationPopUp';
+import StudentEngagementObservationPopUp from '../../components/StudentEngagementComponents/StudentEngagementObservationPopUp';
 import LevelOfInstructionObservationPopUp from '../../components/LevelOfInstructionComponents/LevelOfInstructionObservationPopUp';
 import ListeningToChildrenObservationPopUp from '../../components/ListeningComponents/ListeningToChildrenObservationPopUp';
 import SequentialActivitiesObservationPopUp from '../../components/SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';

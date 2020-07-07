@@ -163,6 +163,37 @@ class ResultsLayout extends React.Component<Props, State> {
     this.setState({ notesModal: false })
   }
 
+  static propTypes = {
+    teacher: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string,
+      notes: PropTypes.string
+    }).isRequired,
+    classes: PropTypes.object.isRequired,
+    magic8: PropTypes.string.isRequired,
+    summary: PropTypes.elementType.isRequired,
+    details: PropTypes.elementType.isRequired,
+    trendsGraph: PropTypes.elementType.isRequired,
+    changeSessionId: PropTypes.func.isRequired,
+    sessionId: PropTypes.string.isRequired,
+    sessionDates: PropTypes.array.isRequired,
+    questions: PropTypes.elementType.isRequired,
+    chosenQuestions: PropTypes.array.isRequired,
+    notes: PropTypes.array.isRequired,
+    actionPlanExists: PropTypes.bool.isRequired,
+    conferencePlanId: PropTypes.string.isRequired,
+    addNoteToPlan: PropTypes.func.isRequired,
+    conferencePlanExists: PropTypes.bool.isRequired,
+    history: PropTypes.exact({
+      replace: PropTypes.func
+    }).isRequired
+  }
+
   /**
    * render function
    * @return {ReactNode}

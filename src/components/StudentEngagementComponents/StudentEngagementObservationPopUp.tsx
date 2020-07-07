@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import AnytimeIconImage from '../assets/images/AnytimeIconImage.svg';
+import AnytimeIconImage from '../../assets/images/AnytimeIconImage.svg';
 
 /**
  * reminders for student engagement observation
@@ -23,7 +23,7 @@ export default function StudentEngagementObservationPopUp(): React.ReactElement 
                 Observe each child for 3 seconds.
               </li>
               <li>
-                Rate each child's level of engagement in the learning activity when prompted.
+                Rate each child&apos;s level of engagement in the learning activity when prompted.
               </li>
             </ul>
           </Typography>

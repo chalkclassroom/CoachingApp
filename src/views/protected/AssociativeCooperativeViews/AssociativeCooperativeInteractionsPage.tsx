@@ -105,7 +105,15 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
 
         <main style={{ flexGrow: 1 }}>
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => (
+            {(firebase: {
+              auth: {
+                currentUser: {
+                  uid: string
+                }
+              },
+              handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
+              handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
+            }): React.ReactNode => (
               <CenterMenu
                 teacher={this.props.teacherSelected}
                 history={this.props.history}
@@ -124,7 +132,13 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  centers: Array<{
+    name: string,
+    count: number
+  }>,
+  teacherSelected: Types.Teacher
+} => {
   return {
     centers: state.associativeCenterState.associativeCenters,
     teacherSelected: state.teacherSelectedState.teacher
