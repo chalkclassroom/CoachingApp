@@ -26,6 +26,8 @@ import TeacherModal from "../views/protected/HomeViews/TeacherModal";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import * as Constants from '../constants/Constants';
+import ReactRouterPropTypes from 'react-router-prop-types';
+
 
 const styles: object = {
   toolbarIcon: {
@@ -88,7 +90,7 @@ interface State {
  * Navigation Menu
  * @class BurgerMenu
  * @param {type} type
- * 
+ *
  */
 class BurgerMenu extends React.Component<Props, State>{
   state = {
@@ -134,9 +136,9 @@ class BurgerMenu extends React.Component<Props, State>{
     }).isRequired,
     handleClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
-    history: PropTypes.exact({
-      push: PropTypes.func
-    }).isRequired,
+    history: ReactRouterPropTypes.history.isRequired,
+    location: ReactRouterPropTypes.location.isRequired,
+    match: ReactRouterPropTypes.match.isRequired,
     firebase: PropTypes.exact({
       getTeacherList: PropTypes.func,
       firebaseSignOut: PropTypes.func

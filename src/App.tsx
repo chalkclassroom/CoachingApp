@@ -37,7 +37,7 @@ import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivi
 import StudentEngagementPage from "./views/protected/StudentEngagementViews/StudentEngagementPage";
 import StudentEngagementResultsPage from "./views/protected/StudentEngagementViews/StudentEngagementResultsPage";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage";
-import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage"; 
+import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
 import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage';
 import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
@@ -52,6 +52,9 @@ import Grid from '@material-ui/core/Grid';
 import { getCoach } from './state/actions/coach';
 import { connect } from 'react-redux';
 import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
+import {withRouter} from 'react-router-dom';
+
+
 
 ReactGA.initialize('UA-154034655-1');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -81,19 +84,15 @@ const styles = createMuiTheme({
 });
 
 /**
- * 
+ *
  * @return {ReactElement}
  */
-function PrivateRoute({ component: Component, auth, ...rest }): React.ReactElement {
+function PrivateRoute({ auth, ...rest }): React.ReactElement {
   return (
     auth === true ? (
       <Route
+        exact
         {...rest}
-        render={(props): React.ReactNode => {
-          return (
-            <Route component={Component} {...props} />
-          )
-        }}
       />
     ) : (
       <Route
@@ -109,7 +108,6 @@ function PrivateRoute({ component: Component, auth, ...rest }): React.ReactEleme
 }
 
 PrivateRoute.propTypes = {
-  component: PropTypes.element.isRequired,
   auth: PropTypes.bool.isRequired,
   location: PropTypes.object
 }
@@ -134,9 +132,9 @@ interface State {
  */
 class App extends React.Component<Props, State> {
   removeListener: any;
-  
+
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -213,163 +211,163 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/Landing"
-              component={WelcomePage}
+              render={(props) : React.ReactElement=> <WelcomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/Invite"
-              component={HomePage}
+              render={(props) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/Account"
-              component={HomePage}
+              render={(props) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/Home"
-              component={HomePage}
+              render={(props) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth || !this.state.auth}
               path="/team"
-              component={TeamPage}
+              render={(props) : React.ReactElement=> <TeamPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ActionPlans"
-              component={ActionPlanListPage}
+              render={(props) : React.ReactElement=> <ActionPlanListPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ActionPlan"
-              component={ActionPlanView}
+              render={(props) : React.ReactElement=> <ActionPlanView {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ConferencePlans"
-              component={ConferencePlanListPage}
+              render={(props) : React.ReactElement=> <ConferencePlanListPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ConferencePlan"
-              component={ConferencePlanView}
+              render={(props) : React.ReactElement=> <ConferencePlanView {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTime"
-              component={TransitionTimePage}
+              render={(props) : React.ReactElement=> <TransitionTimePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/LevelOfInstruction"
-              component={LevelOfInstructionPage}
+              render={(props) : React.ReactElement=> <LevelOfInstructionPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ClassroomClimate"
-              component={ClassroomClimatePage}
+              render={(props) : React.ReactElement=> <ClassroomClimatePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildren"
-              component={ListeningToChildrenPage}
+              render={(props) : React.ReactElement=> <ListeningToChildrenPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildrenResults"
-              component={ListeningToChildrenResultsPage}
+              render={(props) : React.ReactElement=> <ListeningToChildrenResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildrenTraining"
-              component={ListeningToChildrenTrainingPage}
+              render={(props) : React.ReactElement=> <ListeningToChildrenTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractions"
-              component={AssociativeCooperativeInteractionsPage}
+              render={(props) : React.ReactElement=> <HomeAssociativeCooperativeInteractionsPagePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsResults"
-              component={AssociativeCooperativeInteractionsResultsPage}
+              render={(props) : React.ReactElement=> <AssociativeCooperativeInteractionsResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstruction"
-              component={MathInstructionPage}
+              render={(props) : React.ReactElement=> <MathInstructionPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstructionResults"
-              component={MathInstructionResultsPage}
+              render={(props) : React.ReactElement=> <MathInstructionResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivities"
-              component={SequentialActivitiesPage}
+              render={(props) : React.ReactElement=> <SequentialActivitiesPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstructionTraining"
-              component={MathInstructionTrainingPage}
+              render={(props) : React.ReactElement=> <MathInstructionTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivitiesResults"
-              component={SequentialActivitiesResultsPage}
+              render={(props) : React.ReactElement=> <SequentialActivitiesResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsTraining"
-              component={AssociativeCooperativeInteractionsTrainingPage}
+              render={(props) : React.ReactElement=> <AssociativeCooperativeInteractionsTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/LevelOfInstructionTraining"
-              component={LevelOfInstructionTrainingPage}
+              render={(props) : React.ReactElement=> <LevelOfInstructionTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ClassroomClimateTraining"
-              component={ClassroomClimateTrainingPage}
+              render={(props) : React.ReactElement=> <ClassroomClimateTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivitiesTraining"
-              component={SequentialActivitiesTrainingPage}
+              render={(props) : React.ReactElement=> <SequentialActivitiesTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTimeTraining"
-              component={TransitionTimeTrainingPage}
+              render={(props) : React.ReactElement=> <TransitionTimeTrainingPage {...props}/>}
             />
             <PrivateRoute
               exact
               auth={this.state.auth}
               path="/MyTeachers"
-              component={TeacherListPage}
+              render={(props) : React.ReactElement=> <TeacherListPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path={`/MyTeachers/:teacherid`}
-              component={TeacherDetailPage}
+              render={(props) : React.ReactElement=> <TeacherDetailPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
                 path="/StudentEngagement"
-                component={StudentEngagementPage}
+                render={(props) : React.ReactElement=> <StudentEngagementPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
                 path="/StudentEngagementResults"
-                component={StudentEngagementResultsPage}
+                render={(props) : React.ReactElement=> <StudentEngagementResultsPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
                 path="/StudentEngagementTraining"
-                component={StudentEngagementTrainingPage}
+                render={(props) : React.ReactElement=> <StudentEngagementTrainingPage {...props}/>}
             />
 
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass

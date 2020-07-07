@@ -18,6 +18,8 @@ import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
+import ReactRouterPropTypes from 'react-router-prop-types';
+
 // import * as Constants from '../constants';
 
 const styles: object = {
@@ -195,9 +197,9 @@ class AppBar extends React.Component<Props, State> {
         onAuthStateChanged: PropTypes.func
       }).isRequired
     }).isRequired,
-    history: PropTypes.exact({
-      push: PropTypes.func
-    }).isRequired
+    history: ReactRouterPropTypes.history.isRequired,
+    location: ReactRouterPropTypes.location.isRequired,
+    match: ReactRouterPropTypes.match.isRequired,
   }
 
   /**

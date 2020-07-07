@@ -21,6 +21,8 @@ import { getCoach } from '../../../state/actions/coach';
 import { connect } from 'react-redux';
 import TeacherBarDetails from "../../../components/MathInstructionComponents/ResultsComponents/TeacherBarDetails";
 import * as Types from '../../../constants/Types';
+import ReactRouterPropTypes from 'react-router-prop-types';
+
 
 const styles: object = {
   root: {
@@ -94,7 +96,7 @@ interface State {
  */
 class HomePage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -141,9 +143,6 @@ class HomePage extends React.Component<Props, State> {
       pos: PropTypes.string,
       image: PropTypes.string,
       buttonGrid: PropTypes.string
-    }).isRequired,
-    history: PropTypes.exact({
-      push: PropTypes.func
     }).isRequired,
     coachName: PropTypes.string.isRequired,
     getCoach: PropTypes.func.isRequired
@@ -321,7 +320,7 @@ class HomePage extends React.Component<Props, State> {
               </Card>
               <Card
                 className={classes.card}
-                onClick={(): void => 
+                onClick={(): void =>
                   this.props.history.push({
                     pathname: "/Magic8Menu",
                     state: { type: "Training" }
