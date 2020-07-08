@@ -1089,7 +1089,7 @@ class Firebase {
           sessionTotal: number,
           startDate: {value: string}
         }>>}) => {
-          console.log('transition trend', result);
+          // console.log('transition trend', result.data[0]);
           result.data[0]
         }
     )

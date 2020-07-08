@@ -524,7 +524,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): { teacherSelected: Types.Teacher } => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

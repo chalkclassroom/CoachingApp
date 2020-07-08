@@ -152,8 +152,21 @@ class TransitionResultsPage extends React.Component<Props, State> {
     const otherArray: Array<number> = [];
     const totalArray: Array<number> = [];
     let formattedTime;
-    firebase.fetchTransitionTrend(teacherId).then(dataSet => {
+    firebase.fetchTransitionTrend(teacherId).then((dataSet: Array<{
+      id: string,
+      line: number,
+      traveling: number,
+      waiting: number,
+      routines: number,
+      behaviorManagement: number,
+      other: number,
+      total: number,
+      sessionTotal: number,
+      startDate: {value: string}
+    }>) => {
+      console.log('fetchtransitiontrend dataset', dataSet);
       dataSet.forEach(data => {
+        console.log('transition data', data);
         formattedTime = this.handleTrendsFormatTime(data.total);
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
@@ -290,7 +303,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{
-      id: number,
+      id: string,
       content: string,
       timestamp: {
         seconds: number,
@@ -709,7 +722,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

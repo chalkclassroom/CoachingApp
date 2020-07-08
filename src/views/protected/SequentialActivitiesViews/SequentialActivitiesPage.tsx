@@ -41,8 +41,8 @@ interface Style {
 
 interface Props {
   classes: Style,
-  addNewCenter(): void,
-  incrementCenterCount(): void,
+  addNewCenter(centerName: string): void,
+  incrementCenterCount(centerName: string): void,
   updateSequentialCount(behavior: string): void,
   centers: Array<{
     name: string,
@@ -73,7 +73,11 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string,
+      grow: PropTypes.string,
+      backButton: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -105,7 +109,15 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
         </FirebaseContext.Consumer>
         <main style={{ flexGrow: 1 }}>
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => (
+            {(firebase: {
+              auth: {
+                currentUser: {
+                  uid: string
+                }
+              },
+              handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
+              handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
+            }): React.ReactNode => (
               <CenterMenu
                 teacher={this.props.teacherSelected}
                 history={this.props.history}
@@ -124,7 +136,13 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  centers: Array<{
+    name: string,
+    count: number
+  }>,
+  teacherSelected: Types.Teacher
+} => {
   return {
     centers: state.sequentialCenterState.sequentialCenters,
     teacherSelected: state.teacherSelectedState.teacher

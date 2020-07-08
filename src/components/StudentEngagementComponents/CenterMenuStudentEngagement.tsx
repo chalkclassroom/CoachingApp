@@ -110,7 +110,6 @@ interface Style {
 interface Props {
   classes: Style,
   teacherId: string,
-  observedBy: number,
   time: number,
   handleTimerReset(): void,
   handleTimerStart(): void,
@@ -318,7 +317,15 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     classes: PropTypes.object.isRequired,
     onStatusChange: PropTypes.func.isRequired,
     teacherId: PropTypes.string,
-    firebase: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      auth: PropTypes.exact({
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        })
+      }).isRequired,
+      handleSession: PropTypes.func.isRequired,
+      handlePushSEEachEntry: PropTypes.func.isRequired
+    }).isRequired,
     time: PropTypes.number.isRequired,
     handleTimerReset: PropTypes.func.isRequired,
     handleTimerStart: PropTypes.func.isRequired,
@@ -843,24 +850,5 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     }
   }
 }
-
-CenterMenuStudentEngagement.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onStatusChange: PropTypes.func.isRequired,
-  teacherId: PropTypes.string,
-  firebase: PropTypes.exact({
-    auth: PropTypes.exact({
-      currentUser: PropTypes.exact({
-        uid: PropTypes.string
-      })
-    }).isRequired,
-    handleSession: PropTypes.func.isRequired,
-    handlePushSEEachEntry: PropTypes.func.isRequired
-  }).isRequired,
-  time: PropTypes.number.isRequired,
-  handleTimerReset: PropTypes.func.isRequired,
-  handleTimerStart: PropTypes.func.isRequired,
-  updateEngagementCount: PropTypes.func.isRequired
-};
 
 export default connect(null, { updateEngagementCount })(withStyles(styles)(CenterMenuStudentEngagement));

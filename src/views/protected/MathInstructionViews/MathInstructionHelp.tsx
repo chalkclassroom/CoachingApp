@@ -57,11 +57,11 @@ class MathInstructionHelp extends React.Component<Props, State> {
     open: true
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 

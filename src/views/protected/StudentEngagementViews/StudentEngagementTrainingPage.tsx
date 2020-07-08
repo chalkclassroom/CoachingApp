@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as Constants from "../../../constants/Constants";
@@ -164,6 +163,9 @@ interface Props {
       }
     ): void,
     goBack(): void
+  },
+  location: {
+    state: string
   }
 }
 
