@@ -574,7 +574,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,

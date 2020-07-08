@@ -111,10 +111,7 @@ function getComparator(order: 'desc' | 'asc' | TeacherListInfo, orderBy: Teacher
  */
 function stableSort(array: Array<TeacherListInfo>, comparator: typeof getComparator): any {
   const stabilizedThis: Array<Array<TeacherListInfo, number>> = array.map((el, index) => [el, index]);
-  // console.log('stabiliized this ', stabilizedThis);
   stabilizedThis.sort((a, b) => {
-    // console.log('stabilized a', a[0]);
-    // console.log('stabilized b', b[0]);
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];

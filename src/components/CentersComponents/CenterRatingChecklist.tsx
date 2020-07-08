@@ -124,7 +124,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.timer = setInterval(this.tick, 1000);
+    this.timer = global.setInterval(this.tick, 1000);
   }
 
   /** lifecycle method invoked just before component is unmounted */

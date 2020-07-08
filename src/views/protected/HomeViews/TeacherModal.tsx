@@ -100,8 +100,6 @@ class TeacherModal extends React.Component<Props, State> {
       open: true,
       teachers: []
     };
-
-    this.selectTeacher = this.selectTeacher.bind(this);
   }
 
   handleClose = (): void => {
@@ -128,7 +126,7 @@ class TeacherModal extends React.Component<Props, State> {
   /**
    * @param {object} teacherInfo
    */
-  selectTeacher(teacherInfo: Types.Teacher): void {
+  selectTeacher = (teacherInfo: Types.Teacher): void => {
     this.props.history.push({
       pathname: "/Magic8Menu",
       state: { teacher: this.props.teacherSelected, type: this.props.type, teachers: this.props.teacherList}
@@ -139,12 +137,29 @@ class TeacherModal extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      paper: PropTypes.string,
+      root: PropTypes.string,
+      list: PropTypes.string,
+      inline: PropTypes.string
+    }).isRequired,
     handleClose: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
     firebase: PropTypes.exact({getTeacherList: PropTypes.func}).isRequired,
     history: PropTypes.exact({push: PropTypes.func}).isRequired,
-    changeTeacher: PropTypes.func.isRequired
+    changeTeacher: PropTypes.func.isRequired,
+    getTeacherList: PropTypes.func.isRequired,
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired,
+    teacherList: PropTypes.array.isRequired
   }
 
   /**
@@ -228,7 +243,10 @@ class TeacherModal extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  teacherList: Array<Types.Teacher>
+} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,
     teacherList: state.teacherListState.teachers

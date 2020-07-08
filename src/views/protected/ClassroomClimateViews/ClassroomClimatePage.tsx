@@ -28,7 +28,7 @@ import EmptyToneRating from "../../../components/ClassroomClimateComponent/Empty
     and then allow for 2 full minutes in between ratings.
  */
 
-const RATING_INTERVAL: number = 130000;
+const RATING_INTERVAL = 130000;
 
 const styles: object = {
   root: {
@@ -79,6 +79,7 @@ interface State {
  * @class ClassroomClimatePage
  */
 class ClassroomClimatePage extends React.Component<Props, State> {
+  timer: NodeJS.Timeout;
   state = {
     auth: true,
     time: RATING_INTERVAL,
@@ -140,12 +141,12 @@ class ClassroomClimatePage extends React.Component<Props, State> {
   };
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
-    this.timer = setInterval(this.tick, 1000);
+  componentDidMount(): void {
+    this.timer = global.setInterval(this.tick, 1000);
   }
 
   /** lifecycle method invoked just before component is unmounted */
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     clearInterval(this.timer);
   }
 
@@ -222,7 +223,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                 >
                   <Grid item>
                     <Dashboard
-                      type="CC"
+                      type='CC'
                       infoDisplay={
                         <Countdown type='CC' time={this.state.time} timerTime={RATING_INTERVAL} />
                       }
@@ -240,7 +241,15 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                   direction={"column"}
                 >
                   <FirebaseContext.Consumer>
-                    {(firebase: object): React.ReactNode => (
+                    {(firebase: {
+                      auth: {
+                        currentUser: {
+                          uid: string
+                        }
+                      },
+                      handleSession(entry: object): void,
+                      handlePushClimate(entry: object): void
+                    }): React.ReactNode => (
                       <BehaviorCounter
                         firebase={firebase}
                       />

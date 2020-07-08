@@ -41,8 +41,8 @@ interface Style {
 
 interface Props {
   classes: Style,
-  addNewCenter(): void,
-  incrementCenterCount(): void,
+  addNewCenter(centerName: string): void,
+  incrementCenterCount(centerName: string): void,
   updateACCount(behavior: string): void,
   centers: Array<{
     name: string,

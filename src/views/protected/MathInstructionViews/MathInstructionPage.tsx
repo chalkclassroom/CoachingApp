@@ -42,8 +42,8 @@ interface Style {
 
 interface Props {
   classes: Style,
-  addNewCenter(): void,
-  incrementCenterCount(): void,
+  addNewCenter(centerName: string): void,
+  incrementCenterCount(centerName: string): void,
   updateMathCount(behavior: string): void,
   centers: Array<{
     name: string,
@@ -106,7 +106,15 @@ class MathInstructionPage extends React.Component<Props, {}> {
         </FirebaseContext.Consumer>
         <main style={{ flexGrow: 1 }}>
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => (
+            {(firebase: {
+              auth: {
+                currentUser: {
+                  uid: string
+                }
+              },
+              handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
+              handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
+            }): React.ReactNode => (
               <CenterMenu
                 teacher={this.props.teacherSelected}
                 history={this.props.history}
@@ -125,7 +133,13 @@ class MathInstructionPage extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  centers: Array<{
+    name: string,
+    count: number
+  }>,
+  teacherSelected: Types.Teacher
+} => {
   return {
     centers: state.mathCentersState.mathCenters,
     teacherSelected: state.teacherSelectedState.teacher

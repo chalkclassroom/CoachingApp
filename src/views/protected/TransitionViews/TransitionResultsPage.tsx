@@ -422,9 +422,9 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 
   /**
-   * @param {React.SyntheticEvent} event
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    */
-  changeSessionId = (event: React.SyntheticEvent): void => {
+  changeSessionId = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     this.setState({
       sessionId: event.target.value,
     }, () => {

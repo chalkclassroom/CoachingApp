@@ -6,7 +6,6 @@ import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import TeacherChecklist from '../../../components/ListeningComponents/TeacherChecklist';
 import { withStyles } from '@material-ui/core/styles';
-import * as Types from '../../../constants/Types';
 
 const styles: object = {
   backButton: {
@@ -21,12 +20,6 @@ const styles: object = {
 interface Props {
   classes: {
     backButton: string
-  },
-  location: {
-    state: {
-      teacher: Types.Teacher,
-      teachers: Array<Types.Teacher>
-    }
   },
   history: {
     replace(
@@ -46,7 +39,7 @@ interface Props {
  * @return {ReactElement}
  */
 function ListeningToChildrenPage(props: Props): React.ReactElement {
-  const { classes, location, history } = props;
+  const { classes, history } = props;
   return (
     <div>
       <FirebaseContext.Consumer>

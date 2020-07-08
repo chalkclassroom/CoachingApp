@@ -214,7 +214,7 @@ class Firebase {
   /**
    * gets list of all teachers linked to current user's account
    */
-  getTeacherList = async function(): Promise<Array<Types.Teacher>> {
+  getTeacherList = async function(): Promise<Array<Promise<Types.Teacher>>> {
     return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)
