@@ -22,7 +22,8 @@ import amber from "@material-ui/core/colors/amber";
 import {
   createMuiTheme,
   MuiThemeProvider,
-  withStyles
+  // withStyles,
+  Theme
 } from "@material-ui/core/styles";
 import LevelOfInstructionTrainingPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage";
 import LevelOfInstructionPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionPage";
@@ -60,7 +61,7 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 LogRocket.init('akprci/cqref');
 setupLogRocketReact(LogRocket);
 
-const styles: object = createMuiTheme({
+const styles: Theme = createMuiTheme({
   palette: {
     primary: {
       light: blue[300],
@@ -422,5 +423,5 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default hot(withStyles(styles)(connect(null, {getCoach})(App)));
+export default hot(connect(null, {getCoach})(App));
 
