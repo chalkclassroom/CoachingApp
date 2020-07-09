@@ -78,7 +78,7 @@ const MAP = {
   LevelOfInstruction: 5,
   ListeningToChildren: 6,
   SequentialActivities: 7,
-  AssociativeCooperativeInteractions: 8
+  AssociativeCooperativeInteractions: 8,
 };
 
 interface Style {
