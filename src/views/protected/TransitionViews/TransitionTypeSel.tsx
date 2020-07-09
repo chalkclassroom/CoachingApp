@@ -31,7 +31,7 @@ interface Props {
   },
   handleNotes(open: boolean): void,
   handleTransitionType(type: string | null): void,
-  transitionType: string | null,
+  transitionType?: string,
 }
 
 /**
@@ -62,9 +62,9 @@ function TransitionTypeSel(props: Props): React.ReactElement {
         <Grid
           item
           xs={6}
-          alignItems="center"
-          justify="center"
-          direction="column"
+          // alignItems="center"
+          // justify="center"
+          // direction="column"
         >
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
@@ -72,7 +72,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                 <Button
                   onClick={(): void => handleButtonChange("waiting")}
                   classes={{ root: classes.button, label: classes.label }}
-                  variant="raised"
+                  variant="contained"
                   disabled={(transitionType!==null) && (transitionType!=="waiting")}
                   color="primary"
                   style={{
@@ -107,7 +107,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                 <Button
                   onClick={(): void => handleButtonChange("traveling")}
                   classes={{ root: classes.button, label: classes.label }}
-                  variant="raised"
+                  variant="contained"
                   disabled={(transitionType!==null) && (transitionType!=="traveling")}
                   color="primary"
                   style={{
@@ -142,7 +142,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                 <Button
                   onClick={(): void => handleButtonChange("child waiting")}
                   classes={{ root: classes.button, label: classes.label }}
-                  variant="raised"
+                  variant="contained"
                   disabled={(transitionType!==null) && (transitionType!=="child waiting")}
                   color="primary"
                   style={{
@@ -171,9 +171,9 @@ function TransitionTypeSel(props: Props): React.ReactElement {
         <Grid
           item
           xs={6}
-          alignItems="center"
-          justify="center"
-          direction="column"
+          // alignItems="center"
+          // justify="center"
+          // direction="column"
         >
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
@@ -181,7 +181,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                 <Button
                   onClick={(): void => handleButtonChange("classroom routines")}
                   classes={{ root: classes.button, label: classes.label }}
-                  variant="raised"
+                  variant="contained"
                   disabled={(transitionType!==null) && (transitionType!=="classroom routines")}
                   color="primary"
                   style={{
@@ -216,7 +216,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                     handleButtonChange("behavior management disruption")
                   }
                   classes={{ root: classes.button, label: classes.label }}
-                  variant="raised"
+                  variant="contained"
                   disabled={(transitionType !== null) && (transitionType!=="behavior management disruption")}
                   color="primary"
                   style={{
@@ -251,7 +251,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                 <Button
                   onClick={(): void => handleButtonChange("other")}
                   classes={{ root: classes.button, label: classes.label }}
-                  variant="raised"
+                  variant="contained"
                   disabled={(transitionType !== null) && (transitionType!=="other")}
                   color="primary"
                   style={{
@@ -280,7 +280,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
 
 TransitionTypeSel.propTypes = {
   classes: PropTypes.object.isRequired,
-  transitionType: PropTypes.string.isRequired,
+  transitionType: PropTypes.string,
   handleTransitionType: PropTypes.func.isRequired,
   handleNotes: PropTypes.func.isRequired
 };

@@ -11,6 +11,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Avatar from '@material-ui/core/Avatar';
 import { withRouter } from "react-router-dom";
 import StarsIcon from '@material-ui/icons/Stars';
 import { changeTeacher, getTeacherList } from '../../../state/actions/teacher';
@@ -68,7 +70,7 @@ interface Props {
   handleClose(): void,
   changeTeacher(teacher: Types.Teacher): Types.Teacher,
   getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>,
-  teacherSelected: Types.Teacher,
+  teacherSelected?: Types.Teacher,
   teacherList: Array<Types.Teacher>
 }
 
@@ -158,7 +160,7 @@ class TeacherModal extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired,
+    }),
     teacherList: PropTypes.array.isRequired
   }
 
@@ -174,7 +176,7 @@ class TeacherModal extends React.Component<Props, State> {
         <Modal open={this.state.open}>
           <div style={getModalStyle()} className={classes.paper}>
             <Grid
-              xs={12}
+              // xs={12}
               container
               alignItems="center"
               direction="row"
@@ -190,7 +192,7 @@ class TeacherModal extends React.Component<Props, State> {
               </IconButton>
             </Grid>
             <Grid
-              xs={12}
+              // xs={12}
               container
               alignItems="center"
               direction="column"
@@ -210,13 +212,9 @@ class TeacherModal extends React.Component<Props, State> {
                         this.selectTeacher(teacher)
                       }
                   >
-                    <ListItemAvatar>
-                      {/* <Avatar
-                        alt="Teacher Profile Pic"
-                        src={TeacherSvg}
-                      /> */}
+                    <ListItemIcon>
                       <StarsIcon style={{color: Constants.Colors.SA }}/>
-                    </ListItemAvatar>
+                    </ListItemIcon>
                     <ListItemText
                       primary={teacher.firstName + " " + teacher.lastName}
                       secondary={
