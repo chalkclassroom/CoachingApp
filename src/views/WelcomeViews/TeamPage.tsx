@@ -5,9 +5,9 @@ import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import ProjectAdvisor from "../../components/TeamPageComponents/ProjectAdvisor.tsx";
-import TeamMemberCard from "../../components/TeamPageComponents/TeamMemberCard.tsx";
-import TeamMemberExpansion from "../../components/TeamPageComponents/TeamMemberExpansion.tsx";
+import ProjectAdvisor from "../../components/TeamPageComponents/ProjectAdvisor";
+import TeamMemberCard from "../../components/TeamPageComponents/TeamMemberCard";
+import TeamMemberExpansion from "../../components/TeamPageComponents/TeamMemberExpansion";
 import PreschoolPromiseLogoImage from "../../assets/images/PreschoolPromiseLogoImage.jpg";
 import UnitedWayLogoImage from "../../assets/images/UnitedWayLogoImage.jpg";
 import UDaytonLogoImage from "../../assets/images/UDaytonLogoImage.jpg";
@@ -78,7 +78,7 @@ class TeamPage extends React.Component<Props, State> {
     };
   }
 
-  openCC = () => {
+  openCC = (): void => {
     if (this.state.open === "CC") {
       this.setState({
         open: null
@@ -90,7 +90,7 @@ class TeamPage extends React.Component<Props, State> {
     }
   };
 
-  openDM = () => {
+  openDM = (): void => {
     if (this.state.open === "DM") {
       this.setState({
         open: null
@@ -102,7 +102,7 @@ class TeamPage extends React.Component<Props, State> {
     }
   };
 
-  openKN = () => {
+  openKN = (): void => {
     if (this.state.open === "KN") {
       this.setState({
         open: null
@@ -114,7 +114,7 @@ class TeamPage extends React.Component<Props, State> {
     }
   };
 
-  openCS = () => {
+  openCS = (): void => {
     if (this.state.open === "CS") {
       this.setState({
         open: null
@@ -132,9 +132,9 @@ class TeamPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div>

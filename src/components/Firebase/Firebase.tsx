@@ -1088,10 +1088,8 @@ class Firebase {
           total: number,
           sessionTotal: number,
           startDate: {value: string}
-        }>>}) => {
-          // console.log('transition trend', result.data[0]);
+        }>>}) =>
           result.data[0]
-        }
     )
     .catch((error: Error) =>
       console.error("Error occurred getting transition trend: ", error)

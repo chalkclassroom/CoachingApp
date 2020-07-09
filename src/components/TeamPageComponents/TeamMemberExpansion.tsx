@@ -38,7 +38,14 @@ interface Style {
 
 interface Props {
   classes: Style,
-  person: { email: string, name: string, role: string, initials: string, description: string, link: string }
+  person: {
+    email?: string,
+    name: string,
+    role: string,
+    initials: string,
+    description: string,
+    link?: string
+  }
 }
 
 /**

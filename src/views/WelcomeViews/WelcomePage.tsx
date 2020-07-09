@@ -27,9 +27,9 @@ class WelcomePage extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const {classes} = this.props;
     return (
       <div className={classes.root}>
@@ -37,7 +37,15 @@ class WelcomePage extends React.Component<Props, {}> {
           {(firebase: object): React.ReactNode => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <LandingPage firebase={firebase}/> }
+          {(firebase: {
+            emailListSignUp(email: string): Promise<void>,
+            firebasePilotSignUp(userData: {
+              email: string,
+              program: string,
+              firstName: string,
+              lastName: string
+            }): Promise<void>
+          }): React.ReactNode => <LandingPage firebase={firebase}/> }
         </FirebaseContext.Consumer>
       </div>
     );

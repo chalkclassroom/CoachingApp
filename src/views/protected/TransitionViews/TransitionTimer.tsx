@@ -72,7 +72,7 @@ interface State {
  * @class TransitionTimer
  */
 class TransitionTimer extends React.Component<Props, State> {
-  // private timer: number;
+  timer: NodeJS.Timeout;
   /**
    * @param {Props} props 
    */

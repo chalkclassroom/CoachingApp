@@ -197,6 +197,12 @@ interface Props {
   classes: Style,
   firebase: {
     emailListSignUp(email: string): Promise<void>,
+    firebasePilotSignUp(userData: {
+      email: string,
+      program: string,
+      firstName: string,
+      lastName: string
+    }): Promise<void>
   }
 }
 
@@ -325,7 +331,8 @@ class LandingPage extends React.Component<Props, State> {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     firebase: PropTypes.exact({
-      emailListSignUp: PropTypes.func
+      emailListSignUp: PropTypes.func,
+      firebasePilotSignUp: PropTypes.func
     }).isRequired
   }
 

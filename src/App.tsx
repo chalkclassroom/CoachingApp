@@ -59,7 +59,7 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 LogRocket.init('akprci/cqref');
 setupLogRocketReact(LogRocket);
 
-const styles = createMuiTheme({
+const styles: object = createMuiTheme({
   palette: {
     primary: {
       light: blue[300],

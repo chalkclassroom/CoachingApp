@@ -164,9 +164,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
       sessionTotal: number,
       startDate: {value: string}
     }>) => {
-      console.log('fetchtransitiontrend dataset', dataSet);
       dataSet.forEach(data => {
-        console.log('transition data', data);
         formattedTime = this.handleTrendsFormatTime(data.total);
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
@@ -567,7 +565,10 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string,
+      comparisonText: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -644,7 +645,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
                   <TransitionTimePie
                     transitionTime={this.state.transitionTime}
                     learningActivityTime={this.state.learningActivityTime}
-                    style={{overflow:"hidden", height: '80vh'}}
+                    // style={{overflow:"hidden", height: '80vh'}}
                   />
                 </Grid>
               </Grid>
@@ -676,7 +677,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
                       routines={this.state.sessionRoutines}
                       behaviorManagement={this.state.sessionBehaviorManagement}
                       other={this.state.sessionOther}
-                      style={{alignItems: "center", height: '80vh'}}
+                      // style={{alignItems: "center", height: '80vh'}}
                     />
                   </Grid>
                 </Grid>
@@ -685,7 +686,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
             trendsGraph={
               <TransitionTrendsGraph
                 data={this.handleTrendsFormatData}
-                style={{overflow:"hidden", height: '80vh'}}
+                // style={{overflow:"hidden", height: '80vh'}}
               />
             }
             changeSessionId={this.changeSessionId}
@@ -709,7 +710,9 @@ class TransitionResultsPage extends React.Component<Props, State> {
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactElement => (
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}

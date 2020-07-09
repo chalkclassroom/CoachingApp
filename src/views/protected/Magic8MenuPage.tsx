@@ -70,7 +70,7 @@ const styles: object = {
 
 
 const MAP = {
-  None: 0,
+  none: 0,
   TransitionTime: 1,
   ClassroomClimate: 2,
   MathInstruction: 3,
@@ -112,7 +112,7 @@ interface Props {
 interface State {
   allowed: boolean,
   numSelected: number,
-  selected: string,
+  selected: Selected,
   unlocked: Array<number>,
   unlockedData: boolean,
   page: string,
@@ -120,6 +120,9 @@ interface State {
   teacherName: string,
   teacher: {}
 }
+
+type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
+'LevelOfInstruction' | 'ListeningToChildren' | 'SequentialActivities' | 'AssociativeCooperativeInteractions' | 'none';
 
 /**
  * magic 8 menu
@@ -149,10 +152,10 @@ class Magic8MenuPage extends React.Component<Props, State> {
 
   /**
    * @param {string} selected
-   * @param {string} title
+   * @param {Selected} title
    * @return {void}
    */
-  onClick = (selected: string, title: string): void => {
+  onClick = (selected: string, title: Selected): void => {
     if (selected && this.state.numSelected > 0) {
       this.setState({
         numSelected: this.state.numSelected - 1,
