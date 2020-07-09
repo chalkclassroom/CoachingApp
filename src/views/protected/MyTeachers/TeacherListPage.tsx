@@ -661,7 +661,7 @@ class TeacherListPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar {...firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>

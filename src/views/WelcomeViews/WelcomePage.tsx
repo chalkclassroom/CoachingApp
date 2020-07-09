@@ -34,10 +34,10 @@ class WelcomePage extends React.Component<Props, {}> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase}/>}
+          {(firebase: object): React.ReactNode => <AppBar {...firebase}/>}
         </FirebaseContext.Consumer>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <LandingPage firebase={firebase}/> }
+          {(firebase: object): React.ReactNode => <LandingPage {...firebase}/> }
         </FirebaseContext.Consumer>
       </div>
     );

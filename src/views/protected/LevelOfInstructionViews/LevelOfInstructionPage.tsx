@@ -71,7 +71,7 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar {...firebase} />}
         </FirebaseContext.Consumer>
         <header>
           <Grid container direction="row" alignItems="center" justify="flex-start">

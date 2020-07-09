@@ -140,7 +140,7 @@ class TeamPage extends React.Component<Props, State> {
       <div>
         <div className={classes.root}>
           <FirebaseContext.Consumer>
-            {(firebase: object) => <AppBar firebase={firebase} />}
+            {(firebase: object): React.ReactNode => <AppBar {...firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container
@@ -465,7 +465,7 @@ class TeamPage extends React.Component<Props, State> {
         </div>
         <div className={classes.mobileRoot}>
           <FirebaseContext.Consumer>
-            {(firebase: object) => <AppBar firebase={firebase} />}
+            {(firebase: object): React.ReactNode => <AppBar {...firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container

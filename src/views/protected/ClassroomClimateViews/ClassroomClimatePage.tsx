@@ -166,7 +166,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar {...firebase} />}
         </FirebaseContext.Consumer>
         <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
           <RatingModal

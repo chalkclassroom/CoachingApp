@@ -63,7 +63,7 @@ class ForgotPasswordPage extends React.Component<Props, {}> {
             ): Promise<void>
           }): React.ReactElement => (
             <div>
-              <AppBar firebase={firebase} />
+              <AppBar {...firebase} />
               <ResetForm firebase={firebase} />
             </div>
           )}

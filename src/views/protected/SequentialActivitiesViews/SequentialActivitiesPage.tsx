@@ -101,10 +101,7 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
       <div className={classes.root}>
         <FirebaseContext.Consumer>
           {(firebase: object): React.ReactNode => (
-            <AppBar
-              firebase={firebase}
-              className={classes.grow}
-            />
+            <AppBar {...firebase} />
           )}
         </FirebaseContext.Consumer>
         <main style={{ flexGrow: 1 }}>
