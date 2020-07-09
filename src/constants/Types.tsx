@@ -1,3 +1,5 @@
+import { Prompt } from "react-router-dom";
+
 export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'LI' | 'LC' | 'SA' | 'AC' | 'RedGraph' | 'NotPresent';
 
 export interface ReduxState {
@@ -96,4 +98,54 @@ export interface Teacher {
   phone: string,
   role: string,
   school: string
+}
+
+export interface History {
+  length?: number,
+  action?: string,
+  location?: {
+    pathname: string,
+    search: string,
+    hash: string,
+    state: {
+      type?: string,
+      teacherId?: string,
+      actionPlanId?: string,
+      conferencePlanId?: string,
+      sessionId?: string,
+      teacher?: Teacher
+    }
+  },
+  push?(
+    param: (string | {
+      pathname: string,
+      state: {
+        type?: string,
+        teacherId?: string,
+        actionPlanId?: string,
+        conferencePlanId?: string,
+        sessionId?: string,
+        teacher?: Teacher
+      }
+    }),
+  ): void,
+  replace?(
+    param: (string | {
+      pathname: string,
+      state: {
+        type?: string,
+        teacherId?: string,
+        actionPlanId?: string,
+        conferencePlanId?: string,
+        sessionId?: string,
+        teacher?: Teacher
+      }
+    }),
+  ): void,
+  go?(n: number): void,
+  goBack?(): void,
+  goForward?(): void,
+  block?(prompt: Prompt): void,
+  listen?(param: any): void,
+  createHref?(param: any): void
 }

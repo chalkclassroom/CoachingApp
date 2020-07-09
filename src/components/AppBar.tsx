@@ -19,6 +19,7 @@ import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import ReactRouterPropTypes from 'react-router-prop-types';
+import * as Types from '../constants/Types';
 
 // import * as Constants from '../constants';
 
@@ -97,14 +98,19 @@ interface Style {
 }
 
 interface Props {
-  classes: Style,
+  classes?: Style,
   firebase: {
     auth: {
-      currentUser: firebase.User | null,
+      // currentUser: firebase.User | null,
+      currentUser: {
+        uid: string
+      },
       onAuthStateChanged(arg: any): firebase.User | null
     },
+    firebaseEmailSignIn(): any
   },
-  history: {
+  // firebase: any,
+  /* history: {
     push(
       param: (string | {
         pathname: string,
@@ -113,7 +119,9 @@ interface Props {
         }
       }),
     ): void
-  }
+  } */
+  // history?: any
+  history: Types.History
 }
 
 interface State {
@@ -190,16 +198,46 @@ class AppBar extends React.Component<Props, State> {
       menuText: PropTypes.string,
       chalkText: PropTypes.string,
       coachingText: PropTypes.string
-    }).isRequired,
+    }),
     firebase: PropTypes.exact({
       auth: PropTypes.exact({
-        currentUser: PropTypes.object,
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        }),
         onAuthStateChanged: PropTypes.func
-      }).isRequired
+      }).isRequired,
+      firebaseEmailSignIn: PropTypes.func
     }).isRequired,
-    history: ReactRouterPropTypes.history.isRequired,
-    location: ReactRouterPropTypes.location.isRequired,
-    match: ReactRouterPropTypes.match.isRequired,
+    history: ReactRouterPropTypes.history,
+    /* history: PropTypes.shape({
+      action: PropTypes.oneOf(['PUSH', 'REPLACE', 'POP']),
+      block: PropTypes.func,
+      createHref: PropTypes.func,
+      go: PropTypes.func,
+      goBack: PropTypes.func,
+      goForward: PropTypes.func,
+      length: PropTypes.number,
+      listen: PropTypes.func,
+      location: PropTypes.shape({
+        type: PropTypes.string,
+        teacherId: PropTypes.string,
+        actionPlanId: PropTypes.string,
+        conferencePlanId: PropTypes.string,
+        sessionId: PropTypes.string,
+        teacher: PropTypes.shape({
+          email: PropTypes.string,
+          firstName: PropTypes.string,
+          lastName: PropTypes.string,
+          notes: PropTypes.string,
+          id: PropTypes.string,
+          phone: PropTypes.string,
+          role: PropTypes.string,
+          school: PropTypes.string
+        })
+      }),
+      push: PropTypes.func,
+      replace: PropTypes.func,
+    }) */
   }
 
   /**
