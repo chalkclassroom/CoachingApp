@@ -98,7 +98,7 @@ class MathInstructionPage extends React.Component<Props, {}> {
       <div className={classes.root}>
         <FirebaseContext.Consumer>
           {(firebase: object): React.ReactNode => (
-            <AppBar {...firebase} />
+            <AppBar firebase={firebase} />
           )}
         </FirebaseContext.Consumer>
         <main style={{ flexGrow: 1 }}>

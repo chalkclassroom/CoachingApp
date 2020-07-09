@@ -111,7 +111,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar {...firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid
           container

@@ -64,7 +64,7 @@ class ActionPlanView extends React.Component<Props, State>{
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar {...firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
           <Grid direction="column" justify="center" alignItems="center" style={{paddingLeft: '3em', paddingRight: '3em', paddingTop: '1em'}}>

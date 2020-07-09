@@ -100,9 +100,10 @@ interface Props {
   classes: Style,
   firebase: {
     auth: {
-      currentUser: null | {
+      /* currentUser: null | {
         uid: string
-      },
+      }, */
+      currentUser: firebase.User | null,
       onAuthStateChanged(arg: any): firebase.User | null,
     },
     firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>,
@@ -206,9 +207,7 @@ class AppBar extends React.Component<Props, State> {
     }).isRequired,
     firebase: PropTypes.exact({
       auth: PropTypes.exact({
-        currentUser: PropTypes.exact({
-          uid: PropTypes.string
-        }),
+        currentUser: PropTypes.object,
         onAuthStateChanged: PropTypes.func
       }).isRequired,
       firebaseEmailSignIn: PropTypes.func,

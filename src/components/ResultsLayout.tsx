@@ -203,7 +203,7 @@ class ResultsLayout extends React.Component<Props, State> {
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar {...firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid container justify="flex-start" direction="row" alignItems="flex-start">
           <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>

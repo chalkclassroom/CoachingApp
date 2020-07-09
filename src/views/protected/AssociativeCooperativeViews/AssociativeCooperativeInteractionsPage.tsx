@@ -97,7 +97,7 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
         <FirebaseContext.Consumer>
           {(firebase: object): React.ReactNode => (
             <AppBar
-              {...firebase}
+              firebase={firebase}
               // className={classes.grow}
             />
           )}

@@ -245,7 +245,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar {...firebase} />}
+          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid direction="column" justify="center" alignItems="center">
           <Grid item style={{width: '100%', paddingTop: '2em'}}>
