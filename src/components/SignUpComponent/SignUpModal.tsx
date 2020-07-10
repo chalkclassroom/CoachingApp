@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import SignUpForm from "./SignUpForm.tsx";
+import SignUpForm from "./SignUpForm";
 import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
@@ -17,6 +17,10 @@ import GrayedTeacherImage from "../../assets/images/GrayedTeacherImage.svg";
 import GrayedCoachImage from "../../assets/images/GrayedCoachImage.svg";
 import CardContent from "@material-ui/core/CardContent";
 
+/**
+ * specifies styling for modal
+ * @return {React.CSSProperties}
+ */
 function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
@@ -82,7 +86,7 @@ interface Props {
         lastName: string
       },
       role: string
-    ): Promise<void> 
+    ): Promise<void>
   }
 }
 
@@ -111,7 +115,7 @@ class SignUpModal extends React.Component<Props, State> {
   /**
    * @param {number} role
    */
-  handleChangeRole = (role: number) => {
+  handleChangeRole = (role: number): void => {
     this.setState({ role: role });
   };
 
@@ -250,7 +254,7 @@ class SignUpModal extends React.Component<Props, State> {
                   </Grid>
                 ) : this.state.role === 1 ? (
                   <SignUpForm
-                    mRole={"coach"}
+                    mRole="coach"
                     fullWidth
                     firebase={this.props.firebase}
                   />

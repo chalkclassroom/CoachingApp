@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import SmallGroupIconImage from '../assets/images/SmallGroupIconImage.svg'
-import WholeGroupIconImage from '../assets/images/WholeGroupIconImage.svg'
+import SmallGroupIconImage from '../../assets/images/SmallGroupIconImage.svg'
+import WholeGroupIconImage from '../../assets/images/WholeGroupIconImage.svg'
 
 /**
  * reminders for level of instruction observation

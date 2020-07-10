@@ -72,7 +72,7 @@ interface State {
  * @class TransitionTimer
  */
 class TransitionTimer extends React.Component<Props, State> {
-  // private timer: number;
+  timer: NodeJS.Timeout;
   /**
    * @param {Props} props 
    */
@@ -227,7 +227,7 @@ class TransitionTimer extends React.Component<Props, State> {
               <MuiThemeProvider theme={theme}>
                 <Button
                   color="secondary"
-                  variant="raised"
+                  variant="contained"
                   aria-label="Start"
                   onClick={this.guide}
                   style={{ fontFamily: 'Arimo', boxShadow: 'none' }}

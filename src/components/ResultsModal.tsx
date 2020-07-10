@@ -118,4 +118,12 @@ function ResultsModal(props: Props): React.ReactElement {
   );
 }
 
+ResultsModal.propTypes = {
+  classes: PropTypes.object.isRequired,
+  handleBegin: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  tool: PropTypes.string.isRequired
+}
+
 export default withStyles(styles)(ResultsModal);

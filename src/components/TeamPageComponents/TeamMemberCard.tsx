@@ -27,7 +27,13 @@ interface Style {
 
 interface Props {
   classes: Style,
-  person: { email: string, name: string, role: string, initials: string, description: string, link: string },
+  person: {
+    email?: string,
+    name: string,
+    role: string,
+    initials: string,
+    description: string,
+    link?: string },
   open: boolean,
   handleClick(): void
 }
@@ -53,7 +59,7 @@ class TeamMemberCard extends React.Component<Props, State> {
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
+  componentDidMount(): void {
     this.props.person.initials === "CC"
       ? this.setState({ image: CCImage })
       : this.props.person.initials === "DM"
@@ -79,9 +85,9 @@ class TeamMemberCard extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <Grid container justify="center" alignItems="center">

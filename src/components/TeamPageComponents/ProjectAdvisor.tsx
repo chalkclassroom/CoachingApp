@@ -30,9 +30,9 @@ class ProjectAdvisor extends React.Component<Props, {}> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return(
       <Grid container direction="column" justify="center" alignItems="center">
         <Grid item>

@@ -3,6 +3,7 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import ActionPlanForm from '../../../components/ActionPlanForm';
+import * as Types from '../../../constants/Types';
 
 interface Props {
   actionPlanId: string,
@@ -20,19 +21,8 @@ interface Props {
 }
 
 interface State {
-  teacher: Teacher
+  teacher: Types.Teacher
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * @class ActionPlanView
@@ -82,7 +72,48 @@ class ActionPlanView extends React.Component<Props, State>{
               <Grid container justify="center" alignItems="center" style={{width: '100%'}}>
                 {this.state.teacher ? (
                   <FirebaseContext.Consumer>
-                    {(firebase: object): React.ReactNode => <ActionPlanForm
+                    {(firebase: {
+                      createActionPlan(teacherId: string, magic8: string): Promise<void>,
+                      getAPInfo(actionPlanId: string): Promise<{
+                        sessionId: string,
+                        goal: string,
+                        goalTimeline: string,
+                        benefit: string,
+                        dateModified: {seconds: number, nanoseconds: number},
+                        dateCreated: {seconds: number, nanoseconds: number},
+                        coach: string,
+                        teacher: string,
+                        tool: string
+                      }>,
+                      getTeacherActionPlans(practice: string, teacherId: string): Promise<Array<{
+                        id: string,
+                        date: {seconds: number, nanoseconds: number},
+                        newDate: Date
+                      }>>,
+                      getActionSteps(actionPlanId: string): Promise<Array<{
+                        step: string,
+                        materials: string,
+                        person: string,
+                        timeline: string
+                      }>>,
+                      saveActionPlan(
+                        actionPlanId: string,
+                        goal: string,
+                        goalTimeline: string,
+                        benefit: string
+                      ): Promise<void>,
+                      saveActionStep(
+                        actionPlanId: string,
+                        index: string,
+                        step: string,
+                        materials: string,
+                        person: string,
+                        timeline: string
+                      ): Promise<void>,
+                      createActionStep(actionPlanId: string, index: string): Promise<void>,
+                      getCoachFirstName(): Promise<string>,
+                      getCoachLastName(): Promise<string>
+                    }): React.ReactNode => <ActionPlanForm
                       firebase={firebase}
                       actionPlanId={this.props.location.state.actionPlanId}
                       teacher={this.state.teacher}

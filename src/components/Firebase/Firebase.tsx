@@ -1,5 +1,6 @@
 import * as firebase from "firebase";
 import {FirebaseFunctions}  from '@firebase/functions-types';
+import * as Types from '../../constants/Types';
 // import 'firebase/auth';
 
 // Need to find a new place for this...
@@ -13,17 +14,6 @@ const config = {
   messagingSenderId: "353838544707",
   measurementId: "G-S797QZ8L3N"
 };
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-}
 
 interface TeacherInfo {
   firstName: string,
@@ -224,14 +214,14 @@ class Firebase {
   /**
    * gets list of all teachers linked to current user's account
    */
-  getTeacherList = async function(): Promise<Array<Teacher>> {
+  getTeacherList = async function(): Promise<Array<Promise<Types.Teacher>>> {
     return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)
       .collection("partners")
       .get()
       .then((partners: Array<{id: string}>) => {
-        const teacherList: Array<Teacher> = [];
+        const teacherList: Array<Types.Teacher> = [];
         partners.forEach(partner =>
           teacherList.push(this.getTeacherInfo(partner.id))
         );
@@ -1098,10 +1088,8 @@ class Firebase {
           total: number,
           sessionTotal: number,
           startDate: {value: string}
-        }>>}) => {
-          console.log('transition trend', result);
+        }>>}) =>
           result.data[0]
-        }
     )
     .catch((error: Error) =>
       console.error("Error occurred getting transition trend: ", error)

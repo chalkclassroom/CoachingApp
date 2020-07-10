@@ -17,9 +17,9 @@ class TrainingVideo extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     return (
       <Video
         autoPlay
@@ -27,7 +27,7 @@ class TrainingVideo extends React.Component<Props, {}> {
         muted
         controls={["PlayPause", "Seek", "Time", "Volume", "Fullscreen"]}
         poster="http://sourceposter.jpg"
-        onCanPlayThrough={() => {
+        onCanPlayThrough={(): void => {
           // Do stuff
         }}
       >

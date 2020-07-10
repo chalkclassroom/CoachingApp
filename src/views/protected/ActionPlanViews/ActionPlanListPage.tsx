@@ -43,21 +43,30 @@ interface Props {
 }
 
 interface State {
-  result: Array<{
-    id: string,
-    teacherId: string,
-    teacherLastName: string,
-    teacherFirstName: string,
-    date: {seconds: number, nanoseconds: number},
-    practice: string
-  }>,
+  result: Array<TeacherListInfo>,
   order: 'desc' | 'asc',
-  orderBy: string,
+  orderBy: TeacherListInfoKey,
   // rows: number,
   rowsPerPage: number,
   page: number,
-  selected: Array<any>
+  selected: Array<string>
 }
+
+interface TeacherListInfo {
+  name: string,
+  teacherId: string,
+  teacherFirstName: string,
+  teacherLastName: string,
+  practice: string,
+  id: string,
+  date: {
+    seconds: number,
+    nanoseconds: number
+  },
+  modified: Date
+}
+
+type TeacherListInfoKey = keyof TeacherListInfo;
 
 const headCells = [
   { id: 'modified', numeric: false, disablePadding: false, label: 'Last Modified' },
@@ -68,12 +77,12 @@ const headCells = [
 
 /**
  *
- * @param {any} a
- * @param {any} b
- * @param {string} orderBy
+ * @param {TeacherListInfo} a
+ * @param {TeacherListInfo} b
+ * @param {TeacherListInfoKey} orderBy
  * @return {number}
  */
-function descendingComparator(a, b, orderBy: string): number {
+function descendingComparator(a: TeacherListInfo, b: TeacherListInfo, orderBy: TeacherListInfoKey): number {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -84,24 +93,24 @@ function descendingComparator(a, b, orderBy: string): number {
 }
 
 /**
- * @param {'desc' | 'asc'} order
- * @param {string} orderBy
+ * @param {'desc' | 'asc' | TeacherListInfo} order
+ * @param {TeacherListInfoKey} orderBy
  * @return {any}
  */
-function getComparator(order: string, orderBy: string) {
+function getComparator(order: 'desc' | 'asc' | TeacherListInfo, orderBy: TeacherListInfoKey): any {
   return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+    ? (a: TeacherListInfo, b: TeacherListInfo): number => descendingComparator(a, b, orderBy)
+    : (a: TeacherListInfo, b: TeacherListInfo): number => -descendingComparator(a, b, orderBy);
 }
 
 /**
  *
- * @param {Array<any>} array
+ * @param {Array<TeacherListInfo>} array
  * @param {any} comparator
  * @return {any}
  */
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
+function stableSort(array: Array<TeacherListInfo>, comparator: typeof getComparator): any {
+  const stabilizedThis: Array<Array<TeacherListInfo, number>> = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -112,7 +121,7 @@ function stableSort(array, comparator) {
 
 interface TableHeadProps {
   order: 'desc' | 'asc',
-  orderBy: string,
+  orderBy: TeacherListInfoKey,
   onRequestSort(event: React.SyntheticEvent, property: string): void
 }
 
@@ -191,7 +200,11 @@ class ActionPlanListPage extends React.Component<Props, State>{
     }
   }
 
-  handleRequestSort = (event: React.SyntheticEvent, property: string): void => {
+  /**
+   * @param {SyntheticEvent} event
+   * @param {TeacherListInfoKey} property
+   */
+  handleRequestSort = (event: React.SyntheticEvent, property: TeacherListInfoKey): void => {
     const isAsc = this.state.orderBy === property && this.state.order === 'asc';
     isAsc ? this.setState({ order: 'desc' }) : this.setState({ order: 'asc' });
     this.setState({ orderBy: property });
@@ -203,23 +216,9 @@ class ActionPlanListPage extends React.Component<Props, State>{
   componentDidMount(): void {
     const firebase = this.context;
     firebase.getCoachActionPlans().then(
-      (answer: Array<{
-        id: string,
-        teacherId: string,
-        date: {seconds: number, nanoseconds: number},
-        practice: string,
-        teacherFirstName: string,
-        teacherLastName: string
-      }>) => {
+      (answer: Array<TeacherListInfo>) => {
       answer.forEach((
-        actionPlan: {
-          id: string,
-          teacherId: string,
-          date: {seconds: number, nanoseconds: number},
-          practice: string,
-          teacherFirstName: string,
-          teacherLastName: string
-        }
+        actionPlan: TeacherListInfo
       ) => 
         firebase.getTeacherFirstName(actionPlan.teacherId).then((firstName: string) => {
           actionPlan.teacherFirstName = firstName;
@@ -227,6 +226,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
           firebase.getTeacherLastName(actionPlan.teacherId).then((lastName: string) => {
             actionPlan.teacherLastName = lastName;
           }).then(() => {
+            console.log('answer is', answer)
             this.setState({
               result: answer
             })
@@ -241,6 +241,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
    */
   render(): React.ReactNode {
     const isSelected = (id: string): boolean => this.state.selected.includes(id);
+    console.log('selected state', this.state.selected);
     return (
       <div>
         <FirebaseContext.Consumer>
@@ -287,7 +288,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
                         <TableRow
                           key={index}
                           selected={isItemSelected}
-                          onClick={() => {
+                          onClick={(): void => {
                             this.props.history.push({
                               pathname: "/ActionPlan",
                               state: {

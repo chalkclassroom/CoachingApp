@@ -20,6 +20,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import FadeAwayModal from './FadeAwayModal';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 import * as moment from 'moment';
+import * as Types from '../constants/Types';
 
 const styles: object = {
   textField: {
@@ -36,21 +37,10 @@ const styles: object = {
   }
 }
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   classes: Style,
   actionPlanId?: string,
-  teacher: Teacher,
+  teacher: Types.Teacher,
   magic8?: string,
   firebase: {
     createActionPlan(teacherId: string, magic8: string): Promise<void>,
@@ -178,10 +168,10 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 
   /**
-   * @param {SyntheticEvent} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    * @param {string} popover
    */
-  handlePopoverOpen = (event: React.SyntheticEvent, popover: string): void => {
+  handlePopoverOpen = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>, popover: string): void => {
     this.setState({
       anchorEl: event.currentTarget,
       popover: popover
@@ -202,10 +192,22 @@ class ActionPlanForm extends React.Component<Props, State> {
    * @return {void}
    */
   handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({
-      [name]: event.target.value,
-      saved: false
-    });
+    if (name === 'goal') {
+      this.setState({
+        goal: event.target.value,
+        saved: false
+      })
+    } else if (name === 'goalTimeline') {
+      this.setState({
+        goalTimeline: event.target.value,
+        saved: false
+      })
+    } else if (name === 'benefit') {
+      this.setState({
+        benefit: event.target.value,
+        saved: false
+      })
+    }
   };
 
   /**
@@ -411,11 +413,11 @@ class ActionPlanForm extends React.Component<Props, State> {
   }
 
   /**
-   * @param {React.SyntheticEvent} e
+   * @param {React.ChangeEvent<{}>} e
    */
-  onClickAway = (e: React.SyntheticEvent): void => {
+  onClickAway = (e: React.ChangeEvent<{}>): void => {
     const ap = document.getElementById('ap');
-    if (!this.state.saved && !ap.contains(e.target) && !this.state.popover) {
+    if (!this.state.saved && !ap.contains(e.target as Node) && !this.state.popover) {
       this.setState({ dialog: true })
     }
   }
@@ -460,7 +462,8 @@ class ActionPlanForm extends React.Component<Props, State> {
   static propTypes = {
     firebase: PropTypes.exact({
       createActionPlan: PropTypes.func,
-      getActionPlan: PropTypes.func,
+      getAPInfo: PropTypes.func,
+      getTeacherActionPlans: PropTypes.func,
       getActionSteps: PropTypes.func,
       saveActionPlan: PropTypes.func,
       saveActionStep: PropTypes.func,

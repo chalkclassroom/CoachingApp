@@ -15,6 +15,7 @@ import PieSliceChildNonImage from '../../../assets/images/PieSliceChildNonImage.
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
+import * as Types from '../../../constants/Types';
 import TeacherModal from '../HomeViews/TeacherModal';
 
 const styles: object = {
@@ -34,7 +35,17 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher,
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void
+  }
 }
 
 interface Style {
@@ -65,17 +76,6 @@ interface State {
   questionAdded: boolean,
   teacherModal: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * listening to children results
@@ -302,9 +302,9 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   }
 
   /**
-   * @param {SyntheticEvent} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    */
-  changeSessionId = (event: React.SyntheticEvent): void => {
+  changeSessionId = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     this.setState(
       {
         sessionId: event.target.value
@@ -451,7 +451,10 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string,
+      comparisonText: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -596,7 +599,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

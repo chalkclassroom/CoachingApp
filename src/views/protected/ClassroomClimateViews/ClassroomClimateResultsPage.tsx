@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TeacherModal from '../HomeViews/TeacherModal';
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -26,7 +27,17 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher,
+  history: {
+    replace(
+      param: {
+        pathname: string,
+        state: {
+          type: string
+        }
+      }
+    ): void
+  }
 }
 
 interface Style {
@@ -53,17 +64,6 @@ interface State {
   questionAdded: boolean,
   teacherModal: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * classroom climate results
@@ -291,9 +291,9 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   }
 
   /**
-   * @param {SyntheticEvent} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    */
-  changeSessionId = (event: React.SyntheticEvent): void => {
+  changeSessionId = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     console.log("sessionId", event.target.value, "type is: ", typeof event);
     this.setState(
       {
@@ -428,7 +428,9 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -438,6 +440,9 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
+    }).isRequired,
+    history: PropTypes.exact({
+      replace: PropTypes.func
     }).isRequired
   };
 
@@ -531,7 +536,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

@@ -10,7 +10,7 @@ import Magic8MenuPage from "./views/protected/Magic8MenuPage";
 import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage";
 import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage";
-import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage.tsx";
+import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
 import HomePage from "./views/protected/HomeViews/HomePage";
 import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
 import ActionPlanListPage from "./views/protected/ActionPlanViews/ActionPlanListPage";
@@ -22,7 +22,8 @@ import amber from "@material-ui/core/colors/amber";
 import {
   createMuiTheme,
   MuiThemeProvider,
-  withStyles
+  // withStyles,
+  Theme
 } from "@material-ui/core/styles";
 import LevelOfInstructionTrainingPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage";
 import LevelOfInstructionPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionPage";
@@ -36,6 +37,7 @@ import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateView
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage";
 import StudentEngagementPage from "./views/protected/StudentEngagementViews/StudentEngagementPage";
 import StudentEngagementResultsPage from "./views/protected/StudentEngagementViews/StudentEngagementResultsPage";
+// import TransitionTimeTrainingPageOld from "./views/protected/TransitionViews/TransitionTimeTrainingPageOld";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage";
 import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage"; 
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
@@ -59,7 +61,7 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 LogRocket.init('akprci/cqref');
 setupLogRocketReact(LogRocket);
 
-const styles = createMuiTheme({
+const styles: Theme = createMuiTheme({
   palette: {
     primary: {
       light: blue[300],
@@ -345,6 +347,11 @@ class App extends React.Component<Props, State> {
               path="/TransitionTimeTraining"
               component={TransitionTimeTrainingPage}
             />
+            {/* <PrivateRoute
+              auth={this.state.auth}
+              path="/TransitionTime2Training"
+              component={TransitionTimeTrainingPage}
+            /> */}
             <PrivateRoute
               exact
               auth={this.state.auth}
@@ -416,5 +423,5 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default hot(withStyles(styles)(connect(null, {getCoach})(App)));
+export default hot(connect(null, {getCoach})(App));
 

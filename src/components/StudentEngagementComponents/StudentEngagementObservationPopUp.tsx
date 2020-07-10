@@ -1,37 +1,29 @@
 import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import SmallGroupIconImage from '../assets/images/SmallGroupIconImage.svg'
+import AnytimeIconImage from '../../assets/images/AnytimeIconImage.svg';
 
 /**
- * reminders for listening to children observation
+ * reminders for student engagement observation
  * @return {ReactElement}
  */
-export default function ListeningToChildrenObservationPopUp(): React.ReactElement {
+export default function StudentEngagementObservationPopUp(): React.ReactElement {
   return (
     <div>
       <Grid container direction="column" justify="center" alignItems="center">
         <Grid item>
-          <Typography variant="h4" align="center">
-            Listening to Children Observation
+          <Typography variant="h4">
+            Student Engagement Observation
           </Typography>
         </Grid>
         <Grid item style={{paddingTop: '1em'}}>
-          <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
+          <Typography variant="h6" align="left">
             <ul>
               <li>
-                Observe the teacher interacting with children.
+                Observe each child for 3 seconds.
               </li>
               <li>
-                Select the types of behaviors that show teachers
-                <ul>
-                  <li>
-                    listening to children
-                  </li>
-                  <li>
-                    encouraging child talk
-                  </li>
-                </ul>
+                Rate each child&apos;s level of engagement in the learning activity when prompted.
               </li>
             </ul>
           </Typography>
@@ -44,11 +36,11 @@ export default function ListeningToChildrenObservationPopUp(): React.ReactElemen
               </Typography>
             </Grid>
               <Grid item>
-              <img src={SmallGroupIconImage} width={150}/>
+              <img src={AnytimeIconImage} width={150}/>
               </Grid>
             <Grid item>
               <Typography variant="h6">
-                Centers / Small Groups / Table Activities / Mealtimes
+                Any time of the day!
               </Typography>
             </Grid>
           </Grid>

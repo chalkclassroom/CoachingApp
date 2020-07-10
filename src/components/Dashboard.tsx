@@ -53,7 +53,7 @@ import SequentialResultsDialog from './SequentialActivitiesComponents/Sequential
 import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog';
 import * as Types from '../constants/Types';
 
-const styles = {
+const styles: object = {
   card: {
     border: "3px solid #d9d9d9",
     borderRadius: 10,
@@ -127,8 +127,8 @@ interface Props {
     push(pathname: string): void
   },
   teacherSelected: Types.Teacher,
-  infoPlacement: string,
-  infoDisplay: React.ReactElement,
+  infoPlacement?: string,
+  infoDisplay?: React.ReactElement,
   completeObservation: boolean,
   updateSessionTime(time: number): void
 }
@@ -265,7 +265,7 @@ class Dashboard extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    infoDisplay: PropTypes.element.isRequired,
+    infoDisplay: PropTypes.element,
     classes: PropTypes.exact({
       card: PropTypes.string,
       iconGrid: PropTypes.string,
@@ -279,7 +279,7 @@ class Dashboard extends React.Component<Props, State> {
     history: PropTypes.exact({
       push: PropTypes.func
     }).isRequired,
-    infoPlacement: PropTypes.string.isRequired,
+    infoPlacement: PropTypes.string,
     completeObservation: PropTypes.bool.isRequired,
     type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,
     updateSessionTime: PropTypes.func.isRequired,
@@ -355,7 +355,14 @@ class Dashboard extends React.Component<Props, State> {
           : <div />
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => (
+            {(firebase: {
+              handleFetchNotes(): Promise<Array<{
+                id: string,
+                content: string,
+                timestamp: {seconds: number, nanoseconds: number}
+              }>>,
+              handlePushNotes(note: string): Promise<void>
+            }): React.ReactNode => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}

@@ -70,7 +70,6 @@ class TrainingQuestion extends React.Component<Props, {}> {
     feedback: PropTypes.string.isRequired,
     recentlyCorrect: PropTypes.bool.isRequired,
     question: PropTypes.string.isRequired,
-    options: PropTypes.instanceOf(Map).isRequired,
     selected: PropTypes.number.isRequired
   }
 

@@ -14,6 +14,7 @@ import ResultsDashboard from './ResultsDashboard';
 import ActionPlanForm from './ActionPlanForm';
 import ConferencePlanForm from './ConferencePlanForm';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
+import * as Types from '../constants/Types';
 
 const styles: object = {
   root: {
@@ -52,19 +53,8 @@ const styles: object = {
   },
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
-  teacher: Teacher,
+  teacher: Types.Teacher,
   classes: Style,
   magic8: string,
   summary: React.ReactNode,
@@ -171,6 +161,37 @@ class ResultsLayout extends React.Component<Props, State> {
 
   handleCloseNotes = (): void => {
     this.setState({ notesModal: false })
+  }
+
+  static propTypes = {
+    teacher: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string,
+      notes: PropTypes.string
+    }).isRequired,
+    classes: PropTypes.object.isRequired,
+    magic8: PropTypes.string.isRequired,
+    summary: PropTypes.elementType.isRequired,
+    details: PropTypes.elementType.isRequired,
+    trendsGraph: PropTypes.elementType.isRequired,
+    changeSessionId: PropTypes.func.isRequired,
+    sessionId: PropTypes.string.isRequired,
+    sessionDates: PropTypes.array.isRequired,
+    questions: PropTypes.elementType.isRequired,
+    chosenQuestions: PropTypes.array.isRequired,
+    notes: PropTypes.array.isRequired,
+    actionPlanExists: PropTypes.bool.isRequired,
+    conferencePlanId: PropTypes.string.isRequired,
+    addNoteToPlan: PropTypes.func.isRequired,
+    conferencePlanExists: PropTypes.bool.isRequired,
+    history: PropTypes.exact({
+      replace: PropTypes.func
+    }).isRequired
   }
 
   /**
@@ -296,7 +317,20 @@ class ResultsLayout extends React.Component<Props, State> {
                   {this.props.sessionId ? (
                     <div>
                       <FirebaseContext.Consumer>
-                        {(firebase: object): React.ReactNode => 
+                        {(firebase: {
+                          createConferencePlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
+                          getConferencePlan(sessionId: string):
+                            Promise<Array<{
+                              id: string,
+                              feedback: Array<string>,
+                              questions: Array<string>,
+                              addedQuestions: Array<string>,
+                              notes: Array<string>,
+                              date: {seconds: number, nanoseconds: number}}>>,
+                          saveConferencePlan(conferencePlanId: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>): Promise<void>,
+                          getCoachFirstName(): Promise<string>,
+                          getCoachLastName(): Promise<string>
+                        }): React.ReactNode => 
                           <ConferencePlanForm 
                             conferencePlanExists={this.props.conferencePlanExists}
                             editMode={this.state.conferencePlanEditMode}
@@ -327,7 +361,48 @@ class ResultsLayout extends React.Component<Props, State> {
                   {this.props.sessionId ? (
                     <div>
                       <FirebaseContext.Consumer>
-                        {(firebase: object): React.ReactNode => <ActionPlanForm
+                        {(firebase: {
+                          createActionPlan(teacherId: string, magic8: string): Promise<void>,
+                          getAPInfo(actionPlanId: string): Promise<{
+                            sessionId: string,
+                            goal: string,
+                            goalTimeline: string,
+                            benefit: string,
+                            dateModified: {seconds: number, nanoseconds: number},
+                            dateCreated: {seconds: number, nanoseconds: number},
+                            coach: string,
+                            teacher: string,
+                            tool: string
+                          }>,
+                          getTeacherActionPlans(practice: string, teacherId: string): Promise<Array<{
+                            id: string,
+                            date: {seconds: number, nanoseconds: number},
+                            newDate: Date
+                          }>>,
+                          getActionSteps(actionPlanId: string): Promise<Array<{
+                            step: string,
+                            materials: string,
+                            person: string,
+                            timeline: string
+                          }>>,
+                          saveActionPlan(
+                            actionPlanId: string,
+                            goal: string,
+                            goalTimeline: string,
+                            benefit: string
+                          ): Promise<void>,
+                          saveActionStep(
+                            actionPlanId: string,
+                            index: string,
+                            step: string,
+                            materials: string,
+                            person: string,
+                            timeline: string
+                          ): Promise<void>,
+                          createActionStep(actionPlanId: string, index: string): Promise<void>,
+                          getCoachFirstName(): Promise<string>,
+                          getCoachLastName(): Promise<string>
+                        }): React.ReactNode => <ActionPlanForm
                           firebase={firebase}
                           teacher={this.props.teacher}
                           sessionId={this.props.sessionId}

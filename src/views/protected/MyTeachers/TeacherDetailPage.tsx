@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { FirebaseContext } from "../../../components/Firebase/index";
 import AppBar from "../../../components/AppBar";
-import LabeledInfo from "../../../components/MyTeachersComponents/LabeledInfo.tsx";
+import LabeledInfo from "../../../components/MyTeachersComponents/LabeledInfo";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import EngagementIconImage from "../../../assets/images/EngagementIconImage.svg";
 import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
@@ -25,6 +25,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -269,17 +270,6 @@ interface Style {
   deleteModalButton: string
 }
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string,
-};
-
 interface Props {
   match: {
     params: {
@@ -288,7 +278,7 @@ interface Props {
   },
   location: {
     state: {
-      teacher: Teacher
+      teacher: Types.Teacher
     }
   },
   history: {
@@ -430,7 +420,7 @@ class TeacherDetailPage extends React.Component<Props, State> {
     const firebase = this.context;
     firebase
       .getTeacherInfo(this.state.teacherUID)
-      .then((teacherInfo: Teacher) => {
+      .then((teacherInfo: Types.Teacher) => {
         this.setState({
           firstName: teacherInfo.firstName,
           lastName: teacherInfo.lastName,
@@ -488,12 +478,31 @@ class TeacherDetailPage extends React.Component<Props, State> {
   handleEditText = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const type = e.target.name;
     const val = e.target.value;
-    this.setState(
-      {
-        [type]: val
-      },
-      () => this.validateInputText(type, val)
-    );
+    if (type === 'inputFirstName') {
+      this.setState({
+        inputFirstName: val
+      }, () => this.validateInputText(type, val))
+    } else if (type === 'inputLastName') {
+      this.setState({
+        inputLastName: val
+      }, () => this.validateInputText(type, val))
+    } else if (type === 'inputSchool') {
+      this.setState({
+        inputSchool: val
+      }, () => this.validateInputText(type, val))
+    } else if (type === 'inputEmail') {
+      this.setState({
+        inputEmail: val
+      }, () => this.validateInputText(type, val))
+    } else if (type === 'inputPhone') {
+      this.setState({
+        inputPhone: val
+      }, () => this.validateInputText(type, val))
+    } else if (type === 'inputNotes') {
+      this.setState({
+        inputNotes: val
+      }, () => this.validateInputText(type, val))
+    }
   };
 
   /**
@@ -680,10 +689,44 @@ class TeacherDetailPage extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    classes: PropTypes.exact({
+      root: PropTypes.string,
+      container: PropTypes.string,
+      button: PropTypes.string,
+      teacherHeader: PropTypes.string,
+      actionButton: PropTypes.string,
+      contentContainer: PropTypes.string,
+      teacherCard: PropTypes.string,
+      magicEightCard: PropTypes.string,
+      magicEightItem: PropTypes.string,
+      magicEightButton: PropTypes.string,
+      img: PropTypes.string,
+      deleteModalButtonContainer: PropTypes.string,
+      deleteModalButton: PropTypes.string
+    }).isRequired,
+    /* match: PropTypes.exact({
+      params: PropTypes.exact({
+        teacherid: PropTypes.string
+      })
+    }).isRequired,
+    location: PropTypes.exact({
+      state: PropTypes.exact({
+        teacher: PropTypes.exact({
+          email: PropTypes.string,
+          firstName: PropTypes.string,
+          lastName: PropTypes.string,
+          notes: PropTypes.string,
+          id: PropTypes.string,
+          phone: PropTypes.string,
+          role: PropTypes.string,
+          school: PropTypes.string
+        })
+      })
+    }).isRequired,
+    history: PropTypes.exact({
+      goBack: PropTypes.func,
+      replace: PropTypes.func
+    }).isRequired */
   }
 
   /**

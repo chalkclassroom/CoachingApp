@@ -120,7 +120,7 @@ class TeacherChecklist extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.timer = setInterval(this.tick, 1000);
+    this.timer = global.setInterval(this.tick, 1000);
   }
 
   /** lifecycle method invoked just before component is unmounted */
@@ -137,7 +137,7 @@ class TeacherChecklist extends React.Component<Props, State> {
       timeUpOpen: false,
       time: 10000,
       final: true
-    }, () => {this.timer = setInterval(this.tick, 1000)})
+    }, () => {this.timer = global.setInterval(this.tick, 1000)})
   }
 
   handleNext = (): void => {
@@ -168,7 +168,7 @@ class TeacherChecklist extends React.Component<Props, State> {
           checked: [],
           in: true,
           time: 60000
-        }, () => {this.timer = setInterval(this.tick, 1000)})
+        }, () => {this.timer = global.setInterval(this.tick, 1000)})
       });
     })
   };

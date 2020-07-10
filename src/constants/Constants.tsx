@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 import {
   lightGreen,
@@ -41,6 +42,108 @@ export const UnselectedTransitionTypeColors = {
   behaviorManagementColor: red['A100'],
   otherColor: indigo['A100']
 }
+
+export const LineTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: TransitionTypeColors.lineColor
+    },
+    secondary: {
+      main: UnselectedTransitionTypeColors.lineColor
+    },
+    action: {
+      disabledBackground: UnselectedTransitionTypeColors.lineColor
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+
+export const TravelingTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: TransitionTypeColors.travelingColor
+    },
+    secondary: {
+      main: UnselectedTransitionTypeColors.travelingColor
+    },
+    action: {
+      disabledBackground: UnselectedTransitionTypeColors.travelingColor
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+
+export const WaitingTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: TransitionTypeColors.waitingColor
+    },
+    secondary: {
+      main: UnselectedTransitionTypeColors.waitingColor
+    },
+    action: {
+      disabledBackground: UnselectedTransitionTypeColors.waitingColor
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+
+export const RoutinesTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: TransitionTypeColors.routinesColor
+    },
+    secondary: {
+      main: UnselectedTransitionTypeColors.routinesColor
+    },
+    action: {
+      disabledBackground: UnselectedTransitionTypeColors.routinesColor
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+
+export const BehaviorManagementTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: TransitionTypeColors.behaviorManagementColor
+    },
+    secondary: {
+      main: UnselectedTransitionTypeColors.behaviorManagementColor
+    },
+    action: {
+      disabledBackground: UnselectedTransitionTypeColors.behaviorManagementColor
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+
+export const OtherTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: TransitionTypeColors.otherColor
+    },
+    secondary: {
+      main: UnselectedTransitionTypeColors.otherColor
+    },
+    action: {
+      disabledBackground: UnselectedTransitionTypeColors.otherColor
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
 
 export const CentersFirstHalf = [
   "Blocks",

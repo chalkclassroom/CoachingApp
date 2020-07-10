@@ -42,6 +42,7 @@ import { MuiThemeProvider, createMuiTheme, Theme } from '@material-ui/core/style
 import { changeTeacher } from '../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Constants from '../constants/Constants';
+import * as Types from '../constants/Types';
 
 const TransitionTheme = createMuiTheme({
   palette: {
@@ -124,7 +125,7 @@ const ACTheme = createMuiTheme({
   }
 });
 
-const styles = {
+const styles: object = {
   card: {
     border: "3px solid #d9d9d9",
     borderRadius: 10,
@@ -205,17 +206,6 @@ interface Style {
   viewButtonsSelected: string
 }
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   magic8: string,
   changeTeacher(teacher: string): void,
@@ -231,8 +221,8 @@ interface Props {
   handleOpenNotes(): void,
   handleCloseNotes(): void,
   notesModal: boolean,
-  teacherSelected: Teacher,
-  teacherList: Array<Teacher>
+  teacherSelected: Types.Teacher,
+  teacherList: Array<Types.Teacher>
 }
 
 interface State {
@@ -548,7 +538,10 @@ class ResultsDashboard extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  teacherList: Array<Types.Teacher>
+} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,
     teacherList: state.teacherListState.teachers

@@ -26,6 +26,7 @@ import TeacherModal from "../views/protected/HomeViews/TeacherModal";
 import FirebaseContext from "./Firebase/FirebaseContext";
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import * as Constants from '../constants/Constants';
+import * as Types from '../constants/Types';
 
 const styles: object = {
   toolbarIcon: {
@@ -44,17 +45,6 @@ interface Style {
   nested: string
 }
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   open: boolean,
   classes: Style,
@@ -71,7 +61,7 @@ interface Props {
   },
   firebase: {
     firebaseSignOut(): Promise<void>,
-    getTeacherList(): Promise<Teacher[]>
+    getTeacherList(): Promise<Types.Teacher[]>
   },
   clearCoach(): void
 }
@@ -134,9 +124,9 @@ class BurgerMenu extends React.Component<Props, State>{
     }).isRequired,
     handleClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
-    history: PropTypes.exact({
+    /* history: PropTypes.exact({
       push: PropTypes.func
-    }).isRequired,
+    }).isRequired, */
     firebase: PropTypes.exact({
       getTeacherList: PropTypes.func,
       firebaseSignOut: PropTypes.func

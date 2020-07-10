@@ -3,7 +3,8 @@ import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../components/AppBar";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
-import ResetForm from "./ResetForm.tsx";
+import ResetForm from "./ResetForm";
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   root: {
@@ -41,7 +42,26 @@ class ForgotPasswordPage extends React.Component<Props, {}> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactElement => (
+          {(firebase: {
+            resetPassword(email: string): Promise<void>,
+            /* auth: {
+              currentUser: null | {
+                uid: string
+              },
+              onAuthStateChanged(arg: any): firebase.User | null,
+            }, */
+            auth: firebase.auth.Auth,
+            firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>,
+            firebaseEmailSignUp(
+              info: {
+                email: string,
+                password: string,
+                firstName: string,
+                lastName: string
+              },
+              role: string
+            ): Promise<void>
+          }): React.ReactElement => (
             <div>
               <AppBar firebase={firebase} />
               <ResetForm firebase={firebase} />

@@ -3,7 +3,17 @@ import * as PropTypes from "prop-types";
 import { Line } from "react-chartjs-2";
 
 interface Props {
-  data: {labels: Array<string>, datasets: Array<{label: string, data: number, backgroundColor: string, borderColor: string, fill: boolean, lineTension: number}>}
+  data(): {
+    labels: Array<string>,
+    datasets: Array<{
+      label: string,
+      data: Array<number>,
+      backgroundColor: string,
+      borderColor: string,
+      fill: boolean,
+      lineTension: number
+    }>
+  }
 }
 
 /**

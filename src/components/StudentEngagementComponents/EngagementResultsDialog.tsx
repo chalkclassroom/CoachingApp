@@ -10,6 +10,7 @@ import { clearTeacher } from "../../state/actions/teacher";
 import { clearEngagementCount } from "../../state/actions/student-engagement";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 const EngagementTheme = createMuiTheme({
   palette: {
@@ -95,7 +96,7 @@ function EngagementResultsDialog(props: Props): React.ReactElement {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {engagedCount: number, notEngagedCount: number} => {
   return {
     engagedCount: state.engagementCountState.engagedCount,
     notEngagedCount: state.engagementCountState.notEngagedCount

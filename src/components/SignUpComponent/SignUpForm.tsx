@@ -124,7 +124,7 @@ class SignUpForm extends React.Component<Props, State> {
    * @param {string} name
    * @param {string} value
    */
-  validateState = (name: string, value: string) => {
+  validateState = (name: string, value: string): void => {
     switch (name) {
       case "firstName":
         if (value.length < 1) {
@@ -221,7 +221,7 @@ class SignUpForm extends React.Component<Props, State> {
     return re.test(String(email).toLowerCase());
   };
 
-  handleSubmit = () => {
+  handleSubmit = (): void => {
     if (!this.state.errors) {
       this.props.firebase
         .firebaseEmailSignUp(
@@ -252,9 +252,9 @@ class SignUpForm extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (
