@@ -17,6 +17,7 @@ import VanderbiltEngineeringLogoImage from "../../assets/images/VanderbiltEngine
 import AbtLogoImage from "../../assets/images/AbtLogoImage.png";
 import MNPSLogoImage from "../../assets/images/MNPSLogoImage.jpg";
 import * as Constants from "../../constants/Constants";
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   root: {
@@ -140,7 +141,7 @@ class TeamPage extends React.Component<Props, State> {
       <div>
         <div className={classes.root}>
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container
@@ -465,7 +466,7 @@ class TeamPage extends React.Component<Props, State> {
         </div>
         <div className={classes.mobileRoot}>
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container

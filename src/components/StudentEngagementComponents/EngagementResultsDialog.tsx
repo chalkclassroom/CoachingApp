@@ -11,6 +11,7 @@ import { clearEngagementCount } from "../../state/actions/student-engagement";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const EngagementTheme = createMuiTheme({
   palette: {
@@ -25,9 +26,7 @@ const EngagementTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   engagedCount: number,
   notEngagedCount: number,

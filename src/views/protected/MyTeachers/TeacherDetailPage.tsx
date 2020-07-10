@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import { FirebaseContext } from "../../../components/Firebase/index";
 import AppBar from "../../../components/AppBar";
 import LabeledInfo from "../../../components/MyTeachersComponents/LabeledInfo";
@@ -26,6 +26,8 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import * as Types from '../../../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -270,21 +272,14 @@ interface Style {
   deleteModalButton: string
 }
 
-interface Props {
+type Props = RouteComponentProps & {
   match: {
     params: {
       teacherid: string
     }
   },
-  location: {
-    state: {
-      teacher: Types.Teacher
-    }
-  },
-  history: {
-    goBack(): void,
-    replace(param: string): void
-  },
+  location: H.Location,
+  history: H.History,
   classes: Style
 }
 
@@ -704,6 +699,8 @@ class TeacherDetailPage extends React.Component<Props, State> {
       deleteModalButtonContainer: PropTypes.string,
       deleteModalButton: PropTypes.string
     }).isRequired,
+    history: ReactRouterPropTypes.history.isRequired,
+    location: ReactRouterPropTypes.location.isRequired
     /* match: PropTypes.exact({
       params: PropTypes.exact({
         teacherid: PropTypes.string
@@ -758,7 +755,7 @@ class TeacherDetailPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.container}>
           <Button

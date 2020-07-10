@@ -10,7 +10,7 @@ import {
 import { AppBar as NavBar } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import LogoImage from "../assets/images/LogoImage.svg";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -20,9 +20,11 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
+// import { RouterProps, RouteProps, RedirectProps } from 'react-router';
 
 // import * as Constants from '../constants';
 import * as firebase from 'firebase/app';
+import * as H from 'history';
 
 const styles: object = {
   grow: {
@@ -98,14 +100,13 @@ interface Style {
   coachingText: string
 }
 
-interface Props {
+type Props = RouteComponentProps & {
   classes?: Style,
-  firebase: {
+  firebase?: {
     auth: {
-      /* currentUser: null | {
+      currentUser: null | {
         uid: string
-      }, */
-      currentUser: firebase.User | null,
+      },
       onAuthStateChanged(arg: any): firebase.User | null,
     },
     firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>,
@@ -117,21 +118,11 @@ interface Props {
         lastName: string
       },
       role: string
-    ): Promise<void>
+    ): Promise<void>,
+    firebaseSignOut(): Promise<void>,
+    getTeacherList(): Promise<Types.Teacher[]>
   },
-  // firebase: any,
-  /* history: {
-    push(
-      param: (string | {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }),
-    ): void
-  } */
-  // history?: any
-  history: Types.History
+  history: H.History;
 }
 
 interface State {
@@ -217,9 +208,11 @@ class AppBar extends React.Component<Props, State> {
         onAuthStateChanged: PropTypes.func
       }).isRequired,
       firebaseEmailSignIn: PropTypes.func,
-      firebaseEmailSignUp: PropTypes.func
-    }).isRequired,
-    history: ReactRouterPropTypes.history,
+      firebaseEmailSignUp: PropTypes.func,
+      firebaseSignOut: PropTypes.func,
+      getTeacherList: PropTypes.func
+    }),
+    history: ReactRouterPropTypes.history
     /* history: PropTypes.shape({
       action: PropTypes.oneOf(['PUSH', 'REPLACE', 'POP']),
       block: PropTypes.func,

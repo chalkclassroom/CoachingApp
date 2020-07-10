@@ -14,6 +14,9 @@ import ListeningToChildrenHelpCard from '../../../components/ListeningComponents
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/es';
 import Grid from '@material-ui/core/Grid';
+import * as Types from '../../../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const ListeningTheme = createMuiTheme({
   palette: {
@@ -156,10 +159,7 @@ interface Props {
   location: {
     state: string
   };
-  history: {
-    goBack(): void,
-    replace(param: {pathname: string, state: {type: string}}): void
-  };
+  history: H.History;
 }
 
 interface Style {
@@ -231,7 +231,8 @@ class ListeningToChildrenTrainingPage extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**
@@ -244,7 +245,7 @@ class ListeningToChildrenTrainingPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
           <Grid container justify="center" alignItems="center">

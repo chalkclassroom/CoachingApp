@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import TeacherModal from '../HomeViews/TeacherModal';
+import * as H from 'history';
 
 const styles: object = {
   root: {
@@ -27,16 +28,7 @@ const styles: object = {
 interface Props {
   classes: Style,
   teacherSelected: Types.Teacher,
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  }
+  history: H.History
 }
 
 interface Style {

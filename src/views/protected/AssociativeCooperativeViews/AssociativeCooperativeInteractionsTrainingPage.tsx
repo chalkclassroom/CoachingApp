@@ -12,8 +12,10 @@ import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionna
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import AssocCoopHelpCard from '../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import { createMuiTheme } from '@material-ui/core/es';
+import { createMuiTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import * as H from 'history';
+import * as Types from '../../../constants/Types';
 
 const ACTheme = createMuiTheme({
   palette: {
@@ -156,15 +158,7 @@ interface Props {
   location: {
     state: string
   },
-  history: {
-    goBack(): void,
-    replace(params: {
-      pathname: string,
-      state: {
-        type: string
-      }
-    }): void
-  }
+  history: H.History
 }
 
 interface Style {
@@ -249,7 +243,7 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
           <Grid container justify="center" alignItems="center">

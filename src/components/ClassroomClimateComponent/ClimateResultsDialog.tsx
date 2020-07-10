@@ -11,6 +11,7 @@ import { emptyClimateStack } from "../../state/actions/classroom-climate";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const ClimateTheme = createMuiTheme({
   palette: {
@@ -25,9 +26,7 @@ const ClimateTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   climateStack: Array<{timestamp: number, observation: string}>,
   emptyClimateStack(): void

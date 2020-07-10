@@ -11,6 +11,7 @@ import { emptyLoiStack } from "../../state/actions/level-of-instruction";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const InstructionTheme = createMuiTheme({
   palette: {
@@ -25,9 +26,7 @@ const InstructionTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   instructionStack: Array<{timestamp: number, observation: string}>,
   emptyLoiStack(): void

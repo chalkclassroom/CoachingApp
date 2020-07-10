@@ -19,7 +19,7 @@ import ResultsIcon from "@material-ui/icons/PieChart";
 import TutorialIcon from "@material-ui/icons/School";
 import HelpIcon from "@material-ui/icons/ContactSupport";
 import LogoutIcon from "@material-ui/icons/ExitToApp";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import { connect } from 'react-redux';
 import { clearCoach } from '../state/actions/coach';
 import TeacherModal from "../views/protected/HomeViews/TeacherModal";
@@ -28,6 +28,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import * as Constants from '../constants/Constants';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
+import * as H from 'history';
 
 const styles: object = {
   toolbarIcon: {
@@ -46,20 +47,11 @@ interface Style {
   nested: string
 }
 
-interface Props {
+type Props = RouteComponentProps & {
   open: boolean,
   classes: Style,
   handleClose(event: React.MouseEvent<HTMLElement, MouseEvent>): void,
-  history: {
-    push(
-      param: (string | {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }),
-    ): void
-  },
+  history: H.History,
   firebase: {
     firebaseSignOut(): Promise<void>,
     getTeacherList(): Promise<Types.Teacher[]>
@@ -332,7 +324,9 @@ class BurgerMenu extends React.Component<Props, State>{
         </Drawer>
         {this.state.teacherModal ? (
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => (
+            {(firebase: {
+              getTeacherList(): Promise<Types.Teacher[]>
+            }): React.ReactNode => (
               <TeacherModal
                 handleClose={this.handleTeacherModalClose}
                 firebase={firebase}

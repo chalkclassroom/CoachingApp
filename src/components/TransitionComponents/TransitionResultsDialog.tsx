@@ -11,6 +11,7 @@ import { resetTransitionTime, clearTransitionTime, clearSessionTime } from "../.
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const TransitionTheme = createMuiTheme({
   palette: {
@@ -25,9 +26,7 @@ const TransitionTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   transitionTime: number,
   startTime: number,

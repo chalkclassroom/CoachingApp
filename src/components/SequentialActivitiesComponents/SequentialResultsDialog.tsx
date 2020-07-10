@@ -11,6 +11,7 @@ import { deleteSACenters, clearSequentialCount } from "../../state/actions/seque
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const SequentialTheme = createMuiTheme({
   palette: {
@@ -25,9 +26,7 @@ const SequentialTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   sequentialCount: number,
   noSequentialCount: number,

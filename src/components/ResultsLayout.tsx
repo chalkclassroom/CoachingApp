@@ -15,6 +15,8 @@ import ActionPlanForm from './ActionPlanForm';
 import ConferencePlanForm from './ConferencePlanForm';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 import * as Types from '../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -70,16 +72,7 @@ interface Props {
   conferencePlanId: string,
   addNoteToPlan(conferencePlanId: string, note: string): void,
   conferencePlanExists: boolean,
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  }
+  history: H.History
 }
 
 interface Style {
@@ -189,9 +182,7 @@ class ResultsLayout extends React.Component<Props, State> {
     conferencePlanId: PropTypes.string.isRequired,
     addNoteToPlan: PropTypes.func.isRequired,
     conferencePlanExists: PropTypes.bool.isRequired,
-    history: PropTypes.exact({
-      replace: PropTypes.func
-    }).isRequired
+    history: ReactRouterPropTypes.history
   }
 
   /**
@@ -203,7 +194,7 @@ class ResultsLayout extends React.Component<Props, State> {
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid container justify="flex-start" direction="row" alignItems="flex-start">
           <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>

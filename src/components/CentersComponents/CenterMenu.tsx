@@ -12,6 +12,8 @@ import TotalVisitCount from '../TotalVisitCount';
 import grey from "@material-ui/core/colors/grey";
 import { withStyles } from "@material-ui/core/styles";
 import * as Types from '../../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -122,9 +124,7 @@ interface Props {
     grow: string,
     backButton: string
   },
-  history: {
-    replace(param: {pathname: string, state: {type: string}}): void
-  }
+  history: H.History
 }
 
 interface State{
@@ -237,9 +237,7 @@ class CenterMenu extends React.Component<Props, State> {
     updateCount: PropTypes.func.isRequired,
     centers: PropTypes.array.isRequired,
     type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,
-    history: PropTypes.exact({
-      replace: PropTypes.func
-    }).isRequired
+    history: ReactRouterPropTypes.history
   }
 
   /**

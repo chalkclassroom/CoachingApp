@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import AppBar from "../../../components/AppBar";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
@@ -29,6 +29,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
+import * as Types from '../../../constants/Types';
 
 const styles = (theme: Theme): object => ({
   root: {
@@ -252,18 +255,8 @@ interface Style {
   legendIcon: string
 }
 
-interface Props {
-  history: {
-    push(
-      param: (string | {
-        pathname: string,
-        state: {
-          teacher: Teacher,
-          type: string
-        }
-      }),
-    ): void
-  }
+type Props = RouteComponentProps & {
+  history: H.History,
   classes: Style,
   type: string
 }
@@ -637,7 +630,8 @@ class TeacherListPage extends React.Component<Props, State> {
       legendItem: PropTypes.string,
       legendIcon: PropTypes.string
     }).isRequired,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   }
 
   /**
@@ -661,7 +655,7 @@ class TeacherListPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.container}>
           <h2 className={classes.title}>My Teachers</h2>

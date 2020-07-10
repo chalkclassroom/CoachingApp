@@ -14,6 +14,9 @@ import TransitionHelpCard from '../../../components/TransitionComponents/Transit
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import * as Types from '../../../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const TransitionTheme = createMuiTheme({
   palette: {
@@ -153,20 +156,8 @@ const ViewEnum = {
 
 interface Props {
   classes: Style,
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void,
-    goBack(): void
-  },
-  location: {
-    state: string
-  }
+  history: H.History,
+  location: H.Location
 }
 
 interface Style {
@@ -238,7 +229,9 @@ class TransitionTime2TrainingPage extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    history: ReactRouterPropTypes.history.isRequired,
+    location: ReactRouterPropTypes.location
   }
 
   /**
@@ -251,7 +244,7 @@ class TransitionTime2TrainingPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
           <Grid container justify="center" alignItems="center">

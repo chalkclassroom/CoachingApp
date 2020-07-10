@@ -11,6 +11,7 @@ import { deleteMICenters, clearMathCount } from "../../state/actions/math-instru
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const MathTheme = createMuiTheme({
   palette: {
@@ -25,9 +26,7 @@ const MathTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   mathCount: number,
   noMathCount: number,

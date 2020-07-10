@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import Grid from "@material-ui/core/Grid";
 import Button from '@material-ui/core/Button';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
@@ -6,6 +7,9 @@ import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import TeacherChecklist from '../../../components/ListeningComponents/TeacherChecklist';
 import { withStyles } from '@material-ui/core/styles';
+import * as H from 'history';
+import * as Types from '../../../constants/Types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   backButton: {
@@ -21,16 +25,7 @@ interface Props {
   classes: {
     backButton: string
   },
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  }
+  history: H.History
 };
 
 /**
@@ -43,7 +38,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
   return (
     <div>
       <FirebaseContext.Consumer>
-        {(firebase: object): React.ReactNode => (<AppBar firebase={firebase} />)}
+        {(firebase: Types.FirebaseAppBar): React.ReactNode => (<AppBar firebase={firebase} />)}
       </FirebaseContext.Consumer>
       <header>
         <Grid container direction="row" alignItems="center" justify="flex-start">
@@ -93,6 +88,11 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
       </main>
     </div>
   );
+}
+
+ListeningToChildrenPage.propTypes = {
+  classes: PropTypes.object.isRequired,
+  history: ReactRouterPropTypes.history.isRequired
 }
 
 export default withStyles(styles)(ListeningToChildrenPage);

@@ -24,6 +24,10 @@ interface Props {
   }
 }
 
+type FirebaseResetForm = Types.FirebaseAppBar & {
+  resetPassword(email: string): Promise<void>
+}
+
 /**
  * @class ForgotPasswordPage
  */
@@ -42,26 +46,7 @@ class ForgotPasswordPage extends React.Component<Props, {}> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: {
-            resetPassword(email: string): Promise<void>,
-            /* auth: {
-              currentUser: null | {
-                uid: string
-              },
-              onAuthStateChanged(arg: any): firebase.User | null,
-            }, */
-            auth: firebase.auth.Auth,
-            firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>,
-            firebaseEmailSignUp(
-              info: {
-                email: string,
-                password: string,
-                firstName: string,
-                lastName: string
-              },
-              role: string
-            ): Promise<void>
-          }): React.ReactElement => (
+          {(firebase: FirebaseResetForm): React.ReactElement => (
             <div>
               <AppBar firebase={firebase} />
               <ResetForm firebase={firebase} />

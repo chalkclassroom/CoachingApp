@@ -161,3 +161,24 @@ export interface UserCredential {
     email: string
   }
 }
+
+export interface FirebaseAppBar {
+  auth: {
+    currentUser: null | {
+      uid: string
+    },
+    onAuthStateChanged(arg: any): firebase.User | null,
+  },
+  firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<UserCredential>,
+  firebaseEmailSignUp(
+    info: {
+      email: string,
+      password: string,
+      firstName: string,
+      lastName: string
+    },
+    role: string
+  ): Promise<void>,
+  firebaseSignOut(): Promise<void>,
+  getTeacherList(): Promise<Teacher[]>
+}

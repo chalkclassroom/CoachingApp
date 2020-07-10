@@ -12,6 +12,7 @@ import {
   updateACCount
 } from "../../../state/actions/associative-cooperative";
 import * as Types from '../../../constants/Types';
+import * as H from 'history';
 
 const styles: object = {
   root: {
@@ -48,16 +49,7 @@ interface Props {
     name: string,
     count: number
   }>,
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  },
+  history: H.History,
   teacherSelected: Types.Teacher
 }
 
@@ -95,11 +87,8 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => (
-            <AppBar
-              firebase={firebase}
-              // className={classes.grow}
-            />
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => (
+            <AppBar firebase={firebase} />
           )}
         </FirebaseContext.Consumer>
 

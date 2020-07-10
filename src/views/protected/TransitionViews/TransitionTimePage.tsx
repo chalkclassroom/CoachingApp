@@ -15,6 +15,8 @@ import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 import * as Constants from "../../../constants/Constants";
 import * as Types from '../../../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -35,16 +37,7 @@ const styles: object = {
 
 interface Props {
   classes: { root: string, backButton: string },
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  },
+  history: H.History,
   toggleNewTransitionType(transitionType: string | null): void,
   transitionType: string | null
 };
@@ -103,7 +96,8 @@ class TransitionTimePage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    toggleNewTransitionType: PropTypes.func.isRequired
+    toggleNewTransitionType: PropTypes.func.isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**
@@ -136,7 +130,7 @@ class TransitionTimePage extends React.Component<Props, State> {
           </FirebaseContext.Consumer>
         ) : (<div />)}
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <header>
           <Grid container direction="row" alignItems="center" justify="flex-start">

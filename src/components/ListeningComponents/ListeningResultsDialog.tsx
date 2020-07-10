@@ -11,6 +11,7 @@ import { clearListeningCount } from "../../state/actions/listening-to-children";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const ListeningTheme = createMuiTheme({
   palette: {
@@ -25,9 +26,7 @@ const ListeningTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   listeningCount: number,
   noListeningCount: number,
