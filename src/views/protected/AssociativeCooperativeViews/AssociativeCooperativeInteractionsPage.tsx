@@ -11,7 +11,7 @@ import {
   incrementCenterCount,
   updateACCount
 } from "../../../state/actions/associative-cooperative";
-
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -33,17 +33,6 @@ const styles: object = {
   }
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Style {
   root: string,
   grow: string,
@@ -52,8 +41,8 @@ interface Style {
 
 interface Props {
   classes: Style,
-  addNewCenter(): void,
-  incrementCenterCount(): void,
+  addNewCenter(centerName: string): void,
+  incrementCenterCount(centerName: string): void,
   updateACCount(behavior: string): void,
   centers: Array<{
     name: string,
@@ -69,7 +58,7 @@ interface Props {
       }
     ): void
   },
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 /**
@@ -109,14 +98,22 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
           {(firebase: object): React.ReactNode => (
             <AppBar
               firebase={firebase}
-              className={classes.grow}
+              // className={classes.grow}
             />
           )}
         </FirebaseContext.Consumer>
 
         <main style={{ flexGrow: 1 }}>
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => (
+            {(firebase: {
+              auth: {
+                currentUser: {
+                  uid: string
+                }
+              },
+              handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
+              handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
+            }): React.ReactNode => (
               <CenterMenu
                 teacher={this.props.teacherSelected}
                 history={this.props.history}
@@ -135,7 +132,13 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  centers: Array<{
+    name: string,
+    count: number
+  }>,
+  teacherSelected: Types.Teacher
+} => {
   return {
     centers: state.associativeCenterState.associativeCenters,
     teacherSelected: state.teacherSelectedState.teacher

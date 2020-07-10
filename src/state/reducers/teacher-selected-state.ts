@@ -3,20 +3,10 @@ import {
   CLEAR_TEACHER,
   TeacherTypes
 } from "../actions/teacher";
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-}
+import * as Types from '../../constants/Types';
 
 interface TeacherSelectedState {
-  teacher: Teacher
+  teacher: Types.Teacher
 }
 
 const initialState: TeacherSelectedState = { teacher: null };

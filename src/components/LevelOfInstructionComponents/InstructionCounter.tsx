@@ -41,17 +41,6 @@ const styles: object = {
   }
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   firebase: {
     auth: {
@@ -338,7 +327,7 @@ class InstructionCounter extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): {totalVisitCount: number, teacherSelected: Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {totalVisitCount: number, teacherSelected: Types.Teacher} => {
   return {
     totalVisitCount: state.instructionStackState.instructionStack.length,
     teacherSelected: state.teacherSelectedState.teacher

@@ -149,3 +149,15 @@ export interface History {
   listen?(param: any): void,
   createHref?(param: any): void
 }
+
+export interface UserCredential {
+  credential: {
+    providerId: string,
+    signInMethod: string
+  },
+  user: {
+    uid: string,
+    displayName: string,
+    email: string
+  }
+}

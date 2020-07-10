@@ -400,12 +400,31 @@ class TeacherListPage extends React.Component<Props, State> {
   handleAddText = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     const type = event.target.name;
     const val = event.target.value;
-    this.setState(
-      {
-        [type]: val
-      },
-      () => this.validateInputText(type, val)
-    );
+    if (type === 'inputFirstName') {
+      this.setState({
+        inputFirstName: val
+      }, () => this.validateInputText(type, val))
+    } else if (type === 'inputLastName') {
+      this.setState({
+        inputLastName: val
+      }, () => this.validateInputText(type, val))
+    } else if (type === 'inputSchool') {
+      this.setState({
+        inputSchool: val
+      }, () => this.validateInputText(type, val))
+    } else if (type === 'inputEmail') {
+      this.setState({
+        inputEmail: val
+      }, () => this.validateInputText(type, val))
+    } else if (type === 'inputPhone') {
+      this.setState({
+        inputPhone: val
+      }, () => this.validateInputText(type, val))
+    } else if (type === 'inputNotes') {
+      this.setState({
+        inputNotes: val
+      }, () => this.validateInputText(type, val))
+    }
   };
 
   /**
@@ -598,8 +617,26 @@ class TeacherListPage extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string,
+      container: PropTypes.string,
+      title: PropTypes.string,
+      actionContainer: PropTypes.string,
+      search: PropTypes.string,
+      actionButton: PropTypes.string,
+      tableContainer: PropTypes.string,
+      nameCellHeader: PropTypes.string,
+      emailCellHeader: PropTypes.string,
+      magicEightCell: PropTypes.string,
+      magicEightIcon: PropTypes.string,
+      row: PropTypes.string,
+      nameField: PropTypes.string,
+      emailField: PropTypes.string,
+      unlockedIcon: PropTypes.string,
+      legendContainer: PropTypes.string,
+      legendItem: PropTypes.string,
+      legendIcon: PropTypes.string
+    }).isRequired,
     type: PropTypes.string.isRequired
   }
 

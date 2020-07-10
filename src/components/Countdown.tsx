@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import { Line } from "rc-progress";
 import ms from "pretty-ms";
 import * as Constants from '../constants/Constants';
+import * as Types from '../constants/Types';
 
 const styles: object = {
   line: {
@@ -23,7 +24,7 @@ const styles: object = {
 interface Props {
   classes: Style,
   timerTime: number,
-  type: string,
+  type: Types.DashboardType,
   time: number
 }
 
@@ -72,6 +73,13 @@ function Countdown(props: Props): React.ReactElement {
       </Grid>
     </Grid>
   );
+}
+
+Countdown.propTypes = {
+  classes: PropTypes.object.isRequired,
+  timerTime: PropTypes.number.isRequired,
+  type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,
+  time: PropTypes.number.isRequired
 }
 
 export default withStyles(styles)(Countdown);

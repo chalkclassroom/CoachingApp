@@ -1,18 +1,8 @@
+import * as Types from '../../constants/Types';
 import { GET_TEACHER_LIST, TeacherTypes } from "../actions/teacher";
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-}
-
 interface TeacherListState {
-  teachers: Array<Teacher>
+  teachers: Array<Types.Teacher>
 }
 
 const initialState: TeacherListState = { teachers: [] };

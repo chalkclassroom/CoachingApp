@@ -19,6 +19,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import FadeAwayModal from './FadeAwayModal';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../constants/Constants';
+import * as Types from '../constants/Types';
 
 const TransitionTheme = createMuiTheme({
   palette: {
@@ -128,7 +129,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacher: Teacher,
+  teacher: Types.Teacher,
   magic8?: string,
   firebase: {
     createConferencePlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
@@ -179,17 +180,6 @@ interface State {
   dialog: boolean,
   savedAlert: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 interface Style {
   textField: string,

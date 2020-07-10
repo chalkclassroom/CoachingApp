@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
-import { connect } from 'react-redux';
 import Dashboard from '../../../components/Dashboard';
 import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
 import Button from '@material-ui/core/Button';
@@ -28,20 +27,8 @@ const styles: object = {
   }
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   classes: { root: string, backButton: string },
-  location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
   history: {
     replace(
       param: {
@@ -69,20 +56,8 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
    */
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.exact({
-      state: PropTypes.exact({
-        teacher: PropTypes.exact({
-          email: PropTypes.string,
-          firstName: PropTypes.string,
-          lastName: PropTypes.string,
-          notes: PropTypes.string,
-          id: PropTypes.string,
-          phone: PropTypes.string,
-          role: PropTypes.string,
-          school: PropTypes.string
-        }).isRequired,
-        teachers: PropTypes.array.isRequired
-      })
+    history: PropTypes.exact({
+      replace: PropTypes.func
     }).isRequired
   };
 
@@ -130,10 +105,18 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
                 />
               </Grid>
             </Grid>
-            <Grid item xs={9} justify="center" style={{height: '100%'}}>
+            <Grid item xs={9} style={{height: '100%'}}>
               <Grid container alignItems={'center'} justify={'center'} direction={'column'}>
                 <FirebaseContext.Consumer>
-                  {(firebase: object): React.ReactNode => (
+                  {(firebase: {
+                    auth: {
+                      currentUser: {
+                        uid: string
+                      }
+                    },
+                    handleSession(entry: {teacher: string, observedBy: string, type: string}): void,
+                    handlePushInstruction(insType: string): void,
+                  }): React.ReactNode => (
                     <InstructionCounter
                       firebase={firebase}
                     />

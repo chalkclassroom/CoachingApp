@@ -117,7 +117,14 @@ class TransitionTimePage extends React.Component<Props, State> {
       <div className={classes.root}>
         {this.state.notes ? (
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactElement => (
+            {(firebase: {
+              handleFetchNotes(): Promise<Array<{
+                id: string,
+                content: string,
+                timestamp: {seconds: number, nanoseconds: number}
+              }>>,
+              handlePushNotes(note: string): Promise<void>
+            }): React.ReactElement => (
               <Notes
                 open={true}
                 onClose={this.handleNotes}
@@ -194,7 +201,19 @@ class TransitionTimePage extends React.Component<Props, State> {
                 direction={"column"}
               >
                 <FirebaseContext.Consumer>
-                  {(firebase: object): React.ReactNode => (
+                  {(firebase: {
+                    auth: {
+                      currentUser: {
+                        uid: string
+                      }
+                    },
+                    handleSession(mEntry: {
+                      observedBy: string,
+                      teacher: string,
+                      start?: Date,
+                      type: string
+                    }): Promise<void>
+                  }): React.ReactNode => (
                     <TransitionTimer
                       firebase={firebase}
                       typeSelected={

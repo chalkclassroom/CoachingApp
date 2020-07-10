@@ -12,7 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import LogoImage from "../assets/images/LogoImage.svg";
 import { withRouter } from "react-router-dom";
 import LoginModal from "./LoginComponent/LoginModal";
-import SignUpModal from "./SignUpComponent/SignUpModal.tsx";
+import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
 import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -22,6 +22,7 @@ import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
 
 // import * as Constants from '../constants';
+import * as firebase from 'firebase/app';
 
 const styles: object = {
   grow: {
@@ -101,13 +102,22 @@ interface Props {
   classes?: Style,
   firebase: {
     auth: {
-      // currentUser: firebase.User | null,
-      currentUser: {
+      /* currentUser: null | {
         uid: string
-      },
-      onAuthStateChanged(arg: any): firebase.User | null
+      }, */
+      currentUser: firebase.User | null,
+      onAuthStateChanged(arg: any): firebase.User | null,
     },
-    firebaseEmailSignIn(): any
+    firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>,
+    firebaseEmailSignUp(
+      info: {
+        email: string,
+        password: string,
+        firstName: string,
+        lastName: string
+      },
+      role: string
+    ): Promise<void>
   },
   // firebase: any,
   /* history: {
@@ -206,7 +216,8 @@ class AppBar extends React.Component<Props, State> {
         }),
         onAuthStateChanged: PropTypes.func
       }).isRequired,
-      firebaseEmailSignIn: PropTypes.func
+      firebaseEmailSignIn: PropTypes.func,
+      firebaseEmailSignUp: PropTypes.func
     }).isRequired,
     history: ReactRouterPropTypes.history,
     /* history: PropTypes.shape({

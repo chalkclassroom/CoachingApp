@@ -8,6 +8,7 @@ import LoginForm from "./LoginForm";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/es/IconButton";
 import Tooltip from "@material-ui/core/es/Tooltip";
+import * as Types from '../../constants/Types';
 
 /**
  * specifies styling for modal
@@ -40,25 +41,13 @@ const styles = {
   },
 };
 
-interface UserCredential {
-  credential: {
-    providerId: string,
-    signInMethod: string
-  },
-  user: {
-    uid: string,
-    displayName: string,
-    email: string
-  }
-}
-
 interface Props {
   classes: {
     paper: string
   },
   handleClose(): void,
   firebase: {
-    firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<UserCredential>
+    firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>
   }
 }
 

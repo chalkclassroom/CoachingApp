@@ -38,7 +38,14 @@ interface Style {
 
 interface Props {
   classes: Style,
-  person: { email: string, name: string, role: string, initials: string, description: string, link: string }
+  person: {
+    email?: string,
+    name: string,
+    role: string,
+    initials: string,
+    description: string,
+    link?: string
+  }
 }
 
 /**
@@ -66,9 +73,9 @@ class TeamMemberExpansion extends React.Component<Props, {}> {
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return(
       <Grid container direction="row" justify="center" alignItems="center" className={classes.grid}>

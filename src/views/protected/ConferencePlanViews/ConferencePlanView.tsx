@@ -3,6 +3,7 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import ConferencePlanForm from '../../../components/ConferencePlanForm';
+import * as Types from '../../../constants/Types';
 
 interface Props {
   actionPlanId: string,
@@ -20,19 +21,8 @@ interface Props {
 }
 
 interface State {
-  teacher: Teacher,
+  teacher: Types.Teacher,
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * @class ConferencePlanView
@@ -82,7 +72,20 @@ class ConferencePlanView extends React.Component<Props, State>{
               <Grid container justify="center" alignItems="center" style={{width: '100%'}}>
                 {this.state.teacher ? (
                   <FirebaseContext.Consumer>
-                    {(firebase: object): React.ReactNode => <ConferencePlanForm 
+                    {(firebase: {
+                      createConferencePlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
+                      getConferencePlan(sessionId: string):
+                        Promise<Array<{
+                          id: string,
+                          feedback: Array<string>,
+                          questions: Array<string>,
+                          addedQuestions: Array<string>,
+                          notes: Array<string>,
+                          date: {seconds: number, nanoseconds: number}}>>,
+                      saveConferencePlan(conferencePlanId: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>): Promise<void>,
+                      getCoachFirstName(): Promise<string>,
+                      getCoachLastName(): Promise<string>
+                    }): React.ReactNode => <ConferencePlanForm 
                       firebase={firebase}
                       conferencePlanId={this.props.location.state.conferencePlanId}
                       teacher={this.state.teacher}

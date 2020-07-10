@@ -8,6 +8,7 @@ import CenterMenuStudentEngagement from "../../../components/StudentEngagementCo
 import { connect } from "react-redux";
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
+import * as Types from '../../../constants/Types';
 
 /*
     N.B. Time measured in milliseconds.
@@ -34,23 +35,12 @@ const styles: object = {
   }
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   classes: {
     root: string,
     grow: string
   },
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 interface State {
@@ -63,6 +53,8 @@ interface State {
  * @class ClassroomClimatePage
  */
 class StudentEngagementPage extends React.Component<Props, State> {
+  timer: NodeJS.Timeout;
+
   state = {
     time: RATING_INTERVAL,
     recs: true,
@@ -152,7 +144,15 @@ class StudentEngagementPage extends React.Component<Props, State> {
             </Grid>
             <Grid item xs={8}>
               <FirebaseContext.Consumer>
-                {(firebase: object): React.ReactNode => (
+                {(firebase: {
+                  auth: {
+                    currentUser: {
+                      uid: string
+                    }
+                  },
+                  handleSession(entry: object): void,
+                  handlePushSEEachEntry(mEntry: object): void
+                }): React.ReactNode => (
                   <CenterMenuStudentEngagement
                     teacherId={this.props.teacherSelected.id}
                     firebase={firebase}
@@ -171,7 +171,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

@@ -17,26 +17,9 @@ const styles: object = {
   }
 }
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
   classes: {
     backButton: string
-  },
-  location: {
-    state: {
-      teacher: Teacher,
-      teachers: Array<Teacher>
-    }
   },
   history: {
     replace(
@@ -56,7 +39,7 @@ interface Props {
  * @return {ReactElement}
  */
 function ListeningToChildrenPage(props: Props): React.ReactElement {
-  const { classes, location, history } = props;
+  const { classes, history } = props;
   return (
     <div>
       <FirebaseContext.Consumer>

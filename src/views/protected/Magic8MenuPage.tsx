@@ -20,9 +20,9 @@ import TrainingModal from '../../components/TrainingModal';
 import TransitionTimeObservationPopUp from '../../components/TransitionComponents/TransitionTimeObservationPopUp';
 import ClassroomClimateObservationPopUp from '../../components/ClassroomClimateComponent/ClassroomClimateObservationPopUp';
 import MathInstructionObservationPopUp from '../../components/MathInstructionComponents/MathInstructionObservationPopUp';
-import StudentEngagementObservationPopUp from '../../components/StudentEngagementObservationPopUp';
-import LevelOfInstructionObservationPopUp from '../../components/LevelOfInstructionObservationPopUp';
-import ListeningToChildrenObservationPopUp from '../../components/ListeningToChildrenObservationPopUp';
+import StudentEngagementObservationPopUp from '../../components/StudentEngagementComponents/StudentEngagementObservationPopUp';
+import LevelOfInstructionObservationPopUp from '../../components/LevelOfInstructionComponents/LevelOfInstructionObservationPopUp';
+import ListeningToChildrenObservationPopUp from '../../components/ListeningComponents/ListeningToChildrenObservationPopUp';
 import SequentialActivitiesObservationPopUp from '../../components/SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
 import AssociativeCooperativeInteractionsObservationPopUp from '../../components/AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
 import LockedModal from '../../components/LockedModal';
@@ -70,7 +70,7 @@ const styles: object = {
 
 
 const MAP = {
-  None: 0,
+  none: 0,
   TransitionTime: 1,
   ClassroomClimate: 2,
   MathInstruction: 3,
@@ -78,7 +78,7 @@ const MAP = {
   LevelOfInstruction: 5,
   ListeningToChildren: 6,
   SequentialActivities: 7,
-  AssociativeCooperativeInteractions: 8
+  AssociativeCooperativeInteractions: 8,
 };
 
 interface Style {
@@ -112,7 +112,7 @@ interface Props {
 interface State {
   allowed: boolean,
   numSelected: number,
-  selected: string,
+  selected: Selected,
   unlocked: Array<number>,
   unlockedData: boolean,
   page: string,
@@ -120,6 +120,9 @@ interface State {
   teacherName: string,
   teacher: {}
 }
+
+type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
+'LevelOfInstruction' | 'ListeningToChildren' | 'SequentialActivities' | 'AssociativeCooperativeInteractions' | 'none';
 
 /**
  * magic 8 menu
@@ -149,10 +152,10 @@ class Magic8MenuPage extends React.Component<Props, State> {
 
   /**
    * @param {string} selected
-   * @param {string} title
+   * @param {Selected} title
    * @return {void}
    */
-  onClick = (selected: string, title: string): void => {
+  onClick = (selected: string, title: Selected): void => {
     if (selected && this.state.numSelected > 0) {
       this.setState({
         numSelected: this.state.numSelected - 1,
