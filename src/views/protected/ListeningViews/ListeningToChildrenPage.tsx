@@ -60,7 +60,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
   return (
     <div>
       <FirebaseContext.Consumer>
-        {(firebase: object): React.ReactNode => (<AppBar {...firebase}/>)}
+        {(firebase: object): React.ReactNode => (<AppBar firebase={firebase} />)}
       </FirebaseContext.Consumer>
       <header>
         <Grid container direction="row" alignItems="center" justify="flex-start">

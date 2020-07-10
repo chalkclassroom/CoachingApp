@@ -19,7 +19,6 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
 import { getCoach } from '../../../state/actions/coach';
 import { connect } from 'react-redux';
-import TeacherBarDetails from "../../../components/MathInstructionComponents/ResultsComponents/TeacherBarDetails";
 import * as Types from '../../../constants/Types';
 import ReactRouterPropTypes from 'react-router-prop-types';
 
@@ -76,7 +75,7 @@ interface Props {
         pathname: string,
         state: {
           type: string,
-          teacher?: TeacherBarDetails,
+          teacher?: Types.Teacher,
           teachers?: Array<Types.Teacher>
         }
       },

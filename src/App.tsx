@@ -53,6 +53,7 @@ import { getCoach } from './state/actions/coach';
 import { connect } from 'react-redux';
 import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 import {withRouter} from 'react-router-dom';
+import * as Types from './constants/Types';
 
 
 
@@ -211,92 +212,105 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/Landing"
-              render={(props) : React.ReactElement=> <WelcomePage {...props}/>}
+              render={(props: object) : React.ReactElement=> <WelcomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/Invite"
-              render={(props) : React.ReactElement=> <HomePage {...props}/>}
+              render={(props: {
+                history: {
+                  push(
+                    param: string | {
+                      pathname: string,
+                      state: {
+                        type: string,
+                        teacher?: Types.Teacher,
+                        teachers?: Array<Types.Teacher>
+                      }
+                    },
+                  ): void
+                }
+              }) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/Account"
-              render={(props) : React.ReactElement=> <HomePage {...props}/>}
+              render={(props: object) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/Home"
-              render={(props) : React.ReactElement=> <HomePage {...props}/>}
+              render={(props: object) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth || !this.state.auth}
               path="/team"
-              render={(props) : React.ReactElement=> <TeamPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <TeamPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ActionPlans"
-              render={(props) : React.ReactElement=> <ActionPlanListPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <ActionPlanListPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ActionPlan"
-              render={(props) : React.ReactElement=> <ActionPlanView {...props}/>}
+              render={(props: object) : React.ReactElement=> <ActionPlanView {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ConferencePlans"
-              render={(props) : React.ReactElement=> <ConferencePlanListPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <ConferencePlanListPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ConferencePlan"
-              render={(props) : React.ReactElement=> <ConferencePlanView {...props}/>}
+              render={(props: object) : React.ReactElement=> <ConferencePlanView {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTime"
-              render={(props) : React.ReactElement=> <TransitionTimePage {...props}/>}
+              render={(props: object) : React.ReactElement=> <TransitionTimePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/LevelOfInstruction"
-              render={(props) : React.ReactElement=> <LevelOfInstructionPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <LevelOfInstructionPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ClassroomClimate"
-              render={(props) : React.ReactElement=> <ClassroomClimatePage {...props}/>}
+              render={(props: object) : React.ReactElement=> <ClassroomClimatePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildren"
-              render={(props) : React.ReactElement=> <ListeningToChildrenPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <ListeningToChildrenPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildrenResults"
-              render={(props) : React.ReactElement=> <ListeningToChildrenResultsPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <ListeningToChildrenResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildrenTraining"
-              render={(props) : React.ReactElement=> <ListeningToChildrenTrainingPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <ListeningToChildrenTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractions"
-              render={(props) : React.ReactElement=> <HomeAssociativeCooperativeInteractionsPagePage {...props}/>}
+              render={(props: object) : React.ReactElement=> <HomeAssociativeCooperativeInteractionsPagePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsResults"
-              render={(props) : React.ReactElement=> <AssociativeCooperativeInteractionsResultsPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <AssociativeCooperativeInteractionsResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstruction"
-              render={(props) : React.ReactElement=> <MathInstructionPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <MathInstructionPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -341,7 +355,7 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTimeTraining"
-              render={(props) : React.ReactElement=> <TransitionTimeTrainingPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <TransitionTimeTrainingPage {...props}/>}
             />
             <PrivateRoute
               exact
