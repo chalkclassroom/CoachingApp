@@ -7,8 +7,7 @@ import * as Types from '../../../constants/Types';
 import * as H from 'history';
 
 interface Props {
-  actionPlanId: string,
-  location: {state: {conferencePlanId: string, teacherId: string, sessionId: string}},
+  location: H.Location,
   classes: {
     backButton: string
   },

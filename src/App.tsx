@@ -22,7 +22,6 @@ import amber from "@material-ui/core/colors/amber";
 import {
   createMuiTheme,
   MuiThemeProvider,
-  // withStyles,
   Theme
 } from "@material-ui/core/styles";
 import LevelOfInstructionTrainingPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage";
@@ -37,7 +36,6 @@ import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateView
 import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage";
 import StudentEngagementPage from "./views/protected/StudentEngagementViews/StudentEngagementPage";
 import StudentEngagementResultsPage from "./views/protected/StudentEngagementViews/StudentEngagementResultsPage";
-// import TransitionTimeTrainingPageOld from "./views/protected/TransitionViews/TransitionTimeTrainingPageOld";
 import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage";
 import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
 import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
@@ -54,9 +52,7 @@ import Grid from '@material-ui/core/Grid';
 import { getCoach } from './state/actions/coach';
 import { connect } from 'react-redux';
 import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
-import {withRouter} from 'react-router-dom';
-import * as Types from './constants/Types';
-
+import * as H from 'history';
 
 
 ReactGA.initialize('UA-154034655-1');
@@ -174,7 +170,9 @@ class App extends React.Component<Props, State> {
 
   static propTypes = {
     firebase: PropTypes.exact({
-      onAuthStateChanged: PropTypes.func,
+      auth: PropTypes.exact({
+        onAuthStateChanged: PropTypes.func
+      }),
       getCoachFirstName: PropTypes.func
     }).isRequired,
     getCoach: PropTypes.func.isRequired
@@ -220,29 +218,22 @@ class App extends React.Component<Props, State> {
               auth={this.state.auth}
               path="/Invite"
               render={(props: {
-                history: {
-                  push(
-                    param: string | {
-                      pathname: string,
-                      state: {
-                        type: string,
-                        teacher?: Types.Teacher,
-                        teachers?: Array<Types.Teacher>
-                      }
-                    },
-                  ): void
-                }
+                history: H.History
               }) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/Account"
-              render={(props: object) : React.ReactElement=> <HomePage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/Home"
-              render={(props: object) : React.ReactElement=> <HomePage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth || !this.state.auth}
@@ -252,112 +243,174 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/ActionPlans"
-              render={(props: object) : React.ReactElement=> <ActionPlanListPage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ActionPlanListPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ActionPlan"
-              render={(props: object) : React.ReactElement=> <ActionPlanView {...props}/>}
+              render={(props: {
+                history: H.History,
+                actionPlanId: string,
+                location: H.Location,
+                classes: {
+                  backButton: string
+                }
+              }) : React.ReactElement=> <ActionPlanView {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ConferencePlans"
-              render={(props: object) : React.ReactElement=> <ConferencePlanListPage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ConferencePlanListPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ConferencePlan"
-              render={(props: object) : React.ReactElement=> <ConferencePlanView {...props}/>}
+              render={(props: {
+                history: H.History,
+                location: H.Location,
+                classes: {
+                  backButton: string
+                }
+              }) : React.ReactElement=> <ConferencePlanView {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTime"
-              render={(props: object) : React.ReactElement=> <TransitionTimePage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <TransitionTimePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/LevelOfInstruction"
-              render={(props: object) : React.ReactElement=> <LevelOfInstructionPage {...props}/>}
+              render={(props: {
+                history: H.History,
+                classes: object
+              }) : React.ReactElement=> <LevelOfInstructionPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ClassroomClimate"
-              render={(props: object) : React.ReactElement=> <ClassroomClimatePage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ClassroomClimatePage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildren"
-              render={(props: object) : React.ReactElement=> <ListeningToChildrenPage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ListeningToChildrenPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildrenResults"
-              render={(props: object) : React.ReactElement=> <ListeningToChildrenResultsPage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <ListeningToChildrenResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildrenTraining"
-              render={(props: object) : React.ReactElement=> <ListeningToChildrenTrainingPage {...props}/>}
+              render={(props: {
+                history: H.History,
+                location: H.Location,
+                classes: object
+              }) : React.ReactElement=> <ListeningToChildrenTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractions"
-              render={(props: object) : React.ReactElement=> <HomeAssociativeCooperativeInteractionsPagePage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <AssociativeCooperativeInteractionsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsResults"
-              render={(props: object) : React.ReactElement=> <AssociativeCooperativeInteractionsResultsPage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <AssociativeCooperativeInteractionsResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstruction"
-              render={(props: object) : React.ReactElement=> <MathInstructionPage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <MathInstructionPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstructionResults"
-              render={(props) : React.ReactElement=> <MathInstructionResultsPage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <MathInstructionResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivities"
-              render={(props) : React.ReactElement=> <SequentialActivitiesPage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <SequentialActivitiesPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstructionTraining"
-              render={(props) : React.ReactElement=> <MathInstructionTrainingPage {...props}/>}
+              render={(props: {
+                history: H.History,
+                location: H.Location
+              }) : React.ReactElement=> <MathInstructionTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivitiesResults"
-              render={(props) : React.ReactElement=> <SequentialActivitiesResultsPage {...props}/>}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <SequentialActivitiesResultsPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsTraining"
-              render={(props) : React.ReactElement=> <AssociativeCooperativeInteractionsTrainingPage {...props}/>}
+              render={(props: {
+                history: H.History,
+                location: H.Location
+              }) : React.ReactElement=> <AssociativeCooperativeInteractionsTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/LevelOfInstructionTraining"
-              render={(props) : React.ReactElement=> <LevelOfInstructionTrainingPage {...props}/>}
+              render={(props: {
+                history: H.History,
+                location: H.Location
+              }) : React.ReactElement=> <LevelOfInstructionTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ClassroomClimateTraining"
-              render={(props) : React.ReactElement=> <ClassroomClimateTrainingPage {...props}/>}
+              render={(props: {
+                history: H.History,
+                location: H.Location
+              }) : React.ReactElement=> <ClassroomClimateTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivitiesTraining"
-              render={(props) : React.ReactElement=> <SequentialActivitiesTrainingPage {...props}/>}
+              render={(props: {
+                history: H.History,
+                location: H.Location
+              }) : React.ReactElement=> <SequentialActivitiesTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTimeTraining"
-              render={(props: object) : React.ReactElement=> <TransitionTimeTrainingPage {...props}/>}
+              render={(props: {
+                history: H.History,
+                location: H.Location
+              }) : React.ReactElement=> <TransitionTimeTrainingPage {...props}/>}
             />
             {/* <PrivateRoute
               auth={this.state.auth}
@@ -368,27 +421,43 @@ class App extends React.Component<Props, State> {
               exact
               auth={this.state.auth}
               path="/MyTeachers"
-              render={(props) : React.ReactElement=> <TeacherListPage {...props}/>}
+              render={(props: {
+                history: H.History,
+                type: string
+              }) : React.ReactElement=> <TeacherListPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path={`/MyTeachers/:teacherid`}
-              render={(props) : React.ReactElement=> <TeacherDetailPage {...props}/>}
+              render={(props: {
+                history: H.History,
+                location: H.Location,
+                match: {
+                  params: {
+                    teacherid: string
+                  }
+                }
+              }) : React.ReactElement=> <TeacherDetailPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
                 path="/StudentEngagement"
-                render={(props) : React.ReactElement=> <StudentEngagementPage {...props}/>}
+                render={(props: object) : React.ReactElement=> <StudentEngagementPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
                 path="/StudentEngagementResults"
-                render={(props) : React.ReactElement=> <StudentEngagementResultsPage {...props}/>}
+                render={(props: {
+                  history: H.History
+                }) : React.ReactElement=> <StudentEngagementResultsPage {...props}/>}
             />
             <PrivateRoute
                 auth={this.state.auth}
                 path="/StudentEngagementTraining"
-                render={(props) : React.ReactElement=> <StudentEngagementTrainingPage {...props}/>}
+                render={(props: {
+                  history: H.History,
+                  location: H.Location
+                }) : React.ReactElement=> <StudentEngagementTrainingPage {...props}/>}
             />
 
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass
