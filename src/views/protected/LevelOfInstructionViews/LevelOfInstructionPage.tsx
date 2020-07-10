@@ -105,7 +105,7 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
                 />
               </Grid>
             </Grid>
-            <Grid item xs={9} justify="center" style={{height: '100%'}}>
+            <Grid item xs={9} style={{height: '100%'}}>
               <Grid container alignItems={'center'} justify={'center'} direction={'column'}>
                 <FirebaseContext.Consumer>
                   {(firebase: {

@@ -554,7 +554,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 </Grid>
               </div>
             </Modal>
-            <Button variant="flat" style={{margin: 10}} onClick={(): void =>this.switchToNameList()}>
+            <Button variant="text" style={{margin: 10}} onClick={(): void =>this.switchToNameList()}>
               <BackIcon/>  Back
             </Button>
             <Grid
