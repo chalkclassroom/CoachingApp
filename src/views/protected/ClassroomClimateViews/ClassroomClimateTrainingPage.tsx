@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Constants from '../../../constants/Constants';
 import Button from '@material-ui/core/Button/Button';
 import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg';
@@ -156,9 +157,7 @@ const ViewEnum = {
 
 interface Props {
   classes: Style,
-  location: {
-    state: string
-  },
+  location: H.Location,
   history: H.History
 }
 
@@ -228,7 +227,9 @@ class ClassroomClimateTrainingPage extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    location: ReactRouterPropTypes.location,
+    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**

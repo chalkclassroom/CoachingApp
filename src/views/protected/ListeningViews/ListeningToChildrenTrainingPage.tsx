@@ -156,9 +156,7 @@ const ViewEnum = {
 
 interface Props {
   classes: Style;
-  location: {
-    state: string
-  };
+  location: H.Location;
   history: H.History;
 }
 
@@ -232,6 +230,7 @@ class ListeningToChildrenTrainingPage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    location: ReactRouterPropTypes.location,
     history: ReactRouterPropTypes.history.isRequired
   };
 

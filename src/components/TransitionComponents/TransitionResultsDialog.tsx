@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -119,5 +121,17 @@ const mapStateToProps = (state: Types.ReduxState): {
     endTime: state.sessionTimeState.endTime
   };
 };
+
+TransitionResultsDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  transitionTime: PropTypes.number.isRequired,
+  startTime: PropTypes.number.isRequired,
+  endTime: PropTypes.number.isRequired,
+  resetTransitionTime: PropTypes.func.isRequired,
+  clearTransitionTime: PropTypes.func.isRequired,
+  clearSessionTime: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {clearTeacher, resetTransitionTime, clearTransitionTime, clearSessionTime})(TransitionResultsDialog);

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -104,5 +106,14 @@ const mapStateToProps = (state: Types.ReduxState): {
     noListeningCount: state.listeningCountState.noListeningCount
   };
 };
+
+ListeningResultsDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  listeningCount: PropTypes.number.isRequired,
+  noListeningCount: PropTypes.number.isRequired,
+  clearListeningCount: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {clearTeacher, clearListeningCount})(ListeningResultsDialog);

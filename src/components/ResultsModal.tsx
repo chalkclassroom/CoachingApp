@@ -79,7 +79,6 @@ function ResultsModal(props: Props): React.ReactElement {
       <Modal open={open}>
         <div style={getModalStyle()} className={classes.paper}>
           <Grid
-            xs={12}
             container
             alignItems="center"
             direction="row"

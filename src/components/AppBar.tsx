@@ -20,9 +20,6 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
-// import { RouterProps, RouteProps, RedirectProps } from 'react-router';
-
-// import * as Constants from '../constants';
 import * as firebase from 'firebase/app';
 import * as H from 'history';
 
@@ -213,35 +210,6 @@ class AppBar extends React.Component<Props, State> {
       getTeacherList: PropTypes.func
     }),
     history: ReactRouterPropTypes.history
-    /* history: PropTypes.shape({
-      action: PropTypes.oneOf(['PUSH', 'REPLACE', 'POP']),
-      block: PropTypes.func,
-      createHref: PropTypes.func,
-      go: PropTypes.func,
-      goBack: PropTypes.func,
-      goForward: PropTypes.func,
-      length: PropTypes.number,
-      listen: PropTypes.func,
-      location: PropTypes.shape({
-        type: PropTypes.string,
-        teacherId: PropTypes.string,
-        actionPlanId: PropTypes.string,
-        conferencePlanId: PropTypes.string,
-        sessionId: PropTypes.string,
-        teacher: PropTypes.shape({
-          email: PropTypes.string,
-          firstName: PropTypes.string,
-          lastName: PropTypes.string,
-          notes: PropTypes.string,
-          id: PropTypes.string,
-          phone: PropTypes.string,
-          role: PropTypes.string,
-          school: PropTypes.string
-        })
-      }),
-      push: PropTypes.func,
-      replace: PropTypes.func,
-    }) */
   }
 
   /**

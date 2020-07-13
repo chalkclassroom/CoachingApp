@@ -21,6 +21,8 @@ import FadeAwayModal from './FadeAwayModal';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 import * as moment from 'moment';
 import * as Types from '../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   textField: {
@@ -88,13 +90,7 @@ interface Props {
   readOnly: boolean,
   actionPlanExists: boolean,
   editMode?: boolean,
-  history?: {
-    replace(
-      param: {
-        pathname: string
-      }
-    ): void
-  }
+  history?: H.History
 }
 
 interface State {
@@ -484,6 +480,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     readOnly: PropTypes.bool.isRequired,
     actionPlanExists: PropTypes.bool.isRequired,
     editMode: PropTypes.bool,
+    history: ReactRouterPropTypes.history
   };
 
   /**

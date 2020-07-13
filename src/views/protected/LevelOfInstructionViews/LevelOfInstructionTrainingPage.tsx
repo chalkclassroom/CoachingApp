@@ -155,9 +155,7 @@ const styles: object = {
 
   interface Props {
     classes: Style,
-    location: {
-      state: string
-    },
+    location: H.Location,
     history: H.History
   }
 
@@ -228,6 +226,7 @@ const styles: object = {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    location: ReactRouterPropTypes.location,
     history: ReactRouterPropTypes.history.isRequired
   };
 

@@ -705,24 +705,6 @@ class TeacherDetailPage extends React.Component<Props, State> {
       params: PropTypes.exact({
         teacherid: PropTypes.string
       })
-    }).isRequired,
-    location: PropTypes.exact({
-      state: PropTypes.exact({
-        teacher: PropTypes.exact({
-          email: PropTypes.string,
-          firstName: PropTypes.string,
-          lastName: PropTypes.string,
-          notes: PropTypes.string,
-          id: PropTypes.string,
-          phone: PropTypes.string,
-          role: PropTypes.string,
-          school: PropTypes.string
-        })
-      })
-    }).isRequired,
-    history: PropTypes.exact({
-      goBack: PropTypes.func,
-      replace: PropTypes.func
     }).isRequired */
   }
 

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -101,5 +103,14 @@ const mapStateToProps = (state: Types.ReduxState): {engagedCount: number, notEng
     notEngagedCount: state.engagementCountState.notEngagedCount
   };
 };
+
+EngagementResultsDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  engagedCount: PropTypes.number.isRequired,
+  notEngagedCount: PropTypes.number.isRequired,
+  clearEngagementCount: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {clearTeacher, clearEngagementCount})(EngagementResultsDialog);

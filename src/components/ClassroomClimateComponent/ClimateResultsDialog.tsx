@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -12,6 +13,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const ClimateTheme = createMuiTheme({
   palette: {
@@ -104,5 +106,13 @@ const mapStateToProps = (state: Types.ReduxState): {climateStack: Array<{timesta
     climateStack: state.climateStackState.climateStack,
   };
 };
+
+ClimateResultsDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  climateStack: PropTypes.array.isRequired,
+  emptyClimateStack: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {clearTeacher, emptyClimateStack})(ClimateResultsDialog);

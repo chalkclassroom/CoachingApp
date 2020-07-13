@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -12,6 +13,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const ACTheme = createMuiTheme({
   palette: {
@@ -116,5 +118,16 @@ const mapStateToProps = (state: Types.ReduxState): {
     noOppCount: state.associativeCountState.noOppCount
   };
 };
+
+ACResultsDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  acCount: PropTypes.number.isRequired,
+  noACCount: PropTypes.number.isRequired,
+  noOppCount: PropTypes.number.isRequired,
+  clearACCount: PropTypes.func.isRequired,
+  deleteACCenters: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {clearTeacher, deleteACCenters, clearACCount})(ACResultsDialog);

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -105,5 +107,15 @@ const mapStateToProps = (state: Types.ReduxState): {mathCount: number, noMathCou
     noMathCount: state.mathCountState.noMathCount
   };
 };
+
+MathResultsDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  mathCount: PropTypes.number.isRequired,
+  noMathCount: PropTypes.number.isRequired,
+  clearMathCount: PropTypes.func.isRequired,
+  deleteMICenters: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {clearTeacher, deleteMICenters, clearMathCount})(MathResultsDialog);

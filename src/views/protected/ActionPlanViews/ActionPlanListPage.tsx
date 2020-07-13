@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
@@ -217,6 +219,10 @@ class ActionPlanListPage extends React.Component<Props, State>{
         })
       )
     });
+  }
+
+  static propTypes = {
+    history: ReactRouterPropTypes.history.isRequired
   }
 
   /**

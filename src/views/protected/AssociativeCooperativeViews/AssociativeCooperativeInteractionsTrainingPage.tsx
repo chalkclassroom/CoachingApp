@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Constants from '../../../constants/Constants';
 import Button from '@material-ui/core/Button/Button';
 import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
@@ -155,9 +156,7 @@ const ViewEnum = {
 
 interface Props {
   classes: Style;
-  location: {
-    state: string
-  },
+  location: H.Location,
   history: H.History
 }
 
@@ -230,7 +229,9 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    location: ReactRouterPropTypes.location,
+    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**

@@ -81,6 +81,8 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
       role: PropTypes.string,
       school: PropTypes.string
     }).isRequired,
+    addNewCenter: PropTypes.func.isRequired,
+    incrementCenterCount: PropTypes.func.isRequired,
     updateSequentialCount: PropTypes.func.isRequired,
     history: ReactRouterPropTypes.history.isRequired
   };

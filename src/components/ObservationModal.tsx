@@ -41,7 +41,7 @@ interface Style {
 
 interface Props {
   classes: Style,
-  content: React.ReactNode,
+  content?: React.ReactNode,
   handleBegin(): void,
   handleClose(): void,
   open: boolean
@@ -64,7 +64,6 @@ function ObservationModal(props: Props): React.ReactElement {
       <Modal open={open}>
         <div style={getModalStyle()} className={classes.paper}>
           <Grid
-            xs={12}
             container
             alignItems="center"
             direction="row"
@@ -100,7 +99,7 @@ function ObservationModal(props: Props): React.ReactElement {
 
 ObservationModal.propTypes = {
   classes: PropTypes.object.isRequired,
-  content: PropTypes.element.isRequired,
+  content: PropTypes.element,
   handleBegin: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired

@@ -79,6 +79,8 @@ class MathInstructionPage extends React.Component<Props, {}> {
       school: PropTypes.string
     }).isRequired,
     updateMathCount: PropTypes.func.isRequired,
+    addNewCenter: PropTypes.func.isRequired,
+    incrementCenterCount: PropTypes.func.isRequired,
     history: ReactRouterPropTypes.history.isRequired
   };
 

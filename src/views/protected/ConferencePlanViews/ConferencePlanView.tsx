@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
@@ -8,9 +9,6 @@ import * as H from 'history';
 
 interface Props {
   location: H.Location,
-  classes: {
-    backButton: string
-  },
   history: H.History
 }
 
@@ -49,6 +47,11 @@ class ConferencePlanView extends React.Component<Props, State>{
         role: string,
         school: string
       }) => this.setState({teacher: teacherInfo}))
+  }
+
+  static propTypes = {
+    location: ReactRouterPropTypes.location.isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   }
 
   /**

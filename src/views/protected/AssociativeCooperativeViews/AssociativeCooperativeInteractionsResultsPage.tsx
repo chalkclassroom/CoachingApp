@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
+import ReactRouterPropTypes from 'react-router-prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
@@ -578,7 +579,8 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**
@@ -609,7 +611,6 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
                 support={this.state.support}
                 noSupport={this.state.noSupport}
                 noTeacherOpp={this.state.noTeacherOpp}
-
               />
             }
             details={
