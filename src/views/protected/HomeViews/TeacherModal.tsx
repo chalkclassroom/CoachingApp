@@ -10,15 +10,15 @@ import IconButton from "@material-ui/core/es/IconButton/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Avatar from '@material-ui/core/Avatar';
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import StarsIcon from '@material-ui/icons/Stars';
 import { changeTeacher, getTeacherList } from '../../../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 /**
  * specifies styling for modal
@@ -62,10 +62,10 @@ interface Style {
   inline: string
 }
 
-interface Props {
+type Props = RouteComponentProps & {
   classes: Style,
   type: string,
-  history: { push(param: string | Push): void },
+  history: H.History,
   firebase: { getTeacherList(): Promise<Types.Teacher[]> },
   handleClose(): void,
   changeTeacher(teacher: Types.Teacher): Types.Teacher,
@@ -148,7 +148,7 @@ class TeacherModal extends React.Component<Props, State> {
     handleClose: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
     firebase: PropTypes.exact({getTeacherList: PropTypes.func}).isRequired,
-    history: PropTypes.exact({push: PropTypes.func}).isRequired,
+    history: ReactRouterPropTypes.history.isRequired,
     changeTeacher: PropTypes.func.isRequired,
     getTeacherList: PropTypes.func.isRequired,
     teacherSelected: PropTypes.exact({
@@ -250,10 +250,6 @@ const mapStateToProps = (state: Types.ReduxState): {
     teacherList: state.teacherListState.teachers
   };
 };
-
-// export default withRouter(withStyles(styles)(TeacherModal));
-
-// export default withRouter(connect(null,{ changeTeacher })(withStyles(styles)(TeacherModal)));
 
 export default withRouter(connect(
   mapStateToProps,

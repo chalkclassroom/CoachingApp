@@ -1,23 +1,15 @@
 import * as React from 'react';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import ConferencePlanForm from '../../../components/ConferencePlanForm';
 import * as Types from '../../../constants/Types';
+import * as H from 'history';
 
 interface Props {
-  actionPlanId: string,
-  location: {state: {conferencePlanId: string, teacherId: string, sessionId: string}},
-  classes: {
-    backButton: string
-  },
-  history: {
-    replace(
-      param: {
-        pathname: string
-      }
-    ): void
-  }
+  location: H.Location,
+  history: H.History
 }
 
 interface State {
@@ -57,6 +49,11 @@ class ConferencePlanView extends React.Component<Props, State>{
       }) => this.setState({teacher: teacherInfo}))
   }
 
+  static propTypes = {
+    location: ReactRouterPropTypes.location.isRequired,
+    history: ReactRouterPropTypes.history.isRequired
+  }
+
   /**
    * @return {ReactNode}
    */
@@ -64,7 +61,7 @@ class ConferencePlanView extends React.Component<Props, State>{
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
           <Grid direction="column" justify="center" alignItems="center" style={{paddingLeft: '3em', paddingRight: '3em', paddingTop: '1em'}}>

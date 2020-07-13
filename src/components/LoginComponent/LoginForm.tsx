@@ -1,12 +1,14 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import * as LogRocket from 'logrocket';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   main: {
@@ -38,7 +40,7 @@ interface UserCredential {
   }
 }
 
-interface Props {
+type Props = RouteComponentProps & {
   classes: {
     main: string,
     paper: string,
@@ -48,9 +50,7 @@ interface Props {
   firebase: {
     firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<UserCredential>
   },
-  history: {
-    push(param: string): void
-  }
+  history: H.History
 }
 
 interface State {
@@ -167,9 +167,16 @@ class LoginForm extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
-    firebase: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    classes: PropTypes.exact({
+      main: PropTypes.string,
+      paper: PropTypes.string,
+      form: PropTypes.string,
+      submit: PropTypes.string
+    }).isRequired,
+    firebase: PropTypes.exact({
+      firebaseEmailSignIn: PropTypes.func
+    }).isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   }
 
   /**

@@ -20,6 +20,8 @@ import FadeAwayModal from './FadeAwayModal';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../constants/Constants';
 import * as Types from '../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const TransitionTheme = createMuiTheme({
   palette: {
@@ -151,13 +153,7 @@ interface Props {
   editMode: boolean,
   chosenQuestions: Array<string>,
   conferencePlanId?: string,
-  history?: {
-    replace(
-      param: {
-        pathname: string
-      }
-    ): void
-  },
+  history?: H.History,
   notesModal: boolean
 }
 
@@ -477,7 +473,8 @@ class ConferencePlanForm extends React.Component<Props, State> {
     conferencePlanExists: PropTypes.bool.isRequired,
     editMode: PropTypes.bool.isRequired,
     chosenQuestions: PropTypes.array.isRequired,
-    notesModal: PropTypes.bool.isRequired
+    notesModal: PropTypes.bool.isRequired,
+    history: ReactRouterPropTypes.history
   };
 
   /**

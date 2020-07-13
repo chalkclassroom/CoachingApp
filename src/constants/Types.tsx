@@ -1,3 +1,5 @@
+import { Prompt } from "react-router-dom";
+
 export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'LI' | 'LC' | 'SA' | 'AC' | 'RedGraph' | 'NotPresent';
 
 export interface ReduxState {
@@ -98,6 +100,56 @@ export interface Teacher {
   school: string
 }
 
+export interface History {
+  length?: number,
+  action?: string,
+  location?: {
+    pathname: string,
+    search: string,
+    hash: string,
+    state: {
+      type?: string,
+      teacherId?: string,
+      actionPlanId?: string,
+      conferencePlanId?: string,
+      sessionId?: string,
+      teacher?: Teacher
+    }
+  },
+  push?(
+    param: (string | {
+      pathname: string,
+      state: {
+        type?: string,
+        teacherId?: string,
+        actionPlanId?: string,
+        conferencePlanId?: string,
+        sessionId?: string,
+        teacher?: Teacher
+      }
+    }),
+  ): void,
+  replace?(
+    param: (string | {
+      pathname: string,
+      state: {
+        type?: string,
+        teacherId?: string,
+        actionPlanId?: string,
+        conferencePlanId?: string,
+        sessionId?: string,
+        teacher?: Teacher
+      }
+    }),
+  ): void,
+  go?(n: number): void,
+  goBack?(): void,
+  goForward?(): void,
+  block?(prompt: Prompt): void,
+  listen?(param: any): void,
+  createHref?(param: any): void
+}
+
 export interface UserCredential {
   credential: {
     providerId: string,
@@ -108,4 +160,25 @@ export interface UserCredential {
     displayName: string,
     email: string
   }
+}
+
+export interface FirebaseAppBar {
+  auth: {
+    currentUser: null | {
+      uid: string
+    },
+    onAuthStateChanged(arg: any): firebase.User | null,
+  },
+  firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<UserCredential>,
+  firebaseEmailSignUp(
+    info: {
+      email: string,
+      password: string,
+      firstName: string,
+      lastName: string
+    },
+    role: string
+  ): Promise<void>,
+  firebaseSignOut(): Promise<void>,
+  getTeacherList(): Promise<Teacher[]>
 }

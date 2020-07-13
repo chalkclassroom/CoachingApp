@@ -255,7 +255,7 @@ class SignUpModal extends React.Component<Props, State> {
                 ) : this.state.role === 1 ? (
                   <SignUpForm
                     mRole="coach"
-                    fullWidth
+                    // fullWidth
                     firebase={this.props.firebase}
                   />
                 ) : this.state.role === 2 ? (

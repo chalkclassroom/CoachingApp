@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -11,6 +13,7 @@ import { clearEngagementCount } from "../../state/actions/student-engagement";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const EngagementTheme = createMuiTheme({
   palette: {
@@ -25,9 +28,7 @@ const EngagementTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   engagedCount: number,
   notEngagedCount: number,
@@ -102,5 +103,14 @@ const mapStateToProps = (state: Types.ReduxState): {engagedCount: number, notEng
     notEngagedCount: state.engagementCountState.notEngagedCount
   };
 };
+
+EngagementResultsDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  engagedCount: PropTypes.number.isRequired,
+  notEngagedCount: PropTypes.number.isRequired,
+  clearEngagementCount: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {clearTeacher, clearEngagementCount})(EngagementResultsDialog);

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Constants from '../../../constants/Constants';
 import Button from '@material-ui/core/Button/Button';
 import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg';
@@ -14,6 +15,8 @@ import ClassroomClimateHelpCard from '../../../components/ClassroomClimateCompon
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import * as H from 'history';
+import * as Types from '../../../constants/Types';
 
 
 const ClimateTheme = createMuiTheme({
@@ -154,18 +157,8 @@ const ViewEnum = {
 
 interface Props {
   classes: Style,
-  location: {
-    state: string
-  },
-  history: {
-    goBack(): void,
-    replace(params: {
-      pathname: string,
-      state: {
-        type: string
-      }
-    }): void
-  }
+  location: H.Location,
+  history: H.History
 }
 
 interface Style {
@@ -234,7 +227,9 @@ class ClassroomClimateTrainingPage extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    location: ReactRouterPropTypes.location,
+    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**
@@ -247,7 +242,7 @@ class ClassroomClimateTrainingPage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
           <Grid container justify="center" alignItems="center">

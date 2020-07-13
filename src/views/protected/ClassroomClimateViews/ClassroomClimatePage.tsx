@@ -18,6 +18,9 @@ import {
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
+import * as Types from '../../../constants/Types';
 
 /*
     N.B. Time measured in milliseconds.
@@ -53,16 +56,7 @@ const styles: object = {
 
 interface Props {
   classes: { root: string, grow: string, backButton: string },
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  },
+  history: H.History,
   appendClimateRating(rating: number): void
 };
 
@@ -152,9 +146,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    history: PropTypes.exact({
-      replace: PropTypes.func
-    }).isRequired,
+    history: ReactRouterPropTypes.history.isRequired,
     appendClimateRating: PropTypes.func.isRequired
   }
 
@@ -166,7 +158,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
     return (
       <div className={this.props.classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
           <RatingModal

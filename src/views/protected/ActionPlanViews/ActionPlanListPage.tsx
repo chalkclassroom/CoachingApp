@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
@@ -18,28 +20,11 @@ import InstructionIconImage from '../../../assets/images/InstructionIconImage.sv
 import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg';
 import SequentialIconImage from '../../../assets/images/SequentialIconImage.svg';
 import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
+import * as H from 'history';
+import * as Types from '../../../constants/Types';
 
 interface Props {
-  history: {
-    push(
-      param: {
-        pathname: string,
-        state: {
-          actionPlanId: string,
-          teacherId: string
-        }
-      }
-    ): void,
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          actionPlanId: string,
-          teacherId: string
-        }
-      }
-    ): void
-  }
+  history: H.History
 }
 
 interface State {
@@ -236,6 +221,10 @@ class ActionPlanListPage extends React.Component<Props, State>{
     });
   }
 
+  static propTypes = {
+    history: ReactRouterPropTypes.history.isRequired
+  }
+
   /**
    * @return {ReactNode}
    */
@@ -245,7 +234,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid direction="column" justify="center" alignItems="center">
           <Grid item style={{width: '100%', paddingTop: '2em'}}>

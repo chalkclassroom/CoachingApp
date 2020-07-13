@@ -10,7 +10,7 @@ import {
 import { AppBar as NavBar } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import LogoImage from "../assets/images/LogoImage.svg";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -18,9 +18,10 @@ import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
-// import * as Constants from '../constants';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
 import * as firebase from 'firebase/app';
+import * as H from 'history';
 
 const styles: object = {
   grow: {
@@ -96,14 +97,13 @@ interface Style {
   coachingText: string
 }
 
-interface Props {
-  classes: Style,
-  firebase: {
+type Props = RouteComponentProps & {
+  classes?: Style,
+  firebase?: {
     auth: {
-      /* currentUser: null | {
+      currentUser: null | {
         uid: string
-      }, */
-      currentUser: firebase.User | null,
+      },
       onAuthStateChanged(arg: any): firebase.User | null,
     },
     firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>,
@@ -115,19 +115,11 @@ interface Props {
         lastName: string
       },
       role: string
-    ): Promise<void>
+    ): Promise<void>,
+    firebaseSignOut(): Promise<void>,
+    getTeacherList(): Promise<Types.Teacher[]>
   },
-  history: {
-    push(
-      param: (string | {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }),
-    ): void
-  }
-  // history: History
+  history: H.History;
 }
 
 interface State {
@@ -204,19 +196,20 @@ class AppBar extends React.Component<Props, State> {
       menuText: PropTypes.string,
       chalkText: PropTypes.string,
       coachingText: PropTypes.string
-    }).isRequired,
+    }),
     firebase: PropTypes.exact({
       auth: PropTypes.exact({
-        currentUser: PropTypes.object,
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        }),
         onAuthStateChanged: PropTypes.func
       }).isRequired,
       firebaseEmailSignIn: PropTypes.func,
-      firebaseEmailSignUp: PropTypes.func
-    }).isRequired,
-    /* history: PropTypes.exact({
-      push: PropTypes.func
-    }).isRequired */
-    // history: PropTypes.
+      firebaseEmailSignUp: PropTypes.func,
+      firebaseSignOut: PropTypes.func,
+      getTeacherList: PropTypes.func
+    }),
+    history: ReactRouterPropTypes.history
   }
 
   /**

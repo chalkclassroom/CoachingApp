@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Button, Card, Grid, Typography } from "@material-ui/core";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg";
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg";
 import MathIconImage from "../assets/images/MathIconImage.svg";
@@ -52,6 +52,8 @@ import ListeningResultsDialog from './ListeningComponents/ListeningResultsDialog
 import SequentialResultsDialog from './SequentialActivitiesComponents/SequentialResultsDialog';
 import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog';
 import * as Types from '../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   card: {
@@ -120,12 +122,10 @@ interface Style {
   gridTopMargin: string
 }
 
-interface Props {
+type Props = RouteComponentProps & {
   classes: Style,
   type: Types.DashboardType,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   teacherSelected: Types.Teacher,
   infoPlacement?: string,
   infoDisplay?: React.ReactElement,
@@ -276,9 +276,7 @@ class Dashboard extends React.Component<Props, State> {
       completeButton: PropTypes.string,
       gridTopMargin: PropTypes.string
     }).isRequired,
-    history: PropTypes.exact({
-      push: PropTypes.func
-    }).isRequired,
+    history: ReactRouterPropTypes.history.isRequired,
     infoPlacement: PropTypes.string,
     completeObservation: PropTypes.bool.isRequired,
     type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,

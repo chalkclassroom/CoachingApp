@@ -32,6 +32,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { changeTeacher } from '../../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -91,19 +93,8 @@ interface Style {
 
 interface Props {
   classes: Style,
-  history: {
-    push(param: {pathname: string}): void,
-    location: {
-      state: {
-        type: string
-      }
-    }
-  },
-  location: {
-    state: {
-      type: string
-    }
-  },
+  history: H.History,
+  location: H.Location,
   changeTeacher(teacher: string): void,
   teacherSelected: Types.Teacher,
   teacherList: Array<Types.Teacher>
@@ -246,19 +237,8 @@ class Magic8MenuPage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    history: PropTypes.exact({
-      push: PropTypes.func,
-      location: PropTypes.exact({
-        state: PropTypes.exact({
-          state: PropTypes.string
-        })
-      })
-    }).isRequired,
-    location: PropTypes.exact({
-      state: PropTypes.exact({
-        state: PropTypes.string
-      })
-    }).isRequired,
+    history: ReactRouterPropTypes.history,
+    location: ReactRouterPropTypes.location,
     changeTeacher: PropTypes.func.isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
@@ -293,7 +273,7 @@ class Magic8MenuPage extends React.Component<Props, State> {
       <div className={classes.root}>
         <div>
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
         </div>
         <div style={{flexGrow: 1}}>

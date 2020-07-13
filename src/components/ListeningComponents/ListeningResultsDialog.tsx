@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -11,6 +13,7 @@ import { clearListeningCount } from "../../state/actions/listening-to-children";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const ListeningTheme = createMuiTheme({
   palette: {
@@ -25,9 +28,7 @@ const ListeningTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   listeningCount: number,
   noListeningCount: number,
@@ -105,5 +106,14 @@ const mapStateToProps = (state: Types.ReduxState): {
     noListeningCount: state.listeningCountState.noListeningCount
   };
 };
+
+ListeningResultsDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  listeningCount: PropTypes.number.isRequired,
+  noListeningCount: PropTypes.number.isRequired,
+  clearListeningCount: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {clearTeacher, clearListeningCount})(ListeningResultsDialog);

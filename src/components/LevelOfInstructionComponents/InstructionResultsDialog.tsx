@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -11,6 +13,7 @@ import { emptyLoiStack } from "../../state/actions/level-of-instruction";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const InstructionTheme = createMuiTheme({
   palette: {
@@ -25,9 +28,7 @@ const InstructionTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   instructionStack: Array<{timestamp: number, observation: string}>,
   emptyLoiStack(): void
@@ -105,5 +106,13 @@ const mapStateToProps = (state: Types.ReduxState): {instructionStack: Array<{tim
     instructionStack: state.instructionStackState.instructionStack,
   };
 };
+
+InstructionResultsDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  instructionStack: PropTypes.array.isRequired,
+  emptyLoiStack: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {clearTeacher, emptyLoiStack})(InstructionResultsDialog);

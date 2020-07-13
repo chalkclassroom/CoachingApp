@@ -4,7 +4,9 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   main: {
@@ -25,7 +27,7 @@ const styles: object = {
   }
 };
 
-interface Props {
+type Props = RouteComponentProps & {
   firebase: {
     firebaseEmailSignUp(
       info: {
@@ -38,9 +40,7 @@ interface Props {
     ): Promise<void> 
   },
   mRole: string,
-  history: {
-    push(param: string): void
-  },
+  history: H.History,
   classes: {
     main: string,
     paper: string,
@@ -245,9 +245,7 @@ class SignUpForm extends React.Component<Props, State> {
     firebase: PropTypes.exact({
       firebaseEmailSignUp: PropTypes.func
     }).isRequired,
-    history: PropTypes.exact({
-      push: PropTypes.func
-    }).isRequired
+    history: ReactRouterPropTypes.history.isRequired
   }
 
   /**

@@ -8,7 +8,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/es/IconButton/IconButton";
 import Button from '@material-ui/core/Button';
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 /**
  * specifies styling for modal
@@ -37,9 +39,7 @@ interface Props {
   classes: Style,
   open: boolean,
   handleClose(): void,
-  history: {
-    push(param: {pathname: string, state: {type: string}}): void
-  }
+  history: H.History
 }
 
 interface Style {
@@ -51,7 +51,7 @@ interface Style {
  * @param {Props} props 
  * @return {ReactElement}
  */
-function LockedModal(props: Props): React.ReactElement {
+function LockedModal(props: Props & RouteComponentProps): React.ReactElement {
   const { classes, open, handleClose } = props;
   return (
     <div>
@@ -107,7 +107,8 @@ function LockedModal(props: Props): React.ReactElement {
 }
 
 LockedModal.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  history: ReactRouterPropTypes.history
 };
 
 export default withRouter(withStyles(styles)(LockedModal));

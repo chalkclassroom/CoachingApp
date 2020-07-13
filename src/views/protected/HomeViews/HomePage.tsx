@@ -19,8 +19,9 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
 import { getCoach } from '../../../state/actions/coach';
 import { connect } from 'react-redux';
-import TeacherBarDetails from "../../../components/MathInstructionComponents/ResultsComponents/TeacherBarDetails";
 import * as Types from '../../../constants/Types';
+import ReactRouterPropTypes from 'react-router-prop-types';
+import * as H from 'history';
 
 const styles: object = {
   root: {
@@ -68,18 +69,7 @@ interface Props {
   classes: Style,
   coachName: string,
   getCoach(name: string): void,
-  history: {
-    push(
-      param: string | {
-        pathname: string,
-        state: {
-          type: string,
-          teacher?: TeacherBarDetails,
-          teachers?: Array<Types.Teacher>
-        }
-      },
-    ): void
-  }
+  history: H.History
 }
 
 interface State {
@@ -94,7 +84,7 @@ interface State {
  */
 class HomePage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -142,11 +132,9 @@ class HomePage extends React.Component<Props, State> {
       image: PropTypes.string,
       buttonGrid: PropTypes.string
     }).isRequired,
-    history: PropTypes.exact({
-      push: PropTypes.func
-    }).isRequired,
     coachName: PropTypes.string.isRequired,
-    getCoach: PropTypes.func.isRequired
+    getCoach: PropTypes.func.isRequired,
+    history: ReactRouterPropTypes.history
   }
 
   /**
@@ -158,7 +146,7 @@ class HomePage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         {this.props.coachName ? (
           <Grid
@@ -321,7 +309,7 @@ class HomePage extends React.Component<Props, State> {
               </Card>
               <Card
                 className={classes.card}
-                onClick={(): void => 
+                onClick={(): void =>
                   this.props.history.push({
                     pathname: "/Magic8Menu",
                     state: { type: "Training" }
@@ -392,10 +380,11 @@ class HomePage extends React.Component<Props, State> {
         )}
         {this.state.teacherModal ? (
           <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => (
+            {(firebase: {
+              getTeacherList(): Promise<Types.Teacher[]>
+            }): React.ReactNode => (
               <TeacherModal
                 handleClose={this.handleClose}
-                history={this.props.history}
                 firebase={firebase}
                 type={this.state.type}
               />

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -11,6 +13,7 @@ import { resetTransitionTime, clearTransitionTime, clearSessionTime } from "../.
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
+import * as H from 'history';
 
 const TransitionTheme = createMuiTheme({
   palette: {
@@ -25,9 +28,7 @@ const TransitionTheme = createMuiTheme({
 
 interface Props {
   open: boolean,
-  history: {
-    push(pathname: string): void
-  },
+  history: H.History,
   clearTeacher(): void,
   transitionTime: number,
   startTime: number,
@@ -120,5 +121,17 @@ const mapStateToProps = (state: Types.ReduxState): {
     endTime: state.sessionTimeState.endTime
   };
 };
+
+TransitionResultsDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  clearTeacher: PropTypes.func.isRequired,
+  transitionTime: PropTypes.number.isRequired,
+  startTime: PropTypes.number.isRequired,
+  endTime: PropTypes.number.isRequired,
+  resetTransitionTime: PropTypes.func.isRequired,
+  clearTransitionTime: PropTypes.func.isRequired,
+  clearSessionTime: PropTypes.func.isRequired
+}
 
 export default connect(mapStateToProps, {clearTeacher, resetTransitionTime, clearTransitionTime, clearSessionTime})(TransitionResultsDialog);

@@ -12,6 +12,8 @@ import {
   updateSequentialCount
 } from "../../../state/actions/sequential-activities";
 import * as Types from '../../../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -48,16 +50,7 @@ interface Props {
     name: string,
     count: number
   }>,
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  },
+  history: H.History,
   teacherSelected: Types.Teacher
 }
 
@@ -88,7 +81,10 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
       role: PropTypes.string,
       school: PropTypes.string
     }).isRequired,
-    updateSequentialCount: PropTypes.func.isRequired
+    addNewCenter: PropTypes.func.isRequired,
+    incrementCenterCount: PropTypes.func.isRequired,
+    updateSequentialCount: PropTypes.func.isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**
@@ -100,7 +96,7 @@ class SequentialActivitiesPage extends React.Component<Props, {}> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => (
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => (
             <AppBar firebase={firebase} />
           )}
         </FirebaseContext.Consumer>

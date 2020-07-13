@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '../../components/AppBar';
 import LandingPage from './LandingPage';
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   root: {
@@ -34,7 +35,7 @@ class WelcomePage extends React.Component<Props, {}> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase}/>}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
         <FirebaseContext.Consumer>
           {(firebase: {

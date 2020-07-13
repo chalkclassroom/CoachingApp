@@ -18,6 +18,8 @@ import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -37,16 +39,7 @@ const styles: object = {
 interface Props {
   classes: { root: string, comparisonText: string },
   teacherSelected: Types.Teacher,
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  }
+  history: H.History
 }
 
 interface State {
@@ -578,7 +571,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**

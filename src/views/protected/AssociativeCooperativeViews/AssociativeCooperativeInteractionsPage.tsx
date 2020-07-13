@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
+import ReactRouterPropTypes from 'react-router-prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
@@ -12,6 +13,7 @@ import {
   updateACCount
 } from "../../../state/actions/associative-cooperative";
 import * as Types from '../../../constants/Types';
+import * as H from 'history';
 
 const styles: object = {
   root: {
@@ -48,16 +50,7 @@ interface Props {
     name: string,
     count: number
   }>,
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  },
+  history: H.History,
   teacherSelected: Types.Teacher
 }
 
@@ -83,7 +76,12 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    history: ReactRouterPropTypes.history.isRequired,
+    addNewCenter: PropTypes.func.isRequired,
+    incrementCenterCount: PropTypes.func.isRequired,
+    updateACCount: PropTypes.func.isRequired,
+    centers: PropTypes.array.isRequired,
   };
 
   /**
@@ -95,11 +93,8 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => (
-            <AppBar
-              firebase={firebase}
-              // className={classes.grow}
-            />
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => (
+            <AppBar firebase={firebase} />
           )}
         </FirebaseContext.Consumer>
 
