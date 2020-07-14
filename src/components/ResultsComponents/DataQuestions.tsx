@@ -78,7 +78,8 @@ class DataQuestions extends React.Component<Props, {}> {
   render():React.ReactNode {
     const { classes } = this.props;
     return (
-      <div>
+      <Grid container direction="column" justify="flex-start" alignItems="center">
+        <Grid item>
         {this.props.questions.map((item, index) => (
           <ExpansionPanel
             key={index}
@@ -123,7 +124,20 @@ class DataQuestions extends React.Component<Props, {}> {
             </ExpansionPanelDetails>
           </ExpansionPanel>
         ))}
-      </div>
+        </Grid>
+        <Grid item style={{paddingTop: '1em'}}>
+          <Grid container direction="row" justify="center" alignItems="center">
+            <Grid item style={{paddingRight: '0.5em'}}>
+              <AddCircleIcon style={{fill: this.props.color}} />
+            </Grid>
+            <Grid item style={{paddingLeft: '0.5em'}}>
+              <Typography style={{fontFamily: 'Arimo'}}>
+                Add to Conference Plan
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     );
   }
 }

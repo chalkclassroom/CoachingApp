@@ -138,7 +138,6 @@ interface Props {
     DEFINITIONS: number,
     EXAMPLE: number,
     DEMONSTRATION: number,
-    TRYIT: number,
     KNOWLEDGECHECK: number
   },
   view: number,
@@ -147,7 +146,6 @@ interface Props {
   definitionsClick(): void,
   exampleClick(): void,
   demonstrationClick(): void,
-  tryItClick(): void,
   knowledgeCheckClick(): void,
   colorTheme: Theme
 }
@@ -167,7 +165,6 @@ function TrainingDashboard(props: Props): React.ReactElement {
     definitionsClick,
     exampleClick,
     demonstrationClick,
-    tryItClick,
     knowledgeCheckClick,
     colorTheme
   } = props;
@@ -212,21 +209,6 @@ function TrainingDashboard(props: Props): React.ReactElement {
                 size="large"
                 color={"primary"}
                 fullWidth={true}
-                variant={view === ViewEnum.EXAMPLE ? "contained" : "outlined"}
-                onClick={exampleClick}
-                style={{ fontSize: '1em' }}
-                disabled
-              >
-                EXAMPLE
-              </Button>
-            </MuiThemeProvider>
-          </ListItem>
-          <ListItem>
-            <MuiThemeProvider theme={colorTheme}>
-              <Button
-                size="large"
-                color={"primary"}
-                fullWidth={true}
                 variant={view === ViewEnum.DEMONSTRATION ? "contained" : "outlined"}
                 onClick={demonstrationClick}
                 style={{ fontSize: '1em' }}
@@ -241,12 +223,12 @@ function TrainingDashboard(props: Props): React.ReactElement {
                 size="large"
                 color={"primary"}
                 fullWidth={true}
-                variant={view === ViewEnum.TRYIT ? "contained" : "outlined"}
-                onClick={tryItClick}
+                variant={view === ViewEnum.EXAMPLE ? "contained" : "outlined"}
+                onClick={exampleClick}
                 style={{ fontSize: '1em' }}
                 disabled
               >
-                TRY IT YOURSELF
+                EXAMPLE
               </Button>
             </MuiThemeProvider>
           </ListItem>
@@ -282,7 +264,6 @@ TrainingDashboard.propTypes = {
     DEFINITIONS: PropTypes.number,
     EXAMPLE: PropTypes.number,
     DEMONSTRATION: PropTypes.number,
-    TRYIT: PropTypes.number,
     KNOWLEDGECHECK: PropTypes.number
   }).isRequired,
   view: PropTypes.number.isRequired,
@@ -291,7 +272,6 @@ TrainingDashboard.propTypes = {
   definitionsClick: PropTypes.func.isRequired,
   exampleClick: PropTypes.func.isRequired,
   demonstrationClick: PropTypes.func.isRequired,
-  tryItClick: PropTypes.func.isRequired,
   knowledgeCheckClick: PropTypes.func.isRequired,
 };
 

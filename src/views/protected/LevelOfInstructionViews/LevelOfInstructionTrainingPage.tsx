@@ -149,7 +149,6 @@ const styles: object = {
     DEFINITIONS: 2,
     EXAMPLE: 3,
     DEMONSTRATION: 4,
-    TRYIT: 5,
     KNOWLEDGECHECK: 6
   };
 
@@ -209,12 +208,6 @@ const styles: object = {
   demonstrationClick = (): void => {
     if (this.state.view !== ViewEnum.DEMONSTRATION) {
       this.setState({ view: ViewEnum.DEMONSTRATION });
-    }
-  };
-
-  tryItClick = (): void => {
-    if (this.state.view !== ViewEnum.TRYIT) {
-      this.setState({ view: ViewEnum.TRYIT });
     }
   };
 
@@ -284,7 +277,6 @@ const styles: object = {
               definitionsClick={this.definitionsClick}
               exampleClick={this.exampleClick}
               demonstrationClick={this.demonstrationClick}
-              tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
               colorTheme={InstructionTheme}
             />
@@ -308,8 +300,6 @@ const styles: object = {
                   }
                 />
               </div>
-            ) : view === ViewEnum.TRYIT ? (
-              <div>TRY IT</div>
             ) : view === ViewEnum.KNOWLEDGECHECK ? (
               <TrainingQuestionnaire section={'level'} />
             ) : null}

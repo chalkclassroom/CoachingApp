@@ -91,88 +91,92 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
   render(): React.ReactNode {
     return(
       <Grid container direction="column">
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-          <Grid item>
-            <MuiThemeProvider theme={EngagementTheme}>
-              <Button
-                onClick={this.offTaskBehaviorClick}
-                variant="contained"
-                color="primary"
-                style={{width:'10em', height: '10em'}}
-              >
-                <Typography>
-                  Off Task Behavior
-                </Typography>
-              </Button >
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={EngagementTheme}>
-              <Button
-                onClick={this.mildEngagementClick}
-                variant="contained"
-                color="primary"
-                style={{width:'10em', height: '10em'}}
-              >
-                <Typography style={{color: 'black'}}>
-                 Mild Engagement
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={EngagementTheme}>
-              <Button
-                onClick={this.highEngagementClick}
-                variant="contained"
-                color="primary"
-                style={{width:'10em', height: '10em'}}
-              >
-                <Typography>
-                  High Engagement
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
+        <Grid item>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
+            <Grid item>
+              <MuiThemeProvider theme={EngagementTheme}>
+                <Button
+                  onClick={this.offTaskBehaviorClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'10em', height: '10em'}}
+                >
+                  <Typography>
+                    Off Task Behavior
+                  </Typography>
+                </Button >
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item>
+              <MuiThemeProvider theme={EngagementTheme}>
+                <Button
+                  onClick={this.mildEngagementClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'10em', height: '10em'}}
+                >
+                  <Typography style={{color: 'black'}}>
+                  Mild Engagement
+                  </Typography>
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item>
+              <MuiThemeProvider theme={EngagementTheme}>
+                <Button
+                  onClick={this.highEngagementClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'10em', height: '10em'}}
+                >
+                  <Typography>
+                    High Engagement
+                  </Typography>
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "offTaskBehavior" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Engagement.OffTask}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.Colors.SE}
-            />
-          ) : this.state.categoryView === "mildEngagement" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Engagement.MildEngagement}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.Colors.SE}
-            />
-          ) : this.state.categoryView === "highEngagement" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Engagement.HighEngagement}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={this.props.magic8}
-              color={Constants.Colors.SE}
-            />
-          ) : <div/>}
+        <Grid item>
+          <Grid container direction="column" style={{marginTop: "1vh"}}>
+            {this.state.categoryView === "offTaskBehavior" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Engagement.OffTask}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={this.props.magic8}
+                color={Constants.Colors.SE}
+              />
+            ) : this.state.categoryView === "mildEngagement" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Engagement.MildEngagement}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={this.props.magic8}
+                color={Constants.Colors.SE}
+              />
+            ) : this.state.categoryView === "highEngagement" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Engagement.HighEngagement}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={this.props.magic8}
+                color={Constants.Colors.SE}
+              />
+            ) : <div/>}
+          </Grid>
         </Grid>
       </Grid>
     );

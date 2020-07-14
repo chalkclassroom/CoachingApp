@@ -90,88 +90,92 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
   render(): React.ReactNode {
     return(
       <Grid container direction="column">
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-          <Grid item>
-            <MuiThemeProvider theme={ListeningTheme}>
-              <Button
-                onClick={this.listeningClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Listening to Children
-                </Typography>
-              </Button >
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={ListeningTheme}>
-              <Button
-                onClick={this.supportingClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Supporting Child Talk
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={ListeningTheme}>
-              <Button
-                onClick={this.encouragingClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Encouraging Peer Talk
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
+        <Grid item>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
+            <Grid item>
+              <MuiThemeProvider theme={ListeningTheme}>
+                <Button
+                  onClick={this.listeningClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'8em', height: '8em'}}
+                >
+                  <Typography style={{color: 'white'}}>
+                    Listening to Children
+                  </Typography>
+                </Button >
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item>
+              <MuiThemeProvider theme={ListeningTheme}>
+                <Button
+                  onClick={this.supportingClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'8em', height: '8em'}}
+                >
+                  <Typography style={{color: 'white'}}>
+                    Supporting Child Talk
+                  </Typography>
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item>
+              <MuiThemeProvider theme={ListeningTheme}>
+                <Button
+                  onClick={this.encouragingClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'8em', height: '8em'}}
+                >
+                  <Typography style={{color: 'white'}}>
+                    Encouraging Peer Talk
+                  </Typography>
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "listening" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Listening.Listening}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Listening To Children"}
-              color={Constants.Colors.LC}
-            />
-          ) : this.state.categoryView === "supporting" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Listening.Supporting}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Listening To Children"}
-              color={Constants.Colors.LC}
-            />
-          ) : this.state.categoryView === "encouraging" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Listening.Encouraging}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Listening To Children"}
-              color={Constants.Colors.LC}
-            />
-          ) : <div/>}
+        <Grid item>
+          <Grid container direction="column" style={{marginTop: "1vh"}}>
+            {this.state.categoryView === "listening" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Listening.Listening}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Listening To Children"}
+                color={Constants.Colors.LC}
+              />
+            ) : this.state.categoryView === "supporting" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Listening.Supporting}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Listening To Children"}
+                color={Constants.Colors.LC}
+              />
+            ) : this.state.categoryView === "encouraging" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Listening.Encouraging}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Listening To Children"}
+                color={Constants.Colors.LC}
+              />
+            ) : <div/>}
+          </Grid>
         </Grid>
       </Grid>
     );

@@ -285,10 +285,10 @@ class TeamPage extends React.Component<Props, State> {
                           style={{ paddingBottom: 15 }}
                         >
                           <Grid item xs={6}>
-                            <ProjectAdvisor person={Constants.DS} />
+                            <ProjectAdvisor person={Constants.DR} />
                           </Grid>
                           <Grid item xs={6}>
-                            <ProjectAdvisor person={Constants.JW} />
+                            <ProjectAdvisor person={Constants.DS} />
                           </Grid>
                         </Grid>
                         <Grid
@@ -299,8 +299,19 @@ class TeamPage extends React.Component<Props, State> {
                           style={{ paddingBottom: 15 }}
                         >
                           <Grid item xs={6}>
+                            <ProjectAdvisor person={Constants.JW} />
+                          </Grid>
+                          <Grid item xs={6}>
                             <ProjectAdvisor person={Constants.SJW} />
                           </Grid>
+                        </Grid>
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          alignItems="center"
+                          style={{ paddingBottom: 15 }}
+                        >
                           <Grid item xs={6}>
                             <ProjectAdvisor person={Constants.LW} />
                           </Grid>

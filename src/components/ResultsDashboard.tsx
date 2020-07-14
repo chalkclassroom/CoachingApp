@@ -422,7 +422,7 @@ class ResultsDashboard extends React.Component<Props, State> {
                 value={this.props.teacherSelected}
                 onChange={this.changeTeacher}
                 InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
-                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
+                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal', textAlign: 'center'}}}
               >
                 {this.props.teacherList.map((teacher, index)=> 
                   {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
@@ -438,7 +438,7 @@ class ResultsDashboard extends React.Component<Props, State> {
                 value={this.props.sessionId}
                 onChange={this.props.changeSessionId}
                 InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
-                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
+                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal', textAlign: 'center'}}}
               >
                 {this.props.sessionDates.map((date, index)=> 
                   {return <MenuItem key={index} id={date.id} value={date.id} style={{fontFamily: 'Arimo'}}>
@@ -477,7 +477,7 @@ class ResultsDashboard extends React.Component<Props, State> {
                   className={this.props.view === 'questions' ? classes.viewButtonsSelected : classes.viewButtons}
                   onClick={(): void => this.props.viewClick('questions')}
                 >
-                  Questions
+                  Coaching Questions
                 </Button>
               </MuiThemeProvider>
             </Grid>

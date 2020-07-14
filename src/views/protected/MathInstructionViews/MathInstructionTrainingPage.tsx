@@ -150,7 +150,6 @@ const ViewEnum = {
   DEFINITIONS: 2,
   EXAMPLE: 3,
   DEMONSTRATION: 4,
-  TRYIT: 5,
   KNOWLEDGECHECK: 6
 };
 
@@ -216,12 +215,6 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
     }
   };
 
-  tryItClick = (): void => {
-    if (this.state.view !== ViewEnum.TRYIT) {
-      this.setState({ view: ViewEnum.TRYIT });
-    }
-  };
-
   knowledgeCheckClick = (): void => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
       this.setState({ view: ViewEnum.KNOWLEDGECHECK });
@@ -279,7 +272,6 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
               definitionsClick={this.definitionsClick}
               exampleClick={this.exampleClick}
               demonstrationClick={this.demonstrationClick}
-              tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
               colorTheme={MathTheme}
             />
@@ -303,8 +295,6 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
                   }
                 />
               </div>
-            ) : view === ViewEnum.TRYIT ? (
-              <div>TRY IT</div>
             ) : view === ViewEnum.KNOWLEDGECHECK ? (
               <TrainingQuestionnaire section={'math'} />
             ) : null}

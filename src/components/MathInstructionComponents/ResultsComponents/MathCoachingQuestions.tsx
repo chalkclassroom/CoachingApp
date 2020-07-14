@@ -106,140 +106,144 @@ class MathCoachingQuestions extends React.Component<Props, State> {
   render(): React.ReactNode {
     return(
       <Grid container direction="column">
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-          <Grid item>
-            <MuiThemeProvider theme={MathTheme}>
-              <Button 
-                onClick={this.countingClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Counting and Numbers
-                </Typography>
-              </Button >
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={MathTheme}>
-              <Button
-                onClick={this.measurementClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Measurement and Data
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={MathTheme}>
-              <Button
-                onClick={this.patternsClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Patterns
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={MathTheme}>
-              <Button
-                onClick={this.shapesClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Shapes and Spatial Reasoning
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={MathTheme}>
-              <Button
-                onClick={this.teacherSupportClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Teacher Support for Math
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
+        <Grid item>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
+            <Grid item>
+              <MuiThemeProvider theme={MathTheme}>
+                <Button 
+                  onClick={this.countingClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'8em', height: '8em'}}
+                >
+                  <Typography style={{color: 'white'}}>
+                    Counting and Numbers
+                  </Typography>
+                </Button >
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item>
+              <MuiThemeProvider theme={MathTheme}>
+                <Button
+                  onClick={this.measurementClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'8em', height: '8em'}}
+                >
+                  <Typography style={{color: 'white'}}>
+                    Measurement and Data
+                  </Typography>
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item>
+              <MuiThemeProvider theme={MathTheme}>
+                <Button
+                  onClick={this.patternsClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'8em', height: '8em'}}
+                >
+                  <Typography style={{color: 'white'}}>
+                    Patterns
+                  </Typography>
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item>
+              <MuiThemeProvider theme={MathTheme}>
+                <Button
+                  onClick={this.shapesClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'8em', height: '8em'}}
+                >
+                  <Typography style={{color: 'white'}}>
+                    Shapes and Spatial Reasoning
+                  </Typography>
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item>
+              <MuiThemeProvider theme={MathTheme}>
+                <Button
+                  onClick={this.teacherSupportClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'8em', height: '8em'}}
+                >
+                  <Typography style={{color: 'white'}}>
+                    Teacher Support for Math
+                  </Typography>
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "counting" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Math.CountingAndNumbers}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Math Instruction"}
-              color={Constants.Colors.MI}
-            />
-          ) : this.state.categoryView === "measurement" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Math.MeasurementAndData}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Math Instruction"}
-              color={Constants.Colors.MI}
-            />
-          ) : this.state.categoryView === "patterns" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Math.Patterns}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Math Instruction"}
-              color={Constants.Colors.MI}
-            />
-          ) : this.state.categoryView === "shapes" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Math.ShapesAndSpatialReasoning}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Math Instruction"}
-              color={Constants.Colors.MI}
-            />
-          ) : this.state.categoryView === "teacherSupport" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Math.TeacherSupport}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Math Instruction"}
-              color={Constants.Colors.MI}
-            />
-          ) : <div/>}
+        <Grid item>
+          <Grid container direction="column" style={{marginTop: "1vh"}}>
+            {this.state.categoryView === "counting" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Math.CountingAndNumbers}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Math Instruction"}
+                color={Constants.Colors.MI}
+              />
+            ) : this.state.categoryView === "measurement" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Math.MeasurementAndData}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Math Instruction"}
+                color={Constants.Colors.MI}
+              />
+            ) : this.state.categoryView === "patterns" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Math.Patterns}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Math Instruction"}
+                color={Constants.Colors.MI}
+              />
+            ) : this.state.categoryView === "shapes" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Math.ShapesAndSpatialReasoning}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Math Instruction"}
+                color={Constants.Colors.MI}
+              />
+            ) : this.state.categoryView === "teacherSupport" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Math.TeacherSupport}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Math Instruction"}
+                color={Constants.Colors.MI}
+              />
+            ) : <div/>}
+          </Grid>
         </Grid>
       </Grid>
     );

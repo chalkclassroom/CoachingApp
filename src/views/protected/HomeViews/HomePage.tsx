@@ -281,7 +281,7 @@ class HomePage extends React.Component<Props, State> {
                     </Grid>
                     <Grid item>
                       <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                        Action Plan
+                        Action Plans
                       </Typography>
                     </Grid>
                   </Grid>
@@ -301,7 +301,7 @@ class HomePage extends React.Component<Props, State> {
                     </Grid>
                     <Grid item>
                       <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                        Conference Plan
+                        Conference Plans
                       </Typography>
                     </Grid>
                   </Grid>

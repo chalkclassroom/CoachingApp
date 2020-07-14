@@ -235,8 +235,8 @@ export const PM = {
 export const LM = {
   'name': 'Laura Moore, M.P.P.',
   'role': 'Advisory Board Member',
-  'job': 'Deputy Policy Director for Opportunity Insights',
-  'affiliation': 'Harvard University'
+  'job': 'Deputy Director of Education',
+  'affiliation': 'Obama Foundation'
 };
 export const SJW = {
   'name': 'Sandra Jo Wilson, Ph.D.',
@@ -260,6 +260,12 @@ export const DS = {
   'name': 'Doug Schmidt, Ph.D.',
   'role': 'Innovation Garage Advisor',
   'job': 'Professor of Computer Science and Computer Engineering',
+  'affiliation': 'Vanderbilt University'
+};
+export const DR = {
+  'name': 'Deborah Wells Rowe, Ph.D.',
+  'role': 'Early Literacy Expert',
+  'job': 'Professor and Chair, Department of Teaching and Learning',
   'affiliation': 'Vanderbilt University'
 };
 

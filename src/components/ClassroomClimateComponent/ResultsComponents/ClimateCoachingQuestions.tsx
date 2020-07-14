@@ -88,90 +88,96 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
   render(): React.ReactNode {
     return(
       <Grid container direction="column">
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-          <Grid item>
-            <Button
-              // style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
-              onClick={this.approvalsClick}
-            >
-              <ThumbUpIcon fill="#0988ec" />
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              // style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
-              onClick={this.redirectionsClick}
-            >
-              <ThumbDownIcon fill="#f37b6b" />
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              onClick={this.disapprovalsClick}
-            >
-              <NotInterestedIcon fill="#ec2409" />
-            </Button>
-          </Grid>
-        </Grid>
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh", fontFamily: "Arimo"}}>
-          <Grid
-            item xs={2}
-          >
-            Behavior Approvals
-          </Grid>
-          <Grid
-            item xs={2}
-            // className = {classes.buttonText}
-            // style={{fontWeight: this.state.categoryView === "traveling" ? "bold" : "normal"}}
-          >
-            Redirections
-          </Grid>
-          <Grid
-            item xs={2}
-            // className = {classes.buttonText}
-            // style={{fontWeight: this.state.categoryView === "childrenWaiting" ? "bold" : "normal"}}
-          >
-            Disapprovals
+        <Grid item>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
+            <Grid item>
+              <Button
+                // style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
+                onClick={this.approvalsClick}
+              >
+                <ThumbUpIcon fill="#0988ec" />
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                // style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
+                onClick={this.redirectionsClick}
+              >
+                <ThumbDownIcon fill="#f37b6b" />
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                onClick={this.disapprovalsClick}
+              >
+                <NotInterestedIcon fill="#ec2409" />
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "approvals" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Climate.Approvals}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Classroom Climate"}
-              color={Constants.Colors.CC}
-            />
-          ) : this.state.categoryView === "redirections" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Climate.Redirections}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Classroom Climate"}
-              color={Constants.Colors.CC}
-            />
-          ) : this.state.categoryView === "disapprovals" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Climate.Disapprovals}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Classroom Climate"}
-              color={Constants.Colors.CC}
-            />
-          ) : <div/>}
+        <Grid item>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh", fontFamily: "Arimo"}}>
+            <Grid
+              item xs={2}
+            >
+              Behavior Approvals
+            </Grid>
+            <Grid
+              item xs={2}
+              // className = {classes.buttonText}
+              // style={{fontWeight: this.state.categoryView === "traveling" ? "bold" : "normal"}}
+            >
+              Redirections
+            </Grid>
+            <Grid
+              item xs={2}
+              // className = {classes.buttonText}
+              // style={{fontWeight: this.state.categoryView === "childrenWaiting" ? "bold" : "normal"}}
+            >
+              Disapprovals
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="column" style={{marginTop: "1vh"}}>
+            {this.state.categoryView === "approvals" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Climate.Approvals}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Classroom Climate"}
+                color={Constants.Colors.CC}
+              />
+            ) : this.state.categoryView === "redirections" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Climate.Redirections}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Classroom Climate"}
+                color={Constants.Colors.CC}
+              />
+            ) : this.state.categoryView === "disapprovals" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Climate.Disapprovals}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Classroom Climate"}
+                color={Constants.Colors.CC}
+              />
+            ) : <div/>}
+          </Grid>
         </Grid>
       </Grid>
     );

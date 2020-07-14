@@ -344,4 +344,3 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
 }
 
 export default withStyles(styles)(TransitionCoachingQuestions);
-// export default TransitionCoachingQuestions;
