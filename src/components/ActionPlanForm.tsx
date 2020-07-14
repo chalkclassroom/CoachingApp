@@ -953,7 +953,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                           <br />
                                           how the coach will support the teacher.
                                           <br />
-                                          Example: modeling
+                                          Example: modeling, scheduling progress check-ins
                                         </Typography>
                                       </li>
                                     </ul>
@@ -964,7 +964,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                           </Grid>
                         </Grid>
                       </Grid>
-                      <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                      <ol style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
                         {this.state.actionStepsArray.map((value, index) => {
                           return(
                             <li key={index}>
@@ -986,12 +986,12 @@ class ActionPlanForm extends React.Component<Props, State> {
                                   readOnly: this.props.readOnly,
                                   style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
                                 }}
-                                style={{marginTop: 0, paddingBottom: '0.5em', marginBottom: 0 }}
+                                style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0 }}
                               />
                             </li>
                           );
                         })}
-                      </ul>
+                      </ol>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center">
                           <Grid item xs={1}>
@@ -1068,7 +1068,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         </Grid>
                       </Grid>
                       <Grid item>
-                        <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                        <ol style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
                           {this.state.actionStepsArray.map((value, index) => {
                             return(
                               <li key={index}>
@@ -1090,12 +1090,12 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     readOnly: this.props.readOnly,
                                     style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
                                   }}
-                                  style={{marginTop: 0, paddingBottom: '0.5em', marginBottom: 0}}
+                                  style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
                                 />
                               </li>
                             );
                           })}
-                        </ul>
+                        </ol>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1105,7 +1105,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
                           <Grid item xs={11}>
                             <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
-                              Person
+                              Persons
                             </Typography>
                           </Grid>
                           <Grid item xs={1}>
@@ -1138,12 +1138,12 @@ class ActionPlanForm extends React.Component<Props, State> {
                                 >
                                   <div style={{padding: '2em'}}>
                                     <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
-                                      Person
+                                      Persons
                                     </Typography>
                                     <ul>
                                       <li>
                                         <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                                          List the person responsible for completing
+                                          List the person(s) responsible for completing
                                           <br />
                                           each action step.
                                         </Typography>
@@ -1164,7 +1164,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         </Grid>
                       </Grid>
                       <Grid item>
-                        <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                        <ol style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
                           {this.state.actionStepsArray.map((value, index) => {
                             return(
                               <li key={index}>
@@ -1186,12 +1186,12 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     readOnly: this.props.readOnly,
                                     style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
                                   }}
-                                  style={{marginTop: 0, paddingBottom: '0.5em', marginBottom: 0}}
+                                  style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
                                 />
                               </li>
                             );
                           })}
-                        </ul>
+                        </ol>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -1264,7 +1264,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         </Grid>
                       </Grid>
                       <Grid item>
-                        <ul style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                        <ol style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
                           {this.state.actionStepsArray.map((value, index) => {
                             return(
                               <li key={index}>
@@ -1286,12 +1286,12 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     readOnly: this.props.readOnly,
                                     style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
                                   }}
-                                  style={{marginTop: 0, paddingBottom: '0.5em', marginBottom: 0}}
+                                  style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
                                 />
                               </li>
                             );
                           })}
-                        </ul>
+                        </ol>
                       </Grid>
                     </Grid>
                   </Grid>

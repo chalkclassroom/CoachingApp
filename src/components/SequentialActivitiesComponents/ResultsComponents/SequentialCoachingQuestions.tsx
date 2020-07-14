@@ -90,88 +90,94 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
   render(): React.ReactNode {
     return(
       <Grid container direction="column">
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-          <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
-              <Button
-                onClick={this.drawingWritingClick}
-                variant="contained"
-                color="primary"
-                style={{width:'10em', height: '10em'}}
-              >
-                <Typography>
-                  Drawing and Writing
-                </Typography>
-              </Button >
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
-              <Button
-                onClick={this.gamesClick}
-                variant="contained"
-                color="primary"
-                style={{width:'10em', height: '10em'}}
-              >
-                <Typography style={{color: 'black'}}>
-                  Games and Pretend Play
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
-              <Button
-                onClick={this.teacherSupportClick}
-                variant="contained"
-                color="primary"
-                style={{width:'10em', height: '10em'}}
-              >
-                <Typography>
-                  Teacher Support for Sequential Activities
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
+        <Grid item>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
+            <Grid item>
+              <MuiThemeProvider theme={SequentialTheme}>
+                <Button
+                  onClick={this.drawingWritingClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'10em', height: '10em'}}
+                >
+                  <Typography>
+                    Drawing and Writing
+                  </Typography>
+                </Button >
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item>
+              <MuiThemeProvider theme={SequentialTheme}>
+                <Button
+                  onClick={this.gamesClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'10em', height: '10em'}}
+                >
+                  <Typography style={{color: 'black'}}>
+                    Games and Pretend Play
+                  </Typography>
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item>
+              <MuiThemeProvider theme={SequentialTheme}>
+                <Button
+                  onClick={this.teacherSupportClick}
+                  variant="contained"
+                  color="primary"
+                  style={{width:'10em', height: '10em'}}
+                >
+                  <Typography>
+                    Teacher Support for Sequential Activities
+                  </Typography>
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "drawingAndWriting" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Sequential.DrawingAndWriting}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Sequential Activities"}
-              color={Constants.Colors.SA}
-            />
-          ) : this.state.categoryView === "games" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Sequential.GamesAndPretendPlay}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Sequential Activities"}
-              color={Constants.Colors.SA}
-            />
-          ) : this.state.categoryView === "teacherSupport" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Sequential.TeacherSupport}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Sequential Activities"}
-              color={Constants.Colors.SA}
-            />
-          ) : <div/>}
+        <Grid item>
+          <Grid container direction="column" style={{marginTop: "1vh"}}>
+            {this.state.categoryView === "drawingAndWriting" ? (
+              <Grid item>
+                <DataQuestions
+                  questions={Constants.CoachingQuestions.Sequential.DrawingAndWriting}
+                  openPanel={this.state.openPanel}
+                  handlePanelChange={this.handlePanelChange}
+                  addedToPlan={this.props.addedToPlan}
+                  handleAddToPlan={this.props.handleAddToPlan}
+                  sessionId={this.props.sessionId}
+                  teacherId={this.props.teacherId}
+                  magic8={"Sequential Activities"}
+                  color={Constants.Colors.SA}
+                />
+              </Grid>
+            ) : this.state.categoryView === "games" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Sequential.GamesAndPretendPlay}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Sequential Activities"}
+                color={Constants.Colors.SA}
+              />
+            ) : this.state.categoryView === "teacherSupport" ? (
+              <DataQuestions
+                questions={Constants.CoachingQuestions.Sequential.TeacherSupport}
+                openPanel={this.state.openPanel}
+                handlePanelChange={this.handlePanelChange}
+                addedToPlan={this.props.addedToPlan}
+                handleAddToPlan={this.props.handleAddToPlan}
+                sessionId={this.props.sessionId}
+                teacherId={this.props.teacherId}
+                magic8={"Sequential Activities"}
+                color={Constants.Colors.SA}
+              />
+            ) : <div/>}
+          </Grid>
         </Grid>
       </Grid>
     );

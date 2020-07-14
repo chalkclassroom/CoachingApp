@@ -151,7 +151,6 @@ const ViewEnum = {
   DEFINITIONS: 2,
   EXAMPLE: 3,
   DEMONSTRATION: 4,
-  TRYIT: 5,
   KNOWLEDGECHECK: 6
 };
 
@@ -214,12 +213,6 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
     }
   }
 
-  tryItClick = (): void => {
-    if (this.state.view !== ViewEnum.TRYIT) {
-      this.setState({ view: ViewEnum.TRYIT })
-    }
-  }
-
   knowledgeCheckClick = (): void => {
     if (this.state.view !== ViewEnum.KNOWLEDGECHECK) {
       this.setState({ view: ViewEnum.KNOWLEDGECHECK })
@@ -277,7 +270,6 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
               definitionsClick={this.definitionsClick}
               exampleClick={this.exampleClick}
               demonstrationClick={this.demonstrationClick}
-              tryItClick={this.tryItClick}
               knowledgeCheckClick={this.knowledgeCheckClick}
               colorTheme={SequentialTheme}
             />
@@ -297,8 +289,6 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
                   videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'}
                 />
               </div>
-            : view === ViewEnum.TRYIT ?
-              <div>TRY IT</div>
             : view === ViewEnum.KNOWLEDGECHECK ? (
               <TrainingQuestionnaire section={'sequential'} />
             ) : null}
