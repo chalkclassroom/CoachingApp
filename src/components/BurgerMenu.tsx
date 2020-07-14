@@ -13,6 +13,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import MessagesIcon from "@material-ui/icons/MailOutline";
 import ObserveIcon from "@material-ui/icons/Visibility";
 import ActionPlansIcon from "@material-ui/icons/CastForEducation";
+import ConferencePlansIcon from "@material-ui/icons/ListAlt";
 import Magic8Icon from "@material-ui/icons/Stars";
 import PeopleIcon from "@material-ui/icons/People";
 import ResultsIcon from "@material-ui/icons/PieChart";
@@ -243,6 +244,21 @@ class BurgerMenu extends React.Component<Props, State>{
             </ListItem>
             <ListItem
               button
+              onClick={(): void => {
+                this.setState({ menu: 10 });
+                this.props.history.push("/ConferencePlans")
+              }}
+              className={classes.nested}
+            >
+              <ListItemIcon>
+                <ConferencePlansIcon style={{ fill: Constants.Colors.CC }} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Conference Plans"
+              />
+            </ListItem>
+            <ListItem
+              button
               disabled
               onClick={(): void => {
                 this.setState({ menu: 3 });
@@ -250,7 +266,7 @@ class BurgerMenu extends React.Component<Props, State>{
               className={classes.nested}
             >
               <ListItemIcon>
-                <MessagesIcon style={{ fill: Constants.Colors.CC }} />
+                <MessagesIcon style={{ fill: Constants.Colors.SE }} />
               </ListItemIcon>
               <ListItemText
                 primary="Messages"
