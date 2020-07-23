@@ -285,7 +285,7 @@ const styles: object = {
             {view === ViewEnum.CONCEPTS ? (
               <TrainingVideo
                 videoUrl={
-                  'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Level_of_Instruction_Training_Video.mp4?alt=media&token=32d2fde3-3979-4c5f-9bf4-556a6f2c5e8a'
+                  'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Level%20of%20Instruction%20Concepts.mp4?alt=media&token=a6757bbf-a815-4949-84bc-4bc602178b17'
                 }
               />
             ) : view === ViewEnum.DEFINITIONS ? (
@@ -296,7 +296,7 @@ const styles: object = {
               <div>
                 <TrainingVideo
                   videoUrl={
-                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'
+                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Level%20of%20Instruction%20Demo.mp4?alt=media&token=95ba2041-d63d-42b4-b37c-b43389700d3c'
                   }
                 />
               </div>

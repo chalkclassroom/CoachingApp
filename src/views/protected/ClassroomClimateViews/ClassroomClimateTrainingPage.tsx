@@ -289,7 +289,7 @@ class ClassroomClimateTrainingPage extends React.Component<Props, State> {
               <div>
                 <TrainingVideo
                   videoUrl={
-                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'
+                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Classroom%20Climate%20Demo.mp4?alt=media&token=cb1a1796-59b2-41f9-a170-43fde82f5be4'
                   }
                 />
               </div>

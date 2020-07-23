@@ -284,9 +284,7 @@ class StudentEngagementTrainingPage extends React.Component<Props, State> {
               <div>EXAMPLE</div>
             : view === ViewEnum.DEMONSTRATION ?
               <div>
-                <TrainingVideo
-                  videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'}
-                />
+                Coming Soon!
               </div>
             : view === ViewEnum.KNOWLEDGECHECK ? (
               <TrainingQuestionnaire section={'student'} />

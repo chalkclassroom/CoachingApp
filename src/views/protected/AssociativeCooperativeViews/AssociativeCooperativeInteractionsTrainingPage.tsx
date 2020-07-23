@@ -291,7 +291,7 @@ class AssociativeCooperativeInteractionsTrainingPage extends React.Component<Pro
               <div>
                 <TrainingVideo
                   videoUrl={
-                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'
+                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/A%26C%20Demo.mp4?alt=media&token=8aa8ba49-9dce-4f21-a29e-b5f6382f4698'
                   }
                 />
               </div>

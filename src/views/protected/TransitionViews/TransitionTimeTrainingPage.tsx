@@ -288,7 +288,7 @@ class TransitionTime2TrainingPage extends React.Component<Props, State> {
             : view === ViewEnum.DEMONSTRATION ?
               <div>
                 <TrainingVideo
-                  videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'}
+                  videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Transition%20Time%20Demo.mp4?alt=media&token=8e00dc42-fcec-4143-a201-36ac64bc8702'}
                 />
               </div>
             : view === ViewEnum.KNOWLEDGECHECK ? (
