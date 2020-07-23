@@ -286,7 +286,7 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
             : view === ViewEnum.DEMONSTRATION ?
               <div>
                 <TrainingVideo
-                  videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'}
+                  videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Sequential%20Activities%20Demo.mp4?alt=media&token=d7fedabb-3ef1-430f-978a-4493914b1f65'}
                 />
               </div>
             : view === ViewEnum.KNOWLEDGECHECK ? (

@@ -280,7 +280,7 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
             {view === ViewEnum.CONCEPTS ? (
               <TrainingVideo
                 videoUrl={
-                  'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Math%20Instruction%20Concepts.mp4?alt=media&token=ca70255c-7d29-4ab5-84fe-a3ebdde744af'
+                  'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Math%20Opportunities%20Concepts.mp4?alt=media&token=601148ea-87ec-4c1d-8949-d972be9d4903'
                 }
               />
             ) : view === ViewEnum.DEFINITIONS ? (
@@ -291,7 +291,7 @@ class MathInstructionTrainingPage extends React.Component<Props, State> {
               <div>
                 <TrainingVideo
                   videoUrl={
-                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'
+                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Math%20Instruction%20Demo.mp4?alt=media&token=fa1d02bd-e012-498f-9db5-8c85b523990f'
                   }
                 />
               </div>

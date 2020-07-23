@@ -278,14 +278,11 @@ class ListeningToChildrenTrainingPage extends React.Component<Props, State> {
           </div>
           <div className={classes.trainingContentCard}>
             {view === ViewEnum.CONCEPTS ? (
-              /* <TrainingVideo
+              <TrainingVideo
                 videoUrl={
-                  'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Math%20Instruction%20Concepts.mp4?alt=media&token=ca70255c-7d29-4ab5-84fe-a3ebdde744af'
+                  'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Listening%20to%20Children%20Concepts%20(subtitles).mp4?alt=media&token=e022fcbe-e38a-4f40-bb45-f150df013da6'
                 }
-              /> */
-              <div>
-                COMING SOON
-              </div>
+              />
             ) : view === ViewEnum.DEFINITIONS ? (
               <ListeningToChildrenHelpCard />
             ) : view === ViewEnum.EXAMPLE ? (
@@ -294,7 +291,7 @@ class ListeningToChildrenTrainingPage extends React.Component<Props, State> {
               <div>
                 <TrainingVideo
                   videoUrl={
-                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/TT_Demo.mp4?alt=media&token=6fd2c698-0b5e-4a88-94d9-c34637a85043'
+                    'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Listening%20to%20Children%20Demo.mp4?alt=media&token=4fa8b5c2-cc26-4072-b779-181a74c243a1'
                   }
                 />
               </div>
