@@ -513,7 +513,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                       style={{width: '100%', paddingTop: '0.5em', paddingBottom: '1em'}}
                     >
                       <Grid item xs={2}>
-                        <Grid container alignItems="center" justify="flex-start">
+                        {/* <Grid container alignItems="center" justify="flex-start">
                           <Grid item>
                             <Button
                               variant="contained"
@@ -529,7 +529,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                               <b>Back</b>
                             </Button>
                           </Grid>
-                        </Grid>
+                        </Grid> */}
                       </Grid>
                       <Grid item xs={8}>
                         <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>

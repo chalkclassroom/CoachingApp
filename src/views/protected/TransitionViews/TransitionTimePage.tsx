@@ -132,7 +132,7 @@ class TransitionTimePage extends React.Component<Props, State> {
         <FirebaseContext.Consumer>
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <header>
+        {/* <header>
           <Grid container direction="row" alignItems="center" justify="flex-start">
             <Grid item xs={3}>
               <Grid container alignItems="center" justify="center">
@@ -153,7 +153,7 @@ class TransitionTimePage extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-        </header>
+        </header> */}
         <main style={{ flexGrow: 1 }}>
           <Grid container alignItems="center">
             <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>

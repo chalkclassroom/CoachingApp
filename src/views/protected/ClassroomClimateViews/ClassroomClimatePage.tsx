@@ -171,12 +171,12 @@ class ClassroomClimatePage extends React.Component<Props, State> {
             <EmptyToneRating />
           </ClickAwayListener>
         </Modal>
-        <header>
+        {/* <header>
           <Grid container direction="row" alignItems="center" justify="flex-start">
             <Grid item xs={3}>
               <Grid container alignItems="center" justify="center">
                 <Grid item>
-                <Button variant="contained" size="medium" className={this.props.classes.backButton}
+                  <Button variant="contained" size="medium" className={this.props.classes.backButton}
                     onClick={(): void => {
                       this.props.history.replace({
                         pathname: "/Magic8Menu",
@@ -192,7 +192,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-        </header>
+        </header> */}
         <main style={{ flex: 1 }}>
           <Grid
             container

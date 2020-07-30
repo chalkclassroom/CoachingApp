@@ -740,7 +740,7 @@ class TeacherDetailPage extends React.Component<Props, State> {
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.container}>
-          <Button
+          {/* <Button
             variant="contained"
             size="medium"
             className={classes.button}
@@ -755,7 +755,7 @@ class TeacherDetailPage extends React.Component<Props, State> {
           >
             <ChevronLeftRoundedIcon />
             <b>My Teachers</b>
-          </Button>
+          </Button> */}
           <div className={classes.teacherHeader}>
             <span>
               <b>

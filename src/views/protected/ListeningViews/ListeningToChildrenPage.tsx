@@ -40,7 +40,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
       <FirebaseContext.Consumer>
         {(firebase: Types.FirebaseAppBar): React.ReactNode => (<AppBar firebase={firebase} />)}
       </FirebaseContext.Consumer>
-      <header>
+      {/* <header>
         <Grid container direction="row" alignItems="center" justify="flex-start">
           <Grid item xs={3}>
             <Grid container alignItems="center" justify="center">
@@ -61,7 +61,7 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
             </Grid>
           </Grid>
         </Grid>
-      </header>
+      </header> */}
       <main style={{ flexGrow: 1 }}>
         <FirebaseContext.Consumer>
           {(firebase: {

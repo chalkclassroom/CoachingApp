@@ -361,13 +361,13 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                 justify={"center"}
                 direction={"column"}
               >
-                <Grid item>
+                {/* <Grid item>
                   <Button variant="contained" size="medium" className={classes.backButton}
                     onClick={this.props.backToCenterMenu}>
                     <ChevronLeftRoundedIcon />
                     <b>Back</b>
                   </Button>
-                </Grid>
+                </Grid> */}
                 <Grid item>
                 <Dashboard
                   type={this.props.type}

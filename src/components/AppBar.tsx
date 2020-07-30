@@ -5,7 +5,8 @@ import {
   Toolbar,
   Typography,
   Button,
-  IconButton
+  IconButton,
+  Avatar
 } from "@material-ui/core";
 import { AppBar as NavBar } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -14,6 +15,7 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
+import BackIcon from '@material-ui/icons/ArrowBackIos';
 import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
@@ -24,27 +26,41 @@ import * as firebase from 'firebase/app';
 import * as H from 'history';
 
 const styles: object = {
+  root: {
+    height: '10vh',
+    minHeight: '4em',
+    maxHeight: '7em'
+  },
+  backIcon: {
+    display: 'none'
+  },
   grow: {
     flexGrow: 1
   },
   menuButton: {
     fontFamily: 'Arimo',
-    fontSize: 16,
+    // fontSize: 16,
     marginLeft: -12,
     marginRight: 20,
     "&:hover": {
       backgroundColor: "#FFC35C"
-    }
+    },
+    fontSize: 'calc(14px + (30 - 14) * ((100vw - 300px) / (1600 - 300)))'
   },
   link: {
     textDecoration: "none"
   },
+  buttonText: {
+    fontSize: 'calc(14px + (30 - 14) * ((100vw - 300px) / (1600 - 300)))'
+  },
   menuText: {
     color:'#FFFFFF',
+    fontSize: 'calc(14px + (30 - 14) * ((100vw - 300px) / (1600 - 300)))'
   },
   chalkText: {
     color: 'white',
     fontFamily: 'Arimo',
+    // fontSize: 'calc(18px + (36 - 18) * ((100vw - 300px) / (1600 - 300)))',
     fontSize: 20,
     fontWeight: 'bold',
     lineHeight: '110%',
@@ -54,15 +70,19 @@ const styles: object = {
   coachingText: {
     color: 'white',
     fontFamily: 'Arimo',
-    fontSize: 14,
+    // fontSize: 'calc(14px + (30 - 14) * ((100vw - 300px) / (1600 - 300)))',
+    fontSize: 16,
     fontWeight: 'normal',
     lineHeight: '110%',
     letterSpacing: '0.05em'
   },
-  "@media (max-width: 700px)": {
+  "@media (max-width: 767px)": {
     menuButton: {
       marginLeft: '-0.7em',
       marginRight: '0.4em'
+    },
+    backIcon: {
+      display: 'flex'
     },
     chalkText: {
       fontSize: 16
@@ -71,6 +91,12 @@ const styles: object = {
       fontSize: 12
     }
   },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)': {
+    backIcon: {
+      // color: 'white',
+      display: 'flex'
+    }
+  }
 };
 
 const theme = createMuiTheme({
@@ -88,13 +114,16 @@ const theme = createMuiTheme({
 });
 
 interface Style {
+  root: string,
   grow: string,
   menuButton: string,
   link: string,
   logoButton: string,
+  buttonText: string,
   menuText: string,
   chalkText: string,
-  coachingText: string
+  coachingText: string,
+  backIcon: string
 }
 
 type Props = RouteComponentProps & {
@@ -189,13 +218,16 @@ class AppBar extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.exact({
+      root: PropTypes.string,
       grow: PropTypes.string,
       menuButton: PropTypes.string,
       link: PropTypes.string,
       logoButton: PropTypes.string,
+      buttonText: PropTypes.string,
       menuText: PropTypes.string,
       chalkText: PropTypes.string,
-      coachingText: PropTypes.string
+      coachingText: PropTypes.string,
+      backIcon: PropTypes.string
     }),
     firebase: PropTypes.exact({
       auth: PropTypes.exact({
@@ -222,11 +254,11 @@ class AppBar extends React.Component<Props, State> {
       <MuiThemeProvider theme={theme}>
         <div>
           {this.state.auth ? (
-            <NavBar position="static" color={"primary"}>
-              <Toolbar>
-                <Grid container direction="row" alignItems="center">
-                  <Grid item xs={4}>
-                    <Grid container direction="row" justify="flex-start" alignItems="center">
+            <NavBar position="static" color={"primary"} className={classes.root}>
+              {/* <Toolbar style={{border: '1px solid red', height: '10vh'}}> */}
+                <Grid container direction="row" alignItems="center" style={{height: '100%', paddingLeft: '1em', paddingRight: '1em'}}>
+                  <Grid item xs={6} style={{height: '100%'}}>
+                    <Grid container direction="row" justify="flex-start" alignItems="center" style={{height: '100%'}}>
                       <Grid item>
                         <IconButton
                           color="inherit"
@@ -234,19 +266,26 @@ class AppBar extends React.Component<Props, State> {
                           className={classes.menuButton}
                           onClick={(): void => this.handleMenu()}
                         >
-                          <MenuIcon color="secondary" />
+                          <MenuIcon
+                            color="secondary"
+                            fontSize='large'
+                          />
                         </IconButton>
                       </Grid>
-                      <Grid item>
-                        <IconButton
+                      <Grid item style={{height: '100%'}}>
+                        {/* <IconButton
                           color="inherit"
                           aria-label="Logo"
                           className={classes.menuButton}
-                          style={{backgroundColor: "#FFFFFF", margin: 10}}
+                          style={{backgroundColor: "#FFFFFF", margin: 10, border: '1px solid yellow', height: '100%', width: '100%'}}
                           onClick = {(): void => this.props.history.push("/Landing")}
+                          // size='large'
                         >
-                          <img src={LogoImage} height={'36'} alt={""}/>
-                        </IconButton>
+                          <img src={LogoImage} height='100%' width='auto' alt={""}/>
+                        </IconButton> */}
+                        <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%', padding: '0.5em'}}>
+                          <Avatar src={LogoImage} style={{backgroundColor: 'white', border: '0.5em solid white'}} />
+                        </Grid>
                       </Grid>
                       <Grid item>
                         <Grid container direction="column" justify="center" alignItems="flex-start">
@@ -270,10 +309,23 @@ class AppBar extends React.Component<Props, State> {
                           </Grid>
                         </Grid>
                       </Grid>
+                      <Grid item className={classes.backIcon} style={{paddingLeft: '1em'}}>
+                        <IconButton
+                          color="inherit"
+                          aria-label="menu"
+                          className={classes.menuButton}
+                          onClick={(): void => this.props.history.goBack()}
+                        >
+                          <BackIcon
+                            color="secondary"
+                            fontSize='large'
+                          />
+                        </IconButton>
+                      </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={8}>
-                    <div color="inherit" className={classes.grow}/>
+                  <Grid item xs={6}>
+                    {/* <div color="inherit" className={classes.grow}/> */}
                     <Router>
                       <div>
                         <Grid container direction="row" justify="flex-end" alignItems="center">
@@ -313,7 +365,7 @@ class AppBar extends React.Component<Props, State> {
                     </Router>
                   </Grid>
                 </Grid>
-              </Toolbar>
+              {/* </Toolbar> */}
               <BurgerMenu
                 open={this.state.open}
                 handleClose={this.handleMenu}

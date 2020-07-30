@@ -4,8 +4,8 @@ import FirebaseContext from "./Firebase/FirebaseContext";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "./AppBar";
 import Grid from '@material-ui/core/Grid';
-import Button from "@material-ui/core/Button/Button";
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+// import Button from "@material-ui/core/Button/Button";
+// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
@@ -15,8 +15,8 @@ import ActionPlanForm from './ActionPlanForm';
 import ConferencePlanForm from './ConferencePlanForm';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 import * as Types from '../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
+// import * as H from 'history';
+// import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -72,7 +72,7 @@ interface Props {
   conferencePlanId: string,
   addNoteToPlan(conferencePlanId: string, note: string): void,
   conferencePlanExists: boolean,
-  history: H.History
+  // history: H.History
 }
 
 interface Style {
@@ -182,7 +182,7 @@ class ResultsLayout extends React.Component<Props, State> {
     conferencePlanId: PropTypes.string.isRequired,
     addNoteToPlan: PropTypes.func.isRequired,
     conferencePlanExists: PropTypes.bool.isRequired,
-    history: ReactRouterPropTypes.history
+    // history: ReactRouterPropTypes.history
   }
 
   /**
@@ -197,13 +197,14 @@ class ResultsLayout extends React.Component<Props, State> {
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid container justify="flex-start" direction="row" alignItems="flex-start">
-          <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+          <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em', height: '100%'}}>
             <Grid container
               alignItems="center"
               justify="center"
               direction="column"
+              style={{height: '100%'}}
             >
-              <Grid item>
+              {/* <Grid item>
                 <Button variant="contained" size="medium" className={classes.backButton}
                   onClick={(): void => {
                     this.props.history.replace({
@@ -216,7 +217,7 @@ class ResultsLayout extends React.Component<Props, State> {
                   <ChevronLeftRoundedIcon />
                   <b>Back</b>
                 </Button>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <ResultsDashboard
                   magic8={this.props.magic8}
@@ -235,7 +236,7 @@ class ResultsLayout extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container xs={9} justify="flex-start" direction="column" alignItems="center" style={{height: '75vh'}}>
+          <Grid container xs={9} justify="flex-start" direction="column" alignItems="center" style={{}}>
             <div>
               {this.state.view === 'data' ? (
                 <div className={classes.resultsContent} style={{width: '60vw'}}>

@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import CenterChecklist from './CenterChecklist';
 import NewCenterDialog from './NewCenterDialog';
 import CenterRatingChecklist from './CenterRatingChecklist';
@@ -12,8 +12,8 @@ import TotalVisitCount from '../TotalVisitCount';
 import grey from "@material-ui/core/colors/grey";
 import { withStyles } from "@material-ui/core/styles";
 import * as Types from '../../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
+// import * as H from 'history';
+// import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -124,7 +124,7 @@ interface Props {
     grow: string,
     backButton: string
   },
-  history: H.History
+  // history: H.History
 }
 
 interface State{
@@ -222,7 +222,7 @@ class CenterMenu extends React.Component<Props, State> {
       role: PropTypes.string,
       school: PropTypes.string
     }).isRequired,
-    classes: PropTypes.object.isRequired,
+    // classes: PropTypes.object.isRequired,
     firebase: PropTypes.exact({
       auth: PropTypes.exact({
         currentUser: PropTypes.exact({
@@ -237,7 +237,7 @@ class CenterMenu extends React.Component<Props, State> {
     updateCount: PropTypes.func.isRequired,
     centers: PropTypes.array.isRequired,
     type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,
-    history: ReactRouterPropTypes.history
+    // history: ReactRouterPropTypes.history
   }
 
   /**
@@ -245,7 +245,7 @@ class CenterMenu extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     switch (this.state.status) {
       case CENTER_CHECKLIST:
         return (
@@ -275,7 +275,7 @@ class CenterMenu extends React.Component<Props, State> {
                   justify={"center"}
                   direction={"column"}
                 >
-                  <Grid item>
+                  {/* <Grid item>
                     <Button variant="contained" size="medium" className={classes.backButton}
                       onClick={(): void => {
                         this.props.history.replace({
@@ -288,7 +288,7 @@ class CenterMenu extends React.Component<Props, State> {
                       <ChevronLeftRoundedIcon />
                       <b>Back</b>
                     </Button>
-                  </Grid>
+                  </Grid> */}
                   <Grid item>
                     <Dashboard
                       type={this.props.type}

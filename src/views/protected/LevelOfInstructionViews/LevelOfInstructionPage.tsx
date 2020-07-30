@@ -67,7 +67,7 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
         <FirebaseContext.Consumer>
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <header>
+        {/* <header>
           <Grid container direction="row" alignItems="center" justify="flex-start">
             <Grid item xs={3}>
               <Grid container alignItems="center" justify="center">
@@ -88,7 +88,7 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
               </Grid>
             </Grid>
           </Grid>
-        </header>
+        </header> */}
         <main style={{ flexGrow: 1 }}>
           <Grid container alignItems="center" style={{height: '100%'}}>
             <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
