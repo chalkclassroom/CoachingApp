@@ -40,8 +40,8 @@ const styles: object = {
   menuButton: {
     fontFamily: 'Arimo',
     // fontSize: 16,
-    marginLeft: -12,
-    marginRight: 20,
+    // marginLeft: -12,
+    // marginRight: 20,
     "&:hover": {
       backgroundColor: "#FFC35C"
     },
@@ -256,9 +256,16 @@ class AppBar extends React.Component<Props, State> {
           {this.state.auth ? (
             <NavBar position="static" color={"primary"} className={classes.root}>
               {/* <Toolbar style={{border: '1px solid red', height: '10vh'}}> */}
-                <Grid container direction="row" alignItems="center" style={{height: '100%', paddingLeft: '1em', paddingRight: '1em'}}>
-                  <Grid item xs={6} style={{height: '100%'}}>
+                <Grid container direction="row" alignItems="center" justify="flex-start" style={{height: '100%', paddingLeft: '1em', paddingRight: '1em'}}>
+                  <Grid item xs={12} style={{height: '100%'}}>
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{height: '100%'}}>
+                      <Grid item style={{height: '100%'}}>
+                        <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
+                          <Button onClick={(): void => this.props.history.push('/Home')}>
+                            <Avatar src={LogoImage} style={{backgroundColor: 'white', border: '0.5em solid white'}} />
+                          </Button>
+                        </Grid>
+                      </Grid>
                       <Grid item>
                         <IconButton
                           color="inherit"
@@ -272,43 +279,31 @@ class AppBar extends React.Component<Props, State> {
                           />
                         </IconButton>
                       </Grid>
-                      <Grid item style={{height: '100%'}}>
-                        {/* <IconButton
+                      <Grid item className={classes.backIcon}>
+                        <IconButton
                           color="inherit"
-                          aria-label="Logo"
+                          aria-label="menu"
                           className={classes.menuButton}
-                          style={{backgroundColor: "#FFFFFF", margin: 10, border: '1px solid yellow', height: '100%', width: '100%'}}
-                          onClick = {(): void => this.props.history.push("/Landing")}
-                          // size='large'
+                          onClick={(): void => this.props.history.goBack()}
                         >
-                          <img src={LogoImage} height='100%' width='auto' alt={""}/>
-                        </IconButton> */}
-                        <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%', padding: '0.5em'}}>
-                          <Avatar src={LogoImage} style={{backgroundColor: 'white', border: '0.5em solid white'}} />
+                          <BackIcon
+                            color="secondary"
+                            fontSize='large'
+                          />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  {/* <Grid item xs={6} style={{height: '100%'}}>
+                    <Grid container direction="row" justify="flex-start" alignItems="center" style={{height: '100%'}}>
+                      <Grid item style={{height: '100%'}}>
+                        <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
+                          <Button onClick={(): void => this.props.history.push('/Home')}>
+                            <Avatar src={LogoImage} style={{backgroundColor: 'white', border: '0.5em solid white'}} />
+                          </Button>
                         </Grid>
                       </Grid>
-                      <Grid item>
-                        <Grid container direction="column" justify="center" alignItems="flex-start">
-                          <Grid item>
-                            <Typography
-                              variant="h6"
-                              className={classes.chalkText}
-                              onClick = {(): void => this.props.history.push("/Landing")}
-                            >
-                              CHALK
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography
-                              variant="h6"
-                              className={classes.coachingText}
-                              onClick = {(): void => this.props.history.push("/Landing")}
-                            >
-                              COACHING
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
+                      
                       <Grid item className={classes.backIcon} style={{paddingLeft: '1em'}}>
                         <IconButton
                           color="inherit"
@@ -324,47 +319,25 @@ class AppBar extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    {/* <div color="inherit" className={classes.grow}/> */}
-                    <Router>
-                      <div>
-                        <Grid container direction="row" justify="flex-end" alignItems="center">
-                          <Grid item>
-                            <Link to="/" className={classes.link}>
-                              <Button
-                                color="secondary"
-                                className={classes.menuButton}
-                                onClick={(): void => this.props.history.push("/")}
-                              >
-                                Home
-                              </Button>
-                            </Link>
-                          </Grid>
-                          <Grid item>
-                            <Link to="/team" className={classes.link}>
-                              <Button
-                                color="secondary"
-                                className={classes.menuButton}
-                                onClick={(): void => this.props.history.push("/team")}
-                              >
-                                Team
-                              </Button>
-                            </Link>
-                          </Grid>
-                            {/* <Link to="/about" className={classes.link}>
-                              <Button
-                                color="secondary"
-                                className={classes.menuButton}
-                                onClick={() => this.props.history.push("/about")}
-                              >
-                                About
-                              </Button>
-                            </Link> */}
-                        </Grid>
-                      </div>
-                    </Router>
+
+                  <Grid item xs={6} style={{height: '100%'}}>
+                    <Grid container direction="row" justify="flex-end" alignItems="center" style={{height: '100%'}}>
+                      <Grid item>
+                        <IconButton
+                          color="inherit"
+                          aria-label="menu"
+                          className={classes.menuButton}
+                          onClick={(): void => this.handleMenu()}
+                        >
+                          <MenuIcon
+                            color="secondary"
+                            fontSize='large'
+                          />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </Grid> */}
                   </Grid>
-                </Grid>
               {/* </Toolbar> */}
               <BurgerMenu
                 open={this.state.open}
@@ -376,65 +349,16 @@ class AppBar extends React.Component<Props, State> {
             <NavBar position="static" color={"primary"}>
               <Toolbar>
                 <Grid container direction="row" alignItems="center">
-                  <Grid item xs={4}>
+                  <Grid item xs={6}>
                     <Grid container direction="row" justify="flex-start" alignItems="center">
-                      <Grid item>
-                        <IconButton
-                          color="inherit"
-                          aria-label="Logo"
-                          className={classes.menuButton}
-                          style={{backgroundColor: "#FFFFFF", margin: 10}}
-                          onClick = {(): void => this.props.history.push("/")}
-                        >
-                          <img src={LogoImage} height={'36'} alt={""}/>
-                        </IconButton>
-                      </Grid>
-                      <Grid item>
-                        <Grid container direction="column" justify="center" alignItems="flex-start">
-                          <Grid item>
-                            <Typography
-                              variant="h6"
-                              className={classes.chalkText}
-                              onClick = {(): void => this.props.history.push("/")}
-                            >
-                              CHALK
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography
-                              variant="h6"
-                              className={classes.coachingText}
-                              onClick = {(): void => this.props.history.push("/")}
-                            >
-                              COACHING
-                            </Typography>
-                          </Grid>
+                      <Grid item style={{height: '100%'}}>
+                        <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
+                          <Button onClick={(): void => this.props.history.push('/Home')}>
+                            <Avatar src={LogoImage} style={{backgroundColor: 'white', border: '0.5em solid white'}} />
+                          </Button>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Grid container direction="row" justify="flex-end" alignItems="center">
-                      <div color="inherit" className={classes.grow}/>
-                      <Grid item>
-                        <Button
-                          color="secondary"
-                          onClick={this.handleLoginModal}
-                          className={classes.menuButton}
-                        >
-                          Log In
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          color="secondary"
-                          onClick={this.handleSignupModal}
-                          className={classes.menuButton}
-                        >
-                          Sign Up
-                        </Button>
-                      </Grid>
-                      <Grid>
+                      <Grid item style={{paddingLeft: '1em'}}>
                         <Router>
                           <div>
                             <Link to="/team" className={classes.link}>
@@ -443,20 +367,34 @@ class AppBar extends React.Component<Props, State> {
                                 className={classes.menuButton}
                                 onClick={(): void => this.props.history.push("/team")}
                               >
-                                Team
+                                <strong>Team</strong>
                               </Button>
                             </Link>
-                            {/* <Link to = "/about" className={classes.link}>
-                              <Button
-                                color="secondary"
-                                className={classes.menuButton}
-                                onClick={() => this.props.history.push("/about")}
-                              >
-                                About
-                              </Button>
-                            </Link> */}
                           </div>
                         </Router>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Grid container direction="row" justify="flex-end" alignItems="center">
+                      {/* <div color="inherit" className={classes.grow}/> */}
+                      <Grid item>
+                        <Button
+                          color="secondary"
+                          onClick={this.handleLoginModal}
+                          className={classes.menuButton}
+                        >
+                          <strong>Log In</strong>
+                        </Button>
+                      </Grid>
+                      <Grid item style={{paddingLeft: '1em'}}>
+                        <Button
+                          color="secondary"
+                          onClick={this.handleSignupModal}
+                          className={classes.menuButton}
+                        >
+                          <strong>Sign Up</strong>
+                        </Button>
                       </Grid>
                     </Grid>
                   </Grid>
