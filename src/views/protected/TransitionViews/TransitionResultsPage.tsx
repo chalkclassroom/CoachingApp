@@ -18,8 +18,8 @@ import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
+// import * as H from 'history';
+// import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -39,7 +39,7 @@ const styles: object = {
 interface Props {
   classes: { root: string, comparisonText: string },
   teacherSelected: Types.Teacher,
-  history: H.History
+  // history: H.History
 }
 
 interface State {
@@ -572,7 +572,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
       role: PropTypes.string,
       school: PropTypes.string
     }).isRequired,
-    history: ReactRouterPropTypes.history.isRequired
+    // history: ReactRouterPropTypes.history.isRequired
   };
 
   /**
@@ -594,7 +594,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
           <ResultsLayout
             teacher={this.props.teacherSelected}
             magic8="Transition Time"
-            history={this.props.history}
+            // history={this.props.history}
             summary={
               <Grid container justify={"center"} direction={"column"}>
                 <Grid item style={{padding: '1em'}}>

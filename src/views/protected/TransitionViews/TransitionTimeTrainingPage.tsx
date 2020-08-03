@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as Constants from '../../../constants/Constants';
-import Button from "@material-ui/core/Button/Button";
+// import Button from "@material-ui/core/Button/Button";
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
 import AppBar from "../../../components/AppBar";
@@ -11,12 +11,12 @@ import TrainingVideo from "../../../components/Shared/TrainingVideo";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import * as Types from '../../../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
+// import * as H from 'history';
+// import ReactRouterPropTypes from 'react-router-prop-types';
 
 const TransitionTheme = createMuiTheme({
   palette: {
@@ -155,8 +155,8 @@ const ViewEnum = {
 
 interface Props {
   classes: Style,
-  history: H.History,
-  location: H.Location
+  // history: H.History,
+  // location: H.Location
 }
 
 interface Style {
@@ -223,8 +223,8 @@ class TransitionTime2TrainingPage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    history: ReactRouterPropTypes.history.isRequired,
-    location: ReactRouterPropTypes.location
+    // history: ReactRouterPropTypes.history.isRequired,
+    // location: ReactRouterPropTypes.location
   }
 
   /**

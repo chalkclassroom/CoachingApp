@@ -2,8 +2,8 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+// import Button from '@material-ui/core/Button';
+// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
@@ -18,8 +18,8 @@ import {
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
+// import * as H from 'history';
+// import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../../../constants/Types';
 
 /*
@@ -56,7 +56,7 @@ const styles: object = {
 
 interface Props {
   classes: { root: string, grow: string, backButton: string },
-  history: H.History,
+  // history: H.History,
   appendClimateRating(rating: number): void
 };
 
@@ -146,7 +146,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    history: ReactRouterPropTypes.history.isRequired,
+    // history: ReactRouterPropTypes.history.isRequired,
     appendClimateRating: PropTypes.func.isRequired
   }
 

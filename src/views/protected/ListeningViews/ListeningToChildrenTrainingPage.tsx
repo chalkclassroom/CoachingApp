@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as Constants from '../../../constants/Constants';
-import Button from '@material-ui/core/Button/Button';
+// import Button from '@material-ui/core/Button/Button';
 import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg';
 import { withStyles } from '@material-ui/core/styles/index';
 import AppBar from '../../../components/AppBar';
@@ -11,12 +11,12 @@ import TrainingVideo from '../../../components/Shared/TrainingVideo';
 import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionnaire';
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import ListeningToChildrenHelpCard from '../../../components/ListeningComponents/ListeningToChildrenHelpCard';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/es';
 import Grid from '@material-ui/core/Grid';
 import * as Types from '../../../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
+// import * as H from 'history';
+// import ReactRouterPropTypes from 'react-router-prop-types';
 
 const ListeningTheme = createMuiTheme({
   palette: {
@@ -155,8 +155,8 @@ const ViewEnum = {
 
 interface Props {
   classes: Style;
-  location: H.Location;
-  history: H.History;
+  // location: H.Location;
+  // history: H.History;
 }
 
 interface Style {
@@ -223,8 +223,8 @@ class ListeningToChildrenTrainingPage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: ReactRouterPropTypes.location,
-    history: ReactRouterPropTypes.history.isRequired
+    // location: ReactRouterPropTypes.location,
+    // history: ReactRouterPropTypes.history.isRequired
   };
 
   /**

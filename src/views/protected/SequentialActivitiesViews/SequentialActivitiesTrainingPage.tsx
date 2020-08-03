@@ -2,7 +2,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as Constants from "../../../constants/Constants";
-import Button from "@material-ui/core/Button/Button";
+// import Button from "@material-ui/core/Button/Button";
 import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
 import { withStyles } from "@material-ui/core/styles/index";
 import AppBar from "../../../components/AppBar";
@@ -11,13 +11,13 @@ import "chartjs-plugin-datalabels";
 import TrainingVideo from "../../../components/Shared/TrainingVideo";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import SequentialHelpCard from "../../../components/SequentialActivitiesComponents/SequentialHelpCard";
 import { createMuiTheme } from "@material-ui/core/es/styles";
 import Grid from '@material-ui/core/Grid';
 import * as Types from '../../../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
+// import * as H from 'history';
+// import ReactRouterPropTypes from 'react-router-prop-types';
 
 const SequentialTheme = createMuiTheme({
   palette: {
@@ -156,8 +156,8 @@ const ViewEnum = {
 
 interface Props {
   classes: Style,
-  location: H.Location;
-  history: H.History;
+  // location: H.Location;
+  // history: H.History;
 }
 
 interface Style {
@@ -221,8 +221,8 @@ class SequentialActivitiesTrainingPage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: ReactRouterPropTypes.location,
-    history: ReactRouterPropTypes.history.isRequired
+    // location: ReactRouterPropTypes.location,
+    // history: ReactRouterPropTypes.history.isRequired
   }
 
   /**

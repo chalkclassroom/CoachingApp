@@ -6,10 +6,10 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Dashboard from '../../../components/Dashboard';
 import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
+// import Button from '@material-ui/core/Button';
+// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+// import * as H from 'history';
+// import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../../../constants/Types';
 
 const styles: object = {
@@ -32,7 +32,7 @@ const styles: object = {
 
 interface Props {
   classes: { root: string, backButton: string },
-  history: H.History
+  // history: H.History
 }
 
 /**
@@ -52,7 +52,7 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
    */
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    history: ReactRouterPropTypes.history.isRequired
+    // history: ReactRouterPropTypes.history.isRequired
   };
 
   /**

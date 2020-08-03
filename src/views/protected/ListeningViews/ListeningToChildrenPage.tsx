@@ -1,17 +1,17 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
-import Grid from "@material-ui/core/Grid";
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+// import * as PropTypes from 'prop-types';
+// import Grid from "@material-ui/core/Grid";
+// import Button from '@material-ui/core/Button';
+// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import TeacherChecklist from '../../../components/ListeningComponents/TeacherChecklist';
-import { withStyles } from '@material-ui/core/styles';
-import * as H from 'history';
+// import { withStyles } from '@material-ui/core/styles';
+// import * as H from 'history';
 import * as Types from '../../../constants/Types';
-import ReactRouterPropTypes from 'react-router-prop-types';
+// import ReactRouterPropTypes from 'react-router-prop-types';
 
-const styles: object = {
+/* const styles: object = {
   backButton: {
     marginTop: '0.5em',
     marginBottom: '0.5em',
@@ -19,22 +19,14 @@ const styles: object = {
     borderRadius: 3,
     textTransform: 'none'
   }
-}
-
-interface Props {
-  classes: {
-    backButton: string
-  },
-  history: H.History
-};
+} */
 
 /**
  * @function ListeningToChildrenPage
- * @param {Props} props
  * @return {ReactElement}
  */
-function ListeningToChildrenPage(props: Props): React.ReactElement {
-  const { classes, history } = props;
+function ListeningToChildrenPage(): React.ReactElement {
+  // const { classes, history } = props;
   return (
     <div>
       <FirebaseContext.Consumer>
@@ -91,8 +83,8 @@ function ListeningToChildrenPage(props: Props): React.ReactElement {
 }
 
 ListeningToChildrenPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-  history: ReactRouterPropTypes.history.isRequired
+  // classes: PropTypes.object.isRequired,
+  // history: ReactRouterPropTypes.history.isRequired
 }
 
-export default withStyles(styles)(ListeningToChildrenPage);
+export default (ListeningToChildrenPage);
