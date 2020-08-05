@@ -11,7 +11,7 @@ import TrainingVideo from "../../../components/Shared/TrainingVideo";
 import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionnaire";
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 // import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import { createMuiTheme } from "@material-ui/core/es/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import StudentEngagementHelpCard from "../../../components/StudentEngagementComponents/StudentEngagementHelpCard";
 import * as Types from '../../../constants/Types';

@@ -12,7 +12,7 @@ import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionna
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import LevelOfInstructionHelpCard from '../../../components/LevelOfInstructionComponents/LevelOfInstructionHelpCard';
 import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import { createMuiTheme } from '@material-ui/core/es';
+import { createMuiTheme } from '@material-ui/core/styles';
 import * as Types from '../../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
@@ -236,7 +236,7 @@ const styles: object = {
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
-          <Button
+          {/* <Button
             variant="contained"
             size="medium"
             className={classes.backButton}
@@ -254,7 +254,7 @@ const styles: object = {
           >
             <ChevronLeftRoundedIcon />
             <b>Training Home</b>
-          </Button>
+          </Button> */}
           <h1 style={{ justifySelf: 'center' }}>Training Tool</h1>
           <Button
             variant="contained"

@@ -13,7 +13,7 @@ import TrainingQuestionnaire from "../../../components/Shared/TrainingQuestionna
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 // import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import SequentialHelpCard from "../../../components/SequentialActivitiesComponents/SequentialHelpCard";
-import { createMuiTheme } from "@material-ui/core/es/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import * as Types from '../../../constants/Types';
 // import * as H from 'history';

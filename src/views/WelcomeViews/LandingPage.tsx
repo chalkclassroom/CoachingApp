@@ -38,7 +38,7 @@ import CoachLandingMobileImage from '../../assets/images/CoachLandingMobileImage
 import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal';
 import PilotModal from '../../components/LandingPageComponents/PilotModal';
 import DemoModal from '../../components/LandingPageComponents/DemoModal';
-import { ClickAwayListener } from '@material-ui/core/es';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import * as Constants from '../../constants/Constants';
 
 const styles: object = {

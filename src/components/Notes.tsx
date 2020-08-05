@@ -13,7 +13,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/es/DialogActions/DialogActions";
+import DialogActions from "@material-ui/core/DialogActions";
 import Grid from "@material-ui/core/Grid";
 
 interface Props {
