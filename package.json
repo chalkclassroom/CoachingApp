@@ -79,7 +79,7 @@
     "removebuild": "rimraf build",
     "webpack": "webpack",
     "webpack-dev-server": "webpack-dev-server",
-    "livedev": "webpack-dev-server --mode=development",
+    "livedev": "webpack-dev-server --mode=development --host 0.0.0.0",
     "dev": "webpack --mode=development",
     "prod": "webpack --mode=production",
     "deploydocs": "npm run doc && firebase target:apply hosting chalkdocs chalkdocs && firebase deploy --only hosting:chalkdocs",

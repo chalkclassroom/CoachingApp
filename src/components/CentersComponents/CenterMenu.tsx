@@ -208,7 +208,7 @@ class CenterMenu extends React.Component<Props, State> {
   };
 
   backToCenterMenu = (): void => {
-    this.setState({ status: CENTER_MENU })
+    this.setState({ status: CENTER_MENU });
   }
 
   static propTypes = {

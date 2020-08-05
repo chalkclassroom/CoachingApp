@@ -9,6 +9,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from "@material-ui/icons/Person";
 import MessagesIcon from "@material-ui/icons/MailOutline";
 import ObserveIcon from "@material-ui/icons/Visibility";
@@ -25,7 +26,7 @@ import { connect } from 'react-redux';
 import { clearCoach } from '../state/actions/coach';
 import TeacherModal from "../views/protected/HomeViews/TeacherModal";
 import FirebaseContext from "./Firebase/FirebaseContext";
-import DashboardIcon from '@material-ui/icons/Dashboard';
+// import DashboardIcon from '@material-ui/icons/Dashboard';
 import * as Constants from '../constants/Constants';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
@@ -154,10 +155,10 @@ class BurgerMenu extends React.Component<Props, State>{
               className={classes.nested}
             >
               <ListItemIcon>
-                <DashboardIcon style={{ fill: Constants.Colors.CC}} />
+                <HomeIcon style={{ fill: Constants.Colors.CC}} />
               </ListItemIcon>
               <ListItemText
-                primary="Dashboard"
+                primary="Home"
               />
             </ListItem>
             <ListItem

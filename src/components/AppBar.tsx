@@ -148,7 +148,8 @@ type Props = RouteComponentProps & {
     firebaseSignOut(): Promise<void>,
     getTeacherList(): Promise<Types.Teacher[]>
   },
-  history: H.History;
+  history: H.History,
+  noBack?: boolean
 }
 
 interface State {
@@ -241,7 +242,8 @@ class AppBar extends React.Component<Props, State> {
       firebaseSignOut: PropTypes.func,
       getTeacherList: PropTypes.func
     }),
-    history: ReactRouterPropTypes.history
+    history: ReactRouterPropTypes.history,
+    noBack: PropTypes.bool
   }
 
   /**
@@ -279,7 +281,7 @@ class AppBar extends React.Component<Props, State> {
                           />
                         </IconButton>
                       </Grid>
-                      <Grid item className={classes.backIcon}>
+                      {this.props.noBack ? (<div />) : (<Grid item className={classes.backIcon}>
                         <IconButton
                           color="inherit"
                           aria-label="menu"
@@ -291,7 +293,7 @@ class AppBar extends React.Component<Props, State> {
                             fontSize='large'
                           />
                         </IconButton>
-                      </Grid>
+                      </Grid>)}
                     </Grid>
                   </Grid>
                   {/* <Grid item xs={6} style={{height: '100%'}}>
