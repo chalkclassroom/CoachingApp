@@ -3,7 +3,6 @@ import * as PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import CenterChecklist from './CenterChecklist';
 import NewCenterDialog from './NewCenterDialog';
 import CenterRatingChecklist from './CenterRatingChecklist';
@@ -12,8 +11,6 @@ import TotalVisitCount from '../TotalVisitCount';
 import grey from "@material-ui/core/colors/grey";
 import { withStyles } from "@material-ui/core/styles";
 import * as Types from '../../constants/Types';
-// import * as H from 'history';
-// import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -138,7 +135,6 @@ interface Props {
     backButton: string,
     main: string
   },
-  // history: H.History
 }
 
 interface State{
@@ -251,7 +247,6 @@ class CenterMenu extends React.Component<Props, State> {
     updateCount: PropTypes.func.isRequired,
     centers: PropTypes.array.isRequired,
     type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,
-    // history: ReactRouterPropTypes.history
   }
 
   /**
@@ -291,20 +286,6 @@ class CenterMenu extends React.Component<Props, State> {
                   direction={"column"}
                   style={{height: '100%'}}
                 >
-                  {/* <Grid item>
-                    <Button variant="contained" size="medium" className={classes.backButton}
-                      onClick={(): void => {
-                        this.props.history.replace({
-                          pathname: "/Magic8Menu",
-                          state: {
-                            type: "Observe"
-                          }
-                        })
-                      }}>
-                      <ChevronLeftRoundedIcon />
-                      <b>Back</b>
-                    </Button>
-                  </Grid> */}
                   <Grid item>
                     <Dashboard
                       type={this.props.type}

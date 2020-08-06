@@ -1,8 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Constants from '../../../constants/Constants';
-import Button from '@material-ui/core/Button/Button';
 import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg';
 import { withStyles } from '@material-ui/core/styles/index';
 import AppBar from '../../../components/AppBar';
@@ -12,10 +10,8 @@ import TrainingVideo from '../../../components/Shared/TrainingVideo';
 import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionnaire';
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import ClassroomClimateHelpCard from '../../../components/ClassroomClimateComponent/ClassroomClimateHelpCard';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { createMuiTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import * as H from 'history';
 import * as Types from '../../../constants/Types';
 
 
@@ -156,8 +152,6 @@ const ViewEnum = {
 
 interface Props {
   classes: Style,
-  location: H.Location,
-  history: H.History
 }
 
 interface Style {
@@ -221,8 +215,6 @@ class ClassroomClimateTrainingPage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: ReactRouterPropTypes.location,
-    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**
@@ -239,22 +231,7 @@ class ClassroomClimateTrainingPage extends React.Component<Props, State> {
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
           <Grid container justify="center" alignItems="center">
-            <Grid item xs={3}>
-              {/* <Button variant="contained" size="medium" className={classes.backButton}
-                onClick={(): void => {
-                  if (this.props.location.state !== undefined) { // came from MyTeachers
-                    this.props.history.goBack();
-                  } else {
-                    this.props.history.replace({
-                      pathname: "/Magic8Menu",
-                      state: { type: "Training" }
-                    })
-                  }
-                }}>
-                <ChevronLeftRoundedIcon />
-                <b>Training Home</b>
-              </Button> */}
-            </Grid>
+            <Grid item xs={3} />
             <Grid item xs={9}>
               <h1 style={{ justifySelf: 'center', fontFamily: 'Arimo' }}>Training Tool</h1>
             </Grid>

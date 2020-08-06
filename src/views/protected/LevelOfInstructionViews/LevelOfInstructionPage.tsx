@@ -6,10 +6,6 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Dashboard from '../../../components/Dashboard';
 import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
-// import Button from '@material-ui/core/Button';
-// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-// import * as H from 'history';
-// import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../../../constants/Types';
 
 const styles: object = {
@@ -45,7 +41,6 @@ const styles: object = {
 
 interface Props {
   classes: { root: string, backButton: string, main: string },
-  // history: H.History
 }
 
 /**
@@ -65,7 +60,6 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
    */
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    // history: ReactRouterPropTypes.history.isRequired
   };
 
   /**
@@ -74,34 +68,11 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        {/* <header>
-          <Grid container direction="row" alignItems="center" justify="flex-start">
-            <Grid item xs={3}>
-              <Grid container alignItems="center" justify="center">
-                <Grid item>
-                  <Button variant="contained" size="medium" className={classes.backButton}
-                    onClick={(): void => {
-                      this.props.history.replace({
-                        pathname: "/Magic8Menu",
-                        state: {
-                          type: "Observe"
-                        }
-                      })
-                    }}>
-                    <ChevronLeftRoundedIcon />
-                    <b>Back</b>
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </header> */}
         <main className={classes.main}>
           <Grid container direction="row" alignItems="center" style={{height: '100%'}}>
             <Grid item xs={3} style={{height: '100%'}}>

@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import InfoIcon from '@material-ui/icons/Info';
 import SaveImage from '../assets/images/SaveImage.svg';
@@ -546,25 +545,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                     alignItems="center"
                     style={{width: '100%', paddingTop: '0.5em', paddingBottom: '1em'}}
                   >
-                    <Grid item xs={2}>
-                      {/* <Grid container alignItems="center" justify="flex-start">
-                        <Grid item>
-                          <Button
-                            variant="contained"
-                            size="medium"
-                            className={classes.backButton}
-                            onClick={(): void => {
-                              this.props.history.replace({
-                                pathname: "/ActionPlans"
-                              })
-                            }}
-                          >
-                            <ChevronLeftRoundedIcon />
-                            <b>Back</b>
-                          </Button>
-                        </Grid>
-                      </Grid> */}
-                    </Grid>
+                    <Grid item xs={2} />
                     <Grid item xs={8}>
                       <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
                         <Typography variant="h4" style={{fontFamily: "Arimo"}}>

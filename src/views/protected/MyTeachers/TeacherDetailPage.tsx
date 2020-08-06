@@ -15,7 +15,6 @@ import AssocCoopIconImage from "../../../assets/images/AssocCoopIconImage.svg";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
-// import ChevronLeftRoundedIcon from "@material-ui/icons/ChevronLeftRounded";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import Grid from "@material-ui/core/Grid";
@@ -740,22 +739,6 @@ class TeacherDetailPage extends React.Component<Props, State> {
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.container}>
-          {/* <Button
-            variant="contained"
-            size="medium"
-            className={classes.button}
-            onClick={(): void => {
-              if (this.props.location.state !== undefined) {
-                // came from MyTeachers
-                this.props.history.goBack();
-              } else {
-                this.props.history.replace("/MyTeachers");
-              }
-            }}
-          >
-            <ChevronLeftRoundedIcon />
-            <b>My Teachers</b>
-          </Button> */}
           <div className={classes.teacherHeader}>
             <span>
               <b>
