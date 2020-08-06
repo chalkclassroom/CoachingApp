@@ -51,11 +51,24 @@ const styles: object = {
     color: '#333333',
     borderRadius: 3,
     textTransform: 'none'
+  },
+  main: {
+    height: '100%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    }
   }
 };
 
 interface Props {
-  classes: { root: string, grow: string, backButton: string },
+  classes: { root: string, grow: string, backButton: string, main: string },
   // history: H.History,
   appendClimateRating(rating: number): void
 };
@@ -193,12 +206,13 @@ class ClassroomClimatePage extends React.Component<Props, State> {
             </Grid>
           </Grid>
         </header> */}
-        <main style={{ flex: 1 }}>
+        <main className={this.props.classes.main}>
           <Grid
             container
             alignItems={"center"}
             justify={"center"}
             direction={"column"}
+            style={{height: '100%'}}
           >
             <Grid
               container

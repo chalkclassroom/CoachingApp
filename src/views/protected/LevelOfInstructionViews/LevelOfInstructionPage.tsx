@@ -27,11 +27,24 @@ const styles: object = {
     color: '#333333',
     borderRadius: 3,
     textTransform: 'none'
+  },
+  main: {
+    height: '100%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    }
   }
 };
 
 interface Props {
-  classes: { root: string, backButton: string },
+  classes: { root: string, backButton: string, main: string },
   // history: H.History
 }
 
@@ -89,17 +102,17 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
             </Grid>
           </Grid>
         </header> */}
-        <main style={{ flexGrow: 1 }}>
-          <Grid container alignItems="center" style={{height: '100%'}}>
-            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
-              <Grid container alignItems={'center'} justify={'center'} direction={'column'}>
+        <main className={classes.main}>
+          <Grid container direction="row" alignItems="center" style={{height: '100%'}}>
+            <Grid item xs={3} style={{height: '100%'}}>
+              <Grid container alignItems={'center'} justify={'center'} direction={'column'} style={{height: '100%'}}>
                 <Dashboard
                   type="LI"
                   completeObservation={true}
                 />
               </Grid>
             </Grid>
-            <Grid item xs={9} style={{height: '100%'}}>
+            <Grid item xs={9}>
               <Grid container alignItems={'center'} justify={'center'} direction={'column'}>
                 <FirebaseContext.Consumer>
                   {(firebase: {

@@ -35,7 +35,7 @@ const styles: object = {
     zIndex: '99',
     textTransform: 'Capitalize',
     fontWeight: 'bold',
-    fontSize: '1.5em',
+    fontSize: '1.2em',
     paddingRight: '0.5em',
     paddingLeft: '0.5em'
   }

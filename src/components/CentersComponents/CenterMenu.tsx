@@ -31,6 +31,19 @@ const styles: object = {
     color: '#333333',
     borderRadius: 3,
     textTransform: 'none'
+  },
+  main: {
+    height: '100%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    }
   }
 };
 
@@ -122,7 +135,8 @@ interface Props {
   classes: {
     root: string,
     grow: string,
-    backButton: string
+    backButton: string,
+    main: string
   },
   // history: H.History
 }
@@ -256,24 +270,26 @@ class CenterMenu extends React.Component<Props, State> {
         );
       case CENTER_MENU:
         return (
-          <div>
+          <div className={this.props.classes.main}>
             <Grid
               container
               justify="center"
               alignItems="center"
               direction="row"
+              style={{height: '100%'}}
             >
               <NewCenterDialog
                 open={this.state.addDialog}
                 handleClose={this.handleClose}
                 handleSubmit={this.handleAddCenter}
               />
-              <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+              <Grid item xs={3} style={{height: '100%'}}>
                 <Grid
                   container
                   alignItems={"center"}
                   justify={"center"}
                   direction={"column"}
+                  style={{height: '100%'}}
                 >
                   {/* <Grid item>
                     <Button variant="contained" size="medium" className={classes.backButton}

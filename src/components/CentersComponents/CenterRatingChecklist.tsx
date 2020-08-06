@@ -3,7 +3,6 @@ import * as PropTypes from "prop-types";
 import Button from "@material-ui/core/Button/Button";
 import Card from "@material-ui/core/Card/Card";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
-// import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
@@ -46,6 +45,19 @@ const styles: object = {
     paddingRight: '1em',
     height: '5vh',
     verticalAlign: 'center'
+  },
+  main: {
+    height: '100%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    }
   }
 };
 
@@ -67,7 +79,8 @@ interface Props {
     root: string,
     grow: string,
     backButton: string,
-    instructionText: string
+    instructionText: string,
+    main: string
   },
   firebase: {
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
@@ -377,27 +390,22 @@ class CenterRatingChecklist extends React.Component<Props, State> {
             </DialogContentText>
           </DialogContent>
         </Dialog>
-        <main>
+        <main className={classes.main}>
           <Grid
             container
             alignItems={"center"}
             direction={"row"}
             justify={"center"}
+            style={{height: '100%'}}
           >
-            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+            <Grid item xs={3} style={{height: '100%'}}>
               <Grid
                 container
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}
+                style={{height: '100%'}}
               >
-                {/* <Grid item>
-                  <Button variant="contained" size="medium" className={classes.backButton}
-                    onClick={this.props.backToCenterMenu}>
-                    <ChevronLeftRoundedIcon />
-                    <b>Back</b>
-                  </Button>
-                </Grid> */}
                 <Grid item>
                 <Dashboard
                   type={this.props.type}
