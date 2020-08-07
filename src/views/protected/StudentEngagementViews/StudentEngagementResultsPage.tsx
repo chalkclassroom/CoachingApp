@@ -14,8 +14,6 @@ import StudentEngagementCoachingQuestions
 import TeacherModal from '../HomeViews/TeacherModal';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import * as Types from '../../../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -29,8 +27,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher,
-  history: H.History
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -439,8 +436,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired,
-    history: ReactRouterPropTypes.history.isRequired
+    }).isRequired
   };
 
   /**
@@ -462,7 +458,6 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
           <ResultsLayout
             teacher={this.props.teacherSelected}
             magic8="Level of Engagement"
-            history={this.props.history}
             summary={
               <SummarySlider
                 offTask={this.state.offTaskSummaryCount}

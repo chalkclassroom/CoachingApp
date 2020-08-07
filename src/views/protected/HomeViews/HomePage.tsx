@@ -146,7 +146,7 @@ class HomePage extends React.Component<Props, State> {
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} noBack={true} />}
         </FirebaseContext.Consumer>
         {this.props.coachName ? (
           <Grid

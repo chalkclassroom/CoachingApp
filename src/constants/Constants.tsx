@@ -8,7 +8,7 @@ import {
   blue,
   indigo
 } from "@material-ui/core/colors";
-import { red } from "@material-ui/core/es/colors";
+import red from "@material-ui/core/colors/red";
 
 // Colors
 export const Colors = {

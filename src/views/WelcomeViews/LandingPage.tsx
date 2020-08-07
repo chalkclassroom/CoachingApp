@@ -38,7 +38,8 @@ import CoachLandingMobileImage from '../../assets/images/CoachLandingMobileImage
 import UpcomingEventsModal from '../../components/LandingPageComponents/UpcomingEventsModal';
 import PilotModal from '../../components/LandingPageComponents/PilotModal';
 import DemoModal from '../../components/LandingPageComponents/DemoModal';
-import { ClickAwayListener } from '@material-ui/core/es';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import * as Constants from '../../constants/Constants';
 
 const styles: object = {
   root: {
@@ -364,19 +365,19 @@ class LandingPage extends React.Component<Props, State> {
                 <Grid container direction="row" justify="flex-start" alignItems="center">
                   <Grid item xs={7} style={{paddingTop: '2vh'}}>
                     <Typography className={classes.chalkTitle}>
-                      <strong>C</strong>oaching to
+                      <strong style={{color: Constants.Colors.AppBar}}>C</strong>oaching to
                     </Typography>
                     <Typography className={classes.chalkTitle}>
-                      <strong>H</strong>elp
+                      <strong style={{color: Constants.Colors.AppBar}}>H</strong>elp
                     </Typography>
                     <Typography className={classes.chalkTitle}>
-                      <strong>A</strong>ctivate
+                      <strong style={{color: Constants.Colors.AppBar}}>A</strong>ctivate
                     </Typography>
                     <Typography className={classes.chalkTitle}>
-                      <strong>L</strong>earning for
+                      <strong style={{color: Constants.Colors.AppBar}}>L</strong>earning for
                     </Typography>
                     <Typography className={classes.chalkTitle}>
-                      <strong>K</strong>ids
+                      <strong style={{color: Constants.Colors.AppBar}}>K</strong>ids
                     </Typography>
                     <Typography className={classes.tagline} style={{paddingTop: '7vh'}}>
                       Empowering coaches and teachers

@@ -3,9 +3,9 @@ import * as PropTypes from "prop-types";
 import {
   withStyles,
   Toolbar,
-  Typography,
   Button,
-  IconButton
+  IconButton,
+  Avatar
 } from "@material-ui/core";
 import { AppBar as NavBar } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -14,6 +14,7 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import LoginModal from "./LoginComponent/LoginModal";
 import SignUpModal from "./SignUpComponent/SignUpModal";
 import MenuIcon from "@material-ui/icons/Menu";
+import BackIcon from '@material-ui/icons/ArrowBackIos';
 import BurgerMenu from "./BurgerMenu";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { MuiThemeProvider } from "@material-ui/core/styles";
@@ -24,27 +25,41 @@ import * as firebase from 'firebase/app';
 import * as H from 'history';
 
 const styles: object = {
+  root: {
+    height: '10vh',
+    minHeight: '4em',
+    maxHeight: '7em'
+  },
+  backIcon: {
+    display: 'none'
+  },
   grow: {
     flexGrow: 1
   },
   menuButton: {
     fontFamily: 'Arimo',
-    fontSize: 16,
-    marginLeft: -12,
-    marginRight: 20,
+    // fontSize: 16,
+    // marginLeft: -12,
+    // marginRight: 20,
     "&:hover": {
       backgroundColor: "#FFC35C"
-    }
+    },
+    fontSize: 'calc(14px + (30 - 14) * ((100vw - 300px) / (1600 - 300)))'
   },
   link: {
     textDecoration: "none"
   },
+  buttonText: {
+    fontSize: 'calc(14px + (30 - 14) * ((100vw - 300px) / (1600 - 300)))'
+  },
   menuText: {
     color:'#FFFFFF',
+    fontSize: 'calc(14px + (30 - 14) * ((100vw - 300px) / (1600 - 300)))'
   },
   chalkText: {
     color: 'white',
     fontFamily: 'Arimo',
+    // fontSize: 'calc(18px + (36 - 18) * ((100vw - 300px) / (1600 - 300)))',
     fontSize: 20,
     fontWeight: 'bold',
     lineHeight: '110%',
@@ -54,15 +69,19 @@ const styles: object = {
   coachingText: {
     color: 'white',
     fontFamily: 'Arimo',
-    fontSize: 14,
+    // fontSize: 'calc(14px + (30 - 14) * ((100vw - 300px) / (1600 - 300)))',
+    fontSize: 16,
     fontWeight: 'normal',
     lineHeight: '110%',
     letterSpacing: '0.05em'
   },
-  "@media (max-width: 700px)": {
+  "@media (max-width: 767px)": {
     menuButton: {
       marginLeft: '-0.7em',
       marginRight: '0.4em'
+    },
+    backIcon: {
+      display: 'flex'
     },
     chalkText: {
       fontSize: 16
@@ -71,6 +90,12 @@ const styles: object = {
       fontSize: 12
     }
   },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)': {
+    backIcon: {
+      // color: 'white',
+      display: 'flex'
+    }
+  }
 };
 
 const theme = createMuiTheme({
@@ -88,13 +113,16 @@ const theme = createMuiTheme({
 });
 
 interface Style {
+  root: string,
   grow: string,
   menuButton: string,
   link: string,
   logoButton: string,
+  buttonText: string,
   menuText: string,
   chalkText: string,
-  coachingText: string
+  coachingText: string,
+  backIcon: string
 }
 
 type Props = RouteComponentProps & {
@@ -119,7 +147,8 @@ type Props = RouteComponentProps & {
     firebaseSignOut(): Promise<void>,
     getTeacherList(): Promise<Types.Teacher[]>
   },
-  history: H.History;
+  history: H.History,
+  noBack?: boolean
 }
 
 interface State {
@@ -189,13 +218,16 @@ class AppBar extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.exact({
+      root: PropTypes.string,
       grow: PropTypes.string,
       menuButton: PropTypes.string,
       link: PropTypes.string,
       logoButton: PropTypes.string,
+      buttonText: PropTypes.string,
       menuText: PropTypes.string,
       chalkText: PropTypes.string,
-      coachingText: PropTypes.string
+      coachingText: PropTypes.string,
+      backIcon: PropTypes.string
     }),
     firebase: PropTypes.exact({
       auth: PropTypes.exact({
@@ -209,7 +241,8 @@ class AppBar extends React.Component<Props, State> {
       firebaseSignOut: PropTypes.func,
       getTeacherList: PropTypes.func
     }),
-    history: ReactRouterPropTypes.history
+    history: ReactRouterPropTypes.history,
+    noBack: PropTypes.bool
   }
 
   /**
@@ -222,11 +255,24 @@ class AppBar extends React.Component<Props, State> {
       <MuiThemeProvider theme={theme}>
         <div>
           {this.state.auth ? (
-            <NavBar position="static" color={"primary"}>
-              <Toolbar>
-                <Grid container direction="row" alignItems="center">
-                  <Grid item xs={4}>
-                    <Grid container direction="row" justify="flex-start" alignItems="center">
+            <NavBar position="static" color={"primary"} className={classes.root}>
+              {/* <Toolbar style={{border: '1px solid red', height: '10vh'}}> */}
+                <Grid container direction="row" alignItems="center" justify="flex-start" style={{height: '100%', paddingLeft: '1em', paddingRight: '1em'}}>
+                  <Grid item xs={12} style={{height: '100%'}}>
+                    <Grid container direction="row" justify="flex-start" alignItems="center" style={{height: '100%'}}>
+                      <Grid item style={{height: '100%'}}>
+                        <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
+                          <IconButton
+                            color="inherit"
+                            aria-label="Logo"
+                            className={classes.menuButton}
+                            style={{backgroundColor: "#FFFFFF"}}
+                            onClick = {(): void => this.props.history.push("/Home")}
+                          >
+                            <img src={LogoImage} height='35vh' alt='OWL' />
+                          </IconButton>
+                        </Grid>
+                      </Grid>
                       <Grid item>
                         <IconButton
                           color="inherit"
@@ -234,86 +280,72 @@ class AppBar extends React.Component<Props, State> {
                           className={classes.menuButton}
                           onClick={(): void => this.handleMenu()}
                         >
-                          <MenuIcon color="secondary" />
+                          <MenuIcon
+                            color="secondary"
+                            fontSize='large'
+                          />
                         </IconButton>
                       </Grid>
-                      <Grid item>
+                      {this.props.noBack ? (<div />) : (<Grid item className={classes.backIcon}>
                         <IconButton
                           color="inherit"
-                          aria-label="Logo"
+                          aria-label="menu"
                           className={classes.menuButton}
-                          style={{backgroundColor: "#FFFFFF", margin: 10}}
-                          onClick = {(): void => this.props.history.push("/Landing")}
+                          onClick={(): void => this.props.history.goBack()}
                         >
-                          <img src={LogoImage} height={'36'} alt={""}/>
+                          <BackIcon
+                            color="secondary"
+                            fontSize='large'
+                          />
                         </IconButton>
-                      </Grid>
-                      <Grid item>
-                        <Grid container direction="column" justify="center" alignItems="flex-start">
-                          <Grid item>
-                            <Typography
-                              variant="h6"
-                              className={classes.chalkText}
-                              onClick = {(): void => this.props.history.push("/Landing")}
-                            >
-                              CHALK
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography
-                              variant="h6"
-                              className={classes.coachingText}
-                              onClick = {(): void => this.props.history.push("/Landing")}
-                            >
-                              COACHING
-                            </Typography>
-                          </Grid>
+                      </Grid>)}
+                    </Grid>
+                  </Grid>
+                  {/* <Grid item xs={6} style={{height: '100%'}}>
+                    <Grid container direction="row" justify="flex-start" alignItems="center" style={{height: '100%'}}>
+                      <Grid item style={{height: '100%'}}>
+                        <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
+                          <Button onClick={(): void => this.props.history.push('/Home')}>
+                            <Avatar src={LogoImage} style={{backgroundColor: 'white', border: '0.5em solid white'}} />
+                          </Button>
                         </Grid>
+                      </Grid>
+                      
+                      <Grid item className={classes.backIcon} style={{paddingLeft: '1em'}}>
+                        <IconButton
+                          color="inherit"
+                          aria-label="menu"
+                          className={classes.menuButton}
+                          onClick={(): void => this.props.history.goBack()}
+                        >
+                          <BackIcon
+                            color="secondary"
+                            fontSize='large'
+                          />
+                        </IconButton>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={8}>
-                    <div color="inherit" className={classes.grow}/>
-                    <Router>
-                      <div>
-                        <Grid container direction="row" justify="flex-end" alignItems="center">
-                          <Grid item>
-                            <Link to="/" className={classes.link}>
-                              <Button
-                                color="secondary"
-                                className={classes.menuButton}
-                                onClick={(): void => this.props.history.push("/")}
-                              >
-                                Home
-                              </Button>
-                            </Link>
-                          </Grid>
-                          <Grid item>
-                            <Link to="/team" className={classes.link}>
-                              <Button
-                                color="secondary"
-                                className={classes.menuButton}
-                                onClick={(): void => this.props.history.push("/team")}
-                              >
-                                Team
-                              </Button>
-                            </Link>
-                          </Grid>
-                            {/* <Link to="/about" className={classes.link}>
-                              <Button
-                                color="secondary"
-                                className={classes.menuButton}
-                                onClick={() => this.props.history.push("/about")}
-                              >
-                                About
-                              </Button>
-                            </Link> */}
-                        </Grid>
-                      </div>
-                    </Router>
+
+                  <Grid item xs={6} style={{height: '100%'}}>
+                    <Grid container direction="row" justify="flex-end" alignItems="center" style={{height: '100%'}}>
+                      <Grid item>
+                        <IconButton
+                          color="inherit"
+                          aria-label="menu"
+                          className={classes.menuButton}
+                          onClick={(): void => this.handleMenu()}
+                        >
+                          <MenuIcon
+                            color="secondary"
+                            fontSize='large'
+                          />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </Grid> */}
                   </Grid>
-                </Grid>
-              </Toolbar>
+              {/* </Toolbar> */}
               <BurgerMenu
                 open={this.state.open}
                 handleClose={this.handleMenu}
@@ -324,65 +356,22 @@ class AppBar extends React.Component<Props, State> {
             <NavBar position="static" color={"primary"}>
               <Toolbar>
                 <Grid container direction="row" alignItems="center">
-                  <Grid item xs={4}>
+                  <Grid item xs={6}>
                     <Grid container direction="row" justify="flex-start" alignItems="center">
-                      <Grid item>
-                        <IconButton
-                          color="inherit"
-                          aria-label="Logo"
-                          className={classes.menuButton}
-                          style={{backgroundColor: "#FFFFFF", margin: 10}}
-                          onClick = {(): void => this.props.history.push("/")}
-                        >
-                          <img src={LogoImage} height={'36'} alt={""}/>
-                        </IconButton>
-                      </Grid>
-                      <Grid item>
-                        <Grid container direction="column" justify="center" alignItems="flex-start">
-                          <Grid item>
-                            <Typography
-                              variant="h6"
-                              className={classes.chalkText}
-                              onClick = {(): void => this.props.history.push("/")}
-                            >
-                              CHALK
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography
-                              variant="h6"
-                              className={classes.coachingText}
-                              onClick = {(): void => this.props.history.push("/")}
-                            >
-                              COACHING
-                            </Typography>
-                          </Grid>
+                      <Grid item style={{height: '100%'}}>
+                        <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
+                          <IconButton
+                            color="inherit"
+                            aria-label="Logo"
+                            className={classes.menuButton}
+                            style={{backgroundColor: "#FFFFFF"}}
+                            onClick = {(): void => this.props.history.push("/Home")}
+                          >
+                            <img src={LogoImage} height='35vh' alt='OWL' />
+                          </IconButton>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Grid container direction="row" justify="flex-end" alignItems="center">
-                      <div color="inherit" className={classes.grow}/>
-                      <Grid item>
-                        <Button
-                          color="secondary"
-                          onClick={this.handleLoginModal}
-                          className={classes.menuButton}
-                        >
-                          Log In
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          color="secondary"
-                          onClick={this.handleSignupModal}
-                          className={classes.menuButton}
-                        >
-                          Sign Up
-                        </Button>
-                      </Grid>
-                      <Grid>
+                      <Grid item style={{paddingLeft: '1em'}}>
                         <Router>
                           <div>
                             <Link to="/team" className={classes.link}>
@@ -391,20 +380,34 @@ class AppBar extends React.Component<Props, State> {
                                 className={classes.menuButton}
                                 onClick={(): void => this.props.history.push("/team")}
                               >
-                                Team
+                                <strong>Team</strong>
                               </Button>
                             </Link>
-                            {/* <Link to = "/about" className={classes.link}>
-                              <Button
-                                color="secondary"
-                                className={classes.menuButton}
-                                onClick={() => this.props.history.push("/about")}
-                              >
-                                About
-                              </Button>
-                            </Link> */}
                           </div>
                         </Router>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Grid container direction="row" justify="flex-end" alignItems="center">
+                      {/* <div color="inherit" className={classes.grow}/> */}
+                      <Grid item>
+                        <Button
+                          color="secondary"
+                          onClick={this.handleLoginModal}
+                          className={classes.menuButton}
+                        >
+                          <strong>Log In</strong>
+                        </Button>
+                      </Grid>
+                      <Grid item style={{paddingLeft: '1em'}}>
+                        <Button
+                          color="secondary"
+                          onClick={this.handleSignupModal}
+                          className={classes.menuButton}
+                        >
+                          <strong>Sign Up</strong>
+                        </Button>
                       </Grid>
                     </Grid>
                   </Grid>

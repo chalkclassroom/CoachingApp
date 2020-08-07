@@ -14,8 +14,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Types from '../../../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -29,8 +27,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher,
-  history: H.History
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -433,8 +430,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired,
-    history: ReactRouterPropTypes.history.isRequired
+    }).isRequired
   };
 
   /**
@@ -456,7 +452,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Classroom Climate"
-          history={this.props.history}
           summary={
             <ClimateSummarySlider
               positiveResponses={this.state.specificBehaviorCount+this.state.nonspecificBehaviorCount}

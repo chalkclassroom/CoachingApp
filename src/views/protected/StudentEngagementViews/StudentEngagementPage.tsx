@@ -32,13 +32,27 @@ const styles: object = {
   },
   grow: {
     flexGrow: 0
+  },
+  main: {
+    height: '100%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    }
   }
 };
 
 interface Props {
   classes: {
     root: string,
-    grow: string
+    grow: string,
+    main: string
   },
   teacherSelected: Types.Teacher
 }
@@ -113,59 +127,64 @@ class StudentEngagementPage extends React.Component<Props, State> {
         <FirebaseContext.Consumer>
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <Grid
-          container
-          alignItems={"center"}
-          justify={"center"}
-          direction={"row"}
-        >
+        <div className={this.props.classes.main}>
           <Grid
             container
-            alignItems={"flex-start"}
-            justify={"flex-start"}
+            alignItems={"center"}
+            justify={"center"}
             direction={"row"}
+            style={{height: '100%'}}
           >
-            <Grid item xs={3}>
-              <Grid
-                container
-                alignItems={"center"}
-                justify={"center"}
-                direction={"column"}
-              >
-                <Dashboard
-                  type="SE"
-                  infoDisplay={
-                      this.state.completeEnabled && <Countdown type="SE" timerTime={RATING_INTERVAL} time={this.state.time} />
-                  }
-                  infoPlacement="center"
-                  completeObservation={this.state.completeEnabled}
-                />
+            <Grid
+              container
+              alignItems={"flex-start"}
+              justify={"flex-start"}
+              direction={"row"}
+              style={{height: '100%'}}
+            >
+              <Grid item xs={3} style={{height: '100%'}}>
+                <Grid
+                  container
+                  alignItems={"center"}
+                  justify={"center"}
+                  direction={"column"}
+                  style={{height: '100%'}}
+                >
+                  <Dashboard
+                    type="SE"
+                    infoDisplay={
+                        this.state.completeEnabled && <Countdown type="SE" timerTime={RATING_INTERVAL} time={this.state.time} />
+                    }
+                    infoPlacement="center"
+                    completeObservation={this.state.completeEnabled}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={8}>
+                <FirebaseContext.Consumer>
+                  {(firebase: {
+                    auth: {
+                      currentUser: {
+                        uid: string
+                      }
+                    },
+                    handleSession(entry: object): void,
+                    handlePushSEEachEntry(mEntry: object): void
+                  }): React.ReactNode => (
+                    <CenterMenuStudentEngagement
+                      teacherId={this.props.teacherSelected.id}
+                      firebase={firebase}
+                      onStatusChange={this.handleCompleteButton}
+                      time={this.state.time}
+                      handleTimerReset = {this.handleTimerReset}
+                      handleTimerStart = {this.handleTimerStart}
+                    />
+                  )}
+                </FirebaseContext.Consumer>
               </Grid>
             </Grid>
-            <Grid item xs={8}>
-              <FirebaseContext.Consumer>
-                {(firebase: {
-                  auth: {
-                    currentUser: {
-                      uid: string
-                    }
-                  },
-                  handleSession(entry: object): void,
-                  handlePushSEEachEntry(mEntry: object): void
-                }): React.ReactNode => (
-                  <CenterMenuStudentEngagement
-                    teacherId={this.props.teacherSelected.id}
-                    firebase={firebase}
-                    onStatusChange={this.handleCompleteButton}
-                    time={this.state.time}
-                    handleTimerReset = {this.handleTimerReset}
-                    handleTimerStart = {this.handleTimerStart}
-                  />
-                )}
-              </FirebaseContext.Consumer>
-            </Grid>
           </Grid>
-        </Grid>
+        </div>
       </div>
     );
   }

@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import ReactRouterPropTypes from 'react-router-prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
@@ -14,7 +13,6 @@ import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import TeacherModal from '../HomeViews/TeacherModal';
-import * as H from 'history';
 
 const styles: object = {
   root: {
@@ -28,8 +26,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher,
-  history: H.History
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -579,8 +576,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired,
-    history: ReactRouterPropTypes.history.isRequired
+    }).isRequired
   };
 
   /**
@@ -602,7 +598,6 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
           <ResultsLayout
             teacher={this.props.teacherSelected}
             magic8="AC"
-            history={this.props.history}
             summary={
               <ChildTeacherBehaviorPieSlider
                 ac={this.state.ac}

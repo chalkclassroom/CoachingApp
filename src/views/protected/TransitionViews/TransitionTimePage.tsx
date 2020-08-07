@@ -1,8 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { withStyles } from "@material-ui/core/styles";
 import TransitionTimer from "./TransitionTimer";
 import TransitionLog from "./TransitionLog";
@@ -15,8 +13,6 @@ import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
 import * as Constants from "../../../constants/Constants";
 import * as Types from '../../../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -33,11 +29,23 @@ const styles: object = {
     borderRadius: 3,
     textTransform: 'none'
   },
+  main: {
+    height: '100%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    }
+  }
 };
 
 interface Props {
-  classes: { root: string, backButton: string },
-  history: H.History,
+  classes: { root: string, backButton: string, main: string },
   toggleNewTransitionType(transitionType: string | null): void,
   transitionType: string | null
 };
@@ -97,7 +105,6 @@ class TransitionTimePage extends React.Component<Props, State> {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     toggleNewTransitionType: PropTypes.func.isRequired,
-    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**
@@ -132,36 +139,15 @@ class TransitionTimePage extends React.Component<Props, State> {
         <FirebaseContext.Consumer>
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
-        <header>
-          <Grid container direction="row" alignItems="center" justify="flex-start">
-            <Grid item xs={3}>
-              <Grid container alignItems="center" justify="center">
-                <Grid item>
-                  <Button variant="contained" size="medium" className={classes.backButton}
-                    onClick={(): void => {
-                      this.props.history.replace({
-                        pathname: "/Magic8Menu",
-                        state: {
-                          type: "Observe"
-                        }
-                      })
-                    }}>
-                    <ChevronLeftRoundedIcon />
-                    <b>Back</b>
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </header>
-        <main style={{ flexGrow: 1 }}>
-          <Grid container alignItems="center">
-            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+        <main className={classes.main}>
+          <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
+            <Grid item xs={3} style={{height: '100%'}}>
               <Grid
                 container
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}
+                style={{height: '100%'}}
               >
                 <Grid item>
                   <Dashboard
@@ -173,7 +159,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={4} justify="center">
+            <Grid item xs={4}>
               <Grid
                 container
                 alignItems={"center"}

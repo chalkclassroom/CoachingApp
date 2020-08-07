@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as Constants from '../../../constants/Constants';
-import Button from '@material-ui/core/Button/Button';
 import InstructionIconImage from '../../../assets/images/InstructionIconImage.svg';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '../../../components/AppBar';
@@ -11,11 +10,8 @@ import TrainingVideo from '../../../components/Shared/TrainingVideo';
 import TrainingQuestionnaire from '../../../components/Shared/TrainingQuestionnaire';
 import TrainingDashboard from '../../../components/Shared/TrainingDashboard';
 import LevelOfInstructionHelpCard from '../../../components/LevelOfInstructionComponents/LevelOfInstructionHelpCard';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
-import { createMuiTheme } from '@material-ui/core/es';
+import { createMuiTheme } from '@material-ui/core/styles';
 import * as Types from '../../../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
 
 const InstructionTheme = createMuiTheme({
   palette: {
@@ -154,8 +150,6 @@ const styles: object = {
 
   interface Props {
     classes: Style,
-    location: H.Location,
-    history: H.History
   }
 
   interface Style {
@@ -219,8 +213,6 @@ const styles: object = {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: ReactRouterPropTypes.location,
-    history: ReactRouterPropTypes.history.isRequired
   };
 
   /**
@@ -236,36 +228,7 @@ const styles: object = {
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <div className={classes.titleContainer}>
-          <Button
-            variant="contained"
-            size="medium"
-            className={classes.backButton}
-            onClick={(): void => {
-              if (this.props.location.state !== undefined) {
-                // came from MyTeachers
-                this.props.history.goBack();
-              } else {
-                this.props.history.replace({
-                  pathname: '/Magic8Menu',
-                  state: { type: 'Training' }
-                });
-              }
-            }}
-          >
-            <ChevronLeftRoundedIcon />
-            <b>Training Home</b>
-          </Button>
           <h1 style={{ justifySelf: 'center' }}>Training Tool</h1>
-          <Button
-            variant="contained"
-            size="medium"
-            className={classes.backButton}
-            onClick={null}
-            style={{ visibility: 'hidden' }}
-          >
-            <ChevronLeftRoundedIcon />
-            <b>Training Home</b>
-          </Button>
         </div>
         <div className={classes.main}>
           <div className={classes.dashboardContainer}>

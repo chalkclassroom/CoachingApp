@@ -2,8 +2,6 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
@@ -18,8 +16,6 @@ import {
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../../../constants/Types';
 
 /*
@@ -51,12 +47,24 @@ const styles: object = {
     color: '#333333',
     borderRadius: 3,
     textTransform: 'none'
+  },
+  main: {
+    height: '100%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    }
   }
 };
 
 interface Props {
-  classes: { root: string, grow: string, backButton: string },
-  history: H.History,
+  classes: { root: string, grow: string, backButton: string, main: string },
   appendClimateRating(rating: number): void
 };
 
@@ -146,7 +154,6 @@ class ClassroomClimatePage extends React.Component<Props, State> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    history: ReactRouterPropTypes.history.isRequired,
     appendClimateRating: PropTypes.func.isRequired
   }
 
@@ -171,34 +178,13 @@ class ClassroomClimatePage extends React.Component<Props, State> {
             <EmptyToneRating />
           </ClickAwayListener>
         </Modal>
-        <header>
-          <Grid container direction="row" alignItems="center" justify="flex-start">
-            <Grid item xs={3}>
-              <Grid container alignItems="center" justify="center">
-                <Grid item>
-                <Button variant="contained" size="medium" className={this.props.classes.backButton}
-                    onClick={(): void => {
-                      this.props.history.replace({
-                        pathname: "/Magic8Menu",
-                        state: {
-                          type: "Observe"
-                        }
-                      })
-                    }}>
-                    <ChevronLeftRoundedIcon />
-                    <b>Back</b>
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </header>
-        <main style={{ flex: 1 }}>
+        <main className={this.props.classes.main}>
           <Grid
             container
             alignItems={"center"}
             justify={"center"}
             direction={"column"}
+            style={{height: '100%'}}
           >
             <Grid
               container

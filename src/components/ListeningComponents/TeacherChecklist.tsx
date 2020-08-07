@@ -32,6 +32,19 @@ const styles: object = {
   },
   grow: {
     flexGrow: 1
+  },
+  main: {
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em',
+    height: '100%'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    }
   }
 };
 
@@ -40,7 +53,8 @@ const RATING_INTERVAL = 60000;
 interface Props {
   classes: {
     root: string,
-    grow: string
+    grow: string,
+    main: string
   },
   type: Types.DashboardType,
   firebase: {
@@ -262,19 +276,21 @@ class TeacherChecklist extends React.Component<Props, State> {
             </div>
           )}
         </Dialog>
-        <main>
+        <main className={this.props.classes.main}>
           <Grid
             container
             alignItems={"center"}
             direction={"row"}
             justify={"center"}
+            style={{ height: '100%'}}
           >
-            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+            <Grid item xs={3} style={{height: '100%'}}>
               <Grid
                 container
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}
+                style={{height: '100%'}}
               >
                 <Dashboard
                   type={this.props.type}
@@ -284,7 +300,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                 />
               </Grid>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={9} style={{height: '100%'}}>
               <Zoom in={this.state.in}>
                 <Grid container alignItems="center" direction="column" xs={12}>
                   <div style={{ height: 20 }} />
