@@ -86,7 +86,9 @@ function SequentialActivitiesHelp(props: Props): React.ReactElement {
 }
 
 SequentialActivitiesHelp.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  close: PropTypes.func.isRequired
 }
 
 export default withStyles(styles)(SequentialActivitiesHelp);

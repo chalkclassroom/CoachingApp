@@ -176,7 +176,7 @@ const styles: object = {
     marginTop: "5px"
   },
   resultsButtons: {
-    marginTop: "2vh",
+    marginTop: "1.5vh",
     marginRight: '0.5em',
     marginLeft: '0.5em'
   },
@@ -446,7 +446,6 @@ class ResultsDashboard extends React.Component<Props, State> {
                   </MenuItem>})}
               </TextField>
             </Grid>
-
             <Grid item className={classes.resultsButtons}>
               <MuiThemeProvider theme={this.state.theme}>
                 <Button

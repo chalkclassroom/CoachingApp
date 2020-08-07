@@ -3,7 +3,6 @@ import * as PropTypes from "prop-types";
 import {
   withStyles,
   Toolbar,
-  Typography,
   Button,
   IconButton,
   Avatar

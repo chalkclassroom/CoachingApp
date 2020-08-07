@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App.tsx";
+import App from "./App";
 import Firebase, { FirebaseContext } from "./components/Firebase";
 import { Provider } from "react-redux";
 import { store } from "./state/store";

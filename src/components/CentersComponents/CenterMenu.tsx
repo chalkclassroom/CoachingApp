@@ -47,7 +47,7 @@ const styles: object = {
 interface VisitCenterProps {
   centerName: string,
   visitCount: number,
-  onClick(): void 
+  onClick(): void,
   type: string
 }
 
@@ -94,6 +94,13 @@ const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
       </Typography>
     </Button>
   );
+};
+
+VisitCenterButton.propTypes = {
+  centerName: PropTypes.string.isRequired,
+  visitCount: PropTypes.number.isRequired,
+  onClick: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired
 };
 
 
