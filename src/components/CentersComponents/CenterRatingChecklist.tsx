@@ -43,7 +43,7 @@ const styles: object = {
     fontFamily: 'Arimo',
     paddingLeft: '1em',
     paddingRight: '1em',
-    height: '5vh',
+    height: '9vh',
     verticalAlign: 'center'
   },
   main: {
@@ -424,7 +424,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       this.props.currentCenter.substr(1)}
                   </Typography>
                   <div style={{ height: '0.5em' }} />
-                  <Typography variant={"subtitle2"} style={{fontFamily: 'Arimo', paddingBottom: '1em'}}>
+                  <Typography variant={"subtitle2"} style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
                     Please select the number of children and teachers at the
                     center:
                   </Typography>
@@ -433,6 +433,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                     direction={"row"}
                     justify={"space-around"}
                     xs={12}
+                    style={{paddingBottom: '0.5em'}}
                   >
                     <Grid item>
                       <Button
@@ -477,7 +478,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       </Button>
                     </Grid>
                   </Grid>
-                  <div style={{ height: 20 }} />
+                  {/* <div style={{ height: 20 }} /> */}
                   <Grid container direction={"row"} spacing={16} xs={12}>
                     <Grid item xs={6}>
                       <Card>
@@ -491,7 +492,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                         >
                           {Constants.Checklist[this.props.type].ChildInstructions}
                         </Typography>
-                        <List>
+                        <List style={{paddingBottom: 0}}>
                           {Constants.Checklist[this.props.type].ChildBehaviors.map(
                           (value: Array<React.ReactElement>, index: number) => {
                             return (<ListItem
@@ -525,7 +526,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                         >
                           {Constants.Checklist[this.props.type].TeacherInstructions}
                         </Typography>
-                        <List>
+                        <List style={{paddingBottom: 0}}>
                           {Constants.Checklist[this.props.type].TeacherBehaviors.map(
                           (value: Array<React.ReactElement>, index: number) => {
                             return (<ListItem
