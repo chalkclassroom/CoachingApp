@@ -41,8 +41,6 @@ const styles = {
   },
 };
 
-type Position = 'absolute' | 'fixed' | 'static';
-
 interface Props {
   classes: {
     paper: string
