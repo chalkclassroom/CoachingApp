@@ -11,15 +11,16 @@ import TransitionTrendsGraph from "../../../components/ResultsComponents/Transit
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import Grid from '@material-ui/core/Grid';
-import PieSliceTransitionImage from '../../../assets/images/PieSliceTransitionImage.svg';
-import PieSliceTeacherSupportImage from '../../../assets/images/PieSliceTeacherSupportImage.svg';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
-// import * as H from 'history';
-// import ReactRouterPropTypes from 'react-router-prop-types';
+import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const styles: object = {
   root: {
@@ -39,7 +40,6 @@ const styles: object = {
 interface Props {
   classes: { root: string, comparisonText: string },
   teacherSelected: Types.Teacher,
-  // history: H.History
 }
 
 interface State {
@@ -571,8 +571,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired,
-    // history: ReactRouterPropTypes.history.isRequired
+    }).isRequired
   };
 
   /**
@@ -607,32 +606,20 @@ class TransitionResultsPage extends React.Component<Props, State> {
                 </Typography>
                 <Grid container direction="column" alignItems="center">
                   <Grid item style={{width: '100%'}}>
-                    <Grid container direction="row">
-                      <Grid item xs={1}>
-                        <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                          <Grid item style={{height:"50%"}}>
-                            <img alt="orange" src={PieSliceTransitionImage} height="95%"/>
-                          </Grid>
-                          <Grid item style={{height:"50%"}}>
-                            <img alt="blue" src={PieSliceTeacherSupportImage} height="95%"/>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={11}>
-                        <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                          <Grid item style={{height:"50%"}}>
-                            <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
-                              Transitions
-                            </Typography>
-                          </Grid>
-                          <Grid item style={{height:"50%"}}>
-                            <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                              Learning activities
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
+                    <List>
+                      <ListItem style={{padding: 0}}>
+                        <ListItemIcon style={{margin: 0}}>
+                          <SignalWifi4BarIcon style={{fill: Constants.Colors.TT, transform: 'rotate(-45deg)'}} />
+                        </ListItemIcon>
+                        <ListItemText primary="Transitions" />
+                      </ListItem>
+                      <ListItem style={{padding: 0}}>
+                        <ListItemIcon style={{margin: 0}}>
+                          <SignalWifi4BarIcon style={{fill: Constants.Colors.AppBar, transform: 'rotate(-45deg)'}} />
+                        </ListItemIcon>
+                        <ListItemText primary="Learning activities" />
+                      </ListItem>
+                    </List>
                   </Grid>
                 </Grid>
                 <Grid item>

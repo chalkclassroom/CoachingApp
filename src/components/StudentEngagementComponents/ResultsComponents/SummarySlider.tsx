@@ -6,26 +6,18 @@ import 'slick-carousel/slick/slick.css';
 import PieSummary from "./PieSummary";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import PieSliceEngagementImage from "../../../assets/images/PieSliceEngagementImage.svg";
-import PieSliceChildNonImage from "../../../assets/images/PieSliceChildNonImage.svg";
-import { withStyles } from "@material-ui/core/styles";
 import AvgBarSummary from "../../StudentEngagementComponents/ResultsComponents/AvgBarSummary";
-
-const styles: object = {
-  comparisonText: {
-    paddingLeft: '1em',
-    lineHeight:'1.8em',
-    fontFamily: 'Arimo'
-  }
-}
+import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import * as Constants from '../../../constants/Constants';
 
 interface Props {
   offTask: number,
   engaged: number,
-  avgRating: number,
-  classes: {
-    comparisonText: string,
-  }
+  avgRating: number
 }
 
 /**
@@ -38,15 +30,13 @@ class SummarySlider extends React.Component<Props, {}> {
   static propTypes = {
     offTask: PropTypes.number.isRequired,
     engaged: PropTypes.number.isRequired,
-    avgRating: PropTypes.number.isRequired,
-    classes: PropTypes.object.isRequired,
+    avgRating: PropTypes.number.isRequired
   }
   /**
    * render function
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
     const settings = {
       dots: true,
       infinite: true,
@@ -64,37 +54,25 @@ class SummarySlider extends React.Component<Props, {}> {
               </Typography>
               <Grid container direction="column" alignItems="center">
                 <Grid item style={{width: '100%'}}>
-                  <Grid container direction="row">
-                    <Grid item xs={1}>
-                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                        <Grid item style={{height:"50%"}}>
-                          <img alt="yellow" src={PieSliceEngagementImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"50%"}}>
-                          <img alt="red" src={PieSliceChildNonImage} height="95%"/>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={11}>
-                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                        <Grid item style={{height:"50%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Engaged
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"50%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Off Task
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                  <List>
+                    <ListItem style={{padding: 0}}>
+                      <ListItemIcon style={{margin: 0}}>
+                        <SignalWifi4BarIcon style={{fill: Constants.Colors.SE, transform: 'rotate(-45deg)'}} />
+                      </ListItemIcon>
+                      <ListItemText primary="Engaged" />
+                    </ListItem>
+                    <ListItem style={{padding: 0}}>
+                      <ListItemIcon style={{margin: 0}}>
+                        <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
+                      </ListItemIcon>
+                      <ListItemText primary="Off Task" />
+                    </ListItem>
+                  </List>
                 </Grid>
               </Grid>
               <PieSummary
-                  offTask={this.props.offTask}
-                  engaged={this.props.engaged}
+                offTask={this.props.offTask}
+                engaged={this.props.engaged}
               />
             </Grid>
           </div>
@@ -118,4 +96,4 @@ class SummarySlider extends React.Component<Props, {}> {
   }
 }
 
-export default withStyles(styles)(SummarySlider);
+export default SummarySlider;

@@ -23,7 +23,7 @@ const styles: object = {
   resultsContent: {
     position: "relative",
     width: '70vw',
-    marginTop: '5vh'
+    marginTop: '0.5em'
   },
   buttonText: {
     fontSize: "12px",

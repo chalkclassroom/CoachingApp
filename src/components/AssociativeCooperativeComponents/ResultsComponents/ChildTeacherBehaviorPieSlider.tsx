@@ -7,20 +7,12 @@ import ChildBehaviorsPie from "./ChildBehaviorsPie";
 import TeacherBehaviorsPie from "./TeacherBehaviorsPie";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import PieSliceChildACImage from "../../../assets/images/PieSliceChildACImage.svg";
-import PieSliceChildNonImage from "../../../assets/images/PieSliceChildNonImage.svg";
-import PieSliceNoOppImage from "../../../assets/images/PieSliceNoOppImage.svg";
-import PieSliceTeacherSupportImage from "../../../assets/images/PieSliceTeacherSupportImage.svg";
-import PieSliceTeacherNoSupportImage from "../../../assets/images/PieSliceTeacherNoSupportImage.svg";
-import { withStyles } from "@material-ui/core/styles";
-
-const styles: object = {
-  comparisonText: {
-    paddingLeft: '1em',
-    lineHeight:'1.8em',
-    fontFamily: 'Arimo'
-  }
-}
+import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import * as Constants from '../../../constants/Constants';
 
 interface Props {
   ac: number,
@@ -28,10 +20,7 @@ interface Props {
   noChildOpp: number,
   support: number,
   noSupport: number,
-  noTeacherOpp: number,
-  classes: {
-    comparisonText: string,
-  }
+  noTeacherOpp: number
 }
 
 /**
@@ -54,7 +43,6 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
     const settings = {
       dots: true,
       infinite: true,
@@ -67,7 +55,7 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
         <Slider {...settings}>
           <div>
             <Grid container justify={"center"} direction={"column"}>
-              <Typography align={"center"} variant="h4" style={{fontFamily: 'Arimo'}}>
+              <Typography align={"center"} variant="h5" style={{fontFamily: 'Arimo'}}>
                 Child Behaviors
               </Typography>
               <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
@@ -75,40 +63,26 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
               </Typography>
               <Grid container direction="column" alignItems="center">
                 <Grid item style={{width: '100%'}}>
-                  <Grid container direction="row">
-                    <Grid item xs={1}>
-                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="purple" src={PieSliceChildACImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="red" src={PieSliceChildNonImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="orange" src={PieSliceNoOppImage} height="95%"/>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={11}>
-                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                        <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Engaged in associative and cooperative interactions.
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Played in the same area but did not interact.
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Played alone (had no opportunity for interaction).
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                  <List>
+                    <ListItem style={{padding: 0}}>
+                      <ListItemIcon style={{margin: 0}}>
+                        <SignalWifi4BarIcon style={{fill: Constants.Colors.AC, transform: 'rotate(-45deg)'}} />
+                      </ListItemIcon>
+                      <ListItemText primary="Engaged in associative and cooperative interactions." />
+                    </ListItem>
+                    <ListItem style={{padding: 0}}>
+                      <ListItemIcon style={{margin: 0}}>
+                        <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
+                      </ListItemIcon>
+                      <ListItemText primary="Played in the same area but did not interact." />
+                    </ListItem>
+                    <ListItem style={{padding: 0}}>
+                      <ListItemIcon style={{margin: 0}}>
+                        <SignalWifi4BarIcon style={{fill: '#bababa', transform: 'rotate(-45deg)'}} />
+                      </ListItemIcon>
+                      <ListItemText primary="Played alone (had no opportunity for interaction)." />
+                    </ListItem>
+                  </List>
                 </Grid>
               </Grid>
               <ChildBehaviorsPie
@@ -120,7 +94,7 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
           </div>
           <div>
             <Grid container justify={"center"} direction={"column"}>
-              <Typography align={"center"} variant="h4" style={{fontFamily: 'Arimo'}}>
+              <Typography align={"center"} variant="h5" style={{fontFamily: 'Arimo'}}>
                 Teacher Behaviors
               </Typography>
               <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
@@ -128,40 +102,26 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
               </Typography>
               <Grid container direction="column" alignItems="center">
                 <Grid item style={{width: '100%'}}>
-                  <Grid container direction="row">
-                    <Grid item xs={1}>
-                      <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="purple" src={PieSliceTeacherSupportImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="red" src={PieSliceTeacherNoSupportImage} height="95%"/>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <img alt="orange" src={PieSliceNoOppImage} height="95%"/>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={11}>
-                      <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                        <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Supported children&apos;s associative and cooperative interactions.
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                            Was present in the center but did not support associative and cooperative interactions.
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{height:"33%"}}>
-                          <Typography variant="subtitle1" className={classes.comparisonText}>
-                            Was not present in the centers observed.
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                  <List>
+                    <ListItem style={{padding: 0}}>
+                      <ListItemIcon style={{margin: 0}}>
+                        <SignalWifi4BarIcon style={{fill: Constants.Colors.AppBar, transform: 'rotate(-45deg)'}} />
+                      </ListItemIcon>
+                      <ListItemText primary="Supported children&apos;s associative and cooperative interactions." />
+                    </ListItem>
+                    <ListItem style={{padding: 0}}>
+                      <ListItemIcon style={{margin: 0}}>
+                        <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
+                      </ListItemIcon>
+                      <ListItemText primary="Was present in the center but did not support associative and cooperative interactions." />
+                    </ListItem>
+                    <ListItem style={{padding: 0}}>
+                      <ListItemIcon style={{margin: 0}}>
+                        <SignalWifi4BarIcon style={{fill: '#bababa', transform: 'rotate(-45deg)'}} />
+                      </ListItemIcon>
+                      <ListItemText primary="Was not present in the centers observed." />
+                    </ListItem>
+                  </List>
                 </Grid>
               </Grid>
               <TeacherBehaviorsPie
@@ -180,4 +140,4 @@ class ChildTeacherBehaviorPieSlider extends React.Component<Props, {}> {
   }
 }
 
-export default withStyles(styles)(ChildTeacherBehaviorPieSlider);
+export default (ChildTeacherBehaviorPieSlider);

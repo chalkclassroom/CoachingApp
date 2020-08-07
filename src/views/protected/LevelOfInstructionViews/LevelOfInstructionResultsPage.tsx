@@ -9,14 +9,15 @@ import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInst
 import LevelOfInstructionSummaryChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummaryChart";
 import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph";
 import { Grid, Typography } from "@material-ui/core";
-import PieSliceLOIBasicImage from "../../../assets/images/PieSliceLOIBasicImage.svg";
-import PieSliceLOIInferentialImage from "../../../assets/images/PieSliceLOIInferentialImage.svg";
+import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Types from '../../../constants/Types';
-import * as H from 'history';
-import ReactRouterPropTypes from 'react-router-prop-types';
 
 const styles: object = {
   root: {
@@ -35,8 +36,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher,
-  history: H.History
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -428,8 +428,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired,
-    history: ReactRouterPropTypes.history.isRequired
+    }).isRequired
   };
 
   /**
@@ -451,7 +450,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           <ResultsLayout
             teacher={this.props.teacherSelected}
             magic8="Level of Instruction"
-            history={this.props.history}
             summary={
               <div>
                 <Grid container justify={"center"} direction={"column"}>
@@ -460,32 +458,20 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                   </Typography>
                   <Grid container direction="column" alignItems="center">
                     <Grid item style={{width: '100%'}}>
-                      <Grid container direction="row">
-                        <Grid item xs={1}>
-                          <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                            <Grid item style={{height:"50%"}}>
-                              <img alt="blue" src={PieSliceLOIBasicImage} height="95%"/>
-                            </Grid>
-                            <Grid item style={{height:"50%"}}>
-                              <img alt="green" src={PieSliceLOIInferentialImage} height="95%"/>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={11}>
-                          <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                            <Grid item style={{height:"50%"}}>
-                              <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
-                                Basic skills instruction 
-                              </Typography>
-                            </Grid>
-                            <Grid item style={{height:"50%"}}>
-                              <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                                Inferential instruction
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
+                      <List>
+                      <ListItem style={{padding: 0}}>
+                        <ListItemIcon style={{margin: 0}}>
+                          <SignalWifi4BarIcon style={{fill: '#6d9eeb', transform: 'rotate(-45deg)'}} />
+                        </ListItemIcon>
+                        <ListItemText primary="Basic skills instruction" />
+                      </ListItem>
+                      <ListItem style={{padding: 0}}>
+                        <ListItemIcon style={{margin: 0}}>
+                          <SignalWifi4BarIcon style={{fill: '#6aa84f', transform: 'rotate(-45deg)'}} />
+                        </ListItemIcon>
+                        <ListItemText primary="Inferential instruction" />
+                      </ListItem>
+                    </List>
                     </Grid>
                   </Grid>
                   <LevelOfInstructionSummaryChart
