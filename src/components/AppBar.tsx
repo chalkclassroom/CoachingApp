@@ -261,10 +261,16 @@ class AppBar extends React.Component<Props, State> {
                   <Grid item xs={12} style={{height: '100%'}}>
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{height: '100%'}}>
                       <Grid item style={{height: '100%'}}>
-                        <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
-                          <Button onClick={(): void => this.props.history.push('/Home')}>
-                            <Avatar src={LogoImage} style={{backgroundColor: 'white', border: '0.5em solid white'}} />
-                          </Button>
+                        <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
+                          <IconButton
+                            color="inherit"
+                            aria-label="Logo"
+                            className={classes.menuButton}
+                            style={{backgroundColor: "#FFFFFF"}}
+                            onClick = {(): void => this.props.history.push("/Home")}
+                          >
+                            <img src={LogoImage} height='35vh' alt='OWL' />
+                          </IconButton>
                         </Grid>
                       </Grid>
                       <Grid item>
@@ -354,9 +360,15 @@ class AppBar extends React.Component<Props, State> {
                     <Grid container direction="row" justify="flex-start" alignItems="center">
                       <Grid item style={{height: '100%'}}>
                         <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
-                          <Button onClick={(): void => this.props.history.push('/Home')}>
-                            <Avatar src={LogoImage} style={{backgroundColor: 'white', border: '0.5em solid white'}} />
-                          </Button>
+                          <IconButton
+                            color="inherit"
+                            aria-label="Logo"
+                            className={classes.menuButton}
+                            style={{backgroundColor: "#FFFFFF"}}
+                            onClick = {(): void => this.props.history.push("/Home")}
+                          >
+                            <img src={LogoImage} height='35vh' alt='OWL' />
+                          </IconButton>
                         </Grid>
                       </Grid>
                       <Grid item style={{paddingLeft: '1em'}}>
