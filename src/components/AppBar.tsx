@@ -5,7 +5,7 @@ import {
   Toolbar,
   Button,
   IconButton,
-  Avatar
+  // Avatar
 } from "@material-ui/core";
 import { AppBar as NavBar } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
