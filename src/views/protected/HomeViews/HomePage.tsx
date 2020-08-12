@@ -52,6 +52,26 @@ const styles: object = {
   },
   buttonGrid: {
     height: '30vh'
+  },
+  landscape: {
+    width: '100%'
+  },
+  portrait: {
+    display: 'none'
+  },
+  helpButtons: {
+    fontSize: '1em'
+  },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: portrait)': {
+    portrait: {
+      display: 'flex'
+    },
+    landscape: {
+      display: 'none'
+    },
+    helpButtons: {
+      fontSize: '1.5em'
+    },
   }
 };
 
@@ -62,7 +82,10 @@ interface Style {
   title: string,
   pos: string,
   image: string,
-  buttonGrid: string
+  buttonGrid: string,
+  portrait: string,
+  landscape: string,
+  helpButtons: string
 }
 
 interface Props {
@@ -130,7 +153,10 @@ class HomePage extends React.Component<Props, State> {
       title: PropTypes.string,
       pos: PropTypes.string,
       image: PropTypes.string,
-      buttonGrid: PropTypes.string
+      buttonGrid: PropTypes.string,
+      portrait: PropTypes.string,
+      landscape: PropTypes.string,
+      helpButtons: PropTypes.string
     }).isRequired,
     coachName: PropTypes.string.isRequired,
     getCoach: PropTypes.func.isRequired,
@@ -188,153 +214,311 @@ class HomePage extends React.Component<Props, State> {
                 </Grid>
               </Grid>
             </Grid> */}
-            <Grid
-              container
-              alignItems="center"
-              direction="row"
-              justify="space-around"
-              className={classes.buttonGrid}
-            >
-              <Card
-                className={classes.card}
-                onClick={(): void => this.showTeacherModal("Observe")}
+            <Grid item className={classes.landscape}>
+              <Grid
+                container
+                alignItems="center"
+                direction="row"
+                justify="space-around"
+                className={classes.buttonGrid}
               >
-                <CardContent>
-                  <Grid
-                    container
-                    alignItems="center"
-                    direction="column"
-                    justify="flex-start"
-                  >
-                    <Grid item>
-                      <ObserveIcon style={{ fill: "#094492", width: '12vw', height: '12vh' }} />
+                <Card
+                  className={classes.card}
+                  onClick={(): void => this.showTeacherModal("Observe")}
+                >
+                  <CardContent>
+                    <Grid
+                      container
+                      alignItems="center"
+                      direction="column"
+                      justify="flex-start"
+                    >
+                      <Grid item>
+                        <ObserveIcon style={{ fill: "#094492", width: '12vw', height: '12vh' }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                          Observe
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                        Observe
-                      </Typography>
+                  </CardContent>
+                </Card>
+                <Card
+                  className={classes.card}
+                  onClick={(): void => this.showTeacherModal("Results")}
+                >
+                  <CardContent>
+                    <Grid
+                      container
+                      alignItems="center"
+                      direction="column"
+                      justify="flex-start"
+                    >
+                      <Grid item>
+                        <ResultsIcon style={{ fill: "#4fd9b3", width: '12vw', height: '12vh' }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                          Results
+                        </Typography>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-              <Card
-                className={classes.card}
-                onClick={(): void => this.showTeacherModal("Results")}
+                  </CardContent>
+                </Card>
+                <Card className={classes.card}>
+                  <CardContent>
+                    <Grid
+                      container
+                      alignItems="center"
+                      direction="column"
+                      justify="flex-start"
+                      onClick={(): void => this.props.history.push("/MyTeachers")}
+                    >
+                      <Grid item>
+                        <PeopleIcon style={{ fill: "#ffd300", width: '12vw', height: '12vh' }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                          My Teachers
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid
+                container
+                alignItems="center"
+                direction="row"
+                justify="space-around"
+                className={classes.buttonGrid}
               >
-                <CardContent>
-                  <Grid
-                    container
-                    alignItems="center"
-                    direction="column"
-                    justify="flex-start"
-                  >
-                    <Grid item>
-                      <ResultsIcon style={{ fill: "#4fd9b3", width: '12vw', height: '12vh' }} />
+                <Card className={classes.card}>
+                  <CardContent>
+                    <Grid
+                      container
+                      alignItems="center"
+                      direction="column"
+                      justify="flex-start"
+                      onClick={(): void => this.props.history.push("/ActionPlans")}
+                    >
+                      <Grid item>
+                        <ActionPlansIcon style={{ fill: "#e55529", width: '12vw', height: '12vh' }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                          Action Plans
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                        Results
-                      </Typography>
+                  </CardContent>
+                </Card>
+                <Card className={classes.card}>
+                  <CardContent>
+                    <Grid
+                      container
+                      alignItems="center"
+                      direction="column"
+                      justify="flex-start"
+                      onClick={(): void => this.props.history.push("/ConferencePlans")}
+                    >
+                      <Grid item>
+                        <ConferencePlansIcon style={{ fill: "#0988ec", width: '12vw', height: '12vh' }} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                          Conference Plans
+                        </Typography>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-              <Card className={classes.card}>
-                <CardContent>
-                  <Grid
-                    container
-                    alignItems="center"
-                    direction="column"
-                    justify="flex-start"
-                    onClick={(): void => this.props.history.push("/MyTeachers")}
-                  >
-                    <Grid item>
-                      <PeopleIcon style={{ fill: "#ffd300", width: '12vw', height: '12vh' }} />
+                  </CardContent>
+                </Card>
+                <Card
+                  className={classes.card}
+                  onClick={(): void =>
+                    this.props.history.push({
+                      pathname: "/Magic8Menu",
+                      state: { type: "Training" }
+                    })
+                  }
+                >
+                  <CardContent>
+                    <Grid
+                      container
+                      alignItems="center"
+                      direction="column"
+                      justify="flex-start"
+                    >
+                      <Grid item>
+                        <TrainingIcon style={{fill: '#6f39c4', width: '12vw', height: '12vh'}} />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                          Training
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                        My Teachers
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
-            <Grid
-              container
-              alignItems="center"
-              direction="row"
-              justify="space-around"
-              className={classes.buttonGrid}
-            >
-              <Card className={classes.card}>
-                <CardContent>
-                  <Grid
-                    container
-                    alignItems="center"
-                    direction="column"
-                    justify="flex-start"
-                    onClick={(): void => this.props.history.push("/ActionPlans")}
-                  >
-                    <Grid item>
-                      <ActionPlansIcon style={{ fill: "#e55529", width: '12vw', height: '12vh' }} />
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                        Action Plans
-                      </Typography>
-                    </Grid>
+            <div className={classes.portrait} style={{width: '100%'}}>
+              <Grid item>
+                <Grid
+                  container
+                  alignItems="center"
+                  direction="row"
+                  justify="space-around"
+                  // className={classes.buttonGrid}
+                  style={{width: '100%'}}
+                >
+                  <Grid item xs={6}>
+                    <Card
+                      className={classes.card}
+                      onClick={(): void => this.showTeacherModal("Observe")}
+                    >
+                      <CardContent>
+                        <Grid
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
+                        >
+                          <Grid item>
+                            <ObserveIcon style={{ fill: "#094492", width: '12vw', height: '12vh' }} />
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                              Observe
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
                   </Grid>
-                </CardContent>
-              </Card>
-              <Card className={classes.card}>
-                <CardContent>
-                  <Grid
-                    container
-                    alignItems="center"
-                    direction="column"
-                    justify="flex-start"
-                    onClick={(): void => this.props.history.push("/ConferencePlans")}
-                  >
-                    <Grid item>
-                      <ConferencePlansIcon style={{ fill: "#0988ec", width: '12vw', height: '12vh' }} />
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                        Conference Plans
-                      </Typography>
-                    </Grid>
+                  <Grid item xs={6}>
+                    <Card
+                      className={classes.card}
+                      onClick={(): void => this.showTeacherModal("Results")}
+                    >
+                      <CardContent>
+                        <Grid
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
+                        >
+                          <Grid item>
+                            <ResultsIcon style={{ fill: "#4fd9b3", width: '12vw', height: '12vh' }} />
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                              Results
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
                   </Grid>
-                </CardContent>
-              </Card>
-              <Card
-                className={classes.card}
-                onClick={(): void =>
-                  this.props.history.push({
-                    pathname: "/Magic8Menu",
-                    state: { type: "Training" }
-                  })
-                }
-              >
-                <CardContent>
-                  <Grid
-                    container
-                    alignItems="center"
-                    direction="column"
-                    justify="flex-start"
-                  >
-                    <Grid item>
-                      <TrainingIcon style={{fill: '#6f39c4', width: '12vw', height: '12vh'}} />
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
-                        Training
-                      </Typography>
-                    </Grid>
+                  <Grid item xs={6}>
+                    <Card
+                      className={classes.card}
+                      onClick={(): void =>
+                        this.props.history.push({
+                          pathname: "/Magic8Menu",
+                          state: { type: "Training" }
+                        })
+                      }
+                    >
+                      <CardContent>
+                        <Grid
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
+                        >
+                          <Grid item>
+                            <TrainingIcon style={{fill: '#6f39c4', width: '12vw', height: '12vh'}} />
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                              Training
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
                   </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
+                  <Grid item xs={6}>
+                    <Card className={classes.card}>
+                      <CardContent>
+                        <Grid
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
+                          onClick={(): void => this.props.history.push("/MyTeachers")}
+                        >
+                          <Grid item>
+                            <PeopleIcon style={{ fill: "#ffd300", width: '12vw', height: '12vh' }} />
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                              My Teachers
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Card className={classes.card}>
+                      <CardContent>
+                        <Grid
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
+                          onClick={(): void => this.props.history.push("/ActionPlans")}
+                        >
+                          <Grid item>
+                            <ActionPlansIcon style={{ fill: "#e55529", width: '12vw', height: '12vh' }} />
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                              Action Plans
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Card className={classes.card}>
+                      <CardContent>
+                        <Grid
+                          container
+                          alignItems="center"
+                          direction="column"
+                          justify="flex-start"
+                          onClick={(): void => this.props.history.push("/ConferencePlans")}
+                        >
+                          <Grid item>
+                            <ConferencePlansIcon style={{ fill: "#0988ec", width: '12vw', height: '12vh' }} />
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" component="h2" style={{fontFamily: 'Arimo'}}>
+                              Conference Plans
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </div>
             <Grid
               container
               alignItems="flex-end"
@@ -342,11 +526,11 @@ class HomePage extends React.Component<Props, State> {
               justify="center"
               style={{height: '14vh'}}
             >
-              <Grid item xs={4} style={{paddingBottom: '1em', paddingTop: '1em'}}>
+              <Grid item xs={7} style={{paddingBottom: '1em', paddingTop: '1em'}}>
                 <Grid container direction="row" justify="space-between" alignItems="center">
                   <Grid item xs={5}>
                     <Grid container direction="row" justify="flex-end" alignItems="center">
-                      <Button color="primary" style={{paddingRight: '2em'}}>
+                      <Button color="primary" className={classes.helpButtons} style={{paddingRight: '2em'}}>
                         MY ACCOUNT
                       </Button>
                     </Grid>
@@ -358,7 +542,7 @@ class HomePage extends React.Component<Props, State> {
                   </Grid>
                   <Grid item xs={5}>
                     <Grid container direction="row" justify="flex-start" alignItems="center">
-                      <Button color="primary" style={{paddingLeft: '2em'}}>
+                      <Button color="primary" className={classes.helpButtons} style={{paddingLeft: '2em'}}>
                         HELP
                       </Button>
                     </Grid>
