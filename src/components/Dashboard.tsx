@@ -70,12 +70,12 @@ const styles: object = {
     display: "flex",
   },
   iconGrid: {
-    marginTop: "10px",
-    marginBottom: "5px"
+    marginTop: "0.7em",
+    marginBottom: "0.3em"
   },
   icon: {
-    width: "100px",
-    height: "100px"
+    width: "6em",
+    height: "6em"
   },
   infoDisplayGrid: {
     height: "34vh",
@@ -108,6 +108,37 @@ const styles: object = {
   gridTopMargin: {
     marginTop: "5px",
     fontFamily: "Arimo"
+  },
+  test: {
+    direction: 'column'
+  },
+  portrait: {
+    display: 'none'
+  },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: portrait)': {
+    /* icon: {
+      width: '9vh',
+      height: '9vh'
+    }, */
+    test: {
+      direction: 'row'
+    },
+    landscape: {
+      display: 'none'
+    },
+    portrait: {
+      display: 'flex',
+      width: '100%'
+    },
+    card: {
+      width: '90vw',
+      marginLeft: 0,
+      marginRight: 0
+    },
+    infoDisplayGrid: {
+      width: 'auto',
+      height: 'auto',
+    }
   }
 };
 
@@ -119,7 +150,9 @@ interface Style {
   helpIcon: string,
   completeGrid: string,
   completeButton: string,
-  gridTopMargin: string
+  gridTopMargin: string,
+  landscape: string,
+  portrait: string
 }
 
 type Props = RouteComponentProps & {
@@ -274,7 +307,9 @@ class Dashboard extends React.Component<Props, State> {
       helpIcon: PropTypes.string,
       completeGrid: PropTypes.string,
       completeButton: PropTypes.string,
-      gridTopMargin: PropTypes.string
+      gridTopMargin: PropTypes.string,
+      landscape: PropTypes.string,
+      portrait: PropTypes.string
     }).isRequired,
     history: ReactRouterPropTypes.history.isRequired,
     infoPlacement: PropTypes.string,
@@ -378,101 +413,213 @@ class Dashboard extends React.Component<Props, State> {
           <div />
         )}
         <Card className={classes.card}>
-          <Grid
-            container
-            style={{display: 'flex', flex: 1, flexDirection: 'column'}}
-            spacing={0}
-            direction="column"
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item className={classes.iconGrid}>
-              <img
-                src={this.state.icon}
-                alt="Magic 8 Icon"
-                className={classes.icon}
-              />
-            </Grid>
-            <Grid item>
-              <Typography style={{fontFamily: 'Arimo'}}>
-                {this.props.teacherSelected.firstName} {this.props.teacherSelected.lastName}
-              </Typography>
-            </Grid>
-            <Grid
-              item
-              className={classes.infoDisplayGrid}
-              style={{ alignItems: this.props.infoPlacement }}
-            >
-              {this.props.infoDisplay}
-            </Grid>
+          <div className={classes.landscape}>
             <Grid
               container
-              className={classes.gridTopMargin}
-              direction="row"
-              spacing={16}
-              alignItems="center"
-              alignContent="center"
+              // style={{display: 'flex', flex: 1, flexDirection: 'column'}}
+              spacing={0}
+              direction="column"
               justify="center"
+              alignItems="center"
             >
-              <Button className="lookFor" onClick={this.handleHelpModal}>
+              <Grid item className={classes.iconGrid}>
                 <img
-                  src={this.state.lookForsIcon}
-                  alt="Look-Fors"
-                  className={classes.helpIcon}
+                  src={this.state.icon}
+                  alt="Magic 8 Icon"
+                  className={classes.icon}
                 />
-              </Button>
-              <Button className="notes" onClick={(): void => this.handleNotes(true)}>
-                <img
-                  src={this.state.notesIcon}
-                  alt="Notes"
-                  className={classes.helpIcon}
-                />
-              </Button>
-            </Grid>
-            <Grid item className={classes.gridTopMargin}>
-              Start Time: {this.state.time}
-            </Grid>
-            {this.props.completeObservation ? (
-              <Grid item className={classes.completeGrid}>
-                <FirebaseContext.Consumer>
-                  {(firebase: {
-                    endSession(time?: Date): void
-                  }): React.ReactNode => (
-                    <YesNoDialog
-                      buttonText={<b>COMPLETE OBSERVATION</b>}
-                      buttonVariant={"outlined"}
-                      buttonColor={Constants.Colors[this.props.type]}
-                      buttonMargin={10}
-                      dialogTitle={
-                        "Are you sure you want to complete this observation?"
-                      }
-                      shouldOpen={true}
-                      onAccept={(): void => {
-                        this.setState({resultsDialog: this.props.type});
-                        if (this.props.type === "TT") {
-                          const sessionEnd = Date.now();
-                          this.props.updateSessionTime(sessionEnd);
-                          firebase.endSession(new Date(sessionEnd));
-                        } else {
-                          firebase.endSession();
-                        }
-                      }}
-                    />
-                  )}
-                </FirebaseContext.Consumer>
               </Grid>
-            ) : (
-              <Grid item className={classes.completeGrid}>
-                <Button
-                  variant="outlined"
-                  onClick={this.handleIncomplete}
-                  className={classes.completeButton}
-                >
-                  <b>COMPLETE OBSERVATION</b>
+              <Grid item>
+                <Typography style={{fontFamily: 'Arimo'}}>
+                  {this.props.teacherSelected.firstName} {this.props.teacherSelected.lastName}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                className={classes.infoDisplayGrid}
+                style={{ alignItems: this.props.infoPlacement }}
+              >
+                {this.props.infoDisplay}
+              </Grid>
+              <Grid
+                container
+                className={classes.gridTopMargin}
+                direction="row"
+                spacing={16}
+                alignItems="center"
+                alignContent="center"
+                justify="center"
+              >
+                <Button className="lookFor" onClick={this.handleHelpModal}>
+                  <img
+                    src={this.state.lookForsIcon}
+                    alt="Look-Fors"
+                    className={classes.helpIcon}
+                  />
+                </Button>
+                <Button className="notes" onClick={(): void => this.handleNotes(true)}>
+                  <img
+                    src={this.state.notesIcon}
+                    alt="Notes"
+                    className={classes.helpIcon}
+                  />
                 </Button>
               </Grid>
-            )}
-          </Grid>
+              <Grid item className={classes.gridTopMargin}>
+                Start Time: {this.state.time}
+              </Grid>
+              {this.props.completeObservation ? (
+                <Grid item className={classes.completeGrid}>
+                  <FirebaseContext.Consumer>
+                    {(firebase: {
+                      endSession(time?: Date): void
+                    }): React.ReactNode => (
+                      <YesNoDialog
+                        buttonText={<b>COMPLETE OBSERVATION</b>}
+                        buttonVariant={"outlined"}
+                        buttonColor={Constants.Colors[this.props.type]}
+                        buttonMargin={10}
+                        dialogTitle={
+                          "Are you sure you want to complete this observation?"
+                        }
+                        shouldOpen={true}
+                        onAccept={(): void => {
+                          this.setState({resultsDialog: this.props.type});
+                          if (this.props.type === "TT") {
+                            const sessionEnd = Date.now();
+                            this.props.updateSessionTime(sessionEnd);
+                            firebase.endSession(new Date(sessionEnd));
+                          } else {
+                            firebase.endSession();
+                          }
+                        }}
+                      />
+                    )}
+                  </FirebaseContext.Consumer>
+                </Grid>
+              ) : (
+                <Grid item className={classes.completeGrid}>
+                  <Button
+                    variant="outlined"
+                    onClick={this.handleIncomplete}
+                    className={classes.completeButton}
+                  >
+                    <b>COMPLETE OBSERVATION</b>
+                  </Button>
+                </Grid>
+              )}
+            </Grid>
+          </div>
+          <div className={classes.portrait}>
+            <Grid
+              container
+              // style={{display: 'flex', flex: 1, flexDirection: 'column'}}
+              spacing={0}
+              direction="row"
+              justify="space-around"
+              alignItems="center"
+            >
+              <Grid item xs={2} className={classes.iconGrid}>
+                <Grid container direction="column" justify="center" alignItems="center">
+                  <Grid item>
+                    <img
+                      src={this.state.icon}
+                      alt="Magic 8 Icon"
+                      className={classes.icon}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Typography style={{fontFamily: 'Arimo'}} align="center">
+                      {this.props.teacherSelected.firstName} {this.props.teacherSelected.lastName}
+                    </Typography>
+                  </Grid>
+                </Grid> 
+              </Grid>
+              <Grid
+                item
+                xs={4}
+                className={classes.infoDisplayGrid}
+                style={{ alignItems: this.props.infoPlacement }}
+              >
+                {this.props.infoDisplay}
+              </Grid>
+              <Grid item xs={4}>
+                <Grid container direction="column">
+                  <Grid item>
+                    <Grid
+                      container
+                      className={classes.gridTopMargin}
+                      direction="row"
+                      spacing={16}
+                      alignItems="center"
+                      alignContent="center"
+                      justify="center"
+                    >
+                      <Button className="lookFor" onClick={this.handleHelpModal}>
+                        <img
+                          src={this.state.lookForsIcon}
+                          alt="Look-Fors"
+                          className={classes.helpIcon}
+                        />
+                      </Button>
+                      <Button className="notes" onClick={(): void => this.handleNotes(true)}>
+                        <img
+                          src={this.state.notesIcon}
+                          alt="Notes"
+                          className={classes.helpIcon}
+                        />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid item className={classes.gridTopMargin}>
+                    <Typography style={{fontFamily: 'Arimo'}} align="center">
+                      Start Time: {this.state.time}
+                    </Typography>
+                  </Grid>
+                  {this.props.completeObservation ? (
+                    <Grid item className={classes.completeGrid}>
+                      <FirebaseContext.Consumer>
+                        {(firebase: {
+                          endSession(time?: Date): void
+                        }): React.ReactNode => (
+                          <YesNoDialog
+                            buttonText={<b>COMPLETE OBSERVATION</b>}
+                            buttonVariant={"outlined"}
+                            buttonColor={Constants.Colors[this.props.type]}
+                            buttonMargin={10}
+                            dialogTitle={
+                              "Are you sure you want to complete this observation?"
+                            }
+                            shouldOpen={true}
+                            onAccept={(): void => {
+                              this.setState({resultsDialog: this.props.type});
+                              if (this.props.type === "TT") {
+                                const sessionEnd = Date.now();
+                                this.props.updateSessionTime(sessionEnd);
+                                firebase.endSession(new Date(sessionEnd));
+                              } else {
+                                firebase.endSession();
+                              }
+                            }}
+                          />
+                        )}
+                      </FirebaseContext.Consumer>
+                    </Grid>
+                  ) : (
+                    <Grid item className={classes.completeGrid}>
+                      <Button
+                        variant="outlined"
+                        onClick={this.handleIncomplete}
+                        className={classes.completeButton}
+                      >
+                        <b>COMPLETE OBSERVATION</b>
+                      </Button>
+                    </Grid>
+                  )}
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
         </Card>
       </div>
     );

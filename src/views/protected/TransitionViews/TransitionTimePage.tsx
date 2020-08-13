@@ -20,7 +20,8 @@ const styles: object = {
     height: "100vh",
     flexDirection: "column",
     overflowY: 'auto',
-    overflowX: 'hidden'
+    // overflowX: 'hidden'
+    overflowX: 'auto'
   },
   backButton: {
     marginTop: '0.5em',
@@ -34,6 +35,9 @@ const styles: object = {
     paddingTop: '0.5em',
     paddingBottom: '0.5em'
   },
+  portrait: {
+    display: 'none'
+  },
   // ipad landscape
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
     main: {
@@ -41,11 +45,24 @@ const styles: object = {
       paddingTop: 0,
       paddingBottom: 0
     }
+  },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    landscape: {
+      display: 'none'
+    },
+    portrait: {
+      display: 'flex'
+    }
   }
 };
 
 interface Props {
-  classes: { root: string, backButton: string, main: string },
+  classes: { root: string, backButton: string, main: string, landscape: string, portrait: string },
   toggleNewTransitionType(transitionType: string | null): void,
   transitionType: string | null
 };
@@ -140,7 +157,7 @@ class TransitionTimePage extends React.Component<Props, State> {
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main className={classes.main}>
-          <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
+          <Grid container direction="row" justify="center" alignItems="center" className={classes.landscape} style={{height: '100%'}}>
             <Grid item xs={3} style={{height: '100%'}}>
               <Grid
                 container
@@ -203,6 +220,66 @@ class TransitionTimePage extends React.Component<Props, State> {
                     />
                   )}
                 </FirebaseContext.Consumer>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid container direction="column" justify="space-around" alignItems="center" className={classes.portrait} style={{height: '100%'}}>
+            <Grid item>
+              <Dashboard
+                type="TT"
+                infoDisplay={<TransitionLog />}
+                infoPlacement="center"
+                completeObservation={true}
+              />
+            </Grid>
+            <Grid item>
+              <Grid container direction="row">
+                <Grid item xs={6}>
+                  <Grid
+                    container
+                    alignItems={"center"}
+                    justify={"center"}
+                    direction={"column"}
+                  >
+                    <TransitionTypeSel
+                      handleTransitionType={this.handleTransitionType}
+                      handleNotes={this.handleNotes}
+                      transitionType={this.props.transitionType}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item xs={6}>
+                  <Grid
+                    container
+                    alignItems={"center"}
+                    justify={"center"}
+                    direction={"column"}
+                  >
+                    <FirebaseContext.Consumer>
+                      {(firebase: {
+                        auth: {
+                          currentUser: {
+                            uid: string
+                          }
+                        },
+                        handleSession(mEntry: {
+                          observedBy: string,
+                          teacher: string,
+                          start?: Date,
+                          type: string
+                        }): Promise<void>
+                      }): React.ReactNode => (
+                        <TransitionTimer
+                          firebase={firebase}
+                          typeSelected={
+                            this.props.transitionType === null ? false : true
+                          }
+                          handleEndTransition={this.handleEndTransition}
+                        />
+                      )}
+                    </FirebaseContext.Consumer>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
