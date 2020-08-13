@@ -53,18 +53,55 @@ const styles: object = {
     paddingTop: '0.5em',
     paddingBottom: '0.5em'
   },
+  dashboardGrid: {
+    xs: 3,
+    height: '100%'
+  },
+  contentGrid: {
+    xs: 9
+  },
+  grid: {
+    direction: "row",
+    justify: 'space-around',
+  },
   // ipad landscape
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
     main: {
       height: '90vh',
       paddingTop: 0,
       paddingBottom: 0
+    },
+  },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    dashboardGrid: {
+      xs: 3,
+      height: 'auto'
+    },
+    contentGrid: {
+      xs: 9
+    },
+    grid: {
+      direction: 'column',
+      justify: 'center'
     }
   }
 };
 
 interface Props {
-  classes: { root: string, grow: string, backButton: string, main: string },
+  classes: {
+    root: string,
+    grow: string,
+    backButton: string,
+    main: string,
+    dashboardGrid: string,
+    contentGrid: string,
+    grid: string
+  },
   appendClimateRating(rating: number): void
 };
 
@@ -184,20 +221,22 @@ class ClassroomClimatePage extends React.Component<Props, State> {
             alignItems={"center"}
             justify={"center"}
             direction={"column"}
-            style={{height: '100%'}}
+            style={{height: '100%', width: '100%'}}
           >
             <Grid
               container
               alignItems={"center"}
-              justify={"center"}
-              direction={"row"}
+              justify={"space-around"}
+              style={{width: '100%', height: '100%'}}
+              className={this.props.classes.grid}
             >
-              <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+              <Grid item className={this.props.classes.dashboardGrid} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
                 <Grid
                   container
                   alignItems={"center"}
                   justify={"center"}
                   direction={"column"}
+                  style={{height: '100%'}}
                 >
                   <Grid item>
                     <Dashboard
@@ -211,7 +250,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={9}>
+              <Grid item className={this.props.classes.contentGrid}>
                 <Grid
                   container
                   alignItems={"center"}

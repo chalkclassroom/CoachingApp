@@ -223,8 +223,8 @@ class TransitionTimePage extends React.Component<Props, State> {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container direction="column" justify="space-around" alignItems="center" className={classes.portrait} style={{height: '100%'}}>
-            <Grid item>
+          <Grid container direction="column" justify="space-around" alignItems="center" className={classes.portrait} style={{height: '100%', border: '1px solid red'}}>
+            <Grid item style={{border: '1px solid black'}}>
               <Dashboard
                 type="TT"
                 infoDisplay={<TransitionLog />}

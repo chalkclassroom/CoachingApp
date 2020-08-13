@@ -47,8 +47,7 @@ const styles: object = {
   },
   listItem: {
     width: 'auto',
-    padding: '0.5em',
-    height: '10vh'
+    padding: '0.5em'
   },
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: portrait)': {
     listDiv: {
