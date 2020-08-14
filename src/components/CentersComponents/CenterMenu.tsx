@@ -34,12 +34,49 @@ const styles: object = {
     paddingTop: '0.5em',
     paddingBottom: '0.5em'
   },
+  centerMenuGrid: {
+    direction: 'row'
+  },
+  dashboardGrid: {
+    // xs: 3
+    width: '25%'
+  },
+  contentGrid: {
+    // xs: 9
+    width: '75%'
+  },
   // ipad landscape
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
     main: {
       height: '90vh',
       paddingTop: 0,
       paddingBottom: 0
+    },
+    /* dashboardGrid: {
+      xs: 3
+    },
+    contentGrid: {
+      xs: 9
+    }, */
+  },
+  // ipad portrait
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    centerMenuGrid: {
+      direction: 'column'
+    },
+    dashboardGrid: {
+      // xs: 12
+      width: '100%'
+    },
+    contentGrid: {
+      // xs: 12
+      width: '100%',
+      height: '70%'
     }
   }
 };
@@ -67,6 +104,8 @@ const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
       variant="contained"
       color="primary"
       style={{
+        // height: '18vh',
+        // width: '18vh',
         minHeight: 150,
         maxHeight: 150,
         minWidth: 150,
@@ -140,7 +179,10 @@ interface Props {
     root: string,
     grow: string,
     backButton: string,
-    main: string
+    main: string,
+    centerMenuGrid: string,
+    dashboardGrid: string,
+    contentGrid: string
   },
 }
 
@@ -275,17 +317,17 @@ class CenterMenu extends React.Component<Props, State> {
           <div className={this.props.classes.main}>
             <Grid
               container
-              justify="center"
+              justify="space-around"
               alignItems="center"
-              direction="row"
               style={{height: '100%'}}
+              className={this.props.classes.centerMenuGrid}
             >
               <NewCenterDialog
                 open={this.state.addDialog}
                 handleClose={this.handleClose}
                 handleSubmit={this.handleAddCenter}
               />
-              <Grid item xs={3} style={{height: '100%'}}>
+              <Grid item className={this.props.classes.dashboardGrid}>
                 <Grid
                   container
                   alignItems={"center"}
@@ -305,14 +347,14 @@ class CenterMenu extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={9}>
+              <Grid item className={this.props.classes.contentGrid}>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
                   {this.props.centers.map((center, index) => (
                     <Grid
                       key={index}
                       item
                       xs={4}
-                      style={{ textAlign: "center", padding: "10px" }}
+                      style={{ textAlign: "center", paddingTop: '1em' }}
                     >
                       <VisitCenterButton
                         centerName={center.name}
@@ -325,11 +367,13 @@ class CenterMenu extends React.Component<Props, State> {
                   <Grid
                     item
                     xs={4}
-                    style={{ textAlign: "center", padding: "10px" }}
+                    style={{ textAlign: "center", paddingTop: '1em' }}
                   >
                     <Button
                       variant="contained"
                       style={{
+                        // height: '18vh',
+                        // width: '18vh',
                         minHeight: 150,
                         maxHeight: 150,
                         minWidth: 150,

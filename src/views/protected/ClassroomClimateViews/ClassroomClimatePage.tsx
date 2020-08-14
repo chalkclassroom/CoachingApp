@@ -78,11 +78,11 @@ const styles: object = {
       paddingBottom: 0
     },
     dashboardGrid: {
-      xs: 3,
+      xs: 12,
       height: 'auto'
     },
     contentGrid: {
-      xs: 9
+      xs: 12
     },
     grid: {
       direction: 'column',
