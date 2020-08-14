@@ -62,7 +62,6 @@ const styles: object = {
   },
   grid: {
     direction: "row",
-    justify: 'space-around',
   },
   // ipad landscape
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
@@ -87,7 +86,6 @@ const styles: object = {
     },
     grid: {
       direction: 'column',
-      justify: 'center'
     }
   }
 };
@@ -226,11 +224,11 @@ class ClassroomClimatePage extends React.Component<Props, State> {
             <Grid
               container
               alignItems={"center"}
-              justify={"space-around"}
+              justify={"space-evenly"}
               style={{width: '100%', height: '100%'}}
               className={this.props.classes.grid}
             >
-              <Grid item className={this.props.classes.dashboardGrid} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+              <Grid item className={this.props.classes.dashboardGrid} style={{paddingTop: '0.5em'}}>
                 <Grid
                   container
                   alignItems={"center"}
