@@ -14,7 +14,7 @@ function ListeningToChildrenPage(): React.ReactElement {
       <FirebaseContext.Consumer>
         {(firebase: Types.FirebaseAppBar): React.ReactNode => (<AppBar firebase={firebase} />)}
       </FirebaseContext.Consumer>
-      <main style={{ flexGrow: 1 }}>
+      <main>
         <FirebaseContext.Consumer>
           {(firebase: {
             auth: {
