@@ -38,6 +38,17 @@ const styles: object = {
     paddingTop: '0.5em',
     paddingBottom: '0.5em'
   },
+  grid: {
+    direction: 'row'
+  },
+  dashboardGrid: {
+    width: '25%',
+    height: '100%'
+  },
+  contentGrid: {
+    width: '75%',
+    height: '100%'
+  },
   // ipad landscape
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
     main: {
@@ -45,6 +56,25 @@ const styles: object = {
       paddingTop: 0,
       paddingBottom: 0
     }
+  },
+  // ipad portrait
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    grid: {
+      direction: 'column'
+    },
+    dashboardGrid: {
+      width: '100%',
+      height: '25%'
+    },
+    contentGrid: {
+      width: '100%',
+      height: 'auto'
+    },
   }
 };
 
@@ -52,7 +82,10 @@ interface Props {
   classes: {
     root: string,
     grow: string,
-    main: string
+    main: string,
+    grid: string,
+    dashboardGrid: string,
+    contentGrid: string
   },
   teacherSelected: Types.Teacher
 }
@@ -132,17 +165,18 @@ class StudentEngagementPage extends React.Component<Props, State> {
             container
             alignItems={"center"}
             justify={"center"}
-            direction={"row"}
+            // direction={"row"}
+            className={this.props.classes.grid}
             style={{height: '100%'}}
           >
             <Grid
               container
               alignItems={"flex-start"}
-              justify={"flex-start"}
+              justify={"space-around"}
               direction={"row"}
               style={{height: '100%'}}
             >
-              <Grid item xs={3} style={{height: '100%'}}>
+              <Grid item className={this.props.classes.dashboardGrid}>
                 <Grid
                   container
                   alignItems={"center"}
@@ -160,7 +194,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
                   />
                 </Grid>
               </Grid>
-              <Grid item xs={8}>
+              <Grid className={this.props.classes.contentGrid}>
                 <FirebaseContext.Consumer>
                   {(firebase: {
                     auth: {
