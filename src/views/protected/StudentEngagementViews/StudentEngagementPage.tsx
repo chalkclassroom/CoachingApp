@@ -171,7 +171,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
           >
             <Grid
               container
-              alignItems={"flex-start"}
+              alignItems={"center"}
               justify={"space-around"}
               direction={"row"}
               style={{height: '100%'}}
