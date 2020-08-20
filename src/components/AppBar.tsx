@@ -132,7 +132,7 @@ type Props = RouteComponentProps & {
       currentUser: null | {
         uid: string
       },
-      onAuthStateChanged(arg: any): firebase.User | null,
+      onAuthStateChanged(arg: unknown): firebase.User | null,
     },
     firebaseEmailSignIn(credentials: {email: string, password: string}): Promise<Types.UserCredential>,
     firebaseEmailSignUp(
