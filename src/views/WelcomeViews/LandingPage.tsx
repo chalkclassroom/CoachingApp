@@ -2,7 +2,6 @@ import * as React from "react";
 import { withStyles } from "@material-ui/core";
 import * as PropTypes from "prop-types";
 import Grid from '@material-ui/core/Grid/Grid';
-import IconButton from '@material-ui/core/IconButton';
 import LogoImage from '../../assets/images/LogoImage.svg';
 import NSFLogoImage from '../../assets/images/NSFLogoImage.png';
 import PieChartImage from '../../assets/images/PieChartImage.svg';
@@ -364,48 +363,6 @@ class LandingPage extends React.Component<Props, State> {
               <img src={CoachLandingImage} alt = "Coach and Teacher" width="100%" className={classes.rootImage}/>
               <img src={CoachLandingLargeImage} alt = "Coach and Teacher" width="100%" className={classes.largeImage}/>
               <Grid item xs={10} style={{position: 'absolute'}}>
-                <Grid container direction="column" justify="flex-start" alignItems="center">
-                  <Grid item style={{width: '100%'}}>
-                    <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%', height: '100%'}}>
-                      <Grid item>
-                        {/* <img src={NSFLogoImage} alt="NSF" style={{maxWidth: '10vw'}} /> */}
-                        <IconButton
-                            color="inherit"
-                            aria-label="Logo"
-                            disabled
-                            // className={classes.menuButton}
-                            style={{backgroundColor: "#FFFFFF"}}
-                            // onClick = {(): void => this.props.history.push("/Home")}
-                          >
-                            <img src={NSFLogoImage} height='100vh' alt='NSF' />
-                          </IconButton>
-                      </Grid>
-                      <Grid item style={{paddingLeft: '1em', height: '5em'}}>
-                        <div style={{borderLeft: '3px solid white', height: '100%'}} />
-                      </Grid>
-                      <Grid item style={{height: '100%', paddingLeft: '1.5em'}}>
-                        <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
-                          <IconButton
-                            color="inherit"
-                            aria-label="Logo"
-                            disabled
-                            // className={classes.menuButton}
-                            style={{backgroundColor: "#FFFFFF"}}
-                            // onClick = {(): void => this.props.history.push("/Home")}
-                          >
-                            <img src={LogoImage} height='35vh' alt='OWL' />
-                          </IconButton>
-                        </Grid>
-                      </Grid>
-                      <Grid item style={{paddingLeft: '1em', height: '100%'}}>
-                        <Typography className={classes.chalkTitle}>
-                          NSF&apos;s CHALK
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    
-                  </Grid>
-                  <Grid item>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
                   <Grid item xs={7} style={{paddingTop: '2vh'}}>
                     <Typography className={classes.chalkTitle}>
@@ -445,8 +402,6 @@ class LandingPage extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-                </Grid>
                 </Grid>
               </Grid>
             </Grid>
@@ -651,7 +606,6 @@ class LandingPage extends React.Component<Props, State> {
                 </Grid>
               </Grid>
               <Grid item style={{width: '100%', paddingTop: '2em'}}>
-                
                   {this.state.emailAdded ? (
                     <Grid container direction="row" justify="center" alignItems="center">
                       <Grid item xs={12}>
@@ -691,73 +645,52 @@ class LandingPage extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   )}
-                
               </Grid>
             </Grid>
-            {/* <Grid container direction="row" justify="flex-start" alignItems="center" className={classes.section}>
+            <Grid container direction="row" justify="flex-start" alignItems="center" className={classes.section}>
               <Grid item xs={5}>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
                   <Grid item style={{padding: '1.5em'}}>
-                  <img src={NSFLogoImage} alt="NSF" width='200vw' />
-                  </Grid>
-                
-              <Grid item>
-                <Grid container direction="column" justify="center" alignItems="flex-start">
-                  <Grid item>
-                    <Typography variant="h5" style={{fontFamily: 'Garamond'}}>
-                      <strong>National</strong>
-                    </Typography>
+                    <img src={NSFLogoImage} alt="NSF" width='200vw' />
                   </Grid>
                   <Grid item>
-                    <Typography variant="h5" style={{fontFamily: 'Garamond'}}>
-                      <strong>Science</strong>
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5" style={{fontFamily: 'Garamond'}}>
-                      <strong>Foundation</strong>
-                    </Typography>
+                    <Grid container direction="column" justify="center" alignItems="flex-start">
+                      <Grid item>
+                        <Typography variant="h5" style={{fontFamily: 'Garamond'}}>
+                          <strong>National</strong>
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" style={{fontFamily: 'Garamond'}}>
+                          <strong>Science</strong>
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h5" style={{fontFamily: 'Garamond'}}>
+                          <strong>Foundation</strong>
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              </Grid>
               </Grid>
               <Grid item xs={7} style={{padding: '1.5em'}}>
                 <Grid container direction="column">
                   <Grid item>
-                <Typography variant="h6">
-                  This material is based upon work supported by the National Science Foundation under Grant No. DRK-12-1813008.
-                </Typography>
-                </Grid>
-                <Grid item style={{paddingTop: '1em'}}>
-                  <Typography variant="body1">
-                  Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
-                  </Typography>
-                </Grid>
-
-                </Grid>
-              </Grid>
-            </Grid> */}
-            <Grid container direction="column" justify="center" alignItems="center">
-            <Grid item style={{padding: '1.5em'}}>
-                  <img src={NSFLogoImage} alt="NSF" width='200vw' />
-                  </Grid>
-                  <Grid item>
-                  <Typography variant="h4" style={{fontFamily: 'Garamond'}}>
-                      <strong>National Science Foundation</strong>
+                    <Typography variant="h6">
+                      This material is based upon work supported by the
+                      National Science Foundation under Grant No. DRK-12-1813008.
                     </Typography>
                   </Grid>
-                  <Grid item style={{padding: '2em', width: '80%'}}>
-                  <Typography variant="h6" align="center">
-                  This material is based upon work supported by the National Science Foundation under Grant No. DRK-12-1813008.
-                </Typography>
+                  <Grid item style={{paddingTop: '1em'}}>
+                    <Typography variant="body1">
+                      Any opinions, findings, and conclusions or recommendations
+                      expressed in this material are those of the author(s) and do
+                      not necessarily reflect the views of the National Science Foundation.
+                    </Typography>
                   </Grid>
-                  <Grid item style={{paddingBottom: '1.5em', width: '80%'}}>
-                    <Typography variant="body1" align="center">
-                  Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
-                  </Typography>
-                  </Grid>
-
+                </Grid>
+              </Grid>
             </Grid>
             <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em', backgroundColor: '#dbebfb'}} className={classes.section}>
               <Grid item style={{width: '100%'}}>
@@ -1093,7 +1026,27 @@ class LandingPage extends React.Component<Props, State> {
                 )}
               </Grid>
             </Grid>
-            <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em'}} className={classes.section}>
+            <Grid container direction="column" justify="center" alignItems="center">
+              <Grid item style={{padding: '1.5em'}}>
+                <img src={NSFLogoImage} alt="NSF" width='200vw' />
+              </Grid>
+              <Grid item>
+                <Typography variant="h4" style={{fontFamily: 'Garamond'}}>
+                  <strong>National Science Foundation</strong>
+                </Typography>
+              </Grid>
+              <Grid item style={{padding: '2em', width: '80%'}}>
+                <Typography variant="h6" align="center">
+                  This material is based upon work supported by the National Science Foundation under Grant No. DRK-12-1813008.
+                </Typography>
+              </Grid>
+              <Grid item style={{paddingBottom: '1.5em', width: '80%'}}>
+                <Typography variant="body1" align="center">
+                Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container direction="column" justify="center" alignItems="center" style={{paddingTop: '2em', backgroundColor: '#dbebfb'}} className={classes.section}>
               <Grid item style={{width: '100%'}}>
                 <Grid container direction="row" justify="flex-start" alignItems="center">
                   <Typography className={classes.partnersText}>

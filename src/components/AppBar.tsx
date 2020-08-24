@@ -5,7 +5,6 @@ import {
   Toolbar,
   Button,
   IconButton,
-  Avatar
 } from "@material-ui/core";
 import { AppBar as NavBar } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -44,7 +43,7 @@ const styles: object = {
     "&:hover": {
       backgroundColor: "#FFC35C"
     },
-    fontSize: 'calc(14px + (30 - 14) * ((100vw - 300px) / (1600 - 300)))'
+    fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)))'
   },
   link: {
     textDecoration: "none"
@@ -358,7 +357,7 @@ class AppBar extends React.Component<Props, State> {
                 <Grid container direction="row" alignItems="center">
                   <Grid item xs={6}>
                     <Grid container direction="row" justify="flex-start" alignItems="center">
-                      {/* <Grid item style={{height: '100%'}}>
+                      <Grid item style={{height: '100%'}}>
                         <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
                           <IconButton
                             color="inherit"
@@ -370,7 +369,7 @@ class AppBar extends React.Component<Props, State> {
                             <img src={LogoImage} height='35vh' alt='OWL' />
                           </IconButton>
                         </Grid>
-                      </Grid> */}
+                      </Grid>
                       <Grid item>
                         <Router>
                           <div>
@@ -408,19 +407,6 @@ class AppBar extends React.Component<Props, State> {
                         >
                           <strong>Sign Up</strong>
                         </Button>
-                      </Grid>
-                      <Grid item style={{paddingLeft: '1em', height: '100%'}}>
-                        <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
-                          <IconButton
-                            color="inherit"
-                            aria-label="Logo"
-                            className={classes.menuButton}
-                            style={{backgroundColor: "#FFFFFF"}}
-                            onClick = {(): void => this.props.history.push("/Home")}
-                          >
-                            <img src={LogoImage} height='35vh' alt='OWL' />
-                          </IconButton>
-                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
