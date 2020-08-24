@@ -5,7 +5,6 @@ import {
   Toolbar,
   Button,
   IconButton,
-  Avatar
 } from "@material-ui/core";
 import { AppBar as NavBar } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -44,7 +43,7 @@ const styles: object = {
     "&:hover": {
       backgroundColor: "#FFC35C"
     },
-    fontSize: 'calc(14px + (30 - 14) * ((100vw - 300px) / (1600 - 300)))'
+    fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)))'
   },
   link: {
     textDecoration: "none"
