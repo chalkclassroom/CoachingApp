@@ -71,12 +71,16 @@ const styles: object = {
     },
     dashboardGrid: {
       // xs: 12
-      width: '100%'
+      width: '100%',
+      height: '25%'
     },
     contentGrid: {
       // xs: 12
       width: '100%',
-      height: '70%'
+      height: '75%'
+    },
+    centersGrid: {
+      height: '100%'
     }
   }
 };
@@ -182,7 +186,8 @@ interface Props {
     main: string,
     centerMenuGrid: string,
     dashboardGrid: string,
-    contentGrid: string
+    contentGrid: string,
+    centersGrid: string
   },
 }
 
@@ -348,7 +353,7 @@ class CenterMenu extends React.Component<Props, State> {
                 </Grid>
               </Grid>
               <Grid item className={this.props.classes.contentGrid}>
-                <Grid container direction="row" justify="flex-start" alignItems="center">
+                <Grid container direction="row" justify="flex-start" alignItems="center" className={this.props.classes.centersGrid}>
                   {this.props.centers.map((center, index) => (
                     <Grid
                       key={index}

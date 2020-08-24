@@ -513,7 +513,6 @@ class Dashboard extends React.Component<Props, State> {
           <div className={classes.portrait}>
             <Grid
               container
-              // style={{display: 'flex', flex: 1, flexDirection: 'column'}}
               spacing={0}
               direction="row"
               justify="space-around"

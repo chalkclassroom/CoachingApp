@@ -54,11 +54,10 @@ const styles: object = {
     paddingBottom: '0.5em'
   },
   dashboardGrid: {
-    xs: 3,
-    height: '100%'
+    width: '25%',
   },
   contentGrid: {
-    xs: 9
+    width: '75%',
   },
   grid: {
     direction: "row",
@@ -71,6 +70,7 @@ const styles: object = {
       paddingBottom: 0
     },
   },
+  // ipad portrait
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
     main: {
       height: '90vh',
@@ -78,11 +78,12 @@ const styles: object = {
       paddingBottom: 0
     },
     dashboardGrid: {
-      xs: 12,
-      height: 'auto'
+      width: '100%',
+      height: '25%'
     },
     contentGrid: {
-      xs: 12
+      width: '100%',
+      height: '75%'
     },
     grid: {
       direction: 'column',
@@ -254,6 +255,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                   alignItems={"center"}
                   justify={"center"}
                   direction={"column"}
+                  style={{height: '100%'}}
                 >
                   <FirebaseContext.Consumer>
                     {(firebase: {

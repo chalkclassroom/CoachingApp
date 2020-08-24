@@ -69,11 +69,11 @@ const styles: object = {
     },
     dashboardGrid: {
       width: '100%',
-      height: '25%'
+      height: '25%',
     },
     contentGrid: {
       width: '100%',
-      height: 'auto'
+      height: '75%'
     },
   }
 };
@@ -325,12 +325,14 @@ class TeacherChecklist extends React.Component<Props, State> {
                 direction={"column"}
                 style={{height: '100%'}}
               >
-                <Dashboard
-                  type={this.props.type}
-                  infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
-                  infoPlacement="center"
-                  completeObservation={true}
-                />
+                <Grid item>
+                  <Dashboard
+                    type={this.props.type}
+                    infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
+                    infoPlacement="center"
+                    completeObservation={true}
+                  />
+                </Grid>
               </Grid>
             </Grid>
             <Grid item className={this.props.classes.contentGrid}>

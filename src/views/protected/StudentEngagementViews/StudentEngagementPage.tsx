@@ -73,7 +73,7 @@ const styles: object = {
     },
     contentGrid: {
       width: '100%',
-      height: 'auto'
+      height: '75%'
     },
   }
 };

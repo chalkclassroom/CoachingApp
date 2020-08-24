@@ -91,10 +91,12 @@ const styles: object = {
     },
     dashboardGrid: {
       // xs: 12
+      height: '25%',
       width: '100%'
     },
     contentGrid: {
       // xs: 12
+      height: '75%',
       width: '100%'
     },
     checklistItem: {
@@ -468,7 +470,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
             </Grid>
             <Grid item className={classes.contentGrid}>
               <Zoom in={true}>
-                <Grid container alignItems="center" direction="column" xs={12}>
+                <Grid container alignItems="center" direction="column">
                   <Typography variant="h5" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
                     {this.props.currentCenter[0].toUpperCase() +
                       this.props.currentCenter.substr(1)}
