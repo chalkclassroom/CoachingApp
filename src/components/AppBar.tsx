@@ -370,7 +370,7 @@ class AppBar extends React.Component<Props, State> {
                           </IconButton>
                         </Grid>
                       </Grid>
-                      <Grid item>
+                      <Grid item style={{paddingLeft: '1em'}}>
                         <Router>
                           <div>
                             <Link to="/team" className={classes.link}>
