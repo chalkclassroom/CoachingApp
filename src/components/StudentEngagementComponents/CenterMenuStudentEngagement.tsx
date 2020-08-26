@@ -347,6 +347,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             alignItems={'center'}
             justify={'center'}
             direction={'column'}
+            style={{height: '100%'}}
           >
             <Dialog
               open={this.state.setOpen}
@@ -399,19 +400,12 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               alignItems="center"
               direction="row"
               justify={'center'}
-              xs={12}
-              style={{ margin: 40 }}
             >
-              <Grid
-                alignItems="flex-end"
-                direction="row"
-                justify="flex-end"
-                container
-                item
-                xs={8}
-              >
+              <Grid item xs={3} />
+              <Grid item xs={6}>
                 <Typography
                   variant="h4"
+                  align="center"
                   gutterBottom
                   style={{ fontFamily: 'Arimo' }}
                 >
@@ -419,20 +413,14 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 </Typography>
                 <Typography
                   variant="subtitle1"
+                  align="center"
                   gutterBottom
                   style={{ fontFamily: 'Arimo' }}
                 >
                   Please enter the student names.
                 </Typography>
               </Grid>
-              <Grid
-                alignItems="flex-start"
-                direction="row"
-                justify="center"
-                container
-                item
-                xs={4}
-              >
+              <Grid item xs={3}>
                 <Fab
                   className={classes.button}
                   aria-label="add"
@@ -448,47 +436,49 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               direction="row"
               justify="center"
             >
-              <Grid
-                alignItems="flex-start"
-                direction="row"
-                justify="flex-start"
-                container
-                item
-                xs={12}
-              >
-                <GridList
-                  cellHeight={60}
-                  className={classes.gridList}
-                  cols={4}
+              <Grid item xs={12}>
+                <Grid
+                  alignItems="center"
+                  direction="row"
+                  justify="center"
+                  container
                 >
-                  {this.state.students.map(
-                    (student: string, i: number) => {
-                      return (
-                        <GridListTile
-                          key={i + 'grid'}
-                          cols={1}
-                        >
-                          <Card>
-                            <CardContent>
-                              <Paper
-                                className={classes.root}
-                                elevation={1}
-                                style={{padding: 8}}
-                              >
-                                <Typography variant="subtitle2">
-                                  {
-                                    i + 1 + ' : ' + student.charAt(0)
-                                    .toUpperCase() + student.substring(1)
-                                  }
-                                </Typography>
-                              </Paper>
-                            </CardContent>
-                          </Card>
-                        </GridListTile>
-                      )
-                    }
-                  )}
-                </GridList>
+                  <Grid item>
+                    <GridList
+                      cellHeight={60}
+                      className={classes.gridList}
+                      cols={4}
+                    >
+                      {this.state.students.map(
+                        (student: string, i: number) => {
+                          return (
+                            <GridListTile
+                              key={i + 'grid'}
+                              cols={1}
+                            >
+                              <Card>
+                                <CardContent>
+                                  <Paper
+                                    className={classes.root}
+                                    elevation={1}
+                                    style={{padding: 8}}
+                                  >
+                                    <Typography variant="subtitle2">
+                                      {
+                                        i + 1 + ' : ' + student.charAt(0)
+                                        .toUpperCase() + student.substring(1)
+                                      }
+                                    </Typography>
+                                  </Paper>
+                                </CardContent>
+                              </Card>
+                            </GridListTile>
+                          )
+                        }
+                      )}
+                    </GridList>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
             <Grid
@@ -511,7 +501,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
         )
       case OBSERVATION:
         return (
-          <>
+          <div style={{width: '100%', height: '100%'}}>
             <Modal open={this.state.modal}>
               <div style={getModalStyle()} className={classes.paper}>
                 <Grid
@@ -533,7 +523,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     container
                     item xs={6}
                   >
-                    <img src={ObserveImage} onClick={(): void =>this.beginObservingStudent()}/>
+                    <img src={ObserveImage} />
                     <Button
                       color="primary"
                       variant="contained"
@@ -554,296 +544,274 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 </Grid>
               </div>
             </Modal>
-            <Button variant="text" style={{margin: 10}} onClick={(): void =>this.switchToNameList()}>
-              <BackIcon/>  Back
-            </Button>
-            <Grid
-              container
-              alignItems="center"
-              direction="row"
-              justify={'center'}
-              xs={12}
-            >
+            <div style={{height: '100%'}}>
+              <Button variant="text" onClick={(): void =>this.switchToNameList()} style={{padding: '1em'}}>
+                <BackIcon/>  Back
+              </Button>
               <Grid
-                alignItems="center"
-                direction="row"
-                justify="space-between"
                 container
-                item xs={12}
-                style={{height: 10}}
+                alignItems="center"
+                direction="column"
+                justify={'center'}
+                style={{width: '100%'}}
               >
-                <Grid item xs={10}>
+                <Grid item>
+                  <Typography variant="h6" gutterBottom style={{fontFamily: "Arimo"}}>
+                    {this.props.time != 0?"Please observe ":"Now Rate "}this student&apos;s level of engagement.
+                  </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item>
+                  <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+                    {this.state.students[this.state.currentStudent].charAt(0).toUpperCase()+this.state.students[this.state.currentStudent].substr(1)}
+                  </Typography>
                 </Grid>
-              </Grid>
-              <Grid
-                alignItems="center"
-                direction="row"
-                justify="center"
-                container
-                item xs={12}
-              >
-                <Typography variant="h6" gutterBottom style={{fontFamily: "Arimo"}}>
-                  {this.props.time != 0?"Please observe ":"Now Rate "}this student&apos;s level of engagement.
-                </Typography>
-              </Grid>
-              <Grid
-                alignItems="center"
-                direction="row"
-                justify="center"
-                container
-                item xs={12}
-              >
-                <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                  {this.state.students[this.state.currentStudent].charAt(0).toUpperCase()+this.state.students[this.state.currentStudent].substr(1)}
-                </Typography>
-              </Grid>
-              <Grid
-                alignItems="stretch"
-                direction="row"
-                justify="space-between"
-                container
-                item xs={8}
-                style={{marginTop: 50, marginBottom: 50}}
-              >
-                <Button
-                  variant={this.state.selectedPoint === 0? "contained": "outlined"}
-                  disabled={this.props.time!=0?true:false}
-                  style={{
-                    minHeight: 100,
-                    maxHeight: 100,
-                    minWidth: 100,
-                    maxWidth: 100,
-                    fontFamily: "Arimo",
-                    fontSize: 14
-                  }}
-                  onClick={(): void => this.handleSelectedValue(0)}
-                >
+                <Grid item style={{marginTop: '3em', marginBottom: '3em', width: '100%'}}>
                   <Grid
                     alignItems="center"
-                    direction="column"
-                    justify="center"
+                    direction="row"
+                    justify="space-around"
                     container
-                    item xs={12}
+                    style={{width: '100%'}}
                   >
-                    <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                      <b>0</b>
-                    </Typography>
-                    <Typography variant="subtitle2" gutterBottom>
-                      Off Task
-                    </Typography>
+                    <Button
+                      variant={this.state.selectedPoint === 0? "contained": "outlined"}
+                      disabled={this.props.time!=0?true:false}
+                      style={{
+                        width: '18vh',
+                        height: '18vh',
+                        maxWidth: 130,
+                        maxHeight: 130,
+                        fontFamily: "Arimo",
+                        fontSize: 14
+                      }}
+                      onClick={(): void => this.handleSelectedValue(0)}
+                    >
+                      <Grid
+                        alignItems="center"
+                        direction="column"
+                        justify="center"
+                        container
+                        item xs={12}
+                      >
+                        <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+                          <b>0</b>
+                        </Typography>
+                        <Typography variant="subtitle2" gutterBottom>
+                          Off Task
+                        </Typography>
+                      </Grid>
+                    </Button>
+                    <Button
+                      variant={this.state.selectedPoint === 1? "contained": "outlined"}
+                      disabled={this.props.time!=0?true:false}
+                      style={{
+                        width: '18vh',
+                        height: '18vh',
+                        maxWidth: 130,
+                        maxHeight: 130,
+                        fontFamily: "Arimo",
+                        fontSize: 14
+                      }}
+                      onClick={(): void => this.handleSelectedValue(1)}
+                    >
+                      <Grid
+                        alignItems="center"
+                        direction="column"
+                        justify="center"
+                        container
+                        item xs={12}
+                      >
+                        <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+                          <b>1</b>
+                        </Typography>
+                        <Typography variant="subtitle2" gutterBottom>
+                          Mildy Engaged
+                        </Typography>
+                      </Grid>
+                    </Button>
+                    <Button
+                      disabled={this.props.time!=0?true:false}
+                      variant={this.state.selectedPoint === 2? "contained": "outlined"}
+                      style={{
+                        width: '18vh',
+                        height: '18vh',
+                        maxWidth: 130,
+                        maxHeight: 130,
+                        fontFamily: "Arimo",
+                        fontSize: 14,
+                      }}
+                      onClick={(): void => this.handleSelectedValue(2)}
+                    >
+                      <Grid
+                        alignItems="center"
+                        direction="column"
+                        justify="center"
+                        container
+                        item xs={12}
+                      >
+                        <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+                          <b>2</b>
+                        </Typography>
+                        <Typography variant="subtitle2" gutterBottom>
+                          Engaged
+                        </Typography>
+                      </Grid>
+                    </Button>
+                    <Button
+                      disabled={this.props.time!=0?true:false}
+                      variant={this.state.selectedPoint === 3? "contained": "outlined"}
+                      style={{
+                        width: '18vh',
+                        height: '18vh',
+                        maxWidth: 130,
+                        maxHeight: 130,
+                        fontFamily: "Arimo",
+                        fontSize: 14
+                      }}
+                      onClick={(): void => this.handleSelectedValue(3)}
+                    >
+                      <Grid
+                        alignItems="center"
+                        direction="column"
+                        justify="center"
+                        container
+                        item xs={12}
+                      >
+                        <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
+                          <b>3</b>
+                        </Typography>
+                        <Typography variant="subtitle2" gutterBottom>
+                          Highly Engaged
+                        </Typography>
+                      </Grid>
+                    </Button>
                   </Grid>
-                </Button>
-                <Button
-                  variant={this.state.selectedPoint === 1? "contained": "outlined"}
-                  disabled={this.props.time!=0?true:false}
-                  style={{
-                    minHeight: 100,
-                    maxHeight: 100,
-                    minWidth: 100,
-                    maxWidth: 100,
-                    fontFamily: "Arimo",
-                    fontSize: 14
-                  }}
-                  onClick={(): void => this.handleSelectedValue(1)}
+                </Grid>
+                <Grid
+                  alignItems="stretch"
+                  direction="row"
+                  justify="space-around"
+                  container
+                  item xs={8}
+                  style={{marginTop: 20, marginBottom: 20}}
                 >
-                  <Grid
-                    alignItems="center"
-                    direction="column"
-                    justify="center"
-                    container
-                    item xs={12}
+                  <BootstrapButton
+                    variant={this.state.entryType === 0? "contained": "outlined"}
+                    style={{
+                      minHeight: 100,
+                      maxHeight: 100,
+                      minWidth: 100,
+                      maxWidth: 100,
+                      fontFamily: "Arimo",
+                      fontSize: 14,
+                      backgroundColor: this.state.entryType === 0 && "#0069d9",
+                      borderColor: this.state.entryType === 0 && "#005cbf",
+                    }}
+                    onClick={(): void => this.handleSelectedType(0)}
                   >
-                    <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                      <b>1</b>
-                    </Typography>
-                    <Typography variant="subtitle2" gutterBottom>
-                      Mildy Engaged
-                    </Typography>
-                  </Grid>
-                </Button>
-                <Button
-                  disabled={this.props.time!=0?true:false}
-                  variant={this.state.selectedPoint === 2? "contained": "outlined"}
-                  style={{
-                    minHeight: 100,
-                    maxHeight: 100,
-                    minWidth: 100,
-                    maxWidth: 100,
-                    fontFamily: "Arimo",
-                    fontSize: 14,
-                  }}
-                  onClick={(): void => this.handleSelectedValue(2)}
-                >
-                  <Grid
-                    alignItems="center"
-                    direction="column"
-                    justify="center"
-                    container
-                    item xs={12}
+                    <Grid
+                      alignItems="center"
+                      direction="column"
+                      justify="center"
+                      container
+                      item xs={12}
+                    >
+                      <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
+                        Small Group
+                      </Typography>
+                    </Grid>
+                  </BootstrapButton>
+                  <BootstrapButton
+                    variant={this.state.entryType === 1? "contained": "outlined"}
+                    style={{
+                      minHeight: 100,
+                      maxHeight: 100,
+                      minWidth: 100,
+                      maxWidth: 100,
+                      fontFamily: "Arimo",
+                      fontSize: 14,
+                      backgroundColor: this.state.entryType === 1 && "#0069d9",
+                      borderColor: this.state.entryType === 1 && "#005cbf",
+                    }}
+                    onClick={(): void => this.handleSelectedType(1)}
                   >
-                    <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                      <b>2</b>
-                    </Typography>
-                    <Typography variant="subtitle2" gutterBottom>
-                      Engaged
-                    </Typography>
-                  </Grid>
-                </Button>
-                <Button
-                  disabled={this.props.time!=0?true:false}
-                  variant={this.state.selectedPoint === 3? "contained": "outlined"}
-                  style={{
-                    minHeight: 100,
-                    maxHeight: 100,
-                    minWidth: 100,
-                    maxWidth: 100,
-                    fontFamily: "Arimo",
-                    fontSize: 14
-                  }}
-                  onClick={(): void => this.handleSelectedValue(3)}
-                >
-                  <Grid
-                    alignItems="center"
-                    direction="column"
-                    justify="center"
-                    container
-                    item xs={12}
+                    <Grid
+                      alignItems="center"
+                      direction="column"
+                      justify="center"
+                      container
+                      item xs={12}
+                    >
+                      <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
+                        Whole Group
+                      </Typography>
+                    </Grid>
+                  </BootstrapButton>
+                  <BootstrapButton
+                    variant={this.state.entryType === 2? "contained": "outlined"}
+                    style={{
+                      minHeight: 100,
+                      maxHeight: 100,
+                      minWidth: 100,
+                      maxWidth: 100,
+                      fontFamily: "Arimo",
+                      fontSize: 14,
+                      backgroundColor: this.state.entryType === 2 && "#0069d9",
+                      borderColor: this.state.entryType === 2 && "#005cbf",
+                    }}
+                    onClick={(): void => this.handleSelectedType(2)}
                   >
-                    <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                      <b>3</b>
-                    </Typography>
-                    <Typography variant="subtitle2" gutterBottom>
-                      Highly Engaged
-                    </Typography>
-                  </Grid>
-                </Button>
-              </Grid>
-              <Grid
-                alignItems="stretch"
-                direction="row"
-                justify="space-around"
-                container
-                item xs={8}
-                style={{marginTop: 20, marginBottom: 20}}
-              >
-                <BootstrapButton
-                  variant={this.state.entryType === 0? "contained": "outlined"}
-                  style={{
-                    minHeight: 100,
-                    maxHeight: 100,
-                    minWidth: 100,
-                    maxWidth: 100,
-                    fontFamily: "Arimo",
-                    fontSize: 14,
-                    backgroundColor: this.state.entryType === 0 && "#0069d9",
-                    borderColor: this.state.entryType === 0 && "#005cbf",
-                  }}
-                  onClick={(): void => this.handleSelectedType(0)}
+                    <Grid
+                      alignItems="center"
+                      direction="column"
+                      justify="center"
+                      container
+                      item xs={12}
+                    >
+                      <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
+                        Transition
+                      </Typography>
+                    </Grid>
+                  </BootstrapButton>
+                </Grid>
+                <Grid
+                  alignItems="center"
+                  direction="row"
+                  justify="space-between"
+                  container
+                  item xs={6}
                 >
-                  <Grid
-                    alignItems="center"
-                    direction="column"
-                    justify="center"
-                    container
-                    item xs={12}
+                  <Button
+                    variant="outlined"
+                    style={{fontFamily: "Arimo", color: "red"}}
+                    onClick={(): void => this.handleSkipRating()}
                   >
-                    <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
-                      Small Group
-                    </Typography>
-                  </Grid>
-                </BootstrapButton>
-                <BootstrapButton
-                  variant={this.state.entryType === 1? "contained": "outlined"}
-                  style={{
-                    minHeight: 100,
-                    maxHeight: 100,
-                    minWidth: 100,
-                    maxWidth: 100,
-                    fontFamily: "Arimo",
-                    fontSize: 14,
-                    backgroundColor: this.state.entryType === 1 && "#0069d9",
-                    borderColor: this.state.entryType === 1 && "#005cbf",
-                  }}
-                  onClick={(): void => this.handleSelectedType(1)}
-                >
-                  <Grid
-                    alignItems="center"
-                    direction="column"
-                    justify="center"
-                    container
-                    item xs={12}
-                  >
-                    <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
-                      Whole Group
-                    </Typography>
-                  </Grid>
-                </BootstrapButton>
-                <BootstrapButton
-                  variant={this.state.entryType === 2? "contained": "outlined"}
-                  style={{
-                    minHeight: 100,
-                    maxHeight: 100,
-                    minWidth: 100,
-                    maxWidth: 100,
-                    fontFamily: "Arimo",
-                    fontSize: 14,
-                    backgroundColor: this.state.entryType === 2 && "#0069d9",
-                    borderColor: this.state.entryType === 2 && "#005cbf",
-                  }}
-                  onClick={(): void => this.handleSelectedType(2)}
-                >
-                  <Grid
-                    alignItems="center"
-                    direction="column"
-                    justify="center"
-                    container
-                    item xs={12}
-                  >
-                    <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
-                      Transition
-                    </Typography>
-                  </Grid>
-                </BootstrapButton>
-              </Grid>
-              <Grid
-                alignItems="center"
-                direction="row"
-                justify="space-between"
-                container
-                item xs={6}
-              >
-                <Button
-                  variant="outlined"
-                  style={{fontFamily: "Arimo", color: "red"}}
-                  onClick={(): void => this.handleSkipRating()}
-                >
-                  SKIP RATING
-                </Button>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  className={classes.button}
-                  style={{fontFamily: "Arimo"}}
-                  disabled={this.state.entryType === -1 || 
-                    this.state.selectedPoint === -1 || 
-                    this.props.time !==0
-                  }
-                  onClick={(): void => {
-                    this.handleConfirmRating();
-                    if(this.state.selectedPoint > 0) {
-                      this.props.updateEngagementCount(true)
-                    } else {
-                      this.props.updateEngagementCount(false)
+                    SKIP RATING
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    className={classes.button}
+                    style={{fontFamily: "Arimo"}}
+                    disabled={this.state.entryType === -1 || 
+                      this.state.selectedPoint === -1 || 
+                      this.props.time !==0
                     }
-                  }}
-                >
-                  CONFIRM RATING
-                </Button>
+                    onClick={(): void => {
+                      this.handleConfirmRating();
+                      if(this.state.selectedPoint > 0) {
+                        this.props.updateEngagementCount(true)
+                      } else {
+                        this.props.updateEngagementCount(false)
+                      }
+                    }}
+                  >
+                    CONFIRM RATING
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
-          </>
+            </div>
+          </div>
         );
       default:
         return <div>Unknown status value!!!</div>;

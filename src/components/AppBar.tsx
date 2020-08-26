@@ -89,9 +89,13 @@ const styles: object = {
       fontSize: 12
     }
   },
-  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)': {
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: landscape)': {
     backIcon: {
-      // color: 'white',
+      display: 'flex'
+    }
+  },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation: portrait)': {
+    backIcon: {
       display: 'flex'
     }
   }
@@ -259,7 +263,7 @@ class AppBar extends React.Component<Props, State> {
                 <Grid container direction="row" alignItems="center" justify="flex-start" style={{height: '100%', paddingLeft: '1em', paddingRight: '1em'}}>
                   <Grid item xs={12} style={{height: '100%'}}>
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{height: '100%'}}>
-                      <Grid item style={{height: '100%'}}>
+                      <Grid item xs={1} style={{height: '100%'}}>
                         <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
                           <IconButton
                             color="inherit"
@@ -272,7 +276,7 @@ class AppBar extends React.Component<Props, State> {
                           </IconButton>
                         </Grid>
                       </Grid>
-                      <Grid item>
+                      <Grid item xs={1}>
                         <IconButton
                           color="inherit"
                           aria-label="menu"
@@ -285,19 +289,21 @@ class AppBar extends React.Component<Props, State> {
                           />
                         </IconButton>
                       </Grid>
-                      {this.props.noBack ? (<div />) : (<Grid item className={classes.backIcon}>
-                        <IconButton
-                          color="inherit"
-                          aria-label="menu"
-                          className={classes.menuButton}
-                          onClick={(): void => this.props.history.goBack()}
-                        >
-                          <BackIcon
-                            color="secondary"
-                            fontSize='large'
-                          />
-                        </IconButton>
-                      </Grid>)}
+                      {this.props.noBack ? (<div />) : (
+                        <Grid item xs={1} className={classes.backIcon}>
+                          <IconButton
+                            color="inherit"
+                            aria-label="menu"
+                            className={classes.menuButton}
+                            onClick={(): void => this.props.history.goBack()}
+                          >
+                            <BackIcon
+                              color="secondary"
+                              fontSize='large'
+                            />
+                          </IconButton>
+                        </Grid>
+                      )}
                     </Grid>
                   </Grid>
                   {/* <Grid item xs={6} style={{height: '100%'}}>

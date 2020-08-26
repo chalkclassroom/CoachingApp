@@ -22,7 +22,6 @@ import Zoom from '@material-ui/core/Zoom';
 
 const styles: object = {
   root: {
-    // flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
     flexDirection: "column",
@@ -51,12 +50,49 @@ const styles: object = {
     paddingTop: '0.5em',
     paddingBottom: '0.5em'
   },
+  grid: {
+    direction: 'row'
+  },
+  dashboardGrid: {
+    width: '25%'
+  },
+  contentGrid: {
+    width: '75%'
+  },
+  checklistItem: {
+    height: '10vh'
+  },
   // ipad landscape
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
     main: {
       height: '90vh',
       paddingTop: 0,
       paddingBottom: 0
+    },
+  },
+  // ipad portrait
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    grid: {
+      direction: 'column'
+    },
+    dashboardGrid: {
+      height: '25%',
+      width: '100%'
+    },
+    contentGrid: {
+      height: '75%',
+      width: '100%'
+    },
+    checklistItem: {
+      height: '7vh'
+    },
+    instructionText: {
+      height: '7vh'
     }
   }
 };
@@ -80,7 +116,11 @@ interface Props {
     grow: string,
     backButton: string,
     instructionText: string,
-    main: string
+    main: string,
+    grid: string,
+    dashboardGrid: string,
+    contentGrid: string,
+    checklistItem: string
   },
   firebase: {
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
@@ -394,11 +434,12 @@ class CenterRatingChecklist extends React.Component<Props, State> {
           <Grid
             container
             alignItems={"center"}
-            direction={"row"}
-            justify={"center"}
+            // direction={"row"}
+            justify={"space-around"}
             style={{height: '100%'}}
+            className={classes.grid}
           >
-            <Grid item xs={3} style={{height: '100%'}}>
+            <Grid item className={classes.dashboardGrid}>
               <Grid
                 container
                 alignItems={"center"}
@@ -416,9 +457,9 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item className={classes.contentGrid}>
               <Zoom in={true}>
-                <Grid container alignItems="center" direction="column" xs={12}>
+                <Grid container alignItems="center" direction="column">
                   <Typography variant="h5" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
                     {this.props.currentCenter[0].toUpperCase() +
                       this.props.currentCenter.substr(1)}
@@ -478,7 +519,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       </Button>
                     </Grid>
                   </Grid>
-                  {/* <div style={{ height: 20 }} /> */}
                   <Grid container direction={"row"} spacing={16} xs={12}>
                     <Grid item xs={6}>
                       <Card>
@@ -499,7 +539,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                               key={index}
                               onClick={this.handleChildToggle(index+1)}
                               disabled={this.childDisabled()}
-                              style={{height: '10vh'}}
+                              className={classes.checklistItem}
                             >
                               <Checkbox
                                 checked={
@@ -533,7 +573,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                               key={index}
                               onClick={this.handleTeacherToggle(index+6)}
                               disabled={this.teacherDisabled()}
-                              style={{height: '10vh'}}
+                              className={classes.checklistItem}
                             >
                               <Checkbox
                                 checked={

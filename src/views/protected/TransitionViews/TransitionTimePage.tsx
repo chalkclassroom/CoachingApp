@@ -20,7 +20,8 @@ const styles: object = {
     height: "100vh",
     flexDirection: "column",
     overflowY: 'auto',
-    overflowX: 'hidden'
+    // overflowX: 'hidden'
+    overflowX: 'auto'
   },
   backButton: {
     marginTop: '0.5em',
@@ -34,6 +35,23 @@ const styles: object = {
     paddingTop: '0.5em',
     paddingBottom: '0.5em'
   },
+  grid: {
+    direction: 'row'
+  },
+  dashboardGrid: {
+    width: '25%',
+    height: '100%'
+  },
+  contentGrid: {
+    width: '75%',
+    height: '100%'
+  },
+  typeGrid: {
+    width: '45%',
+  },
+  timerGrid: {
+    width: '55%',
+  },
   // ipad landscape
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
     main: {
@@ -41,11 +59,44 @@ const styles: object = {
       paddingTop: 0,
       paddingBottom: 0
     }
+  },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    grid: {
+      direction: 'column'
+    },
+    dashboardGrid: {
+      width: '100%',
+      height: '25%'
+    },
+    contentGrid: {
+      width: '100%',
+      height: '75%'
+    },
+    typeGrid: {
+      width: '50%'
+    },
+    timerGrid: {
+      width: '50%'
+    }
   }
 };
 
 interface Props {
-  classes: { root: string, backButton: string, main: string },
+  classes: {
+    root: string,
+    backButton: string,
+    main: string,
+    grid: string,
+    dashboardGrid: string,
+    contentGrid: string,
+    typeGrid: string,
+    timerGrid: string
+  },
   toggleNewTransitionType(transitionType: string | null): void,
   transitionType: string | null
 };
@@ -140,8 +191,8 @@ class TransitionTimePage extends React.Component<Props, State> {
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main className={classes.main}>
-          <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
-            <Grid item xs={3} style={{height: '100%'}}>
+          <Grid container justify="center" alignItems="center" className={classes.grid} style={{height: '100%'}}>
+            <Grid item className={classes.dashboardGrid}>
               <Grid
                 container
                 alignItems={"center"}
@@ -159,50 +210,54 @@ class TransitionTimePage extends React.Component<Props, State> {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={4}>
-              <Grid
-                container
-                alignItems={"center"}
-                justify={"center"}
-                direction={"column"}
-              >
-                <TransitionTypeSel
-                  handleTransitionType={this.handleTransitionType}
-                  handleNotes={this.handleNotes}
-                  transitionType={this.props.transitionType}
-                />
-              </Grid>
-            </Grid>
-            <Grid item xs={5}>
-              <Grid
-                container
-                alignItems={"center"}
-                justify={"center"}
-                direction={"column"}
-              >
-                <FirebaseContext.Consumer>
-                  {(firebase: {
-                    auth: {
-                      currentUser: {
-                        uid: string
-                      }
-                    },
-                    handleSession(mEntry: {
-                      observedBy: string,
-                      teacher: string,
-                      start?: Date,
-                      type: string
-                    }): Promise<void>
-                  }): React.ReactNode => (
-                    <TransitionTimer
-                      firebase={firebase}
-                      typeSelected={
-                        this.props.transitionType === null ? false : true
-                      }
-                      handleEndTransition={this.handleEndTransition}
+            <Grid item className={classes.contentGrid}>
+              <Grid container direction="row" alignItems="center" justify="space-evenly" style={{height: '100%'}}>
+                <Grid item className={classes.typeGrid}>
+                  <Grid
+                    container
+                    alignItems={"center"}
+                    justify={"center"}
+                    direction={"column"}
+                  >
+                    <TransitionTypeSel
+                      handleTransitionType={this.handleTransitionType}
+                      handleNotes={this.handleNotes}
+                      transitionType={this.props.transitionType}
                     />
-                  )}
-                </FirebaseContext.Consumer>
+                  </Grid>
+                </Grid>
+                <Grid item className={classes.timerGrid}>
+                  <Grid
+                    container
+                    alignItems={"center"}
+                    justify={"center"}
+                    direction={"column"}
+                  >
+                    <FirebaseContext.Consumer>
+                      {(firebase: {
+                        auth: {
+                          currentUser: {
+                            uid: string
+                          }
+                        },
+                        handleSession(mEntry: {
+                          observedBy: string,
+                          teacher: string,
+                          start?: Date,
+                          type: string
+                        }): Promise<void>
+                      }): React.ReactNode => (
+                        <TransitionTimer
+                          firebase={firebase}
+                          typeSelected={
+                            this.props.transitionType === null ? false : true
+                          }
+                          handleEndTransition={this.handleEndTransition}
+                        />
+                      )}
+                    </FirebaseContext.Consumer>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

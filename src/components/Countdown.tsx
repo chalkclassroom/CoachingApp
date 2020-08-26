@@ -18,6 +18,17 @@ const styles: object = {
   timeText: {
     textAlign: "center",
     fontFamily: 'Arimo',
+  },
+  timerContainer: {
+    marginTop: '10vh'
+  },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    line: {
+      transform: 'rotate(0deg)',
+    },
+    timerContainer: {
+      marginTop: 0
+    }
   }
 };
 
@@ -31,7 +42,8 @@ interface Props {
 interface Style {
   line: string,
   lineGrid: string,
-  timeText: string
+  timeText: string,
+  timerContainer: string
 }
 
 /**
@@ -55,7 +67,7 @@ function Countdown(props: Props): React.ReactElement {
       style={{width: '100%', height: '100%'}}
     >
       <Grid item className={classes.lineGrid}>
-        <div style={{ marginTop: "10vh" }} />
+        <div className={classes.timerContainer} />
         <Line
           className={classes.line}
           percent={100 * (time / timerTime)}

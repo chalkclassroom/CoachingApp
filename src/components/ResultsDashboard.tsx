@@ -143,13 +143,9 @@ const styles: object = {
     flex: "1",
     flexWrap: 'nowrap'
   },
-  iconGrid: {
-    marginTop:"10px",
-    marginBottom:"5px"
-  },
   icon: {
-    width: "100px",
-    height: "100px"
+    width: "6em",
+    height: "6em"
   },
   infoDisplayGrid: {
     height: "41vh",
@@ -176,7 +172,6 @@ const styles: object = {
     marginTop: "5px"
   },
   resultsButtons: {
-    marginTop: "1.5vh",
     marginRight: '0.5em',
     marginLeft: '0.5em'
   },
@@ -191,11 +186,25 @@ const styles: object = {
     fontFamily: "Arimo",
     width: '20vw'
   },
+  button: {
+    paddingTop: '0.7em'
+  },
+  grid: {
+    direction: 'column'
+  },
+  // ipad portait
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    grid: {
+      direction: 'row'
+    },
+    card: {
+      marginBottom: 0
+    }
+  }
 };
 
 interface Style {
   card: string,
-  iconGrid: string,
   icon: string,
   infoDisplayGrid: string,
   helpIcon: string,
@@ -203,7 +212,9 @@ interface Style {
   gridTopMargin: string,
   resultsButtons: string,
   viewButtons: string,
-  viewButtonsSelected: string
+  viewButtonsSelected: string,
+  grid: string,
+  button: string
 }
 
 interface Props {
@@ -338,7 +349,6 @@ class ResultsDashboard extends React.Component<Props, State> {
     addNoteToPlan: PropTypes.func.isRequired,
     classes: PropTypes.exact({
       card: PropTypes.string,
-      iconGrid: PropTypes.string,
       icon: PropTypes.string,
       infoDisplayGrid: PropTypes.string,
       helpIcon: PropTypes.string,
@@ -346,7 +356,9 @@ class ResultsDashboard extends React.Component<Props, State> {
       gridTopMargin: PropTypes.string,
       resultsButtons: PropTypes.string,
       viewButtons: PropTypes.string,
-      viewButtonsSelected: PropTypes.string
+      viewButtonsSelected: PropTypes.string,
+      grid: PropTypes.string,
+      button: PropTypes.string
     }).isRequired,
     notes: PropTypes.array.isRequired,
     changeTeacher: PropTypes.func.isRequired,
@@ -373,7 +385,7 @@ class ResultsDashboard extends React.Component<Props, State> {
   render(): React.ReactNode {
     const { classes } = this.props;
     return(
-      <div>
+      <div style={{width: '100%'}}>
         {this.state.help ? (
           this.props.magic8 === "Transition Time" ? 
             <TransitionTimeHelp open={this.state.help} close={this.handleCloseHelp} />
@@ -405,116 +417,126 @@ class ResultsDashboard extends React.Component<Props, State> {
         <Card className={classes.card}>
           <Grid
             container
-            spacing={0}
-            direction="column"
-            justify="center"
+            justify="space-evenly"
             alignItems="center"
-            style={{marginRight: 20, marginLeft: 20}}
+            className={classes.grid}
           >
-            <Grid item className={classes.iconGrid}>
-              <img src={this.state.icon} alt="Magic 8 Icon" className={classes.icon}/>
+            <Grid item className={classes.resultsButtons}>
+              <Grid container direction="column" justify="center" alignItems="center">
+                <Grid item className={classes.button}>
+                  <img src={this.state.icon} alt="Magic 8 Icon" className={classes.icon}/>
+                </Grid>
+                <Grid item className={classes.button}>
+                  <TextField
+                    select
+                    className={classes.viewButtons}
+                    label="TEACHER"
+                    value={this.props.teacherSelected}
+                    onChange={this.changeTeacher}
+                    InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                    InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal', textAlign: 'center'}}}
+                  >
+                    {this.props.teacherList.map((teacher, index)=> 
+                      {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
+                        <em>{teacher.firstName + " " + teacher.lastName}</em>
+                      </MenuItem>})}
+                  </TextField>
+                </Grid>
+                <Grid item className={classes.button} style={{paddingBottom: '0.5em'}}>
+                  <TextField
+                    select
+                    className={classes.viewButtons}
+                    label="DATE"
+                    value={this.props.sessionId}
+                    onChange={this.props.changeSessionId}
+                    InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                    InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal', textAlign: 'center'}}}
+                  >
+                    {this.props.sessionDates.map((date, index)=> 
+                      {return <MenuItem key={index} id={date.id} value={date.id} style={{fontFamily: 'Arimo'}}>
+                        <em>{moment(date.sessionStart.value).format("MMMM DD YYYY")}</em>
+                      </MenuItem>})}
+                  </TextField>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <TextField
-                select
-                className={classes.viewButtons}
-                label="TEACHER"
-                value={this.props.teacherSelected}
-                onChange={this.changeTeacher}
-                InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
-                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal', textAlign: 'center'}}}
-              >
-                {this.props.teacherList.map((teacher, index)=> 
-                  {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
-                    <em>{teacher.firstName + " " + teacher.lastName}</em>
-                  </MenuItem>})}
-              </TextField>
+              <Grid container direction="column" justify="center" alignItems="center">
+                <Grid item className={classes.button}>
+                  <MuiThemeProvider theme={this.state.theme}>
+                    <Button
+                      size="large"
+                      color="primary"
+                      variant={
+                        this.props.view === 'data'
+                          ? "contained"
+                          : "outlined"
+                      }
+                      className={this.props.view === 'data' ? classes.viewButtonsSelected : classes.viewButtons}
+                      onClick={(): void => this.props.viewClick('data')}
+                    >
+                      Data
+                    </Button>
+                  </MuiThemeProvider>
+                </Grid>
+                <Grid item className={classes.button}>
+                  <MuiThemeProvider theme={this.state.theme}>
+                    <Button
+                      size="large"
+                      color="primary"
+                      variant={
+                        this.props.view === 'questions'
+                          ? "contained"
+                          : "outlined"
+                      }
+                      className={this.props.view === 'questions' ? classes.viewButtonsSelected : classes.viewButtons}
+                      onClick={(): void => this.props.viewClick('questions')}
+                    >
+                      Coaching Questions
+                    </Button>
+                  </MuiThemeProvider>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item className={classes.resultsButtons}>
-              <TextField
-                select
-                className={classes.viewButtons}
-                label="DATE"
-                value={this.props.sessionId}
-                onChange={this.props.changeSessionId}
-                InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
-                InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal', textAlign: 'center'}}}
-              >
-                {this.props.sessionDates.map((date, index)=> 
-                  {return <MenuItem key={index} id={date.id} value={date.id} style={{fontFamily: 'Arimo'}}>
-                    <em>{moment(date.sessionStart.value).format("MMMM DD YYYY")}</em>
-                  </MenuItem>})}
-              </TextField>
+              <Grid container direction="column" justify="center" alignItems="center">
+                <Grid item className={classes.button}>
+                  <MuiThemeProvider theme={this.state.theme}>
+                    <Button
+                      size="large"
+                      color="primary"
+                      variant={
+                        this.props.view === 'conferencePlan'
+                          ? "contained"
+                          : "outlined"
+                      }
+                      className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                      onClick={(): void => this.props.viewClick('conferencePlan')}
+                    >
+                      Conference Plan
+                    </Button>
+                  </MuiThemeProvider>
+                </Grid>
+                <Grid item className={classes.button}>
+                  <MuiThemeProvider theme={this.state.theme}>
+                    <Button
+                      size="large"
+                      color="primary"
+                      variant={
+                        this.props.view === 'actionPlan'
+                          ? "contained"
+                          : "outlined"
+                      }
+                      className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                      onClick={(): void => this.props.viewClick('actionPlan')}
+                    >
+                      Action Plan
+                    </Button>
+                  </MuiThemeProvider>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item className={classes.resultsButtons}>
-              <MuiThemeProvider theme={this.state.theme}>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant={
-                    this.props.view === 'data'
-                      ? "contained"
-                      : "outlined"
-                  }
-                  className={this.props.view === 'data' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={(): void => this.props.viewClick('data')}
-                >
-                  Data
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item className={classes.resultsButtons}>
-              <MuiThemeProvider theme={this.state.theme}>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant={
-                    this.props.view === 'questions'
-                      ? "contained"
-                      : "outlined"
-                  }
-                  className={this.props.view === 'questions' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={(): void => this.props.viewClick('questions')}
-                >
-                  Coaching Questions
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item className={classes.resultsButtons}>
-              <MuiThemeProvider theme={this.state.theme}>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant={
-                    this.props.view === 'conferencePlan'
-                      ? "contained"
-                      : "outlined"
-                  }
-                  className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={(): void => this.props.viewClick('conferencePlan')}
-                >
-                  Conference Plan
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item className={classes.resultsButtons}>
-              <MuiThemeProvider theme={this.state.theme}>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant={
-                    this.props.view === 'actionPlan'
-                      ? "contained"
-                      : "outlined"
-                  }
-                  className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={(): void => this.props.viewClick('actionPlan')}
-                >
-                  Action Plan
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item style={{marginTop: '2vh'}}>
+            <Grid item style={{marginTop: '2vh'}} className={classes.resultsButtons}>
               <Button onClick={(): void => this.setState({help: true})}>
                 <img
                   src={this.state.lookForsIcon}

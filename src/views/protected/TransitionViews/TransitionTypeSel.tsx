@@ -14,8 +14,10 @@ import * as Constants from '../../../constants/Constants';
 const styles: object = {
   button: {
     margin: '0.5em',
-    width: 130,
-    height: 130,
+    width: '18vh',
+    height: '18vh',
+    maxWidth: 130,
+    maxHeight: 130,
     textAlign: "center"
   },
   label: {
@@ -62,9 +64,6 @@ function TransitionTypeSel(props: Props): React.ReactElement {
         <Grid
           item
           xs={6}
-          // alignItems="center"
-          // justify="center"
-          // direction="column"
         >
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
@@ -83,8 +82,12 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   <img
                     alt="Waiting in line"
                     src={WaitingInLineImage}
-                    height="100"
-                    width="100"
+                    width= '90%'
+                    height= '90%'
+                    style={{
+                      maxWidth: 100,
+                      maxHeight: 100
+                    }}
                   />
                 </Button>
               </MuiThemeProvider>
@@ -118,8 +121,9 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   <img
                     alt="Walking"
                     src={WalkingImage}
-                    height="100"
-                    width="100"
+                    style={{
+                      maxHeight: 100
+                    }}
                   />
                 </Button>
               </MuiThemeProvider>
@@ -153,8 +157,12 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   <img
                     alt="Child waiting"
                     src={ChildWaitingImage}
-                    height="100"
-                    width="100"
+                    width= '90%'
+                    height= '90%'
+                    style={{
+                      maxWidth: 100,
+                      maxHeight: 100
+                    }}
                   />
                 </Button>
               </MuiThemeProvider>
@@ -171,9 +179,6 @@ function TransitionTypeSel(props: Props): React.ReactElement {
         <Grid
           item
           xs={6}
-          // alignItems="center"
-          // justify="center"
-          // direction="column"
         >
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
@@ -192,8 +197,12 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   <img
                     alt="classroom routines"
                     src={ClassroomRoutinesImage}
-                    height="100"
-                    width="100"
+                    width= '90%'
+                    height= '90%'
+                    style={{
+                      maxWidth: 100,
+                      maxHeight: 100
+                    }}
                   />
                 </Button>
               </MuiThemeProvider>
@@ -227,8 +236,12 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   <img
                     alt="Behavior Management Disruption"
                     src={BMDImage}
-                    height="100"
-                    width="100"
+                    width= '90%'
+                    height= '90%'
+                    style={{
+                      maxWidth: 100,
+                      maxHeight: 100
+                    }}
                   />
                 </Button>
               </MuiThemeProvider>
@@ -259,7 +272,16 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                     boxShadow: transitionType === "other" ? "8px 8px #a9a9a9" : null
                   }}
                 >
-                  <img alt="other" src={OtherImage} height="100" width="100" />
+                  <img
+                    alt="other"
+                    src={OtherImage}
+                    width= '90%'
+                    height= '90%'
+                    style={{
+                      maxWidth: 100,
+                      maxHeight: 100
+                    }}
+                  />
                 </Button>
               </MuiThemeProvider>
             </Grid>
