@@ -22,7 +22,6 @@ import Zoom from '@material-ui/core/Zoom';
 
 const styles: object = {
   root: {
-    // flexGrow: 1,
     backgroundColor: "#ffffff",
     display: "flex",
     flexDirection: "column",
@@ -55,11 +54,9 @@ const styles: object = {
     direction: 'row'
   },
   dashboardGrid: {
-    // xs: 3
     width: '25%'
   },
   contentGrid: {
-    // xs: 6
     width: '75%'
   },
   checklistItem: {
@@ -72,12 +69,6 @@ const styles: object = {
       paddingTop: 0,
       paddingBottom: 0
     },
-    /* dashboardGrid: {
-      xs: 3
-    },
-    contentGrid: {
-      xs: 9
-    }, */
   },
   // ipad portrait
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
@@ -90,12 +81,10 @@ const styles: object = {
       direction: 'column'
     },
     dashboardGrid: {
-      // xs: 12
       height: '25%',
       width: '100%'
     },
     contentGrid: {
-      // xs: 12
       height: '75%',
       width: '100%'
     },
@@ -530,7 +519,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       </Button>
                     </Grid>
                   </Grid>
-                  {/* <div style={{ height: 20 }} /> */}
                   <Grid container direction={"row"} spacing={16} xs={12}>
                     <Grid item xs={6}>
                       <Card>
@@ -551,7 +539,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                               key={index}
                               onClick={this.handleChildToggle(index+1)}
                               disabled={this.childDisabled()}
-                              // style={{height: '10vh'}}
                               className={classes.checklistItem}
                             >
                               <Checkbox
@@ -586,7 +573,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                               key={index}
                               onClick={this.handleTeacherToggle(index+6)}
                               disabled={this.teacherDisabled()}
-                              // style={{height: '10vh'}}
                               className={classes.checklistItem}
                             >
                               <Checkbox

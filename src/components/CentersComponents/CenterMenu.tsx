@@ -38,11 +38,10 @@ const styles: object = {
     direction: 'row'
   },
   dashboardGrid: {
-    // xs: 3
-    width: '25%'
+    width: '25%',
+    height: '100%'
   },
   contentGrid: {
-    // xs: 9
     width: '75%'
   },
   // ipad landscape
@@ -52,12 +51,6 @@ const styles: object = {
       paddingTop: 0,
       paddingBottom: 0
     },
-    /* dashboardGrid: {
-      xs: 3
-    },
-    contentGrid: {
-      xs: 9
-    }, */
   },
   // ipad portrait
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
@@ -70,12 +63,10 @@ const styles: object = {
       direction: 'column'
     },
     dashboardGrid: {
-      // xs: 12
       width: '100%',
       height: '25%'
     },
     contentGrid: {
-      // xs: 12
       width: '100%',
       height: '75%'
     },
