@@ -33,7 +33,6 @@ import { connect } from 'react-redux';
 import { clearCoach } from '../state/actions/coach';
 import TeacherModal from "../views/protected/HomeViews/TeacherModal";
 import FirebaseContext from "./Firebase/FirebaseContext";
-// import DashboardIcon from '@material-ui/icons/Dashboard';
 import * as Constants from '../constants/Constants';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../constants/Types';
@@ -306,7 +305,7 @@ class BurgerMenu extends React.Component<Props, State>{
               <ListItemIcon>
                 <ChalkIcon style={{ fill: Constants.Colors.MI }} />
               </ListItemIcon>
-              <ListItemText primary="CHALK" />
+              <ListItemText primary="About" />
               {this.state.chalkOpen ? (
                 <ExpandLessIcon />
               ) : (
@@ -317,7 +316,7 @@ class BurgerMenu extends React.Component<Props, State>{
               <ListItem
                 button
                 onClick={(): void => {
-                  this.setState({ menu: 9 });
+                  this.setState({ menu: 9, chalkOpen: false });
                   this.props.history.push("/Landing");
                 }}
                 className={classes.nested}
@@ -326,7 +325,7 @@ class BurgerMenu extends React.Component<Props, State>{
                   <AboutIcon style={{ fill: Constants.Colors.LC }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary="About"
+                  primary="How It Works"
                 />
               </ListItem>
               <ListItem
