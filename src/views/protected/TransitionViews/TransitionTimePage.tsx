@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { resetTransitionTime, toggleNewTransitionType } from "../../../state/actions/transition-time";
 import TransitionTypeSel from "./TransitionTypeSel";
 import Dashboard from "../../../components/Dashboard";
+import TeacherModal from '../HomeViews/TeacherModal';
 import * as Constants from "../../../constants/Constants";
 import * as Types from '../../../constants/Types';
 
@@ -98,14 +99,16 @@ interface Props {
     timerGrid: string
   },
   toggleNewTransitionType(transitionType: string | null): void,
-  transitionType: string | null
+  transitionType: string | null,
+  teacherSelected: Types.Teacher
 };
 
 interface State {
   notes: boolean,
   transitionType: string,
   open: boolean,
-  transitionEnded: boolean
+  transitionEnded: boolean,
+  teacherModal: boolean
 };
 
 /**
@@ -123,7 +126,8 @@ class TransitionTimePage extends React.Component<Props, State> {
       notes: false,
       transitionType: null,
       open: false,
-      transitionEnded: false
+      transitionEnded: false,
+      teacherModal: false
     };
   }
 
@@ -153,9 +157,30 @@ class TransitionTimePage extends React.Component<Props, State> {
     }
   };
 
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  };
+
+  /** lifecycle method invoked after component mounts */
+  componentDidMount(): void {
+    if (!this.props.teacherSelected) {
+      this.setState({ teacherModal: true })
+    }
+  };
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     toggleNewTransitionType: PropTypes.func.isRequired,
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   };
 
   /**
@@ -166,110 +191,128 @@ class TransitionTimePage extends React.Component<Props, State> {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
-        {this.state.notes ? (
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          {this.state.notes ? (
+            <FirebaseContext.Consumer>
+              {(firebase: {
+                handleFetchNotes(): Promise<Array<{
+                  id: string,
+                  content: string,
+                  timestamp: {seconds: number, nanoseconds: number}
+                }>>,
+                handlePushNotes(note: string): Promise<void>
+              }): React.ReactElement => (
+                <Notes
+                  open={true}
+                  onClose={this.handleNotes}
+                  color={Constants.Colors.TT}
+                  text={"Transition Time" + " Notes"}
+                  firebase={firebase}
+                />
+              )}
+            </FirebaseContext.Consumer>
+          ) : (<div />)}
           <FirebaseContext.Consumer>
-            {(firebase: {
-              handleFetchNotes(): Promise<Array<{
-                id: string,
-                content: string,
-                timestamp: {seconds: number, nanoseconds: number}
-              }>>,
-              handlePushNotes(note: string): Promise<void>
-            }): React.ReactElement => (
-              <Notes
-                open={true}
-                onClose={this.handleNotes}
-                color={Constants.Colors.TT}
-                text={"Transition Time" + " Notes"}
-                firebase={firebase}
-              />
-            )}
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
-        ) : (<div />)}
-        <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
-        </FirebaseContext.Consumer>
-        <main className={classes.main}>
-          <Grid container justify="center" alignItems="center" className={classes.grid} style={{height: '100%'}}>
-            <Grid item className={classes.dashboardGrid}>
-              <Grid
-                container
-                alignItems={"center"}
-                justify={"center"}
-                direction={"column"}
-                style={{height: '100%'}}
-              >
-                <Grid item>
-                  <Dashboard
-                    type="TT"
-                    infoDisplay={<TransitionLog />}
-                    infoPlacement="center"
-                    completeObservation={true}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item className={classes.contentGrid}>
-              <Grid container direction="row" alignItems="center" justify="space-evenly" style={{height: '100%'}}>
-                <Grid item className={classes.typeGrid}>
-                  <Grid
-                    container
-                    alignItems={"center"}
-                    justify={"center"}
-                    direction={"column"}
-                  >
-                    <TransitionTypeSel
-                      handleTransitionType={this.handleTransitionType}
-                      handleNotes={this.handleNotes}
-                      transitionType={this.props.transitionType}
+          <main className={classes.main}>
+            <Grid container justify="center" alignItems="center" className={classes.grid} style={{height: '100%'}}>
+              <Grid item className={classes.dashboardGrid}>
+                <Grid
+                  container
+                  alignItems={"center"}
+                  justify={"center"}
+                  direction={"column"}
+                  style={{height: '100%'}}
+                >
+                  <Grid item>
+                    <Dashboard
+                      type="TT"
+                      infoDisplay={<TransitionLog />}
+                      infoPlacement="center"
+                      completeObservation={true}
                     />
                   </Grid>
                 </Grid>
-                <Grid item className={classes.timerGrid}>
-                  <Grid
-                    container
-                    alignItems={"center"}
-                    justify={"center"}
-                    direction={"column"}
-                  >
-                    <FirebaseContext.Consumer>
-                      {(firebase: {
-                        auth: {
-                          currentUser: {
-                            uid: string
-                          }
-                        },
-                        handleSession(mEntry: {
-                          observedBy: string,
-                          teacher: string,
-                          start?: Date,
-                          type: string
-                        }): Promise<void>
-                      }): React.ReactNode => (
-                        <TransitionTimer
-                          firebase={firebase}
-                          typeSelected={
-                            this.props.transitionType === null ? false : true
-                          }
-                          handleEndTransition={this.handleEndTransition}
-                        />
-                      )}
-                    </FirebaseContext.Consumer>
+              </Grid>
+              <Grid item className={classes.contentGrid}>
+                <Grid container direction="row" alignItems="center" justify="space-evenly" style={{height: '100%'}}>
+                  <Grid item className={classes.typeGrid}>
+                    <Grid
+                      container
+                      alignItems={"center"}
+                      justify={"center"}
+                      direction={"column"}
+                    >
+                      <TransitionTypeSel
+                        handleTransitionType={this.handleTransitionType}
+                        handleNotes={this.handleNotes}
+                        transitionType={this.props.transitionType}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item className={classes.timerGrid}>
+                    <Grid
+                      container
+                      alignItems={"center"}
+                      justify={"center"}
+                      direction={"column"}
+                    >
+                      <FirebaseContext.Consumer>
+                        {(firebase: {
+                          auth: {
+                            currentUser: {
+                              uid: string
+                            }
+                          },
+                          handleSession(mEntry: {
+                            observedBy: string,
+                            teacher: string,
+                            start?: Date,
+                            type: string
+                          }): Promise<void>
+                        }): React.ReactNode => (
+                          <TransitionTimer
+                            firebase={firebase}
+                            typeSelected={
+                              this.props.transitionType === null ? false : true
+                            }
+                            handleEndTransition={this.handleEndTransition}
+                          />
+                        )}
+                      </FirebaseContext.Consumer>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </main>
-      </div>
+          </main>
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Observe"}
+            />
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): {transitionType: string | null} => {
+const mapStateToProps = (state: Types.ReduxState): {
+  transitionType: string | null,
+  teacherSelected: Types.Teacher
+} => {
   return {
     transitionType: state.transitionTypeState.transitionType,
+    teacherSelected: state.teacherSelectedState.teacher
   };
 };
 

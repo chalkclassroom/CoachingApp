@@ -8,6 +8,7 @@ import CenterMenuStudentEngagement from "../../../components/StudentEngagementCo
 import { connect } from "react-redux";
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
+import TeacherModal from '../HomeViews/TeacherModal';
 import * as Types from '../../../constants/Types';
 
 /*
@@ -92,7 +93,8 @@ interface Props {
 
 interface State {
   time: number,
-  completeEnabled: boolean
+  completeEnabled: boolean,
+  teacherModal: boolean
 }
 
 /**
@@ -106,6 +108,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
     time: RATING_INTERVAL,
     recs: true,
     completeEnabled: false,
+    teacherModal: false
   };
 
   tick = (): void => {
@@ -136,6 +139,17 @@ class StudentEngagementPage extends React.Component<Props, State> {
     this.timer = setInterval(this.tick, 1000);
   }
 
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  };
+
+  /** lifecycle method invoked after component mounts */
+  componentDidMount(): void {
+    if (!this.props.teacherSelected) {
+      this.setState({ teacherModal: true })
+    }
+  };
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     teacherSelected: PropTypes.exact({
@@ -156,70 +170,83 @@ class StudentEngagementPage extends React.Component<Props, State> {
    */
   render(): React.ReactElement {
     return (
-      <div className={this.props.classes.root}>
-        <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
-        </FirebaseContext.Consumer>
-        <div className={this.props.classes.main}>
-          <Grid
-            container
-            alignItems={"center"}
-            justify={"center"}
-            // direction={"row"}
-            className={this.props.classes.grid}
-            style={{height: '100%'}}
-          >
+      this.props.teacherSelected ? (
+        <div className={this.props.classes.root}>
+          <FirebaseContext.Consumer>
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+          </FirebaseContext.Consumer>
+          <div className={this.props.classes.main}>
             <Grid
               container
               alignItems={"center"}
-              justify={"space-around"}
-              direction={"row"}
+              justify={"center"}
+              className={this.props.classes.grid}
               style={{height: '100%'}}
             >
-              <Grid item className={this.props.classes.dashboardGrid}>
-                <Grid
-                  container
-                  alignItems={"center"}
-                  justify={"center"}
-                  direction={"column"}
-                  style={{height: '100%'}}
-                >
-                  <Dashboard
-                    type="SE"
-                    infoDisplay={
-                        this.state.completeEnabled && <Countdown type="SE" timerTime={RATING_INTERVAL} time={this.state.time} />
-                    }
-                    infoPlacement="center"
-                    completeObservation={this.state.completeEnabled}
-                  />
+              <Grid
+                container
+                alignItems={"center"}
+                justify={"space-around"}
+                direction={"row"}
+                style={{height: '100%'}}
+              >
+                <Grid item className={this.props.classes.dashboardGrid}>
+                  <Grid
+                    container
+                    alignItems={"center"}
+                    justify={"center"}
+                    direction={"column"}
+                    style={{height: '100%'}}
+                  >
+                    <Dashboard
+                      type="SE"
+                      infoDisplay={
+                          this.state.completeEnabled && <Countdown type="SE" timerTime={RATING_INTERVAL} time={this.state.time} />
+                      }
+                      infoPlacement="center"
+                      completeObservation={this.state.completeEnabled}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid className={this.props.classes.contentGrid}>
+                  <FirebaseContext.Consumer>
+                    {(firebase: {
+                      auth: {
+                        currentUser: {
+                          uid: string
+                        }
+                      },
+                      handleSession(entry: object): void,
+                      handlePushSEEachEntry(mEntry: object): void
+                    }): React.ReactNode => (
+                      <CenterMenuStudentEngagement
+                        teacherId={this.props.teacherSelected.id}
+                        firebase={firebase}
+                        onStatusChange={this.handleCompleteButton}
+                        time={this.state.time}
+                        handleTimerReset = {this.handleTimerReset}
+                        handleTimerStart = {this.handleTimerStart}
+                      />
+                    )}
+                  </FirebaseContext.Consumer>
                 </Grid>
               </Grid>
-              <Grid className={this.props.classes.contentGrid}>
-                <FirebaseContext.Consumer>
-                  {(firebase: {
-                    auth: {
-                      currentUser: {
-                        uid: string
-                      }
-                    },
-                    handleSession(entry: object): void,
-                    handlePushSEEachEntry(mEntry: object): void
-                  }): React.ReactNode => (
-                    <CenterMenuStudentEngagement
-                      teacherId={this.props.teacherSelected.id}
-                      firebase={firebase}
-                      onStatusChange={this.handleCompleteButton}
-                      time={this.state.time}
-                      handleTimerReset = {this.handleTimerReset}
-                      handleTimerStart = {this.handleTimerStart}
-                    />
-                  )}
-                </FirebaseContext.Consumer>
-              </Grid>
             </Grid>
-          </Grid>
+          </div>
         </div>
-      </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Observe"}
+            />
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }
