@@ -7,6 +7,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
 import { deleteACCenters } from "../../../state/actions/associative-cooperative";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
+import TeacherModal from '../HomeViews/TeacherModal';
 import {
   addNewCenter,
   incrementCenterCount,
@@ -35,6 +36,10 @@ const styles: object = {
   }
 };
 
+interface State {
+  teacherModal: boolean
+}
+
 interface Style {
   root: string,
   grow: string,
@@ -57,13 +62,28 @@ interface Props {
 /**
  * @class AssociativeCooperativeInteractionsPage
  */
-class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> {
+class AssociativeCooperativeInteractionsPage extends React.Component<Props, State> {
   /**
    * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
+
+    this.state = {
+      teacherModal: false
+    }
   }
+
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  };
+
+  /** lifecycle method invoked after component mounts */
+  componentDidMount(): void {
+    if (!this.props.teacherSelected) {
+      this.setState({ teacherModal: true })
+    }
+  };
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -91,38 +111,51 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
   render(): React.ReactNode {
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
-        <FirebaseContext.Consumer>
-          {(firebase: Types.FirebaseAppBar): React.ReactNode => (
-            <AppBar firebase={firebase} />
-          )}
-        </FirebaseContext.Consumer>
-
-        <main style={{ flexGrow: 1 }}>
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
           <FirebaseContext.Consumer>
-            {(firebase: {
-              auth: {
-                currentUser: {
-                  uid: string
-                }
-              },
-              handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
-              handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
-            }): React.ReactNode => (
-              <CenterMenu
-                teacher={this.props.teacherSelected}
-                history={this.props.history}
-                firebase={firebase}
-                addNewCenter={this.props.addNewCenter}
-                incrementCenterCount={this.props.incrementCenterCount}
-                updateCount={this.props.updateACCount}
-                type="AC"
-                centers={this.props.centers}
-              />
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => (
+              <AppBar firebase={firebase} />
             )}
           </FirebaseContext.Consumer>
-        </main>
-      </div>
+          <main style={{ flexGrow: 1 }}>
+            <FirebaseContext.Consumer>
+              {(firebase: {
+                auth: {
+                  currentUser: {
+                    uid: string
+                  }
+                },
+                handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
+                handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
+              }): React.ReactNode => (
+                <CenterMenu
+                  teacher={this.props.teacherSelected}
+                  history={this.props.history}
+                  firebase={firebase}
+                  addNewCenter={this.props.addNewCenter}
+                  incrementCenterCount={this.props.incrementCenterCount}
+                  updateCount={this.props.updateACCount}
+                  type="AC"
+                  centers={this.props.centers}
+                />
+              )}
+            </FirebaseContext.Consumer>
+          </main>
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Observe"}
+            />
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }
