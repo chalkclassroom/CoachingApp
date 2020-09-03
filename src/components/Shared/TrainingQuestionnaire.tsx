@@ -12,6 +12,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContentText from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+import { addUnlocked } from '../../state/actions/unlocked';
+import { connect } from 'react-redux';
 
 
 const styles: object = {
@@ -35,7 +37,8 @@ interface Props {
     root: string,
     button: string,
     nextButton: string
-  }
+  },
+  addUnlocked(unlocked: number): void
 }
 
 interface State {
@@ -106,8 +109,10 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
       this.magic8Number = 6
     } else if (this.props.section === 'sequential'){
       this.magic8Number = 7
-    } else {
+    } else if (this.props.section === 'ac'){
       this.magic8Number = 8
+    } else {
+      this.magic8Number = 9
     }
   }
 
@@ -284,6 +289,7 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
       console.log("passed");
       const firebase = this.context;
       firebase.handleUnlockSection(this.magic8Number);
+      this.props.addUnlocked(this.magic8Number);
     } else {
       console.log("failed try again");
     }
@@ -342,7 +348,8 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
 
   static propTypes = {
     section: PropTypes.oneOf<Selection>(['transition', 'climate', 'math', 'student', 'level', 'listening', 'sequential', 'ac']).isRequired,
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    addUnlocked: PropTypes.func.isRequired
   }
 
   /**
@@ -380,4 +387,4 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
 }
 
 TrainingQuestionnaire.contextType = FirebaseContext;
-export default withStyles(styles)(TrainingQuestionnaire);
+export default withStyles(styles)(connect(null, {addUnlocked})(TrainingQuestionnaire));

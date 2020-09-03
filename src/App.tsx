@@ -44,12 +44,14 @@ import ListeningToChildrenResultsPage from './views/protected/ListeningViews/Lis
 import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
 import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
+import TrainingPage from './views/protected/TrainingPage';
 import * as LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import * as ReactGA from 'react-ga';
 import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
 import Grid from '@material-ui/core/Grid';
 import { getCoach } from './state/actions/coach';
+import { getUnlocked } from './state/actions/unlocked';
 import { connect } from 'react-redux';
 import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 import * as H from 'history';
@@ -116,9 +118,11 @@ interface Props {
     auth: {
       onAuthStateChanged(arg: any): firebase.User | null
     },
-    getCoachFirstName(): Promise<string>
+    getCoachFirstName(): Promise<string>,
+    getUnlockedSections(): Promise<Array<number>>
   },
-  getCoach(name: string): void
+  getCoach(name: string): void,
+  getUnlocked(unlocked: Array<number>): void
 }
 
 interface State {
@@ -154,6 +158,9 @@ class App extends React.Component<Props, State> {
             loading: false
           });
         });
+        this.props.firebase.getUnlockedSections().then((unlocked: Array<number>) => {
+          this.props.getUnlocked(unlocked);
+        })
       } else {
         this.setState({
           auth: false,
@@ -173,9 +180,11 @@ class App extends React.Component<Props, State> {
       auth: PropTypes.exact({
         onAuthStateChanged: PropTypes.func
       }),
-      getCoachFirstName: PropTypes.func
+      getCoachFirstName: PropTypes.func,
+      getUnlockedSections: PropTypes.func
     }).isRequired,
-    getCoach: PropTypes.func.isRequired
+    getCoach: PropTypes.func.isRequired,
+    getUnlocked: PropTypes.func.isRequired
   }
 
   /**
@@ -239,6 +248,13 @@ class App extends React.Component<Props, State> {
               auth={this.state.auth || !this.state.auth}
               path="/team"
               render={(props: object) : React.ReactElement=> <TeamPage {...props}/>}
+            />
+            <PrivateRoute
+              auth={this.state.auth || !this.state.auth}
+              path="/training"
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <TrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -504,5 +520,5 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default hot(connect(null, {getCoach})(App));
+export default hot(connect(null, {getCoach, getUnlocked})(App));
 

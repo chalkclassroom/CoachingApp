@@ -56,11 +56,10 @@ interface Style {
 
 interface Props {
   classes: Style,
-  onClick(selected: string, title: string): void,
-  numSelected: number,
+  onClick(title: string, unlocked: boolean): void,
   title: string,
   icon: string,
-  page: string,
+  training: boolean,
   unlocked: boolean
 }
 
@@ -84,25 +83,12 @@ class Magic8Card extends React.Component<Props, State> {
     };
   }
 
-  /** @return {void} */
-  onClick = (): void => {
-    // e.preventDefault();
-    const { onClick, numSelected } = this.props;
-    onClick(this.state.selected, this.props.title);
-    if (this.state.selected) {
-      this.setState({ selected: false });
-    } else if (numSelected < 1) {
-      this.setState({ selected: true });
-    }
-  }
-
   static propTypes = {
     classes: PropTypes.object.isRequired,
     onClick: PropTypes.func.isRequired,
-    numSelected: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     icon: PropTypes.string.isRequired,
-    page: PropTypes.string.isRequired,
+    training: PropTypes.bool.isRequired,
     unlocked: PropTypes.bool.isRequired
   }
 
@@ -116,14 +102,13 @@ class Magic8Card extends React.Component<Props, State> {
       <CardBase>
         <Card
           className={classes.card}
-          onClick={this.onClick}
-          // style={{ opacity: this.state.selected ? 0.5 : 1 }}
+          onClick={(): void => this.props.onClick(this.props.title, this.props.unlocked)}
         >
           <CardActionArea className={classes.cardAction}>
             <BackgroundImage>
               <img src={this.props.icon} style={{ display: "block" }} />
             </BackgroundImage>
-            {this.props.page === "Training" ? (
+            {this.props.training ? (
               this.props.unlocked ? (
                 <Overlay>
                   <img
