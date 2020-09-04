@@ -65,7 +65,8 @@ const styles: object = {
   },
   resultsButtons: {
     marginRight: '0.5em',
-    marginLeft: '0.5em'
+    marginLeft: '0.5em',
+    width: '100%'
   },
   viewButtons: {
     minWidth: 150,
@@ -79,7 +80,9 @@ const styles: object = {
     width: '20vw'
   },
   button: {
-    paddingTop: '0.7em'
+    paddingTop: '1em',
+    paddingBottom: '1em',
+    width: '100%'
   },
   grid: {
     direction: 'column'
@@ -91,6 +94,9 @@ const styles: object = {
     },
     card: {
       marginBottom: 0
+    },
+    resultsButtons: {
+      width: 'auto'
     }
   }
 };
@@ -114,7 +120,7 @@ interface Props {
   // changeTeacher(teacher: string): void,
   classes: Style,
   viewClick(name: string): void
-  // view: string,
+  view: string,
   // viewClick(name: string): void,
   // sessionId: string,
   // conferencePlanId?: string,
@@ -165,7 +171,7 @@ class TrainingDashboard extends React.Component<Props, State> {
 
   static propTypes = {
     // magic8: PropTypes.string.isRequired,
-    // view: PropTypes.string.isRequired,
+    view: PropTypes.string.isRequired,
     viewClick: PropTypes.func.isRequired,
     // changeSessionId: PropTypes.func.isRequired,
     // sessionId: PropTypes.string.isRequired,
@@ -225,16 +231,16 @@ class TrainingDashboard extends React.Component<Props, State> {
                     <Button
                       size="large"
                       color="primary"
-                      variant="outlined"
-                      /* variant={
-                        this.props.view === 'data'
+                      variant={
+                        this.props.view === 'observe'
                           ? "contained"
                           : "outlined"
-                      } */
-                      // className={this.props.view === 'data' ? classes.viewButtonsSelected : classes.viewButtons}
+                      }
+                      className={this.props.view === 'observe' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('observe')}
+                      style={{width: '100%'}}
                     >
-                      Using the Observation Tools
+                      Observation
                     </Button>
                   </MuiThemeProvider>
                 </Grid>
@@ -243,15 +249,16 @@ class TrainingDashboard extends React.Component<Props, State> {
                     <Button
                       size="large"
                       color="primary"
-                      /* variant={
-                        this.props.view === 'questions'
+                      variant={
+                        this.props.view === 'navigation'
                           ? "contained"
                           : "outlined"
-                      } */
-                      // className={this.props.view === 'questions' ? classes.viewButtonsSelected : classes.viewButtons}
+                      }
+                      className={this.props.view === 'navigation' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('navigation')}
+                      style={{width: '100%'}}
                     >
-                      Navigating the Website
+                      Navigation
                     </Button>
                   </MuiThemeProvider>
                 </Grid>
@@ -264,15 +271,16 @@ class TrainingDashboard extends React.Component<Props, State> {
                     <Button
                       size="large"
                       color="primary"
-                      /* variant={
-                        this.props.view === 'conferencePlan'
+                      variant={
+                        this.props.view === 'results'
                           ? "contained"
                           : "outlined"
-                      } */
-                      // className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                      }
+                      className={this.props.view === 'results' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('results')}
+                      style={{width: '100%'}}
                     >
-                      Interpreting Results
+                      Results
                     </Button>
                   </MuiThemeProvider>
                 </Grid>
@@ -281,36 +289,38 @@ class TrainingDashboard extends React.Component<Props, State> {
                     <Button
                       size="large"
                       color="primary"
-                      /* variant={
+                      variant={
+                        this.props.view === 'conferencePlan'
+                          ? "contained"
+                          : "outlined"
+                      }
+                      className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                      onClick={(): void => this.props.viewClick('conferencePlan')}
+                      style={{width: '100%'}}
+                    >
+                      Conference Plan
+                    </Button>
+                  </MuiThemeProvider>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item className={classes.resultsButtons}>
+              <Grid container direction="column" justify="center" alignItems="center">
+                <Grid item className={classes.button}>
+                  <MuiThemeProvider theme={AppBarTheme}>
+                    <Button
+                      size="large"
+                      color="primary"
+                      variant={
                         this.props.view === 'actionPlan'
                           ? "contained"
                           : "outlined"
-                      } */
-                      // className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
-                      onClick={(): void => this.props.viewClick('conferencePlan')}
-                    >
-                      Creating a Conference Plan
-                    </Button>
-                  </MuiThemeProvider>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item className={classes.resultsButtons}>
-              <Grid container direction="column" justify="center" alignItems="center">
-                <Grid item className={classes.button}>
-                  <MuiThemeProvider theme={AppBarTheme}>
-                    <Button
-                      size="large"
-                      color="primary"
-                      /* variant={
-                        this.props.view === 'conferencePlan'
-                          ? "contained"
-                          : "outlined"
-                      } */
-                      // className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                      }
+                      className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('actionPlan')}
+                      style={{width: '100%'}}
                     >
-                      Creating an Action Plan
+                      Action Plan
                     </Button>
                   </MuiThemeProvider>
                 </Grid>

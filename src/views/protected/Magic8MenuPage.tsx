@@ -72,18 +72,18 @@ interface Props {
 }
 
 interface State {
-  allowed: boolean,
-  numSelected: number,
-  selected: Selected,
-  unlocked: Array<number>,
-  unlockedData: boolean,
-  page: string,
+  // allowed: boolean,
+  // numSelected: number,
+  // selected: Selected,
+  // unlocked: Array<number>,
+  // unlockedData: boolean,
+  // page: string,
   teacherId: string,
   teacherName: string,
   teacher: {},
-  observationModal: boolean,
-  resultsModal: boolean,
-  lockedModal: boolean
+  // observationModal: boolean,
+  // resultsModal: boolean,
+  // lockedModal: boolean
 }
 
 type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
@@ -101,23 +101,23 @@ class Magic8MenuPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      allowed: false,
-      numSelected: 0,
-      selected: "none",
-      unlocked: [],
-      unlockedData: false,
-      page: '',
+      // allowed: false,
+      // numSelected: 0,
+      // selected: "none",
+      // unlocked: [],
+      // unlockedData: false,
+      // page: '',
       teacherId: '',
       teacherName: '',
       teacher: {},
-      observationModal: false,
-      resultsModal: false,
-      lockedModal: false
+      // observationModal: false,
+      // resultsModal: false,
+      // lockedModal: false
     };
   }
 
   /** lifecycle method invoked after component mounts */
-  componentDidMount(): void {
+  /* componentDidMount(): void {
     this.setState({
       page: this.props.location.state.type === "Training"
         ? "Training"
@@ -125,19 +125,19 @@ class Magic8MenuPage extends React.Component<Props, State> {
         ? "Observe"
         : "Results",
     });
-  }
+  } */
 
   /**
    *
    * @param {Props} prevProps
    */
-  componentDidUpdate(prevProps: Props): void {
+  /* componentDidUpdate(prevProps: Props): void {
     if (this.props.location.state.type !== prevProps.location.state.type) {
       this.setState({
         page: this.props.location.state.type,
       });
     }
-  }
+  } */
 
   /**
    * @param {ChangeEvent} event
@@ -196,7 +196,7 @@ class Magic8MenuPage extends React.Component<Props, State> {
                 <Grid item xs={9}>
                   <Grid container direction="row" justify="flex-start" alignItems="center">
                     <Typography style={{fontSize:'2.5em'}}>
-                      {this.state.page}
+                      {this.props.location.state.type}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -226,13 +226,13 @@ class Magic8MenuPage extends React.Component<Props, State> {
                 <Grid item xs={12}>
                   <Typography style={{fontSize: '1.2em'}}>
                     Select the skill you would like to{" "}
-                    {this.state.page === "Training" ? "learn:" : "focus on:"}
+                    {this.props.location.state.type === "Training" ? "learn:" : "focus on:"}
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item style={{width: '70vw'}}>
-              <ToolIcons type={this.state.page} training={false} history={this.props.history} />
+              <ToolIcons type={this.props.location.state.type} training={false} history={this.props.history} />
             </Grid>
           </Grid>
         </div>

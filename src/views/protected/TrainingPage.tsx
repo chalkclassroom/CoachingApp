@@ -159,7 +159,9 @@ class TrainingPage extends React.Component<Props, State> {
           style={{height: '90vh'}}
         >
           <Grid item className={classes.dashboardGrid}>
-            <TrainingDashboard viewClick={this.viewClick} />
+            <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
+              <TrainingDashboard viewClick={this.viewClick} view={this.state.view} />
+            </Grid>
           </Grid>
           <Grid item className={classes.contentGrid}>
             {this.state.view === 'observe' ? (
