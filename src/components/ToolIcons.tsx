@@ -23,6 +23,7 @@ import AssociativeCooperativeInteractionsObservationPopUp from './AssociativeCoo
 import ObservationModal from './ObservationModal';
 import ResultsModal from './ResultsModal';
 import LockedModal from './LockedModal';
+import ResultsTrainingModal from '../components/TrainingComponents/ResultsTrainingModal';
 import { useState } from 'react';
 import { connect } from "react-redux";
 import * as Types from '../constants/Types';
@@ -95,6 +96,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(1) : false}
                 training={training}
+                type={type}
               />
             </Grid>
             <Grid item>
@@ -104,6 +106,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(2) : false}
                 training={training}
+                type={type}
               />
             </Grid>
             <Grid item>
@@ -113,6 +116,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(3) : false}
                 training={training}
+                type={type}
               />
             </Grid>
           </Grid>
@@ -126,6 +130,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(5) : false}
                 training={training}
+                type={type}
               />
             </Grid>
             <Grid item>
@@ -135,6 +140,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(4) : false}
                 training={training}
+                type={type}
               />
             </Grid>
             <Grid item>
@@ -144,12 +150,13 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(6) : false}
                 training={training}
+                type={type}
               />
             </Grid>
           </Grid>
         </Grid>
         <Grid item style={{width: '100%'}}>
-          <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%', paddingBottom: '1em'}}>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%'}}>
             <Grid item>
               <Magic8Card
                 title="SequentialActivities"
@@ -157,6 +164,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(7) : false}
                 training={training}
+                type={type}
               />
             </Grid>
             <Grid item>
@@ -166,6 +174,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(9) : false}
                 training={training}
+                type={type}
               />
             </Grid>
             <Grid item>
@@ -175,6 +184,7 @@ function ToolIcons(props: Props): React.ReactElement {
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(8) : false}
                 training={training}
+                type={type}
               />
             </Grid>
           </Grid>
@@ -195,6 +205,10 @@ function ToolIcons(props: Props): React.ReactElement {
         handleBegin={(): void => history.push({pathname: `/${selected}Results`})}
         handleClose={(): void => setResultsModal(false)}
         tool={selected}
+      />
+      <ResultsTrainingModal
+        open={resultsTrainingModal}
+        handleClose={(): void => setResultsTrainingModal(false)}
       />
     </div>
   );

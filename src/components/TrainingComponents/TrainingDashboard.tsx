@@ -27,7 +27,6 @@ const styles: object = {
     width: "90%",
     marginRight: "5%",
     marginLeft: "5%",
-    marginBottom: "5%",
     alignItems: "center",
     justify: "space-evenly",
     display: "flex",
@@ -69,19 +68,22 @@ const styles: object = {
     width: '100%'
   },
   viewButtons: {
-    minWidth: 150,
     fontFamily: "Arimo",
-    width: '20vw'
+    width: '100%'
   },
   viewButtonsSelected: {
-    minWidth: 150,
     color: "#fff",
     fontFamily: "Arimo",
-    width: '20vw'
+    width: '100%'
   },
-  button: {
+  item: {
     paddingTop: '1em',
     paddingBottom: '1em',
+    width: '100%',
+    marginRight: '0.5em',
+    marginLeft: '0.5em',
+  },
+  button: {
     width: '100%'
   },
   grid: {
@@ -90,7 +92,12 @@ const styles: object = {
   // ipad portait
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
     grid: {
-      direction: 'row'
+      direction: 'row',
+      paddingTop: '1em',
+      paddingBottom: '1em'
+    },
+    item: {
+      width: 'auto'
     },
     card: {
       marginBottom: 0
@@ -112,27 +119,14 @@ interface Style {
   viewButtons: string,
   viewButtonsSelected: string,
   grid: string,
+  item: string,
   button: string
 }
 
 interface Props {
-  // magic8: string,
-  // changeTeacher(teacher: string): void,
   classes: Style,
   viewClick(name: string): void
-  view: string,
-  // viewClick(name: string): void,
-  // sessionId: string,
-  // conferencePlanId?: string,
-  // addNoteToPlan(conferencePlanId: string, note: string): void,
-  // changeSessionId(event: React.SyntheticEvent): void,
-  // sessionDates: Array<{id: string, sessionStart: {value: string}}>,
-  // notes: Array<{content: string, timestamp: string}>,
-  // handleOpenNotes(): void,
-  // handleCloseNotes(): void,
-  // notesModal: boolean,
-  // teacherSelected: Types.Teacher,
-  // teacherList: Array<Types.Teacher>
+  view: string
 }
 
 interface State {
@@ -170,14 +164,8 @@ class TrainingDashboard extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    // magic8: PropTypes.string.isRequired,
     view: PropTypes.string.isRequired,
     viewClick: PropTypes.func.isRequired,
-    // changeSessionId: PropTypes.func.isRequired,
-    // sessionId: PropTypes.string.isRequired,
-    // sessionDates: PropTypes.array.isRequired,
-    // conferencePlanId: PropTypes.string,
-    // addNoteToPlan: PropTypes.func.isRequired,
     classes: PropTypes.exact({
       card: PropTypes.string,
       icon: PropTypes.string,
@@ -189,24 +177,9 @@ class TrainingDashboard extends React.Component<Props, State> {
       viewButtons: PropTypes.string,
       viewButtonsSelected: PropTypes.string,
       grid: PropTypes.string,
+      item: PropTypes.string,
       button: PropTypes.string
-    }).isRequired,
-    // notes: PropTypes.array.isRequired,
-    // changeTeacher: PropTypes.func.isRequired,
-   /*  teacherSelected: PropTypes.exact({
-      email: PropTypes.string,
-      firstName: PropTypes.string,
-      lastName: PropTypes.string,
-      notes: PropTypes.string,
-      id: PropTypes.string,
-      phone: PropTypes.string,
-      role: PropTypes.string,
-      school: PropTypes.string
-    }).isRequired, */
-    // teacherList: PropTypes.array.isRequired,
-    // notesModal: PropTypes.bool.isRequired,
-    // handleOpenNotes: PropTypes.func.isRequired,
-    // handleCloseNotes: PropTypes.func.isRequired
+    }).isRequired
   }
 
   /**
@@ -224,107 +197,90 @@ class TrainingDashboard extends React.Component<Props, State> {
             alignItems="center"
             className={classes.grid}
           >
-            <Grid item className={classes.resultsButtons}>
-              <Grid container direction="column" justify="center" alignItems="center">
-                <Grid item className={classes.button}>
-                  <MuiThemeProvider theme={AppBarTheme}>
-                    <Button
-                      size="large"
-                      color="primary"
-                      variant={
-                        this.props.view === 'observe'
-                          ? "contained"
-                          : "outlined"
-                      }
-                      className={this.props.view === 'observe' ? classes.viewButtonsSelected : classes.viewButtons}
-                      onClick={(): void => this.props.viewClick('observe')}
-                      style={{width: '100%'}}
-                    >
-                      Observation
-                    </Button>
-                  </MuiThemeProvider>
-                </Grid>
-                <Grid item className={classes.button}>
-                  <MuiThemeProvider theme={AppBarTheme}>
-                    <Button
-                      size="large"
-                      color="primary"
-                      variant={
-                        this.props.view === 'navigation'
-                          ? "contained"
-                          : "outlined"
-                      }
-                      className={this.props.view === 'navigation' ? classes.viewButtonsSelected : classes.viewButtons}
-                      onClick={(): void => this.props.viewClick('navigation')}
-                      style={{width: '100%'}}
-                    >
-                      Navigation
-                    </Button>
-                  </MuiThemeProvider>
-                </Grid>
-              </Grid>
+            <Grid item className={classes.item}>
+              <MuiThemeProvider theme={AppBarTheme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === 'observe'
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === 'observe' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={(): void => this.props.viewClick('observe')}
+                >
+                  Observation
+                </Button>
+              </MuiThemeProvider>
             </Grid>
-            <Grid item className={classes.resultsButtons}>
-              <Grid container direction="column" justify="center" alignItems="center">
-                <Grid item className={classes.button}>
-                  <MuiThemeProvider theme={AppBarTheme}>
-                    <Button
-                      size="large"
-                      color="primary"
-                      variant={
-                        this.props.view === 'results'
-                          ? "contained"
-                          : "outlined"
-                      }
-                      className={this.props.view === 'results' ? classes.viewButtonsSelected : classes.viewButtons}
-                      onClick={(): void => this.props.viewClick('results')}
-                      style={{width: '100%'}}
-                    >
-                      Results
-                    </Button>
-                  </MuiThemeProvider>
-                </Grid>
-                <Grid item className={classes.button}>
-                  <MuiThemeProvider theme={AppBarTheme}>
-                    <Button
-                      size="large"
-                      color="primary"
-                      variant={
-                        this.props.view === 'conferencePlan'
-                          ? "contained"
-                          : "outlined"
-                      }
-                      className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
-                      onClick={(): void => this.props.viewClick('conferencePlan')}
-                      style={{width: '100%'}}
-                    >
-                      Conference Plan
-                    </Button>
-                  </MuiThemeProvider>
-                </Grid>
-              </Grid>
+            <Grid item className={classes.item}>
+              <MuiThemeProvider theme={AppBarTheme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === 'navigation'
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === 'navigation' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={(): void => this.props.viewClick('navigation')}
+                >
+                  Navigation
+                </Button>
+              </MuiThemeProvider>
             </Grid>
-            <Grid item className={classes.resultsButtons}>
-              <Grid container direction="column" justify="center" alignItems="center">
-                <Grid item className={classes.button}>
-                  <MuiThemeProvider theme={AppBarTheme}>
-                    <Button
-                      size="large"
-                      color="primary"
-                      variant={
-                        this.props.view === 'actionPlan'
-                          ? "contained"
-                          : "outlined"
-                      }
-                      className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
-                      onClick={(): void => this.props.viewClick('actionPlan')}
-                      style={{width: '100%'}}
-                    >
-                      Action Plan
-                    </Button>
-                  </MuiThemeProvider>
-                </Grid>
-              </Grid>
+            <Grid item className={classes.item}>
+              <MuiThemeProvider theme={AppBarTheme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === 'results'
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === 'results' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={(): void => this.props.viewClick('results')}
+                >
+                  Results
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item className={classes.item}>
+              <MuiThemeProvider theme={AppBarTheme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === 'conferencePlan'
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={(): void => this.props.viewClick('conferencePlan')}
+                >
+                  Conference Plan
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item className={classes.item}>
+              <MuiThemeProvider theme={AppBarTheme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === 'actionPlan'
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={(): void => this.props.viewClick('actionPlan')}
+                >
+                  Action Plan
+                </Button>
+              </MuiThemeProvider>
             </Grid>
           </Grid>
         </Card>

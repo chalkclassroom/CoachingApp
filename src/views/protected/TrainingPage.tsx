@@ -13,7 +13,7 @@ import * as H from 'history';
 const styles: object = {
   root: {
     display: "flex",
-    height: "100vh",
+    minHeight: "100vh",
     flexDirection: "column",
     overflowY: 'auto',
     // overflowX: 'hidden'
@@ -34,7 +34,9 @@ const styles: object = {
   grid: {
     direction: 'row',
     justify: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: '3em',
+    paddingBottom: '3em'
   },
   dashboardGrid: {
     width: '25%',
@@ -56,6 +58,11 @@ const styles: object = {
       height: '90vh',
       paddingTop: 0,
       paddingBottom: 0
+    },
+    grid: {
+      height: '90vh',
+      paddingTop: '1em',
+      paddingBottom: '1em'
     }
   },
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
@@ -65,7 +72,10 @@ const styles: object = {
       paddingBottom: 0
     },
     grid: {
-      direction: 'column'
+      direction: 'column',
+      height: '90vh',
+      paddingTop: '1em',
+      paddingBottom: '1em'
     },
     dashboardGrid: {
       width: '100%',
@@ -156,7 +166,8 @@ class TrainingPage extends React.Component<Props, State> {
         <Grid
           container
           className={classes.grid}
-          style={{height: '90vh'}}
+          justify="center"
+          alignItems="center"
         >
           <Grid item className={classes.dashboardGrid}>
             <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
@@ -168,19 +179,17 @@ class TrainingPage extends React.Component<Props, State> {
               <ToolIcons type={'Observe'} training={true} history={this.props.history} />
             ) : this.state.view === 'navigation' ? (
               <div>
-                navigate
+                Video coming soon.
               </div>
             ) : this.state.view === 'results' ? (
-              <div>
-                <ToolIcons type={'Results'} training={true} history={this.props.history} />
-              </div>
+              <ToolIcons type={'Results'} training={true} history={this.props.history} />
             ) : this.state.view === 'conferencePlan' ? (
               <div>
-                conference plan
+                Conference Plan video coming soon.
               </div>
             ) : (
               <div>
-                action plan
+                Video coming soon.
               </div>
             )}
           </Grid>
