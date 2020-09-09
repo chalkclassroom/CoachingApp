@@ -654,6 +654,42 @@ class Firebase {
   };
 
   /**
+   * adds tool to user's watched list when they watch results training video
+   * @param {string} section
+   */
+  handleWatchResultsTraining = async function(section: string): Promise<void> {
+    return this.db
+      .collection("users")
+      .doc(this.auth.currentUser.uid)
+      .update({
+        resultsTraining: firebase.firestore.FieldValue.arrayUnion(section)
+      })
+      .catch((error: Error) =>
+        console.error("Error occurred recording watched video: ", error)
+      );
+  };
+
+  /**
+   * get array of watched results training video
+   */
+  getWatchedResultsTraining = async function(): Promise<Array<string>> {
+    return this.db
+      .collection("users")
+      .doc(this.auth.currentUser.uid)
+      .get()
+      .then((doc: {data(): {resultsTraining: Array<string>}}) => {
+        if (doc.data().resultsTraining === undefined) {
+          return [];
+        } else {
+          return doc.data().resultsTraining;
+        }
+      })
+      .catch((error: Error) =>
+        console.error("Error getting document: ", error)
+      );
+  };
+
+  /**
    * saves a logged transition in the database
    * @param {object} mEntry
    */
