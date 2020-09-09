@@ -42,6 +42,7 @@ import MathInstructionResultsPage from "./views/protected/MathInstructionViews/M
 import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage';
 import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
 import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
+import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage';
 import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import TrainingPage from './views/protected/TrainingPage';
@@ -428,11 +429,11 @@ class App extends React.Component<Props, State> {
                 location: H.Location
               }) : React.ReactElement=> <TransitionTimeTrainingPage {...props}/>}
             />
-            {/* <PrivateRoute
+            <PrivateRoute
               auth={this.state.auth}
-              path="/TransitionTime2Training"
-              component={TransitionTimeTrainingPage}
-            /> */}
+              path="/LiteracyInstructionTraining"
+              render={() : React.ReactElement=> <LiteracyTrainingPage />}
+            />
             <PrivateRoute
               exact
               auth={this.state.auth}
