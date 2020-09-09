@@ -72,18 +72,9 @@ interface Props {
 }
 
 interface State {
-  // allowed: boolean,
-  // numSelected: number,
-  // selected: Selected,
-  // unlocked: Array<number>,
-  // unlockedData: boolean,
-  // page: string,
   teacherId: string,
   teacherName: string,
-  teacher: {},
-  // observationModal: boolean,
-  // resultsModal: boolean,
-  // lockedModal: boolean
+  teacher: {}
 }
 
 type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
@@ -101,43 +92,11 @@ class Magic8MenuPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      // allowed: false,
-      // numSelected: 0,
-      // selected: "none",
-      // unlocked: [],
-      // unlockedData: false,
-      // page: '',
       teacherId: '',
       teacherName: '',
-      teacher: {},
-      // observationModal: false,
-      // resultsModal: false,
-      // lockedModal: false
+      teacher: {}
     };
   }
-
-  /** lifecycle method invoked after component mounts */
-  /* componentDidMount(): void {
-    this.setState({
-      page: this.props.location.state.type === "Training"
-        ? "Training"
-        : this.props.location.state.type === "Observe"
-        ? "Observe"
-        : "Results",
-    });
-  } */
-
-  /**
-   *
-   * @param {Props} prevProps
-   */
-  /* componentDidUpdate(prevProps: Props): void {
-    if (this.props.location.state.type !== prevProps.location.state.type) {
-      this.setState({
-        page: this.props.location.state.type,
-      });
-    }
-  } */
 
   /**
    * @param {ChangeEvent} event
@@ -202,21 +161,19 @@ class Magic8MenuPage extends React.Component<Props, State> {
                 </Grid>
                 <Grid item xs={3}>
                   <Grid container direction="row" justify="flex-end" alignItems="center">
-                    {this.props.location.state.type === "Training" ? <div /> : (
-                      <TextField
-                        select
-                        style={{width: '100%'}}
-                        value={this.props.teacherSelected}
-                        onChange={this.changeTeacher}
-                        InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
-                        InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
-                      >
-                        {this.props.teacherList.map((teacher, index)=>
-                          {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
-                            <em>{teacher.firstName + " " + teacher.lastName}</em>
-                          </MenuItem>})}
-                      </TextField>)
-                    }
+                    <TextField
+                      select
+                      style={{width: '100%'}}
+                      value={this.props.teacherSelected}
+                      onChange={this.changeTeacher}
+                      InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                      InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
+                    >
+                      {this.props.teacherList.map((teacher, index)=>
+                        {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
+                          <em>{teacher.firstName + " " + teacher.lastName}</em>
+                        </MenuItem>})}
+                    </TextField>
                   </Grid>
                 </Grid>
               </Grid>
@@ -225,8 +182,7 @@ class Magic8MenuPage extends React.Component<Props, State> {
               <Grid container direction="row" justify="flex-start" alignItems="center">
                 <Grid item xs={12}>
                   <Typography style={{fontSize: '1.2em'}}>
-                    Select the skill you would like to{" "}
-                    {this.props.location.state.type === "Training" ? "learn:" : "focus on:"}
+                    Select the skill you would like to focus on:
                   </Typography>
                 </Grid>
               </Grid>

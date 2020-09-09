@@ -2,9 +2,11 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import { withStyles } from "@material-ui/core/styles";
 import TrainingDashboard from '../../components/TrainingComponents/TrainingDashboard';
 import ToolIcons from '../../components/ToolIcons';
+import LogoImage from '../../assets/images/LogoImage.svg';
 import FirebaseContext from '../../components/Firebase/FirebaseContext';
 import AppBar from '../../components/AppBar';
 import * as Types from '../../constants/Types';
@@ -178,19 +180,40 @@ class TrainingPage extends React.Component<Props, State> {
             {this.state.view === 'observe' ? (
               <ToolIcons type={'Observe'} training={true} history={this.props.history} />
             ) : this.state.view === 'navigation' ? (
-              <div>
-                Video coming soon.
-              </div>
+              <Grid container direction="column" justify="center" alignItems="center" style={{height: '88vh'}}>
+                <Grid item>
+                  <img src={LogoImage} alt="CHALK" height="100vh" />
+                </Grid>
+                <Grid item style={{paddingTop: '3em'}}>
+                  <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
+                    Navigation Training coming soon!
+                  </Typography>
+                </Grid>
+              </Grid>
             ) : this.state.view === 'results' ? (
               <ToolIcons type={'Results'} training={true} history={this.props.history} />
             ) : this.state.view === 'conferencePlan' ? (
-              <div>
-                Conference Plan video coming soon.
-              </div>
+              <Grid container direction="column" justify="center" alignItems="center" style={{height: '88vh'}}>
+                <Grid item>
+                  <img src={LogoImage} alt="CHALK" height="100vh" />
+                </Grid>
+                <Grid item style={{paddingTop: '3em'}}>
+                  <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
+                    Conference Plan Training coming soon!
+                  </Typography>
+                </Grid>
+              </Grid>
             ) : (
-              <div>
-                Video coming soon.
-              </div>
+              <Grid container direction="column" justify="center" alignItems="center" style={{height: '88vh'}}>
+                <Grid item>
+                  <img src={LogoImage} alt="CHALK" height="100vh" />
+                </Grid>
+                <Grid item style={{paddingTop: '3em'}}>
+                  <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
+                    Action Plan Training coming soon!
+                  </Typography>
+                </Grid>
+              </Grid>
             )}
           </Grid>
         </Grid>

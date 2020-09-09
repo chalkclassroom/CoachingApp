@@ -87,7 +87,7 @@ function LockedModal(props: Props & RouteComponentProps): React.ReactElement {
               <Button 
                 onClick={(): void => {
                   props.history.push({
-                    pathname: "/Magic8Menu",
+                    pathname: "/Training",
                     state: { type: "Training" }
                   });
                   handleClose();

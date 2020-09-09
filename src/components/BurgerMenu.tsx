@@ -177,8 +177,8 @@ class BurgerMenu extends React.Component<Props, State>{
               onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
                 this.setState({ menu: 1, chalkOpen: false });
                 this.props.history.push({
-                    pathname: "/Magic8Menu",
-                    state: { type: "Training" }
+                  pathname: "/Training",
+                  // state: { type: "Training" }
                 });
                 this.props.handleClose(event);
               }}
