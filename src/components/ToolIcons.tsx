@@ -57,6 +57,7 @@ function ToolIcons(props: Props): React.ReactElement {
     'LevelOfInstruction': <LevelOfInstructionObservationPopUp />,
     'ListeningToChildren': <ListeningToChildrenObservationPopUp />,
     'SequentialActivities': <SequentialActivitiesObservationPopUp />,
+    'LiteracyInstruction': <div />,
     'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />,
     'none': <div />
   }

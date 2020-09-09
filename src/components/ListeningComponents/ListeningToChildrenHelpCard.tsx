@@ -13,7 +13,7 @@ import ListeningHelp2 from './ListeningHelp2';
 const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.Colors.LI
+      main: Constants.Colors.LC
     },
     secondary: {
       main: '#000000'

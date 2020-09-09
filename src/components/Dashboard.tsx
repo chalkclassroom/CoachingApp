@@ -10,6 +10,7 @@ import EngagementIconImage from "../assets/images/EngagementIconImage.svg";
 import InstructionIconImage from "../assets/images/InstructionIconImage.svg";
 import ListeningIconImage from "../assets/images/ListeningIconImage.svg";
 import SequentialIconImage from "../assets/images/SequentialIconImage.svg";
+import LiteracyIconImage from '../assets/images/LiteracyIconImage.svg';
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg";
 import TransitionTimeNotesImage from "../assets/images/TransitionTimeNotesImage.svg";
 import ClassroomClimateNotesImage from "../assets/images/ClassroomClimateNotesImage.svg";
@@ -18,6 +19,7 @@ import EngagementNotesImage from "../assets/images/EngagementNotesImage.svg";
 import InstructionNotesImage from "../assets/images/InstructionNotesImage.svg";
 import ListeningNotesImage from "../assets/images/ListeningNotesImage.svg";
 import SequentialNotesImage from "../assets/images/SequentialNotesImage.svg";
+import LiteracyInstructionNotesImage from "../assets/images/LiteracyInstructionNotesImage.svg";
 import AssocCoopNotesImage from "../assets/images/AssocCoopNotesImage.svg";
 import TransitionTimeLookForsImage from "../assets/images/TransitionTimeLookForsImage.svg";
 import ClassroomClimateLookForsImage from "../assets/images/ClassroomClimateLookForsImage.svg";
@@ -26,6 +28,7 @@ import EngagementLookForsImage from "../assets/images/EngagementLookForsImage.sv
 import InstructionLookForsImage from "../assets/images/InstructionLookForsImage.svg";
 import ListeningLookForsImage from "../assets/images/ListeningLookForsImage.svg";
 import SequentialLookForsImage from "../assets/images/SequentialLookForsImage.svg";
+import LiteracyInstructionLookForsImage from "../assets/images/LiteracyInstructionLookForsImage.svg";
 import AssocCoopLookForsImage from "../assets/images/AssocCoopLookForsImage.svg";
 import Notes from "./Notes";
 import FirebaseContext from "./Firebase/FirebaseContext";
@@ -240,7 +243,7 @@ class Dashboard extends React.Component<Props, State> {
           notesIcon: EngagementNotesImage,
           title: 'Student Engagement'
         })
-      : this.typeString === "LI"
+      : this.typeString === "IN"
       ? this.setState({
           icon: InstructionIconImage,
           lookForsIcon: InstructionLookForsImage,
@@ -260,6 +263,13 @@ class Dashboard extends React.Component<Props, State> {
           lookForsIcon: SequentialLookForsImage,
           notesIcon: SequentialNotesImage,
           title: 'Sequential Activities'
+        })
+        : this.typeString === "LI"
+      ? this.setState({
+          icon: LiteracyIconImage,
+          lookForsIcon: LiteracyInstructionLookForsImage,
+          notesIcon: LiteracyInstructionNotesImage,
+          title: 'Literacy Instruction'
         })
       : this.setState({
           icon: AssocCoopIconImage,
@@ -313,7 +323,7 @@ class Dashboard extends React.Component<Props, State> {
     history: ReactRouterPropTypes.history.isRequired,
     infoPlacement: PropTypes.string,
     completeObservation: PropTypes.bool.isRequired,
-    type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,
+    type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'IN', 'LC', 'SA', 'LI', 'AC', 'RedGraph', 'NotPresent']).isRequired,
     updateSessionTime: PropTypes.func.isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
@@ -352,7 +362,7 @@ class Dashboard extends React.Component<Props, State> {
           history={this.props.history}
         />
         <InstructionResultsDialog
-          open={this.state.resultsDialog==="LI"}
+          open={this.state.resultsDialog==="IN"}
           history={this.props.history}
         />
         <ListeningResultsDialog
@@ -380,7 +390,7 @@ class Dashboard extends React.Component<Props, State> {
             <AssocCoopHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : this.typeString === "SA" ?
             <SequentialActivitiesHelp open={this.state.help} close={this.handleClickAwayHelp} />
-          : this.typeString === "LI" ?
+          : this.typeString === "IN" ?
             <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : this.typeString === "LC" ?
             <ListeningToChildrenHelp open={this.state.help} close={this.handleClickAwayHelp} />

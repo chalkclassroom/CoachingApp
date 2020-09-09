@@ -17,9 +17,10 @@ export const Colors = {
   'CC': '#0988ec',
   'MI': '#094492',
   'SE': '#e99c2e',
-  'LI': '#009365',
+  'IN': '#009365',
   'LC': '#4fd9b3',
   'SA': '#ffd300',
+  'LI': '#C4395A',
   'AC': '#6f39c4',
   'RedGraph': "#ec2409",
   'NotPresent': "#bababa"

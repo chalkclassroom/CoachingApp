@@ -16,7 +16,7 @@ import * as Types from '../../../constants/Types';
 const InstructionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.Colors.LI
+      main: Constants.Colors.IN
     }
   },
   typography: {

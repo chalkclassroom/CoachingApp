@@ -90,7 +90,7 @@ function Countdown(props: Props): React.ReactElement {
 Countdown.propTypes = {
   classes: PropTypes.object.isRequired,
   timerTime: PropTypes.number.isRequired,
-  type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired,
+  type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'IN', 'LC', 'SA', 'LI', 'AC', 'RedGraph', 'NotPresent']).isRequired,
   time: PropTypes.number.isRequired
 }
 

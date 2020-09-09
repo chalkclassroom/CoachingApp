@@ -18,7 +18,7 @@ import * as H from 'history';
 const InstructionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.Colors.LI
+      main: Constants.Colors.IN
     }
   },
   typography: {

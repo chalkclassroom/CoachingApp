@@ -9,6 +9,7 @@ import EngagementIconImage from "../assets/images/EngagementIconImage.svg"
 import InstructionIconImage from "../assets/images/InstructionIconImage.svg"
 import ListeningIconImage from "../assets/images/ListeningIconImage.svg"
 import SequentialIconImage from "../assets/images/SequentialIconImage.svg"
+import LiteracyIconImage from '../assets/images/LiteracyIconImage.svg';
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg"
 import TransitionTimeNotesImage from "../assets/images/TransitionTimeNotesImage.svg";
 import ClassroomClimateNotesImage from "../assets/images/ClassroomClimateNotesImage.svg";
@@ -17,6 +18,7 @@ import EngagementNotesImage from "../assets/images/EngagementNotesImage.svg";
 import InstructionNotesImage from "../assets/images/InstructionNotesImage.svg";
 import ListeningNotesImage from "../assets/images/ListeningNotesImage.svg";
 import SequentialNotesImage from "../assets/images/SequentialNotesImage.svg";
+import LiteracyInstructionNotesImage from '../assets/images/LiteracyInstructionNotesImage.svg';
 import AssocCoopNotesImage from "../assets/images/AssocCoopNotesImage.svg";
 import TransitionTimeLookForsImage from "../assets/images/TransitionTimeLookForsImage.svg";
 import ClassroomClimateLookForsImage from "../assets/images/ClassroomClimateLookForsImage.svg";
@@ -25,6 +27,7 @@ import EngagementLookForsImage from "../assets/images/EngagementLookForsImage.sv
 import InstructionLookForsImage from "../assets/images/InstructionLookForsImage.svg";
 import ListeningLookForsImage from "../assets/images/ListeningLookForsImage.svg";
 import SequentialLookForsImage from "../assets/images/SequentialLookForsImage.svg";
+import LiteracyInstructionLookForsImage from '../assets/images/LiteracyInstructionLookForsImage.svg';
 import AssocCoopLookForsImage from "../assets/images/AssocCoopLookForsImage.svg";
 import TransitionTimeHelp from "../views/protected/TransitionViews/TransitionTimeHelp";
 import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHelp";
@@ -87,7 +90,7 @@ const EngagementTheme = createMuiTheme({
 const InstructionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.Colors.LI
+      main: Constants.Colors.IN
     }
   },
   typography: {
@@ -108,6 +111,16 @@ const SequentialTheme = createMuiTheme({
   palette: {
     primary: {
       main: Constants.Colors.SA
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+const LiteracyTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.LI
     }
   },
   typography: {
@@ -316,6 +329,13 @@ class ResultsDashboard extends React.Component<Props, State> {
         lookForsIcon: SequentialLookForsImage,
         notesIcon: SequentialNotesImage,
         theme: SequentialTheme
+      })
+    } else if (this.props.magic8 === "Literacy Instruction") {
+      this.setState({
+        icon: LiteracyIconImage,
+        lookForsIcon: LiteracyInstructionLookForsImage,
+        notesIcon: LiteracyInstructionNotesImage,
+        theme: LiteracyTheme
       })
     } else {
       this.setState({

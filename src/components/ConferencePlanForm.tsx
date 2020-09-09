@@ -65,7 +65,7 @@ const EngagementTheme = createMuiTheme({
 const InstructionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.Colors.LI
+      main: Constants.Colors.IN
     }
   },
   typography: {
@@ -86,6 +86,16 @@ const SequentialTheme = createMuiTheme({
   palette: {
     primary: {
       main: Constants.Colors.SA
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+const LiteracyTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: Constants.Colors.LI
     }
   },
   typography: {
@@ -757,6 +767,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                             : this.props.magic8 === 'Level of Instruction' ? InstructionTheme
                                             : this.props.magic8 === 'Listening to Children' ? ListeningTheme
                                             : this.props.magic8 === 'Sequential Activities' ? SequentialTheme
+                                            : this.props.magic8 === 'Literacy Instruction' ? LiteracyTheme
                                             : this.props.magic8 === 'AC' ? ACTheme
                                             : BlankTheme
                                           }

@@ -10,7 +10,7 @@ import * as Constants from '../../../constants/Constants';
 const InstructionTheme = createMuiTheme({
   palette: {
     primary: {
-      main: Constants.Colors.LI
+      main: Constants.Colors.IN
     }
   },
   typography: {
@@ -177,7 +177,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
                 sessionId={this.props.sessionId}
                 teacherId={this.props.teacherId}
                 magic8={"Level of Instruction"}
-                color={Constants.Colors.LI}
+                color={Constants.Colors.IN}
               />
             ) : this.state.categoryView === "followUp"  ? (
               <DataQuestions
@@ -189,7 +189,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
                 sessionId={this.props.sessionId}
                 teacherId={this.props.teacherId}
                 magic8={"Level of Instruction"}
-                color={Constants.Colors.LI}
+                color={Constants.Colors.IN}
               />
             ) : this.state.categoryView === "basicSkills" ? (
               <DataQuestions
@@ -201,7 +201,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
                 sessionId={this.props.sessionId}
                 teacherId={this.props.teacherId}
                 magic8={"Level of Instruction"}
-                color={Constants.Colors.LI}
+                color={Constants.Colors.IN}
               />
             ) : this.state.categoryView === "inferentialInstruction" ? (
               <DataQuestions
@@ -213,7 +213,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
                 sessionId={this.props.sessionId}
                 teacherId={this.props.teacherId}
                 magic8={"Level of Instruction"}
-                color={Constants.Colors.LI}
+                color={Constants.Colors.IN}
               />
             ) : <div/>}
           </Grid>

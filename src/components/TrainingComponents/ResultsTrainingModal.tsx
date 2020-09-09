@@ -92,8 +92,6 @@ function ResultsTrainingModal(props: Props): React.ReactElement {
 
 ResultsTrainingModal.propTypes = {
   classes: PropTypes.object.isRequired,
-  content: PropTypes.element,
-  handleBegin: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired
 }
