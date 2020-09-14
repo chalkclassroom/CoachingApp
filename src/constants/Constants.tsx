@@ -26,6 +26,17 @@ export const Colors = {
   'NotPresent': "#bababa"
 }
 
+export const ACTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#6f39c4'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+
 export const TransitionTypeColors = {
   lineColor: lightGreen[300],
   travelingColor: orange[400],

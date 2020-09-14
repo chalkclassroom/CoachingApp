@@ -77,9 +77,6 @@ interface State {
   teacher: {}
 }
 
-type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
-'LevelOfInstruction' | 'ListeningToChildren' | 'SequentialActivities' | 'AssociativeCooperativeInteractions' | 'none';
-
 /**
  * magic 8 menu
  * @class Magic8MenuPage
