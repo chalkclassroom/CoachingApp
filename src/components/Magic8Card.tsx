@@ -61,7 +61,6 @@ interface Props {
   icon: string,
   training: boolean,
   unlocked: boolean,
-  resultsTraining?: boolean,
   type: string
 }
 
@@ -92,7 +91,6 @@ class Magic8Card extends React.Component<Props, State> {
     icon: PropTypes.string.isRequired,
     training: PropTypes.bool.isRequired,
     unlocked: PropTypes.bool.isRequired,
-    resultsTraining: PropTypes.bool,
     type: PropTypes.string.isRequired
   }
 
@@ -113,30 +111,16 @@ class Magic8Card extends React.Component<Props, State> {
               <img src={this.props.icon} style={{ display: "block" }} />
             </BackgroundImage>
             {this.props.training ? (
-              this.props.type === "Observe" ? (
-                this.props.unlocked ? (
-                  <Overlay>
-                    <img
-                      src={CheckmarkImage}
-                      className={classes.overlayImage}
-                      style={{ width: "100px" }}
-                    />
-                  </Overlay>
-                ) : (
-                  <div />
-                )
+              this.props.type === "Observe" && this.props.unlocked ? (
+                <Overlay>
+                  <img
+                    src={CheckmarkImage}
+                    className={classes.overlayImage}
+                    style={{ width: "100px" }}
+                  />
+                </Overlay>
               ) : (
-                this.props.resultsTraining ? (
-                  <Overlay>
-                    <img
-                      src={CheckmarkImage}
-                      className={classes.overlayImage}
-                      style={{ width: "100px" }}
-                    />
-                  </Overlay>
-                ) : (
-                  <div />
-                )
+                <div />
               )
             ) : this.props.unlocked ? (
               <div />

@@ -26,6 +26,76 @@ export const Colors = {
   'NotPresent': "#bababa"
 }
 
+export const TransitionTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#e55529'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const ClimateTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#0988ec'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const MathTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#094492'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const InstructionTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#009365'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const EngagementTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#e99c2e'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const ListeningTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#4fd9b3'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const SequentialTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ffd300'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
 export const ACTheme = createMuiTheme({
   palette: {
     primary: {

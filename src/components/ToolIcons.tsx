@@ -24,8 +24,7 @@ import ObservationModal from './ObservationModal';
 import ResultsModal from './ResultsModal';
 import LockedModal from './LockedModal';
 import ResultsTrainingModal from '../components/TrainingComponents/ResultsTrainingModal';
-import FirebaseContext from '../components/Firebase/FirebaseContext';
-import { useState, useContext, useEffect } from 'react';
+import { useState } from 'react';
 import { connect } from "react-redux";
 import * as Types from '../constants/Types';
 import * as H from 'history';
@@ -49,8 +48,6 @@ function ToolIcons(props: Props): React.ReactElement {
   const [observeModal, setObserveModal] = useState(false);
   const [resultsModal, setResultsModal] = useState(false);
   const [lockedModal, setLockedModal] = useState(false);
-  const [resultsTraining, setResultsTraining] = useState([]);
-  const firebase = useContext(FirebaseContext);
 
   const ObservationPopUp = {
     'TransitionTime': <TransitionTimeObservationPopUp />,
@@ -88,12 +85,6 @@ function ToolIcons(props: Props): React.ReactElement {
     }
   }
 
-  useEffect(() => {
-    firebase.getWatchedResultsTraining().then((resultsTraining: Array<string>) => {
-      setResultsTraining(resultsTraining);
-    })
-  })
-
   return (
     <div style={{width: '100%', height: '100%'}}>
       <Grid container direction="column" justify="center" alignItems="center" style={{width: '100%', height: '100%'}}>
@@ -105,7 +96,6 @@ function ToolIcons(props: Props): React.ReactElement {
                 icon={TransitionTimeIconImage}
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(1) : false}
-                resultsTraining={resultsTraining ? resultsTraining.includes('TransitionTime') : false}
                 training={training}
                 type={type}
               />
@@ -116,7 +106,6 @@ function ToolIcons(props: Props): React.ReactElement {
                 icon={ClassroomClimateIconImage}
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(2) : false}
-                resultsTraining={resultsTraining ? resultsTraining.includes('ClassroomClimate') : false}
                 training={training}
                 type={type}
               />
@@ -127,7 +116,6 @@ function ToolIcons(props: Props): React.ReactElement {
                 icon={MathIconImage}
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(3) : false}
-                resultsTraining={resultsTraining ? resultsTraining.includes('MathInstruction') : false}
                 training={training}
                 type={type}
               />
@@ -142,7 +130,6 @@ function ToolIcons(props: Props): React.ReactElement {
                 icon={InstructionIconImage}
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(5) : false}
-                resultsTraining={resultsTraining ? resultsTraining.includes('LevelOfInstruction') : false}
                 training={training}
                 type={type}
               />
@@ -153,7 +140,6 @@ function ToolIcons(props: Props): React.ReactElement {
                 icon={EngagementIconImage}
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(4) : false}
-                resultsTraining={resultsTraining ? resultsTraining.includes('StudentEngagement') : false}
                 training={training}
                 type={type}
               />
@@ -164,7 +150,6 @@ function ToolIcons(props: Props): React.ReactElement {
                 icon={ListeningIconImage}
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(6) : false}
-                resultsTraining={resultsTraining ? resultsTraining.includes('ListeningToChildren') : false}
                 training={training}
                 type={type}
               />
@@ -179,7 +164,6 @@ function ToolIcons(props: Props): React.ReactElement {
                 icon={SequentialIconImage}
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(7) : false}
-                resultsTraining={resultsTraining ? resultsTraining.includes('SequentialActivities') : false}
                 training={training}
                 type={type}
               />
@@ -190,7 +174,6 @@ function ToolIcons(props: Props): React.ReactElement {
                 icon={LiteracyIconImage}
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(9) : false}
-                resultsTraining={resultsTraining ? resultsTraining.includes('LiteracyInstruction') : false}
                 training={training}
                 type={type}
               />
@@ -201,7 +184,6 @@ function ToolIcons(props: Props): React.ReactElement {
                 icon={AssocCoopIconImage}
                 onClick={handleClick}
                 unlocked={unlocked ? unlocked.includes(8) : false}
-                resultsTraining={resultsTraining ? resultsTraining.includes('AssociativeCooperativeInteractions') : false}
                 training={training}
                 type={type}
               />
@@ -229,7 +211,6 @@ function ToolIcons(props: Props): React.ReactElement {
         open={resultsTrainingModal}
         handleClose={(): void => {
           setResultsTrainingModal(false);
-          firebase.handleWatchResultsTraining(selected);
         }}
       />
     </div>

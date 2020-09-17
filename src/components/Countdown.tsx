@@ -40,10 +40,10 @@ interface Props {
 }
 
 interface Style {
-  line: string,
-  lineGrid: string,
-  timeText: string,
-  timerContainer: string
+  line?: string,
+  lineGrid?: string,
+  timeText?: string,
+  timerContainer?: string
 }
 
 /**

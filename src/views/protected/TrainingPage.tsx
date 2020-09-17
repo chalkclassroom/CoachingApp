@@ -54,6 +54,10 @@ const styles: object = {
   timerGrid: {
     width: '55%',
   },
+  trainingText: {
+    paddingBottom: '0.5em',
+    fontFamily: 'Arimo'
+  },
   // ipad landscape
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
     main: {
@@ -92,6 +96,9 @@ const styles: object = {
     },
     timerGrid: {
       width: '50%'
+    },
+    trainingText: {
+      paddingBottom: '1.5em'
     }
   }
 };
@@ -105,7 +112,8 @@ interface Props {
     dashboardGrid: string,
     contentGrid: string,
     typeGrid: string,
-    timerGrid: string
+    timerGrid: string,
+    trainingText: string
   },
   history: H.History
 }
@@ -173,7 +181,14 @@ class TrainingPage extends React.Component<Props, State> {
         >
           <Grid item className={classes.dashboardGrid}>
             <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
-              <TrainingDashboard viewClick={this.viewClick} view={this.state.view} />
+              {<Grid item>
+                <Typography align="center" variant="h4" className={classes.trainingText}>
+                  Training
+                </Typography>
+              </Grid>}
+              <Grid item style={{width: '100%'}}>
+                <TrainingDashboard viewClick={this.viewClick} view={this.state.view} />
+              </Grid>
             </Grid>
           </Grid>
           <Grid item className={classes.contentGrid}>

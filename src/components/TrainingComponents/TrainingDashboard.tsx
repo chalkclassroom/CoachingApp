@@ -38,26 +38,8 @@ const styles: object = {
     width: "6em",
     height: "6em"
   },
-  infoDisplayGrid: {
-    height: "41vh",
-    width:"90%",
-    marginLeft:"5px",
-    marginRight:"5px",
-    marginTop:"5px",
-    marginBottom:"5px",
-    display: "flex",
-    justifyItems: "center"
-  },
   helpIcon: {
     width: "60px"
-  },
-  completeGrid: {
-    marginTop: "5px",
-    marginBottom: "10px",
-    marginLeft: "10px",
-    marginRight: "10px",
-    alignContent: "flex-end",
-    display: "flex"
   },
   gridTopMargin: {
     marginTop: "5px"
@@ -100,7 +82,10 @@ const styles: object = {
       width: 'auto'
     },
     card: {
-      marginBottom: 0
+      marginBottom: 0,
+      width: "94%",
+      marginRight: "3%",
+      marginLeft: "3%",
     },
     resultsButtons: {
       width: 'auto'
@@ -111,9 +96,7 @@ const styles: object = {
 interface Style {
   card: string,
   icon: string,
-  infoDisplayGrid: string,
   helpIcon: string,
-  completeGrid: string,
   gridTopMargin: string,
   resultsButtons: string,
   viewButtons: string,
@@ -134,7 +117,6 @@ interface State {
   icon: string,
   lookForsIcon: string,
   notesIcon: string,
-  theme: Theme,
   help: boolean
 }
 
@@ -151,10 +133,9 @@ class TrainingDashboard extends React.Component<Props, State> {
 
     this.state = {
       auth: true,
-      icon: null,
-      lookForsIcon: null,
-      notesIcon: null,
-      theme: null,
+      icon: '',
+      lookForsIcon: '',
+      notesIcon: '',
       help: false
     }
   }
@@ -169,9 +150,7 @@ class TrainingDashboard extends React.Component<Props, State> {
     classes: PropTypes.exact({
       card: PropTypes.string,
       icon: PropTypes.string,
-      infoDisplayGrid: PropTypes.string,
       helpIcon: PropTypes.string,
-      completeGrid: PropTypes.string,
       gridTopMargin: PropTypes.string,
       resultsButtons: PropTypes.string,
       viewButtons: PropTypes.string,
@@ -211,23 +190,6 @@ class TrainingDashboard extends React.Component<Props, State> {
                   onClick={(): void => this.props.viewClick('observe')}
                 >
                   Observation
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item className={classes.item}>
-              <MuiThemeProvider theme={AppBarTheme}>
-                <Button
-                  size="large"
-                  color="primary"
-                  variant={
-                    this.props.view === 'navigation'
-                      ? "contained"
-                      : "outlined"
-                  }
-                  className={this.props.view === 'navigation' ? classes.viewButtonsSelected : classes.viewButtons}
-                  onClick={(): void => this.props.viewClick('navigation')}
-                >
-                  Navigation
                 </Button>
               </MuiThemeProvider>
             </Grid>
@@ -279,6 +241,23 @@ class TrainingDashboard extends React.Component<Props, State> {
                   onClick={(): void => this.props.viewClick('actionPlan')}
                 >
                   Action Plan
+                </Button>
+              </MuiThemeProvider>
+            </Grid>
+            <Grid item className={classes.item}>
+              <MuiThemeProvider theme={AppBarTheme}>
+                <Button
+                  size="large"
+                  color="primary"
+                  variant={
+                    this.props.view === 'navigation'
+                      ? "contained"
+                      : "outlined"
+                  }
+                  className={this.props.view === 'navigation' ? classes.viewButtonsSelected : classes.viewButtons}
+                  onClick={(): void => this.props.viewClick('navigation')}
+                >
+                  Navigation
                 </Button>
               </MuiThemeProvider>
             </Grid>

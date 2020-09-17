@@ -66,7 +66,7 @@ type Props = RouteComponentProps & {
   classes: Style,
   type: string,
   history: H.History,
-  firebase: { getTeacherList(): Promise<Types.Teacher[]> },
+  firebase?: { getTeacherList(): Promise<Types.Teacher[]> } | null,
   handleClose(): void,
   changeTeacher(teacher: Types.Teacher): Types.Teacher,
   getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>,
@@ -110,19 +110,21 @@ class TeacherModal extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Types.Teacher>) => {
-      const teacherList = [];
-      teacherPromiseList.forEach(tpromise => {
-        tpromise.then((data: Types.Teacher) => {
-          teacherList.push(data);
-          this.setState((previousState) => {
-            return {
-              teachers: previousState.teachers.concat(data)
-            };
-          }, () => { this.props.getTeacherList(this.state.teachers) });
+    if (this.props.firebase) {
+      this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Types.Teacher>) => {
+        const teacherList = [];
+        teacherPromiseList.forEach(tpromise => {
+          tpromise.then((data: Types.Teacher) => {
+            teacherList.push(data);
+            this.setState((previousState) => {
+              return {
+                teachers: previousState.teachers.concat(data)
+              };
+            }, () => { this.props.getTeacherList(this.state.teachers) });
+          });
         });
       });
-    });
+    }
   }
 
   /**
@@ -147,7 +149,7 @@ class TeacherModal extends React.Component<Props, State> {
     }).isRequired,
     handleClose: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
-    firebase: PropTypes.exact({getTeacherList: PropTypes.func}).isRequired,
+    firebase: PropTypes.exact({getTeacherList: PropTypes.func}),
     history: ReactRouterPropTypes.history.isRequired,
     changeTeacher: PropTypes.func.isRequired,
     getTeacherList: PropTypes.func.isRequired,

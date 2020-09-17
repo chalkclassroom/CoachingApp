@@ -33,7 +33,7 @@ const styles: object = {
 
 interface Props {
   classes: {
-    paper: string,
+    paper?: string,
   },
   open: boolean,
   close(): void
