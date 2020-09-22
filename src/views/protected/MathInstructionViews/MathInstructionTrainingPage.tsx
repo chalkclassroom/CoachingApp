@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TrainingLayout from '../../../components/TrainingLayout';
+import TrainingLayout from '../../../components/TrainingComponents/TrainingLayout';
 import MathIconImage from '../../../assets/images/MathIconImage.svg';
 import MathHelpCard from '../../../components/MathInstructionComponents/MathHelpCard';
 import * as Constants from '../../../constants/Constants';

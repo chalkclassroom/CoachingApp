@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TrainingLayout from '../../../components/TrainingLayout';
+import TrainingLayout from '../../../components/TrainingComponents/TrainingLayout';
 import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg';
 import ListeningToChildrenHelpCard from '../../../components/ListeningComponents/ListeningToChildrenHelpCard';
 import * as Constants from '../../../constants/Constants';

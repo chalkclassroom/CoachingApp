@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TrainingLayout from '../../../components/TrainingLayout';
+import TrainingLayout from '../../../components/TrainingComponents/TrainingLayout';
 import SequentialIconImage from "../../../assets/images/SequentialIconImage.svg";
 import SequentialHelpCard from "../../../components/SequentialActivitiesComponents/SequentialHelpCard";
 import * as Constants from '../../../constants/Constants';

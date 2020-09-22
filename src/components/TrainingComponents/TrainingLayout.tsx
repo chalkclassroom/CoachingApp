@@ -1,31 +1,26 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { withStyles, Theme } from '@material-ui/core/styles/index';
-import AppBar from './AppBar';
-import FirebaseContext from './Firebase/FirebaseContext';
+import AppBar from '../AppBar';
+import FirebaseContext from '../Firebase/FirebaseContext';
 import 'chartjs-plugin-datalabels';
-import TrainingVideo from './Shared/TrainingVideo';
-import TrainingQuestionnaire from './Shared/TrainingQuestionnaire';
-import TrainingDashboard from './Shared/TrainingDashboard';
+import TrainingVideo from './TrainingVideo';
+import TrainingQuestionnaire from './TrainingQuestionnaire';
+import TrainingObservationDashboard from './TrainingObservationDashboard';
 import Grid from '@material-ui/core/Grid';
-import * as Types from '../constants/Types';
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   root: {
     flexGrow: 1,
     minHeight: '100vh',
-    // width: '100vw',
     flexDirection: 'column',
     alignItems: 'stretch',
     overflowX: 'hidden',
     overflowY: 'auto',
-    // margin: '0',
-    // padding: '0'
   },
   titleContainer: {
     width: '100%',
-    // margin: '0',
-    // padding: '0',
     textAlign: 'center',
     display: 'flex',
     justifyContent: 'space-around',
@@ -38,22 +33,11 @@ const styles: object = {
   },
   main: {
     height: '100%',
-    // flexGrow: 1,
-    // display: 'grid',
-    // gridTemplateRows: '100%',
-    // gridTemplateColumns: '25% 75%',
-    // margin: '2% 5% 2% 5%'
     paddingTop: '0.5em',
     paddingBottom: '0.5em'
   },
   trainingContentCard: {
-    // display: 'flex',
-    // flexDirection: 'column',
-    // justifyContent: 'center',
-    // alignItems: 'stretch',
     padding: '0% 4% 3% 4%',
-    // overflowY: 'scroll',
-    // overflowX: 'hidden',
     width: '75%'
   },
   grid: {
@@ -62,17 +46,12 @@ const styles: object = {
     height: '100%'
   },
   dashboardContainer: {
-    width: '25%',
-    // border: '1px solid blue'
+    width: '25%'
   },
 
   // iPad Landscape
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
-    root: {
-      // fontSize: '1.5em'
-    },
     main: {
-      // margin: '8% 2% 2% 2%',
       height: '90vh'
     }
   },
@@ -92,22 +71,10 @@ const styles: object = {
       boxShadow: '1px 1px 3px #8C8D91'
     },
     trainingContentCard: {
-      // flexGrow: 1,
-      // margin: '5% 0% 2% 0%',
-      // padding: '8% 2% 3% 2%',
-      // justifyContent: 'flex-start',
-      // borderTop: '2px solid #FFA726'
       width: '100%',
       height: '75%'
     }
   },
-
-  // iPad-Mini Landscape
-  /* '@media only screen and (max-width:1024px) and (orientation:landscape)': {
-    main: {
-      margin: '2%'
-    }
-  }, */
 
   // Minor Breakpoint - 900px height
   '@media only screen and (max-width:1024px) and (min-height:900px) and (orientation:portrait)': {
@@ -126,13 +93,6 @@ const styles: object = {
     },
     dashboardContainer: {
       boxShadow: '1px 1px 3px #8C8D91'
-    },
-    trainingContentCard: {
-      // flexGrow: 1,
-      // margin: '3% 0% 2% 0%',
-      // padding: '5% 2% 3% 2%',
-      // justifyContent: 'flex-start',
-      // borderTop: '2px solid #FFA726'
     }
   },
 
@@ -267,7 +227,7 @@ class TrainingLayout extends React.Component<Props, State> {
                 direction='column'
                 style={{height: '100%'}}
               >
-                <TrainingDashboard
+                <TrainingObservationDashboard
                   ViewEnum={ViewEnum}
                   view={view}
                   Icon={this.props.icon}

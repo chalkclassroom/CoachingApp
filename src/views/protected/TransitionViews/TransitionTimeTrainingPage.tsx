@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TrainingLayout from '../../../components/TrainingLayout';
+import TrainingLayout from '../../../components/TrainingComponents/TrainingLayout';
 import TransitionTimeIconImage from "../../../assets/images/TransitionTimeIconImage.svg";
 import TransitionHelpCard from '../../../components/TransitionComponents/TransitionHelpCard';
 import * as Constants from '../../../constants/Constants';

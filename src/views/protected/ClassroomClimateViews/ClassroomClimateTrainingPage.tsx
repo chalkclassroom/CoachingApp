@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TrainingLayout from '../../../components/TrainingLayout';
+import TrainingLayout from '../../../components/TrainingComponents/TrainingLayout';
 import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg';
 import ClassroomClimateHelpCard from '../../../components/ClassroomClimateComponent/ClassroomClimateHelpCard';
 import * as Constants from '../../../constants/Constants';

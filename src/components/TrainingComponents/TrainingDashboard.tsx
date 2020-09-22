@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import { Button, Card, Grid } from '@material-ui/core';
-import { MuiThemeProvider, createMuiTheme, Theme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 // import * as Types from '../../constants/Types';
 

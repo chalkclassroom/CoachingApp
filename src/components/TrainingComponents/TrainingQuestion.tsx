@@ -65,7 +65,11 @@ class TrainingQuestion extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      formControl: PropTypes.string,
+      correctFeedback: PropTypes.string,
+      incorrectFeedback: PropTypes.string
+    }).isRequired,
     setSelection: PropTypes.func.isRequired,
     feedback: PropTypes.string.isRequired,
     recentlyCorrect: PropTypes.bool.isRequired,

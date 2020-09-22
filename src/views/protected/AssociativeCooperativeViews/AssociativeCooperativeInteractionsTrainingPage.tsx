@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TrainingLayout from '../../../components/TrainingLayout';
+import TrainingLayout from '../../../components/TrainingComponents/TrainingLayout';
 import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
 import AssocCoopHelpCard from '../../../components/AssociativeCooperativeComponents/AssocCoopHelpCard';
 import * as Constants from '../../../constants/Constants';

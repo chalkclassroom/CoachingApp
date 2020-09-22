@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TrainingLayout from '../../../components/TrainingLayout';
+import TrainingLayout from '../../../components/TrainingComponents/TrainingLayout';
 import EngagementIconImage from "../../../assets/images/EngagementIconImage.svg";
 import StudentEngagementHelpCard from "../../../components/StudentEngagementComponents/StudentEngagementHelpCard";
 import * as Constants from '../../../constants/Constants';

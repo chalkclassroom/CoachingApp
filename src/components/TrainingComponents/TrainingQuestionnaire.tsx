@@ -348,7 +348,11 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
 
   static propTypes = {
     section: PropTypes.oneOf<Selection>(['transition', 'climate', 'math', 'student', 'level', 'listening', 'sequential', 'ac']).isRequired,
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string,
+      button: PropTypes.string,
+      nextButton: PropTypes.string
+    }).isRequired,
     addUnlocked: PropTypes.func.isRequired
   }
 
@@ -374,7 +378,7 @@ class TrainingQuestionnaire extends React.Component<Props, State> {
             {this.getButtons()}
           </div>
         </div>
-        <Dialog open={modalOpen} onClose={null} >
+        <Dialog open={modalOpen} >
           <DialogTitle id="knowledge-check-modal-title" style={{fontFamily: 'Arimo'}}>
           Your Results
           </DialogTitle>
