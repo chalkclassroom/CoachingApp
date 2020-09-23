@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import ReactRouterPropTypes from 'react-router-prop-types';
 import Magic8Card from './Magic8Card';
 import Grid from '@material-ui/core/Grid';
+import Grow from '@material-ui/core/Grow';
 import AssocCoopIconImage from "../assets/images/AssocCoopIconImage.svg";
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg";
 import InstructionIconImage from "../assets/images/InstructionIconImage.svg";
@@ -90,104 +91,122 @@ function ToolIcons(props: Props): React.ReactElement {
       <Grid container direction="column" justify="center" alignItems="center" style={{width: '100%', height: '100%'}}>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%', paddingBottom: '1em'}}>
-            <Grid item>
-              <Magic8Card
-                title="TransitionTime"
-                icon={TransitionTimeIconImage}
-                onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(1) : false}
-                training={training}
-                type={type}
-              />
-            </Grid>
-            <Grid item>
-              <Magic8Card
-                title="ClassroomClimate"
-                icon={ClassroomClimateIconImage}
-                onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(2) : false}
-                training={training}
-                type={type}
-              />
-            </Grid>
-            <Grid item>
-              <Magic8Card
-                title="MathInstruction"
-                icon={MathIconImage}
-                onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(3) : false}
-                training={training}
-                type={type}
-              />
-            </Grid>
+            <Grow in={true}>
+              <Grid item>
+                <Magic8Card
+                  title="TransitionTime"
+                  icon={TransitionTimeIconImage}
+                  onClick={handleClick}
+                  unlocked={unlocked ? unlocked.includes(1) : false}
+                  training={training}
+                  type={type}
+                />
+              </Grid>
+            </Grow>
+            <Grow in={true} timeout={1000}>
+              <Grid item>
+                <Magic8Card
+                  title="ClassroomClimate"
+                  icon={ClassroomClimateIconImage}
+                  onClick={handleClick}
+                  unlocked={unlocked ? unlocked.includes(2) : false}
+                  training={training}
+                  type={type}
+                />
+              </Grid>
+            </Grow>
+            <Grow in={true} timeout={1500}>
+              <Grid item>
+                <Magic8Card
+                  title="MathInstruction"
+                  icon={MathIconImage}
+                  onClick={handleClick}
+                  unlocked={unlocked ? unlocked.includes(3) : false}
+                  training={training}
+                  type={type}
+                />
+              </Grid>
+            </Grow>
           </Grid>
         </Grid>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%', paddingBottom: '1em'}}>
-            <Grid item>
-              <Magic8Card
-                title="LevelOfInstruction"
-                icon={InstructionIconImage}
-                onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(5) : false}
-                training={training}
-                type={type}
-              />
-            </Grid>
-            <Grid item>
-              <Magic8Card
-                title="StudentEngagement"
-                icon={EngagementIconImage}
-                onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(4) : false}
-                training={training}
-                type={type}
-              />
-            </Grid>
-            <Grid item>
-              <Magic8Card
-                title="ListeningToChildren"
-                icon={ListeningIconImage}
-                onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(6) : false}
-                training={training}
-                type={type}
-              />
-            </Grid>
+            <Grow in={true} timeout={1000}>
+              <Grid item>
+                <Magic8Card
+                  title="LevelOfInstruction"
+                  icon={InstructionIconImage}
+                  onClick={handleClick}
+                  unlocked={unlocked ? unlocked.includes(5) : false}
+                  training={training}
+                  type={type}
+                />
+              </Grid>
+            </Grow>
+            <Grow in={true} timeout={1500}>
+              <Grid item>
+                <Magic8Card
+                  title="StudentEngagement"
+                  icon={EngagementIconImage}
+                  onClick={handleClick}
+                  unlocked={unlocked ? unlocked.includes(4) : false}
+                  training={training}
+                  type={type}
+                />
+              </Grid>
+            </Grow>
+            <Grow in={true} timeout={2000}>
+              <Grid item>
+                <Magic8Card
+                  title="ListeningToChildren"
+                  icon={ListeningIconImage}
+                  onClick={handleClick}
+                  unlocked={unlocked ? unlocked.includes(6) : false}
+                  training={training}
+                  type={type}
+                />
+              </Grid>
+            </Grow>
           </Grid>
         </Grid>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{width: '100%'}}>
-            <Grid item>
-              <Magic8Card
-                title="SequentialActivities"
-                icon={SequentialIconImage}
-                onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(7) : false}
-                training={training}
-                type={type}
-              />
-            </Grid>
-            <Grid item>
-              <Magic8Card
-                title="LiteracyInstruction"
-                icon={LiteracyIconImage}
-                onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(9) : false}
-                training={training}
-                type={type}
-              />
-            </Grid>
-            <Grid item>
-              <Magic8Card
-                title="AssociativeCooperativeInteractions"
-                icon={AssocCoopIconImage}
-                onClick={handleClick}
-                unlocked={unlocked ? unlocked.includes(8) : false}
-                training={training}
-                type={type}
-              />
-            </Grid>
+            <Grow in={true} timeout={1500}>
+              <Grid item>
+                <Magic8Card
+                  title="SequentialActivities"
+                  icon={SequentialIconImage}
+                  onClick={handleClick}
+                  unlocked={unlocked ? unlocked.includes(7) : false}
+                  training={training}
+                  type={type}
+                />
+              </Grid>
+            </Grow>
+            <Grow in={true} timeout={2000}>
+              <Grid item>
+                <Magic8Card
+                  title="LiteracyInstruction"
+                  icon={LiteracyIconImage}
+                  onClick={handleClick}
+                  unlocked={unlocked ? unlocked.includes(9) : false}
+                  training={training}
+                  type={type}
+                />
+              </Grid>
+            </Grow>
+            <Grow in={true} timeout={2500}>
+              <Grid item>
+                <Magic8Card
+                  title="AssociativeCooperativeInteractions"
+                  icon={AssocCoopIconImage}
+                  onClick={handleClick}
+                  unlocked={unlocked ? unlocked.includes(8) : false}
+                  training={training}
+                  type={type}
+                />
+              </Grid>
+            </Grow>
           </Grid>
         </Grid>
       </Grid>
