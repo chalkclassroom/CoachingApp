@@ -114,12 +114,11 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     const dateArray: Array<string> = [];
     const posArray: Array<number> = [];
     const negArray: Array<number> = [];
-    firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<object>) => {
-      console.log("dataset is: ", dataSet);
+    firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, positive: number, negative: number}>) => {
       dataSet.forEach((data: {dayOfEvent: {value: string}, positive: number, negative: number}) => {
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
-        posArray.push(data.positive);
-        negArray.push(data.negative);
+        posArray.push(Math.round((data.positive / (data.positive + data.negative)) * 100));
+        negArray.push(Math.round((data.negative / (data.positive + data.negative)) * 100));
       });
       this.setState({
         trendsDates: dateArray,

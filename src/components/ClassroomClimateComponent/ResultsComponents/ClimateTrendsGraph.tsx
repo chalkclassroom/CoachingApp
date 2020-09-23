@@ -28,10 +28,30 @@ const climateTrendOptions = {
     fontStyle: "bold"
   },
   scales: {
+    xAxes: [
+      {
+        display: true,
+        scaleLabel: {
+          display: true,
+          labelString: "Date",
+          fontStyle: "bold"
+        }
+      }
+    ],
     yAxes: [
       {
         ticks: {
-          beginAtZero: true
+          beginAtZero: true,
+          min: 0,
+          max: 100,
+          callback: function(value: number): string {
+            return value + "%";
+          }
+        },
+        scaleLabel: {
+          display: true,
+          labelString: "% of Behavior Responses",
+          fontStyle: "bold"
         }
       }
     ]
