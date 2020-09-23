@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
@@ -9,20 +9,6 @@ import Grid from '@material-ui/core/Grid';
 import MathHelpChild from './MathHelpChild';
 import MathHelpTeacher from './MathHelpTeacher';
 import * as Constants from '../../constants/Constants';
-
-const MathTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.MI
-    },
-    secondary: {
-      main: '#000000'
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 const styles: object = {
   tabBar: {
@@ -94,7 +80,7 @@ class MathHelpCard extends React.Component<Props, State> {
       <div>
         <Grid container direction="column">
           <Grid item>
-            <MuiThemeProvider theme={MathTheme}>
+            <MuiThemeProvider theme={Constants.MathTheme}>
               <TabBar position="static" color="default" className={classes.tabBar}>
                 <Tabs
                   value={this.state.tabValue}

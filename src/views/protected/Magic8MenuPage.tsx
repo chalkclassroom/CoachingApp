@@ -1,31 +1,11 @@
 import * as React from "react";
 import "../../App.css";
 import * as PropTypes from "prop-types";
-import Magic8Card from "../../components/Magic8Card";
 import { Typography } from "@material-ui/core";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import AppBar from "../../components/AppBar";
 import { withStyles } from "@material-ui/core/styles";
-import AssocCoopIconImage from "../../assets/images/AssocCoopIconImage.svg";
-import ClassroomClimateIconImage from "../../assets/images/ClassroomClimateIconImage.svg";
-import InstructionIconImage from "../../assets/images/InstructionIconImage.svg";
-import ListeningIconImage from "../../assets/images/ListeningIconImage.svg";
-import MathIconImage from "../../assets/images/MathIconImage.svg";
-import SequentialIconImage from "../../assets/images/SequentialIconImage.svg";
-import EngagementIconImage from "../../assets/images/EngagementIconImage.svg";
-import TransitionTimeIconImage from "../../assets/images/TransitionTimeIconImage.svg";
-import ObservationModal from '../../components/ObservationModal';
-import ResultsModal from '../../components/ResultsModal';
-import TrainingModal from '../../components/TrainingModal';
-import TransitionTimeObservationPopUp from '../../components/TransitionComponents/TransitionTimeObservationPopUp';
-import ClassroomClimateObservationPopUp from '../../components/ClassroomClimateComponent/ClassroomClimateObservationPopUp';
-import MathInstructionObservationPopUp from '../../components/MathInstructionComponents/MathInstructionObservationPopUp';
-import StudentEngagementObservationPopUp from '../../components/StudentEngagementComponents/StudentEngagementObservationPopUp';
-import LevelOfInstructionObservationPopUp from '../../components/LevelOfInstructionComponents/LevelOfInstructionObservationPopUp';
-import ListeningToChildrenObservationPopUp from '../../components/ListeningComponents/ListeningToChildrenObservationPopUp';
-import SequentialActivitiesObservationPopUp from '../../components/SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
-import AssociativeCooperativeInteractionsObservationPopUp from '../../components/AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
-import LockedModal from '../../components/LockedModal';
+import ToolIcons from '../../components/ToolIcons';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
@@ -70,19 +50,6 @@ const styles: object = {
   }
 };
 
-
-const MAP = {
-  none: 0,
-  TransitionTime: 1,
-  ClassroomClimate: 2,
-  MathInstruction: 3,
-  StudentEngagement: 4,
-  LevelOfInstruction: 5,
-  ListeningToChildren: 6,
-  SequentialActivities: 7,
-  AssociativeCooperativeInteractions: 8,
-};
-
 interface Style {
   root: string,
   grow: string,
@@ -94,26 +61,21 @@ interface Style {
 interface Props {
   classes: Style,
   history: H.History,
-  location: H.Location,
+  location: {
+    state: {
+      type: string
+    }
+  },
   changeTeacher(teacher: string): void,
   teacherSelected: Types.Teacher,
   teacherList: Array<Types.Teacher>
 }
 
 interface State {
-  allowed: boolean,
-  numSelected: number,
-  selected: Selected,
-  unlocked: Array<number>,
-  unlockedData: boolean,
-  page: string,
   teacherId: string,
   teacherName: string,
   teacher: {}
 }
-
-type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
-'LevelOfInstruction' | 'ListeningToChildren' | 'SequentialActivities' | 'AssociativeCooperativeInteractions' | 'none';
 
 /**
  * magic 8 menu
@@ -125,107 +87,12 @@ class Magic8MenuPage extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props);
-    // this.onClick = this.onClick.bind(this);
+
     this.state = {
-      allowed: false,
-      numSelected: 0,
-      selected: "none",
-      unlocked: [],
-      unlockedData: false,
-      page: '',
       teacherId: '',
       teacherName: '',
       teacher: {}
     };
-
-    // this.setUnlockedSectionsState = this.setUnlockedSectionsState.bind(this);
-  }
-
-  /**
-   * @param {string} selected
-   * @param {Selected} title
-   * @return {void}
-   */
-  onClick = (selected: string, title: Selected): void => {
-    if (selected && this.state.numSelected > 0) {
-      this.setState({
-        numSelected: this.state.numSelected - 1,
-        selected: "none"
-      });
-      if (this.state.numSelected === 1) {
-        this.setState({ allowed: false });
-      }
-    } else if (this.state.numSelected < 1) {
-      this.setState({
-        numSelected: this.state.numSelected + 1,
-        allowed: true,
-        selected: title
-      });
-    }
-  }
-
-  handleGoButton = (): void => {
-    if (this.state.page === "Training") {
-      this.props.history.push({
-        pathname: `/${this.state.selected}Training`,
-      });
-    } else if (this.state.unlocked.includes(MAP[this.state.selected])) {
-      if (this.state.page === "Observe") {
-        this.props.history.push({
-          pathname: `/${this.state.selected}`,
-        });
-      } else if (this.state.page === "Results") {
-        this.props.history.push({
-          pathname: `/${this.state.selected}Results`,
-        });
-      }
-    }
-  };
-
-  /**
-   * @return {void}
-   */
-  setUnlockedSectionsState = (): void => {
-    const firebase = this.context;
-    firebase.getUnlockedSections().then((unlocked: Array<number>) => {
-      this.setState({
-        unlocked: unlocked,
-        unlockedData: true
-      });
-    });
-  }
-
-  /**
-   * @return {void}
-   */
-  handleCloseModal = (): void => {
-    this.setState({
-      numSelected: 0
-    })
-  }
-
-  /** lifecycle method invoked after component mounts */
-  componentDidMount(): void {
-    this.setUnlockedSectionsState();
-    this.setState({
-      page: this.props.history.location.state.type === "Training"
-        ? "Training"
-        : this.props.history.location.state.type === "Observe"
-        ? "Observe"
-        : "Results",
-    });
-  }
-
-  /**
-   *
-   * @param {Props} prevProps
-   */
-  componentDidUpdate(prevProps: Props): void {
-    if (this.props.location.state.type !== prevProps.location.state.type) {
-      this.setState({
-        page: this.props.location.state.type,
-      });
-    }
   }
 
   /**
@@ -236,7 +103,13 @@ class Magic8MenuPage extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string,
+      grow: PropTypes.string,
+      goButton: PropTypes.string,
+      titleText: PropTypes.string,
+      instructionText: PropTypes.string
+    }).isRequired,
     history: ReactRouterPropTypes.history,
     location: ReactRouterPropTypes.location,
     changeTeacher: PropTypes.func.isRequired,
@@ -255,20 +128,10 @@ class Magic8MenuPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render(): React.ReactElement {
+  render(): React.ReactNode {
     const { classes } = this.props;
-    const ObservationPopUp = {
-      'TransitionTime': <TransitionTimeObservationPopUp />,
-      'ClassroomClimate': <ClassroomClimateObservationPopUp />,
-      'MathInstruction': <MathInstructionObservationPopUp />,
-      'StudentEngagement': <StudentEngagementObservationPopUp />,
-      'LevelOfInstruction': <LevelOfInstructionObservationPopUp />,
-      'ListeningToChildren': <ListeningToChildrenObservationPopUp />,
-      'SequentialActivities': <SequentialActivitiesObservationPopUp />,
-      'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />
-    }
     return (
       <div className={classes.root}>
         <div>
@@ -282,34 +145,32 @@ class Magic8MenuPage extends React.Component<Props, State> {
             direction="column"
             justify="flex-start"
             alignItems="center"
-            style={{width: '100vw', height: '100%', paddingTop: '3em'}}
+            style={{width: '100vw', height: '100%', paddingTop: '1em'}}
           >
             <Grid item style={{width: '70vw', paddingBottom: '1em'}}>
               <Grid container direction="row" justify="center" alignItems="center">
                 <Grid item xs={9}>
                   <Grid container direction="row" justify="flex-start" alignItems="center">
-                    <Typography style={{fontSize:'3em'}}>
-                      {this.state.page}
+                    <Typography style={{fontSize:'2.5em'}}>
+                      {this.props.location.state.type}
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid item xs={3}>
                   <Grid container direction="row" justify="flex-end" alignItems="center">
-                    {this.props.history.location.state.type === "Training" ? <div /> : (
-                      <TextField
-                        select
-                        style={{width: '100%'}}
-                        value={this.props.teacherSelected}
-                        onChange={this.changeTeacher}
-                        InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
-                        InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
-                      >
-                        {this.props.teacherList.map((teacher, index)=>
-                          {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
-                            <em>{teacher.firstName + " " + teacher.lastName}</em>
-                          </MenuItem>})}
-                      </TextField>)
-                    }
+                    <TextField
+                      select
+                      style={{width: '100%'}}
+                      value={this.props.teacherSelected}
+                      onChange={this.changeTeacher}
+                      InputLabelProps={{ shrink: true, style: {fontFamily: 'Arimo'} }}
+                      InputProps={{style: {fontFamily: 'Arimo', fontStyle: 'normal'}}}
+                    >
+                      {this.props.teacherList.map((teacher, index)=>
+                        {return <MenuItem key={index} id={teacher.id} value={teacher} style={{fontFamily: 'Arimo'}}>
+                          <em>{teacher.firstName + " " + teacher.lastName}</em>
+                        </MenuItem>})}
+                    </TextField>
                   </Grid>
                 </Grid>
               </Grid>
@@ -318,142 +179,15 @@ class Magic8MenuPage extends React.Component<Props, State> {
               <Grid container direction="row" justify="flex-start" alignItems="center">
                 <Grid item xs={12}>
                   <Typography style={{fontSize: '1.2em'}}>
-                    Select the skill you would like to{" "}
-                    {this.state.page === "Training" ? "learn:" : "focus on:"}
+                    Select the skill you would like to focus on:
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item style={{width: '70vw', paddingBottom: '1em'}}>
-              <Grid container direction="row" justify="space-between" alignItems="center">
-                <Grid item>
-                  <Magic8Card
-                    title="TransitionTime"
-                    icon={TransitionTimeIconImage}
-                    onClick={this.onClick}
-                    numSelected={this.state.numSelected}
-                    unlocked={this.state.unlocked.includes(1)}
-                    page={this.state.page}
-                  />
-                </Grid>
-                <Grid item>
-                  <Magic8Card
-                    title="ClassroomClimate"
-                    icon={ClassroomClimateIconImage}
-                    onClick={this.onClick}
-                    numSelected={this.state.numSelected}
-                    unlocked={this.state.unlocked.includes(2)}
-                    page={this.state.page}
-                  />
-                </Grid>
-                <Grid item>
-                  <Magic8Card
-                    title="MathInstruction"
-                    icon={MathIconImage}
-                    onClick={this.onClick}
-                    numSelected={this.state.numSelected}
-                    unlocked={this.state.unlocked.includes(3)}
-                    page={this.state.page}
-                  />
-                </Grid>
-                <Grid item>
-                  <Magic8Card
-                    title="StudentEngagement"
-                    icon={EngagementIconImage}
-                    onClick={this.onClick}
-                    numSelected={this.state.numSelected}
-                    unlocked={this.state.unlocked.includes(4)}
-                    page={this.state.page}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
             <Grid item style={{width: '70vw'}}>
-              <Grid container direction="row" justify="space-between" alignItems="center">
-                <Grid item>
-                  <Magic8Card
-                    title="LevelOfInstruction"
-                    icon={InstructionIconImage}
-                    onClick={this.onClick}
-                    numSelected={this.state.numSelected}
-                    unlocked={this.state.unlocked.includes(5)}
-                    page={this.state.page}
-                  />
-                </Grid>
-                <Grid item>
-                  <Magic8Card
-                    title="ListeningToChildren"
-                    icon={ListeningIconImage}
-                    onClick={this.onClick}
-                    numSelected={this.state.numSelected}
-                    unlocked={this.state.unlocked.includes(6)}
-                    page={this.state.page}
-                  />
-                </Grid>
-                <Grid item>
-                  <Magic8Card
-                    title="SequentialActivities"
-                    icon={SequentialIconImage}
-                    onClick={this.onClick}
-                    numSelected={this.state.numSelected}
-                    unlocked={this.state.unlocked.includes(7)}
-                    page={this.state.page}
-                  />
-                </Grid>
-                <Grid item>
-                  <Magic8Card
-                    title="AssociativeCooperativeInteractions"
-                    icon={AssocCoopIconImage}
-                    onClick={this.onClick}
-                    numSelected={this.state.numSelected}
-                    unlocked={this.state.unlocked.includes(8)}
-                    page={this.state.page}
-                  />
-                </Grid>
-              </Grid>
+              <ToolIcons type={this.props.location.state.type} training={false} history={this.props.history} />
             </Grid>
           </Grid>
-          <ObservationModal
-            open={
-              this.state.numSelected===1 &&
-              this.state.page==="Observe" &&
-              this.state.unlocked.includes(MAP[this.state.selected]) &&
-              this.state.unlockedData
-            }
-            content={ObservationPopUp[this.state.selected]}
-            handleBegin={this.handleGoButton}
-            handleClose={this.handleCloseModal}
-          />
-          <LockedModal
-            open={
-              this.state.numSelected===1 &&
-              (this.state.page==="Observe" || this.state.page==="Results") &&
-              !this.state.unlocked.includes(MAP[this.state.selected]) &&
-              this.state.unlockedData
-            }
-            handleClose={this.handleCloseModal}
-          />
-          <ResultsModal
-            open={
-              this.state.numSelected===1 &&
-              this.state.page==="Results" &&
-              this.state.unlocked.includes(MAP[this.state.selected]) &&
-              this.state.unlockedData
-            }
-            handleBegin={this.handleGoButton}
-            handleClose={this.handleCloseModal}
-            tool={this.state.selected}
-          />
-          <TrainingModal
-            open={
-              this.state.numSelected===1 &&
-              this.state.page==="Training" &&
-              this.state.unlockedData
-            }
-            handleBegin={this.handleGoButton}
-            handleClose={this.handleCloseModal}
-            tool={this.state.selected}
-          />
         </div>
       </div>
     );

@@ -3,19 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants/Constants';
-
-const EngagementTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SE
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
@@ -94,7 +83,7 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
         <Grid item>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
             <Grid item>
-              <MuiThemeProvider theme={EngagementTheme}>
+              <MuiThemeProvider theme={Constants.EngagementTheme}>
                 <Button
                   onClick={this.offTaskBehaviorClick}
                   variant="contained"
@@ -108,7 +97,7 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
               </MuiThemeProvider>
             </Grid>
             <Grid item>
-              <MuiThemeProvider theme={EngagementTheme}>
+              <MuiThemeProvider theme={Constants.EngagementTheme}>
                 <Button
                   onClick={this.mildEngagementClick}
                   variant="contained"
@@ -122,7 +111,7 @@ class StudentEngagementCoachingQuestions extends React.Component<Props, State> {
               </MuiThemeProvider>
             </Grid>
             <Grid item>
-              <MuiThemeProvider theme={EngagementTheme}>
+              <MuiThemeProvider theme={Constants.EngagementTheme}>
                 <Button
                   onClick={this.highEngagementClick}
                   variant="contained"

@@ -371,7 +371,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     updateCount: PropTypes.func.isRequired,
     currentCenter: PropTypes.string.isRequired,
     backToCenterMenu: PropTypes.func.isRequired,
-    type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'LI', 'LC', 'SA', 'AC', 'RedGraph', 'NotPresent']).isRequired
+    type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'IN', 'LC', 'SA', 'LI', 'AC', 'RedGraph', 'NotPresent']).isRequired
   }
 
   /**

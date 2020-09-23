@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
@@ -10,20 +10,6 @@ import SequentialHelpDefinitions from './SequentialHelpDefinitions';
 import SequentialHelpChild from './SequentialHelpChild';
 import SequentialHelpTeacher from './SequentialHelpTeacher';
 import * as Constants from '../../constants/Constants';
-
-const SequentialTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SA
-    },
-    secondary: {
-      main: '#000000'
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 const styles: object = {
   tabBar: {
@@ -106,7 +92,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
       <div>
         <Grid container direction="column">
           <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
+            <MuiThemeProvider theme={Constants.SequentialTheme}>
               <TabBar position="static" color="default" className={classes.tabBar}>
                 <Tabs
                   value={this.state.tabValue}

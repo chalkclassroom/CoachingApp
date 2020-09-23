@@ -17,13 +17,117 @@ export const Colors = {
   'CC': '#0988ec',
   'MI': '#094492',
   'SE': '#e99c2e',
-  'LI': '#009365',
+  'IN': '#009365',
   'LC': '#4fd9b3',
   'SA': '#ffd300',
+  'LI': '#C4395A',
   'AC': '#6f39c4',
   'RedGraph': "#ec2409",
   'NotPresent': "#bababa"
 }
+
+export const TransitionTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#e55529'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const ClimateTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#0988ec'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const MathTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#094492'
+    },
+    secondary: {
+      main: '#000000'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const InstructionTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#009365'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const EngagementTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#e99c2e'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const ListeningTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#4fd9b3'
+    },
+    secondary: {
+      main: '#000000'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const SequentialTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ffd300'
+    },
+    secondary: {
+      main: '#000000'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const LiteracyTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#C4395A'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const ACTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#6f39c4'
+    },
+    secondary: {
+      main: '#000000'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
 
 export const TransitionTypeColors = {
   lineColor: lightGreen[300],

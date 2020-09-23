@@ -10,21 +10,10 @@ import ChildPieSummary from './ResultsComponents/ChildPieSummary';
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { deleteSACenters, clearSequentialCount } from "../../state/actions/sequential-activities";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
-
-const SequentialTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SA
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   open: boolean,
@@ -65,7 +54,7 @@ function SequentialResultsDialog(props: Props): React.ReactElement {
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
+            <MuiThemeProvider theme={Constants.SequentialTheme}>
               <Button
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
@@ -80,7 +69,7 @@ function SequentialResultsDialog(props: Props): React.ReactElement {
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
+            <MuiThemeProvider theme={Constants.SequentialTheme}>
               <Button
                 color="primary"
                 variant="contained"

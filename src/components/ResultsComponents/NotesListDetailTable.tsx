@@ -96,11 +96,13 @@ class NotesListDetailTable extends React.Component<Props, {}> {
     : this.props.magic8 === "Level of Engagement" ?
       color = Constants.Colors.SE
     : this.props.magic8 === "Level of Instruction" ?
-      color = Constants.Colors.LI
+      color = Constants.Colors.IN
     : this.props.magic8 === "Listening to Children" ?
       color = Constants.Colors.LC
     : this.props.magic8 === "Sequential Activities" ?
       color = Constants.Colors.SA
+    : this.props.magic8 === "Literacy Instruction" ?
+      color = Constants.Colors.LI
     : color = Constants.Colors.AC
 
     return (

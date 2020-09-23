@@ -3,19 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants/Constants';
-
-const ListeningTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.LC
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
@@ -93,7 +82,7 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
         <Grid item>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
             <Grid item>
-              <MuiThemeProvider theme={ListeningTheme}>
+              <MuiThemeProvider theme={Constants.ListeningTheme}>
                 <Button
                   onClick={this.listeningClick}
                   variant="contained"
@@ -107,7 +96,7 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               </MuiThemeProvider>
             </Grid>
             <Grid item>
-              <MuiThemeProvider theme={ListeningTheme}>
+              <MuiThemeProvider theme={Constants.ListeningTheme}>
                 <Button
                   onClick={this.supportingClick}
                   variant="contained"
@@ -121,7 +110,7 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
               </MuiThemeProvider>
             </Grid>
             <Grid item>
-              <MuiThemeProvider theme={ListeningTheme}>
+              <MuiThemeProvider theme={Constants.ListeningTheme}>
                 <Button
                   onClick={this.encouragingClick}
                   variant="contained"

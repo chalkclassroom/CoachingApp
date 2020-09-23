@@ -1,6 +1,9 @@
 import { Prompt } from "react-router-dom";
 
-export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'LI' | 'LC' | 'SA' | 'AC' | 'RedGraph' | 'NotPresent';
+export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' | 'SA' | 'LI' | 'AC' | 'RedGraph' | 'NotPresent';
+
+export type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
+'LevelOfInstruction' | 'ListeningToChildren' | 'SequentialActivities' | 'LiteracyInstruction' | 'AssociativeCooperativeInteractions' | 'none';
 
 export interface ReduxState {
   associativeCenterState: {
@@ -86,6 +89,9 @@ export interface ReduxState {
   },
   transitionTypeState: {
     transitionType: string
+  },
+  unlockedState: {
+    unlocked: Array<number>
   }
 }
 

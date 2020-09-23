@@ -149,7 +149,7 @@ type Props = RouteComponentProps & {
     ): Promise<void>,
     firebaseSignOut(): Promise<void>,
     getTeacherList(): Promise<Types.Teacher[]>
-  },
+  } | null,
   history: H.History,
   noBack?: boolean
 }

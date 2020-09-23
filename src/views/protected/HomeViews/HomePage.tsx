@@ -338,8 +338,8 @@ class HomePage extends React.Component<Props, State> {
                   className={classes.card}
                   onClick={(): void =>
                     this.props.history.push({
-                      pathname: "/Magic8Menu",
-                      state: { type: "Training" }
+                      pathname: "/Training",
+                      // state: { type: "Training" }
                     })
                   }
                 >
@@ -426,7 +426,7 @@ class HomePage extends React.Component<Props, State> {
                       className={classes.card}
                       onClick={(): void =>
                         this.props.history.push({
-                          pathname: "/Magic8Menu",
+                          pathname: "/Training",
                           state: { type: "Training" }
                         })
                       }

@@ -647,7 +647,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: {getTeacherList(): Promise<Types.Teacher[]>}): React.ReactElement => (
+          {(firebase: {getTeacherList(): Promise<Types.Teacher[]>} | null): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}

@@ -10,21 +10,10 @@ import LevelOfInstructionSummaryChart from './ResultsComponents/LevelOfInstructi
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { emptyLoiStack } from "../../state/actions/level-of-instruction";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
-
-const InstructionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.LI
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   open: boolean,
@@ -67,7 +56,7 @@ function InstructionResultsDialog(props: Props): React.ReactElement {
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>
-            <MuiThemeProvider theme={InstructionTheme}>
+            <MuiThemeProvider theme={Constants.InstructionTheme}>
               <Button
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
@@ -81,7 +70,7 @@ function InstructionResultsDialog(props: Props): React.ReactElement {
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <MuiThemeProvider theme={InstructionTheme}>
+            <MuiThemeProvider theme={Constants.InstructionTheme}>
               <Button
                 color="primary"
                 variant="contained"

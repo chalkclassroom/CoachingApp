@@ -151,7 +151,7 @@ class LevelOfInstructionPage extends React.Component<Props, State> {
               <Grid item className={classes.dashboardGrid}>
                 <Grid container alignItems={'center'} justify={'center'} direction={'column'} style={{height: '100%'}}>
                   <Dashboard
-                    type="LI"
+                    type="IN"
                     completeObservation={true}
                   />
                 </Grid>
