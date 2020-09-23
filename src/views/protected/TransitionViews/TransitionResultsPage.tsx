@@ -5,9 +5,9 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import Typography from "@material-ui/core/Typography/Typography";
 import TransitionCoachingQuestions from "../../../components/TransitionComponents/ResultsComponents/TransitionCoachingQuestions"
 import "chartjs-plugin-datalabels";
-import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
-import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
-import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
+import TransitionTimePie from "../../../components/TransitionComponents/ResultsComponents/TransitionTimePie";
+import TransitionBarChart from "../../../components/TransitionComponents/ResultsComponents/TransitionBarChart";
+import TransitionTrendsGraph from "../../../components/TransitionComponents/ResultsComponents/TransitionTrendsGraph";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import Grid from '@material-ui/core/Grid';

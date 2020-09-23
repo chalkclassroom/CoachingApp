@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { Pie } from "react-chartjs-2";
-import FirebaseContext from "../Firebase/FirebaseContext";
-import * as Constants from "../../constants/Constants";
+import FirebaseContext from "../../Firebase/FirebaseContext";
+import * as Constants from "../../../constants/Constants";
 
 interface Props {
   transitionTime: number,
@@ -56,7 +56,8 @@ class TransitionTimePie extends React.Component<Props, {}> {
                 const percentage = parseFloat(
                   ((currentValue / total) * 100).toFixed(1)
                 );
-                return currentValue + " (" + percentage + "%)";
+                return Math.floor((currentValue/1000)/60) + "m "
+                + Math.round((((currentValue/1000)/60) % 1) * 60) + "s" + " (" + percentage + "%)";
               },
               title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
                 return data.labels[tooltipItem[0].index];
@@ -81,7 +82,7 @@ class TransitionTimePie extends React.Component<Props, {}> {
                 size: 20
               },
               fontFamily: 'Arimo',
-              formatter: function(value: number): string | void {
+              formatter: function(value: number): string | null {
                 if (value > 0) {
                   return (
                     Math.floor((value/1000)/60) + "m "
