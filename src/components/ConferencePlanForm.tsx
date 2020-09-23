@@ -22,96 +22,6 @@ import * as Types from '../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 
-const TransitionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.TT
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const ClimateTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.CC
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const MathTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.MI
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const EngagementTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SE
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const InstructionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.IN
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const ListeningTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.LC
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const SequentialTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SA
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const LiteracyTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.LI
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const ACTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.AC
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 const BlankTheme = createMuiTheme({
   palette: {
     primary: {
@@ -760,15 +670,15 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                         Select questions from the {" "}
                                         <MuiThemeProvider
                                           theme={
-                                            this.props.magic8 === 'Transition Time' ? TransitionTheme
-                                            : this.props.magic8 === 'Classroom Climate' ? ClimateTheme
-                                            : this.props.magic8 === 'Math Instruction' ? MathTheme
-                                            : this.props.magic8 === 'Level of Engagement' ? EngagementTheme
-                                            : this.props.magic8 === 'Level of Instruction' ? InstructionTheme
-                                            : this.props.magic8 === 'Listening to Children' ? ListeningTheme
-                                            : this.props.magic8 === 'Sequential Activities' ? SequentialTheme
-                                            : this.props.magic8 === 'Literacy Instruction' ? LiteracyTheme
-                                            : this.props.magic8 === 'AC' ? ACTheme
+                                            this.props.magic8 === 'Transition Time' ? Constants.TransitionTheme
+                                            : this.props.magic8 === 'Classroom Climate' ? Constants.ClimateTheme
+                                            : this.props.magic8 === 'Math Instruction' ? Constants.MathTheme
+                                            : this.props.magic8 === 'Level of Engagement' ? Constants.EngagementTheme
+                                            : this.props.magic8 === 'Level of Instruction' ? Constants.InstructionTheme
+                                            : this.props.magic8 === 'Listening to Children' ? Constants.ListeningTheme
+                                            : this.props.magic8 === 'Sequential Activities' ? Constants.SequentialTheme
+                                            : this.props.magic8 === 'Literacy Instruction' ? Constants.LiteracyTheme
+                                            : this.props.magic8 === 'AC' ? Constants.ACTheme
                                             : BlankTheme
                                           }
                                         >

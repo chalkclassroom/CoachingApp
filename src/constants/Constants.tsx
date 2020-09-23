@@ -50,6 +50,9 @@ export const MathTheme = createMuiTheme({
   palette: {
     primary: {
       main: '#094492'
+    },
+    secondary: {
+      main: '#000000'
     }
   },
   typography: {
@@ -80,6 +83,9 @@ export const ListeningTheme = createMuiTheme({
   palette: {
     primary: {
       main: '#4fd9b3'
+    },
+    secondary: {
+      main: '#000000'
     }
   },
   typography: {
@@ -90,6 +96,19 @@ export const SequentialTheme = createMuiTheme({
   palette: {
     primary: {
       main: '#ffd300'
+    },
+    secondary: {
+      main: '#000000'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+});
+export const LiteracyTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#C4395A'
     }
   },
   typography: {
@@ -100,6 +119,9 @@ export const ACTheme = createMuiTheme({
   palette: {
     primary: {
       main: '#6f39c4'
+    },
+    secondary: {
+      main: '#000000'
     }
   },
   typography: {

@@ -9,22 +9,11 @@ import BehaviorResponsesSummaryChart from './ResultsComponents/BehaviorResponses
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { emptyClimateStack } from "../../state/actions/classroom-climate";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
-
-const ClimateTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.CC
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   open: boolean,
@@ -67,7 +56,7 @@ function ClimateResultsDialog(props: Props): React.ReactElement {
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>
-            <MuiThemeProvider theme={ClimateTheme}>
+            <MuiThemeProvider theme={Constants.ClimateTheme}>
               <Button
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
@@ -81,7 +70,7 @@ function ClimateResultsDialog(props: Props): React.ReactElement {
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <MuiThemeProvider theme={ClimateTheme}>
+            <MuiThemeProvider theme={Constants.ClimateTheme}>
               <Button
                 color="primary"
                 variant="contained"

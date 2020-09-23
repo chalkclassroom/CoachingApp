@@ -10,21 +10,10 @@ import TransitionTimePie from "../ResultsComponents/TransitionTimePie";
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { resetTransitionTime, clearTransitionTime, clearSessionTime } from "../../state/actions/transition-time";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
-
-const TransitionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.TT
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   open: boolean,
@@ -72,7 +61,7 @@ function TransitionResultsDialog(props: Props): React.ReactElement {
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>
-            <MuiThemeProvider theme={TransitionTheme}>
+            <MuiThemeProvider theme={Constants.TransitionTheme}>
               <Button
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
@@ -88,7 +77,7 @@ function TransitionResultsDialog(props: Props): React.ReactElement {
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <MuiThemeProvider theme={TransitionTheme}>
+            <MuiThemeProvider theme={Constants.TransitionTheme}>
               <Button
                 color="primary"
                 variant="contained"

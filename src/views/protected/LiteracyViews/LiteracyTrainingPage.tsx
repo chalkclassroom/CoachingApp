@@ -7,11 +7,10 @@ import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import * as Types from '../../../constants/Types';
 
 /**
- * @function ToolIcons
+ * @function LiteracyTrainingPage
  * @return {ReactElement}
  */
 function LiteracyTrainingPage(): React.ReactElement {
-
   return (
     <div style={{width: '100vw', height: '100vh'}}>
       <FirebaseContext.Consumer>

@@ -10,21 +10,10 @@ import PieSummary from './ResultsComponents/PieSummary';
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { clearEngagementCount } from "../../state/actions/student-engagement";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
-
-const EngagementTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SE
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   open: boolean,
@@ -63,7 +52,7 @@ function EngagementResultsDialog(props: Props): React.ReactElement {
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>
-            <MuiThemeProvider theme={EngagementTheme}>
+            <MuiThemeProvider theme={Constants.EngagementTheme}>
               <Button
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
@@ -77,7 +66,7 @@ function EngagementResultsDialog(props: Props): React.ReactElement {
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <MuiThemeProvider theme={EngagementTheme}>
+            <MuiThemeProvider theme={Constants.EngagementTheme}>
               <Button
                 color="primary"
                 variant="contained"

@@ -41,102 +41,11 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from "@material-ui/core/MenuItem";
 import NotesListDetailTable from './ResultsComponents/NotesListDetailTable';
 import * as moment from 'moment';
-import { MuiThemeProvider, createMuiTheme, Theme } from '@material-ui/core/styles';
+import { MuiThemeProvider, Theme } from '@material-ui/core/styles';
 import { changeTeacher } from '../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Constants from '../constants/Constants';
 import * as Types from '../constants/Types';
-
-const TransitionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.TT
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const ClimateTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.CC
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const MathTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.MI
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const EngagementTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SE
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const InstructionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.IN
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const ListeningTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.LC
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const SequentialTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SA
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const LiteracyTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.LI
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-const ACTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.AC
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 const styles: object = {
   card: {
@@ -271,9 +180,9 @@ class ResultsDashboard extends React.Component<Props, State> {
 
     this.state = {
       auth: true,
-      icon: null,
-      lookForsIcon: null,
-      notesIcon: null,
+      icon: '',
+      lookForsIcon: '',
+      notesIcon: '',
       theme: null,
       help: false
     }
@@ -286,63 +195,63 @@ class ResultsDashboard extends React.Component<Props, State> {
         icon: TransitionTimeIconImage,
         lookForsIcon: TransitionTimeLookForsImage,
         notesIcon: TransitionTimeNotesImage,
-        theme: TransitionTheme
+        theme: Constants.TransitionTheme
       });
     } else if (this.props.magic8 === "Classroom Climate") {
       this.setState({
         icon: ClassroomClimateIconImage,
         lookForsIcon: ClassroomClimateLookForsImage,
         notesIcon: ClassroomClimateNotesImage,
-        theme: ClimateTheme
+        theme: Constants.ClimateTheme
       })
     } else if (this.props.magic8 === "Math Instruction") {
       this.setState({
         icon: MathIconImage,
         lookForsIcon: MathInstructionLookForsImage,
         notesIcon: MathInstructionNotesImage,
-        theme: MathTheme
+        theme: Constants.MathTheme
       })
     } else if (this.props.magic8 === "Level of Engagement") {
       this.setState({
         icon: EngagementIconImage,
         lookForsIcon: EngagementLookForsImage,
         notesIcon: EngagementNotesImage,
-        theme: EngagementTheme
+        theme: Constants.EngagementTheme
       })
     } else if (this.props.magic8 === "Level of Instruction") {
       this.setState({
         icon: InstructionIconImage,
         lookForsIcon: InstructionLookForsImage,
         notesIcon: InstructionNotesImage,
-        theme: InstructionTheme
+        theme: Constants.InstructionTheme
       })
     } else if (this.props.magic8 === "Listening to Children") {
       this.setState({
         icon: ListeningIconImage,
         lookForsIcon: ListeningLookForsImage,
         notesIcon: ListeningNotesImage,
-        theme: ListeningTheme
+        theme: Constants.ListeningTheme
       })
     } else if (this.props.magic8 === "Sequential Activities") {
       this.setState({
         icon: SequentialIconImage,
         lookForsIcon: SequentialLookForsImage,
         notesIcon: SequentialNotesImage,
-        theme: SequentialTheme
+        theme: Constants.SequentialTheme
       })
     } else if (this.props.magic8 === "Literacy Instruction") {
       this.setState({
         icon: LiteracyIconImage,
         lookForsIcon: LiteracyInstructionLookForsImage,
         notesIcon: LiteracyInstructionNotesImage,
-        theme: LiteracyTheme
+        theme: Constants.LiteracyTheme
       })
     } else {
       this.setState({
         icon: AssocCoopIconImage,
         lookForsIcon: AssocCoopLookForsImage,
         notesIcon: AssocCoopNotesImage,
-        theme: ACTheme
+        theme: Constants.ACTheme
       })
     }
   };

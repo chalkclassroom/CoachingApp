@@ -9,22 +9,11 @@ import ChildBehaviorsPie from './ResultsComponents/ChildBehaviorsPie';
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { deleteACCenters, clearACCount } from "../../state/actions/associative-cooperative";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
-
-const ACTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.AC
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   open: boolean,
@@ -71,7 +60,7 @@ function ACResultsDialog(props: Props): React.ReactElement {
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>
-            <MuiThemeProvider theme={ACTheme}>
+            <MuiThemeProvider theme={Constants.ACTheme}>
               <Button
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
@@ -86,7 +75,7 @@ function ACResultsDialog(props: Props): React.ReactElement {
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            <MuiThemeProvider theme={ACTheme}>
+            <MuiThemeProvider theme={Constants.ACTheme}>
               <Button
                 color="primary"
                 variant="contained"

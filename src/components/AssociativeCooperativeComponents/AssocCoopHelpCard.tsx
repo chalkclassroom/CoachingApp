@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
@@ -9,20 +9,6 @@ import Grid from '@material-ui/core/Grid';
 import * as Constants from '../../constants/Constants';
 import ACHelpChild from './ACHelpChild';
 import ACHelpTeacher from './ACHelpTeacher';
-
-const ACTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.AC
-    },
-    secondary: {
-      main: '#000000'
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 const styles = {
   tabBar: {
@@ -95,7 +81,7 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
       <div>
         <Grid container direction="column">
           <Grid item>
-            <MuiThemeProvider theme={ACTheme}>
+            <MuiThemeProvider theme={Constants.ACTheme}>
               <TabBar position="static" color="default" className={classes.tabBar}>
                 <Tabs
                   value={this.state.tabValue}

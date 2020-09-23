@@ -4,19 +4,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants/Constants';
-
-const InstructionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.IN
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
@@ -108,7 +97,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
         <Grid item>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
             <Grid item>
-              <MuiThemeProvider theme={InstructionTheme}>
+              <MuiThemeProvider theme={Constants.InstructionTheme}>
                 <Button
                   onClick={this.highLevelClick}
                   variant="contained"
@@ -122,7 +111,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
               </MuiThemeProvider>
             </Grid>
             <Grid item>
-              <MuiThemeProvider theme={InstructionTheme}>
+              <MuiThemeProvider theme={Constants.InstructionTheme}>
                 <Button
                   onClick={this.followUpClick}
                   variant="contained"
@@ -136,7 +125,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
               </MuiThemeProvider>
             </Grid>
             <Grid item>
-              <MuiThemeProvider theme={InstructionTheme}>
+              <MuiThemeProvider theme={Constants.InstructionTheme}>
                 <Button
                 onClick={this.basicSkillsClick}
                   variant="contained"
@@ -150,7 +139,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
               </MuiThemeProvider>
             </Grid>
             <Grid item>
-              <MuiThemeProvider theme={InstructionTheme}>
+              <MuiThemeProvider theme={Constants.InstructionTheme}>
                 <Button
                   onClick={this.inferentialInstructionClick}
                   variant="contained"
