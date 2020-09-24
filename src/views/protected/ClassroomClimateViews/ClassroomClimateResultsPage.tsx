@@ -52,7 +52,8 @@ interface State {
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
   questionAdded: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  noDataYet: boolean
 }
 
 /**
@@ -84,7 +85,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noteAdded: false,
       questionAdded: false,
-      teacherModal: false
+      teacherModal: false,
+      noDataYet: false
     };
   }
 
@@ -114,12 +116,11 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     const dateArray: Array<string> = [];
     const posArray: Array<number> = [];
     const negArray: Array<number> = [];
-    firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<object>) => {
-      console.log("dataset is: ", dataSet);
+    firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, positive: number, negative: number}>) => {
       dataSet.forEach((data: {dayOfEvent: {value: string}, positive: number, negative: number}) => {
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
-        posArray.push(data.positive);
-        negArray.push(data.negative);
+        posArray.push(Math.round((data.positive / (data.positive + data.negative)) * 100));
+        negArray.push(Math.round((data.negative / (data.positive + data.negative)) * 100));
       });
       this.setState({
         trendsDates: dateArray,
@@ -178,20 +179,28 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noDataYet: false
     }, () => {
       firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        this.setState({
-          sessionDates: dates
-        }, () => {
-          if (this.state.sessionDates[0]) {
-            this.setState({ sessionId: this.state.sessionDates[0].id },
-              () => {
-                this.getData();
-              }
-            );
-          }
-        })
+        {if (dates[0]) {
+          this.setState({
+            sessionDates: dates,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else {
+          this.setState({
+            noDataYet: true
+          })
+        }}
       );
     })
   };
@@ -505,6 +514,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           chosenQuestions={chosenQuestions}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
+          noDataYet={this.state.noDataYet}
         />
       </div>
       ) : (

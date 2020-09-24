@@ -61,7 +61,8 @@ interface State {
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
   questionAdded: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  noDataYet: boolean
 }
 
 /**
@@ -92,7 +93,8 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noteAdded: false,
       questionAdded: false,
-      teacherModal: false
+      teacherModal: false,
+      noDataYet: false
     };
   }
 
@@ -130,12 +132,12 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     const dateArray: Array<string> = [];
     const inferArray: Array<number> = []; 
     const basicArray: Array<number> = [];
-    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<object>) => {                       
+    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, inferential: number, basicSkills: number}>) => {                       
       console.log("dataset is: ", dataSet);
       dataSet.forEach((data: {dayOfEvent: {value: string}, inferential: number, basicSkills: number}) => { 
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
-        inferArray.push(data.inferential); 
-        basicArray.push(data.basicSkills); 
+        inferArray.push(Math.round((data.inferential / (data.inferential + data.basicSkills)) * 100)); 
+        basicArray.push(Math.round((data.basicSkills / (data.inferential + data.basicSkills)) * 100)); 
       });
       this.setState({
         trendsDates: dateArray, 
@@ -193,20 +195,28 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "level").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>  
-        this.setState({
-          sessionDates: dates
-        }, () => {
-          if (this.state.sessionDates[0]) {
-            this.setState({ sessionId: this.state.sessionDates[0].id },
-              () => {
-                this.getData();
-              }
-            );
-          }
-        })
+      firebase.fetchSessionDates(teacherId, "level").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+        {if (dates[0]) {
+          this.setState({
+            sessionDates: dates,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else {
+          this.setState({
+            noDataYet: true
+          })
+        }}
       );
     })
   };
@@ -530,6 +540,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
             chosenQuestions={chosenQuestions}
             actionPlanExists={this.state.actionPlanExists}
             conferencePlanExists={this.state.conferencePlanExists}
+            noDataYet={this.state.noDataYet}
           />
         </div>
       ) : (

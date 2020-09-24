@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import TransitionTimePie from "../ResultsComponents/TransitionTimePie";
+import TransitionTimePie from "./ResultsComponents/TransitionTimePie";
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
 import { resetTransitionTime, clearTransitionTime, clearSessionTime } from "../../state/actions/transition-time";

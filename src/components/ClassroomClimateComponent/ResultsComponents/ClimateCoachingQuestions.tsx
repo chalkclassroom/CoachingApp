@@ -2,10 +2,9 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import NotInterestedIcon from '@material-ui/icons/NotInterested';
+import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
+import { MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants/Constants';
 
 interface Props {
@@ -41,7 +40,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "approvals") {
       this.setState({
         categoryView: "approvals",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -50,7 +49,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "redirections") {
       this.setState({
         categoryView: "redirections",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -59,7 +58,7 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "disapprovals") {
       this.setState({
         categoryView: "disapprovals",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -86,97 +85,80 @@ class ClimateCoachingQuestions extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const categories = [
+      {
+        clickFunction: this.approvalsClick,
+        categoryView: 'approvals',
+        title: 'Behavior Approvals',
+        questions: Constants.CoachingQuestions.Climate.Approvals
+      },
+      {
+        clickFunction: this.redirectionsClick,
+        categoryView: 'redirections',
+        title: 'Redirections',
+        questions: Constants.CoachingQuestions.Climate.Redirections
+      },
+      {
+        clickFunction: this.disapprovalsClick,
+        categoryView: 'disapprovals',
+        title: 'Disapprovals',
+        questions: Constants.CoachingQuestions.Climate.Disapprovals
+      }
+    ];
     return(
       <Grid container direction="column">
         <Grid item>
-          <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-            <Grid item>
-              <Button
-                // style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
-                onClick={this.approvalsClick}
-              >
-                <ThumbUpIcon fill="#0988ec" />
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                // style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
-                onClick={this.redirectionsClick}
-              >
-                <ThumbDownIcon fill="#f37b6b" />
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={this.disapprovalsClick}
-              >
-                <NotInterestedIcon fill="#ec2409" />
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh", fontFamily: "Arimo"}}>
-            <Grid
-              item xs={2}
-            >
-              Behavior Approvals
-            </Grid>
-            <Grid
-              item xs={2}
-              // className = {classes.buttonText}
-              // style={{fontWeight: this.state.categoryView === "traveling" ? "bold" : "normal"}}
-            >
-              Redirections
-            </Grid>
-            <Grid
-              item xs={2}
-              // className = {classes.buttonText}
-              // style={{fontWeight: this.state.categoryView === "childrenWaiting" ? "bold" : "normal"}}
-            >
-              Disapprovals
-            </Grid>
+          <Grid
+            container
+            direction="row"
+            justify="space-around"
+            alignItems="center"
+            style={{marginTop: "1vh"}}
+          >
+            {categories.map((value, index) => {
+              return(
+                <Grid item key={index}>
+                  <MuiThemeProvider theme={Constants.ClimateTheme}>
+                    <Button 
+                      onClick={value.clickFunction}
+                      variant="contained"
+                      color={this.state.categoryView === value.categoryView ? 'primary' : 'default'}
+                      style={{width:'9em', height: '9em'}}
+                    >
+                      <Typography
+                        style={{
+                          color: this.state.categoryView === value.categoryView ? 'white' : Constants.Colors.CC
+                        }}
+                      >
+                        {value.title}
+                      </Typography>
+                    </Button>
+                  </MuiThemeProvider>
+                </Grid>
+              )
+            })}
           </Grid>
         </Grid>
         <Grid item>
           <Grid container direction="column" style={{marginTop: "1vh"}}>
-            {this.state.categoryView === "approvals" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.Climate.Approvals}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Classroom Climate"}
-                color={Constants.Colors.CC}
-              />
-            ) : this.state.categoryView === "redirections" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.Climate.Redirections}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Classroom Climate"}
-                color={Constants.Colors.CC}
-              />
-            ) : this.state.categoryView === "disapprovals" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.Climate.Disapprovals}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Classroom Climate"}
-                color={Constants.Colors.CC}
-              />
-            ) : <div/>}
+            {categories.map((value, index) => {
+              return(
+                this.state.categoryView === value.categoryView ? (
+                  <DataQuestions
+                    key={index}
+                    questions={value.questions}
+                    openPanel={this.state.openPanel}
+                    handlePanelChange={this.handlePanelChange}
+                    addedToPlan={this.props.addedToPlan}
+                    handleAddToPlan={this.props.handleAddToPlan}
+                    sessionId={this.props.sessionId}
+                    teacherId={this.props.teacherId}
+                    magic8={'Classroom Climate'}
+                    color={Constants.Colors.CC}
+                  />
+                ) : null
+              )
+            })}
           </Grid>
         </Grid>
       </Grid>
