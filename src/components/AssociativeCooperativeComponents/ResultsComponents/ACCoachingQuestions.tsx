@@ -4,30 +4,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants/Constants';
-
-const AssociativeTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#c5afe7"
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
-
-const CooperativeTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.AC
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-});
 
 interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
@@ -62,7 +40,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "associative") {
       this.setState({
         categoryView: "associative",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -71,7 +49,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "cooperative") {
       this.setState({
         categoryView: "cooperative",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -80,7 +58,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "teacherParticipation") {
       this.setState({
         categoryView: "teacherParticipation",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -89,7 +67,7 @@ class ACCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "teacherSupport") {
       this.setState({
         categoryView: "teacherSupport",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -116,113 +94,56 @@ class ACCoachingQuestions extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const categories = [
+      {clickFunction: this.associativeClick, categoryView: 'associative', title: 'Associative Interactions', questions: Constants.CoachingQuestions.AC.Associative},
+      {clickFunction: this.cooperativeClick, categoryView: 'cooperative', title: 'Cooperative Interactions', questions: Constants.CoachingQuestions.AC.Cooperative},
+      {clickFunction: this.teacherParticipationClick, categoryView: 'teacherParticipation', title: 'Teacher Participation in Activities', questions: Constants.CoachingQuestions.AC.TeacherParticipation},
+      {clickFunction: this.teacherSupportClick, categoryView: 'teacherSupport', title: 'Teacher Support for Child Interactions', questions: Constants.CoachingQuestions.AC.TeacherSupport}
+    ];
     return(
       <Grid container direction="column">
         <Grid item>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-            <Grid item>
-              <MuiThemeProvider theme={AssociativeTheme}>
-                <Button 
-                  onClick={this.associativeClick}
-                  variant="contained"
-                  color="primary"
-                  style={{width:'10em', height: '10em'}}
-                >
-                  <Typography>
-                    Associative Interactions
-                  </Typography>
-                </Button >
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item>
-              <MuiThemeProvider theme={CooperativeTheme}>
-                <Button
-                  onClick={this.cooperativeClick}
-                  variant="contained"
-                  color="primary"
-                  style={{width:'10em', height: '10em'}}
-                >
-                  <Typography style={{color: 'white'}}>
-                    Cooperative Interactions
-                  </Typography>
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={this.teacherParticipationClick}
-                variant="contained"
-                style={{width:'10em', height: '10em'}}
-              >
-                <Typography>
-                  Teacher Participation in Activities
-                </Typography>
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={this.teacherSupportClick}
-                variant="contained"
-                style={{width:'10em', height: '10em'}}
-              >
-                <Typography>
-                  Teacher Support for Child Interactions
-                </Typography>
-              </Button>
-            </Grid>
+            {categories.map((value, index) => {
+              return(
+                <Grid item key={index}>
+                  <MuiThemeProvider theme={Constants.ACTheme}>
+                    <Button 
+                      onClick={value.clickFunction}
+                      variant="contained"
+                      color={this.state.categoryView === value.categoryView ? 'primary' : 'default'}
+                      style={{width:'9em', height: '9em'}}
+                    >
+                      <Typography style={{color: this.state.categoryView === value.categoryView ? 'white' : Constants.Colors.AC}}>
+                        {value.title}
+                      </Typography>
+                    </Button >
+                  </MuiThemeProvider>
+                </Grid>
+              )
+            })}
           </Grid>
         </Grid>
         <Grid item>
           <Grid container direction="column" style={{marginTop: "1vh"}}>
-            {this.state.categoryView === "associative" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.AC.Associative}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Associative and Cooperative"}
-                color={Constants.Colors.AC}
-              />
-            ) : this.state.categoryView === "cooperative" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.AC.Cooperative}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Associative and Cooperative"}
-                color={Constants.Colors.AC}
-              />
-            ) : this.state.categoryView === "teacherParticipation" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.AC.TeacherParticipation}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Associative and Cooperative"}
-                color={Constants.Colors.AC}
-              />
-            ) : this.state.categoryView === "teacherSupport" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.AC.TeacherSupport}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Associative and Cooperative"}
-                color={Constants.Colors.AC}
-              />
-            ) : <div/>}
+            {categories.map((value, index) => {
+              return(
+                this.state.categoryView === value.categoryView ? (
+                  <DataQuestions
+                    key={index}
+                    questions={value.questions}
+                    openPanel={this.state.openPanel}
+                    handlePanelChange={this.handlePanelChange}
+                    addedToPlan={this.props.addedToPlan}
+                    handleAddToPlan={this.props.handleAddToPlan}
+                    sessionId={this.props.sessionId}
+                    teacherId={this.props.teacherId}
+                    magic8={"Associative and Cooperative"}
+                    color={Constants.Colors.AC}
+                  />
+                ) : null
+              )
+            })}
           </Grid>
         </Grid>
       </Grid>

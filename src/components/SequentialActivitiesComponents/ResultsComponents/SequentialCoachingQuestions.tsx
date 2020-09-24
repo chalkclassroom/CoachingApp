@@ -39,7 +39,7 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "drawingAndWriting") {
       this.setState({
         categoryView: "drawingAndWriting",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -48,7 +48,7 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "games") {
       this.setState({
         categoryView: "games",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -57,7 +57,7 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "teacherSupport") {
       this.setState({
         categoryView: "teacherSupport",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -77,95 +77,55 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const categories = [
+      {clickFunction: this.drawingWritingClick, categoryView: 'drawingAndWriting', title: 'Drawing and Writing', questions: Constants.CoachingQuestions.Sequential.DrawingAndWriting},
+      {clickFunction: this.gamesClick, categoryView: 'games', title: 'Games and Pretend Play', questions: Constants.CoachingQuestions.Sequential.GamesAndPretendPlay},
+      {clickFunction: this.teacherSupportClick, categoryView: 'teacherSupport', title: 'Teacher Support for Sequential Activities', questions: Constants.CoachingQuestions.Sequential.TeacherSupport}
+    ];
     return(
       <Grid container direction="column">
         <Grid item>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-            <Grid item>
-              <MuiThemeProvider theme={Constants.SequentialTheme}>
-                <Button
-                  onClick={this.drawingWritingClick}
-                  variant="contained"
-                  color="primary"
-                  style={{width:'10em', height: '10em'}}
-                >
-                  <Typography>
-                    Drawing and Writing
-                  </Typography>
-                </Button >
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item>
-              <MuiThemeProvider theme={Constants.SequentialTheme}>
-                <Button
-                  onClick={this.gamesClick}
-                  variant="contained"
-                  color="primary"
-                  style={{width:'10em', height: '10em'}}
-                >
-                  <Typography style={{color: 'black'}}>
-                    Games and Pretend Play
-                  </Typography>
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item>
-              <MuiThemeProvider theme={Constants.SequentialTheme}>
-                <Button
-                  onClick={this.teacherSupportClick}
-                  variant="contained"
-                  color="primary"
-                  style={{width:'10em', height: '10em'}}
-                >
-                  <Typography>
-                    Teacher Support for Sequential Activities
-                  </Typography>
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
+            {categories.map((value, index) => {
+              return(
+                <Grid item key={index}>
+                  <MuiThemeProvider theme={Constants.SequentialTheme}>
+                    <Button 
+                      onClick={value.clickFunction}
+                      variant="contained"
+                      color={this.state.categoryView === value.categoryView ? 'primary' : 'default'}
+                      style={{width:'9em', height: '9em'}}
+                    >
+                      <Typography style={{color: this.state.categoryView === value.categoryView ? 'white' : Constants.Colors.SA}}>
+                        {value.title}
+                      </Typography>
+                    </Button >
+                  </MuiThemeProvider>
+                </Grid>
+              )
+            })}
           </Grid>
         </Grid>
         <Grid item>
           <Grid container direction="column" style={{marginTop: "1vh"}}>
-            {this.state.categoryView === "drawingAndWriting" ? (
-              <Grid item>
-                <DataQuestions
-                  questions={Constants.CoachingQuestions.Sequential.DrawingAndWriting}
-                  openPanel={this.state.openPanel}
-                  handlePanelChange={this.handlePanelChange}
-                  addedToPlan={this.props.addedToPlan}
-                  handleAddToPlan={this.props.handleAddToPlan}
-                  sessionId={this.props.sessionId}
-                  teacherId={this.props.teacherId}
-                  magic8={"Sequential Activities"}
-                  color={Constants.Colors.SA}
-                />
-              </Grid>
-            ) : this.state.categoryView === "games" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.Sequential.GamesAndPretendPlay}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Sequential Activities"}
-                color={Constants.Colors.SA}
-              />
-            ) : this.state.categoryView === "teacherSupport" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.Sequential.TeacherSupport}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Sequential Activities"}
-                color={Constants.Colors.SA}
-              />
-            ) : <div/>}
+            {categories.map((value, index) => {
+              return(
+                this.state.categoryView === value.categoryView ? (
+                  <DataQuestions
+                    key={index}
+                    questions={value.questions}
+                    openPanel={this.state.openPanel}
+                    handlePanelChange={this.handlePanelChange}
+                    addedToPlan={this.props.addedToPlan}
+                    handleAddToPlan={this.props.handleAddToPlan}
+                    sessionId={this.props.sessionId}
+                    teacherId={this.props.teacherId}
+                    magic8={"Sequential Activities"}
+                    color={Constants.Colors.SA}
+                  />
+                ) : null
+              )
+            })}
           </Grid>
         </Grid>
       </Grid>

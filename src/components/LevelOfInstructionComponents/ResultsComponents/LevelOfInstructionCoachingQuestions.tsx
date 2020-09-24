@@ -40,7 +40,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
     if (this.state.categoryView !== "highLevel") {
       this.setState({
         categoryView: "highLevel",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -48,7 +48,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
     if (this.state.categoryView !== "followUp") {
       this.setState({
         categoryView: "followUp",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -56,7 +56,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
     if (this.state.categoryView !== "basicSkills") {
       this.setState({
         categoryView: "basicSkills",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -65,7 +65,7 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
     if (this.state.categoryView !== "inferentialInstruction") {
       this.setState({
         categoryView: "inferentialInstruction",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -92,119 +92,56 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const categories = [
+      {clickFunction: this.highLevelClick, categoryView: 'highLevel', title: 'Asking High-Level Questions', questions: Constants.CoachingQuestions.Instruction.highLevel},
+      {clickFunction: this.followUpClick, categoryView: 'followUp', title: 'Following up on Children\'s Responses', questions: Constants.CoachingQuestions.Instruction.followUp},
+      {clickFunction: this.basicSkillsClick, categoryView: 'basicSkills', title: 'Building on Basic Skills Instruction', questions: Constants.CoachingQuestions.Instruction.basicSkills},
+      {clickFunction: this.inferentialInstructionClick, categoryView: 'inferentialInstruction', title: 'Inferential Instruction in Content Areas', questions: Constants.CoachingQuestions.Instruction.inferentialInstruction}
+    ];
     return(
       <Grid container direction="column">
         <Grid item>
           <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-            <Grid item>
-              <MuiThemeProvider theme={Constants.InstructionTheme}>
-                <Button
-                  onClick={this.highLevelClick}
-                  variant="contained"
-                  color="primary"
-                  style={{width:'8em', height: '8em'}}
-                >
-                  <Typography style={{color: 'white'}}>
-                    Asking High-Level Questions
-                  </Typography>
-                </Button >
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item>
-              <MuiThemeProvider theme={Constants.InstructionTheme}>
-                <Button
-                  onClick={this.followUpClick}
-                  variant="contained"
-                  color="primary"
-                  style={{width:'8em', height: '8em'}}
-                >
-                  <Typography style={{color: 'white'}}>
-                    Following up on Children’s Responses
-                  </Typography>
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item>
-              <MuiThemeProvider theme={Constants.InstructionTheme}>
-                <Button
-                onClick={this.basicSkillsClick}
-                  variant="contained"
-                  color="primary"
-                  style={{width:'8em', height: '8em'}}
-                >
-                  <Typography style={{color: 'white'}}>
-                    Building on Basic Skills Instruction
-                  </Typography>
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
-            <Grid item>
-              <MuiThemeProvider theme={Constants.InstructionTheme}>
-                <Button
-                  onClick={this.inferentialInstructionClick}
-                  variant="contained"
-                  color="primary"
-                  style={{width:'8em', height: '8em'}}
-                >
-                  <Typography style={{color: 'white'}}>
-                    Inferential Instruction in Content Areas
-                  </Typography>
-                </Button>
-              </MuiThemeProvider>
-            </Grid>
+            {categories.map((value, index) => {
+              return(
+                <Grid item key={index}>
+                  <MuiThemeProvider theme={Constants.InstructionTheme}>
+                    <Button 
+                      onClick={value.clickFunction}
+                      variant="contained"
+                      color={this.state.categoryView === value.categoryView ? 'primary' : 'default'}
+                      style={{width:'9em', height: '9em'}}
+                    >
+                      <Typography style={{color: this.state.categoryView === value.categoryView ? 'white' : Constants.Colors.IN}}>
+                        {value.title}
+                      </Typography>
+                    </Button >
+                  </MuiThemeProvider>
+                </Grid>
+              )
+            })}
           </Grid>
         </Grid>
         <Grid item>
           <Grid container direction="column" style={{marginTop: "1vh"}}>
-            {this.state.categoryView === "highLevel" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.Instruction.highLevel}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Level of Instruction"}
-                color={Constants.Colors.IN}
-              />
-            ) : this.state.categoryView === "followUp"  ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.Instruction.followUp}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Level of Instruction"}
-                color={Constants.Colors.IN}
-              />
-            ) : this.state.categoryView === "basicSkills" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.Instruction.basicSkills}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Level of Instruction"}
-                color={Constants.Colors.IN}
-              />
-            ) : this.state.categoryView === "inferentialInstruction" ? (
-              <DataQuestions
-                questions={Constants.CoachingQuestions.Instruction.inferentialInstruction}
-                openPanel={this.state.openPanel}
-                handlePanelChange={this.handlePanelChange}
-                addedToPlan={this.props.addedToPlan}
-                handleAddToPlan={this.props.handleAddToPlan}
-                sessionId={this.props.sessionId}
-                teacherId={this.props.teacherId}
-                magic8={"Level of Instruction"}
-                color={Constants.Colors.IN}
-              />
-            ) : <div/>}
+            {categories.map((value, index) => {
+              return(
+                this.state.categoryView === value.categoryView ? (
+                  <DataQuestions
+                    key={index}
+                    questions={value.questions}
+                    openPanel={this.state.openPanel}
+                    handlePanelChange={this.handlePanelChange}
+                    addedToPlan={this.props.addedToPlan}
+                    handleAddToPlan={this.props.handleAddToPlan}
+                    sessionId={this.props.sessionId}
+                    teacherId={this.props.teacherId}
+                    magic8={'Level of Instruction'}
+                    color={Constants.Colors.IN}
+                  />
+                ) : null
+              )
+            })}
           </Grid>
         </Grid>
       </Grid>
