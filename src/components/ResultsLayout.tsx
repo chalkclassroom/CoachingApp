@@ -7,10 +7,13 @@ import Grid from '@material-ui/core/Grid';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabBar from "@material-ui/core/AppBar";
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import "chartjs-plugin-datalabels";
 import ResultsDashboard from './ResultsDashboard';
 import ActionPlanForm from './ActionPlanForm';
 import ConferencePlanForm from './ConferencePlanForm';
+import LogoImage from '../assets/images/LogoImage.svg';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 import * as Types from '../constants/Types';
 
@@ -72,6 +75,9 @@ const styles: object = {
       paddingTop: 0,
       paddingBottom: 0
     },
+    dashboardGrid: {
+      height: '100%'
+    }
   },
   // ipad portait
   '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
@@ -119,6 +125,7 @@ interface Props {
   conferencePlanId: string,
   addNoteToPlan(conferencePlanId: string, note: string): void,
   conferencePlanExists: boolean,
+  noDataYet: boolean
 }
 
 interface Style {
@@ -232,6 +239,7 @@ class ResultsLayout extends React.Component<Props, State> {
     conferencePlanId: PropTypes.string.isRequired,
     addNoteToPlan: PropTypes.func.isRequired,
     conferencePlanExists: PropTypes.bool.isRequired,
+    noDataYet: PropTypes.bool.isRequired
   }
 
   /**
@@ -278,48 +286,57 @@ class ResultsLayout extends React.Component<Props, State> {
               </Grid>
             </Grid>
             <Grid container className={classes.contentGrid} justify="flex-start" direction="column" alignItems="center">
-              <div>
-                {this.state.view === 'data' ? (
-                  <div className={classes.dataContent}>
-                    <Grid item>
-                      <TabBar position="static" color="default" className={classes.tabBar}>
-                        <Tabs
-                          value={this.state.tabValue}
-                          indicatorColor="primary"
-                          textColor="primary"
-                          variant="fullWidth"
-                        >
-                          <Tab label="Summary" onClick={this.handleSummary} style={{fontFamily: "Arimo", fontSize: '1em'}} />
-                          <Tab label="Details" onClick={this.handleDetails} style={{fontFamily: "Arimo", fontSize: '1em'}} />
-                          <Tab label="Trends" onClick={this.handleTrends} style={{fontFamily: "Arimo", fontSize: '1em'}} />
-                        </Tabs>
-                      </TabBar>
-                    </Grid>
-                    <Grid item>
-                      {this.state.tabValue === 0 ? (
-                        <div>
-                          {this.props.sessionId ? (
-                            <div>
-                              {this.props.summary}
-                            </div>
-                          ) : (
-                            <Grid
-                              container
-                              direction="row"
-                              justify="center"
-                              alignItems="center"
-                            >
-                              <img src={CHALKLogoGIF} alt="Loading" width="100%" />
-                            </Grid>
-                          )}
-                        </div>
-                        ) : this.state.tabValue === 1 ? (
-                        <div>
-                          <Grid style={{alignItems: "center"}}>
+              {this.props.noDataYet ? (
+                <Grid container direction="column" justify="center" alignItems="center" style={{height: '88vh'}}>
+                  <Grid item>
+                    <img src={LogoImage} alt="CHALK" height="100vh" />
+                  </Grid>
+                  <Grid item style={{paddingTop: '3em'}}>
+                    <Typography variant="h5" align="center" style={{fontFamily: 'Arimo', paddingLeft: '1em', paddingRight: '1em'}}>
+                      You have not completed any
+                      {this.props.magic8 === 'AC' ? 'Associative and Cooperative' : this.props.magic8}
+                      observations for
+                      {this.props.teacher.firstName + " " + this.props.teacher.lastName} yet.
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    {/* <Button
+                      onClick={() => {
+                        this.props.history.push({
+                          pathname: "/Magic8Menu",
+                          state: { teacher: this.props.teacher, type: this.props.type, teachers: this.props.teacherList}
+                        })
+                      }}
+                    >
+                      Make an Observation
+                    </Button> */}
+                  </Grid>
+                </Grid>
+              ) : (
+                <div>
+                  {this.state.view === 'data' ? (
+                    <div className={classes.dataContent}>
+                      <Grid item>
+                        <TabBar position="static" color="default" className={classes.tabBar}>
+                          <Tabs
+                            value={this.state.tabValue}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            variant="fullWidth"
+                          >
+                            <Tab label="Summary" onClick={this.handleSummary} style={{fontFamily: "Arimo", fontSize: '1em'}} />
+                            <Tab label="Details" onClick={this.handleDetails} style={{fontFamily: "Arimo", fontSize: '1em'}} />
+                            <Tab label="Trends" onClick={this.handleTrends} style={{fontFamily: "Arimo", fontSize: '1em'}} />
+                          </Tabs>
+                        </TabBar>
+                      </Grid>
+                      <Grid item>
+                        {this.state.tabValue === 0 ? (
+                          <div>
                             {this.props.sessionId ? (
                               <div>
-                                {this.props.details}
-                            </div>
+                                {this.props.summary}
+                              </div>
                             ) : (
                               <Grid
                                 container
@@ -330,135 +347,154 @@ class ResultsLayout extends React.Component<Props, State> {
                                 <img src={CHALKLogoGIF} alt="Loading" width="100%" />
                               </Grid>
                             )}
-                          </Grid>
+                          </div>
+                          ) : this.state.tabValue === 1 ? (
+                          <div>
+                            <Grid style={{alignItems: "center"}}>
+                              {this.props.sessionId ? (
+                                <div>
+                                  {this.props.details}
+                              </div>
+                              ) : (
+                                <Grid
+                                  container
+                                  direction="row"
+                                  justify="center"
+                                  alignItems="center"
+                                >
+                                  <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                                </Grid>
+                              )}
+                            </Grid>
+                          </div>
+                        ) : (
+                          <div>
+                            {this.props.trendsGraph}
+                          </div>
+                        )}
+                      </Grid>
+                    </div>
+                  ) : this.state.view === 'questions' ? (
+                    <div className={classes.resultsContent}>
+                      <Grid container direction="column">
+                        {this.props.questions}
+                      </Grid>
+                    </div>
+                  ) : this.state.view === 'conferencePlan' ? (
+                    <div className={classes.resultsContent}>
+                      {this.props.sessionId ? (
+                        <div>
+                          <FirebaseContext.Consumer>
+                            {(firebase: {
+                              createConferencePlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
+                              getConferencePlan(sessionId: string):
+                                Promise<Array<{
+                                  id: string,
+                                  feedback: Array<string>,
+                                  questions: Array<string>,
+                                  addedQuestions: Array<string>,
+                                  notes: Array<string>,
+                                  date: {seconds: number, nanoseconds: number}}>>,
+                              saveConferencePlan(conferencePlanId: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>): Promise<void>,
+                              getCoachFirstName(): Promise<string>,
+                              getCoachLastName(): Promise<string>
+                            }): React.ReactNode => 
+                              <ConferencePlanForm 
+                                conferencePlanExists={this.props.conferencePlanExists}
+                                editMode={this.state.conferencePlanEditMode}
+                                firebase={firebase}
+                                teacher={this.props.teacher}
+                                chosenQuestions={this.props.chosenQuestions}
+                                readOnly={false}
+                                sessionId={this.props.sessionId}
+                                magic8={this.props.magic8}
+                                notesModal={this.state.notesModal}
+                              />
+                            }
+                          </FirebaseContext.Consumer>
                         </div>
                       ) : (
-                        <div>
-                          {this.props.trendsGraph}
-                        </div>
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          alignItems="center"
+                        >
+                          <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                        </Grid>
                       )}
-                    </Grid>
-                  </div>
-                ) : this.state.view === 'questions' ? (
-                  <div className={classes.resultsContent}>
-                    <Grid container direction="column">
-                      {this.props.questions}
-                    </Grid>
-                  </div>
-                ) : this.state.view === 'conferencePlan' ? (
-                  <div className={classes.resultsContent}>
-                    {this.props.sessionId ? (
-                      <div>
-                        <FirebaseContext.Consumer>
-                          {(firebase: {
-                            createConferencePlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
-                            getConferencePlan(sessionId: string):
-                              Promise<Array<{
+                    </div>
+                  ) : this.state.view === 'actionPlan' ? (
+                    <div className={classes.resultsContent} >
+                      {this.props.sessionId ? (
+                        <div>
+                          <FirebaseContext.Consumer>
+                            {(firebase: {
+                              createActionPlan(teacherId: string, magic8: string): Promise<void>,
+                              getAPInfo(actionPlanId: string): Promise<{
+                                sessionId: string,
+                                goal: string,
+                                goalTimeline: string,
+                                benefit: string,
+                                dateModified: {seconds: number, nanoseconds: number},
+                                dateCreated: {seconds: number, nanoseconds: number},
+                                coach: string,
+                                teacher: string,
+                                tool: string
+                              }>,
+                              getTeacherActionPlans(practice: string, teacherId: string): Promise<Array<{
                                 id: string,
-                                feedback: Array<string>,
-                                questions: Array<string>,
-                                addedQuestions: Array<string>,
-                                notes: Array<string>,
-                                date: {seconds: number, nanoseconds: number}}>>,
-                            saveConferencePlan(conferencePlanId: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>): Promise<void>,
-                            getCoachFirstName(): Promise<string>,
-                            getCoachLastName(): Promise<string>
-                          }): React.ReactNode => 
-                            <ConferencePlanForm 
-                              conferencePlanExists={this.props.conferencePlanExists}
-                              editMode={this.state.conferencePlanEditMode}
+                                date: {seconds: number, nanoseconds: number},
+                                newDate: Date
+                              }>>,
+                              getActionSteps(actionPlanId: string): Promise<Array<{
+                                step: string,
+                                materials: string,
+                                person: string,
+                                timeline: string
+                              }>>,
+                              saveActionPlan(
+                                actionPlanId: string,
+                                goal: string,
+                                goalTimeline: string,
+                                benefit: string
+                              ): Promise<void>,
+                              saveActionStep(
+                                actionPlanId: string,
+                                index: string,
+                                step: string,
+                                materials: string,
+                                person: string,
+                                timeline: string
+                              ): Promise<void>,
+                              createActionStep(actionPlanId: string, index: string): Promise<void>,
+                              getCoachFirstName(): Promise<string>,
+                              getCoachLastName(): Promise<string>
+                            }): React.ReactNode => <ActionPlanForm
                               firebase={firebase}
                               teacher={this.props.teacher}
-                              chosenQuestions={this.props.chosenQuestions}
-                              readOnly={false}
                               sessionId={this.props.sessionId}
+                              readOnly={false}
+                              actionPlanExists={this.props.actionPlanExists}
+                              editMode={this.state.actionPlanEditMode}
                               magic8={this.props.magic8}
-                              notesModal={this.state.notesModal}
-                            />
-                          }
-                        </FirebaseContext.Consumer>
-                      </div>
-                    ) : (
-                      <Grid
-                        container
-                        direction="row"
-                        justify="center"
-                        alignItems="center"
-                      >
-                        <img src={CHALKLogoGIF} alt="Loading" width="100%" />
-                      </Grid>
-                    )}
-                  </div>
-                ) : this.state.view === 'actionPlan' ? (
-                  <div className={classes.resultsContent} >
-                    {this.props.sessionId ? (
-                      <div>
-                        <FirebaseContext.Consumer>
-                          {(firebase: {
-                            createActionPlan(teacherId: string, magic8: string): Promise<void>,
-                            getAPInfo(actionPlanId: string): Promise<{
-                              sessionId: string,
-                              goal: string,
-                              goalTimeline: string,
-                              benefit: string,
-                              dateModified: {seconds: number, nanoseconds: number},
-                              dateCreated: {seconds: number, nanoseconds: number},
-                              coach: string,
-                              teacher: string,
-                              tool: string
-                            }>,
-                            getTeacherActionPlans(practice: string, teacherId: string): Promise<Array<{
-                              id: string,
-                              date: {seconds: number, nanoseconds: number},
-                              newDate: Date
-                            }>>,
-                            getActionSteps(actionPlanId: string): Promise<Array<{
-                              step: string,
-                              materials: string,
-                              person: string,
-                              timeline: string
-                            }>>,
-                            saveActionPlan(
-                              actionPlanId: string,
-                              goal: string,
-                              goalTimeline: string,
-                              benefit: string
-                            ): Promise<void>,
-                            saveActionStep(
-                              actionPlanId: string,
-                              index: string,
-                              step: string,
-                              materials: string,
-                              person: string,
-                              timeline: string
-                            ): Promise<void>,
-                            createActionStep(actionPlanId: string, index: string): Promise<void>,
-                            getCoachFirstName(): Promise<string>,
-                            getCoachLastName(): Promise<string>
-                          }): React.ReactNode => <ActionPlanForm
-                            firebase={firebase}
-                            teacher={this.props.teacher}
-                            sessionId={this.props.sessionId}
-                            readOnly={false}
-                            actionPlanExists={this.props.actionPlanExists}
-                            editMode={this.state.actionPlanEditMode}
-                            magic8={this.props.magic8}
-                          />}
-                        </FirebaseContext.Consumer>
-                      </div>
-                    ) : (
-                      <Grid
-                        container
-                        direction="row"
-                        justify="center"
-                        alignItems="center"
-                      >
-                        <img src={CHALKLogoGIF} alt="Loading" width="100%" />
-                      </Grid>
-                    )}
-                  </div>
-                ) : null}
-              </div>
+                            />}
+                          </FirebaseContext.Consumer>
+                        </div>
+                      ) : (
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          alignItems="center"
+                        >
+                          <img src={CHALKLogoGIF} alt="Loading" width="100%" />
+                        </Grid>
+                      )}
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </Grid>
           </Grid>
         </div>

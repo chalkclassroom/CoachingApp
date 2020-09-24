@@ -53,7 +53,8 @@ interface State {
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   teacherModal: boolean,
   noteAdded: boolean,
-  questionAdded: boolean
+  questionAdded: boolean,
+  noDataYet: boolean
 }
 
 /**
@@ -86,7 +87,8 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       teacherModal: false,
       noteAdded: false,
-      questionAdded: false
+      questionAdded: false,
+      noDataYet: false
     };
   }
 
@@ -146,19 +148,27 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       conferencePlanExists: false,
       addedToPlan: [],
       sessionDates: [],
+      noDataYet: false
     }, () => {
       firebase.fetchSessionDates(teacherId, "engagement").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        this.setState({
-          sessionDates: dates
-        }, () => {
-          if (this.state.sessionDates[0]) {
-            this.setState({ sessionId: this.state.sessionDates[0].id },
-              () => {
-                this.getData();
-              }
-            );
-          }
-        })
+        {if (dates[0]) {
+          this.setState({
+            sessionDates: dates,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else {
+          this.setState({
+            noDataYet: true
+          })
+        }}
       );
     })
   };
@@ -495,6 +505,7 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
             actionPlanExists={this.state.actionPlanExists}
             conferencePlanExists={this.state.conferencePlanExists}
             conferencePlanId={this.state.conferencePlanId}
+            noDataYet={this.state.noDataYet}
           />
         </div>
       ) : (

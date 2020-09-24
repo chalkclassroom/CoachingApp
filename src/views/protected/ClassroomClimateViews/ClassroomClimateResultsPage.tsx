@@ -52,7 +52,8 @@ interface State {
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
   questionAdded: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  noDataYet: boolean
 }
 
 /**
@@ -84,7 +85,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noteAdded: false,
       questionAdded: false,
-      teacherModal: false
+      teacherModal: false,
+      noDataYet: false
     };
   }
 
@@ -177,20 +179,28 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noDataYet: false
     }, () => {
       firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        this.setState({
-          sessionDates: dates
-        }, () => {
-          if (this.state.sessionDates[0]) {
-            this.setState({ sessionId: this.state.sessionDates[0].id },
-              () => {
-                this.getData();
-              }
-            );
-          }
-        })
+        {if (dates[0]) {
+          this.setState({
+            sessionDates: dates,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else {
+          this.setState({
+            noDataYet: true
+          })
+        }}
       );
     })
   };
@@ -504,6 +514,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           chosenQuestions={chosenQuestions}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
+          noDataYet={this.state.noDataYet}
         />
       </div>
       ) : (
