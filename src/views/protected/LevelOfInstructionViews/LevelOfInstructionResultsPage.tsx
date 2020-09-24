@@ -130,12 +130,12 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     const dateArray: Array<string> = [];
     const inferArray: Array<number> = []; 
     const basicArray: Array<number> = [];
-    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<object>) => {                       
+    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, inferential: number, basicSkills: number}>) => {                       
       console.log("dataset is: ", dataSet);
       dataSet.forEach((data: {dayOfEvent: {value: string}, inferential: number, basicSkills: number}) => { 
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
-        inferArray.push(data.inferential); 
-        basicArray.push(data.basicSkills); 
+        inferArray.push(Math.round((data.inferential / (data.inferential + data.basicSkills)) * 100)); 
+        basicArray.push(Math.round((data.basicSkills / (data.inferential + data.basicSkills)) * 100)); 
       });
       this.setState({
         trendsDates: dateArray, 
