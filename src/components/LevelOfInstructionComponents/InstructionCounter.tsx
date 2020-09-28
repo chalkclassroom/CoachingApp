@@ -165,7 +165,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                       height: 180
                     }}
                   >
-                    Ask High-Level Question
+                    Teacher Asks High-Level Question
                   </Fab>
                 </Grid>
                 <Grid container alignItems="center" md={5} style={{ fontFamily: 'Arimo' }}>
@@ -174,7 +174,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                     style={{ backgroundColor: '#6aa84fff', color: '#fff!important' }}
                     className={classes.category}
                   >
-                    Inferential Instruction
+                    High-Level Instruction
                   </Button>
                 </Grid>
                 <Grid
@@ -195,7 +195,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                       height: 180
                     }}
                   >
-                    Follow-up on Children’s Responses
+                    Child Answers High-Level Question
                   </Fab>
                 </Grid>
               </Grid>
@@ -285,7 +285,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                       height: 180
                     }}
                   >
-                    Ask Low-Level Question
+                    Teacher Asks Low-Level Question
                   </Fab>
                 </Grid>
                 <Grid container alignItems="center" md={5} style={{ fontFamily: 'Arimo' }}>
@@ -294,7 +294,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                     style={{ backgroundColor: '#6d9eebff', color: '#fff!important' }}
                     className={classes.category}
                   >
-                    Basic Skills Instruction
+                    Low-Level Instruction
                   </Button>
                 </Grid>
                 <Grid
@@ -315,7 +315,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                       height: 180
                     }}
                   >
-                    Teach Specific Skills
+                    Child Answers Low-Level Question
                   </Fab>
                 </Grid>
               </Grid>
