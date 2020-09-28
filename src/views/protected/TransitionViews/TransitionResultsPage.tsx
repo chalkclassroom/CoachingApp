@@ -689,7 +689,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
             questions={
               <TransitionCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />

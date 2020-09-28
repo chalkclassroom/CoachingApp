@@ -1054,13 +1054,13 @@ export const CoachingQuestions = {
     ],
   },
   'Instruction' : {
-    'highLevel': [
+    'highLevelQuestions': [
       {
         'name': 'InstructionPanel1A',
         'title': 'Explain Thinking',
         'text': [
-          'Talk about the opportunities children have to explain their thinking.',
-          'What supports help children who struggle at first when ' +
+          'Talk about the opportunities your students have to explain their thinking.',
+          'What supports help your students who struggle at first when ' +
           'responding to how and why questions?',
         ]
       },
@@ -1068,7 +1068,8 @@ export const CoachingQuestions = {
         'name': 'InstructionPanel1B',
         'title': 'Make a Prediction',
         'text': [
-          'What types of activities give children opportunities to make predictions?',
+          'What types of activities give children in your classroom opportunities ' +
+          'to make predictions?',
           'Let’s think about the children’s favorite units - ' +
           'what could they make predictions about using context clues or prior knowledge?'
         ]
@@ -1077,7 +1078,7 @@ export const CoachingQuestions = {
         'name': 'InstructionPanel1C',
         'title': 'Connecting Content to Experience',
         'text': [
-          'When do children tend to make connections between academic content and ' +
+          'When do your students tend to make connections between academic content and ' +
           'their lives?  During book reading, center time, or science, etc.?', 
           'Talk about the kinds of connections or comparisons to personal experience ' +
           'that might deepen their understanding of the academic content.'
@@ -1093,7 +1094,7 @@ export const CoachingQuestions = {
         ]
       },
     ],
-    'followUp': [
+    /* 'followUp': [
       {
         'name': 'InstructionPanel2A',
         'title': 'Ask Follow-up Questions',
@@ -1126,32 +1127,32 @@ export const CoachingQuestions = {
         ]
       },
     
-    ],
-    'basicSkills': [
+    ], */
+    'lowLevel': [
       {
-        'name': 'InstructionPanel3A',
+        'name': 'InstructionPanel2A',
         'title': 'Encouraging Student Participation',
         'text': [
-          'How do some dual-language learners and/or children with language delays benefit ' + 
-          'from low-level questions that have 1 or 2 - word answers?',
+          'How do dual-language learners and/or children with language delays in your ' + 
+          'classroom benefit from low-level questions that have 1 or 2 - word answers?',
           'Talk about the successes you have had using low-level questions to help children ' +
           'participate in a conversation.',		
-	        'Over time, how do children develop in their participation? Talk about how you as ' +
-          'the teacher support their ability to participate.' 
+	        'Over time, how do children in your classroom develop in their participation? ' +
+          'Talk about how you as the teacher support their ability to participate.' 
         ]
       },
       {
-        'name': 'InstructionPanel3B',
+        'name': 'InstructionPanel2B',
         'title': 'Making a Bridge between Low- and High-Level Questions',
         'text': [
           'Talk about how you have used low-level questions as a springboard for asking ' +
           'high-level questions.',
           'How do you plan questions to ask?  Is there a mix of question types?',
-	        'Talk about how children respond differently to low versus high-level questions.'
+	        'Talk about how your students respond differently to low versus high-level questions.'
         ]
       },
       {
-        'name': 'InstructionPanel3C',
+        'name': 'InstructionPanel2C',
         'title': 'Building on Specific Skills',
         'text': [
           'Once children have learned a skill like the name and sound of a letter or how to ' +
@@ -1159,58 +1160,65 @@ export const CoachingQuestions = {
         ]
       },
     ],
-    'inferentialInstruction': [
+    'highLevelInstruction': [
       {
-        'name': 'InstructionPanel4A',
+        'name': 'InstructionPanel3A',
         'title': 'Math',
         'text': [
-          'Talk about how high-level math questions deepen children’s math learning ' +
-          '(e.g., Tell me what you mean when you say the groups of erasers are the same?).',
-          'What have you noticed about children’s responses and actions when you ' +
+          'Talk about how your students think differently when answering low-level questions ' +
+          'like, "How many erasers do you have?" and high-level questions like, "Tell me what ' +
+          'you mean when you say the groups of erasers are the same."',
+          'What have you noticed about your students’ responses and actions when you ' +
           'ask high-level math questions? '  
         ]
       },
       {
-        'name': 'InstructionPanel4B',
+        'name': 'InstructionPanel3B',
         'title': 'Science and Discovery',
         'text': [
-          'Talk about how you build on children’s natural curiosity about science topics. ' +
-          'What kinds of questions do you tend to ask?',
-          'Once children have learned a science fact (food decomposes over time), ' +
+          'Talk about how you integrate science into other activities (e.g. read-alouds, ' +
+          'morning meeting, centers, etc.).',
+          'Talk about how you build on your students’ natural curiosity about science ' +
+          'topics. What kinds of questions do you tend to ask?',
+          'Once your students have learned a science fact (food decomposes over time), ' +
           'how might you encourage them to think inferentially (why do some conditions ' +
           'speed up or slow down decomposition)?'
         ]
       },
       {
-        'name': 'InstructionPanel4C',
-        'title': 'Book Reading/Language Comprehension',
+        'name': 'InstructionPanel3C',
+        'title': 'Book Reading',
         'text': [
           'Talk about where you like to focus your questions during ' +
           'story time- on the plot, character feelings and motivations, ' +
           'vocabulary, making predictions, etc.?',
-          'What kinds of questions would require children to make inferences, ' +
-          'instead of retelling the story?',
+          'What kinds of questions would require children in your classroom to make ' +
+          'inferences instead of retelling the story?',
           'Talk about how children think differently when answering low-level questions like, ' +
           '"What did the hen do with the bread?" and high-level questions like, ' +
           '"If you were the little red hen, what would you have done with the bread? Why?"'
         ]
       },
       {
-        'name': 'InstructionPanel4D',
+        'name': 'InstructionPanel3D',
         'title': 'Vocabulary',
         'text': [
-          'After children learn a new word, talk about how you get them to think more deeply ' +
-          'about the word. Is it similar to other words they know? Can they act the word out?',
+          'Talk about how you select words to teach. What strategies in your classroom ' +
+          'help children learn new words?',
+          'After children in your classroom learn a new word, talk about how you get them to ' +
+          'think more deeply about the word. Is it similar to other words they know? Can they ' +
+          'act the word out?',
           'When children first learn a new word, they may not be able to use it yet. Talk ' +
-          'about activities or questions that might help children use words in conversation.' 
+          'about activities or questions that help children in your classroom use words in ' +
+          'conversation.'
         ]
       },
       {
-        'name': 'InstructionPanel4E',
+        'name': 'InstructionPanel3E',
         'title': ' Writing',
         'text': [
-          'Talk about opportunities children have for composing their own messages.',         
-          'Talk about how you encourage children to write for real-world reasons ' +
+          'Talk about opportunities your students have for composing their own messages.',         
+          'Talk about how you encourage your students to write for real-world reasons ' +
           'like taking a pizza order, making a zoo diagram in the blocks center, ' +
           'or making observations at the science center.'
         ]

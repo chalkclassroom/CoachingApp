@@ -585,18 +585,17 @@ const questionBank = {
         "or peers. Level of instruction does not depend on the type of academic content being discussed."
     },
     {
-      text: "Children who are interacting with teachers during basic skills instruction may do " +
+      text: "Children who are interacting with teachers during low-level instruction may do " +
         "all of the following EXCEPT:",
       options: new Map([
         ["Identify letters", false],
         ["Answer high-level questions", true],
         ["Answer low-level questions", false],
-        ["Sing a song about shapes", false],
+        ["Select the correct answer from a set of choices", false],
       ]),
-      feedback: "The correct answer is B. Basic skills instruction occurs when teachers ask questions " + 
+      feedback: "The correct answer is B. Low-level instruction occurs when teachers ask questions " + 
         "with predetermined answers, with the goal of having children learn or recite the correct " +
-        "response. It also refers to when children participate in activities that reinforce information " +
-        "about specific, concrete skills, such as singing songs about letters or shapes."
+        "response."
     },
     {
       text: "Which of the following is an example of a high-level question?",
@@ -606,21 +605,20 @@ const questionBank = {
         ["How did you figure that out?", true],
         ["How many will you have if I take 2 away?", false],
       ]),
-      feedback: "The correct answer is C. High-level questions have more than one possible answer " + 
-        "and require children to draw on reasoning skills as they think about how to respond."
+      feedback: "The correct answer is C. High-level questions do not have predetermined answers. " + 
+        "Instead, they require children to draw on reasoning skills as they think about how to respond."
     },
     {
-      text: "During inferential instruction, teachers can build on children's responses to deepen " +
-        "their understanding by:",
+      text: "A teacher holds up four triangles and asks, \"How many triangles do we have now?\" " +
+        "Which of the following child responses would you record in the tool?",
       options: new Map([
-        ["Asking follow-up questions", false],
-        ["Assigning homework on the topic", false],
-        ["Expanding on children's ideas", false],
-        ["A and C", true],
+        ["Five!", false],
+        ["I don't know!", false],
+        ["Four!", false],
+        ["All of the above", true],
       ]),
-      feedback: "The correct answer is D. Achieving a higher level of instruction is not only about " + 
-        "asking high-level questions. Teachers must also build upon children's repsonses by asking " +
-        "follow-up questions and expanding on children's ideas."
+      feedback: "The correct answer is D. In the tool, all child answers are counted. If three " + 
+        "children provide answers, all three are counted, even when answers are incorrect."
     },
     {
       text: "The goal of improving level of instruction is to:",
@@ -630,11 +628,11 @@ const questionBank = {
         ["Ask more high-level questions and fewer low-level questions", true],
         ["Ask more high-level and more low-level questions", false],
       ]),
-      feedback: "The correct answer is C. Some basic skills instruction is necessary in preschool, " + 
+      feedback: "The correct answer is C. Some low-level instruction is necessary in preschool, " + 
         "especially because low-level questions often help dual language learners and children with " +
         "language delays enter conversations. However, the goal for improving level of instruction " +
-        "is to ask fewer low-level questions overall and ask more inferential questions that are " +
-        "high-level, have more than one possbile answer, and require abstract thought."
+        "is to ask fewer low-level questions overall and ask more high-level questions that " +
+        "have more than one possible answer and require abstract thought."
     },
     {
       text: "Level of instruction refers to:",
@@ -646,7 +644,7 @@ const questionBank = {
         ],
         ["The number of conversational turns in teacher-child interactions about academic content.", false],
         ["The amount of time teachers spend on academic content across the day.", false],
-        ["The number of interactions between teachers and children during lessons.", false],
+        ["The number of correct answers children give in response to teacher questions.", false],
       ]),
       feedback: "The correct answer is A. Level of instruction does not refer to the number " + 
         "of instructional interactions a teacher has with children throughout the day. Instead, level " +
@@ -655,26 +653,23 @@ const questionBank = {
         "about content."
     },
     {
-      text: "During a group lesson, the teacher points to a picture about the life cycle of a " +
-        "butterfly and says, 'The caterpillar transforms into a butterfly inside of a chrysalis.' " +
-        "This is an example of:",
+      text: "A teacher places three cards on the table with images of a snake, a slide, and " +
+        "a dog. The teacher asks, \"Which picture starts with /s/?\" This is an example of a " +
+        "high-level question.",
       options: new Map([
-        ["High-level questioning", false],
-        ["Teaching specific skills", true],
-        ["Following up on children's responses", false],
-        ["Low-level questioning", false],
+        ["True", false],
+        ["False", true]
       ]),
-      feedback: "The correct answer is B. When children sit quietly and take in new information, " + 
-        "such as listening to a teacher explain the life cycle of a butterfly, they are learning " +
-        "specific skills or knowledge. A low-level question would be, 'What does the caterpillar " +
-        "turn into?' A high-level question would be, 'How is the life cycle of a butterfly different" +
-        "from the life cycle of a ladybug?'"
+      feedback: "The correct answer is False. Although this question does not have a single " + 
+        "predetermined correct answer (there are two possible correct answers), the teacher " +
+        "presents a set of choices for the children to consider. Therefore, this question is " +
+        "low-level."
     },
     {
       text: "All of the following are examples of high-level questions EXCEPT:",
       options: new Map([
         ["Asking children to explain their thought process", false],
-        ["Asking children to identify the correct answer", true],
+        ["Asking children to identify the correct answer from a set of choices", true],
         ["Asking children to connect academic content with their personal experience", false],
         ["Asking children to make a prediction based on context clues or prior knowledge", false],
       ]),
@@ -683,30 +678,30 @@ const questionBank = {
         "draw from experiences, background knowledge, and context clues to come up with a response."
     },
     {
-      text: "The teacher asks a student to compare two characters in a book. The student says, " +
-        "'They're both mad!' Which teacher response would be characterized as an inferential " +
-        "follow-up question?",
+      text: "A teacher is discussing the concepts of sinking and floating at the water table " +
+        "with a small group of children. As the teacher drops a rock into the water, she says, " +
+        "\"I wonder what will happen to this rock when I put it in the water--let's find out.\" " +
+        "What kind of question is this?",
       options: new Map([
-        ["'What makes you think they're both mad?'", true],
-        ["'That's right!'", false],
-        ["'What happened next in the story?'", false],
-        ["'Raise your hand if you agree with Derrick.'", false],
+        ["High-level question", false],
+        ["Would not be counted as a question", true],
+        ["Low-level question", false],
+        ["None of the above", false],
       ]),
-      feedback: "The correct answer is A. For a child to answer 'What makes you think they're both mad?' " + 
-        "the child must make an inference, either drawing from experiences, background knowledge, or " +
-        "context clues. Asking a student to say what happened next in the story requires children to " +
-        "remember something they were exposed to previously, but it is not inferential because there is " +
-        "one correct answer. Questions that have one correct answer are low-level questions."
+      feedback: "The correct answer is B. When teachers ask questions without providing children " + 
+        "an opportunity to respond, the questions are not counted. If the teacher had asked, " +
+        "\"I wonder what will happen to this rock when I put it in the water,\" and " +
+        "encouraged children to explain their thinking, it would have been a high-level question.",
     },
     {
-      text: "While some basic skills instruction is necessary in preschool, research shows that children " +
-        "in classrooms with more inferential instruction do better academically and show improved " +
+      text: "While some low-level instruction is necessary in preschool, research shows that children " +
+        "in classrooms with more high-level instruction do better academically and show improved " +
         "self-regulation.",
       options: new Map([
         ["True", true],
         ["False", false],
       ]),
-      feedback: "The correct answer is True. Some basic skills instruction is necessary in preschool. " + 
+      feedback: "The correct answer is True. Some low-level instruction is necessary in preschool. " + 
         "However, research shows that young minds also thrive when they have opportunities to think more " +
         "deeply. The goal for improving level of instruction is to provide more of these important " +
         "opportunities to answer high-level questions and engage in conversations that last more than " +

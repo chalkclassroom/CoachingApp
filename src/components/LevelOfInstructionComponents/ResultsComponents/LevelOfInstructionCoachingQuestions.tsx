@@ -9,7 +9,6 @@ import * as Constants from '../../../constants/Constants';
 
 interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
-  addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
   teacherId: string
 }
@@ -37,34 +36,26 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
   }
 
   highLevelClick = (): void => {
-    if (this.state.categoryView !== "highLevel") {
+    if (this.state.categoryView !== "highLevelQuestions") {
       this.setState({
-        categoryView: "highLevel",
+        categoryView: "highLevelQuestions",
         openPanel: ''
       })
     }
   }
-  followUpClick = (): void => {
-    if (this.state.categoryView !== "followUp") {
+  lowLevelClick = (): void => {
+    if (this.state.categoryView !== "lowLevel") {
       this.setState({
-        categoryView: "followUp",
-        openPanel: ''
-      })
-    }
-  }
-  basicSkillsClick = (): void => {
-    if (this.state.categoryView !== "basicSkills") {
-      this.setState({
-        categoryView: "basicSkills",
+        categoryView: "lowLevel",
         openPanel: ''
       })
     }
   }
 
-  inferentialInstructionClick = (): void => {
-    if (this.state.categoryView !== "inferentialInstruction") {
+  highLevelInstructionClick = (): void => {
+    if (this.state.categoryView !== "highLevelInstruction") {
       this.setState({
-        categoryView: "inferentialInstruction",
+        categoryView: "highLevelInstruction",
         openPanel: ''
       })
     }
@@ -83,7 +74,6 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
 
   static propTypes = {
     handleAddToPlan: PropTypes.func.isRequired,
-    addedToPlan: PropTypes.array.isRequired,
     sessionId: PropTypes.string.isRequired,
     teacherId: PropTypes.string.isRequired
   }
@@ -93,10 +83,9 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
    */
   render(): React.ReactNode {
     const categories = [
-      {clickFunction: this.highLevelClick, categoryView: 'highLevel', title: 'Asking High-Level Questions', questions: Constants.CoachingQuestions.Instruction.highLevel},
-      {clickFunction: this.followUpClick, categoryView: 'followUp', title: 'Following up on Children\'s Responses', questions: Constants.CoachingQuestions.Instruction.followUp},
-      {clickFunction: this.basicSkillsClick, categoryView: 'basicSkills', title: 'Building on Basic Skills Instruction', questions: Constants.CoachingQuestions.Instruction.basicSkills},
-      {clickFunction: this.inferentialInstructionClick, categoryView: 'inferentialInstruction', title: 'Inferential Instruction in Content Areas', questions: Constants.CoachingQuestions.Instruction.inferentialInstruction}
+      {clickFunction: this.highLevelClick, categoryView: 'highLevelQuestions', title: 'Asking High-Level Questions', questions: Constants.CoachingQuestions.Instruction.highLevelQuestions},
+      {clickFunction: this.lowLevelClick, categoryView: 'lowLevel', title: 'Building on Low-Level Instruction', questions: Constants.CoachingQuestions.Instruction.lowLevel},
+      {clickFunction: this.highLevelInstructionClick, categoryView: 'highLevelInstruction', title: 'High-Level Instruction in Content Areas', questions: Constants.CoachingQuestions.Instruction.highLevelInstruction}
     ];
     return(
       <Grid container direction="column">
@@ -132,7 +121,6 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
                     questions={value.questions}
                     openPanel={this.state.openPanel}
                     handlePanelChange={this.handlePanelChange}
-                    addedToPlan={this.props.addedToPlan}
                     handleAddToPlan={this.props.handleAddToPlan}
                     sessionId={this.props.sessionId}
                     teacherId={this.props.teacherId}

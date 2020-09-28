@@ -622,7 +622,6 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
             questions={
               <MathCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />

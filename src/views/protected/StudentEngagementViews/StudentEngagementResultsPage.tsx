@@ -496,7 +496,6 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
             questions={
               <StudentEngagementCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />

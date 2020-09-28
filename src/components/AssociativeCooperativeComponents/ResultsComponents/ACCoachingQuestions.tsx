@@ -9,7 +9,6 @@ import * as Constants from '../../../constants/Constants';
 
 interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
-  addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
   teacherId: string
 }
@@ -85,7 +84,6 @@ class ACCoachingQuestions extends React.Component<Props, State> {
 
   static propTypes = {
     handleAddToPlan: PropTypes.func.isRequired,
-    addedToPlan: PropTypes.array.isRequired,
     sessionId: PropTypes.string.isRequired,
     teacherId: PropTypes.string.isRequired
   }
@@ -134,7 +132,6 @@ class ACCoachingQuestions extends React.Component<Props, State> {
                     questions={value.questions}
                     openPanel={this.state.openPanel}
                     handlePanelChange={this.handlePanelChange}
-                    addedToPlan={this.props.addedToPlan}
                     handleAddToPlan={this.props.handleAddToPlan}
                     sessionId={this.props.sessionId}
                     teacherId={this.props.teacherId}

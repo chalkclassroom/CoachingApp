@@ -29,7 +29,6 @@ interface Props {
     buttonText: string,
   },
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
-  addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
   teacherId: string
 }
@@ -123,7 +122,6 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
       buttonText: PropTypes.string
     }).isRequired,
     handleAddToPlan: PropTypes.func.isRequired,
-    addedToPlan: PropTypes.array.isRequired,
     sessionId: PropTypes.string.isRequired,
     teacherId: PropTypes.string.isRequired
   }
@@ -256,7 +254,6 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
                     questions={value.questions}
                     openPanel={this.state.openPanel}
                     handlePanelChange={this.handlePanelChange}
-                    addedToPlan={this.props.addedToPlan}
                     handleAddToPlan={this.props.handleAddToPlan}
                     sessionId={this.props.sessionId}
                     teacherId={this.props.teacherId}
