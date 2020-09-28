@@ -645,7 +645,6 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
             questions={
               <ACCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />

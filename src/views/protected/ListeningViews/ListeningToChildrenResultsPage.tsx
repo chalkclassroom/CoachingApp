@@ -564,7 +564,6 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
             questions={
               <ListeningCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />

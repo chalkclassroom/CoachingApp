@@ -621,7 +621,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
             questions={
               <SequentialCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />

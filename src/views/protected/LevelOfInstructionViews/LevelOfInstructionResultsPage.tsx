@@ -376,7 +376,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       newArray.splice(itemIndex, 1);
       this.setState({ addedToPlan: newArray });
     }
-    console.log('handle add to plan session id is: ', sessionId);
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
@@ -532,7 +531,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
             questions={
               <LevelOfInstructionCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />

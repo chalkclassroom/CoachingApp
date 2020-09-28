@@ -35,7 +35,6 @@ interface Props {
   questions: Array<{name: string, title: string, text: Array<string>}>,
   openPanel: string,
   handlePanelChange(panel: string): void,
-  addedToPlan: Array<{panel: string, number: number, question: string}>,
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
   sessionId: string,
   teacherId: string,
@@ -60,10 +59,10 @@ class DataQuestions extends React.Component<Props, {}> {
     questions: PropTypes.arrayOf(PropTypes.exact({
       name: PropTypes.string,
       title: PropTypes.string,
-      text: PropTypes.array})).isRequired,
+      text: PropTypes.array
+    })).isRequired,
     openPanel: PropTypes.string,
     handlePanelChange: PropTypes.func.isRequired,
-    addedToPlan: PropTypes.array.isRequired,
     handleAddToPlan: PropTypes.func.isRequired,
     sessionId: PropTypes.string.isRequired,
     teacherId: PropTypes.string.isRequired,
@@ -91,9 +90,6 @@ class DataQuestions extends React.Component<Props, {}> {
               <Typography
                 className={classes.expansionPanelTitle}
                 style={{
-                  /* textDecoration: this.props.addedToPlan.includes({panel: item.name, number: index})
-                    ? "underline"
-                    : null, */
                   fontFamily: "Arimo"
                 }}
               >
@@ -103,7 +99,7 @@ class DataQuestions extends React.Component<Props, {}> {
             <ExpansionPanelDetails>
               <Grid container direction="column">
                 {item.text.map((question, index) => (
-                  <Grid container direction="row" key={index}>
+                  <Grid container direction="row" alignItems="center" key={index}>
                     <Grid item xs={10}>
                       <div className={classes.expansionPanelText}>
                         <ul style={{fontFamily: "Arimo"}}>
