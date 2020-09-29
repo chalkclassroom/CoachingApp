@@ -205,7 +205,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
                     <Button
                       onClick={value.clickFunction}
                       color={(this.state.categoryView!=='') && (this.state.categoryView !== value.categoryView) ? "secondary" : "primary"}
-                      variant="raised"
+                      variant="contained"
                       style={{
                         color: 'white',
                         boxShadow: this.state.categoryView === value.categoryView ? "4px 4px #a9a9a9" : '2px 2px #d3d3d3'

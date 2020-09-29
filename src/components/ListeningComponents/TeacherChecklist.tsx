@@ -10,6 +10,7 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
@@ -352,9 +353,11 @@ class TeacherChecklist extends React.Component<Props, State> {
                                 onClick={this.handleCheck(index+1)}
                                 style={{height: '15vh'}}
                               >
-                                <Checkbox
-                                  checked={this.state.checked.includes(index+1)}
-                                />
+                                <ListItemIcon>
+                                  <Checkbox
+                                    checked={this.state.checked.includes(index+1)}
+                                  />
+                                </ListItemIcon>
                                 <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
                                   {value}
                                 </ListItemText>
@@ -372,9 +375,11 @@ class TeacherChecklist extends React.Component<Props, State> {
                                 onClick={this.handleCheck(index+4)}
                                 style={{height: '15vh'}}
                               >
-                                <Checkbox
-                                  checked={this.state.checked.includes(index+4)}
-                                />
+                                <ListItemIcon>
+                                  <Checkbox
+                                    checked={this.state.checked.includes(index+4)}
+                                  />
+                                </ListItemIcon>
                                 <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
                                   {value}
                                 </ListItemText>

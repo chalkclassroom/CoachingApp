@@ -27,9 +27,6 @@ const BlankTheme = createMuiTheme({
     primary: {
       main: '#a3a3a3'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 

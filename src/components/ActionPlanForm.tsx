@@ -504,8 +504,8 @@ class ActionPlanForm extends React.Component<Props, State> {
     const timelineId = timelineOpen ? 'timeline-popover' : undefined;
     return (
       <ClickAwayListener onClickAway={(e): void => this.onClickAway(e)}>
-        <FadeAwayModal open={this.state.savedAlert} text="Saved!" />
         <div style={{width: '100%'}} id='ap'>
+          <FadeAwayModal open={this.state.savedAlert} text="Saved!" />
           {this.state.createDialog ? (
             <Dialog
               open={this.state.createDialog}

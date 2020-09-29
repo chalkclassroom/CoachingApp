@@ -30,7 +30,7 @@ const styles: object = (theme: Theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     background: '#ede7f6',
     backgroundColor: '#e99b2e',
   },

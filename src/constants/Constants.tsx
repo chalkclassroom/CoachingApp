@@ -31,9 +31,6 @@ export const TransitionTheme = createMuiTheme({
     primary: {
       main: '#e55529'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 export const ClimateTheme = createMuiTheme({
@@ -41,9 +38,6 @@ export const ClimateTheme = createMuiTheme({
     primary: {
       main: '#0988ec'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 export const MathTheme = createMuiTheme({
@@ -54,9 +48,6 @@ export const MathTheme = createMuiTheme({
     secondary: {
       main: '#000000'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 export const InstructionTheme = createMuiTheme({
@@ -64,9 +55,6 @@ export const InstructionTheme = createMuiTheme({
     primary: {
       main: '#009365'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 export const EngagementTheme = createMuiTheme({
@@ -74,9 +62,6 @@ export const EngagementTheme = createMuiTheme({
     primary: {
       main: '#e99c2e'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 export const ListeningTheme = createMuiTheme({
@@ -87,9 +72,6 @@ export const ListeningTheme = createMuiTheme({
     secondary: {
       main: '#000000'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 export const SequentialTheme = createMuiTheme({
@@ -100,9 +82,6 @@ export const SequentialTheme = createMuiTheme({
     secondary: {
       main: '#000000'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 export const LiteracyTheme = createMuiTheme({
@@ -110,9 +89,6 @@ export const LiteracyTheme = createMuiTheme({
     primary: {
       main: '#C4395A'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 export const ACTheme = createMuiTheme({
@@ -123,9 +99,6 @@ export const ACTheme = createMuiTheme({
     secondary: {
       main: '#000000'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 
@@ -158,9 +131,6 @@ export const LineTheme = createMuiTheme({
     action: {
       disabledBackground: UnselectedTransitionTypeColors.lineColor
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 
@@ -175,9 +145,6 @@ export const TravelingTheme = createMuiTheme({
     action: {
       disabledBackground: UnselectedTransitionTypeColors.travelingColor
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 
@@ -192,9 +159,6 @@ export const WaitingTheme = createMuiTheme({
     action: {
       disabledBackground: UnselectedTransitionTypeColors.waitingColor
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 
@@ -209,9 +173,6 @@ export const RoutinesTheme = createMuiTheme({
     action: {
       disabledBackground: UnselectedTransitionTypeColors.routinesColor
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 
@@ -226,9 +187,6 @@ export const BehaviorManagementTheme = createMuiTheme({
     action: {
       disabledBackground: UnselectedTransitionTypeColors.behaviorManagementColor
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 
@@ -243,9 +201,6 @@ export const OtherTheme = createMuiTheme({
     action: {
       disabledBackground: UnselectedTransitionTypeColors.otherColor
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 

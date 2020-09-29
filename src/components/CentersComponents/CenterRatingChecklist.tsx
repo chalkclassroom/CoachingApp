@@ -11,6 +11,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
@@ -519,7 +520,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       </Button>
                     </Grid>
                   </Grid>
-                  <Grid container direction={"row"} spacing={16} xs={12}>
+                  <Grid container direction={"row"} spacing={2} xs={12}>
                     <Grid item xs={6}>
                       <Card>
                         <Typography variant="h6" align="center" style={{fontFamily: 'Arimo'}}>
@@ -541,11 +542,13 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                               disabled={this.childDisabled()}
                               className={classes.checklistItem}
                             >
-                              <Checkbox
-                                checked={
-                                  !this.childDisabled() && this.state.childChecked.includes(index+1)
-                                }
-                              />
+                              <ListItemIcon>
+                                <Checkbox
+                                  checked={
+                                    !this.childDisabled() && this.state.childChecked.includes(index+1)
+                                  }
+                                />
+                              </ListItemIcon>
                               <ListItemText disableTypography style={{fontFamily: 'Arimo', fontSize: '1em'}}>
                                 {value}
                               </ListItemText>
@@ -575,11 +578,13 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                               disabled={this.teacherDisabled()}
                               className={classes.checklistItem}
                             >
-                              <Checkbox
-                                checked={
-                                  !this.teacherDisabled() && this.state.teacherChecked.includes(index+6)
-                                }
-                              />
+                              <ListItemIcon>
+                                <Checkbox
+                                  checked={
+                                    !this.teacherDisabled() && this.state.teacherChecked.includes(index+6)
+                                  }
+                                />
+                              </ListItemIcon>
                               <ListItemText disableTypography style={{fontFamily: 'Arimo', fontSize: '1em'}}>
                                 {value}
                               </ListItemText>
