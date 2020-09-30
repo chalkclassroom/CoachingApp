@@ -1,6 +1,5 @@
 import * as firebase from "firebase";
 import {FirebaseFunctions}  from '@firebase/functions-types';
-import * as Types from '../../constants/Types';
 // import 'firebase/auth';
 
 // Need to find a new place for this...
@@ -22,17 +21,6 @@ interface TeacherInfo {
   email: string,
   phone: string,
   notes: string
-}
-
-interface UserData {
-  id: string,
-  email: string,
-  firstName: string,
-  lastName: string,
-  role: string,
-  notes: string,
-  school: string,
-  phone: string
 }
 
 interface Note {
@@ -65,6 +53,7 @@ class Firebase {
   db: firebase.firestore.Firestore;
   functions: FirebaseFunctions;
   sessionRef: firebase.firestore.DocumentReference;
+  query: firebase.firestore.Query;
   /**
    * initializes firebase
    */
@@ -78,7 +67,7 @@ class Firebase {
         .then(() => console.log("Woohoo! Multi-Tab Persistence!"))
         .catch((error: Error) => console.error("Offline Not Working: ", error));
       this.functions = firebase.functions();
-      this.sessionRef = null;
+      // this.sessionRef = null;
     }
   }
 
@@ -127,7 +116,7 @@ class Firebase {
    * @param {object} userData 
    * @param {string} role 
    */
-  firebaseEmailSignUp = async function(
+  firebaseEmailSignUp = async (
     userData: {
       email: string,
       password: string,
@@ -138,40 +127,42 @@ class Firebase {
       }
     },
     role: string
-  ): Promise<void> {
+  ): Promise<void> => {
     return this.auth
       .createUserWithEmailAndPassword(userData.email, userData.password)
-      .then((userInfo: UserCredential) => {
-        console.log("Create user and sign in Success", userInfo);
-        const data = {
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          role: role,
-          id: userInfo.user.uid
-        };
-        const docRef = firebase
-          .firestore()
-          .collection("users")
-          .doc(userInfo.user.uid);
-        docRef
-          .set(data)
-          .then(() => {
-            if (role === "coach") {
-              docRef
-                .collection("partners")
-                .doc("rJxNhJmzjRZP7xg29Ko6") // Practice Teacher UID
-                .set({})
-                .then(() => console.log("Practice Teacher added to coach!"))
-                .catch((error: Error) =>
-                  console.error(
-                    "Error occurred while assigning practice teacher to coach: ",
-                    error
-                  )
-                );
-            } else console.log("User properly added to Firebase!");
-          })
-          .catch((error: Error) => console.error("Error adding coach: ", error));
+      .then((userInfo: firebase.auth.UserCredential) => {
+        if (userInfo.user) {
+          console.log("Create user and sign in Success", userInfo);
+          const data = {
+            email: userData.email,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            role: role,
+            id: userInfo.user ? userInfo.user.uid : ''
+          };
+          const docRef = firebase
+            .firestore()
+            .collection("users")
+            .doc(userInfo.user.uid);
+          docRef
+            .set(data)
+            .then(() => {
+              if (role === "coach") {
+                docRef
+                  .collection("partners")
+                  .doc("rJxNhJmzjRZP7xg29Ko6") // Practice Teacher UID
+                  .set({})
+                  .then(() => console.log("Practice Teacher added to coach!"))
+                  .catch((error: Error) =>
+                    console.error(
+                      "Error occurred while assigning practice teacher to coach: ",
+                      error
+                    )
+                  );
+              } else console.log("User properly added to Firebase!");
+            })
+            .catch((error: Error) => console.error("Error adding coach: ", error));
+        }
       })
       .catch((error: Error) => console.error("Error creating user signup: ", error));
   };
@@ -180,10 +171,10 @@ class Firebase {
    * signs user in
    * @param {object} userData 
    */
-  firebaseEmailSignIn = async function(userData: {
+  firebaseEmailSignIn = async (userData: {
     email: string,
     password: string
-  }): Promise<UserCredential> {
+  }): Promise<firebase.auth.UserCredential | void> => {
     return this.auth
       .signInWithEmailAndPassword(userData.email, userData.password)
       .catch((error: Error) => console.error("Error signing in: ", error));
@@ -192,7 +183,7 @@ class Firebase {
   /**
    * signs user out
    */
-  firebaseSignOut = async function(): Promise<void> {
+  firebaseSignOut = async (): Promise<void> => {
     return this.auth
       .signOut()
       .then(() => console.log("Successfully Signed Out!"))
@@ -203,7 +194,7 @@ class Firebase {
    * sends password reset email to user-entered email
    * @param {string} email
    */
-  resetPassword = async function(email: string): Promise<void> {
+  resetPassword = async (email: string): Promise<void> => {
     return this.auth
       .sendPasswordResetEmail(email)
       .catch((error: Error) =>
@@ -214,36 +205,37 @@ class Firebase {
   /**
    * gets list of all teachers linked to current user's account
    */
-  getTeacherList = async function(): Promise<Array<Promise<Types.Teacher>>> {
-    return this.db
+  getTeacherList = async (): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
+    if (this.auth.currentUser) {
+      return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)
       .collection("partners")
       .get()
-      .then((partners: Array<{id: string}>) => {
-        const teacherList: Array<Types.Teacher> = [];
+      .then((partners: firebase.firestore.QuerySnapshot) => {
+        const teacherList: Array<firebase.firestore.DocumentData> = [];
         partners.forEach(partner =>
           teacherList.push(this.getTeacherInfo(partner.id))
         );
         return teacherList;
       })
       .catch((error: Error) => console.error("Error getting partner list: ", error));
+    }
   };
 
   /**
    * retrieves a teacher's user data
    * @param {string} partnerID
    */
-  getTeacherInfo = async function(partnerID: string): Promise<UserData> {
+  getTeacherInfo = async (partnerID: string): Promise<firebase.firestore.DocumentData | undefined | void> => {
     return this.db
       .collection("users")
       .doc(partnerID)
       .get()
-      .then((doc: {exists: boolean, id: string, data(): UserData}) => {
+      .then((doc: firebase.firestore.DocumentSnapshot) => {
         if (doc.exists) {
           console.log('teacher info', doc.data());
           return doc.data();
-          
         } else {
           console.log("Partner's ID is 'undefined' in dB.");
         }
@@ -258,10 +250,10 @@ class Firebase {
    * @param {string} partnerID
    * @param {object} edits
    */
-  setTeacherInfo = async function(
+  setTeacherInfo = async (
     partnerID: string,
     edits: TeacherInfo
-  ): Promise<void> {
+  ): Promise<void> => {
     if (partnerID === "rJxNhJmzjRZP7xg29Ko6") {
       console.log("You can't edit the Practice Teacher!");
     } else {
@@ -290,7 +282,7 @@ class Firebase {
    * adds teacher to the database and to the coach's partners list
    * @param {TeacherInfo} teacherInfo
    */
-  addTeacher = async function(teacherInfo: TeacherInfo): Promise<string> {
+  addTeacher = async (teacherInfo: TeacherInfo): Promise<string | void> => {
     const { firstName, lastName, school, email, notes, phone } = teacherInfo;
     const newTeacherRef = this.db.collection("users").doc(); // auto-generated iD
     return newTeacherRef
@@ -308,7 +300,7 @@ class Firebase {
         const id = newTeacherRef.id; // get new iD
         return this.db
           .collection("users")
-          .doc(this.auth.currentUser.uid)
+          .doc(this.auth.currentUser ? this.auth.currentUser.uid : '')
           .collection("partners")
           .doc(id)
           .set({})
@@ -331,10 +323,10 @@ class Firebase {
    * removes partner from the user's partners subcollection
    * @param {string} partnerID
    */
-  removePartner = async function(partnerID: string): Promise<void> {
+  removePartner = async (partnerID: string): Promise<void> => {
     if (partnerID === "rJxNhJmzjRZP7xg29Ko6") {
       console.log("You can't delete the Practice Teacher!");
-    } else {
+    } else if (this.auth.currentUser) {
       return this.db
         .collection("users")
         .doc(this.auth.currentUser.uid)
@@ -363,8 +355,8 @@ class Firebase {
    * gets most recent observation of each type for a teacher
    * @param {string} partnerID
    */
-  getRecentObservations = async function(partnerID: string): Promise<Array<string> | void> {
-    const obsRef = this.db
+  getRecentObservations = async (partnerID: string): Promise<Array<string> | void> => {
+    if (this.auth.currentUser) {const obsRef = this.db
       .collection("observations")
       .where("teacher", "==", `/user/${partnerID}`)
       .where("observedBy", "==", `/user/${this.auth.currentUser.uid}`);
@@ -415,7 +407,7 @@ class Firebase {
         const recentObs = new Array(8).fill(null);
         snapshots.forEach((snapshot, index) =>
           snapshot.forEach(
-            (doc: {data(): {end: {toDate(): Date}}}) =>
+            (doc: firebase.firestore.QueryDocumentSnapshot) =>
               (recentObs[index] = doc
                 .data()
                 .end.toDate()
@@ -427,7 +419,7 @@ class Firebase {
       })
       .catch((error: Error) =>
         console.error("Error occurred during Promise.all() resolution: ", error)
-      );
+      );}
   };
 
   /* getCoachList = async function() {
@@ -446,25 +438,29 @@ class Firebase {
   /**
    * gets first name of current user
    */
-  getCoachFirstName = async function(): Promise<string> {
-    return this.db
+  getCoachFirstName = async (): Promise<string | void> => {
+    if (this.auth.currentUser) {
+      return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)
       .get()
-      .then((doc: {data(): {firstName: string}}) => doc.data().firstName)
+      .then((doc: firebase.firestore.DocumentData) => doc.data().firstName)
       .catch((error: Error) => console.error("Error getting cached document:", error));
+    }
   };
 
   /**
    * gets last name of current user
    */
-  getCoachLastName = async function(): Promise<string> {
-    return this.db
+  getCoachLastName = async (): Promise<string | void> => {
+    if (this.auth.currentUser) {
+      return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)
       .get()
-      .then((doc: {data(): {lastName: string}}) => doc.data().lastName)
+      .then((doc: firebase.firestore.DocumentData) => doc.data().lastName)
       .catch((error: Error) => console.error("Error getting cached document:", error));
+    }
   };
 
   /* getAdminList = async function() {
@@ -484,19 +480,20 @@ class Firebase {
    * adds knowledge check entry to database
    * @param {object} entry
    */
-  pushKnowledgeCheck = async function(entry: {
+  pushKnowledgeCheck = async (entry: {
     type: string,
     questionIndex: number,
     answerIndex: number,
     isCorrect: boolean
-  }): Promise<string | void> {
+  }): Promise<firebase.firestore.DocumentReference | void> => {
     const {
       type,
       questionIndex,
       answerIndex,
       isCorrect
     } = entry;
-    return this.db
+    if (this.auth.currentUser) {
+      return this.db
       .collection("knowledgeChecks")
       .add({
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -507,18 +504,19 @@ class Firebase {
         isCorrect: isCorrect
       })
     .catch((error: Error) => console.error("Error occurred recording knowlegde check answer: ", error))
+    }
   };
 
   /**
    * sets fields in document for current observation
    * @param {object} mEntry
    */
-  handleSession = async function(mEntry: {
+  handleSession = async (mEntry: {
     observedBy: string,
     teacher: string,
     type: string,
     start?: Date
-  }): Promise<void> {
+  }): Promise<void> => {
     this.sessionRef = this.db.collection("observations").doc();
     this.sessionRef
       .set({
@@ -535,7 +533,7 @@ class Firebase {
    * updates the end time of the observation session when completed
    * @param {Date | null} time 
    */
-  endSession = async function(time: Date|null = null): Promise<void> {
+  endSession = async (time: Date|null = null): Promise<void> => {
     this.sessionRef
       .update({
         end: time ? time : firebase.firestore.FieldValue.serverTimestamp()
@@ -549,10 +547,10 @@ class Firebase {
    * submits a single center observation to database
    * @param {object} mEntry
    */
-  handlePushCentersData = async function(mEntry: {
+  handlePushCentersData = async (mEntry: {
     checked: Array<number>,
     people: number
-  }): Promise<string | void> {
+  }): Promise<firebase.firestore.DocumentReference | void> => {
     return this.sessionRef
       .collection("entries")
       .add({
@@ -569,11 +567,11 @@ class Firebase {
    * 
    * @param {object} mEntry
    */
-  handlePushSEEachEntry = async function(mEntry: {
+  handlePushSEEachEntry = async (mEntry: {
     entryType: string,
     point: number,
     id: number
-  }): Promise<string|void> {
+  }): Promise<firebase.firestore.DocumentReference | void> => {
     return this.sessionRef
       .collection("entries")
       .add({
@@ -591,7 +589,7 @@ class Firebase {
    * adds level of instruction selection to database
    * @param {string} insType
    */
-  handlePushInstruction = async function(insType: string): Promise<string | void> {
+  handlePushInstruction = async (insType: string): Promise<firebase.firestore.DocumentReference | void> => {
     return this.sessionRef
       .collection("entries")
       .add({
@@ -607,7 +605,8 @@ class Firebase {
    * adds listening to children 1-minute observation to database
    * @param {object} mEntry
    */
-  handlePushListening = async function(mEntry: {checked: Array<number>}): Promise<string|void> {
+  handlePushListening = async (mEntry: {checked: Array<number>}):
+  Promise<firebase.firestore.DocumentReference|void> => {
     return this.sessionRef
       .collection("entries")
       .add({
@@ -623,8 +622,9 @@ class Firebase {
    * adds number for tool to user's unlocked list when they complete training
    * @param {number} section
    */
-  handleUnlockSection = async function(section: number): Promise<void> {
-    return this.db
+  handleUnlockSection = async (section: number): Promise<void> => {
+    if (this.auth.currentUser) {
+      return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)
       .update({
@@ -633,17 +633,19 @@ class Firebase {
       .catch((error: Error) =>
         console.error("Error occurred unlocking section: ", error)
       );
+    }
   };
 
   /**
    * gets array of unlocked tools for current user
    */
-  getUnlockedSections = async function(): Promise<Array<number>> {
-    return this.db
+  getUnlockedSections = async (): Promise<Array<number> | void> => {
+    if (this.auth.currentUser) {
+      return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)
       .get()
-      .then((doc: {data(): {unlocked: Array<number>}}) => {
+      .then((doc: firebase.firestore.DocumentData) => {
         if (doc.data().unlocked === undefined) {
           return [];
         } else {
@@ -651,14 +653,16 @@ class Firebase {
         }
       })
       .catch((error: Error) => console.error("Error getting cached document:", error));
+    }
   };
 
   /**
    * adds tool to user's watched list when they watch results training video
    * @param {string} section
    */
-  handleWatchResultsTraining = async function(section: string): Promise<void> {
-    return this.db
+  handleWatchResultsTraining = async (section: string): Promise<void> => {
+    if (this.auth.currentUser) {
+      return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)
       .update({
@@ -667,17 +671,19 @@ class Firebase {
       .catch((error: Error) =>
         console.error("Error occurred recording watched video: ", error)
       );
+    }
   };
 
   /**
    * get array of watched results training video
    */
-  getWatchedResultsTraining = async function(): Promise<Array<string>> {
-    return this.db
+  getWatchedResultsTraining = async (): Promise<Array<string> | void> => {
+    if (this.auth.currentUser) {
+      return this.db
       .collection("users")
       .doc(this.auth.currentUser.uid)
       .get()
-      .then((doc: {data(): {resultsTraining: Array<string>}}) => {
+      .then((doc: firebase.firestore.DocumentData) => {
         if (doc.data().resultsTraining === undefined) {
           return [];
         } else {
@@ -687,18 +693,19 @@ class Firebase {
       .catch((error: Error) =>
         console.error("Error getting document: ", error)
       );
+    }
   };
 
   /**
    * saves a logged transition in the database
    * @param {object} mEntry
    */
-  handlePushTransition = async function(mEntry: {
+  handlePushTransition = async (mEntry: {
     start: string,
     end: string,
     duration: string,
     transitionType: string
-  }): Promise<string|void> {
+  }): Promise<firebase.firestore.DocumentReference|void> => {
     return this.sessionRef
       .collection("entries")
       .add({
@@ -717,10 +724,10 @@ class Firebase {
    * adds climate selection to database
    * @param {object} mEntry
    */
-  handlePushClimate = async function(mEntry: {
+  handlePushClimate = async (mEntry: {
     BehaviorResponse: string,
     Type: string
-  }): Promise<string | void> {
+  }): Promise<firebase.firestore.DocumentReference | void> => {
     return this.sessionRef
       .collection("entries")
       .add({
@@ -737,7 +744,7 @@ class Firebase {
    * add note to database
    * @param {string} mNote
    */
-  handlePushNotes = async function(mNote: string): Promise<string | void> {
+  handlePushNotes = async (mNote: string): Promise<firebase.firestore.DocumentReference | void> => {
     return this.sessionRef
       .collection("notes")
       .add({
@@ -750,17 +757,11 @@ class Firebase {
   /**
    * 
    */
-  handleFetchNotes = async function(): Promise<Array<Note>> {
+  handleFetchNotes = async (): Promise<Array<Note> | void> => {
     return this.sessionRef
       .collection("notes")
       .get()
-      .then((snapshot: Array<{
-        id: string,
-        data(): {
-          Note: string,
-          Timestamp: {seconds: number, nanoseconds: number}
-        }
-      }>) => {
+      .then((snapshot: firebase.firestore.QuerySnapshot) => {
         const notesArr: Array<Note> = [];
         snapshot.forEach(doc =>
           notesArr.push({
@@ -800,18 +801,12 @@ class Firebase {
   }; */
 
 
-  handleFetchNotesResults = async function(sessionId: string): Promise<Note | void> {
+  handleFetchNotesResults = async (sessionId: string): Promise<Array<Note> | void> => {
     this.sessionRef = this.db.collection("observations").doc(sessionId);
     return this.sessionRef
       .collection("notes")
       .get()
-      .then((querySnapshot: Array<{
-        id: string,
-        data(): {
-          Note: string,
-          Timestamp: {seconds: number, nanoseconds: number}
-        }
-      }>) => {
+      .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
         const notesArr: Array<Note> = [];
         querySnapshot.forEach(doc =>
           notesArr.push({
@@ -845,7 +840,7 @@ class Firebase {
    * get average tone rating for observation session
    * @param {string} sessionId
    */
-  fetchAvgToneRating = async function(sessionId: string): Promise<{average: number} | void> {
+  fetchAvgToneRating = async (sessionId: string): Promise<{average: number} | void> => {
     const getAvgToneRatingFirebaseFunction = this.functions.httpsCallable(
       "funcAvgToneRating"
     );
@@ -864,8 +859,8 @@ class Firebase {
    * get average engagement rating for observations session
    * @param {string} sessionId
    */
-  fetchEngagementAvgSummary = async function(sessionId: string):
-    Promise<{average: number} | void>
+  fetchEngagementAvgSummary = async (sessionId: string):
+    Promise<{average: number} | void> =>
   {
     const getEngagementAvgSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcEngagementAvgSummary"
@@ -885,8 +880,8 @@ class Firebase {
    * gets counts of each behavior type for climate observation
    * @param {string} sessionId
    */
-  fetchBehaviourTypeCount = async function(sessionId: string):
-    Promise<Array<{behaviorResponse: string, count: number}> | void>
+  fetchBehaviourTypeCount = async (sessionId: string):
+    Promise<Array<{behaviorResponse: string, count: number}> | void> =>
   {
     const getBehaviourTypeCountFirebaseFunction = this.functions.httpsCallable(
       "funcBehaviourTypeCount"
@@ -906,8 +901,8 @@ class Firebase {
    * gets positive and negative behavior count for each observation
    * @param {string} teacherId
    */
-  fetchBehaviourTrend = async function(teacherId: string):
-    Promise<Array<{dayOfEvent: {value: string}, positive: number, negative: number}>>
+  fetchBehaviourTrend = async (teacherId: string):
+    Promise<Array<{dayOfEvent: {value: string}, positive: number, negative: number}> | void> =>
   {
     const getBehaviourTrendFirebaseFunction = this.functions.httpsCallable(
       "funcBehaviourTrend"
@@ -927,8 +922,8 @@ class Firebase {
    * gets average engagement rating for each observation
    * @param {string} teacherId
    */
-  fetchEngagementTrend = async function(teacherId: string):
-    Promise<Array<{startDate: {value: string}, average: number}>>
+  fetchEngagementTrend = async (teacherId: string):
+    Promise<Array<{startDate: {value: string}, average: number}> | void> =>
   {
     const getEngagementTrendFirebaseFunction = this.functions.httpsCallable(
       "funcEngagementTrend"
@@ -948,8 +943,8 @@ class Firebase {
    * gets count of each instruction type
    * @param {string} sessionId
    */
-  fetchInstructionTypeCount = async function(sessionId: string):
-    Promise<Array<{instructionType: string, count: number}>>
+  fetchInstructionTypeCount = async (sessionId: string):
+    Promise<Array<{instructionType: string, count: number}> | void> =>
   {
     const getInstructionTypeCountFirebaseFunction = this.functions.httpsCallable(
       "funcInstructionTypeCount"
@@ -969,8 +964,8 @@ class Firebase {
    * gets counts of inferential and basic skills instruction for each observation
    * @param {string} teacherId
    */
-  fetchInstructionTrend = async function(teacherId: string):
-    Promise<Array<{dayOfEvent: {value: string}, inferential: number, basicSkills: number}>>
+  fetchInstructionTrend = async (teacherId: string):
+    Promise<Array<{dayOfEvent: {value: string}, inferential: number, basicSkills: number}> | void> =>
   {
     const getInstructionTrendFirebaseFunction = this.functions.httpsCallable(
       "funcInstructionTrend"
@@ -995,8 +990,8 @@ class Firebase {
    * @param {string} teacherId
    * @param {string} sessionType
    */
-  fetchSessionDates = async function(teacherId: string, sessionType: string):
-    Promise<Array<{id: string, sessionStart: {value: string}}>>
+  fetchSessionDates = async (teacherId: string, sessionType: string):
+    Promise<Array<{id: string, sessionStart: {value: string}}> | void> =>
   {
     const getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable(
       "funcSessionDates"
@@ -1019,11 +1014,11 @@ class Firebase {
    * gets transition time and total session time
    * @param {string} sessionId
    */
-  fetchTransitionSummary = async function(sessionId: string): Promise<Array<{
+  fetchTransitionSummary = async (sessionId: string): Promise<Array<{
     total: number,
     sessionTotal: number,
     startDate: {value: string}
-  }>> {
+  }> | void> => {
     const getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable(
       "funcTransitionSessionSummary"
     );
@@ -1045,7 +1040,7 @@ class Firebase {
    * Transition Time cloud function
    * @param {string} sessionId
    */
-  fetchTransitionTypeSummary = async function(sessionId: string):
+  fetchTransitionTypeSummary = async (sessionId: string):
     Promise<Array<{
       line: number,
       traveling: number,
@@ -1054,7 +1049,7 @@ class Firebase {
       behaviorManagement: number,
       other: number,
       total: number
-    }>>
+    }> | void> =>
   {
     const getTransitionTypeCountFirebaseFunction = this.functions.httpsCallable(
       'funcTransitionTypeSummary'
@@ -1096,7 +1091,7 @@ class Firebase {
    * gets totals of each transition type for each observation
    * @param {string} teacherId
    */
-  fetchTransitionTrend = async function(teacherId: string): Promise<Array<{
+  fetchTransitionTrend = async (teacherId: string): Promise<Array<{
     id: string,
     line: number,
     traveling: number,
@@ -1107,7 +1102,7 @@ class Firebase {
     total: number,
     sessionTotal: number,
     startDate: {value: string}
-  }>> {
+  }> | void> => {
     const getTransitionTrendFirebaseFunction = this.functions.httpsCallable(
       'funcTransitionTrendNew'
     );
@@ -1137,7 +1132,7 @@ class Firebase {
    * gets counts of each type of child & teacher behaviors
    * @param {string} sessionId
    */
-  fetchACDetails = async function(sessionId: string): Promise<{
+  fetchACDetails = async (sessionId: string): Promise<{
     ac1: number,
     ac2: number,
     ac3: number,
@@ -1146,7 +1141,7 @@ class Firebase {
     teacher2: number,
     teacher3: number,
     teacher4: number
-  }> {
+  } | void> => {
     const getACDetailsFirebaseFunction = this.functions.httpsCallable(
       "funcACDetails"
     );
@@ -1174,7 +1169,7 @@ class Firebase {
    * gets counts of each type of child & teacher behaviors
    * @param {string} sessionId
    */
-  fetchSeqDetails = async function(sessionId: string): Promise<{
+  fetchSeqDetails = async (sessionId: string): Promise<{
     sequential1: number,
     sequential2: number,
     sequential3: number,
@@ -1183,7 +1178,7 @@ class Firebase {
     teacher2: number,
     teacher3: number,
     teacher4: number
-  }> {
+  } | void> => {
     const getSeqDetailsFirebaseFunction = this.functions.httpsCallable(
       "funcSeqDetails"
     );
@@ -1211,7 +1206,7 @@ class Firebase {
    * gets counts of engagement ratings by activity type
    * @param {string} sessionId
    */
-  fetchEngagementDetails = async function(sessionId: string): Promise<{
+  fetchEngagementDetails = async (sessionId: string): Promise<{
     offTask0: number,
     offTask1: number,
     offTask2: number,
@@ -1224,7 +1219,7 @@ class Firebase {
     highlyEngaged0: number,
     highlyEngaged1: number,
     highlyEngaged2: number,
-  }> {
+  } | void> => {
     const getEngagementDetailsFirebaseFunction = this.functions.httpsCallable(
       "funcEngagementDetails"
     );
@@ -1256,7 +1251,7 @@ class Firebase {
    * gets counts of each type of child & teacher behaviors
    * @param {string} sessionId 
    */
-  fetchMathDetails = async function(sessionId: string): Promise<{
+  fetchMathDetails = async (sessionId: string): Promise<{
     math1: number,
     math2: number,
     math3: number,
@@ -1265,7 +1260,7 @@ class Firebase {
     teacher2: number,
     teacher3: number,
     teacher4: number
-  }> {
+  } | void> => {
   const getMathDetailsFirebaseFunction = this.functions.httpsCallable(
     "funcMathDetails"
   );
@@ -1293,14 +1288,14 @@ class Firebase {
    * gets counts of each listening behavior type
    * @param {string} sessionId
    */
-  fetchListeningDetails = async function(sessionId: string): Promise<{
+  fetchListeningDetails = async (sessionId: string): Promise<{
     listening1: number,
     listening2: number,
     listening3: number,
     listening4: number,
     listening5: number,
     listening6: number,
-  }> {
+  } | void> => {
     const getListeningDetailsFirebaseFunction = this.functions.httpsCallable(
       "funcListeningDetails"
     );
@@ -1326,11 +1321,11 @@ class Firebase {
    * gets counts of child summary data
    * @param {string} sessionId
    */
-  fetchChildACSummary = async function(sessionId: string): Promise<{
+  fetchChildACSummary = async (sessionId: string): Promise<{
     noOpportunity: number,
     noac: number,
     ac: number
-  }> {
+  } | void> => {
     const getChildACSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcChildACSummary"
     );
@@ -1353,10 +1348,10 @@ class Firebase {
    * gets counts of child summary data
    * @param {string} sessionId
    */
-  fetchChildSeqSummary = async function(sessionId: string): Promise<{
+  fetchChildSeqSummary = async (sessionId: string): Promise<{
     notSequential: number,
     sequential: number
-  }> {
+  } | void> => {
     const getChildSeqSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcChildSeqSummary"
     );
@@ -1378,10 +1373,10 @@ class Firebase {
    * gets counts of summary data
    * @param {string} sessionId
    */
-  fetchEngagementPieSummary = async function(sessionId: string): Promise<{
+  fetchEngagementPieSummary = async (sessionId: string): Promise<{
     offTask: number,
     engaged: number
-  }> {
+  } | void> => {
     const getEngagementPieSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcEngagementPieSummary"
     );
@@ -1406,10 +1401,10 @@ class Firebase {
    * gets counts of child summary data
    * @param {string} sessionId
    */
-  fetchChildMathSummary = async function(sessionId: string): Promise<{
+  fetchChildMathSummary = async (sessionId: string): Promise<{
     math: number,
     notMath: number
-  }> {
+  } | void> => {
     const getChildMathSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcChildMathSummary"
     );
@@ -1431,11 +1426,11 @@ class Firebase {
    * gets counts of teacher summary data
    * @param {string} sessionId
    */
-  fetchTeacherACSummary = async function(sessionId: string): Promise<{
+  fetchTeacherACSummary = async (sessionId: string): Promise<{
     noOpportunity: number,
     noSupport: number,
     support: number
-  }> {
+  } | void> => {
     const getTeacherACSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherACSummary"
     );
@@ -1458,11 +1453,11 @@ class Firebase {
    * gets counts of teacher summary data
    * @param {string} sessionId
    */
-  fetchTeacherSeqSummary = async function(sessionId: string): Promise<{
+  fetchTeacherSeqSummary = async (sessionId: string): Promise<{
     noOpportunity: number,
     noSupport: number,
     support: number
-  }> {
+  } | void> => {
     const getTeacherSeqSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherSeqSummary"
     );
@@ -1488,11 +1483,11 @@ class Firebase {
    * gets counts of teacher summary data
    * @param {string} sessionId
    */
-  fetchTeacherMathSummary = async function(sessionId: string): Promise<{
+  fetchTeacherMathSummary = async (sessionId: string): Promise<{
     noOpportunity: number,
     noSupport: number,
     support: number
-  }> {
+  } | void> => {
     const getTeacherMathSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherMathSummary"
     );
@@ -1515,10 +1510,10 @@ class Firebase {
    * gets counts of summary data
    * @param {string} sessionId
    */
-  fetchListeningSummary = async function(sessionId: string): Promise<{
+  fetchListeningSummary = async (sessionId: string): Promise<{
     listening: number,
     notListening: number
-  }> {
+  } | void> => {
     const getListeningSummaryFirebaseFunction = this.functions.httpsCallable(
       "funcListeningSummary"
     );
@@ -1537,12 +1532,12 @@ class Firebase {
    * gets counts of child data for each observation
    * @param {string} teacherId 
    */
-  fetchChildACTrend = async function(teacherId: string): Promise<Array<{
+  fetchChildACTrend = async (teacherId: string): Promise<Array<{
     startDate: {value: string},
     noOpportunity: number,
     ac: number,
     noac: number
-  }>> {
+  }> | void> => {
     const getChildACTrendFirebaseFunction = this.functions.httpsCallable(
       "funcChildACTrend"
     );
@@ -1566,11 +1561,11 @@ class Firebase {
    * gets counts of child data for each observation
    * @param {string} teacherId
    */
-  fetchChildSeqTrend = async function(teacherId: string): Promise<Array<{
+  fetchChildSeqTrend = async (teacherId: string): Promise<Array<{
     startDate: {value: string},
     sequential: number,
     notSequential: number
-  }>> {
+  }> | void> => {
     const getChildSeqTrendFirebaseFunction = this.functions.httpsCallable(
       "funcChildSeqTrend"
     );
@@ -1593,11 +1588,11 @@ class Firebase {
    * gets counts of child data for each observation
    * @param {string} teacherId
    */
-  fetchChildMathTrend = async function(teacherId: string): Promise<Array<{
+  fetchChildMathTrend = async (teacherId: string): Promise<Array<{
     startDate: {value: string},
     math: number,
     notMath: number
-  }>> {
+  }> | void> => {
     const getChildMathTrendFirebaseFunction = this.functions.httpsCallable(
       "funcChildMathTrend"
     );
@@ -1621,12 +1616,12 @@ class Firebase {
    * gets counts of teacher data for each observation
    * @param {string} teacherId
    */
-  fetchTeacherACTrend = async function(teacherId: string): Promise<Array<{
+  fetchTeacherACTrend = async (teacherId: string): Promise<Array<{
     startDate: {value: string},
     noOpportunity: number,
     support: number,
     nosupport: number
-  }>> {
+  }> | void> => {
     const getTeacherACTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherACTrend"
     );
@@ -1650,12 +1645,12 @@ class Firebase {
    * gets counts of teacher data for each observation
    * @param {string} teacherId
    */
-  fetchTeacherSeqTrend = async function(teacherId: string): Promise<Array<{
+  fetchTeacherSeqTrend = async (teacherId: string): Promise<Array<{
     startDate: {value: string},
     noOpportunity: number,
     support: number,
     noSupport: number
-  }>> {
+  }> | void> => {
     const getTeacherSeqTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherSeqTrend"
     );
@@ -1677,12 +1672,12 @@ class Firebase {
    * gets counts of teacher data for each observation
    * @param {string} teacherId
    */
-  fetchTeacherMathTrend = async function(teacherId: string): Promise<Array<{
+  fetchTeacherMathTrend = async (teacherId: string): Promise<Array<{
     startDate: {value: string},
     noOpportunity: number,
     support: number,
     noSupport: number
-  }>> {
+  }> | void> => {
     const getTeacherMathTrendFirebaseFunction = this.functions.httpsCallable(
       "funcTeacherMathTrend"
     );
@@ -1706,11 +1701,11 @@ class Firebase {
    * gets listening counts for each observation
    * @param {string} teacherId
    */
-  fetchListeningTrend = async function(teacherId: string): Promise<Array<{
+  fetchListeningTrend = async (teacherId: string): Promise<Array<{
     startDate: {value: string},
     listening: number,
     notListening: number
-  }>> {
+  }> | void> => {
     const getListeningTrendFirebaseFunction = this.functions.httpsCallable(
       "funcListeningTrend"
     );
@@ -1733,11 +1728,11 @@ class Firebase {
    * @param {string} teacherId
    * @param {string} magic8
    */
-  createActionPlan = async function(teacherId: string, magic8: string): Promise<string | void> {
+  createActionPlan = async (teacherId: string, magic8: string): Promise<string | void> => {
     const data = Object.assign(
       {},
       {
-        coach: this.auth.currentUser.uid,
+        coach: this.auth.currentUser? this.auth.currentUser.uid : 'unknown',
         teacher: teacherId,
         tool: magic8,
         dateModified: firebase.firestore.Timestamp.now(),
@@ -1770,7 +1765,7 @@ class Firebase {
    * @param {string} actionPlanId
    * @param {string} index
    */
-  createActionStep = async function(actionPlanId: string, index: string): Promise<string|void> {
+  createActionStep = async (actionPlanId: string, index: string): Promise<string|void> => {
     const actionStepsRef = this.db.collection('actionPlans').doc(actionPlanId).collection("actionSteps").doc(index);
     actionStepsRef.set({
       step: '',
@@ -1787,48 +1782,43 @@ class Firebase {
   /**
    * finds all action plans for coach and all their teachers
    */
-  getCoachActionPlans = async function(): Promise<Array<{
+  getCoachActionPlans = async (): Promise<Array<{
     id: string,
     teacherId: string,
     date: {seconds: number, nanoseconds: number},
     practice: string,
     teacherFirstName: string,
     teacherLastName: string
-  }>> {
-    this.sessionRef = this.db.collection("actionPlans")
-      .where("coach", "==", this.auth.currentUser.uid)
-    return this.sessionRef.get()
-      .then((querySnapshot: Array<{
-        id: string,
-        data(): {
-          teacher: string,
-          tool: string,
-          dateModified: {seconds: number, nanoseconds: number}
-        }
-      }>) => {
-        const idArr: Array<{
-          id: string,
-          teacherId: string,
-          date: {seconds: number, nanoseconds: number},
-          practice: string,
-          teacherFirstName: string,
-          teacherLastName: string
-        }> = [];
-        querySnapshot.forEach(doc =>
-          idArr.push({
-            id: doc.id,
-            teacherId: doc.data().teacher,
-            teacherFirstName: '',
-            teacherLastName: '',
-            practice: doc.data().tool,
-            date: doc.data().dateModified
-          })
-        )
-        return idArr;
-      })
-      .catch(() => {
-        console.log( 'unable to retrieve action plan id')
-      })
+  }> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("actionPlans")
+        .where("coach", "==", this.auth.currentUser.uid)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const idArr: Array<{
+            id: string,
+            teacherId: string,
+            date: {seconds: number, nanoseconds: number},
+            practice: string,
+            teacherFirstName: string,
+            teacherLastName: string
+          }> = [];
+          querySnapshot.forEach(doc =>
+            idArr.push({
+              id: doc.id,
+              teacherId: doc.data().teacher,
+              teacherFirstName: '',
+              teacherLastName: '',
+              practice: doc.data().tool,
+              date: doc.data().dateModified
+            })
+          )
+          return idArr;
+        })
+        .catch(() => {
+          console.log( 'unable to retrieve action plan id')
+        })
+    }
   }
 
   /**
@@ -1836,50 +1826,47 @@ class Firebase {
    * @param {string} practice
    * @param {string} teacherId
    */
-  getTeacherActionPlans = async function(practice: string, teacherId: string): Promise<Array<{
+  getTeacherActionPlans = async (practice: string, teacherId: string): Promise<Array<{
     id: string,
     date: {seconds: number, nanoseconds: number},
-    newDate: Date
-  }>> {
-    this.sessionRef = this.db.collection("actionPlans")
-      .where("coach", "==", this.auth.currentUser.uid)
-      .where("teacher", "==", teacherId)
-      .where("tool", "==", practice)
-    return this.sessionRef.get()
-      .then((querySnapshot: Array<{
-        id: string,
-        data(): {
-          dateModified: {seconds: number, nanoseconds: number}
-        }
-      }>) => {
-        const idArr: Array<{
-          id: string,
-          date: {seconds: number, nanoseconds: number},
-          // newDate: Date
-        }> = [];
-        querySnapshot.forEach(doc =>
-          idArr.push({
-            id: doc.id,
-            date: doc.data().dateModified
-          })
-        )
-        return idArr;
-      })
-      .catch(() => {
-        console.log( 'unable to retrieve action plans')
-      })
+    // newDate: Date
+  }> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("actionPlans")
+        .where("coach", "==", this.auth.currentUser.uid)
+        .where("teacher", "==", teacherId)
+        .where("tool", "==", practice)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const idArr: Array<{
+            id: string,
+            date: {seconds: number, nanoseconds: number},
+            // newDate: Date
+          }> = [];
+          querySnapshot.forEach(doc =>
+            idArr.push({
+              id: doc.id,
+              date: doc.data().dateModified
+            })
+          )
+          return idArr;
+        })
+        .catch(() => {
+          console.log( 'unable to retrieve action plans')
+        })
+      }
   }
 
   /**
    * gets first name of teacher
    * @param {string} teacherId
    */
-  getTeacherFirstName = async function(teacherId: string): Promise<string> {
+  getTeacherFirstName = async (teacherId: string): Promise<string | void> => {
     return this.db
       .collection("users")
       .doc(teacherId)
       .get()
-      .then((doc: {data(): {firstName: string}}) => doc.data().firstName)
+      .then((doc: firebase.firestore.DocumentData) => doc.data().firstName)
       .catch((error: Error) => console.error("Error getting cached document:", error));
   }
 
@@ -1887,12 +1874,12 @@ class Firebase {
    * gets last name of teacher
    * @param {string} teacherId
    */
-  getTeacherLastName = async function(teacherId: string): Promise<string> {
+  getTeacherLastName = async (teacherId: string): Promise<string | void> => {
     return this.db
       .collection("users")
       .doc(teacherId)
       .get()
-      .then((doc: {data(): {lastName: string}}) => doc.data().lastName)
+      .then((doc: firebase.firestore.DocumentData) => doc.data().lastName)
       .catch((error: Error) => console.error("Error getting cached document:", error));
   }
 
@@ -1900,32 +1887,12 @@ class Firebase {
    * gets action plan data
    * @param {string} actionPlanId
    */
-  getAPInfo = async function(actionPlanId: string): Promise<{
-    sessionId: string,
-    goal: string,
-    goalTimeline: string,
-    benefit: string,
-    dateModified: {seconds: number, nanoseconds: number},
-    dateCreated: {seconds: number, nanoseconds: number},
-    coach: string,
-    teacher: string,
-    tool: string
-  }> {
+  getAPInfo = async (actionPlanId: string): Promise<firebase.firestore.DocumentData | void> => {
     return this.db
       .collection("actionPlans")
       .doc(actionPlanId)
       .get()
-      .then((doc: {exists: boolean, id: string, data(): {
-        sessionId: string,
-        goal: string,
-        goalTimeline: string,
-        benefit: string,
-        dateModified: {seconds: number, nanoseconds: number},
-        dateCreated: {seconds: number, nanoseconds: number},
-        coach: string,
-        teacher: string,
-        tool: string
-      }}) => {
+      .then((doc: firebase.firestore.DocumentSnapshot) => {
         if (doc.exists) {
           return doc.data();
         } else {
@@ -1942,23 +1909,15 @@ class Firebase {
    * gets action steps
    * @param {string} actionPlanId
    */
-  getActionSteps = async function(actionPlanId: string): Promise<Array<{
+  getActionSteps = async (actionPlanId: string): Promise<Array<{
     step: string,
     materials: string,
     person: string,
     timeline: string
-  }>> {
-    this.sessionRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps");
-    return this.sessionRef.get()
-      .then((querySnapshot: Array<{
-        id: string,
-        data(): {
-          step: string,
-          materials: string,
-          person: string,
-          timeline: string
-        }
-      }>) => {
+  }> | void> => {
+    this.query = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps");
+    return this.query.get()
+      .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
         const actionStepsArr: Array<{
           step: string,
           materials: string,
@@ -1987,12 +1946,12 @@ class Firebase {
    * @param {string} goalTimeline
    * @param {string} benefit
    */
-  saveActionPlan = async function(
+  saveActionPlan = async (
     actionPlanId: string,
     goal: string,
     goalTimeline: string,
     benefit: string
-  ): Promise<void> {
+  ): Promise<void> => {
     const actionPlanRef = this.db.collection("actionPlans").doc(actionPlanId);
     return actionPlanRef.update({
       goal: goal,
@@ -2017,14 +1976,14 @@ class Firebase {
    * @param {string} person
    * @param {string} timeline
    */
-  saveActionStep = async function(
+  saveActionStep = async (
     actionPlanId: string,
     index: string,
     step: string,
     materials: string,
     person: string,
     timeline: string
-  ): Promise<void> {
+  ): Promise<void> => {
     const actionStepsRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps").doc(index);
     return actionStepsRef.update({
       step: step, 
@@ -2050,7 +2009,7 @@ class Firebase {
    * @param {Array<string>} addedQuestions
    * @param {Array<string>} notes
    */
-  createConferencePlan = async function(
+  createConferencePlan = async (
     teacherId: string,
     sessionId: string,
     magic8: string,
@@ -2058,12 +2017,12 @@ class Firebase {
     questions?: Array<string>,
     addedQuestions?: Array<string>,
     notes?: Array<string>
-  ): Promise<string|void> {
+  ): Promise<string|void> => {
     const data = Object.assign(
       {},
       {
         sessionId: sessionId,
-        coach: this.auth.currentUser.uid,
+        coach: this.auth.currentUser ? this.auth.currentUser.uid : 'unknown',
         teacher: teacherId,
         tool: magic8,
         dateCreated: firebase.firestore.Timestamp.now(),
@@ -2086,27 +2045,18 @@ class Firebase {
    * gets data in conference plan
    * @param {string} sessionId
    */
-  getConferencePlan = async function(sessionId: string): Promise<Array<{
+  getConferencePlan = async (sessionId: string): Promise<Array<{
     id: string,
     feedback: Array<string>,
     questions: Array<string>,
     addedQuestions: Array<string>,
     notes: Array<string>,
     date: {seconds: number, nanoseconds: number}
-  }>> {
-    this.sessionRef = this.db.collection("conferencePlans")
+  }> | void> => {
+    this.query = this.db.collection("conferencePlans")
       .where("sessionId", "==", sessionId)
-    return this.sessionRef.get()
-      .then((querySnapshot: Array<{
-        id: string,
-        data(): {
-          feedback: Array<string>,
-          questions: Array<string>,
-          addedQuestions: Array<string>,
-          notes: Array<string>,
-          dateCreated: {seconds: number, nanoseconds: number}
-        }
-      }>) => {
+    return this.query.get()
+      .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
         const idArr: Array<{
           id: string,
           feedback: Array<string>,
@@ -2135,7 +2085,7 @@ class Firebase {
   /**
    * finds all conference plans for coach and all their teachers
    */
-  getCoachConferencePlans = async function(): Promise<Array<{
+  getCoachConferencePlans = async (): Promise<Array<{
     id: string,
     teacherId: string,
     date: {seconds: number, nanoseconds: number},
@@ -2143,58 +2093,52 @@ class Firebase {
     practice: string,
     teacherFirstName: string,
     teacherLastName: string
-  }>> {
-    this.sessionRef = this.db.collection("conferencePlans")
-      .where("coach", "==", this.auth.currentUser.uid)
-    return this.sessionRef.get()
-      .then((querySnapshot: Array<{
-        id: string,
-        data(): {
-          teacher: string,
-          sessionId: string,
-          tool: string,
-          dateModified: {seconds: number, nanoseconds: number}
-        }
-      }>) => {
-        const idArr: Array<{
-          id: string,
-          teacherId: string,
-          date: {seconds: number, nanoseconds: number},
-          sessionId: string,
-          practice: string,
-          teacherFirstName: string,
-          teacherLastName: string
-        }> = [];
-        querySnapshot.forEach(doc =>
-          idArr.push({
-            id: doc.id,
-            teacherId: doc.data().teacher,
-            teacherFirstName: '',
-            teacherLastName: '',
-            sessionId: doc.data().sessionId,
-            practice: doc.data().tool,
-            date: doc.data().dateModified
-          })
-        )
-        return idArr;
-      })
-      .catch(() => {
-        console.log( 'unable to retrieve conference plan info')
-      })
+  }> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("conferencePlans")
+        .where("coach", "==", this.auth.currentUser.uid)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const idArr: Array<{
+            id: string,
+            teacherId: string,
+            date: {seconds: number, nanoseconds: number},
+            sessionId: string,
+            practice: string,
+            teacherFirstName: string,
+            teacherLastName: string
+          }> = [];
+          querySnapshot.forEach(doc =>
+            idArr.push({
+              id: doc.id,
+              teacherId: doc.data().teacher,
+              teacherFirstName: '',
+              teacherLastName: '',
+              sessionId: doc.data().sessionId,
+              practice: doc.data().tool,
+              date: doc.data().dateModified
+            })
+          )
+          return idArr;
+        })
+        .catch(() => {
+          console.log( 'unable to retrieve conference plan info')
+        })
+      }
   }
 
   /**
    * gets observation date for conference plan
    * @param {string} sessionId
    */
-  getObservationDate = async function(sessionId: string):
-    Promise<{seconds: number, nanoseconds: number}>
+  getObservationDate = async (sessionId: string):
+    Promise<{seconds: number, nanoseconds: number} | void> =>
   {
     return this.db
       .collection("observations")
       .doc(sessionId)
       .get()
-      .then((doc: {data(): {start: {seconds: number, nanoseconds: number}}}) => doc.data().start)
+      .then((doc: firebase.firestore.DocumentData) => doc.data().start)
       .catch((error: Error) => console.error("Error getting cached document:", error));
   }
 
@@ -2205,13 +2149,13 @@ class Firebase {
    * @param {Array<string>} addedQuestions
    * @param {Array<string>} notes
    */
-  saveConferencePlan = async function(
+  saveConferencePlan = async (
     conferencePlanId: string,
     feedback: Array<string>,
     questions: Array<string>,
     addedQuestions: Array<string>,
     notes: Array<string>
-  ): Promise<void> {
+  ): Promise<void> => {
     const conferencePlanRef = this.db.collection("conferencePlans").doc(conferencePlanId);
     return conferencePlanRef.update({
       feedback: feedback,
@@ -2233,7 +2177,7 @@ class Firebase {
    * @param {string} conferencePlanId
    * @param {string} note
    */
-  addNoteToConferencePlan = async function(conferencePlanId: string, note: string): Promise<void> {
+  addNoteToConferencePlan = async (conferencePlanId: string, note: string): Promise<void> => {
     return this.db
       .collection("conferencePlans")
       .doc(conferencePlanId)
@@ -2251,11 +2195,9 @@ class Firebase {
    * @param {string} sessionId
    * @param {string} questionText
    */
-  saveConferencePlanQuestion = async function(sessionId: string, questionText: string): Promise<void> {
+  saveConferencePlanQuestion = async (sessionId: string, questionText: string): Promise<void> => {
     const conferencePlanRef = this.db.collection("conferencePlans").where("sessionId", "==", sessionId);
-    conferencePlanRef.get().then((querySnapshot: Array<{
-      id: string
-    }>) => {
+    conferencePlanRef.get().then((querySnapshot: firebase.firestore.QuerySnapshot) => {
       const conferencePlanId: Array<string> = [];
       querySnapshot.forEach(doc =>
         conferencePlanId.push(doc.id)
