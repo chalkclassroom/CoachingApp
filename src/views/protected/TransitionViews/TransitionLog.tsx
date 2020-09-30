@@ -114,7 +114,7 @@ function TransitionLog(props: Props): React.ReactElement {
                       minute: "numeric"
                     })}
                     secondary={entry.duration}
-                    secondaryTypographyProps={{color: 'textPrimary'}}
+                    secondaryTypographyProps={{color: 'white'}}
                   />
                 </ListItem>
               </React.Fragment>
