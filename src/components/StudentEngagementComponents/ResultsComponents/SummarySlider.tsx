@@ -8,10 +8,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import AvgBarSummary from "../../StudentEngagementComponents/ResultsComponents/AvgBarSummary";
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import * as Constants from '../../../constants/Constants';
 
 interface Props {

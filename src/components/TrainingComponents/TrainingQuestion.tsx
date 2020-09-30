@@ -1,8 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles/index';
-import Radio from '@material-ui/core/Radio/index';
-import RadioGroup from '@material-ui/core/RadioGroup/index';
+import { Radio, RadioGroup } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel/index';
 import FormControl from '@material-ui/core/FormControl/index';
 import FormHelperText from '@material-ui/core/FormHelperText';

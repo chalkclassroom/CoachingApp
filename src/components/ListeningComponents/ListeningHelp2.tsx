@@ -1,10 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
-import Table from '@material-ui/core/Table/index';
-import TableRow from '@material-ui/core/TableRow/index';
-import TableBody from '@material-ui/core/TableBody/index';
-import TableCell from '@material-ui/core/TableCell/index';
+import { Table, TableRow, TableBody, TableCell } from '@material-ui/core';
 import * as Constants from '../../constants/Constants';
 
 const styles: object = {
@@ -13,15 +10,14 @@ const styles: object = {
     fontWeight: 'bold',
     fontSize: '1.1em',
     color: 'black',
-    paddingRight: '12px'
+    padding: '0.5em'
   },
   checklistItem : {
     backgroundColor: '#f3f3f3',
     fontSize: '0.9em',
     fontFamily: 'Arimo',
     width: '25%',
-    paddingTop: '0.5em',
-    paddingBottom: '0.5em',
+    padding: '0.5em',
     verticalAlign: 'top'
   },
   example: {
@@ -29,8 +25,7 @@ const styles: object = {
     fontSize: '0.9em',
     fontFamily: "Arimo",
     width: '75%',
-    paddingTop: '0.5em',
-    paddingBottom: '0.5em',
+    padding: '0.5em',
     verticalAlign: 'top'
   }
 };
@@ -53,18 +48,18 @@ function ListeningHelp2(props: Props): React.ReactElement {
     <Table>
       <TableBody>
         <TableRow>
-          <TableCell align="center" padding="checkbox" className={classes.header} style={{backgroundColor: Constants.Colors.AppBar}}>
+          <TableCell align="center" className={classes.header} style={{backgroundColor: Constants.Colors.AppBar}}>
             Teacher Behaviors
           </TableCell>
-          <TableCell align="center" padding="checkbox" className={classes.header} style={{backgroundColor: '#b4d6f7'}}>
+          <TableCell align="center" className={classes.header} style={{backgroundColor: '#b4d6f7'}}>
             Definitions and Examples
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.checklistItem}>
+          <TableCell className={classes.checklistItem}>
             Asks <strong>open-ended questions</strong> to encourage conversation
           </TableCell>
-          <TableCell padding="checkbox" className={classes.example}>
+          <TableCell className={classes.example}>
             Teacher asks questions or makes statements that invite multi-word
             responses. The child&apos;s answer is not constrained. These questions
             often involve a <i>wh-</i> word (i.e., what, why, where, how).
@@ -82,11 +77,11 @@ function ListeningHelp2(props: Props): React.ReactElement {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.checklistItem}>
+          <TableCell className={classes.checklistItem}>
             <strong>Expands on children&apos;s play or talk</strong> {" "}
             using questions or comments
           </TableCell>
-          <TableCell padding="checkbox" className={classes.example}>
+          <TableCell className={classes.example}>
             First, the teacher notices what children are talking about or doing.
             Then, the teacher uses comments or questions to enrich
             or add to children&apos;s play or talk.
@@ -106,10 +101,10 @@ function ListeningHelp2(props: Props): React.ReactElement {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.checklistItem}>
+          <TableCell className={classes.checklistItem}>
             Encourages children to <strong>talk to peers</strong>
           </TableCell>
-          <TableCell padding="checkbox" className={classes.example}>
+          <TableCell className={classes.example}>
             Teacher prompts children to talk to each other or solve problems
             together during activities.
             <ul>

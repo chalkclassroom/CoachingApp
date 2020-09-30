@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from 'prop-types';
 import { withStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
@@ -272,7 +272,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     this.props.handleTimerStart();
   }
 
-  generateHashCodeOfStudent = function(): void {
+  generateHashCodeOfStudent = (): number => {
     return this.hashCode(this.state.students[this.state.currentStudent].concat(this.state.currentStudent))
   }
 

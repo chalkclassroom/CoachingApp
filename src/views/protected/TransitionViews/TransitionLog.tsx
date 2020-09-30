@@ -3,9 +3,7 @@ import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from '@material-ui/core/ListItemText';
+import { List, ListItem, ListItemText }from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import { connect } from "react-redux";
 import * as Constants from '../../../constants/Constants';
@@ -68,7 +66,7 @@ const styles: object = {
   }
 };
 
-const getHexFromType = (type: string): string => {
+const getHexFromType = (type: string): string | undefined => {
   switch (type) {
     case "waiting":
       return Constants.TransitionTypeColors.lineColor;

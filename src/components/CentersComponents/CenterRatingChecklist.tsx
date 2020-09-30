@@ -9,10 +9,7 @@ import DialogContentText from "@material-ui/core/DialogContentText/DialogContent
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from '@material-ui/core/DialogActions';
 import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List/List";
-import ListItem from "@material-ui/core/ListItem/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
@@ -124,7 +121,7 @@ interface Props {
     checklistItem: string
   },
   firebase: {
-    handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
+    handlePushCentersData(mEntry: {checked: Array<number>, people: number | null}): void
   },
   type: Types.DashboardType,
   backToCenterMenu(): void
@@ -133,7 +130,7 @@ interface Props {
 interface State {
   childChecked: Array<number>,
   teacherChecked: Array<number>,
-  people: number,
+  people: number | null,
   time: number,
   timeUpOpen: boolean,
   peopleWarning: boolean,
@@ -156,7 +153,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     this.state = {
       childChecked: [],
       teacherChecked: [],
-      people: undefined,
+      people: null,
       time: RATING_INTERVAL,
       timeUpOpen: false,
       peopleWarning: false,

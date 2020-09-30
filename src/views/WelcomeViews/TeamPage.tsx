@@ -75,14 +75,14 @@ class TeamPage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      open: null
+      open: ''
     };
   }
 
   openCC = (): void => {
     if (this.state.open === "CC") {
       this.setState({
-        open: null
+        open: ''
       });
     } else {
       this.setState({
@@ -94,7 +94,7 @@ class TeamPage extends React.Component<Props, State> {
   openDM = (): void => {
     if (this.state.open === "DM") {
       this.setState({
-        open: null
+        open: ''
       });
     } else {
       this.setState({
@@ -106,7 +106,7 @@ class TeamPage extends React.Component<Props, State> {
   openKN = (): void => {
     if (this.state.open === "KN") {
       this.setState({
-        open: null
+        open: ''
       });
     } else {
       this.setState({
@@ -118,7 +118,7 @@ class TeamPage extends React.Component<Props, State> {
   openCS = (): void => {
     if (this.state.open === "CS") {
       this.setState({
-        open: null
+        open: ''
       });
     } else {
       this.setState({

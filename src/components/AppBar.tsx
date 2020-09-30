@@ -126,7 +126,7 @@ interface Style {
 }
 
 type Props = RouteComponentProps & {
-  classes?: Style,
+  classes: Style,
   firebase?: {
     auth: {
       currentUser: null | {
@@ -228,7 +228,7 @@ class AppBar extends React.Component<Props, State> {
       chalkText: PropTypes.string,
       coachingText: PropTypes.string,
       backIcon: PropTypes.string
-    }),
+    }).isRequired,
     firebase: PropTypes.exact({
       auth: PropTypes.exact({
         currentUser: PropTypes.exact({

@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/Tooltip";
+import { Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import Button from '@material-ui/core/Button';
 import { withRouter, RouteComponentProps } from "react-router-dom";
@@ -107,6 +107,7 @@ function LockedModal(props: Props & RouteComponentProps): React.ReactElement {
 
 LockedModal.propTypes = {
   classes: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
   history: ReactRouterPropTypes.history
 };
 

@@ -17,10 +17,7 @@ import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 
 const styles: object = {
   root: {

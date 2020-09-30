@@ -124,7 +124,7 @@ class TransitionTimePage extends React.Component<Props, State> {
 
     this.state = {
       notes: false,
-      transitionType: null,
+      transitionType: '',
       open: false,
       transitionEnded: false,
       teacherModal: false

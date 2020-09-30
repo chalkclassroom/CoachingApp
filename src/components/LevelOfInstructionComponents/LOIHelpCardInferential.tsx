@@ -1,10 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
-import Table from '@material-ui/core/Table/index';
-import TableRow from '@material-ui/core/TableRow/index';
-import TableBody from '@material-ui/core/TableBody/index';
-import TableCell from '@material-ui/core/TableCell/index';
+import { Table, TableRow, TableBody, TableCell } from '@material-ui/core';
 
 const styles: object = {
   inferentialSubtitle: {
@@ -13,17 +10,16 @@ const styles: object = {
     fontSize: 18,
     textAlign: "center",
     width: '50%',
-    fontFamily: 'Arimo'
+    fontFamily: 'Arimo',
+    padding: '0.5em'
   },
   example: {
     backgroundColor: "#f3f3f3",
     color: 'black',
-    padding: "1%",
+    padding: "0.5em",
     width: '50%',
     fontFamily: 'Arimo',
     fontSize: '0.9em',
-    paddingBottom: '0.5em',
-    paddingTop: '0.5em',
     verticalAlign: 'top'
   }
 };
@@ -44,7 +40,7 @@ function LOIHelpCardInferential(props: Props): React.ReactElement {
   const { classes } = props;
   return (
     <div>
-      <Table padding="checkbox">
+      <Table>
         <TableBody>
           <TableRow>
             <TableCell className={classes.inferentialSubtitle}>

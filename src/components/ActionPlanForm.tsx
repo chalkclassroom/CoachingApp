@@ -3,8 +3,7 @@ import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Popover from '@material-ui/core/Popover';
-import { TextField } from '@material-ui/core';
+import { TextField, Popover } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import InfoIcon from '@material-ui/icons/Info';
@@ -648,7 +647,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     marginTop: '0.3em'
                                   }}
                                   onClick={
-                                    (e): void => this.handlePopoverOpen(e, 'goal-popover')
+                                    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => this.handlePopoverOpen(e, 'goal-popover')
                                   }
                                 />
                                 <Popover
@@ -733,7 +732,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                               <Grid item>
                                 <InfoIcon
                                   onClick={
-                                    (e): void => this.handlePopoverOpen(e, 'goal-timeline-popover')
+                                    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => this.handlePopoverOpen(e, 'goal-timeline-popover')
                                   }
                                   style={{
                                     fill: "#4fd9b3",
@@ -812,7 +811,10 @@ class ActionPlanForm extends React.Component<Props, State> {
                           <Grid item xs={1}>
                             <Grid container justify="flex-end" direction="row" alignItems="center">
                               <Grid item>
-                                <InfoIcon style={{ fill: "#e99c2e", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'benefit-popover')} />
+                                <InfoIcon
+                                  style={{ fill: "#e99c2e", marginRight: '0.3em', marginTop: '0.3em' }}
+                                  onClick={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => this.handlePopoverOpen(e, 'benefit-popover')}
+                                />
                                 <Popover
                                   id={benefitId}
                                   open={benefitOpen}
@@ -895,7 +897,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                           <Grid item xs={1}>
                             <Grid container justify="flex-end" direction="row" alignItems="center">
                               <Grid item>
-                                <InfoIcon style={{ fill: "#0988ec", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'action-step-popover')}/>
+                                <InfoIcon style={{ fill: "#0988ec", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => this.handlePopoverOpen(e, 'action-step-popover')}/>
                                 <Popover
                                   id={actionStepId}
                                   open={actionStepOpen}
@@ -1003,7 +1005,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     marginTop: '0.3em'
                                   }}
                                   onClick={
-                                    (e): void => this.handlePopoverOpen(e, 'materials-popover')
+                                    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => this.handlePopoverOpen(e, 'materials-popover')
                                   }
                                 />
                                 <Popover
@@ -1099,7 +1101,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     marginTop: '0.3em'
                                   }} 
                                   onClick={
-                                    (e): void => this.handlePopoverOpen(e, 'person-popover')
+                                    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => this.handlePopoverOpen(e, 'person-popover')
                                   }
                                 />
                                 <Popover
@@ -1195,7 +1197,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     marginTop: '0.3em'
                                   }}
                                   onClick={
-                                    (e): void => this.handlePopoverOpen(e, 'timeline-popover')
+                                    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => this.handlePopoverOpen(e, 'timeline-popover')
                                   }
                                 />
                                 <Popover

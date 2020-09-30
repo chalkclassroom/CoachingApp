@@ -28,7 +28,7 @@ import Typography from '@material-ui/core/Typography/Typography';
 import LandingDetail from '../../components/LandingPageComponents/LandingDetail';
 import FeaturesCard from '../../components/LandingPageComponents/FeaturesCard';
 import Impact from '../../components/LandingPageComponents/Impact';
-import TextField from '@material-ui/core/TextField';
+import { TextField } from '@material-ui/core';
 import Fab from '@material-ui/core/Fab';
 import iPadImage from '../../assets/images/iPadImage.svg';
 import CoachingCycleFullImage from '../../assets/images/CoachingCycleFullImage.svg';

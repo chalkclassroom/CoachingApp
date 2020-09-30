@@ -1,7 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Button, Card } from '@material-ui/core';
-import ListItem from "@material-ui/core/ListItem/index";
+import { Button, Card, ListItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider, Theme } from '@material-ui/core/styles';
 

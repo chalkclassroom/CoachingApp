@@ -5,12 +5,14 @@ import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
 import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/Tooltip";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Tooltip
+} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import StarsIcon from '@material-ui/icons/Stars';
 import { changeTeacher, getTeacherList } from '../../../state/actions/teacher';

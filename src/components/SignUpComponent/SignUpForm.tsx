@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+import { TextField } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { withRouter, RouteComponentProps } from "react-router-dom";

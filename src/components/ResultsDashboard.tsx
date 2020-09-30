@@ -37,8 +37,7 @@ import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocC
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp";
 import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from "@material-ui/core/MenuItem";
+import { TextField, MenuItem } from '@material-ui/core';
 import NotesListDetailTable from './ResultsComponents/NotesListDetailTable';
 import * as moment from 'moment';
 import { MuiThemeProvider, Theme } from '@material-ui/core/styles';

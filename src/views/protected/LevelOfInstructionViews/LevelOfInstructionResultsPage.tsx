@@ -8,12 +8,15 @@ import InstructionTypeDetailsChart from "../../../components/LevelOfInstructionC
 import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionCoachingQuestions";
 import LevelOfInstructionSummaryChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummaryChart";
 import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph";
-import { Grid, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
+} from "@material-ui/core";
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import TeacherModal from '../HomeViews/TeacherModal';

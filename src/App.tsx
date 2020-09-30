@@ -330,11 +330,7 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/ListeningToChildrenTraining"
-              render={(props: {
-                history: H.History,
-                location: H.Location,
-                classes: object
-              }) : React.ReactElement=> <ListeningToChildrenTrainingPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <ListeningToChildrenTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -374,10 +370,7 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/MathInstructionTraining"
-              render={(props: {
-                history: H.History,
-                location: H.Location
-              }) : React.ReactElement=> <MathInstructionTrainingPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <MathInstructionTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -389,42 +382,27 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/AssociativeCooperativeInteractionsTraining"
-              render={(props: {
-                history: H.History,
-                location: H.Location
-              }) : React.ReactElement=> <AssociativeCooperativeInteractionsTrainingPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <AssociativeCooperativeInteractionsTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/LevelOfInstructionTraining"
-              render={(props: {
-                history: H.History,
-                location: H.Location
-              }) : React.ReactElement=> <LevelOfInstructionTrainingPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <LevelOfInstructionTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/ClassroomClimateTraining"
-              render={(props: {
-                history: H.History,
-                location: H.Location
-              }) : React.ReactElement=> <ClassroomClimateTrainingPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <ClassroomClimateTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/SequentialActivitiesTraining"
-              render={(props: {
-                history: H.History,
-                location: H.Location
-              }) : React.ReactElement=> <SequentialActivitiesTrainingPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <SequentialActivitiesTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
               path="/TransitionTimeTraining"
-              render={(props: {
-                history: H.History,
-                location: H.Location
-              }) : React.ReactElement=> <TransitionTimeTrainingPage {...props}/>}
+              render={(props: object) : React.ReactElement=> <TransitionTimeTrainingPage {...props}/>}
             />
             <PrivateRoute
               auth={this.state.auth}
@@ -468,10 +446,7 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
                 auth={this.state.auth}
                 path="/StudentEngagementTraining"
-                render={(props: {
-                  history: H.History,
-                  location: H.Location
-                }) : React.ReactElement=> <StudentEngagementTrainingPage {...props}/>}
+                render={(props: object) : React.ReactElement=> <StudentEngagementTrainingPage {...props}/>}
             />
 
             {/* this is the ugly way I had to do the router bc i wasn't sure how to pass

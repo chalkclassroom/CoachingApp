@@ -2,11 +2,7 @@ import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
 import Typography from '@material-ui/core/Typography';
-import TableHead from '@material-ui/core/TableHead/index';
-import Table from '@material-ui/core/Table/index';
-import TableRow from '@material-ui/core/TableRow/index';
-import TableBody from '@material-ui/core/TableBody/index';
-import TableCell from '@material-ui/core/TableCell/index';
+import { Table, TableRow, TableBody, TableCell, TableHead } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 
 const styles: object = {

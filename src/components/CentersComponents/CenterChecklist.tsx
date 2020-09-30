@@ -3,10 +3,7 @@ import * as PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import * as Constants from '../../constants/Constants';
 
