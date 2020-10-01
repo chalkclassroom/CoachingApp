@@ -255,7 +255,7 @@ class ResultsLayout extends React.Component<Props, State> {
           <Grid
             container
             justify="center"
-            alignItems="center"
+            alignItems="flex-start"
             className={classes.grid}
           >
             <Grid item className={classes.dashboardGrid} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
@@ -291,9 +291,9 @@ class ResultsLayout extends React.Component<Props, State> {
                   </Grid>
                   <Grid item style={{paddingTop: '3em'}}>
                     <Typography variant="h5" align="center" style={{fontFamily: 'Arimo', paddingLeft: '1em', paddingRight: '1em'}}>
-                      You have not completed any
+                      You have not completed any {" "}
                       {this.props.magic8 === 'AC' ? 'Associative and Cooperative' : this.props.magic8}
-                      observations for
+                      {" "} observations for {" "}
                       {this.props.teacher.firstName + " " + this.props.teacher.lastName} yet.
                     </Typography>
                   </Grid>
@@ -375,7 +375,17 @@ class ResultsLayout extends React.Component<Props, State> {
                   ) : this.state.view === 'questions' ? (
                     <div className={classes.resultsContent}>
                       <Grid container direction="column">
-                        {this.props.questions}
+                        <Grid item>
+                          <Grid container direction="row" justify="center" alignItems="center">
+                            <Typography variant="h6" align="center" style={{fontFamily: 'Arimo', padding: '0.5em'}}>
+                              Based on the observation results, select a category to guide your
+                              reflection on classroom practices and plan your next steps.
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          {this.props.questions}
+                        </Grid>
                       </Grid>
                     </div>
                   ) : this.state.view === 'conferencePlan' ? (

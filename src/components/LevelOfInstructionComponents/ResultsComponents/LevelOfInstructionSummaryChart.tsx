@@ -4,8 +4,8 @@ import { Pie } from "react-chartjs-2";
 import FirebaseContext from "../../Firebase/FirebaseContext";
 
 interface Props {
-  basicSkillsResponses: number, 
-  inferentialResponses: number, 
+  lowLevel: number, 
+  highLevel: number, 
 }
 
 /**
@@ -20,8 +20,8 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    basicSkillsResponses: PropTypes.number.isRequired, 
-    inferentialResponses: PropTypes.number.isRequired,
+    lowLevel: PropTypes.number.isRequired, 
+    highLevel: PropTypes.number.isRequired,
   }
 
   /**
@@ -30,16 +30,16 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const instructionResponseData = {
-      labels: ["Inferential Instruction", "Basic Skills Instruction"],
+      labels: ["High-Level Instruction", "Low-Level Instruction"],
       datasets: [
         {
-          data: [this.props.inferentialResponses, this.props.basicSkillsResponses],
+          data: [this.props.highLevel, this.props.lowLevel],
           backgroundColor: ["#6aa84f","#6d9eeb"],
           hoverBackgroundColor: ["#6aa84f", "#6d9eeb"] 
         }
       ]
     };
-    const total = this.props.inferentialResponses + this.props.basicSkillsResponses;
+    const total = this.props.highLevel + this.props.lowLevel;
     return (
       <div>
         <Pie

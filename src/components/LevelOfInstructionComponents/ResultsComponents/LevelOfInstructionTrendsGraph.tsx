@@ -35,7 +35,8 @@ const instructionTrendOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date",
-          fontStyle: "bold"
+          fontStyle: "bold",
+          fontSize: 16
         }
       }
     ],
@@ -51,8 +52,9 @@ const instructionTrendOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: "% of Observations",
-          fontStyle: "bold"
+          labelString: "% of Each Instruction Type",
+          fontStyle: "bold",
+          fontSize: 16
         }
       }
     ]

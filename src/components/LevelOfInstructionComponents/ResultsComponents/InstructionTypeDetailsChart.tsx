@@ -3,10 +3,10 @@ import * as PropTypes from 'prop-types';
 import {HorizontalBar} from 'react-chartjs-2';
 
 interface Props {
-  highLevelQuesInsCount: number,
-  followUpInsCount: number,
-  lowLevelInsCount: number,
-  specificSkillInsCount: number,
+  hlqCount: number,
+  hlqResponseCount: number,
+  llqCount: number,
+  llqResponseCount: number,
 }
 
 /**
@@ -22,10 +22,10 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    highLevelQuesInsCount: PropTypes.number.isRequired,
-    followUpInsCount: PropTypes.number.isRequired,
-    lowLevelInsCount: PropTypes.number.isRequired,
-    specificSkillInsCount: PropTypes.number.isRequired,
+    hlqCount: PropTypes.number.isRequired,
+    hlqResponseCount: PropTypes.number.isRequired,
+    llqCount: PropTypes.number.isRequired,
+    llqResponseCount: PropTypes.number.isRequired,
   }
 
   /**
@@ -35,16 +35,17 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const instructionData = {  
       labels: [
-        "Ask High-Level Question",
-        ["Follow-up on ","Children’s Responses"],
-        "Ask Low-Level Question", 
-        "Teach Specific Skills",
+        ["Teacher Asks", "High-Level Question"],
+        ["Child Answers", "High-Level Question"],
+        ["Teacher Asks", "Low-Level Question"], 
+        ["Child Answers", "Low-Level Question"],
       ],
       datasets: [{
-        data: [this.props.highLevelQuesInsCount,
-          this.props.followUpInsCount,
-          this.props.lowLevelInsCount,
-          this.props.specificSkillInsCount
+        data: [
+          this.props.hlqCount,
+          this.props.hlqResponseCount,
+          this.props.llqCount,
+          this.props.llqResponseCount
         ],
         backgroundColor: ["#38761d", "38761d", "#1155cc", "#1155cc"],
         hoverBackgroundColor: ["#38761d", "38761d", "#1155cc", "#1155cc"]
@@ -61,16 +62,16 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
                   min: 0,
                   max: (
                     Math.max(
-                      this.props.specificSkillInsCount,
-                      this.props.followUpInsCount,
-                      this.props.lowLevelInsCount,
-                      this.props.highLevelQuesInsCount
+                      this.props.llqResponseCount,
+                      this.props.hlqResponseCount,
+                      this.props.llqCount,
+                      this.props.hlqCount
                     ) > 20) ?
                     Math.max(
-                      this.props.specificSkillInsCount,
-                      this.props.followUpInsCount,
-                      this.props.lowLevelInsCount,
-                      this.props.highLevelQuesInsCount
+                      this.props.llqResponseCount,
+                      this.props.hlqResponseCount,
+                      this.props.llqCount,
+                      this.props.hlqCount
                     ) : 20,
                   fontSize: 16,
                   stepSize: 1

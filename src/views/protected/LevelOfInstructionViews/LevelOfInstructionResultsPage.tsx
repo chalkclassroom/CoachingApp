@@ -48,10 +48,10 @@ interface Style {
 }
 
 interface State {
-  highLevelQuesInsCount: number, 
-  followUpInsCount: number,
-  lowLevelInsCount: number,
-  specificSkillInsCount: number,
+  hlqCount: number, 
+  hlqResponseCount: number,
+  llqCount: number,
+  llqResponseCount: number,
   sessionId: string,
   conferencePlanId: string,
   trendsDates: Array<string>,
@@ -80,10 +80,10 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      highLevelQuesInsCount: 0,      
-      followUpInsCount: 0,
-      lowLevelInsCount: 0,
-      specificSkillInsCount: 0,              
+      hlqCount: 0,      
+      hlqResponseCount: 0,
+      llqCount: 0,
+      llqResponseCount: 0,              
       sessionId: '',
       conferencePlanId: '',
       trendsDates: [],
@@ -185,10 +185,10 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
-      highLevelQuesInsCount: 0,      
-      followUpInsCount: 0,
-      lowLevelInsCount: 0,
-      specificSkillInsCount: 0,              
+      hlqCount: 0,      
+      hlqResponseCount: 0,
+      llqCount: 0,
+      llqResponseCount: 0,              
       sessionId: '',
       conferencePlanId: '',
       trendsDates: [],
@@ -294,10 +294,10 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
         }
       });
       this.setState({
-        followUpInsCount: followUpCount,                          
-        highLevelQuesInsCount: highLevelQuesCount,
-        lowLevelInsCount: lowLevelCount,
-        specificSkillInsCount: specificSkillCount                                  
+        hlqResponseCount: followUpCount,                          
+        hlqCount: highLevelQuesCount,
+        llqCount: lowLevelCount,
+        llqResponseCount: specificSkillCount                                  
       });
     });
   }
@@ -475,20 +475,20 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                         <ListItemIcon style={{margin: 0}}>
                           <SignalWifi4BarIcon style={{fill: '#6d9eeb', transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary="Basic skills instruction" />
+                        <ListItemText primary="Low-level instruction" />
                       </ListItem>
                       <ListItem style={{padding: 0}}>
                         <ListItemIcon style={{margin: 0}}>
                           <SignalWifi4BarIcon style={{fill: '#6aa84f', transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary="Inferential instruction" />
+                        <ListItemText primary="High-level instruction" />
                       </ListItem>
                     </List>
                     </Grid>
                   </Grid>
                   <LevelOfInstructionSummaryChart
-                    basicSkillsResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
-                    inferentialResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
+                    lowLevel={this.state.llqResponseCount+this.state.llqCount}
+                    highLevel={this.state.hlqResponseCount+this.state.hlqCount}
                   />
                 </Grid>
               </div>} 
@@ -500,30 +500,20 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                       Was there a type of instruction the teacher used more often? 
                     </Typography>
                     <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                      Was there a type of instruction they used less often?               
+                      How often did children respond to different question types?              
                     </Typography>
                   </Grid>
                   <InstructionTypeDetailsChart
-                    highLevelQuesInsCount={this.state.highLevelQuesInsCount}               
-                    followUpInsCount={this.state.followUpInsCount}            
-                    lowLevelInsCount={this.state.lowLevelInsCount}             
-                    specificSkillInsCount={this.state.specificSkillInsCount}                  
+                    hlqCount={this.state.hlqCount}               
+                    hlqResponseCount={this.state.hlqResponseCount}            
+                    llqCount={this.state.llqCount}             
+                    llqResponseCount={this.state.llqResponseCount}                  
                   />
                 </Grid>
               </div>
             }
             trendsGraph={
-              <div>
-                <Grid container justify={"center"} direction={"column"}>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Was there a type of instruction the teacher used more often? 
-                  </Typography>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Was there a type of instruction they used less often?               
-                  </Typography>
-                </Grid>
-                <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
-              </div>
+              <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
             }
             changeSessionId={this.changeSessionId}
             sessionId={this.state.sessionId}
