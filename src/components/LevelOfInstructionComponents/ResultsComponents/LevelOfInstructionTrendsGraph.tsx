@@ -77,7 +77,7 @@ class LevelOfInstructionTrendsGraph extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     // const { classes } = this.props;
-
+    console.log('trends data', this.props.data);
     return (
       <Line
         data={this.props.data}

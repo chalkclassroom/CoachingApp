@@ -157,7 +157,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                   style={{ fontFamily: 'Arimo' }}
                 >
                   <Fab
-                    onClick={(): void => this.handlePushFire('highLevel')}
+                    onClick={(): void => this.handlePushFire('hlq')}
                     className={classes.button}
                     style={{
                       backgroundColor: '#38761dff',
@@ -187,7 +187,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                   style={{ fontFamily: 'Arimo' }}
                 >
                   <Fab
-                    onClick={(): void => this.handlePushFire('followUp')}
+                    onClick={(): void => this.handlePushFire('hlqResponse')}
                     classes={{ root: classes.button }}
                     style={{
                       backgroundColor: '#38761dff',
@@ -277,7 +277,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                   style={{ fontFamily: 'Arimo' }}
                 >
                   <Fab
-                    onClick={(): void => this.handlePushFire('lowLevel')}
+                    onClick={(): void => this.handlePushFire('llq')}
                     className={classes.button}
                     style={{
                       backgroundColor: '#1155ccff',
@@ -307,7 +307,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                   style={{ fontFamily: 'Arimo' }}
                 >
                   <Fab
-                    onClick={(): void => this.handlePushFire('specificSkill')}
+                    onClick={(): void => this.handlePushFire('llqResponse')}
                     classes={{ root: classes.button }}
                     style={{
                       backgroundColor: '#1155ccff',

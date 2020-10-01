@@ -55,8 +55,10 @@ interface State {
   sessionId: string,
   conferencePlanId: string,
   trendsDates: Array<string>,
-  trendsInfer: Array<number>,
-  trendsBasic: Array<number>,
+  trendsHlq: Array<number>,
+  trendsHlqResponse: Array<number>,
+  trendsLlq: Array<number>,
+  trendsLlqResponse: Array<number>,
   notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
@@ -87,8 +89,10 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       sessionId: '',
       conferencePlanId: '',
       trendsDates: [],
-      trendsInfer: [],                   
-      trendsBasic: [],                    
+      trendsHlq: [],
+      trendsHlqResponse: [],
+      trendsLlq: [],                   
+      trendsLlqResponse: [],
       notes: [],
       actionPlanExists: false,
       conferencePlanExists: false,
@@ -133,20 +137,26 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   handleTrendsFetching = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<string> = [];
-    const inferArray: Array<number> = []; 
-    const basicArray: Array<number> = [];
-    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, inferential: number, basicSkills: number}>) => {                       
+    const hlqArray: Array<number> = []; 
+    const hlqResponseArray: Array<number> = [];
+    const llqArray: Array<number> = [];
+    const llqResponseArray: Array<number> = [];
+    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}>) => {                       
       console.log("dataset is: ", dataSet);
-      dataSet.forEach((data: {dayOfEvent: {value: string}, inferential: number, basicSkills: number}) => { 
+      dataSet.forEach((data: {dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}) => { 
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
-        inferArray.push(Math.round((data.inferential / (data.inferential + data.basicSkills)) * 100)); 
-        basicArray.push(Math.round((data.basicSkills / (data.inferential + data.basicSkills)) * 100)); 
+        hlqArray.push(Math.round((data.hlq / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
+        hlqResponseArray.push(Math.round((data.hlqResponse / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
+        llqArray.push(Math.round((data.llq / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
+        llqResponseArray.push(Math.round((data.llqResponse / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
       });
       this.setState({
-        trendsDates: dateArray, 
-        trendsInfer: inferArray, 
-        trendsBasic: basicArray, 
-      });
+        trendsDates: dateArray,
+        trendsHlq: hlqArray,
+        trendsHlqResponse: hlqResponseArray,
+        trendsLlq: llqArray,
+        trendsLlqResponse: llqResponseArray
+      }, () => console.log('trends', this.state.trendsHlq, this.state.trendsHlqResponse, this.state.trendsLlq, this.state.trendsLlqResponse));
     });
   };
 
@@ -192,8 +202,10 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       sessionId: '',
       conferencePlanId: '',
       trendsDates: [],
-      trendsInfer: [],                   
-      trendsBasic: [],                    
+      trendsHlq: [],                   
+      trendsHlqResponse: [],       
+      trendsLlq: [],                   
+      trendsLlqResponse: [],             
       notes: [],
       actionPlanExists: false,
       conferencePlanExists: false,
@@ -239,16 +251,32 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Basic Skills Instruction",  
-          data: this.state.trendsBasic, 
+          label: "High-Level Question",  
+          data: this.state.trendsHlq, 
           backgroundColor: "#6d9eeb",
           borderColor: "#6d9eeb",
           fill: false,
           lineTension: 0,
         },
         {
-          label: "Inferential Instruction", 
-          data: this.state.trendsInfer,  
+          label: "Response to High-Level Question", 
+          data: this.state.trendsHlqResponse,  
+          backgroundColor: "#6aa84fff",
+          borderColor: "#6aa84fff",
+          fill: false,
+          lineTension: 0,
+        },
+        {
+          label: "Low-Level Question",  
+          data: this.state.trendsLlq, 
+          backgroundColor: "#6d9eeb",
+          borderColor: "#6d9eeb",
+          fill: false,
+          lineTension: 0,
+        },
+        {
+          label: "Response to Low-Level Question", 
+          data: this.state.trendsLlqResponse,  
           backgroundColor: "#6aa84fff",
           borderColor: "#6aa84fff",
           fill: false,
@@ -283,13 +311,13 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     })
     firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionType: string, count: number}>) => {  
       json.forEach(instruction => {                                
-        if (instruction.instructionType === "specificSkill") { 
+        if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") { 
           specificSkillCount = instruction.count;                       
-        } else if (instruction.instructionType === "lowLevel") {    
+        } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {    
           lowLevelCount = instruction.count;                                 
-        } else if (instruction.instructionType === "highLevel") {            
+        } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {            
           highLevelQuesCount = instruction.count;                                 
-        } else if (instruction.instructionType === "followUp") {            
+        } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {            
           followUpCount = instruction.count;                                 
         }
       });
