@@ -3,8 +3,7 @@ import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { TextField } from '@material-ui/core';
-import Popover from '@material-ui/core/Popover';
+import { TextField, Popover } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -27,9 +26,6 @@ const BlankTheme = createMuiTheme({
     primary: {
       main: '#a3a3a3'
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 
@@ -53,7 +49,7 @@ interface Props {
   teacher: Types.Teacher,
   magic8?: string,
   firebase: {
-    createConferencePlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
+    createConferencePlan(teacherId: string, sessionId: string, magic8: string, feedback?: Array<string>, questions?: Array<string>, addedQuestions?: Array<string>, notes?: Array<string>): Promise<void>,
     getConferencePlan(sessionId: string):
       Promise<Array<{
         id: string,
@@ -522,7 +518,10 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         <Grid item xs={1}>
                           <Grid container justify="flex-end" direction="row" alignItems="center">
                             <Grid item>
-                              <InfoIcon style={{ fill: "#094492", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'feedback-popover')}/>
+                              <InfoIcon
+                                style={{ fill: "#094492", marginRight: '0.3em', marginTop: '0.3em' }}
+                                onClick={(e: React.SyntheticEvent<Element, Event>): void => this.handlePopoverOpen(e, 'feedback-popover')}
+                              />
                               <Popover
                                 id={feedbackId}
                                 open={feedbackOpen}
@@ -625,7 +624,10 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         <Grid item xs={1}>
                           <Grid container justify="flex-end" direction="row" alignItems="center">
                             <Grid item>
-                              <InfoIcon style={{ fill: "#e55529", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'questions-popover')}/>
+                              <InfoIcon
+                                style={{ fill: "#e55529", marginRight: '0.3em', marginTop: '0.3em' }}
+                                onClick={(e: React.SyntheticEvent<Element, Event>): void => this.handlePopoverOpen(e, 'questions-popover')}
+                              />
                               <Popover
                                 id={questionsId}
                                 open={questionsOpen}
@@ -776,7 +778,10 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         <Grid item xs={1}>
                           <Grid container justify="flex-end" direction="row" alignItems="center">
                             <Grid item>
-                              <InfoIcon style={{ fill: "#009365", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'notes-popover')}/>
+                              <InfoIcon
+                                style={{ fill: "#009365", marginRight: '0.3em', marginTop: '0.3em' }}
+                                onClick={(e: React.SyntheticEvent<Element, Event>): void => this.handlePopoverOpen(e, 'notes-popover')}
+                              />
                               <Popover
                                 id={notesId}
                                 open={notesOpen}

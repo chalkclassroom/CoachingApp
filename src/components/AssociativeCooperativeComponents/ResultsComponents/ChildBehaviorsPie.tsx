@@ -86,7 +86,7 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
               font: {
                 size: 20
               },
-              formatter: function(value: number): number | void {
+              formatter: function(value: number): number | null {
                 if (value > 0) {
                   return value;
                 } else {

@@ -1,4 +1,4 @@
-import { Prompt } from "react-router-dom";
+// import { Prompt } from "react-router-dom";
 
 export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' | 'SA' | 'LI' | 'AC' | 'RedGraph' | 'NotPresent';
 
@@ -106,7 +106,7 @@ export interface Teacher {
   school: string
 }
 
-export interface History {
+/* export interface History {
   length?: number,
   action?: string,
   location?: {
@@ -154,7 +154,7 @@ export interface History {
   block?(prompt: Prompt): void,
   listen?(param: any): void,
   createHref?(param: any): void
-}
+} */
 
 export interface UserCredential {
   credential: {

@@ -44,8 +44,4 @@ class TrainingVideo extends React.Component<Props, {}> {
   }
 }
 
-TrainingVideo.propTypes = {
-  videoUrl: PropTypes.string
-};
-
 export default TrainingVideo;

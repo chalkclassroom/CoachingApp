@@ -136,7 +136,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
                 weight: 'bold'
               },
               fontFamily: 'Arimo',
-              formatter: function(value: number): string | void {
+              formatter: function(value: number): string | null {
                 if (value > 3.5) {
                   // return value + '%';
                   return (Math.floor(value) + 'm ' + Math.round((value % 1) * 60) + 's');

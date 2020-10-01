@@ -11,9 +11,6 @@ const AppBarTheme = createMuiTheme({
     primary: {
       main: Constants.Colors.AppBar
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 

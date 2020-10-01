@@ -23,7 +23,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
+import { TextField } from "@material-ui/core";
 import * as Types from '../../../constants/Types';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
@@ -346,14 +346,14 @@ class TeacherDetailPage extends React.Component<Props, State> {
       editAlert: false,
       alertText: "",
       recentObs: [
-        null, // transition
-        null, // climate
-        null, // listening
-        null, // level
-        null, // math
-        null, // engagement
-        null, // sequential
-        null // AC
+        '', // transition
+        '', // climate
+        '', // listening
+        '', // level
+        '', // math
+        '', // engagement
+        '', // sequential
+        '' // AC
       ]
     };
 
@@ -396,14 +396,14 @@ class TeacherDetailPage extends React.Component<Props, State> {
         editAlert: false,
         alertText: "",
         recentObs: [
-          null, // transition
-          null, // climate
-          null, // listening
-          null, // level
-          null, // math
-          null, // engagement
-          null, // sequential
-          null // AC
+          '', // transition
+          '', // climate
+          '', // listening
+          '', // level
+          '', // math
+          '', // engagement
+          '', // sequential
+          '' // AC
         ]
       };
     }
@@ -559,7 +559,7 @@ class TeacherDetailPage extends React.Component<Props, State> {
     }
   };
 
-  handleEditConfirm = (): void => {
+  handleEditConfirm = (): void | null => {
     const {
       teacherUID,
       inputFirstName,

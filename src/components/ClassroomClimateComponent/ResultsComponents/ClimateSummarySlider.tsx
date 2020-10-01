@@ -6,10 +6,7 @@ import Slider from "react-slick";
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import * as Constants from '../../../constants/Constants';
 
 interface Props {

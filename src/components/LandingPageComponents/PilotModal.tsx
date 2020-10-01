@@ -5,7 +5,7 @@ import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
 import PilotForm from './PilotForm';
 import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/Tooltip";
+import { Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 
 /**

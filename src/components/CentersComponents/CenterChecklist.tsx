@@ -3,9 +3,7 @@ import * as PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import * as Constants from '../../constants/Constants';
 
@@ -109,11 +107,13 @@ class CenterChecklist extends React.Component<Props, State> {
                     disableRipple
                     onClick={this.handleToggle(value)}
                   >
-                    <Checkbox
-                      checked={this.state.checked.includes(value)}
-                      tabIndex={-1}
-                      disableRipple
-                    />
+                    <ListItemIcon>
+                      <Checkbox
+                        checked={this.state.checked.includes(value)}
+                        tabIndex={-1}
+                        disableRipple
+                      />
+                    </ListItemIcon>
                     <ListItemText
                       primary={<Typography variant="h6" style={{fontFamily: "Arimo"}}>{value}</Typography>}
                       disableTypography
@@ -134,11 +134,13 @@ class CenterChecklist extends React.Component<Props, State> {
                     disableRipple
                     onClick={this.handleToggle(value)}
                   >
-                    <Checkbox
-                      checked={this.state.checked.includes(value)}
-                      tabIndex={-1}
-                      disableRipple
-                    />
+                    <ListItemIcon>
+                      <Checkbox
+                        checked={this.state.checked.includes(value)}
+                        tabIndex={-1}
+                        disableRipple
+                      />
+                    </ListItemIcon>
                     <ListItemText
                       primary={<Typography variant="h6" style={{fontFamily: "Arimo"}}>{value}</Typography>}
                       disableTypography

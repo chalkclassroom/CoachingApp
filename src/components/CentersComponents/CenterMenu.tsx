@@ -211,7 +211,7 @@ class CenterMenu extends React.Component<Props, State> {
     this.state = {
       addDialog: false,
       status: CENTER_CHECKLIST,
-      currentCenter: null,
+      currentCenter: '',
       totalVisitCount: 0
     }
   }
@@ -393,7 +393,7 @@ class CenterMenu extends React.Component<Props, State> {
             currentCenter={this.state.currentCenter}
             toggleScreen={this.switchToCenterMenu}
             updateCount={this.props.updateCount}
-            finishVisit={(centerName): void => this.finishCenterVisit(centerName)}
+            finishVisit={(centerName: string): void => this.finishCenterVisit(centerName)}
             backToCenterMenu={this.backToCenterMenu}
             firebase={this.props.firebase}
             type={this.props.type}

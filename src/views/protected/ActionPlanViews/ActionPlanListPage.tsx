@@ -1,16 +1,17 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableHead,
+  TableBody,
+  TableSortLabel
+} from '@material-ui/core';
 import * as moment from 'moment';
 import TransitionTimeIconImage from '../../../assets/images/TransitionTimeIconImage.svg';
 import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg';
@@ -128,7 +129,7 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'checkbox'}
+            padding={headCell.disablePadding ? 'none' : '0.5em'}
             sortDirection={orderBy === headCell.id ? order : false}
             style={{backgroundColor: '#d8ecff'}}
           >
@@ -176,7 +177,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
     super(props);
 
     this.state={
-      result: null,
+      result: [],
       order: 'desc',
       orderBy: 'modified',
       rowsPerPage: 5,
@@ -287,21 +288,21 @@ class ActionPlanListPage extends React.Component<Props, State>{
                             });
                           }}
                         >
-                          <TableCell padding="checkbox">
+                          <TableCell style={{padding: '0.5em'}}>
                             <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                               {moment(row.modified).format('MM/DD/YYYY')}
                             </Typography>
                           </TableCell>
-                          <TableCell padding="checkbox">
+                          <TableCell style={{padding: '0.5em'}}>
                             <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                               {row.name}
                             </Typography>
                           </TableCell>
-                          <TableCell padding="checkbox">
+                          <TableCell style={{padding: '0.5em'}}>
                             <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                               <Grid container direction="row" justify="flex-start" alignItems="center">
                                 <Grid item xs={9}>
-                                  <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                  <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
                                     {row.practice}
                                   </Typography>
                                 </Grid>
@@ -351,7 +352,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
                               </Grid>
                             </Typography>
                           </TableCell>
-                          <TableCell padding="checkbox">
+                          <TableCell style={{padding: '0.5em'}}>
                             {row.deadline}
                           </TableCell>
                         </TableRow>

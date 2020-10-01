@@ -27,7 +27,16 @@ class ActionPlanView extends React.Component<Props, State>{
     super(props);
 
     this.state={
-      teacher: null
+      teacher: {
+        email: '',
+        firstName: '',
+        lastName: '',
+        id: '',
+        phone: '',
+        notes: '',
+        role: 'teacher',
+        school: ''
+      }
     }
   }
 

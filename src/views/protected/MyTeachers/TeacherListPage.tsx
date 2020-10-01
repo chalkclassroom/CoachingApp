@@ -18,17 +18,19 @@ import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import AddIcon from "@material-ui/icons/Add";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TextField
+} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
-import TextField from "@material-ui/core/TextField";
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import * as Types from '../../../constants/Types';
@@ -480,7 +482,7 @@ class TeacherListPage extends React.Component<Props, State> {
     }
   };
 
-  handleAddConfirm = (): void => {
+  handleAddConfirm = (): void | null => {
     const {
       inputFirstName,
       inputLastName,

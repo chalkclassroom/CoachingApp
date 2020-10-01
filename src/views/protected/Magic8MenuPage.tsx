@@ -1,14 +1,12 @@
 import * as React from "react";
 import "../../App.css";
 import * as PropTypes from "prop-types";
-import { Typography } from "@material-ui/core";
+import { Typography, TextField, MenuItem } from "@material-ui/core";
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import AppBar from "../../components/AppBar";
 import { withStyles } from "@material-ui/core/styles";
 import ToolIcons from '../../components/ToolIcons';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from "@material-ui/core/MenuItem";
 import { changeTeacher } from '../../state/actions/teacher';
 import { connect } from 'react-redux';
 import * as Types from '../../constants/Types';

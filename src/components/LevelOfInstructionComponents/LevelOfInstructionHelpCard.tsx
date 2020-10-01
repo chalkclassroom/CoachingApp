@@ -4,8 +4,7 @@ import { withStyles } from "@material-ui/core/styles/index";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import LOIHelpCardInferential from './LOIHelpCardInferential';
 import LOIHelpCardBasic from './LOIHelpCardBasic';
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { Tabs, Tab } from "@material-ui/core";
 import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
 
@@ -17,9 +16,6 @@ const LOITheme = createMuiTheme({
     secondary: {
       main: "#1155cc"
     }
-  },
-  typography: {
-    useNextVariants: true
   }
 });
 

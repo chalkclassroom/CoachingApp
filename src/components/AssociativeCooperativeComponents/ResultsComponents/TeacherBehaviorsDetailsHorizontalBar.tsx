@@ -93,7 +93,7 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
                 size: 16,
                 weight: 'bold'
               },
-              formatter: function(value: number): number | void {
+              formatter: function(value: number): number | null {
                 if (value > 0) {
                   return value;
                 } else {

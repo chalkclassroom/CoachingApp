@@ -2,11 +2,7 @@ import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
 import Typography from '@material-ui/core/Typography';
-import TableHead from '@material-ui/core/TableHead/index';
-import Table from '@material-ui/core/Table/index';
-import TableRow from '@material-ui/core/TableRow/index';
-import TableBody from '@material-ui/core/TableBody/index';
-import TableCell from '@material-ui/core/TableCell/index';
+import { Table, TableRow, TableBody, TableCell, TableHead } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 
 const styles: object = {
@@ -15,44 +11,48 @@ const styles: object = {
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    width: "25%"
+    width: "25%",
+    padding: '0.5em'
   },
   disapprovalExample: {
     backgroundColor: "#F9D8CE",
-    padding: "1%"
+    padding: '0.5em'
   },
   redirectionTitle: {
     backgroundColor: "#E69129",
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    width: "25%"
+    width: "25%",
+    padding: '0.5em'
   },
   redirectionExample: {
     backgroundColor: "#FAE8CF",
-    padding: "1%"
+    padding: '0.5em'
   },
   generalTitle: {
     backgroundColor: "#46D3AA",
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    width: "25%"
+    width: "25%",
+    padding: '0.5em'
   },
   generalExample: {
     backgroundColor: "#D7F6EE",
-    padding: "1%"
+    padding: '0.5em'
   },
   specificTitle: {
     backgroundColor: "#0C3C87",
     color: "white",
     fontSize: 18,
     textAlign: "center",
-    width: "25%"
+    width: "25%",
+    padding: '0.5em'
   },
   specificExample: {
     backgroundColor: "#B3D1FA",
-    padding: "1%"
+    padding: '0.5em'
   }
 };
 
@@ -88,7 +88,7 @@ function ClassroomClimateHelpCard(props: Props): React.ReactElement {
       <Typography variant="h6" gutterBottom>
         Hints + Reminders: Classifying Behavior Responses
       </Typography>
-      <Table padding="checkbox">
+      <Table>
         <TableHead>
           <TableRow>
             <TableCell className={classes.disapprovalTitle}>

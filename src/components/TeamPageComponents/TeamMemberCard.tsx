@@ -54,7 +54,7 @@ class TeamMemberCard extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      image: null
+      image: ''
     };
   }
 

@@ -7,7 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import LoginForm from "./LoginForm";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
+import { Tooltip } from "@material-ui/core";
 import * as Types from '../../constants/Types';
 
 /**

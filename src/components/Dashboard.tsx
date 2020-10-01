@@ -205,11 +205,11 @@ class Dashboard extends React.Component<Props, State> {
       }),
       alignFormat: "center",
       incomplete: false,
-      icon: null,
-      lookForsIcon: null,
-      notesIcon: null,
+      icon: '',
+      lookForsIcon: '',
+      notesIcon: '',
       title: '',
-      resultsDialog: null
+      resultsDialog: ''
     };
   }
 

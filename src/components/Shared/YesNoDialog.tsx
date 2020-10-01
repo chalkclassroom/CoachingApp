@@ -31,7 +31,7 @@ interface State {
   open: boolean
 }
 
-type ButtonVariant = 'text' | 'flat' | 'outlined' | 'contained' | 'raised' | 'fab';
+type ButtonVariant = 'text' | 'outlined' | 'contained' | undefined;
 
 /**
  * dialog for buttons with yes/no option
@@ -66,9 +66,13 @@ class YesNoDialog extends React.Component<Props, State> {
 
   handleAccept = (): void => {
     if (this.props.onAcceptParams !== null) {
-      this.props.onAccept(this.props.onAcceptParams);
+      if (this.props.onAccept) {
+        this.props.onAccept(this.props.onAcceptParams);
+      }
     } else {
-      this.props.onAccept();
+      if (this.props.onAccept) {
+        this.props.onAccept();
+      }
     }
     this.setState({ open: false });
   };
@@ -81,7 +85,7 @@ class YesNoDialog extends React.Component<Props, State> {
       PropTypes.element,
       PropTypes.string
     ]),
-    buttonVariant: PropTypes.oneOf<ButtonVariant>(['text', 'flat', 'outlined', 'contained', 'raised', 'fab']).isRequired,
+    buttonVariant: PropTypes.oneOf<ButtonVariant>(['text', 'outlined', 'contained', undefined]).isRequired,
     buttonColor: PropTypes.string,
     backgroundColor: PropTypes.string,
     buttonWidth: PropTypes.string,

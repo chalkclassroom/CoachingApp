@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
+import { TextField } from "@material-ui/core";
 import * as LogRocket from 'logrocket';
 import * as H from 'history';
 import ReactRouterPropTypes from 'react-router-prop-types';

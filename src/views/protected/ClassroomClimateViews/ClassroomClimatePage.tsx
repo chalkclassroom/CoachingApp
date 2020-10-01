@@ -225,7 +225,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
           <FirebaseContext.Consumer>
             {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
-          <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
+          <Modal open={this.state.ratingIsOpen}>
             <RatingModal
               handleRatingConfirmation={this.handleRatingConfirmation}
               handleIncomplete={this.handleIncomplete}
