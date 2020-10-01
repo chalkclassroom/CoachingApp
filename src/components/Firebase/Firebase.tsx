@@ -961,11 +961,11 @@ class Firebase {
 
   /**
    * Level of Instruction cloud function
-   * gets counts of inferential and basic skills instruction for each observation
+   * gets counts of the 4 instruction types for each observation
    * @param {string} teacherId
    */
   fetchInstructionTrend = async (teacherId: string):
-    Promise<Array<{dayOfEvent: {value: string}, inferential: number, basicSkills: number}> | void> =>
+    Promise<Array<{dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}> | void> =>
   {
     const getInstructionTrendFirebaseFunction = this.functions.httpsCallable(
       "funcInstructionTrend"
@@ -974,8 +974,10 @@ class Firebase {
       .then(
         (result: {data: Array<Array<{
           dayOfEvent: {value: string},
-          inferential: number,
-          basicSkills: number
+          hlq: number,
+          hlqResponse: number,
+          llq: number,
+          llqResponse: number
         }>>}) =>
           result.data[0]
       )

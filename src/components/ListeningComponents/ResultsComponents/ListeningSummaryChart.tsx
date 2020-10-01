@@ -31,7 +31,7 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const listeningData = {
-      labels: ["Listening/Encouraging", "Other"],
+      labels: ["Listening/Encouraging", "No Target Behaviors Observed"],
       datasets: [
         {
           data: [this.props.listening, this.props.notListening],

@@ -29,14 +29,14 @@ interface Props {
  */
 function InstructionResultsDialog(props: Props): React.ReactElement {
   const {open, history, clearTeacher, instructionStack, emptyLoiStack} = props;
-  let basicSkillsResponses = 0;
-  let inferentialResponses = 0;
+  let highLevel = 0;
+  let lowLevel = 0;
   let i = 0;
   for (i; i<instructionStack.length; i++) {
-    if (instructionStack[i].observation === 'lowLevel' || instructionStack[i].observation === 'specificSkill'){
-      basicSkillsResponses++;
+    if (instructionStack[i].observation === 'hlq' || instructionStack[i].observation === 'hlqResponse'){
+      highLevel++;
     } else {
-      inferentialResponses++;
+      lowLevel++;
     }
   }
   return (
@@ -50,8 +50,8 @@ function InstructionResultsDialog(props: Props): React.ReactElement {
         </DialogTitle>
         <DialogContent>
           <LevelOfInstructionSummaryChart
-            basicSkillsResponses={basicSkillsResponses}
-            inferentialResponses={inferentialResponses}
+            lowLevel={lowLevel}
+            highLevel={highLevel}
           />
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>

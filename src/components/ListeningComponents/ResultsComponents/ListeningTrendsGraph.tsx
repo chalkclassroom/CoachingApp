@@ -96,7 +96,7 @@ class ListeningTrendsGraph extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     // const { classes } = this.props;
-
+    console.log('data', this.props.data);
     return (
       <Line
         data={this.props.data}

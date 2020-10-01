@@ -504,7 +504,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                         <ListItemIcon style={{margin: 0}}>
                           <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary="Doing other tasks or activities" />
+                        <ListItemText primary="Not doing any target behaviors" />
                       </ListItem>
                     </List>
                   </Grid>

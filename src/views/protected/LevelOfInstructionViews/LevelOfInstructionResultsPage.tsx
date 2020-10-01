@@ -48,15 +48,17 @@ interface Style {
 }
 
 interface State {
-  highLevelQuesInsCount: number, 
-  followUpInsCount: number,
-  lowLevelInsCount: number,
-  specificSkillInsCount: number,
+  hlqCount: number, 
+  hlqResponseCount: number,
+  llqCount: number,
+  llqResponseCount: number,
   sessionId: string,
   conferencePlanId: string,
   trendsDates: Array<string>,
-  trendsInfer: Array<number>,
-  trendsBasic: Array<number>,
+  trendsHlq: Array<number>,
+  trendsHlqResponse: Array<number>,
+  trendsLlq: Array<number>,
+  trendsLlqResponse: Array<number>,
   notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
@@ -80,15 +82,17 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      highLevelQuesInsCount: 0,      
-      followUpInsCount: 0,
-      lowLevelInsCount: 0,
-      specificSkillInsCount: 0,              
+      hlqCount: 0,      
+      hlqResponseCount: 0,
+      llqCount: 0,
+      llqResponseCount: 0,              
       sessionId: '',
       conferencePlanId: '',
       trendsDates: [],
-      trendsInfer: [],                   
-      trendsBasic: [],                    
+      trendsHlq: [],
+      trendsHlqResponse: [],
+      trendsLlq: [],                   
+      trendsLlqResponse: [],
       notes: [],
       actionPlanExists: false,
       conferencePlanExists: false,
@@ -133,20 +137,26 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   handleTrendsFetching = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<string> = [];
-    const inferArray: Array<number> = []; 
-    const basicArray: Array<number> = [];
-    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, inferential: number, basicSkills: number}>) => {                       
+    const hlqArray: Array<number> = []; 
+    const hlqResponseArray: Array<number> = [];
+    const llqArray: Array<number> = [];
+    const llqResponseArray: Array<number> = [];
+    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}>) => {                       
       console.log("dataset is: ", dataSet);
-      dataSet.forEach((data: {dayOfEvent: {value: string}, inferential: number, basicSkills: number}) => { 
+      dataSet.forEach((data: {dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}) => { 
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
-        inferArray.push(Math.round((data.inferential / (data.inferential + data.basicSkills)) * 100)); 
-        basicArray.push(Math.round((data.basicSkills / (data.inferential + data.basicSkills)) * 100)); 
+        hlqArray.push(Math.round((data.hlq / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
+        hlqResponseArray.push(Math.round((data.hlqResponse / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
+        llqArray.push(Math.round((data.llq / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
+        llqResponseArray.push(Math.round((data.llqResponse / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
       });
       this.setState({
-        trendsDates: dateArray, 
-        trendsInfer: inferArray, 
-        trendsBasic: basicArray, 
-      });
+        trendsDates: dateArray,
+        trendsHlq: hlqArray,
+        trendsHlqResponse: hlqResponseArray,
+        trendsLlq: llqArray,
+        trendsLlqResponse: llqResponseArray
+      }, () => console.log('trends', this.state.trendsHlq, this.state.trendsHlqResponse, this.state.trendsLlq, this.state.trendsLlqResponse));
     });
   };
 
@@ -185,15 +195,17 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
-      highLevelQuesInsCount: 0,      
-      followUpInsCount: 0,
-      lowLevelInsCount: 0,
-      specificSkillInsCount: 0,              
+      hlqCount: 0,      
+      hlqResponseCount: 0,
+      llqCount: 0,
+      llqResponseCount: 0,              
       sessionId: '',
       conferencePlanId: '',
       trendsDates: [],
-      trendsInfer: [],                   
-      trendsBasic: [],                    
+      trendsHlq: [],                   
+      trendsHlqResponse: [],       
+      trendsLlq: [],                   
+      trendsLlqResponse: [],             
       notes: [],
       actionPlanExists: false,
       conferencePlanExists: false,
@@ -239,16 +251,32 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Basic Skills Instruction",  
-          data: this.state.trendsBasic, 
+          label: "High-Level Question",  
+          data: this.state.trendsHlq, 
           backgroundColor: "#6d9eeb",
           borderColor: "#6d9eeb",
           fill: false,
           lineTension: 0,
         },
         {
-          label: "Inferential Instruction", 
-          data: this.state.trendsInfer,  
+          label: "Response to High-Level Question", 
+          data: this.state.trendsHlqResponse,  
+          backgroundColor: "#6aa84fff",
+          borderColor: "#6aa84fff",
+          fill: false,
+          lineTension: 0,
+        },
+        {
+          label: "Low-Level Question",  
+          data: this.state.trendsLlq, 
+          backgroundColor: "#6d9eeb",
+          borderColor: "#6d9eeb",
+          fill: false,
+          lineTension: 0,
+        },
+        {
+          label: "Response to Low-Level Question", 
+          data: this.state.trendsLlqResponse,  
           backgroundColor: "#6aa84fff",
           borderColor: "#6aa84fff",
           fill: false,
@@ -283,21 +311,21 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     })
     firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionType: string, count: number}>) => {  
       json.forEach(instruction => {                                
-        if (instruction.instructionType === "specificSkill") { 
+        if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") { 
           specificSkillCount = instruction.count;                       
-        } else if (instruction.instructionType === "lowLevel") {    
+        } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {    
           lowLevelCount = instruction.count;                                 
-        } else if (instruction.instructionType === "highLevel") {            
+        } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {            
           highLevelQuesCount = instruction.count;                                 
-        } else if (instruction.instructionType === "followUp") {            
+        } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {            
           followUpCount = instruction.count;                                 
         }
       });
       this.setState({
-        followUpInsCount: followUpCount,                          
-        highLevelQuesInsCount: highLevelQuesCount,
-        lowLevelInsCount: lowLevelCount,
-        specificSkillInsCount: specificSkillCount                                  
+        hlqResponseCount: followUpCount,                          
+        hlqCount: highLevelQuesCount,
+        llqCount: lowLevelCount,
+        llqResponseCount: specificSkillCount                                  
       });
     });
   }
@@ -475,20 +503,20 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                         <ListItemIcon style={{margin: 0}}>
                           <SignalWifi4BarIcon style={{fill: '#6d9eeb', transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary="Basic skills instruction" />
+                        <ListItemText primary="Low-level instruction" />
                       </ListItem>
                       <ListItem style={{padding: 0}}>
                         <ListItemIcon style={{margin: 0}}>
                           <SignalWifi4BarIcon style={{fill: '#6aa84f', transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary="Inferential instruction" />
+                        <ListItemText primary="High-level instruction" />
                       </ListItem>
                     </List>
                     </Grid>
                   </Grid>
                   <LevelOfInstructionSummaryChart
-                    basicSkillsResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
-                    inferentialResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
+                    lowLevel={this.state.llqResponseCount+this.state.llqCount}
+                    highLevel={this.state.hlqResponseCount+this.state.hlqCount}
                   />
                 </Grid>
               </div>} 
@@ -500,30 +528,20 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                       Was there a type of instruction the teacher used more often? 
                     </Typography>
                     <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                      Was there a type of instruction they used less often?               
+                      How often did children respond to different question types?              
                     </Typography>
                   </Grid>
                   <InstructionTypeDetailsChart
-                    highLevelQuesInsCount={this.state.highLevelQuesInsCount}               
-                    followUpInsCount={this.state.followUpInsCount}            
-                    lowLevelInsCount={this.state.lowLevelInsCount}             
-                    specificSkillInsCount={this.state.specificSkillInsCount}                  
+                    hlqCount={this.state.hlqCount}               
+                    hlqResponseCount={this.state.hlqResponseCount}            
+                    llqCount={this.state.llqCount}             
+                    llqResponseCount={this.state.llqResponseCount}                  
                   />
                 </Grid>
               </div>
             }
             trendsGraph={
-              <div>
-                <Grid container justify={"center"} direction={"column"}>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Was there a type of instruction the teacher used more often? 
-                  </Typography>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Was there a type of instruction they used less often?               
-                  </Typography>
-                </Grid>
-                <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
-              </div>
+              <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
             }
             changeSessionId={this.changeSessionId}
             sessionId={this.state.sessionId}

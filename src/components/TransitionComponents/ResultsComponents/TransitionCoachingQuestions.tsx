@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
 import { withStyles, MuiThemeProvider } from "@material-ui/core/styles";
 import * as Constants from '../../../constants/Constants';
@@ -18,7 +17,7 @@ const styles: object = {
     height: "70px"
   },
   buttonText: {
-    fontSize: "12px",
+    fontSize: "1em",
     textAlign: "center"
   },
 };
@@ -176,20 +175,6 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     ];
     return(
       <Grid container direction="column">
-        <Grid item>
-          <Grid container direction="row" justify="center" alignItems="center">
-            <Typography variant="subtitle2" style={{fontFamily: 'Arimo'}}>
-              In which type of transition did children spend the most amount of time?
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Grid container direction="row" justify="center" alignItems="center">
-            <Typography variant="subtitle2" style={{fontFamily: 'Arimo'}}>
-              Select a transition type to view questions that will encourage reflection about teaching practices.
-            </Typography>
-          </Grid>
-        </Grid>
         <Grid item>
           <Grid
             container

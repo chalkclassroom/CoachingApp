@@ -41,7 +41,7 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
     const listeningData = {  
       labels: [
         "At eye-level",
-        "Encourages child talk",
+        ["Uses positive expression", "to encourage child talk"],
         "Repeats or clarifies", 
         "Asks open-ended questions",
         ["Expands on children's", "play or talk"],
