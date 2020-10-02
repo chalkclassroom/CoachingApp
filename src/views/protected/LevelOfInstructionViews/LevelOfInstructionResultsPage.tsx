@@ -142,7 +142,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     const llqArray: Array<number> = [];
     const llqResponseArray: Array<number> = [];
     firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}>) => {                       
-      console.log("dataset is: ", dataSet);
       dataSet.forEach((data: {dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}) => { 
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
         hlqArray.push(Math.round((data.hlq / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
@@ -156,7 +155,7 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
         trendsHlqResponse: hlqResponseArray,
         trendsLlq: llqArray,
         trendsLlqResponse: llqResponseArray
-      }, () => console.log('trends', this.state.trendsHlq, this.state.trendsHlqResponse, this.state.trendsLlq, this.state.trendsLlqResponse));
+      });
     });
   };
 
@@ -166,7 +165,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: {seconds: number, nanoseconds: number}}>) => {
-      console.log(notesArr);
       const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
@@ -182,7 +180,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           timestamp: newTimestamp
         });
       });
-      console.log(formattedNotesArr);
       this.setState({
         notes: formattedNotesArr
       });
@@ -294,7 +291,15 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     let followUpCount = 0;
     this.handleNotesFetching(this.state.sessionId);
 
-    firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+    firebase.getConferencePlan(this.state.sessionId).then((
+      conferencePlanData: Array<{
+        id: string,
+        feedback: string,
+        questions: Array<string>,
+        notes: string,
+        date: Date
+      }>
+    ) => {
       if (conferencePlanData[0]) {
         this.setState({
           conferencePlanExists: true,
@@ -310,7 +315,8 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       console.log('unable to retrieve conference plan')
     })
     firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionType: string, count: number}>) => {  
-      json.forEach(instruction => {                                
+      json.forEach(instruction => {
+        // if (type === old term || type === new term)                             
         if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") { 
           specificSkillCount = instruction.count;                       
         } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {    

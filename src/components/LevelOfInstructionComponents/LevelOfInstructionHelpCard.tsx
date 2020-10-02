@@ -2,8 +2,8 @@ import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import LOIHelpCardInferential from './LOIHelpCardInferential';
-import LOIHelpCardBasic from './LOIHelpCardBasic';
+import LOIHelpCardHighLevel from './LOIHelpCardHighLevel';
+import LOIHelpCardLowLevel from './LOIHelpCardLowLevel';
 import { Tabs, Tab } from "@material-ui/core";
 import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
@@ -20,47 +20,6 @@ const LOITheme = createMuiTheme({
 });
 
 const styles: object = {
-  paper: {
-    position: "absolute",
-    width: "67%",
-    backgroundColor: 'white',
-    padding: '2em',
-    borderRadius: 8
-  },
-  inferentialTitle: {
-    backgroundColor: "#38761d",
-    color: "white",
-    fontSize: 24,
-    textAlign: "center",
-    width: "100%"
-  },
-  inferentialSubtitle: {
-    backgroundColor: "#6aa84f",
-    color: "white",
-    fontSize: 18,
-    textAlign: "center",
-    width: '50%'
-  },
-  basicTitle: {
-    backgroundColor: "#1155cc",
-    color: "white",
-    fontSize: 24,
-    textAlign: "center",
-    width: "100%"
-  },
-  basicSubtitle: {
-    backgroundColor: "#c9daf8",
-    color: "black",
-    fontSize: 18,
-    textAlign: "center",
-    width: '50%'
-  },
-  example: {
-    backgroundColor: "#f3f3f3",
-    color: 'black',
-    padding: "1%",
-    width: '50%'
-  },
   tabBar: {
     marginBottom: "10px",
     height: "5%",
@@ -70,12 +29,6 @@ const styles: object = {
 
 interface Props {
   classes: {
-    paper: string,
-    inferentialTitle: string,
-    inferentialSubtitle: string,
-    basicTitle: string,
-    basicSubtitle: string,
-    example: string,
     tabBar: string
   }
 }
@@ -103,7 +56,7 @@ class LevelOfInstructionHelpCard extends React.Component<Props, State> {
   /**
    * @return {void}
    */
-  handleInferential = (): void => {
+  handleHighLevel = (): void => {
     if (this.state.tabValue !== 0) {
       this.setState({
         tabValue: 0
@@ -114,7 +67,7 @@ class LevelOfInstructionHelpCard extends React.Component<Props, State> {
   /**
    * @return {void}
    */
-  handleBasic = (): void => {
+  handleLowLevel = (): void => {
     if (this.state.tabValue !== 1) {
       this.setState({
         tabValue: 1
@@ -144,8 +97,8 @@ class LevelOfInstructionHelpCard extends React.Component<Props, State> {
                   variant="fullWidth"
                 >
                   <Tab
-                    label="Inferential Instruction"
-                    onClick={this.handleInferential}
+                    label="High-Level Instruction"
+                    onClick={this.handleHighLevel}
                     style={{
                       fontFamily: "Arimo",
                       fontSize: '1em',
@@ -153,8 +106,8 @@ class LevelOfInstructionHelpCard extends React.Component<Props, State> {
                     }}
                   />
                   <Tab
-                    label="Basic Skills Instruction"
-                    onClick={this.handleBasic}
+                    label="Low-Level Instruction"
+                    onClick={this.handleLowLevel}
                     style={{
                       fontFamily: "Arimo",
                       fontSize: '1em',
@@ -166,7 +119,7 @@ class LevelOfInstructionHelpCard extends React.Component<Props, State> {
             </MuiThemeProvider>
           </Grid>
           <Grid item>
-            {this.state.tabValue === 0 ? <LOIHelpCardInferential /> : <LOIHelpCardBasic />}
+            {this.state.tabValue === 0 ? <LOIHelpCardHighLevel /> : <LOIHelpCardLowLevel />}
           </Grid>
         </Grid>
       </div>

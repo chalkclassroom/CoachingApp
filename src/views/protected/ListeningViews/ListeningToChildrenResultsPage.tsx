@@ -198,7 +198,6 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     const notListeningArray: Array<number> = [];
     firebase.fetchListeningTrend(teacherId)
     .then((dataSet: Array<{startDate: {value: string}, listening: number, notListening: number}>) => {
-      console.log('handletrendsfetch returns: ', dataSet);
       dataSet.forEach(data => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
@@ -210,7 +209,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
         trendsDates: dateArray,
         trendsListening: listeningArray,
         trendsNotListening: notListeningArray
-      }, () => console.log('listening trends: ', this.state.trendsListening, this.state.trendsNotListening));
+      });
     });
   };
 
