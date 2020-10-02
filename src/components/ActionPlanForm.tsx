@@ -16,6 +16,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import FadeAwayModal from './FadeAwayModal';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 import * as moment from 'moment';
 import * as Types from '../constants/Types';
@@ -94,6 +96,7 @@ interface Props {
 interface State {
   goal: string,
   goalTimeline: string,
+  goalDate: Date | null,
   benefit: string,
   date: Date,
   actionSteps: string,
@@ -133,6 +136,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     this.state = {
       goal: '',
       goalTimeline: '',
+      goalDate: new Date(),
       benefit: '',
       date: new Date(),
       actionSteps: '',
@@ -628,7 +632,7 @@ class ActionPlanForm extends React.Component<Props, State> {
               </Dialog>
               <Grid item xs={12} style={{width: "100%", paddingTop: '0.4em', paddingBottom: '0.8em'}}>
                 <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
-                  <Grid item style={{width: '81%', border: '2px solid #094492', borderRadius: '0.5em', height: '100%'}}>
+                  <Grid item style={{width: '79%', border: '2px solid #094492', borderRadius: '0.5em', height: '100%'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -718,7 +722,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{width: '18%', border: '2px solid #4fd9b3', borderRadius: '0.5em', height: '100%'}}>
+                  <Grid item style={{width: '20%', border: '2px solid #4fd9b3', borderRadius: '0.5em', height: '100%'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -772,7 +776,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                         </Grid>
                       </Grid>
                       <Grid item>
-                        <TextField
+                        {/* <TextField
                           id="goalTimeline"
                           name="goalTimeline"
                           type="text"
@@ -791,7 +795,20 @@ class ActionPlanForm extends React.Component<Props, State> {
                             style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
                           }}
                           style={{marginTop: 0, paddingTop: '0em', paddingBottom: '0.5em', marginBottom: 0}}
-                        />
+                        /> */}
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                          <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="MM/dd/yyyy"
+                            margin="normal"
+                            id="date-picker-inline"
+                            label="Date"
+                            autoOk={true} // closes date picker on selection
+                            value={this.state.goalDate}
+                            onChange={(date: Date | null): void => {this.setState({goalDate: date});}}
+                          />
+                        </MuiPickersUtilsProvider>
                       </Grid>
                     </Grid>
                   </Grid>
