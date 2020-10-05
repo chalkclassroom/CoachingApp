@@ -49,7 +49,7 @@ interface Props {
     getAPInfo(actionPlanId: string): Promise<{
       sessionId: string,
       goal: string,
-      goalTimeline: string,
+      goalTimeline: firebase.firestore.Timestamp,
       benefit: string,
       dateModified: {seconds: number, nanoseconds: number},
       dateCreated: {seconds: number, nanoseconds: number},
@@ -71,7 +71,7 @@ interface Props {
     saveActionPlan(
       actionPlanId: string,
       goal: string,
-      goalTimeline: string,
+      goalTimeline: Date | null,
       benefit: string
     ): Promise<void>,
     saveActionStep(
@@ -95,8 +95,8 @@ interface Props {
 
 interface State {
   goal: string,
-  goalTimeline: string,
-  goalDate: Date | null,
+  // goalTimeline: string,
+  goalTimeline: Date | null,
   benefit: string,
   date: Date,
   actionSteps: string,
@@ -135,8 +135,8 @@ class ActionPlanForm extends React.Component<Props, State> {
 
     this.state = {
       goal: '',
-      goalTimeline: '',
-      goalDate: new Date(),
+      // goalTimeline: '',
+      goalTimeline: new Date(),
       benefit: '',
       date: new Date(),
       actionSteps: '',
@@ -193,11 +193,6 @@ class ActionPlanForm extends React.Component<Props, State> {
     if (name === 'goal') {
       this.setState({
         goal: event.target.value,
-        saved: false
-      })
-    } else if (name === 'goalTimeline') {
-      this.setState({
-        goalTimeline: event.target.value,
         saved: false
       })
     } else if (name === 'benefit') {
@@ -302,7 +297,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     .then((actionPlanData: {
       sessionId: string,
       goal: string,
-      goalTimeline: string,
+      goalTimeline: firebase.firestore.Timestamp,
       benefit: string,
       dateModified: {seconds: number, nanoseconds: number},
       dateCreated: {seconds: number, nanoseconds: number},
@@ -314,7 +309,7 @@ class ActionPlanForm extends React.Component<Props, State> {
       this.setState({
         actionPlanExists: true,
         goal: actionPlanData.goal,
-        goalTimeline: actionPlanData.goalTimeline,
+        goalTimeline: actionPlanData.goalTimeline ? actionPlanData.goalTimeline.toDate() : new Date(),
         benefit: actionPlanData.benefit,
         date: newDate
       });
@@ -631,8 +626,8 @@ class ActionPlanForm extends React.Component<Props, State> {
                 </DialogActions>
               </Dialog>
               <Grid item xs={12} style={{width: "100%", paddingTop: '0.4em', paddingBottom: '0.8em'}}>
-                <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
-                  <Grid item style={{width: '79%', border: '2px solid #094492', borderRadius: '0.5em', height: '100%'}}>
+                <Grid container direction="row" justify="space-between" alignItems="stretch" style={{height: '100%'}}>
+                  <Grid item style={{width: '77%', border: '2px solid #094492', borderRadius: '0.5em'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -717,12 +712,12 @@ class ActionPlanForm extends React.Component<Props, State> {
                             readOnly: this.props.readOnly,
                             style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
                           }}
-                          style={{marginTop: 0, paddingTop: '0em', paddingBottom: '0.5em', marginBottom: 0}}
+                          style={{marginTop: 0, paddingTop: '0em', marginBottom: 0}}
                         />
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{width: '20%', border: '2px solid #4fd9b3', borderRadius: '0.5em', height: '100%'}}>
+                  <Grid item style={{width: '22%', border: '2px solid #4fd9b3', borderRadius: '0.5em'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -775,27 +770,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item>
-                        {/* <TextField
-                          id="goalTimeline"
-                          name="goalTimeline"
-                          type="text"
-                          value={this.state.goalTimeline}
-                          onChange={this.handleChange('goalTimeline')}
-                          margin="normal"
-                          variant="standard"
-                          fullWidth
-                          multiline
-                          rowsMax={3}
-                          rows={3}
-                          className={classes.textField}
-                          InputProps={{
-                            disableUnderline: true,
-                            readOnly: this.props.readOnly,
-                            style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
-                          }}
-                          style={{marginTop: 0, paddingTop: '0em', paddingBottom: '0.5em', marginBottom: 0}}
-                        /> */}
+                      <Grid item style={{paddingLeft: '0.5em'}}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                           <KeyboardDatePicker
                             disableToolbar
@@ -804,9 +779,16 @@ class ActionPlanForm extends React.Component<Props, State> {
                             margin="normal"
                             id="date-picker-inline"
                             label="Date"
+                            readOnly={this.props.readOnly}
+                            inputProps={{readOnly: this.props.readOnly}}
                             autoOk={true} // closes date picker on selection
-                            value={this.state.goalDate}
-                            onChange={(date: Date | null): void => {this.setState({goalDate: date});}}
+                            value={this.state.goalTimeline}
+                            onChange={(date: Date | null): void => {
+                              this.setState({
+                                goalTimeline: date,
+                                saved: false
+                              });
+                            }}
                           />
                         </MuiPickersUtilsProvider>
                       </Grid>

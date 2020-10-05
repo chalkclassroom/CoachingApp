@@ -1896,6 +1896,7 @@ class Firebase {
       .get()
       .then((doc: firebase.firestore.DocumentSnapshot) => {
         if (doc.exists) {
+          console.log('doc data', doc.data());
           return doc.data();
         } else {
           console.log("Doc does not exist");
