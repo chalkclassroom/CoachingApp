@@ -66,7 +66,7 @@ interface Props {
       step: string,
       materials: string,
       person: string,
-      timeline: string
+      timeline: firebase.firestore.Timestamp
     }>>,
     saveActionPlan(
       actionPlanId: string,
@@ -80,7 +80,7 @@ interface Props {
       step: string,
       materials: string,
       person: string,
-      timeline: string
+      timeline: Date | null
     ): Promise<void>,
     createActionStep(actionPlanId: string, index: string): Promise<void>,
     getCoachFirstName(): Promise<string>,
@@ -100,7 +100,7 @@ interface State {
   benefit: string,
   date: Date,
   actionSteps: string,
-  actionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}>,
+  actionStepsArray: Array<{step: string, materials: string, person: string, timeline: Date | null}>,
   editMode: boolean,
   actionPlanExists: boolean,
   actionPlanId: string,
@@ -140,7 +140,7 @@ class ActionPlanForm extends React.Component<Props, State> {
       benefit: '',
       date: new Date(),
       actionSteps: '',
-      actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}],
+      actionStepsArray: [{step: '', materials: '', person: '', timeline: null}],
       editMode: false,
       actionPlanExists: this.props.actionPlanExists,
       actionPlanId: '',
@@ -159,7 +159,7 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   handleAddActionStep = (): void => {
     this.setState({
-      actionStepsArray: [...this.state.actionStepsArray, {step: '', materials: '', person: '', timeline: ''}]
+      actionStepsArray: [...this.state.actionStepsArray, {step: '', materials: '', person: '', timeline: null}]
     }, () => {
       this.props.firebase.createActionStep(this.state.actionPlanId, (this.state.actionStepsArray.length-1).toString());
     })
@@ -244,11 +244,12 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   /**
    * @param {number} number
+   * @param {Date | null} date
    * @return {void}
    */
-  handleChangeTimeline = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
+  handleChangeTimeline = (number: number, date: Date | null): void => {
     const newArray = [...this.state.actionStepsArray];
-    newArray[number].timeline = event.target.value;
+    newArray[number].timeline = date;
     this.setState({
       actionStepsArray: newArray,
       saved: false
@@ -313,15 +314,15 @@ class ActionPlanForm extends React.Component<Props, State> {
         benefit: actionPlanData.benefit,
         date: newDate
       });
-      const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
-      this.props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
+      const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: Date}> = [];
+      this.props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: firebase.firestore.Timestamp}>) => {
         actionStepsData.forEach((value, index) => {
-          newActionStepsArray[index] = {step: value.step, materials: value.materials, person: value.person, timeline: value.timeline};
+          newActionStepsArray[index] = {step: value.step, materials: value.materials, person: value.person, timeline: value.timeline ? value.timeline.toDate() : new Date()};
         })
       }).then(() => {
         this.setState({
           actionStepsArray: newActionStepsArray
-        });
+        }, () => {console.log('action steps arra', this.state.actionStepsArray)});
       })
       .catch(() => {
         console.log('error retrieving action steps');
@@ -362,7 +363,7 @@ class ActionPlanForm extends React.Component<Props, State> {
         this.setState({actionPlanId: newArr[0].id});
         this.getActionPlan(newArr[0].id);
       } else {
-        this.setState({actionPlanId: null});
+        this.setState({actionPlanId: ''});
         this.createNewActionPlan();
       }
     })
@@ -775,7 +776,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                           <KeyboardDatePicker
                             disableToolbar
                             variant="inline"
-                            format="MM/dd/yyyy"
+                            format="MM/dd/yy"
                             margin="normal"
                             id="date-picker-inline"
                             label="Date"
@@ -1250,7 +1251,30 @@ class ActionPlanForm extends React.Component<Props, State> {
                           {this.state.actionStepsArray.map((value, index) => {
                             return(
                               <li key={index}>
-                                <TextField
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                  <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="MM/dd/yy"
+                                    margin="normal"
+                                    id={"date-picker-inline" + index.toString()}
+                                    // label="Date"
+                                    readOnly={this.props.readOnly}
+                                    inputProps={{readOnly: this.props.readOnly}}
+                                    autoOk={true} // closes date picker on selection
+                                    value={value.timeline}
+                                    /* onChange={(date: Date | null): void => {
+                                      this.setState({
+                                        goalTimeline: date,
+                                        saved: false
+                                      });
+                                    }} */
+                                    onChange={(date: Date | null): void => {
+                                      this.handleChangeTimeline(index, date)
+                                    }}
+                                  />
+                                </MuiPickersUtilsProvider>
+                                {/* <TextField
                                   id={"timeline" + index.toString()}
                                   name={"timeline" + index.toString()}
                                   type="date"
@@ -1269,7 +1293,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
                                   }}
                                   style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
-                                />
+                                /> */}
                               </li>
                             );
                           })}

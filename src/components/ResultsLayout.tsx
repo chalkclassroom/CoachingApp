@@ -459,12 +459,12 @@ class ResultsLayout extends React.Component<Props, State> {
                                 step: string,
                                 materials: string,
                                 person: string,
-                                timeline: string
+                                timeline: firebase.firestore.Timestamp
                               }>>,
                               saveActionPlan(
                                 actionPlanId: string,
                                 goal: string,
-                                goalTimeline: string,
+                                goalTimeline: Date | null,
                                 benefit: string
                               ): Promise<void>,
                               saveActionStep(
@@ -473,7 +473,7 @@ class ResultsLayout extends React.Component<Props, State> {
                                 step: string,
                                 materials: string,
                                 person: string,
-                                timeline: string
+                                timeline: Date | null
                               ): Promise<void>,
                               createActionStep(actionPlanId: string, index: string): Promise<void>,
                               getCoachFirstName(): Promise<string>,

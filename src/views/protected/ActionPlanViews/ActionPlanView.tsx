@@ -100,7 +100,7 @@ class ActionPlanView extends React.Component<Props, State>{
                         step: string,
                         materials: string,
                         person: string,
-                        timeline: string
+                        timeline: firebase.firestore.Timestamp
                       }>>,
                       saveActionPlan(
                         actionPlanId: string,
