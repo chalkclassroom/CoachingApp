@@ -1790,7 +1790,8 @@ class Firebase {
     date: {seconds: number, nanoseconds: number},
     practice: string,
     teacherFirstName: string,
-    teacherLastName: string
+    teacherLastName: string,
+    achieveBy: firebase.firestore.Timestamp
   }> | void> => {
     if (this.auth.currentUser) {
       this.query = this.db.collection("actionPlans")
@@ -1803,7 +1804,8 @@ class Firebase {
             date: {seconds: number, nanoseconds: number},
             practice: string,
             teacherFirstName: string,
-            teacherLastName: string
+            teacherLastName: string,
+            achieveBy: firebase.firestore.Timestamp
           }> = [];
           querySnapshot.forEach(doc =>
             idArr.push({
@@ -1812,13 +1814,15 @@ class Firebase {
               teacherFirstName: '',
               teacherLastName: '',
               practice: doc.data().tool,
-              date: doc.data().dateModified
+              date: doc.data().dateModified,
+              achieveBy: doc.data().goalTimeline ? doc.data().goalTimeline : firebase.firestore.Timestamp.fromDate(new Date())
             })
           )
+          console.log('idArr is2 ', idArr);
           return idArr;
         })
         .catch(() => {
-          console.log( 'unable to retrieve action plan id')
+          console.log('unable to retrieve the action plan id')
         })
     }
   }
