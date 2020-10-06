@@ -95,7 +95,6 @@ interface Props {
 
 interface State {
   goal: string,
-  // goalTimeline: string,
   goalTimeline: Date | null,
   benefit: string,
   date: Date,
@@ -135,12 +134,11 @@ class ActionPlanForm extends React.Component<Props, State> {
 
     this.state = {
       goal: '',
-      // goalTimeline: '',
       goalTimeline: new Date(),
       benefit: '',
       date: new Date(),
       actionSteps: '',
-      actionStepsArray: [{step: '', materials: '', person: '', timeline: null}],
+      actionStepsArray: [{step: '', materials: '', person: '', timeline: new Date()}],
       editMode: false,
       actionPlanExists: this.props.actionPlanExists,
       actionPlanId: '',
@@ -159,7 +157,7 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   handleAddActionStep = (): void => {
     this.setState({
-      actionStepsArray: [...this.state.actionStepsArray, {step: '', materials: '', person: '', timeline: null}]
+      actionStepsArray: [...this.state.actionStepsArray, {step: '', materials: '', person: '', timeline: new Date()}]
     }, () => {
       this.props.firebase.createActionStep(this.state.actionPlanId, (this.state.actionStepsArray.length-1).toString());
     })
@@ -314,15 +312,30 @@ class ActionPlanForm extends React.Component<Props, State> {
         benefit: actionPlanData.benefit,
         date: newDate
       });
-      const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: Date}> = [];
-      this.props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: firebase.firestore.Timestamp}>) => {
+      const newActionStepsArray: Array<{
+        step: string,
+        materials: string,
+        person: string,
+        timeline: Date
+      }> = [];
+      this.props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{
+        step: string,
+        materials: string,
+        person: string,
+        timeline: firebase.firestore.Timestamp
+      }>) => {
         actionStepsData.forEach((value, index) => {
-          newActionStepsArray[index] = {step: value.step, materials: value.materials, person: value.person, timeline: value.timeline ? value.timeline.toDate() : new Date()};
+          newActionStepsArray[index] = {
+            step: value.step,
+            materials: value.materials,
+            person: value.person,
+            timeline: value.timeline ? value.timeline.toDate() : new Date()
+          };
         })
       }).then(() => {
         this.setState({
           actionStepsArray: newActionStepsArray
-        }, () => {console.log('action steps arra', this.state.actionStepsArray)});
+        });
       })
       .catch(() => {
         console.log('error retrieving action steps');
@@ -386,23 +399,29 @@ class ActionPlanForm extends React.Component<Props, State> {
       console.log("error with saving action plan");
     })
     this.state.actionStepsArray.forEach((value, index) => {
-      this.props.firebase.saveActionStep(this.state.actionPlanId, index.toString(), value.step, value.materials, value.person, value.timeline)
-        .then(() => {
-          this.setState({
-            saved: true,
-            dialog: false
-          }, () => {
-            this.setState({ savedAlert: true }, () => {
-              setTimeout(() => {
-                this.setState({ savedAlert: false })
-              }, 1500);
-            });
+      this.props.firebase.saveActionStep(
+        this.state.actionPlanId,
+        index.toString(),
+        value.step,
+        value.materials,
+        value.person,
+        value.timeline
+      ).then(() => {
+        this.setState({
+          saved: true,
+          dialog: false
+        }, () => {
+          this.setState({ savedAlert: true }, () => {
+            setTimeout(() => {
+              this.setState({ savedAlert: false })
+            }, 1500);
           });
-          this.getActionPlan(this.state.actionPlanId);
-        })
-        .catch(() => {
-          console.log("error in saving action step ", index);
-        })
+        });
+        this.getActionPlan(this.state.actionPlanId);
+      })
+      .catch(() => {
+        console.log("error in saving action step ", index);
+      })
     })
   }
 
@@ -779,7 +798,6 @@ class ActionPlanForm extends React.Component<Props, State> {
                             format="MM/dd/yy"
                             margin="normal"
                             id="date-picker-inline"
-                            label="Date"
                             readOnly={this.props.readOnly}
                             inputProps={{readOnly: this.props.readOnly}}
                             autoOk={true} // closes date picker on selection
@@ -1258,42 +1276,15 @@ class ActionPlanForm extends React.Component<Props, State> {
                                     format="MM/dd/yy"
                                     margin="normal"
                                     id={"date-picker-inline" + index.toString()}
-                                    // label="Date"
                                     readOnly={this.props.readOnly}
                                     inputProps={{readOnly: this.props.readOnly}}
                                     autoOk={true} // closes date picker on selection
                                     value={value.timeline}
-                                    /* onChange={(date: Date | null): void => {
-                                      this.setState({
-                                        goalTimeline: date,
-                                        saved: false
-                                      });
-                                    }} */
                                     onChange={(date: Date | null): void => {
                                       this.handleChangeTimeline(index, date)
                                     }}
                                   />
                                 </MuiPickersUtilsProvider>
-                                {/* <TextField
-                                  id={"timeline" + index.toString()}
-                                  name={"timeline" + index.toString()}
-                                  type="date"
-                                  value={value.timeline}
-                                  onChange={this.handleChangeTimeline(index)}
-                                  margin="normal"
-                                  variant="standard"
-                                  fullWidth
-                                  multiline
-                                  rowsMax={4}
-                                  rows={4}
-                                  className={classes.textField}
-                                  InputProps={{
-                                    disableUnderline: true,
-                                    readOnly: this.props.readOnly,
-                                    style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                                  }}
-                                  style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
-                                /> */}
                               </li>
                             );
                           })}
