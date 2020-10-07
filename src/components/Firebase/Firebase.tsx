@@ -1751,7 +1751,7 @@ class Firebase {
         materials: '',
         person: '',
         step: '',
-        timeline: ''
+        timeline: null
       }).then(() => {
         console.log('action steps created');
       }).catch(() => {
@@ -1773,7 +1773,7 @@ class Firebase {
       step: '',
       materials: '',
       person: '',
-      timeline: ''
+      timeline: null
     }).then(() => {
       console.log('action steps created');
     }).catch(() => {
@@ -1790,7 +1790,8 @@ class Firebase {
     date: {seconds: number, nanoseconds: number},
     practice: string,
     teacherFirstName: string,
-    teacherLastName: string
+    teacherLastName: string,
+    achieveBy: firebase.firestore.Timestamp
   }> | void> => {
     if (this.auth.currentUser) {
       this.query = this.db.collection("actionPlans")
@@ -1803,7 +1804,8 @@ class Firebase {
             date: {seconds: number, nanoseconds: number},
             practice: string,
             teacherFirstName: string,
-            teacherLastName: string
+            teacherLastName: string,
+            achieveBy: firebase.firestore.Timestamp
           }> = [];
           querySnapshot.forEach(doc =>
             idArr.push({
@@ -1812,13 +1814,15 @@ class Firebase {
               teacherFirstName: '',
               teacherLastName: '',
               practice: doc.data().tool,
-              date: doc.data().dateModified
+              date: doc.data().dateModified,
+              achieveBy: doc.data().goalTimeline ? doc.data().goalTimeline : firebase.firestore.Timestamp.fromDate(new Date())
             })
           )
+          console.log('idArr is2 ', idArr);
           return idArr;
         })
         .catch(() => {
-          console.log( 'unable to retrieve action plan id')
+          console.log('unable to retrieve the action plan id')
         })
     }
   }
@@ -1896,6 +1900,7 @@ class Firebase {
       .get()
       .then((doc: firebase.firestore.DocumentSnapshot) => {
         if (doc.exists) {
+          console.log('doc data', doc.data());
           return doc.data();
         } else {
           console.log("Doc does not exist");
@@ -1915,7 +1920,7 @@ class Firebase {
     step: string,
     materials: string,
     person: string,
-    timeline: string
+    timeline: firebase.firestore.Timestamp
   }> | void> => {
     this.query = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps");
     return this.query.get()
@@ -1924,7 +1929,7 @@ class Firebase {
           step: string,
           materials: string,
           person: string,
-          timeline: string
+          timeline: firebase.firestore.Timestamp
         }> = [];
         querySnapshot.forEach(doc => 
           actionStepsArr.push({
@@ -1945,19 +1950,19 @@ class Firebase {
    * saves action plan data
    * @param {string} actionPlanId
    * @param {string} goal
-   * @param {string} goalTimeline
+   * @param {Date | null} goalTimeline
    * @param {string} benefit
    */
   saveActionPlan = async (
     actionPlanId: string,
     goal: string,
-    goalTimeline: string,
+    goalTimeline: Date | null,
     benefit: string
   ): Promise<void> => {
     const actionPlanRef = this.db.collection("actionPlans").doc(actionPlanId);
     return actionPlanRef.update({
       goal: goal,
-      goalTimeline: goalTimeline,
+      goalTimeline: goalTimeline ? firebase.firestore.Timestamp.fromDate(goalTimeline) : firebase.firestore.Timestamp.fromDate(new Date()),
       benefit: benefit,
       dateModified: firebase.firestore.Timestamp.now()
     })
@@ -1976,7 +1981,7 @@ class Firebase {
    * @param {string} step
    * @param {string} materials
    * @param {string} person
-   * @param {string} timeline
+   * @param {Date | null} timeline
    */
   saveActionStep = async (
     actionPlanId: string,
@@ -1984,14 +1989,14 @@ class Firebase {
     step: string,
     materials: string,
     person: string,
-    timeline: string
+    timeline: Date | null
   ): Promise<void> => {
     const actionStepsRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps").doc(index);
     return actionStepsRef.update({
       step: step, 
       materials: materials,
       person: person,
-      timeline: timeline
+      timeline: timeline ? firebase.firestore.Timestamp.fromDate(timeline) : firebase.firestore.Timestamp.fromDate(new Date())
     })
     .then(() => {
       console.log("Action step updated successfully!");

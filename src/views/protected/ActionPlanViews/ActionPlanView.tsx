@@ -83,7 +83,7 @@ class ActionPlanView extends React.Component<Props, State>{
                       getAPInfo(actionPlanId: string): Promise<{
                         sessionId: string,
                         goal: string,
-                        goalTimeline: string,
+                        goalTimeline: firebase.firestore.Timestamp,
                         benefit: string,
                         dateModified: {seconds: number, nanoseconds: number},
                         dateCreated: {seconds: number, nanoseconds: number},
@@ -100,7 +100,7 @@ class ActionPlanView extends React.Component<Props, State>{
                         step: string,
                         materials: string,
                         person: string,
-                        timeline: string
+                        timeline: firebase.firestore.Timestamp
                       }>>,
                       saveActionPlan(
                         actionPlanId: string,

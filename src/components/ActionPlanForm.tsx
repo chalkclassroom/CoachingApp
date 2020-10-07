@@ -16,6 +16,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import FadeAwayModal from './FadeAwayModal';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import CHALKLogoGIF from '../assets/images/CHALKLogoGIF.gif';
 import * as moment from 'moment';
 import * as Types from '../constants/Types';
@@ -47,7 +49,7 @@ interface Props {
     getAPInfo(actionPlanId: string): Promise<{
       sessionId: string,
       goal: string,
-      goalTimeline: string,
+      goalTimeline: firebase.firestore.Timestamp,
       benefit: string,
       dateModified: {seconds: number, nanoseconds: number},
       dateCreated: {seconds: number, nanoseconds: number},
@@ -64,12 +66,12 @@ interface Props {
       step: string,
       materials: string,
       person: string,
-      timeline: string
+      timeline: firebase.firestore.Timestamp
     }>>,
     saveActionPlan(
       actionPlanId: string,
       goal: string,
-      goalTimeline: string,
+      goalTimeline: Date | null,
       benefit: string
     ): Promise<void>,
     saveActionStep(
@@ -78,7 +80,7 @@ interface Props {
       step: string,
       materials: string,
       person: string,
-      timeline: string
+      timeline: Date | null
     ): Promise<void>,
     createActionStep(actionPlanId: string, index: string): Promise<void>,
     getCoachFirstName(): Promise<string>,
@@ -93,11 +95,11 @@ interface Props {
 
 interface State {
   goal: string,
-  goalTimeline: string,
+  goalTimeline: Date | null,
   benefit: string,
   date: Date,
   actionSteps: string,
-  actionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}>,
+  actionStepsArray: Array<{step: string, materials: string, person: string, timeline: Date | null}>,
   editMode: boolean,
   actionPlanExists: boolean,
   actionPlanId: string,
@@ -132,11 +134,11 @@ class ActionPlanForm extends React.Component<Props, State> {
 
     this.state = {
       goal: '',
-      goalTimeline: '',
+      goalTimeline: new Date(),
       benefit: '',
       date: new Date(),
       actionSteps: '',
-      actionStepsArray: [{step: '', materials: '', person: '', timeline: ''}],
+      actionStepsArray: [{step: '', materials: '', person: '', timeline: new Date()}],
       editMode: false,
       actionPlanExists: this.props.actionPlanExists,
       actionPlanId: '',
@@ -155,7 +157,7 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   handleAddActionStep = (): void => {
     this.setState({
-      actionStepsArray: [...this.state.actionStepsArray, {step: '', materials: '', person: '', timeline: ''}]
+      actionStepsArray: [...this.state.actionStepsArray, {step: '', materials: '', person: '', timeline: new Date()}]
     }, () => {
       this.props.firebase.createActionStep(this.state.actionPlanId, (this.state.actionStepsArray.length-1).toString());
     })
@@ -189,11 +191,6 @@ class ActionPlanForm extends React.Component<Props, State> {
     if (name === 'goal') {
       this.setState({
         goal: event.target.value,
-        saved: false
-      })
-    } else if (name === 'goalTimeline') {
-      this.setState({
-        goalTimeline: event.target.value,
         saved: false
       })
     } else if (name === 'benefit') {
@@ -245,11 +242,12 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   /**
    * @param {number} number
+   * @param {Date | null} date
    * @return {void}
    */
-  handleChangeTimeline = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
+  handleChangeTimeline = (number: number, date: Date | null): void => {
     const newArray = [...this.state.actionStepsArray];
-    newArray[number].timeline = event.target.value;
+    newArray[number].timeline = date;
     this.setState({
       actionStepsArray: newArray,
       saved: false
@@ -298,7 +296,7 @@ class ActionPlanForm extends React.Component<Props, State> {
     .then((actionPlanData: {
       sessionId: string,
       goal: string,
-      goalTimeline: string,
+      goalTimeline: firebase.firestore.Timestamp,
       benefit: string,
       dateModified: {seconds: number, nanoseconds: number},
       dateCreated: {seconds: number, nanoseconds: number},
@@ -310,14 +308,29 @@ class ActionPlanForm extends React.Component<Props, State> {
       this.setState({
         actionPlanExists: true,
         goal: actionPlanData.goal,
-        goalTimeline: actionPlanData.goalTimeline,
+        goalTimeline: actionPlanData.goalTimeline ? actionPlanData.goalTimeline.toDate() : new Date(),
         benefit: actionPlanData.benefit,
         date: newDate
       });
-      const newActionStepsArray: Array<{step: string, materials: string, person: string, timeline: string}> = [];
-      this.props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{step: string, materials: string, person: string, timeline: string}>) => {
+      const newActionStepsArray: Array<{
+        step: string,
+        materials: string,
+        person: string,
+        timeline: Date
+      }> = [];
+      this.props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{
+        step: string,
+        materials: string,
+        person: string,
+        timeline: firebase.firestore.Timestamp
+      }>) => {
         actionStepsData.forEach((value, index) => {
-          newActionStepsArray[index] = {step: value.step, materials: value.materials, person: value.person, timeline: value.timeline};
+          newActionStepsArray[index] = {
+            step: value.step,
+            materials: value.materials,
+            person: value.person,
+            timeline: value.timeline ? value.timeline.toDate() : new Date()
+          };
         })
       }).then(() => {
         this.setState({
@@ -363,7 +376,7 @@ class ActionPlanForm extends React.Component<Props, State> {
         this.setState({actionPlanId: newArr[0].id});
         this.getActionPlan(newArr[0].id);
       } else {
-        this.setState({actionPlanId: null});
+        this.setState({actionPlanId: ''});
         this.createNewActionPlan();
       }
     })
@@ -386,23 +399,29 @@ class ActionPlanForm extends React.Component<Props, State> {
       console.log("error with saving action plan");
     })
     this.state.actionStepsArray.forEach((value, index) => {
-      this.props.firebase.saveActionStep(this.state.actionPlanId, index.toString(), value.step, value.materials, value.person, value.timeline)
-        .then(() => {
-          this.setState({
-            saved: true,
-            dialog: false
-          }, () => {
-            this.setState({ savedAlert: true }, () => {
-              setTimeout(() => {
-                this.setState({ savedAlert: false })
-              }, 1500);
-            });
+      this.props.firebase.saveActionStep(
+        this.state.actionPlanId,
+        index.toString(),
+        value.step,
+        value.materials,
+        value.person,
+        value.timeline
+      ).then(() => {
+        this.setState({
+          saved: true,
+          dialog: false
+        }, () => {
+          this.setState({ savedAlert: true }, () => {
+            setTimeout(() => {
+              this.setState({ savedAlert: false })
+            }, 1500);
           });
-          this.getActionPlan(this.state.actionPlanId);
-        })
-        .catch(() => {
-          console.log("error in saving action step ", index);
-        })
+        });
+        this.getActionPlan(this.state.actionPlanId);
+      })
+      .catch(() => {
+        console.log("error in saving action step ", index);
+      })
     })
   }
 
@@ -627,8 +646,8 @@ class ActionPlanForm extends React.Component<Props, State> {
                 </DialogActions>
               </Dialog>
               <Grid item xs={12} style={{width: "100%", paddingTop: '0.4em', paddingBottom: '0.8em'}}>
-                <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
-                  <Grid item style={{width: '81%', border: '2px solid #094492', borderRadius: '0.5em', height: '100%'}}>
+                <Grid container direction="row" justify="space-between" alignItems="stretch" style={{height: '100%'}}>
+                  <Grid item style={{width: '77%', border: '2px solid #094492', borderRadius: '0.5em'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -713,12 +732,12 @@ class ActionPlanForm extends React.Component<Props, State> {
                             readOnly: this.props.readOnly,
                             style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
                           }}
-                          style={{marginTop: 0, paddingTop: '0em', paddingBottom: '0.5em', marginBottom: 0}}
+                          style={{marginTop: 0, paddingTop: '0em', marginBottom: 0}}
                         />
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{width: '18%', border: '2px solid #4fd9b3', borderRadius: '0.5em', height: '100%'}}>
+                  <Grid item style={{width: '22%', border: '2px solid #4fd9b3', borderRadius: '0.5em'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -771,27 +790,26 @@ class ActionPlanForm extends React.Component<Props, State> {
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item>
-                        <TextField
-                          id="goalTimeline"
-                          name="goalTimeline"
-                          type="text"
-                          value={this.state.goalTimeline}
-                          onChange={this.handleChange('goalTimeline')}
-                          margin="normal"
-                          variant="standard"
-                          fullWidth
-                          multiline
-                          rowsMax={3}
-                          rows={3}
-                          className={classes.textField}
-                          InputProps={{
-                            disableUnderline: true,
-                            readOnly: this.props.readOnly,
-                            style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
-                          }}
-                          style={{marginTop: 0, paddingTop: '0em', paddingBottom: '0.5em', marginBottom: 0}}
-                        />
+                      <Grid item style={{paddingLeft: '0.5em'}}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                          <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="MM/dd/yy"
+                            margin="normal"
+                            id="date-picker-inline"
+                            readOnly={this.props.readOnly}
+                            inputProps={{readOnly: this.props.readOnly}}
+                            autoOk={true} // closes date picker on selection
+                            value={this.state.goalTimeline}
+                            onChange={(date: Date | null): void => {
+                              this.setState({
+                                goalTimeline: date,
+                                saved: false
+                              });
+                            }}
+                          />
+                        </MuiPickersUtilsProvider>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -885,7 +903,7 @@ class ActionPlanForm extends React.Component<Props, State> {
               </Grid>
               <Grid item xs={12} style={{width: '100%', height: '38vh'}}>
                 <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
-                  <Grid item style={{width: '42%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+                  <Grid item style={{width: '38%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -986,7 +1004,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{width: '23%', border: '2px solid #009365', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+                  <Grid item style={{width: '19%', border: '2px solid #009365', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -1082,7 +1100,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{width: '16%', border: '2px solid #ffd300', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+                  <Grid item style={{width: '19%', border: '2px solid #ffd300', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -1178,7 +1196,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{width: '16%', border: '2px solid #6f39c4', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+                  <Grid item style={{width: '21%', border: '2px solid #6f39c4', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -1251,26 +1269,22 @@ class ActionPlanForm extends React.Component<Props, State> {
                           {this.state.actionStepsArray.map((value, index) => {
                             return(
                               <li key={index}>
-                                <TextField
-                                  id={"timeline" + index.toString()}
-                                  name={"timeline" + index.toString()}
-                                  type="date"
-                                  value={value.timeline}
-                                  onChange={this.handleChangeTimeline(index)}
-                                  margin="normal"
-                                  variant="standard"
-                                  fullWidth
-                                  multiline
-                                  rowsMax={4}
-                                  rows={4}
-                                  className={classes.textField}
-                                  InputProps={{
-                                    disableUnderline: true,
-                                    readOnly: this.props.readOnly,
-                                    style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                                  }}
-                                  style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
-                                />
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                  <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="MM/dd/yy"
+                                    margin="normal"
+                                    id={"date-picker-inline" + index.toString()}
+                                    readOnly={this.props.readOnly}
+                                    inputProps={{readOnly: this.props.readOnly}}
+                                    autoOk={true} // closes date picker on selection
+                                    value={value.timeline}
+                                    onChange={(date: Date | null): void => {
+                                      this.handleChangeTimeline(index, date)
+                                    }}
+                                  />
+                                </MuiPickersUtilsProvider>
                               </li>
                             );
                           })}

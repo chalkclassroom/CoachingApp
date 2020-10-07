@@ -58,7 +58,7 @@ const headCells = [
   { id: 'modified', numeric: false, disablePadding: false, label: 'Last Modified' },
   { id: 'teacherLastName', numeric: false, disablePadding: false, label: 'Teacher' },
   { id: 'practice', numeric: false, disablePadding: false, label: 'CHALK Practice' },
-  { id: 'deadline', numeric: false, disablePadding: false, label: 'Achieve By:' },
+  { id: 'achieveBy', numeric: false, disablePadding: false, label: 'Achieve By:' },
 ];
 
 /**
@@ -205,20 +205,19 @@ class ActionPlanListPage extends React.Component<Props, State>{
       (answer: Array<TeacherListInfo>) => {
       answer.forEach((
         actionPlan: TeacherListInfo
-      ) => 
+      ) => {
         firebase.getTeacherFirstName(actionPlan.teacherId).then((firstName: string) => {
           actionPlan.teacherFirstName = firstName;
         }).then(() => {
           firebase.getTeacherLastName(actionPlan.teacherId).then((lastName: string) => {
             actionPlan.teacherLastName = lastName;
           }).then(() => {
-            console.log('answer is', answer)
             this.setState({
               result: answer
             })
           })
         })
-      )
+      })
     });
   }
 
@@ -231,7 +230,6 @@ class ActionPlanListPage extends React.Component<Props, State>{
    */
   render(): React.ReactNode {
     const isSelected = (id: string): boolean => this.state.selected.includes(id);
-    console.log('selected state', this.state.selected);
     return (
       <div>
         <FirebaseContext.Consumer>
@@ -261,7 +259,8 @@ class ActionPlanListPage extends React.Component<Props, State>{
                           seconds: number,
                           nanoseconds: number
                         },
-                        deadline: string,
+                        achieveBy: firebase.firestore.Timestamp,
+                        // deadline: string,
                         teacherId: string,
                         practice: string,
                         teacherFirstName: string,
@@ -269,6 +268,10 @@ class ActionPlanListPage extends React.Component<Props, State>{
                         modified: Date,
                         name: string
                       }, index: number) => {
+                      // today if achieveBy date does not exist OR if it is a string (from old version)
+                      const achieveBy = (!row.achieveBy || typeof row.achieveBy === 'string')
+                        ? new Date()
+                        : row.achieveBy.toDate();
                       const isItemSelected = isSelected(row.id);
                       const newDate = new Date(0);
                       newDate.setUTCSeconds(row.date.seconds);
@@ -353,7 +356,9 @@ class ActionPlanListPage extends React.Component<Props, State>{
                             </Typography>
                           </TableCell>
                           <TableCell style={{padding: '0.5em'}}>
-                            {row.deadline}
+                            <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                              {moment(achieveBy).format('MM/DD/YYYY')}
+                            </Typography>
                           </TableCell>
                         </TableRow>
                       )
