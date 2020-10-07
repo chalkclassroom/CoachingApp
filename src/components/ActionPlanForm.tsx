@@ -903,7 +903,7 @@ class ActionPlanForm extends React.Component<Props, State> {
               </Grid>
               <Grid item xs={12} style={{width: '100%', height: '38vh'}}>
                 <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
-                  <Grid item style={{width: '42%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+                  <Grid item style={{width: '38%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -1004,7 +1004,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{width: '23%', border: '2px solid #009365', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+                  <Grid item style={{width: '19%', border: '2px solid #009365', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -1100,7 +1100,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{width: '16%', border: '2px solid #ffd300', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+                  <Grid item style={{width: '19%', border: '2px solid #ffd300', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -1196,7 +1196,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{width: '16%', border: '2px solid #6f39c4', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+                  <Grid item style={{width: '21%', border: '2px solid #6f39c4', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
