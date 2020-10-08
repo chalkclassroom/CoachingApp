@@ -96,7 +96,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     if (this.props.teacherSelected) {
       const teacherId = this.props.teacherSelected.id;
       firebase.fetchBehaviourTypeCount(this.state.sessionId);
-      firebase.fetchAvgToneRating(this.state.sessionId);
+      const maybe = firebase.fetchAvgToneRating(this.state.sessionId);
+      console.log('tone?', maybe);
       this.handleDateFetching(teacherId);
       this.handleTrendsFetching(teacherId);
     } else {
@@ -240,53 +241,51 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   };
 
   getData = (): void => {
+    console.log('climate get data');
+    console.log('sessionId', this.state.sessionId);
     const firebase = this.context;
     let specificCount = 0;
     let nonspecificCount = 0;
     let disapprovalCount = 0;
     let redirectionCount = 0;
     this.handleNotesFetching(this.state.sessionId);
-    firebase.fetchAvgToneRating(this.state.sessionId).then((json: Array<{average: number}>) =>
-          json.forEach(toneRating => {
-            this.setState({
-              averageToneRating: toneRating.average
-            });
-          })
-        );
-        firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
-          if (conferencePlanData[0]) {
-            this.setState({
-              conferencePlanExists: true,
-              conferencePlanId: conferencePlanData[0].id
-            })
-          } else {
-            this.setState({
-              conferencePlanExists: false,
-              conferencePlanId: ''
-            })
-          }
-        }).catch(() => {
-          console.log('unable to retrieve conference plan')
+    firebase.fetchAvgToneRating(this.state.sessionId).then((rating: number) => {
+      this.setState({ averageToneRating: rating });
+    });
+    firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+      if (conferencePlanData[0]) {
+        this.setState({
+          conferencePlanExists: true,
+          conferencePlanId: conferencePlanData[0].id
         })
-        firebase.fetchBehaviourTypeCount(this.state.sessionId).then((json: Array<{behaviorResponse: string, count: number}>) => {
-          json.forEach(behavior => {
-            if (behavior.behaviorResponse === "specificapproval") {
-              specificCount = behavior.count;
-            } else if (behavior.behaviorResponse === "nonspecificapproval") {
-              nonspecificCount = behavior.count;
-            } else if (behavior.behaviorResponse === "disapproval") {
-              disapprovalCount = behavior.count;
-            } else if (behavior.behaviorResponse === "redirection") {
-              redirectionCount = behavior.count;
-            }
-          });
-          this.setState({
-            redirectionsBehaviorCount: redirectionCount,
-            disapprovalBehaviorCount: disapprovalCount,
-            nonspecificBehaviorCount: nonspecificCount,
-            specificBehaviorCount: specificCount
-          });
-        });
+      } else {
+        this.setState({
+          conferencePlanExists: false,
+          conferencePlanId: ''
+        })
+      }
+    }).catch(() => {
+      console.log('unable to retrieve conference plan')
+    })
+    firebase.fetchBehaviourTypeCount(this.state.sessionId).then((json: Array<{behaviorResponse: string, count: number}>) => {
+      json.forEach(behavior => {
+        if (behavior.behaviorResponse === "specificapproval") {
+          specificCount = behavior.count;
+        } else if (behavior.behaviorResponse === "nonspecificapproval") {
+          nonspecificCount = behavior.count;
+        } else if (behavior.behaviorResponse === "disapproval") {
+          disapprovalCount = behavior.count;
+        } else if (behavior.behaviorResponse === "redirection") {
+          redirectionCount = behavior.count;
+        }
+      });
+      this.setState({
+        redirectionsBehaviorCount: redirectionCount,
+        disapprovalBehaviorCount: disapprovalCount,
+        nonspecificBehaviorCount: nonspecificCount,
+        specificBehaviorCount: specificCount
+      });
+    });
   }
 
   /**

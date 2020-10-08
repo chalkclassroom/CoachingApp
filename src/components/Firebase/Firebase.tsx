@@ -840,14 +840,13 @@ class Firebase {
    * get average tone rating for observation session
    * @param {string} sessionId
    */
-  fetchAvgToneRating = async (sessionId: string): Promise<{average: number} | void> => {
+  fetchAvgToneRating = async (sessionId: string): Promise<number | void> => {
     const getAvgToneRatingFirebaseFunction = this.functions.httpsCallable(
       "funcAvgToneRating"
     );
     return getAvgToneRatingFirebaseFunction({ sessionId: sessionId })
-      .then((result: {data: Array<Array<{average: number|null}>>}) => {
-          result.data[0]
-        }
+      .then((result: {data: Array<Array<{average: number}>>}) => 
+          result.data[0][0].average
       )
       .catch((error: Error) =>
         console.error("Error occurred getting average tone rating: ", error)
