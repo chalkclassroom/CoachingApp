@@ -79,7 +79,7 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"} variant={"h4"}>
+            <Typography align={"center"} variant={"h6"}>
               Average Tone
             </Typography>
             <ToneSummary

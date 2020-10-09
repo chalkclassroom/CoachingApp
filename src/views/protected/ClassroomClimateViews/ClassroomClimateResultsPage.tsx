@@ -241,8 +241,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   };
 
   getData = (): void => {
-    console.log('climate get data');
-    console.log('sessionId', this.state.sessionId);
     const firebase = this.context;
     let specificCount = 0;
     let nonspecificCount = 0;

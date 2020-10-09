@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-// import Slider from '@material-ui/lab/Slider';
+import Slider from '@material-ui/core/Slider';
 
 interface Props {
   averageToneRating: number
@@ -24,30 +24,46 @@ class ToneSummary extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const marks = [
+      {
+        value: 1,
+        label: '1',
+      },
+      {
+        value: 2,
+        label: '2',
+      },
+      {
+        value: 3,
+        label: '3',
+      },
+      {
+        value: 4,
+        label: '4',
+      },
+      {
+        value: 5,
+        label: '5'
+      }
+    ];
     return (
       <Grid direction="column" justify="center" alignItems="center">
-        <Grid item>
-          <Typography variant="h4">
+        <Grid item style={{paddingTop: '1em'}}>
+          <Typography variant="subtitle1">
             What was the teacher&apos;s average tone rating?
           </Typography>
         </Grid>
-        <Grid item>
-          <Typography variant="h2">
-            {this.props.averageToneRating ? this.props.averageToneRating.toString() : '0'}
-          </Typography>
-        </Grid>
-        {/* <Grid item>
+        <Grid item style={{padding: '1em'}}>
           <Slider
-            defaultValue={this.props.averageToneRating}
-            getAriaValueText={this.props.averageToneRating.toString()}
-            aria-labelledby="discrete-slider"
-            valueLabelDisplay="auto"
-            step={5}
-            marks
+            value={this.props.averageToneRating}
+            aria-labelledby="continuous-slider"
+            step={1}
             min={1}
             max={5}
+            marks={marks}
+            valueLabelDisplay="on"
           />
-        </Grid> */}
+        </Grid>
       </Grid>
     );
   }
