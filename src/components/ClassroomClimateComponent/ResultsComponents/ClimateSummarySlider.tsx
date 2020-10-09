@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import BehaviorResponsesSummaryChart from './BehaviorResponsesSummaryChart';
-import ToneSummary from './ToneSummary';
+import AverageTone from './AverageTone';
 import Slider from "react-slick";
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -82,7 +82,7 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
             <Typography align={"center"} variant={"h6"}>
               Average Tone
             </Typography>
-            <ToneSummary
+            <AverageTone
               averageToneRating={this.props.averageToneRating}
             />
           </Grid>
