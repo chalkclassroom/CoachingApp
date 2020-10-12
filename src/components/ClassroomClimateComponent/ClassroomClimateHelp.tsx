@@ -17,6 +17,7 @@ function getModalStyle(): React.CSSProperties {
     position: "fixed",
     top: `50%`,
     left: `50%`,
+    height: '80%',
     transform: `translate(-50%, -50%)`
   } as React.CSSProperties;
 }
@@ -27,7 +28,8 @@ const styles: object = {
     width: "67%",
     backgroundColor: 'white',
     padding: '2em',
-    borderRadius: 8
+    borderRadius: 8,
+    overflowY: 'auto'
   }
 };
 
@@ -63,7 +65,9 @@ function ClassroomClimateHelp(props: Props): React.ReactElement {
               </IconButton>
             </Grid>
           </Grid>
-          <ClassroomClimateHelpCard />
+          <Grid container alignItems="center" direction="column" justify="flex-start">
+            <ClassroomClimateHelpCard />
+          </Grid>
         </div>
       </Modal>
     </div>
