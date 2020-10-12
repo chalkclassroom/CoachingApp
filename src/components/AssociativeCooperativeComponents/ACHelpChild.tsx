@@ -1,9 +1,8 @@
 import * as React from 'react';
-import * as PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles/index";
+import { makeStyles } from "@material-ui/core/styles/index";
 import { Table, TableRow, TableBody, TableCell, TableHead } from '@material-ui/core';
 
-const styles: object = {
+const useStyles = makeStyles({
   titleText: {
     backgroundColor: "#a481d9",
     color: "white",
@@ -31,22 +30,13 @@ const styles: object = {
     verticalAlign: 'top',
     padding: '0.5em'
   },
-};
-
-interface Props {
-  classes: {
-    titleText: string,
-    checklistItem: string,
-    example: string
-  }
-}
+});
 
 /**
- * @param {Props} props
  * @return {ReactElement}
  */
-function ACHelpChild(props: Props): React.ReactElement {
-  const { classes } = props;
+export default function ACHelpChild(): React.ReactElement {
+  const classes = useStyles();
   return(
     <Table>
       <TableHead>
@@ -121,9 +111,3 @@ function ACHelpChild(props: Props): React.ReactElement {
     </Table>
   )
 }
-
-ACHelpChild.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(ACHelpChild);

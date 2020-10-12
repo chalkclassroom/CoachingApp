@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { withStyles } from "@material-ui/core/styles/index";
+import { makeStyles } from "@material-ui/core/styles";
 import { Table, TableRow, TableBody, TableCell, TableHead, Typography } from '@material-ui/core';
 
-const styles: object = {
+const useStyles = makeStyles({
   title: {
     color: "black",
     backgroundColor: '#84C3F5',
@@ -17,21 +17,13 @@ const styles: object = {
     padding: '0.5em',
     width: '20%'
   },
-};
-
-interface Props {
-  classes: {
-    title: string,
-    content: string
-  }
-}
+});
 
 /**
- * @param {Props} props
  * @return {ReactElement}
  */
-function TeacherToneHelp(props: Props): React.ReactElement {
-  const { classes } = props;
+export default function TeacherToneHelp(): React.ReactElement {
+  const classes = useStyles();
   return(
     <Table>
       <TableHead>
@@ -160,5 +152,3 @@ function TeacherToneHelp(props: Props): React.ReactElement {
     </Table>
   )
 }
-
-export default withStyles(styles)(TeacherToneHelp);

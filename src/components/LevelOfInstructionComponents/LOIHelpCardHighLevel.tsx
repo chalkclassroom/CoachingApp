@@ -1,9 +1,8 @@
 import * as React from 'react';
-import * as PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles/index";
+import { makeStyles } from "@material-ui/core/styles/index";
 import { Table, TableRow, TableBody, TableCell, Typography } from '@material-ui/core';
 
-const styles: object = {
+const useStyles = makeStyles({
   highLevelSubtitle: {
     backgroundColor: "#38761d",
     color: "white",
@@ -22,22 +21,13 @@ const styles: object = {
     fontSize: '0.9em',
     verticalAlign: 'top'
   }
-};
-
-interface Props {
-  classes: {
-    highLevelSubtitle: string,
-    example: string
-  }
-}
+});
 
 /**
- *
- * @param {Props} props
  * @return {ReactElement}
  */
-function LOIHelpCardHighLevel(props: Props): React.ReactElement {
-  const { classes } = props;
+export default function LOIHelpCardHighLevel(): React.ReactElement {
+  const classes = useStyles();
   return (
     <div>
       <Table>
@@ -186,9 +176,3 @@ function LOIHelpCardHighLevel(props: Props): React.ReactElement {
     </div>
   )
 }
-
-LOIHelpCardHighLevel.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(LOIHelpCardHighLevel);

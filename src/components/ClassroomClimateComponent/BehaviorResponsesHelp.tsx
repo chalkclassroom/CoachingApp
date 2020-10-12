@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { withStyles } from "@material-ui/core/styles/index";
+import { makeStyles } from "@material-ui/core/styles/index";
 import { Table, TableRow, TableBody, TableCell, TableHead, Typography } from '@material-ui/core';
 
-const styles: object = {
+const useStyles = makeStyles({
   title: {
     color: "white",
     fontSize: '1.1em',
@@ -16,21 +16,13 @@ const styles: object = {
     padding: '0.5em',
     width: '33%'
   },
-};
-
-interface Props {
-  classes: {
-    title: string,
-    content: string
-  }
-}
+});
 
 /**
- * @param {Props} props
  * @return {ReactElement}
  */
-function BehaviorResponsesHelp(props: Props): React.ReactElement {
-  const { classes } = props;
+export default function BehaviorResponsesHelp(): React.ReactElement {
+  const classes = useStyles();
   return(
     <Table>
       <TableHead>
@@ -241,5 +233,3 @@ function BehaviorResponsesHelp(props: Props): React.ReactElement {
     </Table>
   )
 }
-
-export default withStyles(styles)(BehaviorResponsesHelp);
