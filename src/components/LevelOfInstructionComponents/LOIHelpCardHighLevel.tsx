@@ -91,11 +91,11 @@ function LOIHelpCardHighLevel(props: Props): React.ReactElement {
             </TableCell>
             <TableCell className={classes.example}>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Teacher:</strong>
+                <strong>Teacher:</strong> {" "}
                 <i>Why did you pick that solution card to solve your problem?</i>
               </div>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Child:</strong>
+                <strong>Child:</strong> {" "}
                 <i>Because with taking turns we can both play.</i>
               </div>
             </TableCell>
@@ -113,19 +113,19 @@ function LOIHelpCardHighLevel(props: Props): React.ReactElement {
             </TableCell>
             <TableCell className={classes.example}>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Teacher:</strong>
+                <strong>Teacher:</strong> {" "}
                 <i>What do you think will happen when Luke goes up to bat?</i>
               </div>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Child:</strong>
+                <strong>Child:</strong> {" "}
                 <i>He&apos;s gonna miss!</i>
               </div>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Teacher:</strong>
+                <strong>Teacher:</strong> {" "}
                 <i>Robert?</i> (This would count as a question.)
               </div>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Child:</strong>
+                <strong>Child:</strong> {" "}
                 <i>I think he&apos;s going to hit a home run.</i>
               </div>
             </TableCell>
@@ -144,15 +144,15 @@ function LOIHelpCardHighLevel(props: Props): React.ReactElement {
             </TableCell>
             <TableCell className={classes.example}>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Teacher:</strong>
+                <strong>Teacher:</strong> {" "}
                 <i>Tell me about a time when you used belly breathing at home?</i>
               </div>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Child 1:</strong>
+                <strong>Child 1:</strong> {" "}
                 <i>When I was mad at my brother.</i>
               </div>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Child 2:</strong>
+                <strong>Child 2:</strong> {" "}
                 <i>I never did.</i> (This type of response would also be counted.)
               </div>
             </TableCell>
@@ -169,14 +169,14 @@ function LOIHelpCardHighLevel(props: Props): React.ReactElement {
             </TableCell>
             <TableCell className={classes.example}>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Teacher:</strong>
+                <strong>Teacher:</strong> {" "}
                 <i>
                   Think about the rivers and lakes we have been talking about.
                   How are they different from the ocean?
                 </i>
               </div>
               <div style={{textIndent: '-1em', paddingLeft: '1em'}}>
-                <strong>Child:</strong>
+                <strong>Child:</strong> {" "}
                 <i>The ocean is bigger and very salty.</i>
               </div>
             </TableCell>
