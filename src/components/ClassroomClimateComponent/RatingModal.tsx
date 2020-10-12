@@ -270,6 +270,20 @@ class RatingModal extends React.Component<Props, State> {
             // style={{ spacing: 4 }}
           >
             <Grid item xs={3} />
+            <Grid item xs={3}>
+              <YesNoDialog
+                buttonText={"Skip Rating"}
+                buttonVariant={"contained"}
+                buttonColor={"#e55529"}
+                buttonWidth={"170px"}
+                backgroundColor={"#fff"}
+                buttonMargin={10}
+                dialogTitle={`Are you sure you want to skip this rating? This option should only be used in exceptional circumstances.`}
+                onAccept={this.props.handleRatingConfirmation}
+                onAcceptParams={0}
+                shouldOpen={true}
+              />
+            </Grid>
             <Grid item xs={3} justify={"center"}>
               <Button
                 variant="contained"
@@ -289,20 +303,6 @@ class RatingModal extends React.Component<Props, State> {
               >
                 Confirm Rating
               </Button>
-            </Grid>
-            <Grid item xs={3}>
-              <YesNoDialog
-                buttonText={"Skip Rating"}
-                buttonVariant={"contained"}
-                buttonColor={"#e55529"}
-                buttonWidth={"170px"}
-                backgroundColor={"#fff"}
-                buttonMargin={10}
-                dialogTitle={`Are you sure you want to skip this rating? This option should only be used in exceptional circumstances.`}
-                onAccept={this.props.handleRatingConfirmation}
-                onAcceptParams={0}
-                shouldOpen={true}
-              />
             </Grid>
             <Grid item xs={3} />
           </Grid>
