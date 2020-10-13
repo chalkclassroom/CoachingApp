@@ -154,7 +154,8 @@ interface Style {
   completeButton: string,
   gridTopMargin: string,
   grid: string,
-  endGrid: string
+  endGrid: string,
+  test: string
 }
 
 type Props = RouteComponentProps & {
@@ -318,7 +319,8 @@ class Dashboard extends React.Component<Props, State> {
       completeButton: PropTypes.string,
       gridTopMargin: PropTypes.string,
       grid: PropTypes.string,
-      endGrid: PropTypes.string
+      endGrid: PropTypes.string,
+      test: PropTypes.string
     }).isRequired,
     history: ReactRouterPropTypes.history.isRequired,
     infoPlacement: PropTypes.string,
