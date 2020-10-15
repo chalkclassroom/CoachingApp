@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import ReplySharpIcon from '@material-ui/icons/ReplySharp';
 import * as Types from '../../constants/Types';
+import * as Constants from '../../constants/Constants';
 
 const styles: object = {
   category: {
@@ -127,25 +128,23 @@ class BehaviorCounter extends React.Component<Props, {}> {
     return (
       <div>
         <Grid container direction="row" justify="center" alignItems="stretch">
-          <Grid item style={{height: '100%'}}>
+          <Grid item xs={3} style={{height: '100%'}}>
             <Grid container direction="row" justify="flex-end" alignItems="center" style={{height: '100%'}}>
               <Grid item style={{height: '100%'}}>
                 <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
                   <Grid item style={{height: '25%'}}>
-                    <Grid container direction="column" justify="center" alignItems="center">
-                      <Fab
-                        onClick={(): void => this.handlePushFire("redirection")}
-                        className={classes.button}
-                        style={{ backgroundColor: '#f37b6b' }}
-                      >
-                        <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
-                          Redirection
-                        </Typography>
-                      </Fab>
-                    </Grid>
+                    <Fab
+                      onClick={(): void => this.handlePushFire("redirection")}
+                      className={classes.button}
+                      style={{ backgroundColor: Constants.Colors.TT }}
+                    >
+                      <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
+                        Redirection
+                      </Typography>
+                    </Fab>
                   </Grid>
                   <Grid item style={{height: 120}}>
-                    <Button
+                    {/* <Button
                       disabled
                       style={{
                         backgroundColor: '#eabbeb',
@@ -154,13 +153,13 @@ class BehaviorCounter extends React.Component<Props, {}> {
                         padding: 0
                       }}
                       className={classes.category}
-                    />
+                    /> */}
                   </Grid>
                   <Grid item style={{height: '25%'}}>
                     <Fab
                       onClick={(): void => this.handlePushFire("nonspecificapproval")}
                       className={classes.button}
-                      style={{ backgroundColor: '#84C3F5' }}
+                      style={{ backgroundColor: Constants.Colors.MI }}
                     >
                       <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
                         Non-Specific Approval
@@ -171,7 +170,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6}>
             <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
               <Grid item style={{width: '100%', height: '25%'}}>
                 <Grid container direction="column" justify="center" style={{height: '100%'}}>
@@ -181,12 +180,11 @@ class BehaviorCounter extends React.Component<Props, {}> {
                       backgroundColor: '#eabbeb',
                       color: '#fff!important',
                       height: '52%',
-                      width: '100',
+                      width: '100%',
                       padding: 0
                     }}
                     className={classes.category}
                   />
-                  <div style={{width: '30vw'}} />
                 </Grid>
               </Grid>
               <Grid item style={{height: '20%'}}>
@@ -218,7 +216,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item style={{height: '100%'}}>
+          <Grid item xs={3} style={{height: '100%'}}>
             <Grid container direction="row" justify="flex-start" alignItems="center" style={{height: '100%'}}>
               <Grid item style={{height: '100%'}}>
                 <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
@@ -234,7 +232,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
                     </Fab>
                   </Grid>
                   <Grid item style={{height: 120}}>
-                    <Button
+                    {/* <Button
                       disabled
                       style={{
                         backgroundColor: '#eabbeb',
@@ -243,7 +241,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
                         padding: 0
                       }}
                       className={classes.category}
-                    />
+                    /> */}
                   </Grid>
                   <Grid item style={{height: '25%'}}>
                     <Fab
