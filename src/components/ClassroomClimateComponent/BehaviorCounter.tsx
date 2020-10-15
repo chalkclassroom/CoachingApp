@@ -134,35 +134,24 @@ class BehaviorCounter extends React.Component<Props, {}> {
                 <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
                   <Grid item style={{height: '25%'}}>
                     <Fab
-                      onClick={(): void => this.handlePushFire("redirection")}
-                      className={classes.button}
-                      style={{ backgroundColor: Constants.Colors.TT }}
-                    >
-                      <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
-                        Redirection
-                      </Typography>
-                    </Fab>
-                  </Grid>
-                  <Grid item style={{height: 120}}>
-                    {/* <Button
-                      disabled
-                      style={{
-                        backgroundColor: '#eabbeb',
-                        color: '#fff!important',
-                        height: '100%',
-                        padding: 0
-                      }}
-                      className={classes.category}
-                    /> */}
-                  </Grid>
-                  <Grid item style={{height: '25%'}}>
-                    <Fab
                       onClick={(): void => this.handlePushFire("nonspecificapproval")}
                       className={classes.button}
                       style={{ backgroundColor: Constants.Colors.MI }}
                     >
                       <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
                         Non-Specific Approval
+                      </Typography>
+                    </Fab>
+                  </Grid>
+                  <Grid item style={{height: 120}} />
+                  <Grid item style={{height: '25%'}}>
+                    <Fab
+                      onClick={(): void => this.handlePushFire("redirection")}
+                      className={classes.button}
+                      style={{ backgroundColor: '#a51906' }}
+                    >
+                      <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
+                        Redirection
                       </Typography>
                     </Fab>
                   </Grid>
@@ -177,7 +166,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
                   <Button
                     disabled
                     style={{
-                      backgroundColor: '#eabbeb',
+                      backgroundColor: '#0966bf',
                       color: '#fff!important',
                       height: '52%',
                       width: '100%',
@@ -204,7 +193,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
                   <Button
                     disabled
                     style={{
-                      backgroundColor: '#eabbeb',
+                      backgroundColor: '#C91F08',
                       color: '#fff!important',
                       height: '52%',
                       width: '100',
@@ -222,35 +211,24 @@ class BehaviorCounter extends React.Component<Props, {}> {
                 <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
                   <Grid item style={{height: '25%'}}>
                     <Fab
-                      onClick={(): void => this.handlePushFire("disapproval")}
-                      className={classes.button}
-                      style={{ backgroundColor: '#ec2409' }}
-                    >
-                      <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
-                        Disapproval
-                      </Typography>
-                    </Fab>
-                  </Grid>
-                  <Grid item style={{height: 120}}>
-                    {/* <Button
-                      disabled
-                      style={{
-                        backgroundColor: '#eabbeb',
-                        color: '#fff!important',
-                        height: '100%',
-                        padding: 0
-                      }}
-                      className={classes.category}
-                    /> */}
-                  </Grid>
-                  <Grid item style={{height: '25%'}}>
-                    <Fab
                       onClick={(): void => this.handlePushFire("specificapproval")}
                       className={classes.button}
                       style={{ backgroundColor: '#0988ec' }}
                     >
                       <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
                         Specific Approval
+                      </Typography>
+                    </Fab>
+                  </Grid>
+                  <Grid item style={{height: 120}} />
+                  <Grid item style={{height: '25%'}}>
+                    <Fab
+                      onClick={(): void => this.handlePushFire("disapproval")}
+                      className={classes.button}
+                      style={{ backgroundColor: '#ec2409' }}
+                    >
+                      <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
+                        Disapproval
                       </Typography>
                     </Fab>
                   </Grid>
