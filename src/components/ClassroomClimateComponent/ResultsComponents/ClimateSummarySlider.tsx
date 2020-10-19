@@ -56,13 +56,13 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
                 <List>
                   <ListItem style={{padding: 0}}>
                     <ListItemIcon style={{margin: 0}}>
-                      <SignalWifi4BarIcon style={{fill: Constants.Colors.CC, transform: 'rotate(-45deg)'}} />
+                      <SignalWifi4BarIcon style={{fill: Constants.ClimateTypeColors.positiveBar, transform: 'rotate(-45deg)'}} />
                     </ListItemIcon>
                     <ListItemText primary="Approved of children&apos;s behavior." />
                   </ListItem>
                   <ListItem style={{padding: 0}}>
                     <ListItemIcon style={{margin: 0}}>
-                      <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
+                      <SignalWifi4BarIcon style={{fill: Constants.ClimateTypeColors.negativeBar, transform: 'rotate(-45deg)'}} />
                     </ListItemIcon>
                     <ListItemText primary="Disapproved of children&apos;s behavior." />
                   </ListItem>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { makeStyles } from "@material-ui/core/styles/index";
 import { Table, TableRow, TableBody, TableCell, TableHead, Typography } from '@material-ui/core';
+import * as Constants from '../../constants/Constants';
 
 const useStyles = makeStyles({
   title: {
@@ -27,17 +28,17 @@ export default function BehaviorResponsesHelp(): React.ReactElement {
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell className={classes.title} style={{backgroundColor: '#ec2409'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.disapproval}}>
             <strong>
               DISAPPROVAL
             </strong>
           </TableCell>
-          <TableCell className={classes.title} style={{backgroundColor: '#ec2409'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.disapproval}}>
             <strong>
               EXAMPLES
             </strong>
           </TableCell>
-          <TableCell className={classes.title} style={{backgroundColor: '#ec2409'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.disapproval}}>
             <strong>
               NON-EXAMPLES
             </strong>
@@ -82,17 +83,17 @@ export default function BehaviorResponsesHelp(): React.ReactElement {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className={classes.title} style={{backgroundColor: '#f37b6b'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.redirection}}>
             <strong>
               REDIRECTION
             </strong>
           </TableCell>
-          <TableCell className={classes.title} style={{backgroundColor: '#f37b6b'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.redirection}}>
             <strong>
               EXAMPLES
             </strong>
           </TableCell>
-          <TableCell className={classes.title} style={{backgroundColor: '#f37b6b'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.redirection}}>
             <strong>
               NON-EXAMPLES
             </strong>
@@ -134,17 +135,17 @@ export default function BehaviorResponsesHelp(): React.ReactElement {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className={classes.title} style={{backgroundColor: '#84C3F5'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.nonSpecificApproval}}>
             <strong>
               NON-SPECIFIC APPROVAL
             </strong>
           </TableCell>
-          <TableCell className={classes.title} style={{backgroundColor: '#84C3F5'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.nonSpecificApproval}}>
             <strong>
               EXAMPLES
             </strong>
           </TableCell>
-          <TableCell className={classes.title} style={{backgroundColor: '#84C3F5'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.nonSpecificApproval}}>
             <strong>
               NON-EXAMPLES
             </strong>
@@ -182,17 +183,17 @@ export default function BehaviorResponsesHelp(): React.ReactElement {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className={classes.title} style={{backgroundColor: '#0988ec'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.specificApproval}}>
             <strong>
               SPECIFIC APPROVAL
             </strong>
           </TableCell>
-          <TableCell className={classes.title} style={{backgroundColor: '#0988ec'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.specificApproval}}>
             <strong>
               EXAMPLES
             </strong>
           </TableCell>
-          <TableCell className={classes.title} style={{backgroundColor: '#0988ec'}}>
+          <TableCell className={classes.title} style={{backgroundColor: Constants.ClimateTypeColors.specificApproval}}>
             <strong>
               NON-EXAMPLES
             </strong>

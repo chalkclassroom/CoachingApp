@@ -136,7 +136,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
                     <Fab
                       onClick={(): void => this.handlePushFire("nonspecificapproval")}
                       className={classes.button}
-                      style={{ backgroundColor: Constants.Colors.MI }}
+                      style={{ backgroundColor: Constants.ClimateTypeColors.nonSpecificApproval }}
                     >
                       <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
                         Non-Specific Approval
@@ -146,12 +146,12 @@ class BehaviorCounter extends React.Component<Props, {}> {
                   <Grid item style={{height: 120}} />
                   <Grid item style={{height: '25%'}}>
                     <Fab
-                      onClick={(): void => this.handlePushFire("redirection")}
+                      onClick={(): void => this.handlePushFire("disapproval")}
                       className={classes.button}
-                      style={{ backgroundColor: '#a51906' }}
+                      style={{ backgroundColor: Constants.ClimateTypeColors.disapproval }}
                     >
                       <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
-                        Redirection
+                        Disapproval
                       </Typography>
                     </Fab>
                   </Grid>
@@ -166,7 +166,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
                   <Button
                     disabled
                     style={{
-                      backgroundColor: '#0966bf',
+                      backgroundColor: Constants.ClimateTypeColors.positiveBar,
                       color: '#fff!important',
                       height: '52%',
                       width: '100%',
@@ -193,7 +193,11 @@ class BehaviorCounter extends React.Component<Props, {}> {
                   <Button
                     disabled
                     style={{
-                      backgroundColor: '#C91F08',
+                      // c91f08
+                      // e93d19
+                      // f65205
+                      // f26a15
+                      backgroundColor: Constants.ClimateTypeColors.negativeBar,
                       color: '#fff!important',
                       height: '52%',
                       width: '100',
@@ -213,7 +217,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
                     <Fab
                       onClick={(): void => this.handlePushFire("specificapproval")}
                       className={classes.button}
-                      style={{ backgroundColor: '#0988ec' }}
+                      style={{ backgroundColor: Constants.ClimateTypeColors.specificApproval }}
                     >
                       <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
                         Specific Approval
@@ -223,12 +227,14 @@ class BehaviorCounter extends React.Component<Props, {}> {
                   <Grid item style={{height: 120}} />
                   <Grid item style={{height: '25%'}}>
                     <Fab
-                      onClick={(): void => this.handlePushFire("disapproval")}
+                      onClick={(): void => this.handlePushFire("redirection")}
                       className={classes.button}
-                      style={{ backgroundColor: '#ec2409' }}
+                      style={{ backgroundColor: Constants.ClimateTypeColors.redirection }}
+                      // #a51906
+                      // #ff8c00
                     >
                       <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
-                        Disapproval
+                        Redirection
                       </Typography>
                     </Fab>
                   </Grid>

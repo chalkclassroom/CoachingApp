@@ -14,6 +14,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Types from '../../../constants/Types';
+import * as Constants from '../../../constants/Constants';
 
 const styles: object = {
   root: {
@@ -223,16 +224,16 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
         {
           label: "Redirection/Disapproval",
           data: this.state.trendsNeg,
-          backgroundColor: "#ec2409",
-          borderColor: "#ec2409",
+          backgroundColor: Constants.ClimateTypeColors.negativeBar,
+          borderColor: Constants.ClimateTypeColors.negativeBar,
           fill: false,
           lineTension: 0,
         },
         {
           label: "Specific/General Approval",
           data: this.state.trendsPos,
-          backgroundColor: "#0988ec",
-          borderColor: "#0988ec",
+          backgroundColor: Constants.ClimateTypeColors.positiveBar,
+          borderColor: Constants.ClimateTypeColors.positiveBar,
           fill: false,
           lineTension: 0,
         }
