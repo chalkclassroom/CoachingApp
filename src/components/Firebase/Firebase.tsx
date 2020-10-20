@@ -62,18 +62,27 @@ class Firebase {
       firebase.initializeApp(config);
       this.auth = firebase.auth();
       this.db = firebase.firestore();
+      if (location.hostname === 'localhost') {
+        this.db.settings({
+          host: 'localhost:8080',
+          ssl: false,
+        })
+      }
       this.db
-        .enablePersistence({ experimentalTabSynchronization: true })
-        .then(() => console.log("Woohoo! Multi-Tab Persistence!"))
-        .catch((error: Error) => console.error("Offline Not Working: ", error));
-      this.functions = firebase.functions();
+          .enablePersistence({ experimentalTabSynchronization: true })
+          .then(() => console.log('Woohoo! Multi-Tab Persistence!'))
+          .catch((error: Error) => console.error('Offline Not Working: ', error))
+      this.functions = firebase.functions()
+      if (location.hostname === 'localhost') {
+        this.functions.useFunctionsEmulator('http://localhost:5001')
+      }
       // this.sessionRef = null;
     }
   }
 
   /**
    * submits pilot form to database
-   * @param {object} userData 
+   * @param {object} userData
    */
   firebasePilotSignUp = async function(userData: {
     email: string,
@@ -102,7 +111,7 @@ class Firebase {
 
   /**
    * submits email to database
-   * @param {string} email 
+   * @param {string} email
    */
   emailListSignUp = async (email: string): Promise<void> => {
     this.sessionRef = this.db.collection("emailList").doc();
@@ -113,8 +122,8 @@ class Firebase {
 
   /**
    * creates account for user, makes entry in users collection, adds practice teacher if role===coach
-   * @param {object} userData 
-   * @param {string} role 
+   * @param {object} userData
+   * @param {string} role
    */
   firebaseEmailSignUp = async (
     userData: {
@@ -169,7 +178,7 @@ class Firebase {
 
   /**
    * signs user in
-   * @param {object} userData 
+   * @param {object} userData
    */
   firebaseEmailSignIn = async (userData: {
     email: string,
@@ -531,7 +540,7 @@ class Firebase {
 
   /**
    * updates the end time of the observation session when completed
-   * @param {Date | null} time 
+   * @param {Date | null} time
    */
   endSession = async (time: Date|null = null): Promise<void> => {
     this.sessionRef
@@ -564,7 +573,7 @@ class Firebase {
   };
 
   /**
-   * 
+   *
    * @param {object} mEntry
    */
   handlePushSEEachEntry = async (mEntry: {
@@ -755,7 +764,7 @@ class Firebase {
   };
 
   /**
-   * 
+   *
    */
   handleFetchNotes = async (): Promise<Array<Note> | void> => {
     return this.sessionRef
@@ -1250,7 +1259,7 @@ class Firebase {
   /**
    * Math Instruction cloud function
    * gets counts of each type of child & teacher behaviors
-   * @param {string} sessionId 
+   * @param {string} sessionId
    */
   fetchMathDetails = async (sessionId: string): Promise<{
     math1: number,
@@ -1531,7 +1540,7 @@ class Firebase {
   /**
    * Associative Cooperative cloud function
    * gets counts of child data for each observation
-   * @param {string} teacherId 
+   * @param {string} teacherId
    */
   fetchChildACTrend = async (teacherId: string): Promise<Array<{
     startDate: {value: string},
@@ -1760,7 +1769,7 @@ class Firebase {
       console.log('error creating action plan');
     })
   }
-  
+
   /**
    * adds action step to database
    * @param {string} actionPlanId
@@ -1930,7 +1939,7 @@ class Firebase {
           person: string,
           timeline: firebase.firestore.Timestamp
         }> = [];
-        querySnapshot.forEach(doc => 
+        querySnapshot.forEach(doc =>
           actionStepsArr.push({
             step: doc.data().step,
             materials: doc.data().materials,
@@ -1992,7 +2001,7 @@ class Firebase {
   ): Promise<void> => {
     const actionStepsRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps").doc(index);
     return actionStepsRef.update({
-      step: step, 
+      step: step,
       materials: materials,
       person: person,
       timeline: timeline ? firebase.firestore.Timestamp.fromDate(timeline) : firebase.firestore.Timestamp.fromDate(new Date())

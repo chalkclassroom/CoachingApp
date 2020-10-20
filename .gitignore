@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+data/
+*.log
 
 # doc generated temp folder
 /docs
