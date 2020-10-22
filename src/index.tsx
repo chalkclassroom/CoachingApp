@@ -46,3 +46,8 @@ if ('serviceWorker' in navigator) {
      });
    });
 }
+
+// exposes store when running app in cypress
+if (window.Cypress) {
+  window.store = store
+}

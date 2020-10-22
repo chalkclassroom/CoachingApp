@@ -210,6 +210,7 @@ class RatingModal extends React.Component<Props, State> {
               style={{ width: "20%" }}
             >
               <Button
+                id='positiveInterest'
                 onClick={this.handlePositiveInterestClick}
                 variant={
                   this.state.value === "Positive Interest"
@@ -286,6 +287,7 @@ class RatingModal extends React.Component<Props, State> {
             </Grid>
             <Grid item xs={3} justify={"center"}>
               <Button
+                id="confirm"
                 variant="contained"
                 onClick={
                   this.state.rating === 0

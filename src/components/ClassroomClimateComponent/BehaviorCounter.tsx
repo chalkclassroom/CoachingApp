@@ -184,7 +184,7 @@ class BehaviorCounter extends React.Component<Props, {}> {
                 </Grid>
               </Grid>
               <Grid item style={{height: '20%'}}>
-                <Button onClick={(): void => this.handleUndo()}>
+                <Button onClick={(): void => this.handleUndo()} id="undo">
                   <ReplySharpIcon style={{ fontSize: '80px' }} width={100} height={100} />
                 </Button>
               </Grid>
@@ -193,10 +193,6 @@ class BehaviorCounter extends React.Component<Props, {}> {
                   <Button
                     disabled
                     style={{
-                      // c91f08
-                      // e93d19
-                      // f65205
-                      // f26a15
                       backgroundColor: Constants.ClimateTypeColors.negativeBar,
                       color: '#fff!important',
                       height: '52%',
@@ -230,8 +226,6 @@ class BehaviorCounter extends React.Component<Props, {}> {
                       onClick={(): void => this.handlePushFire("redirection")}
                       className={classes.button}
                       style={{ backgroundColor: Constants.ClimateTypeColors.redirection }}
-                      // #a51906
-                      // #ff8c00
                     >
                       <Typography variant="h5" style={{fontFamily: 'Arimo', fontWeight: 'bold'}}>
                         Redirection
