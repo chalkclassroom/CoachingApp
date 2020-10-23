@@ -1,4 +1,8 @@
-import { CLIMATE_APPEND_RATING, ClassroomClimateTypes } from "../actions/classroom-climate";
+import {
+  CLIMATE_APPEND_RATING,
+  EMPTY_CLIMATE_RATING,
+  ClassroomClimateTypes
+} from "../actions/classroom-climate";
 
 interface ClassroomClimateState {
   climateRatings: Array<{
@@ -16,6 +20,11 @@ export default (state = initialState, action: ClassroomClimateTypes): ClassroomC
         ...state,
         climateRatings: [...state.climateRatings, action.entry]
       };
+    case EMPTY_CLIMATE_RATING:
+      return {
+        ...state,
+        climateRatings: []
+      }
     default:
       return state;
   }

@@ -27,8 +27,11 @@ describe('Classroom Climate Observation', () => {
     })
   })
 
-  it('Tries to undo the count while at 0', () => {
+  it('Tries to undo the count while at 0...count remains at 0', () => {
     cy.react('Button', {props: {id: 'undo'}}).click()
+    cy.react('Typography', {props: {variant: 'h2'}}).should(($Typography) => {
+      expect($Typography.get(0).innerText).to.eq('0')
+    })
   })
 
   it('Counts each behavior once, total is 4', () => {
@@ -85,9 +88,20 @@ describe('Classroom Climate Observation', () => {
     })
   })
 
-  it('Completes the observation', () => {
+  it('Completes the observation, observations removed from store', () => {
     cy.contains('COMPLETE OBSERVATION').click().then(() => {
-      cy.react('Button', {props: {id: 'yes'}}).click()
+      cy.react('Button', {props: {id: 'yes'}}).click().then(() => {
+        cy.react('Button', {props: {id: 'returnHome'}}).click().then(() => {
+          cy.window().its('store').invoke('getState').its('climateStackState')
+          .its('climateStack').then(($stack) => {
+            expect($stack[0]).to.be.undefined
+          })
+          cy.window().its('store').invoke('getState').its('climateRatingsState')
+          .its('climateRatings').then(($stack) => {
+            expect($stack).to.have.length(0)
+          })
+        })
+      })
     })
   })
 })

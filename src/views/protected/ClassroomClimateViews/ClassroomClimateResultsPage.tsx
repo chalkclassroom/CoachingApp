@@ -97,8 +97,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     if (this.props.teacherSelected) {
       const teacherId = this.props.teacherSelected.id;
       firebase.fetchBehaviourTypeCount(this.state.sessionId);
-      const maybe = firebase.fetchAvgToneRating(this.state.sessionId);
-      console.log('tone?', maybe);
       this.handleDateFetching(teacherId);
       this.handleTrendsFetching(teacherId);
     } else {
