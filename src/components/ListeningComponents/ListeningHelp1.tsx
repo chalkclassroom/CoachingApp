@@ -78,12 +78,12 @@ function ListeningHelp1(props: Props): React.ReactElement {
         </TableRow>
         <TableRow>
           <TableCell className={classes.checklistItem}>
-            <strong>Looks at children</strong> with a {" "}
-            <strong>positive expression</strong> to encourage child talk
+            Looks at children with a {" "}
+            <strong>positive </strong>or <strong>interested expression</strong> to encourage child talk
           </TableCell>
           <TableCell className={classes.example}>
             Teacher looks at children with curiosity and
-            tries to make eye contact. The teacher&apos;s body language
+            tries to make eye contact. The teacher&apos;s expression
             shows interest in what children say.
             <ul>
               <li>
