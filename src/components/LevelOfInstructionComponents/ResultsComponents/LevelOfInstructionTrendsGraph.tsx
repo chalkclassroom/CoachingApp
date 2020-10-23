@@ -3,7 +3,6 @@ import * as PropTypes from "prop-types";
 import { Line } from "react-chartjs-2";
 
 interface Props {
-  // data: {labels: Array<string>, datasets: Array<{label: string, data: number, backgroundColor: string}>}
   data(): {
     labels: Array<string>,
     datasets: Array<{
@@ -12,7 +11,8 @@ interface Props {
       borderColor: string,
       fill: boolean,
       lineTension: number,
-      data: Array<number>
+      data: Array<number>,
+      borderDash?: Array<number>
     }>
   }
 }
@@ -76,8 +76,6 @@ class LevelOfInstructionTrendsGraph extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    // const { classes } = this.props;
-    console.log('trends data', this.props.data);
     return (
       <Line
         data={this.props.data}

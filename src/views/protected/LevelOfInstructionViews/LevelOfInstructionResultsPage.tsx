@@ -241,43 +241,46 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       backgroundColor: string,
       borderColor: string,
       fill: boolean,
-      lineTension: number
+      lineTension: number,
+      borderDash?: Array<number>
     }>
   } => {
     return {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "High-Level Question",  
-          data: this.state.trendsHlq, 
-          backgroundColor: "#6d9eeb",
-          borderColor: "#6d9eeb",
-          fill: false,
-          lineTension: 0,
-        },
-        {
-          label: "Response to High-Level Question", 
-          data: this.state.trendsHlqResponse,  
+          label: "High-Level Question",
+          data: this.state.trendsHlq,
           backgroundColor: "#6aa84fff",
           borderColor: "#6aa84fff",
           fill: false,
           lineTension: 0,
         },
         {
-          label: "Low-Level Question",  
-          data: this.state.trendsLlq, 
+          label: "Response to High-Level Question",
+          data: this.state.trendsHlqResponse,
+          backgroundColor: "#6aa84fff",
+          borderColor: "#6aa84fff",
+          fill: false,
+          lineTension: 0,
+          borderDash: [5, 5]
+        },
+        {
+          label: "Low-Level Question",
+          data: this.state.trendsLlq,
           backgroundColor: "#6d9eeb",
           borderColor: "#6d9eeb",
           fill: false,
           lineTension: 0,
         },
         {
-          label: "Response to Low-Level Question", 
-          data: this.state.trendsLlqResponse,  
-          backgroundColor: "#6aa84fff",
-          borderColor: "#6aa84fff",
+          label: "Response to Low-Level Question",
+          data: this.state.trendsLlqResponse,
+          backgroundColor: "#6d9eeb",
+          borderColor: "#6d9eeb",
           fill: false,
           lineTension: 0,
+          borderDash: [5, 5]
         }
       ]
     };
