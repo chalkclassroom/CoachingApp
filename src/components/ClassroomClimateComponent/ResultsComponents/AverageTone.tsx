@@ -12,10 +12,12 @@ const useStyles = makeStyles({
   slider: {
     "& .MuiSlider-markLabel": {
       fontSize: '1.5em',
-      color: 'black'
+      color: 'black',
+      fontFamily: 'Arimo'
     },
     "& .MuiSlider-valueLabel": {
-      fontSize: '1.2em'
+      fontSize: '1.2em',
+      fontFamily: 'Arimo'
     }
   }
 });
@@ -68,6 +70,27 @@ export default function AverageTone(props: Props): React.ReactElement {
           color="primary"
           className={classes.slider}
         />
+      </Grid>
+      <Grid item style={{paddingTop: '2em'}}>
+        <Grid container direction="column" justify="center" alignItems="center">
+          <Grid item>
+          <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+            <strong>1:  Anger </strong>(yelling, sarcasm)
+          </Typography>
+          <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+            <strong>2:  Irritation </strong>(frowning, eye-rolling)
+          </Typography>
+          <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+            <strong>3:  Neutral </strong>(neutral facial expression)
+          </Typography>
+          <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+            <strong>4:  Positive Interest </strong>(smiling, nodding)
+          </Typography>
+          <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+            <strong>5:  Excitement </strong>(laughing, enthusiastic voice)
+          </Typography>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
