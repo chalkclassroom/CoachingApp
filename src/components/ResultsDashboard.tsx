@@ -402,6 +402,11 @@ class ResultsDashboard extends React.Component<Props, State> {
                       }
                       className={this.props.view === 'data' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('data')}
+                      style={{
+                        fontWeight: 'bold',
+                        // fontSize: '1.2em',
+                        color: 'black'
+                      }}
                     >
                       Data
                     </Button>
@@ -419,6 +424,11 @@ class ResultsDashboard extends React.Component<Props, State> {
                       }
                       className={this.props.view === 'questions' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('questions')}
+                      style={{
+                        fontWeight: 'bold',
+                        // fontSize: '1.2em',
+                        color: 'black'
+                      }}
                     >
                       Coaching Questions
                     </Button>
@@ -440,6 +450,11 @@ class ResultsDashboard extends React.Component<Props, State> {
                       }
                       className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('conferencePlan')}
+                      style={{
+                        fontWeight: 'bold',
+                        // fontSize: '1.2em',
+                        color: 'black'
+                      }}
                     >
                       Conference Plan
                     </Button>
@@ -457,6 +472,11 @@ class ResultsDashboard extends React.Component<Props, State> {
                       }
                       className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('actionPlan')}
+                      style={{
+                        fontWeight: 'bold',
+                        // fontSize: '1.2em',
+                        color: 'black'
+                      }}
                     >
                       Action Plan
                     </Button>

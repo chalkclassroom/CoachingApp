@@ -91,11 +91,11 @@ class SequentialCoachingQuestions extends React.Component<Props, State> {
                   <MuiThemeProvider theme={Constants.SequentialTheme}>
                     <Button 
                       onClick={value.clickFunction}
-                      variant="contained"
-                      color={this.state.categoryView === value.categoryView ? 'primary' : 'default'}
+                      variant='contained'
+                      color={this.state.categoryView === value.categoryView ? 'primary' : 'secondary'}
                       style={{width:'9em', height: '9em'}}
                     >
-                      <Typography style={{color: this.state.categoryView === value.categoryView ? 'white' : Constants.Colors.SA}}>
+                      <Typography style={{color: 'black'}}>
                         {value.title}
                       </Typography>
                     </Button >
