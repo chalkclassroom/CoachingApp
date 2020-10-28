@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
-import { Button, Card, Grid } from '@material-ui/core';
+import { Button, Card, Grid, Typography } from '@material-ui/core';
 import TransitionTimeIconImage from "../assets/images/TransitionTimeIconImage.svg"
 import ClassroomClimateIconImage from "../assets/images/ClassroomClimateIconImage.svg"
 import MathIconImage from "../assets/images/MathIconImage.svg"
@@ -402,13 +402,19 @@ class ResultsDashboard extends React.Component<Props, State> {
                       }
                       className={this.props.view === 'data' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('data')}
-                      style={{
-                        fontWeight: 'bold',
-                        // fontSize: '1.2em',
-                        color: 'black'
-                      }}
                     >
-                      Data
+                      <Typography
+                        style={{
+                          fontWeight: 'bold',
+                          fontFamily: 'Arimo',
+                          color: (
+                            this.props.magic8 === 'Listening to Children' ||
+                            this.props.magic8 === 'Sequential Activities'
+                          ) ? "black" : "primary"
+                        }}
+                      >
+                        Data
+                      </Typography>
                     </Button>
                   </MuiThemeProvider>
                 </Grid>
@@ -424,13 +430,19 @@ class ResultsDashboard extends React.Component<Props, State> {
                       }
                       className={this.props.view === 'questions' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('questions')}
-                      style={{
-                        fontWeight: 'bold',
-                        // fontSize: '1.2em',
-                        color: 'black'
-                      }}
                     >
-                      Coaching Questions
+                      <Typography
+                        style={{
+                          fontWeight: 'bold',
+                          fontFamily: 'Arimo',
+                          color: (
+                            this.props.magic8 === 'Listening to Children' ||
+                            this.props.magic8 === 'Sequential Activities'
+                          ) ? "black" : "primary"
+                        }}
+                      >
+                        Coaching Questions
+                      </Typography>
                     </Button>
                   </MuiThemeProvider>
                 </Grid>
@@ -450,13 +462,19 @@ class ResultsDashboard extends React.Component<Props, State> {
                       }
                       className={this.props.view === 'conferencePlan' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('conferencePlan')}
-                      style={{
-                        fontWeight: 'bold',
-                        // fontSize: '1.2em',
-                        color: 'black'
-                      }}
                     >
-                      Conference Plan
+                      <Typography
+                        style={{
+                          fontWeight: 'bold',
+                          fontFamily: 'Arimo',
+                          color: (
+                            this.props.magic8 === 'Listening to Children' ||
+                            this.props.magic8 === 'Sequential Activities'
+                          ) ? "black" : "primary"
+                        }}
+                      >
+                        Conference Plan
+                      </Typography>
                     </Button>
                   </MuiThemeProvider>
                 </Grid>
@@ -464,7 +482,7 @@ class ResultsDashboard extends React.Component<Props, State> {
                   <MuiThemeProvider theme={this.state.theme}>
                     <Button
                       size="large"
-                      color="primary"
+                      color='primary'
                       variant={
                         this.props.view === 'actionPlan'
                           ? "contained"
@@ -472,13 +490,19 @@ class ResultsDashboard extends React.Component<Props, State> {
                       }
                       className={this.props.view === 'actionPlan' ? classes.viewButtonsSelected : classes.viewButtons}
                       onClick={(): void => this.props.viewClick('actionPlan')}
-                      style={{
-                        fontWeight: 'bold',
-                        // fontSize: '1.2em',
-                        color: 'black'
-                      }}
                     >
-                      Action Plan
+                      <Typography
+                        style={{
+                          fontWeight: 'bold',
+                          fontFamily: 'Arimo',
+                          color: (
+                            this.props.magic8 === 'Listening to Children' ||
+                            this.props.magic8 === 'Sequential Activities'
+                          ) ? "black" : "primary"
+                        }}
+                      >
+                        Action Plan
+                      </Typography>
                     </Button>
                   </MuiThemeProvider>
                 </Grid>

@@ -80,7 +80,7 @@ export const SequentialTheme = createMuiTheme({
       main: '#ffd300'
     },
     secondary: {
-      main: '#f5f5f5'
+      main: '#000000'
     }
   }
 });
