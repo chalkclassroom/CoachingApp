@@ -1,25 +1,13 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import { Tabs, Tab } from "@material-ui/core";
 import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
-import * as Constants from '../../constants';
+import * as Constants from '../../constants/Constants';
 import ACHelpChild from './ACHelpChild';
 import ACHelpTeacher from './ACHelpTeacher';
-
-const ACTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.AC
-    },
-    secondary: {
-      main: '#000000'
-    }
-  }
-});
 
 const styles = {
   tabBar: {
@@ -77,7 +65,9 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.exact({
+      tabBar: PropTypes.string
+    }).isRequired
   }
 
   /**
@@ -90,7 +80,7 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
       <div>
         <Grid container direction="column">
           <Grid item>
-            <MuiThemeProvider theme={ACTheme}>
+            <MuiThemeProvider theme={Constants.ACTheme}>
               <TabBar position="static" color="default" className={classes.tabBar}>
                 <Tabs
                   value={this.state.tabValue}
@@ -113,7 +103,7 @@ class AssocCoopHelpCard extends React.Component<Props, State>  {
                     style={{
                       fontFamily: "Arimo",
                       fontSize: '1em',
-                      backgroundColor: this.state.tabValue === 1 ? Constants.AppBarColor: '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 1 ? Constants.Colors.AppBar: '#d3d3d3'
                     }}
                   />
                 </Tabs>

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar } from "react-chartjs-2";
-import * as Constants from "../../../constants";
+import * as Constants from "../../../constants/Constants";
 
 
 interface Props {
@@ -13,12 +13,12 @@ interface Props {
 
 /**
  * Horizontal Bar Graph for Sequential Child Behaviors
- * @class ChildBarDetails
+ * @class EngagementBarDetails
  * @return {void}
  */
 class ChildBarDetails extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -61,8 +61,8 @@ class ChildBarDetails extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: 
-                    (Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) > 20) ? 
+                  max:
+                    (Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) > 20) ?
                     Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) : 20,
                   fontSize: 16,
                   fontColor: 'black'
@@ -94,6 +94,13 @@ class ChildBarDetails extends React.Component<Props, {}> {
               font: {
                 size: 16,
                 weight: 'bold'
+              },
+              formatter: function(value: number): number | null {
+                if (value > 0) {
+                  return value;
+                } else {
+                  return null;
+                }
               }
             }
           }

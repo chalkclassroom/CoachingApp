@@ -2,8 +2,6 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import { withStyles } from "@material-ui/core/styles";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import AppBar from "../../../components/AppBar";
@@ -18,6 +16,8 @@ import {
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
 import EmptyToneRating from "../../../components/ClassroomClimateComponent/EmptyToneRating";
+import TeacherModal from '../HomeViews/TeacherModal';
+import * as Types from '../../../constants/Types';
 
 /*
     N.B. Time measured in milliseconds.
@@ -28,7 +28,7 @@ import EmptyToneRating from "../../../components/ClassroomClimateComponent/Empty
     and then allow for 2 full minutes in between ratings.
  */
 
-const RATING_INTERVAL: number = 130000;
+const RATING_INTERVAL = 130000;
 
 const styles: object = {
   root: {
@@ -48,33 +48,62 @@ const styles: object = {
     color: '#333333',
     borderRadius: 3,
     textTransform: 'none'
+  },
+  main: {
+    height: '100%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  },
+  dashboardGrid: {
+    width: '25%',
+  },
+  contentGrid: {
+    width: '75%',
+  },
+  grid: {
+    direction: "row",
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+  },
+  // ipad portrait
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    dashboardGrid: {
+      width: '100%',
+      height: '25%'
+    },
+    contentGrid: {
+      width: '100%',
+      height: '75%'
+    },
+    grid: {
+      direction: 'column',
+    }
   }
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 interface Props {
-  classes: { root: string, grow: string, backButton: string },
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
+  classes: {
+    root: string,
+    grow: string,
+    backButton: string,
+    main: string,
+    dashboardGrid: string,
+    contentGrid: string,
+    grid: string
   },
-  appendClimateRating(rating: number): void
+  appendClimateRating(rating: number): void,
+  teacherSelected: Types.Teacher
 };
 
 interface State {
@@ -82,7 +111,8 @@ interface State {
   time: number,
   ratingIsOpen: boolean,
   recs: boolean,
-  incompleteRating: boolean
+  incompleteRating: boolean,
+  teacherModal: boolean
 }
 
 /**
@@ -90,12 +120,14 @@ interface State {
  * @class ClassroomClimatePage
  */
 class ClassroomClimatePage extends React.Component<Props, State> {
+  timer: NodeJS.Timeout;
   state = {
     auth: true,
     time: RATING_INTERVAL,
     ratingIsOpen: false,
     recs: true,
-    incompleteRating: false
+    incompleteRating: false,
+    teacherModal: false
   };
 
   tick = (): void => {
@@ -150,22 +182,36 @@ class ClassroomClimatePage extends React.Component<Props, State> {
     this.setState({ incompleteRating: false });
   };
 
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  };
+
   /** lifecycle method invoked after component mounts */
-  componentDidMount() {
-    this.timer = setInterval(this.tick, 1000);
+  componentDidMount(): void {
+    if (!this.props.teacherSelected) {
+      this.setState({ teacherModal: true })
+    }
+    this.timer = global.setInterval(this.tick, 1000);
   }
 
   /** lifecycle method invoked just before component is unmounted */
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     clearInterval(this.timer);
   }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    history: PropTypes.exact({
-      replace: PropTypes.func
-    }).isRequired,
-    appendClimateRating: PropTypes.func.isRequired
+    appendClimateRating: PropTypes.func.isRequired,
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }).isRequired
   }
 
   /**
@@ -174,101 +220,113 @@ class ClassroomClimatePage extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     return (
-      <div className={this.props.classes.root}>
-        <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
-        </FirebaseContext.Consumer>
-        <Modal open={this.state.ratingIsOpen} onBackdropClick={null}>
-          <RatingModal
-            handleRatingConfirmation={this.handleRatingConfirmation}
-            handleIncomplete={this.handleIncomplete}
-          />
-        </Modal>
-        <Modal open={this.state.incompleteRating}>
-          <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
-            <EmptyToneRating />
-          </ClickAwayListener>
-        </Modal>
-        <header>
-          <Grid container direction="row" alignItems="center" justify="flex-start">
-            <Grid item xs={3}>
-              <Grid container alignItems="center" justify="center">
-                <Grid item>
-                <Button variant="contained" size="medium" className={this.props.classes.backButton}
-                    onClick={(): void => {
-                      this.props.history.replace({
-                        pathname: "/Magic8Menu",
-                        state: {
-                          type: "Observe"
-                        }
-                      })
-                    }}>
-                    <ChevronLeftRoundedIcon />
-                    <b>Back</b>
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </header>
-        <main style={{ flex: 1 }}>
-          <Grid
-            container
-            alignItems={"center"}
-            justify={"center"}
-            direction={"column"}
-          >
+      this.props.teacherSelected ? (
+        <div className={this.props.classes.root}>
+          <FirebaseContext.Consumer>
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+          </FirebaseContext.Consumer>
+          <Modal open={this.state.ratingIsOpen}>
+            <RatingModal
+              handleRatingConfirmation={this.handleRatingConfirmation}
+              handleIncomplete={this.handleIncomplete}
+            />
+          </Modal>
+          <Modal open={this.state.incompleteRating}>
+            <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
+              <EmptyToneRating />
+            </ClickAwayListener>
+          </Modal>
+          <main className={this.props.classes.main}>
             <Grid
               container
               alignItems={"center"}
               justify={"center"}
-              direction={"row"}
+              direction={"column"}
+              style={{height: '100%', width: '100%'}}
             >
-              <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
-                <Grid
-                  container
-                  alignItems={"center"}
-                  justify={"center"}
-                  direction={"column"}
-                >
-                  <Grid item>
-                    <Dashboard
-                      type="CC"
-                      infoDisplay={
-                        <Countdown type='CC' time={this.state.time} timerTime={RATING_INTERVAL} />
-                      }
-                      infoPlacement="center"
-                      completeObservation={true}
-                    />
+              <Grid
+                container
+                alignItems={"center"}
+                justify={"space-evenly"}
+                style={{width: '100%', height: '100%'}}
+                className={this.props.classes.grid}
+              >
+                <Grid item className={this.props.classes.dashboardGrid} style={{paddingTop: '0.5em'}}>
+                  <Grid
+                    container
+                    alignItems={"center"}
+                    justify={"center"}
+                    direction={"column"}
+                    style={{height: '100%'}}
+                  >
+                    <Grid item>
+                      <Dashboard
+                        type='CC'
+                        infoDisplay={
+                          <Countdown type='CC' time={this.state.time} timerTime={RATING_INTERVAL} />
+                        }
+                        infoPlacement="center"
+                        completeObservation={true}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item className={this.props.classes.contentGrid}>
+                  <Grid
+                    container
+                    alignItems={"center"}
+                    justify={"center"}
+                    direction={"column"}
+                    style={{height: '100%'}}
+                  >
+                    <FirebaseContext.Consumer>
+                      {(firebase: {
+                        auth: {
+                          currentUser: {
+                            uid: string
+                          }
+                        },
+                        handleSession(entry: object): void,
+                        handlePushClimate(entry: object): void
+                      }): React.ReactNode => (
+                        <BehaviorCounter
+                          firebase={firebase}
+                        />
+                      )}
+                    </FirebaseContext.Consumer>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={9}>
-                <Grid
-                  container
-                  alignItems={"center"}
-                  justify={"center"}
-                  direction={"column"}
-                >
-                  <FirebaseContext.Consumer>
-                    {(firebase: object): React.ReactNode => (
-                      <BehaviorCounter
-                        firebase={firebase}
-                      />
-                    )}
-                  </FirebaseContext.Consumer>
-                </Grid>
-              </Grid>
             </Grid>
-          </Grid>
-        </main>
-      </div>
+          </main>
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Observe"}
+            />
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }
 
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher
+} => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
+
 ClassroomClimatePage.contextType = FirebaseContext;
 
-export default connect(null, { appendClimateRating, emptyClimateStack })(
+export default connect(mapStateToProps, { appendClimateRating, emptyClimateStack })(
   withStyles(styles)(ClassroomClimatePage)
 );

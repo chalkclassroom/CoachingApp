@@ -1,22 +1,14 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import * as Constants from '../../../constants';
-
-const InstructionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.LI
-    }
-  }
-});
+import { MuiThemeProvider } from "@material-ui/core/styles";
+import * as Constants from '../../../constants/Constants';
 
 interface Props {
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
-  addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
   teacherId: string
 }
@@ -44,35 +36,27 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
   }
 
   highLevelClick = (): void => {
-    if (this.state.categoryView !== "highLevel") {
+    if (this.state.categoryView !== "highLevelQuestions") {
       this.setState({
-        categoryView: "highLevel",
-        openPanel: null
+        categoryView: "highLevelQuestions",
+        openPanel: ''
       })
     }
   }
-  followUpClick = (): void => {
-    if (this.state.categoryView !== "followUp") {
+  lowLevelClick = (): void => {
+    if (this.state.categoryView !== "lowLevel") {
       this.setState({
-        categoryView: "followUp",
-        openPanel: null
-      })
-    }
-  }
-  basicSkillsClick = (): void => {
-    if (this.state.categoryView !== "basicSkills") {
-      this.setState({
-        categoryView: "basicSkills",
-        openPanel: null
+        categoryView: "lowLevel",
+        openPanel: ''
       })
     }
   }
 
-    inferentialInstructionClick = (): void => {
-    if (this.state.categoryView !== "inferentialInstruction") {
+  highLevelInstructionClick = (): void => {
+    if (this.state.categoryView !== "highLevelInstruction") {
       this.setState({
-        categoryView: "inferentialInstruction",
-        openPanel: null
+        categoryView: "highLevelInstruction",
+        openPanel: ''
       })
     }
   }
@@ -88,120 +72,65 @@ class LevelOfInstructionCoachingQuestions extends React.Component<Props, State> 
     }
   };
 
+  static propTypes = {
+    handleAddToPlan: PropTypes.func.isRequired,
+    sessionId: PropTypes.string.isRequired,
+    teacherId: PropTypes.string.isRequired
+  }
+
   /**
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const categories = [
+      {clickFunction: this.highLevelClick, categoryView: 'highLevelQuestions', title: 'Asking High-Level Questions', questions: Constants.CoachingQuestions.Instruction.highLevelQuestions},
+      {clickFunction: this.lowLevelClick, categoryView: 'lowLevel', title: 'Building on Low-Level Instruction', questions: Constants.CoachingQuestions.Instruction.lowLevel},
+      {clickFunction: this.highLevelInstructionClick, categoryView: 'highLevelInstruction', title: 'High-Level Instruction in Content Areas', questions: Constants.CoachingQuestions.Instruction.highLevelInstruction}
+    ];
     return(
       <Grid container direction="column">
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-          <Grid item>
-            <MuiThemeProvider theme={InstructionTheme}>
-              <Button 
-                onClick={this.highLevelClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Asking High-Level Questions
-                </Typography>
-              </Button >
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={InstructionTheme}>
-              <Button
-                onClick={this.followUpClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Following up on Children’s Responses
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={InstructionTheme}>
-              <Button
-               onClick={this.basicSkillsClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Building on Basic Skills Instruction
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            <MuiThemeProvider theme={InstructionTheme}>
-              <Button
-                onClick={this.inferentialInstructionClick}
-                variant="contained"
-                color="primary"
-                style={{width:'8em', height: '8em'}}
-              >
-                <Typography style={{color: 'white'}}>
-                  Inferential Instruction in Content Areas
-                </Typography>
-              </Button>
-            </MuiThemeProvider>
+        <Grid item>
+          <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
+            {categories.map((value, index) => {
+              return(
+                <Grid item key={index}>
+                  <MuiThemeProvider theme={Constants.InstructionTheme}>
+                    <Button 
+                      onClick={value.clickFunction}
+                      variant="contained"
+                      color={this.state.categoryView === value.categoryView ? 'primary' : 'default'}
+                      style={{width:'9em', height: '9em'}}
+                    >
+                      <Typography style={{color: this.state.categoryView === value.categoryView ? 'white' : Constants.Colors.IN}}>
+                        {value.title}
+                      </Typography>
+                    </Button >
+                  </MuiThemeProvider>
+                </Grid>
+              )
+            })}
           </Grid>
         </Grid>
-        <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "highLevel" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Instruction.highLevel}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Level of Instruction"}
-              color={Constants.Colors.LI}
-            />
-          ) : this.state.categoryView === "followUp"  ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Instruction.followUp}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Level of Instruction"}
-              color={Constants.Colors.LI}
-            />
-          ) : this.state.categoryView === "basicSkills" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Instruction.basicSkills}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Level of Instruction"}
-              color={Constants.Colors.LI}
-            />
-          ) : this.state.categoryView === "inferentialInstruction" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Instruction.inferentialInstruction}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Level of Instruction"}
-              color={Constants.Colors.LI}
-            />
-          ) : <div/>}
+        <Grid item>
+          <Grid container direction="column" style={{marginTop: "1vh"}}>
+            {categories.map((value, index) => {
+              return(
+                this.state.categoryView === value.categoryView ? (
+                  <DataQuestions
+                    key={index}
+                    questions={value.questions}
+                    openPanel={this.state.openPanel}
+                    handlePanelChange={this.handlePanelChange}
+                    handleAddToPlan={this.props.handleAddToPlan}
+                    sessionId={this.props.sessionId}
+                    teacherId={this.props.teacherId}
+                    magic8={'Level of Instruction'}
+                    color={Constants.Colors.IN}
+                  />
+                ) : null
+              )
+            })}
+          </Grid>
         </Grid>
       </Grid>
     );

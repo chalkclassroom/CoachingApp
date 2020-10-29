@@ -5,21 +5,26 @@ import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
 import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
-import IconButton from "@material-ui/core/es/IconButton/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import { withRouter } from "react-router-dom";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Tooltip
+} from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import StarsIcon from '@material-ui/icons/Stars';
 import { changeTeacher, getTeacherList } from '../../../state/actions/teacher';
 import { connect } from 'react-redux';
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
+import * as Types from '../../../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
 function getModalStyle(): React.CSSProperties {
   return {
@@ -59,42 +64,31 @@ interface Style {
   inline: string
 }
 
-interface Props {
+type Props = RouteComponentProps & {
   classes: Style,
   type: string,
-  history: { push(object: Push): void },
-  firebase: { getTeacherList(): Promise<Teacher[]> },
+  history: H.History,
+  firebase?: { getTeacherList(): Promise<Types.Teacher[]> } | null,
   handleClose(): void,
-  changeTeacher(teacher: Teacher): Teacher,
-  getTeacherList(teachers: Array<Teacher>): Array<Teacher>,
-  teacherSelected: Teacher,
-  teacherList: Array<Teacher>
+  changeTeacher(teacher: Types.Teacher): Types.Teacher,
+  getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>,
+  teacherSelected?: Types.Teacher,
+  teacherList: Array<Types.Teacher>
 }
 
 interface Push {
   pathname: string,
   state: {
-    teacher: Teacher,
-    teachers: Array<Teacher>,
+    teacher?: Types.Teacher,
+    teachers?: Array<Types.Teacher>,
     type: string
   }
 }
 
 interface State {
   open: boolean,
-  teachers: Array<Teacher>
+  teachers: Array<Types.Teacher>
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * modal to select teacher before observation or results
@@ -102,7 +96,7 @@ interface Teacher {
  */
 class TeacherModal extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -110,8 +104,6 @@ class TeacherModal extends React.Component<Props, State> {
       open: true,
       teachers: []
     };
-
-    this.selectTeacher = this.selectTeacher.bind(this);
   }
 
   handleClose = (): void => {
@@ -120,25 +112,27 @@ class TeacherModal extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Teacher>) => {
-      const teacherList = [];
-      teacherPromiseList.forEach(tpromise => {
-        tpromise.then((data: Teacher) => {
-          teacherList.push(data);
-          this.setState((previousState) => {
-            return {
-              teachers: previousState.teachers.concat(data)
-            };
-          }, () => { this.props.getTeacherList(this.state.teachers) });
+    if (this.props.firebase) {
+      this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Types.Teacher>) => {
+        const teacherList = [];
+        teacherPromiseList.forEach(tpromise => {
+          tpromise.then((data: Types.Teacher) => {
+            teacherList.push(data);
+            this.setState((previousState) => {
+              return {
+                teachers: previousState.teachers.concat(data)
+              };
+            }, () => { this.props.getTeacherList(this.state.teachers) });
+          });
         });
       });
-    });
+    }
   }
 
   /**
-   * @param {object} teacherInfo 
+   * @param {object} teacherInfo
    */
-  selectTeacher(teacherInfo: Teacher): void {
+  selectTeacher = (teacherInfo: Types.Teacher): void => {
     this.props.history.push({
       pathname: "/Magic8Menu",
       state: { teacher: this.props.teacherSelected, type: this.props.type, teachers: this.props.teacherList}
@@ -148,14 +142,31 @@ class TeacherModal extends React.Component<Props, State> {
     this.props.changeTeacher(teacherInfo);
   }
 
-  /* static propTypes = {
-    classes: PropTypes.object.isRequired,
+  static propTypes = {
+    classes: PropTypes.exact({
+      paper: PropTypes.string,
+      root: PropTypes.string,
+      list: PropTypes.string,
+      inline: PropTypes.string
+    }).isRequired,
     handleClose: PropTypes.func.isRequired,
     type: PropTypes.string.isRequired,
-    firebase: PropTypes.exact({getTeacherList: PropTypes.func}).isRequired,
-    history: PropTypes.exact({push: PropTypes.func}).isRequired,
-    changeTeacher: PropTypes.func.isRequired
-  } */
+    firebase: PropTypes.exact({getTeacherList: PropTypes.func}),
+    history: ReactRouterPropTypes.history.isRequired,
+    changeTeacher: PropTypes.func.isRequired,
+    getTeacherList: PropTypes.func.isRequired,
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
+    }),
+    teacherList: PropTypes.array.isRequired
+  }
 
   /**
    * render function
@@ -169,7 +180,7 @@ class TeacherModal extends React.Component<Props, State> {
         <Modal open={this.state.open}>
           <div style={getModalStyle()} className={classes.paper}>
             <Grid
-              xs={12}
+              // xs={12}
               container
               alignItems="center"
               direction="row"
@@ -185,7 +196,7 @@ class TeacherModal extends React.Component<Props, State> {
               </IconButton>
             </Grid>
             <Grid
-              xs={12}
+              // xs={12}
               container
               alignItems="center"
               direction="column"
@@ -205,13 +216,9 @@ class TeacherModal extends React.Component<Props, State> {
                         this.selectTeacher(teacher)
                       }
                   >
-                    <ListItemAvatar>
-                      {/* <Avatar
-                        alt="Teacher Profile Pic"
-                        src={TeacherSvg}
-                      /> */}
+                    <ListItemIcon>
                       <StarsIcon style={{color: Constants.Colors.SA }}/>
-                    </ListItemAvatar>
+                    </ListItemIcon>
                     <ListItemText
                       primary={teacher.firstName + " " + teacher.lastName}
                       secondary={
@@ -238,16 +245,15 @@ class TeacherModal extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  teacherList: Array<Types.Teacher>
+} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,
     teacherList: state.teacherListState.teachers
   };
 };
-
-// export default withRouter(withStyles(styles)(TeacherModal));
-
-// export default withRouter(connect(null,{ changeTeacher })(withStyles(styles)(TeacherModal)));
 
 export default withRouter(connect(
   mapStateToProps,

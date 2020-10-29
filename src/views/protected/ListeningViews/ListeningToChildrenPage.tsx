@@ -1,54 +1,20 @@
 import * as React from 'react';
-import Grid from "@material-ui/core/Grid";
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+import * as PropTypes from "prop-types";
+import { useState, useEffect } from 'react';
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import TeacherChecklist from '../../../components/ListeningComponents/TeacherChecklist';
-import { withStyles } from '@material-ui/core/styles';
+import TeacherModal from '../HomeViews/TeacherModal';
+import { connect } from "react-redux";
+import * as Types from '../../../constants/Types';
 
-const styles: object = {
-  backButton: {
-    marginTop: '0.5em',
-    marginBottom: '0.5em',
-    color: '#333333',
-    borderRadius: 3,
-    textTransform: 'none'
-  }
-}
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
+/* function handleCloseTeacherModal(): void => {
+  this.setState({ teacherModal: false })
+}; */
 
 interface Props {
-  classes: {
-    backButton: string
-  },
-  location: {
-    state: {
-      teacher: Teacher,
-      teachers: Array<Teacher>
-    }
-  },
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  }
-};
+  teacherSelected: Types.Teacher
+}
 
 /**
  * @function ListeningToChildrenPage
@@ -56,60 +22,79 @@ interface Props {
  * @return {ReactElement}
  */
 function ListeningToChildrenPage(props: Props): React.ReactElement {
-  const { classes, location, history } = props;
+  const { teacherSelected } = props;
+  const [teacherModal, setTeacherModal] = useState(false);
+  useEffect(() => {
+    if (!teacherSelected) {
+      setTeacherModal(true)
+    }
+  });
   return (
-    <div>
-      <FirebaseContext.Consumer>
-        {(firebase: object): React.ReactNode => (<AppBar firebase={firebase}/>)}
-      </FirebaseContext.Consumer>
-      <header>
-        <Grid container direction="row" alignItems="center" justify="flex-start">
-          <Grid item xs={3}>
-            <Grid container alignItems="center" justify="center">
-              <Grid item>
-                <Button variant="contained" size="medium" className={classes.backButton}
-                  onClick={(): void => {
-                    history.replace({
-                      pathname: "/Magic8Menu",
-                      state: {
-                        type: "Observe"
-                      }
-                    })
-                  }}>
-                  <ChevronLeftRoundedIcon />
-                  <b>Back</b>
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </header>
-      <main style={{ flexGrow: 1 }}>
+    teacherSelected ? (
+      <div>
         <FirebaseContext.Consumer>
-          {(firebase: {
-            auth: {
-              currentUser: {
-                uid: string
-              }
-            },
-            handleSession(mEntry: {
-              teacher: string,
-              observedBy: string,
-              type: string
-            }): void,
-            handlePushListening(mEntry: {
-              checked: Array<number>
-            }): Promise<void>
-          }): React.ReactNode => (
-            <TeacherChecklist
-              firebase={firebase}
-              type='LC'
-            />
-          )}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => (<AppBar firebase={firebase} />)}
         </FirebaseContext.Consumer>
-      </main>
-    </div>
+        <main>
+          <FirebaseContext.Consumer>
+            {(firebase: {
+              auth: {
+                currentUser: {
+                  uid: string
+                }
+              },
+              handleSession(mEntry: {
+                teacher: string,
+                observedBy: string,
+                type: string
+              }): void,
+              handlePushListening(mEntry: {
+                checked: Array<number>
+              }): Promise<void>
+            }): React.ReactNode => (
+              <TeacherChecklist
+                firebase={firebase}
+                type='LC'
+              />
+            )}
+          </FirebaseContext.Consumer>
+        </main>
+      </div>
+    ) : (
+      <FirebaseContext.Consumer>
+        {(firebase: {
+          getTeacherList(): Promise<Types.Teacher[]>
+        }): React.ReactElement => (
+          <TeacherModal
+            handleClose={(): void => setTeacherModal(false)}
+            firebase={firebase}
+            type={"Observe"}
+          />
+        )}
+      </FirebaseContext.Consumer>
+    )
   );
 }
 
-export default withStyles(styles)(ListeningToChildrenPage);
+ListeningToChildrenPage.propTypes = {
+  teacherSelected: PropTypes.exact({
+    email: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    notes: PropTypes.string,
+    id: PropTypes.string,
+    phone: PropTypes.string,
+    role: PropTypes.string,
+    school: PropTypes.string
+  }).isRequired
+}
+
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher
+} => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
+
+export default connect(mapStateToProps, null)(ListeningToChildrenPage);

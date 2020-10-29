@@ -1,26 +1,14 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import { Tabs, Tab } from "@material-ui/core";
 import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
 import SequentialHelpDefinitions from './SequentialHelpDefinitions';
 import SequentialHelpChild from './SequentialHelpChild';
 import SequentialHelpTeacher from './SequentialHelpTeacher';
-import * as Constants from '../../constants';
-
-const SequentialTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SA
-    },
-    secondary: {
-      main: '#000000'
-    }
-  }
-});
+import * as Constants from '../../constants/Constants';
 
 const styles: object = {
   tabBar: {
@@ -42,7 +30,7 @@ interface State {
 
 /**
  * hints and reminders for sequential activities observation
- * @param {Props} props 
+ * @param {Props} props
  */
 class SequentialHelpCard extends React.Component<Props, State> {
   /**
@@ -103,7 +91,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
       <div>
         <Grid container direction="column">
           <Grid item>
-            <MuiThemeProvider theme={SequentialTheme}>
+            <MuiThemeProvider theme={Constants.SequentialTheme}>
               <TabBar position="static" color="default" className={classes.tabBar}>
                 <Tabs
                   value={this.state.tabValue}
@@ -137,7 +125,7 @@ class SequentialHelpCard extends React.Component<Props, State> {
                       fontFamily: "Arimo",
                       fontSize: '1em',
                       color: 'black',
-                      backgroundColor: this.state.tabValue === 2 ? Constants.AppBarColor : '#d3d3d3'
+                      backgroundColor: this.state.tabValue === 2 ? Constants.Colors.AppBar : '#d3d3d3'
                     }}
                   />
                 </Tabs>

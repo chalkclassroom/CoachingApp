@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar } from "react-chartjs-2";
-import * as Constants from "../../../constants";
+import * as Constants from "../../../constants/Constants";
 
 
 interface Props {
@@ -94,6 +94,13 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
               font: {
                 size: 16,
                 weight: 'bold'
+              },
+              formatter: function(value: number): number | null {
+                if (value > 0) {
+                  return value;
+                } else {
+                  return null;
+                }
               }
             }
           }

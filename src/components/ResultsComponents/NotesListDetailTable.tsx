@@ -6,15 +6,14 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
-import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import { Tooltip } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import * as Constants from "../../constants";
+import * as Constants from "../../constants/Constants";
 
 /**
  * specifies styling for modal
@@ -57,10 +56,10 @@ interface Style {
 
 interface Props {
   classes: Style,
-  data: Array<{ timestamp: Date, content: string }>,
+  data: Array<{ timestamp: string, content: string }>,
   magic8: string,
   conferencePlanId: string,
-  addNoteToPlan(conferencePlanId: string, note: string): Promise<void>,
+  addNoteToPlan(conferencePlanId: string, note: string): void,
   handleClose(): void,
   open: boolean
 }
@@ -97,11 +96,13 @@ class NotesListDetailTable extends React.Component<Props, {}> {
     : this.props.magic8 === "Level of Engagement" ?
       color = Constants.Colors.SE
     : this.props.magic8 === "Level of Instruction" ?
-      color = Constants.Colors.LI
+      color = Constants.Colors.IN
     : this.props.magic8 === "Listening to Children" ?
       color = Constants.Colors.LC
     : this.props.magic8 === "Sequential Activities" ?
       color = Constants.Colors.SA
+    : this.props.magic8 === "Literacy Instruction" ?
+      color = Constants.Colors.LI
     : color = Constants.Colors.AC
 
     return (

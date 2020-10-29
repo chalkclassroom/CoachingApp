@@ -3,8 +3,7 @@ import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { TextField } from '@material-ui/core';
-import Popover from '@material-ui/core/Popover';
+import { TextField, Popover } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -14,68 +13,14 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import * as  moment from 'moment';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import FadeAwayModal from './FadeAwayModal';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import * as Constants from '../constants';
+import * as Constants from '../constants/Constants';
+import * as Types from '../constants/Types';
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
-const TransitionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.TT
-    }
-  }
-});
-const ClimateTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.CC
-    }
-  }
-});
-const MathTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.MI
-    }
-  }
-});
-const EngagementTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SE
-    }
-  }
-});
-const InstructionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.LI
-    }
-  }
-});
-const ListeningTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.LC
-    }
-  }
-});
-const SequentialTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.SA
-    }
-  }
-});
-const ACTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: Constants.Colors.AC
-    }
-  }
-});
 const BlankTheme = createMuiTheme({
   palette: {
     primary: {
@@ -101,10 +46,10 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacher: Teacher,
+  teacher: Types.Teacher,
   magic8?: string,
   firebase: {
-    createConferencePlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
+    createConferencePlan(teacherId: string, sessionId: string, magic8: string, feedback?: Array<string>, questions?: Array<string>, addedQuestions?: Array<string>, notes?: Array<string>): Promise<void>,
     getConferencePlan(sessionId: string):
       Promise<Array<{
         id: string,
@@ -123,13 +68,7 @@ interface Props {
   editMode: boolean,
   chosenQuestions: Array<string>,
   conferencePlanId?: string,
-  history?: {
-    replace(
-      param: {
-        pathname: string
-      }
-    ): void
-  },
+  history?: H.History,
   notesModal: boolean
 }
 
@@ -152,17 +91,6 @@ interface State {
   dialog: boolean,
   savedAlert: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 interface Style {
   textField: string,
@@ -460,7 +388,8 @@ class ConferencePlanForm extends React.Component<Props, State> {
     conferencePlanExists: PropTypes.bool.isRequired,
     editMode: PropTypes.bool.isRequired,
     chosenQuestions: PropTypes.array.isRequired,
-    notesModal: PropTypes.bool.isRequired
+    notesModal: PropTypes.bool.isRequired,
+    history: ReactRouterPropTypes.history
   };
 
   /**
@@ -498,25 +427,7 @@ class ConferencePlanForm extends React.Component<Props, State> {
                       alignItems="center"
                       style={{width: '100%', paddingTop: '0.5em', paddingBottom: '1em'}}
                     >
-                      <Grid item xs={2}>
-                        <Grid container alignItems="center" justify="flex-start">
-                          <Grid item>
-                            <Button
-                              variant="contained"
-                              size="medium"
-                              className={classes.backButton}
-                              onClick={(): void => {
-                                this.props.history.replace({
-                                  pathname: "/ConferencePlans"
-                                })
-                              }}
-                            >
-                              <ChevronLeftRoundedIcon />
-                              <b>Back</b>
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Grid>
+                      <Grid item xs={2} />
                       <Grid item xs={8}>
                         <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
                           <Typography variant="h4" style={{fontFamily: "Arimo"}}>
@@ -607,7 +518,10 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         <Grid item xs={1}>
                           <Grid container justify="flex-end" direction="row" alignItems="center">
                             <Grid item>
-                              <InfoIcon style={{ fill: "#094492", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'feedback-popover')}/>
+                              <InfoIcon
+                                style={{ fill: "#094492", marginRight: '0.3em', marginTop: '0.3em' }}
+                                onClick={(e: React.SyntheticEvent<Element, Event>): void => this.handlePopoverOpen(e, 'feedback-popover')}
+                              />
                               <Popover
                                 id={feedbackId}
                                 open={feedbackOpen}
@@ -710,7 +624,10 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         <Grid item xs={1}>
                           <Grid container justify="flex-end" direction="row" alignItems="center">
                             <Grid item>
-                              <InfoIcon style={{ fill: "#e55529", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'questions-popover')}/>
+                              <InfoIcon
+                                style={{ fill: "#e55529", marginRight: '0.3em', marginTop: '0.3em' }}
+                                onClick={(e: React.SyntheticEvent<Element, Event>): void => this.handlePopoverOpen(e, 'questions-popover')}
+                              />
                               <Popover
                                 id={questionsId}
                                 open={questionsOpen}
@@ -755,14 +672,15 @@ class ConferencePlanForm extends React.Component<Props, State> {
                                         Select questions from the {" "}
                                         <MuiThemeProvider
                                           theme={
-                                            this.props.magic8 === 'Transition Time' ? TransitionTheme
-                                            : this.props.magic8 === 'Classroom Climate' ? ClimateTheme
-                                            : this.props.magic8 === 'Math Instruction' ? MathTheme
-                                            : this.props.magic8 === 'Level of Engagement' ? EngagementTheme
-                                            : this.props.magic8 === 'Level of Instruction' ? InstructionTheme
-                                            : this.props.magic8 === 'Listening to Children' ? ListeningTheme
-                                            : this.props.magic8 === 'Sequential Activities' ? SequentialTheme
-                                            : this.props.magic8 === 'AC' ? ACTheme
+                                            this.props.magic8 === 'Transition Time' ? Constants.TransitionTheme
+                                            : this.props.magic8 === 'Classroom Climate' ? Constants.ClimateTheme
+                                            : this.props.magic8 === 'Math Instruction' ? Constants.MathTheme
+                                            : this.props.magic8 === 'Level of Engagement' ? Constants.EngagementTheme
+                                            : this.props.magic8 === 'Level of Instruction' ? Constants.InstructionTheme
+                                            : this.props.magic8 === 'Listening to Children' ? Constants.ListeningTheme
+                                            : this.props.magic8 === 'Sequential Activities' ? Constants.SequentialTheme
+                                            : this.props.magic8 === 'Literacy Instruction' ? Constants.LiteracyTheme
+                                            : this.props.magic8 === 'AC' ? Constants.ACTheme
                                             : BlankTheme
                                           }
                                         >
@@ -860,7 +778,10 @@ class ConferencePlanForm extends React.Component<Props, State> {
                         <Grid item xs={1}>
                           <Grid container justify="flex-end" direction="row" alignItems="center">
                             <Grid item>
-                              <InfoIcon style={{ fill: "#009365", marginRight: '0.3em', marginTop: '0.3em' }} onClick={(e): void => this.handlePopoverOpen(e, 'notes-popover')}/>
+                              <InfoIcon
+                                style={{ fill: "#009365", marginRight: '0.3em', marginTop: '0.3em' }}
+                                onClick={(e: React.SyntheticEvent<Element, Event>): void => this.handlePopoverOpen(e, 'notes-popover')}
+                              />
                               <Popover
                                 id={notesId}
                                 open={notesOpen}

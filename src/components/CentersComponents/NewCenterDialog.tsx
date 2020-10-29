@@ -5,7 +5,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from '@material-ui/core/TextField';
+import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
  */
 class NewCenterDialog extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -54,7 +54,7 @@ class NewCenterDialog extends React.Component<Props, {}> {
           </DialogContentText>
           <TextField
             autoFocus
-            inputRef={cn => (centerName = cn)}
+            inputRef={(cn): void => (centerName = cn)}
             margin="dense"
             id="center-name"
             label="Center Name"
@@ -67,7 +67,7 @@ class NewCenterDialog extends React.Component<Props, {}> {
             Cancel
           </Button>
           <Button
-            onClick={() => this.props.handleSubmit(centerName.value)}
+            onClick={(): void => this.props.handleSubmit(centerName.value)}
             color="primary"
             style={{fontFamily: 'Arimo'}}
           >

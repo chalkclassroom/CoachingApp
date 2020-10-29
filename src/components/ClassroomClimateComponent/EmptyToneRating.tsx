@@ -7,9 +7,9 @@ import Typography from "@material-ui/core/Typography";
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -30,7 +30,7 @@ const styles: object = {
 
 interface Props {
   classes: {
-    paper: string
+    paper?: string
   }
 }
 
@@ -43,11 +43,11 @@ class EmptyToneRating extends React.Component<Props, {}> {
     open: true
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
@@ -57,9 +57,9 @@ class EmptyToneRating extends React.Component<Props, {}> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

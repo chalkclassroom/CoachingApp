@@ -2,18 +2,9 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import DataQuestions from '../../ResultsComponents/DataQuestions';
-import { withStyles, createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import * as Constants from '../../../constants';
-import {
-  lightGreen,
-  deepOrange,
-  orange,
-  blue,
-  indigo
-} from "@material-ui/core/colors";
-import { red } from "@material-ui/core/es/colors";
+import { withStyles, MuiThemeProvider } from "@material-ui/core/styles";
+import * as Constants from '../../../constants/Constants';
 import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
 import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";
 import WalkingImage from "../../../assets/images/WalkingImage.svg";
@@ -26,145 +17,17 @@ const styles: object = {
     height: "70px"
   },
   buttonText: {
-    fontSize: "12px",
+    fontSize: "1em",
     textAlign: "center"
   },
 };
-
-const raisedThemes = createMuiTheme({
-  palette: {
-    waitingColor: {
-      backgroundColor: lightGreen[300],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    },
-    travelingColor: {
-      backgroundColor: orange[400],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    },
-    childWaitingColor: {
-      backgroundColor: deepOrange[400],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    },
-    classroomRoutinesColor: {
-      backgroundColor: blue[300],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    },
-    bmiColor: {
-      backgroundColor: red["A200"],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    },
-    otherColor: {
-      backgroundColor: indigo["A200"],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white',
-      boxShadow: "4px 4px #a9a9a9"
-    }
-  }
-});
-
-const themes = createMuiTheme({
-  palette: {
-    waitingColor: {
-      backgroundColor: lightGreen[300],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    },
-    travelingColor: {
-      backgroundColor: orange[400],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    },
-    childWaitingColor: {
-      backgroundColor: deepOrange[400],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    },
-    classroomRoutinesColor: {
-      backgroundColor: blue[300],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    },
-    bmiColor: {
-      backgroundColor: red["A200"],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    },
-    otherColor: {
-      backgroundColor: indigo["A200"],
-      color: "#000",
-      textColor: 'white',
-      primaryTextColor: 'white'
-    }
-  },
-  overrides: {
-    MuiButton: {
-      raisedPrimary: {
-        color: "white"
-      },
-      textColor: 'white',
-      primaryTextColor: 'white'
-    }
-  }
-});
-
 
 interface Props {
   classes: {
     transitionTypeButton: string,
     buttonText: string,
-    raisedThemes: {
-      palette: {
-        waitingColor: string,
-        travelingColor: string,
-        childWaitingColor: string,
-        classroomRoutinesColor: string,
-        bmiColor: string,
-        otherColor: string,
-      }
-    },
-    themes: {
-      palette: {
-        waitingColor: string,
-        travelingColor: string,
-        childWaitingColor: string,
-        classroomRoutinesColor: string,
-        bmiColor: string,
-        otherColor: string,
-        overrides: {
-          MuiButton: {
-            raisedPrimary: {
-              color: string
-            },
-            textColor: string,
-            primaryTextColor: string
-          }
-        }
-      }
-    }
   },
   handleAddToPlan(panelTitle: string, index: number, question: string, sessionId: string, teacherId: string, magic8: string): void,
-  addedToPlan: Array<{panel: string, number: number, question: string}>,
   sessionId: string
   teacherId: string
 }
@@ -180,7 +43,7 @@ interface State {
  */
 class TransitionCoachingQuestions extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -190,13 +53,13 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
       openPanel: '',
     }
   }
-  
+
   /** opens line expansion panel */
   lineClick = (): void => {
     if (this.state.categoryView !== "line") {
       this.setState({
         categoryView: "line",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -206,7 +69,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "traveling") {
       this.setState({
         categoryView: "traveling",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -216,7 +79,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "childrenWaiting") {
       this.setState({
         categoryView: "childrenWaiting",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -226,7 +89,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "routines") {
       this.setState({
         categoryView: "routines",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -236,7 +99,7 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     if (this.state.categoryView !== "behavior") {
       this.setState({
         categoryView: "behavior",
-        openPanel: null
+        openPanel: ''
       })
     }
   }
@@ -252,165 +115,140 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
     }
   };
 
+  static propTypes = {
+    classes: PropTypes.exact({
+      transitionTypeButton: PropTypes.string,
+      buttonText: PropTypes.string
+    }).isRequired,
+    handleAddToPlan: PropTypes.func.isRequired,
+    sessionId: PropTypes.string.isRequired,
+    teacherId: PropTypes.string.isRequired
+  }
+
   /**
    * render function
    * @return {ReactNode}
    */
   render(): React.ReactNode {
     const { classes } = this.props;
+    const categories = [
+      {
+        clickFunction: this.lineClick,
+        categoryView: 'line',
+        theme: Constants.LineTheme,
+        src: WaitingInLineImage,
+        title: 'Waiting in Line',
+        questions: Constants.CoachingQuestions.Transition.LineQuestions
+      },
+      {
+        clickFunction: this.travelingClick,
+        categoryView: 'traveling',
+        theme: Constants.TravelingTheme,
+        src: WalkingImage,
+        title: 'Traveling',
+        questions: Constants.CoachingQuestions.Transition.TravelingQuestions
+      },
+      {
+        clickFunction: this.childrenWaitingClick,
+        categoryView: 'childrenWaiting',
+        theme: Constants.WaitingTheme,
+        src: ChildWaitingImage,
+        title: 'Children Waiting',
+        questions: Constants.CoachingQuestions.Transition.WaitingQuestions
+      },
+      {
+        clickFunction: this.routinesClick,
+        categoryView: 'routines',
+        theme: Constants.RoutinesTheme,
+        src: ClassroomRoutinesImage,
+        title: 'Classroom Routines',
+        questions: Constants.CoachingQuestions.Transition.RoutinesQuestions
+      },
+      {
+        clickFunction: this.behaviorClick,
+        categoryView: 'behavior',
+        theme: Constants.BehaviorManagementTheme,
+        src: BMDImage,
+        title: 'Behavior Management',
+        questions: Constants.CoachingQuestions.Transition.BehaviorQuestions
+      }
+    ];
     return(
       <Grid container direction="column">
-        <Grid container direction="row" justify="center" alignItems="center">
-          <Typography variant="subtitle2" style={{fontFamily: 'Arimo'}}>
-            In which type of transition did children spend the most amount of time?
-          </Typography>
-        </Grid>
-        <Grid container direction="row" justify="center" alignItems="center">
-          <Typography variant="subtitle2" style={{fontFamily: 'Arimo'}}>
-            Select a transition type to view questions that will encourage reflection about teaching practices.
-          </Typography>
-        </Grid>
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: "1vh"}}>
-          <Grid item>
-            <Button 
-              style={this.state.categoryView === "line" ? raisedThemes.palette.waitingColor : themes.palette.waitingColor}
-              onClick={this.lineClick}
-            >
-              <img src={WaitingInLineImage} className={classes.transitionTypeButton}/>
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              style={this.state.categoryView === "traveling" ? raisedThemes.palette.travelingColor : themes.palette.travelingColor}
-              onClick={this.travelingClick}
-            >
-              <img src={WalkingImage} className={classes.transitionTypeButton}/>
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              style={this.state.categoryView === "childrenWaiting" ? raisedThemes.palette.childWaitingColor : themes.palette.childWaitingColor}
-              onClick={this.childrenWaitingClick}
-            >
-              <img src={ChildWaitingImage} className={classes.transitionTypeButton}/>
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              style={this.state.categoryView === "routines" ? raisedThemes.palette.classroomRoutinesColor : themes.palette.classroomRoutinesColor}
-              onClick={this.routinesClick}
-            >
-              <img src={ClassroomRoutinesImage} className={classes.transitionTypeButton}/>
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              style={this.state.categoryView === "behavior" ? raisedThemes.palette.bmiColor : themes.palette.bmiColor}
-              onClick={this.behaviorClick}
-            >
-              <img src={BMDImage} className={classes.transitionTypeButton}/>
-            </Button>
+        <Grid item>
+          <Grid
+            container
+            direction="row"
+            justify="space-around"
+            alignItems="center"
+            style={{marginTop: "1vh"}}
+          >
+            {categories.map((value, index) => {
+              return(
+                <Grid item key={index}>
+                  <MuiThemeProvider theme={value.theme}>
+                    <Button
+                      onClick={value.clickFunction}
+                      color={(this.state.categoryView!=='') && (this.state.categoryView !== value.categoryView) ? "secondary" : "primary"}
+                      variant="contained"
+                      style={{
+                        color: 'white',
+                        boxShadow: this.state.categoryView === value.categoryView ? "4px 4px #a9a9a9" : '2px 2px #d3d3d3'
+                      }}
+                    >
+                      <img
+                        src={value.src}
+                        className={classes.transitionTypeButton}
+                      />
+                    </Button>
+                  </MuiThemeProvider>
+                </Grid>
+              )
+            })}
           </Grid>
         </Grid>
-        <Grid container direction="row" justify="space-around" alignItems="center" style={{marginTop: ".5vh", fontFamily: "Arimo"}}>
+        <Grid item>
           <Grid
-            item xs={2}
-            className = {classes.buttonText}
-            style={{fontWeight: this.state.categoryView === "line" ? "bold" : "normal"}}
+            container
+            direction="row"
+            justify="space-around"
+            alignItems="center"
+            style={{marginTop: ".5vh", fontFamily: "Arimo"}}
           >
-            Waiting in Line
-          </Grid>
-          <Grid
-            item xs={2}
-            className = {classes.buttonText}
-            style={{fontWeight: this.state.categoryView === "traveling" ? "bold" : "normal"}}
-          >
-            Traveling
-          </Grid>
-          <Grid
-            item xs={2}
-            className = {classes.buttonText}
-            style={{fontWeight: this.state.categoryView === "childrenWaiting" ? "bold" : "normal"}}
-          >
-            Children Waiting
-          </Grid>
-          <Grid
-            item xs={2}
-            className = {classes.buttonText}
-            style={{fontWeight: this.state.categoryView === "routines" ? "bold" : "normal"}}
-          >
-            Classroom Routines
-          </Grid>
-          <Grid
-            item xs={2}
-            className = {classes.buttonText}
-            style={{fontWeight: this.state.categoryView === "behavior" ? "bold" : "normal"}}
-          >
-            Behavior Management
+            {categories.map((value, index) => {
+              return(
+                <Grid
+                  item xs={2}
+                  key={index}
+                  className = {classes.buttonText}
+                  style={{fontWeight: this.state.categoryView === value.categoryView ? "bold" : "normal"}}
+                >
+                  {value.title}
+                </Grid>
+              )
+            })}
           </Grid>
         </Grid>
-        <Grid container direction="column" style={{marginTop: "1vh"}}>
-          {this.state.categoryView === "line" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Transition.LineQuestions}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Transition Time"}
-              color={Constants.Colors.TT}
-            />
-          ) : this.state.categoryView === "traveling" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Transition.TravelingQuestions}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Transition Time"}
-              color={Constants.Colors.TT}
-            />
-          ) : this.state.categoryView === "childrenWaiting" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Transition.WaitingQuestions}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Transition Time"}
-              color={Constants.Colors.TT}
-            />
-          ) : this.state.categoryView === "routines" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Transition.RoutinesQuestions}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Transition Time"}
-              color={Constants.Colors.TT}
-            />
-          ) : this.state.categoryView === "behavior" ? (
-            <DataQuestions
-              questions={Constants.CoachingQuestions.Transition.BehaviorQuestions}
-              openPanel={this.state.openPanel}
-              handlePanelChange={this.handlePanelChange}
-              addedToPlan={this.props.addedToPlan}
-              handleAddToPlan={this.props.handleAddToPlan}
-              sessionId={this.props.sessionId}
-              teacherId={this.props.teacherId}
-              magic8={"Transition Time"}
-              color={Constants.Colors.TT}
-            />
-          ) : <div/>}
+        <Grid item>
+          <Grid container direction="column" style={{marginTop: "1vh"}}>
+            {categories.map((value, index) => {
+              return(
+                this.state.categoryView === value.categoryView ? (
+                  <DataQuestions
+                    key={index}
+                    questions={value.questions}
+                    openPanel={this.state.openPanel}
+                    handlePanelChange={this.handlePanelChange}
+                    handleAddToPlan={this.props.handleAddToPlan}
+                    sessionId={this.props.sessionId}
+                    teacherId={this.props.teacherId}
+                    magic8={'Transition Time'}
+                    color={Constants.Colors.TT}
+                  />
+                ) : null
+              )
+            })}
+          </Grid>
         </Grid>
       </Grid>
     );
@@ -418,4 +256,3 @@ class TransitionCoachingQuestions extends React.Component<Props, State> {
 }
 
 export default withStyles(styles)(TransitionCoachingQuestions);
-// export default TransitionCoachingQuestions;

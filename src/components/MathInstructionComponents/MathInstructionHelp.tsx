@@ -4,8 +4,8 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
-import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import { Tooltip } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 import MathHelpCard from "./MathHelpCard";
 
 /**
@@ -27,7 +27,8 @@ const styles: object = {
     width: "67%",
     backgroundColor: 'white',
     padding: '2em',
-    borderRadius: 8
+    borderRadius: 8,
+    overflowY: 'auto'
   }
 };
 

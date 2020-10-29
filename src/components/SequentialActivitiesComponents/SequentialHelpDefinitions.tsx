@@ -2,10 +2,7 @@ import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
 import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table/index';
-import TableRow from '@material-ui/core/TableRow/index';
-import TableBody from '@material-ui/core/TableBody/index';
-import TableCell from '@material-ui/core/TableCell/index';
+import { Table, TableRow, TableBody, TableCell } from '@material-ui/core';
 
 const styles: object = {
   definitionText: {
@@ -26,7 +23,7 @@ interface Props {
 }
 
 /**
- * @param {Props} props 
+ * @param {Props} props
  * @return {ReactElement}
  */
 function SequentialHelpDefinitions(props: Props): React.ReactElement {
@@ -50,7 +47,7 @@ function SequentialHelpDefinitions(props: Props): React.ReactElement {
               </strong>
               <ul>
                 <li>
-                  Using manipulatives in a sequenced manner (counting, 
+                  Using manipulatives in a sequenced manner (counting,
                   sorting, making shapes, etc.)
                 </li>
                 <li>

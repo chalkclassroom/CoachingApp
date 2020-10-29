@@ -45,7 +45,7 @@ interface Props {
  */
 class FeaturesCard extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props){
     super(props);
@@ -60,10 +60,10 @@ class FeaturesCard extends React.Component<Props, {}> {
   };
 
   /**
-   * render function 
-   * @return {ReactElement}
+   * render function
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return(
       <Card className={classes.card}>

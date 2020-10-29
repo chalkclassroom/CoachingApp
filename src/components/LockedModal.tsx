@@ -5,10 +5,12 @@ import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
-import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import { Tooltip } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 import Button from '@material-ui/core/Button';
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import * as H from 'history';
+import ReactRouterPropTypes from 'react-router-prop-types';
 
 /**
  * specifies styling for modal
@@ -37,9 +39,7 @@ interface Props {
   classes: Style,
   open: boolean,
   handleClose(): void,
-  history: {
-    push(param: {pathname: string, state: {type: string}}): void
-  }
+  history: H.History
 }
 
 interface Style {
@@ -51,14 +51,13 @@ interface Style {
  * @param {Props} props 
  * @return {ReactElement}
  */
-function LockedModal(props: Props): React.ReactElement {
+function LockedModal(props: Props & RouteComponentProps): React.ReactElement {
   const { classes, open, handleClose } = props;
   return (
     <div>
       <Modal open={open}>
         <div style={getModalStyle()} className={classes.paper}>
           <Grid
-            xs={12}
             container
             alignItems="center"
             direction="row"
@@ -88,7 +87,7 @@ function LockedModal(props: Props): React.ReactElement {
               <Button 
                 onClick={(): void => {
                   props.history.push({
-                    pathname: "/Magic8Menu",
+                    pathname: "/Training",
                     state: { type: "Training" }
                   });
                   handleClose();
@@ -107,7 +106,9 @@ function LockedModal(props: Props): React.ReactElement {
 }
 
 LockedModal.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  history: ReactRouterPropTypes.history
 };
 
 export default withRouter(withStyles(styles)(LockedModal));

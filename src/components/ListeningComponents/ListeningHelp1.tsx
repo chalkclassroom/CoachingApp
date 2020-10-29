@@ -1,11 +1,8 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles/index";
-import Table from '@material-ui/core/Table/index';
-import TableRow from '@material-ui/core/TableRow/index';
-import TableBody from '@material-ui/core/TableBody/index';
-import TableCell from '@material-ui/core/TableCell/index';
-import * as Constants from '../../constants';
+import { Table, TableRow, TableBody, TableCell } from '@material-ui/core';
+import * as Constants from '../../constants/Constants';
 
 const styles: object = {
   header: {
@@ -14,15 +11,14 @@ const styles: object = {
     fontWeight: 'bold',
     fontSize: '1.1em',
     color: 'black',
-    paddingRight: '12px'
+    padding: '0.5em'
   },
   checklistItem : {
     backgroundColor: '#f3f3f3',
     fontSize: '0.9em',
     fontFamily: 'Arimo',
     width: '25%',
-    paddingTop: '0.5em',
-    paddingBottom: '0.5em',
+    padding: '0.5em',
     verticalAlign: 'top'
   },
   example: {
@@ -30,8 +26,7 @@ const styles: object = {
     fontSize: '0.9em',
     fontFamily: "Arimo",
     width: '75%',
-    paddingTop: '0.5em',
-    paddingBottom: '0.5em',
+    padding: '0.5em',
     verticalAlign: 'top'
   }
 };
@@ -45,7 +40,7 @@ interface Props {
 }
 
 /**
- * @param {Props} props 
+ * @param {Props} props
  * @return {ReactElement}
  */
 function ListeningHelp1(props: Props): React.ReactElement {
@@ -54,18 +49,18 @@ function ListeningHelp1(props: Props): React.ReactElement {
     <Table>
       <TableBody>
         <TableRow>
-          <TableCell align="center" padding="checkbox" className={classes.header} style={{backgroundColor: Constants.AppBarColor}}>
+          <TableCell align="center" className={classes.header} style={{backgroundColor: Constants.Colors.AppBar}}>
             Teacher Behaviors
           </TableCell>
-          <TableCell align="center" padding="checkbox" className={classes.header} style={{backgroundColor: '#b4d6f7'}}>
+          <TableCell align="center" className={classes.header} style={{backgroundColor: '#b4d6f7'}}>
             Definitions and Examples
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.checklistItem}>
+          <TableCell className={classes.checklistItem}>
             At <strong>eye-level</strong> with children
           </TableCell>
-          <TableCell padding="checkbox" className={classes.example}>
+          <TableCell className={classes.example}>
             Teacher positions body at eye-level with children.
             <ul>
               <li>
@@ -82,11 +77,11 @@ function ListeningHelp1(props: Props): React.ReactElement {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.checklistItem}>
+          <TableCell className={classes.checklistItem}>
             <strong>Looks at children</strong> with a {" "}
             <strong>positive expression</strong> to encourage child talk
           </TableCell>
-          <TableCell padding="checkbox" className={classes.example}>
+          <TableCell className={classes.example}>
             Teacher looks at children with curiosity and
             tries to make eye contact. The teacher&apos;s body language
             shows interest in what children say.
@@ -101,10 +96,10 @@ function ListeningHelp1(props: Props): React.ReactElement {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.checklistItem}>
+          <TableCell className={classes.checklistItem}>
             <strong>Repeats</strong> or <strong>clarifies</strong> children&apos;s comments
           </TableCell>
-          <TableCell padding="checkbox" className={classes.example}>
+          <TableCell className={classes.example}>
             Teacher imitates, or repeats, the child&apos;s verbalization without adding content.
             <ul>
               <li>

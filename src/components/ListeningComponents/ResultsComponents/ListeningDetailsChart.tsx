@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import {HorizontalBar} from 'react-chartjs-2';
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
 
 interface Props {
   listening1: number,
@@ -41,7 +41,7 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
     const listeningData = {  
       labels: [
         "At eye-level",
-        "Encourages child talk",
+        ["Uses positive expression", "to encourage child talk"],
         "Repeats or clarifies", 
         "Asks open-ended questions",
         ["Expands on children's", "play or talk"],
@@ -95,7 +95,7 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
                   fontSize: 18,
                   fontColor: "#000000",
                 },
-                afterFit: function(scale: { height: number }) {
+                afterFit: function(scale: { height: number }): void {
                   scale.height = 100 // creates padding between ticks and scaleLabel
                 }
               }
@@ -112,7 +112,7 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
                   fontSize: 18,
                   fontColor: "#000000"
                 },
-                afterFit: function(scale: { width: number }) {
+                afterFit: function(scale: { width: number }): void {
                   scale.width = 260
                 },
               }
@@ -139,7 +139,7 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
                 size: 16,
                 weight: 'bold'
               },
-              formatter: function(value: number) {
+              formatter: function(value: number): number | null {
                 if (value > 0) {
                   return value;
                 } else {

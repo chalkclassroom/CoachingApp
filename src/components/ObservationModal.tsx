@@ -3,11 +3,10 @@ import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
-import Typography from "@material-ui/core/Typography";
 import Button from '@material-ui/core/Button';
 import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
-import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import { Tooltip } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 
 /**
  * specifies styling for modal
@@ -42,7 +41,7 @@ interface Style {
 
 interface Props {
   classes: Style,
-  content: React.ReactNode,
+  content?: React.ReactNode,
   handleBegin(): void,
   handleClose(): void,
   open: boolean
@@ -65,7 +64,6 @@ function ObservationModal(props: Props): React.ReactElement {
       <Modal open={open}>
         <div style={getModalStyle()} className={classes.paper}>
           <Grid
-            xs={12}
             container
             alignItems="center"
             direction="row"
@@ -97,6 +95,14 @@ function ObservationModal(props: Props): React.ReactElement {
       </Modal>
     </div>
   );
+}
+
+ObservationModal.propTypes = {
+  classes: PropTypes.object.isRequired,
+  content: PropTypes.element,
+  handleBegin: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired
 }
 
 export default withStyles(styles)(ObservationModal);

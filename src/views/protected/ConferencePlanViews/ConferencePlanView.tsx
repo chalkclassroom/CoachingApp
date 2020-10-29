@@ -1,38 +1,20 @@
 import * as React from 'react';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
-import AppBar from '../../../components/AppBar.js';
+import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import ConferencePlanForm from '../../../components/ConferencePlanForm';
+import * as Types from '../../../constants/Types';
+import * as H from 'history';
 
 interface Props {
-  actionPlanId: string,
-  location: {state: {conferencePlanId: string, teacherId: string, sessionId: string}},
-  classes: {
-    backButton: string
-  },
-  history: {
-    replace(
-      param: {
-        pathname: string
-      }
-    ): void
-  }
+  location: H.Location,
+  history: H.History
 }
 
 interface State {
-  teacher: Teacher,
+  teacher: Types.Teacher,
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * @class ConferencePlanView
@@ -45,7 +27,16 @@ class ConferencePlanView extends React.Component<Props, State>{
     super(props);
     
     this.state={
-      teacher: null
+      teacher: {
+        email: '',
+        firstName: '',
+        lastName: '',
+        id: '',
+        phone: '',
+        notes: '',
+        role: 'teacher',
+        school: ''
+      }
     }
   }
 
@@ -67,6 +58,11 @@ class ConferencePlanView extends React.Component<Props, State>{
       }) => this.setState({teacher: teacherInfo}))
   }
 
+  static propTypes = {
+    location: ReactRouterPropTypes.location.isRequired,
+    history: ReactRouterPropTypes.history.isRequired
+  }
+
   /**
    * @return {ReactNode}
    */
@@ -74,7 +70,7 @@ class ConferencePlanView extends React.Component<Props, State>{
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <main>
           <Grid direction="column" justify="center" alignItems="center" style={{paddingLeft: '3em', paddingRight: '3em', paddingTop: '1em'}}>
@@ -82,7 +78,20 @@ class ConferencePlanView extends React.Component<Props, State>{
               <Grid container justify="center" alignItems="center" style={{width: '100%'}}>
                 {this.state.teacher ? (
                   <FirebaseContext.Consumer>
-                    {(firebase: object): React.ReactNode => <ConferencePlanForm 
+                    {(firebase: {
+                      createConferencePlan(teacherId: string, sessionId: string, magic8: string): Promise<void>,
+                      getConferencePlan(sessionId: string):
+                        Promise<Array<{
+                          id: string,
+                          feedback: Array<string>,
+                          questions: Array<string>,
+                          addedQuestions: Array<string>,
+                          notes: Array<string>,
+                          date: {seconds: number, nanoseconds: number}}>>,
+                      saveConferencePlan(conferencePlanId: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>): Promise<void>,
+                      getCoachFirstName(): Promise<string>,
+                      getCoachLastName(): Promise<string>
+                    }): React.ReactNode => <ConferencePlanForm 
                       firebase={firebase}
                       conferencePlanId={this.props.location.state.conferencePlanId}
                       teacher={this.state.teacher}

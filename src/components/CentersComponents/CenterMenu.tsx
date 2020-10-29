@@ -3,14 +3,14 @@ import * as PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
 import CenterChecklist from './CenterChecklist';
 import NewCenterDialog from './NewCenterDialog';
 import CenterRatingChecklist from './CenterRatingChecklist';
-import Dashboard from '../Dashboard.js';
+import Dashboard from '../Dashboard';
 import TotalVisitCount from '../TotalVisitCount';
 import grey from "@material-ui/core/colors/grey";
 import { withStyles } from "@material-ui/core/styles";
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   root: {
@@ -28,13 +28,58 @@ const styles: object = {
     color: '#333333',
     borderRadius: 3,
     textTransform: 'none'
+  },
+  main: {
+    height: '100%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  },
+  centerMenuGrid: {
+    direction: 'row'
+  },
+  dashboardGrid: {
+    width: '25%',
+    height: '100%'
+  },
+  contentGrid: {
+    width: '75%'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+  },
+  // ipad portrait
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    centerMenuGrid: {
+      direction: 'column'
+    },
+    dashboardGrid: {
+      width: '100%',
+      height: '25%'
+    },
+    contentGrid: {
+      width: '100%',
+      height: '75%'
+    },
+    centersGrid: {
+      height: '100%'
+    }
   }
 };
 
 interface VisitCenterProps {
   centerName: string,
   visitCount: number,
-  onClick(): void 
+  onClick(): void,
   type: string
 }
 
@@ -54,6 +99,8 @@ const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
       variant="contained"
       color="primary"
       style={{
+        // height: '18vh',
+        // width: '18vh',
         minHeight: 150,
         maxHeight: 150,
         minWidth: 150,
@@ -68,7 +115,7 @@ const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
         ,
         fontFamily: 'Arimo'
       }}
-      onClick={props.onClick}
+      onClick={(): void => props.onClick()}
     >
       <Typography
         variant="subtitle1"
@@ -81,6 +128,13 @@ const VisitCenterButton = (props: VisitCenterProps): React.ReactElement => {
       </Typography>
     </Button>
   );
+};
+
+VisitCenterButton.propTypes = {
+  centerName: PropTypes.string.isRequired,
+  visitCount: PropTypes.number.isRequired,
+  onClick: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired
 };
 
 
@@ -108,9 +162,10 @@ interface Props {
     handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
     handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
   },
-  type: string,
+  type: Types.DashboardType,
   addNewCenter(centerName: string): void,
   incrementCenterCount(centerName: string): void,
+  updateCount(behavior: string): void,
   centers: Array<{
     name: string,
     count: number
@@ -118,8 +173,13 @@ interface Props {
   classes: {
     root: string,
     grow: string,
-    backButton: string
-  }
+    backButton: string,
+    main: string,
+    centerMenuGrid: string,
+    dashboardGrid: string,
+    contentGrid: string,
+    centersGrid: string
+  },
 }
 
 interface State{
@@ -151,7 +211,7 @@ class CenterMenu extends React.Component<Props, State> {
     this.state = {
       addDialog: false,
       status: CENTER_CHECKLIST,
-      currentCenter: null,
+      currentCenter: '',
       totalVisitCount: 0
     }
   }
@@ -202,8 +262,8 @@ class CenterMenu extends React.Component<Props, State> {
     }
   };
 
-  backToCenterMenu = () => {
-    this.setState({ status: CENTER_MENU })
+  backToCenterMenu = (): void => {
+    this.setState({ status: CENTER_MENU });
   }
 
   static propTypes = {
@@ -217,12 +277,21 @@ class CenterMenu extends React.Component<Props, State> {
       role: PropTypes.string,
       school: PropTypes.string
     }).isRequired,
-    classes: PropTypes.object.isRequired,
-    firebase: PropTypes.object.isRequired,
+    // classes: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      auth: PropTypes.exact({
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        })
+      }).isRequired,
+      handleSession: PropTypes.func,
+      handlePushCentersData: PropTypes.func
+    }).isRequired,
     addNewCenter: PropTypes.func.isRequired,
     incrementCenterCount: PropTypes.func.isRequired,
+    updateCount: PropTypes.func.isRequired,
     centers: PropTypes.array.isRequired,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'IN', 'LC', 'SA', 'LI', 'AC', 'RedGraph', 'NotPresent']).isRequired,
   }
 
   /**
@@ -230,7 +299,7 @@ class CenterMenu extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     switch (this.state.status) {
       case CENTER_CHECKLIST:
         return (
@@ -241,39 +310,27 @@ class CenterMenu extends React.Component<Props, State> {
         );
       case CENTER_MENU:
         return (
-          <div>
+          <div className={this.props.classes.main}>
             <Grid
               container
-              justify="center"
+              justify="space-around"
               alignItems="center"
-              direction="row"
+              style={{height: '100%'}}
+              className={this.props.classes.centerMenuGrid}
             >
               <NewCenterDialog
                 open={this.state.addDialog}
                 handleClose={this.handleClose}
                 handleSubmit={this.handleAddCenter}
               />
-              <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+              <Grid item className={this.props.classes.dashboardGrid}>
                 <Grid
                   container
                   alignItems={"center"}
                   justify={"center"}
                   direction={"column"}
+                  style={{height: '100%'}}
                 >
-                  <Grid item>
-                    <Button variant="contained" size="medium" className={classes.backButton}
-                      onClick={(): void => {
-                        this.props.history.replace({
-                          pathname: "/Magic8Menu",
-                          state: {
-                            type: "Observe"
-                          }
-                        })
-                      }}>
-                      <ChevronLeftRoundedIcon />
-                      <b>Back</b>
-                    </Button>
-                  </Grid>
                   <Grid item>
                     <Dashboard
                       type={this.props.type}
@@ -286,14 +343,14 @@ class CenterMenu extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={9}>
-                <Grid container direction="row" justify="flex-start" alignItems="center">
+              <Grid item className={this.props.classes.contentGrid}>
+                <Grid container direction="row" justify="flex-start" alignItems="center" className={this.props.classes.centersGrid}>
                   {this.props.centers.map((center, index) => (
                     <Grid
                       key={index}
                       item
                       xs={4}
-                      style={{ textAlign: "center", padding: "10px" }}
+                      style={{ textAlign: "center", paddingTop: '1em' }}
                     >
                       <VisitCenterButton
                         centerName={center.name}
@@ -306,11 +363,13 @@ class CenterMenu extends React.Component<Props, State> {
                   <Grid
                     item
                     xs={4}
-                    style={{ textAlign: "center", padding: "10px" }}
+                    style={{ textAlign: "center", paddingTop: '1em' }}
                   >
                     <Button
                       variant="contained"
                       style={{
+                        // height: '18vh',
+                        // width: '18vh',
                         minHeight: 150,
                         maxHeight: 150,
                         minWidth: 150,
@@ -333,7 +392,8 @@ class CenterMenu extends React.Component<Props, State> {
           <CenterRatingChecklist
             currentCenter={this.state.currentCenter}
             toggleScreen={this.switchToCenterMenu}
-            finishVisit={centerName => this.finishCenterVisit(centerName)}
+            updateCount={this.props.updateCount}
+            finishVisit={(centerName: string): void => this.finishCenterVisit(centerName)}
             backToCenterMenu={this.backToCenterMenu}
             firebase={this.props.firebase}
             type={this.props.type}

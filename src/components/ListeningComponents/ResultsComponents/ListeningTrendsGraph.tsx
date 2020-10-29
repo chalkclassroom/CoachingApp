@@ -21,7 +21,7 @@ interface Props {
  * formatting for instruction trends graph, including title and scales for the axes
  * @type {{showScale: boolean, pointDot: boolean, scales: {yAxes: {ticks: {min: number, max: number, callback: (function(*): string), beginAtZero: boolean}, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[], xAxes: {display: boolean, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[]}, title: {display: boolean, fontSize: number, text: string, fontStyle: string}, showLines: boolean}}
  */
-const listeningTrendOptions = {             
+const listeningTrendOptions = {
   showScale: true,
   pointDot: true,
   showLines: true,
@@ -35,7 +35,7 @@ const listeningTrendOptions = {
   },
   title: {
     display: true,
-    text: "Teacher Listening Trends",    
+    text: "Teacher Listening Trends",
     fontSize: 20,
     fontStyle: "bold"
   },
@@ -82,10 +82,10 @@ const listeningTrendOptions = {
 
 /**
  * specifies data sets and formatting for Listening to Children trends graph
- * @class ListeningTrendsGraph                                             
+ * @class ListeningTrendsGraph
  */
-class ListeningTrendsGraph extends React.Component<Props, {}> {            
-   
+class ListeningTrendsGraph extends React.Component<Props, {}> {
+
   static propTypes = {
     data: PropTypes.func.isRequired
   };
@@ -96,7 +96,7 @@ class ListeningTrendsGraph extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     // const { classes } = this.props;
-
+    console.log('data', this.props.data);
     return (
       <Line
         data={this.props.data}
@@ -108,4 +108,4 @@ class ListeningTrendsGraph extends React.Component<Props, {}> {
   }
 }
 
-export default ListeningTrendsGraph;                            
+export default ListeningTrendsGraph;

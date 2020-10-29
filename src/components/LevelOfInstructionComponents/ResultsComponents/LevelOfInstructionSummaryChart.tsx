@@ -4,8 +4,8 @@ import { Pie } from "react-chartjs-2";
 import FirebaseContext from "../../Firebase/FirebaseContext";
 
 interface Props {
-  basicSkillsResponses: number, 
-  inferentialResponses: number, 
+  lowLevel: number, 
+  highLevel: number, 
 }
 
 /**
@@ -20,8 +20,8 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
   }
 
   static propTypes = {
-    basicSkillsResponses: PropTypes.number.isRequired, 
-    inferentialResponses: PropTypes.number.isRequired,
+    lowLevel: PropTypes.number.isRequired, 
+    highLevel: PropTypes.number.isRequired,
   }
 
   /**
@@ -30,15 +30,16 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const instructionResponseData = {
-      labels: ["Inferential Instruction", "Basic Skills Instruction"],
+      labels: ["High-Level Instruction", "Low-Level Instruction"],
       datasets: [
         {
-          data: [this.props.inferentialResponses, this.props.basicSkillsResponses],
+          data: [this.props.highLevel, this.props.lowLevel],
           backgroundColor: ["#6aa84f","#6d9eeb"],
           hoverBackgroundColor: ["#6aa84f", "#6d9eeb"] 
         }
       ]
     };
+    const total = this.props.highLevel + this.props.lowLevel;
     return (
       <div>
         <Pie
@@ -47,17 +48,15 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
             tooltips: {
               callbacks: {
                 label: function(tooltipItem: { datasetIndex: number, index: number },
-                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }) {
+                  data: { datasets: Array<{data: Array<number>, backgroundColor: Array<string>, hoverBackgroundColor: Array<string>}> }): string {
                   const dataset = data.datasets[tooltipItem.datasetIndex];
-                  const meta = dataset._meta[Object.keys(dataset._meta)[0]];
-                  const total = meta.total;
                   const currentValue = dataset.data[tooltipItem.index];
                   const percentage = parseFloat(
                     ((currentValue / total) * 100).toFixed(1)
                   );
                   return currentValue + " (" + percentage + "%)";
                 },
-                title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }) {
+                title: function(tooltipItem: Array<{ index: number }>, data: { labels: Array<string> }): string {
                   return data.labels[tooltipItem[0].index];
                 }
               }
@@ -86,10 +85,12 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
                 font: {
                   size: 20
                 },
-                formatter: function(value: number) {
-                  return (
-                    value
-                  );
+                formatter: function(value: number): number | null {
+                  if (value > 0) {
+                    return value;
+                  } else {
+                    return null;
+                  }
                 }
               }
             }

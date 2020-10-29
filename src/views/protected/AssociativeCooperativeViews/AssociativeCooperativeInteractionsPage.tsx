@@ -1,16 +1,20 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
+import ReactRouterPropTypes from 'react-router-prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import { connect } from "react-redux";
 import { deleteACCenters } from "../../../state/actions/associative-cooperative";
 import CenterMenu from '../../../components/CentersComponents/CenterMenu';
+import TeacherModal from '../HomeViews/TeacherModal';
 import {
   addNewCenter,
-  incrementCenterCount
-} from "../../../state/actions/associative-cooperative.js";
-
+  incrementCenterCount,
+  updateACCount
+} from "../../../state/actions/associative-cooperative";
+import * as Types from '../../../constants/Types';
+import * as H from 'history';
 
 const styles: object = {
   root: {
@@ -32,16 +36,9 @@ const styles: object = {
   }
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
+interface State {
+  teacherModal: boolean
+}
 
 interface Style {
   root: string,
@@ -51,35 +48,42 @@ interface Style {
 
 interface Props {
   classes: Style,
-  addNewCenter(): void,
-  incrementCenterCount(): void,
+  addNewCenter(centerName: string): void,
+  incrementCenterCount(centerName: string): void,
+  updateACCount(behavior: string): void,
   centers: Array<{
     name: string,
     count: number
   }>,
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  },
-  teacherSelected: Teacher
+  history: H.History,
+  teacherSelected: Types.Teacher
 }
 
 /**
  * @class AssociativeCooperativeInteractionsPage
  */
-class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> {
+class AssociativeCooperativeInteractionsPage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
+
+    this.state = {
+      teacherModal: false
+    }
   }
+
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  };
+
+  /** lifecycle method invoked after component mounts */
+  componentDidMount(): void {
+    if (!this.props.teacherSelected) {
+      this.setState({ teacherModal: true })
+    }
+  };
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -92,7 +96,12 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    history: ReactRouterPropTypes.history.isRequired,
+    addNewCenter: PropTypes.func.isRequired,
+    incrementCenterCount: PropTypes.func.isRequired,
+    updateACCount: PropTypes.func.isRequired,
+    centers: PropTypes.array.isRequired,
   };
 
   /**
@@ -102,42 +111,68 @@ class AssociativeCooperativeInteractionsPage extends React.Component<Props, {}> 
   render(): React.ReactNode {
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          <FirebaseContext.Consumer>
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => (
+              <AppBar firebase={firebase} />
+            )}
+          </FirebaseContext.Consumer>
+          <main style={{ flexGrow: 1 }}>
+            <FirebaseContext.Consumer>
+              {(firebase: {
+                auth: {
+                  currentUser: {
+                    uid: string
+                  }
+                },
+                handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
+                handlePushCentersData(mEntry: {checked: Array<number>, people: number}): void
+              }): React.ReactNode => (
+                <CenterMenu
+                  teacher={this.props.teacherSelected}
+                  history={this.props.history}
+                  firebase={firebase}
+                  addNewCenter={this.props.addNewCenter}
+                  incrementCenterCount={this.props.incrementCenterCount}
+                  updateCount={this.props.updateACCount}
+                  type="AC"
+                  centers={this.props.centers}
+                />
+              )}
+            </FirebaseContext.Consumer>
+          </main>
+        </div>
+      ) : (
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => (
-            <AppBar
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
               firebase={firebase}
-              className={classes.grow}
+              type={"Observe"}
             />
           )}
         </FirebaseContext.Consumer>
-        <main style={{ flexGrow: 1 }}>
-          <FirebaseContext.Consumer>
-            {(firebase: object): React.ReactNode => (
-              <CenterMenu
-                teacher={this.props.teacherSelected}
-                history={this.props.history}
-                firebase={firebase}
-                addNewCenter={this.props.addNewCenter}
-                incrementCenterCount={this.props.incrementCenterCount}
-                type="AC"
-                centers={this.props.centers}
-              />
-            )}
-          </FirebaseContext.Consumer>
-        </main>
-      </div>
+      )
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  centers: Array<{
+    name: string,
+    count: number
+  }>,
+  teacherSelected: Types.Teacher
+} => {
   return {
     centers: state.associativeCenterState.associativeCenters,
     teacherSelected: state.teacherSelectedState.teacher
   };
 };
 
-export default connect(mapStateToProps, { deleteACCenters, addNewCenter, incrementCenterCount })(
+export default connect(mapStateToProps, { deleteACCenters, addNewCenter, incrementCenterCount, updateACCount })(
   withStyles(styles)(AssociativeCooperativeInteractionsPage)
 );

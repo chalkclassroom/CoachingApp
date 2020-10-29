@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { HorizontalBar } from "react-chartjs-2";
-import * as Constants from "../../../constants";
+import * as Constants from "../../../constants/Constants";
 
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 
 /**
  * Horizontal Bar Graph for Math Child Behaviors
- * @class ChildBarDetails
+ * @class EngagementBarDetails
  * @return {void}
  */
 class ChildBarDetails extends React.Component<Props, {}> {
@@ -94,6 +94,13 @@ class ChildBarDetails extends React.Component<Props, {}> {
               font: {
                 size: 16,
                 weight: 'bold'
+              },
+              formatter: function(value: number): number | null {
+                if (value > 0) {
+                  return value;
+                } else {
+                  return null;
+                }
               }
             }
           }

@@ -5,18 +5,19 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import Typography from "@material-ui/core/Typography/Typography";
 import TransitionCoachingQuestions from "../../../components/TransitionComponents/ResultsComponents/TransitionCoachingQuestions"
 import "chartjs-plugin-datalabels";
-import TransitionTimePie from "../../../components/ResultsComponents/TransitionTimePie";
-import TransitionBarChart from "../../../components/ResultsComponents/TransitionBarChart";
-import TransitionTrendsGraph from "../../../components/ResultsComponents/TransitionTrendsGraph";
+import TransitionTimePie from "../../../components/TransitionComponents/ResultsComponents/TransitionTimePie";
+import TransitionBarChart from "../../../components/TransitionComponents/ResultsComponents/TransitionBarChart";
+import TransitionTrendsGraph from "../../../components/TransitionComponents/ResultsComponents/TransitionTrendsGraph";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import Grid from '@material-ui/core/Grid';
-import PieSliceTransitionImage from '../../../assets/images/PieSliceTransitionImage.svg';
-import PieSliceTeacherSupportImage from '../../../assets/images/PieSliceTeacherSupportImage.svg';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
+import * as Types from '../../../constants/Types';
+import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
+import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 
 const styles: object = {
   root: {
@@ -35,17 +36,7 @@ const styles: object = {
 
 interface Props {
   classes: { root: string, comparisonText: string },
-  teacherSelected: Teacher,
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          type: string
-        }
-      }
-    ): void
-  }
+  teacherSelected: Types.Teacher,
 }
 
 interface State {
@@ -75,19 +66,9 @@ interface State {
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
   questionAdded: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  noDataYet: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * transition results
@@ -127,11 +108,12 @@ class TransitionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noteAdded: false,
       questionAdded: false,
-      teacherModal: false
+      teacherModal: false,
+      noDataYet: false
     };
   }
 
-  
+
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
@@ -162,7 +144,18 @@ class TransitionResultsPage extends React.Component<Props, State> {
     const otherArray: Array<number> = [];
     const totalArray: Array<number> = [];
     let formattedTime;
-    firebase.fetchTransitionTrend(teacherId).then(dataSet => {
+    firebase.fetchTransitionTrend(teacherId).then((dataSet: Array<{
+      id: string,
+      line: number,
+      traveling: number,
+      waiting: number,
+      routines: number,
+      behaviorManagement: number,
+      other: number,
+      total: number,
+      sessionTotal: number,
+      startDate: {value: string}
+    }>) => {
       dataSet.forEach(data => {
         formattedTime = this.handleTrendsFormatTime(data.total);
         dateArray.push([
@@ -300,7 +293,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{
-      id: number,
+      id: string,
       content: string,
       timestamp: {
         seconds: number,
@@ -357,20 +350,28 @@ class TransitionResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noDataYet: false
     }, () => {
       firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        this.setState({
-          sessionDates: dates
-        }, () => {
-          if (this.state.sessionDates[0]) {
-            this.setState({ sessionId: this.state.sessionDates[0].id },
-              () => {
-                this.getData();
-              }
-            );
-          }
-        })
+        {if (dates[0]) {
+          this.setState({
+            sessionDates: dates,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else {
+          this.setState({
+            noDataYet: true
+          })
+        }}
       );
     })
   };
@@ -432,9 +433,9 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 
   /**
-   * @param {React.SyntheticEvent} event
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    */
-  changeSessionId = (event: React.SyntheticEvent): void => {
+  changeSessionId = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     this.setState({
       sessionId: event.target.value,
     }, () => {
@@ -552,8 +553,8 @@ class TransitionResultsPage extends React.Component<Props, State> {
     })
   };
 
-  /** 
-   * lifecycle method invoked after component updates 
+  /**
+   * lifecycle method invoked after component updates
    * @param {Props} prevProps
    */
   componentDidUpdate(prevProps: Props): void {
@@ -564,7 +565,10 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string,
+      comparisonText: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -596,7 +600,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
           <ResultsLayout
             teacher={this.props.teacherSelected}
             magic8="Transition Time"
-            history={this.props.history}
+            // history={this.props.history}
             summary={
               <Grid container justify={"center"} direction={"column"}>
                 <Grid item style={{padding: '1em'}}>
@@ -609,39 +613,27 @@ class TransitionResultsPage extends React.Component<Props, State> {
                 </Typography>
                 <Grid container direction="column" alignItems="center">
                   <Grid item style={{width: '100%'}}>
-                    <Grid container direction="row">
-                      <Grid item xs={1}>
-                        <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                          <Grid item style={{height:"50%"}}>
-                            <img alt="orange" src={PieSliceTransitionImage} height="95%"/>
-                          </Grid>
-                          <Grid item style={{height:"50%"}}>
-                            <img alt="blue" src={PieSliceTeacherSupportImage} height="95%"/>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={11}>
-                        <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                          <Grid item style={{height:"50%"}}>
-                            <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
-                              Transitions
-                            </Typography>
-                          </Grid>
-                          <Grid item style={{height:"50%"}}>
-                            <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                              Learning activities
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
+                    <List>
+                      <ListItem style={{padding: 0}}>
+                        <ListItemIcon style={{margin: 0}}>
+                          <SignalWifi4BarIcon style={{fill: Constants.Colors.TT, transform: 'rotate(-45deg)'}} />
+                        </ListItemIcon>
+                        <ListItemText primary="Transitions" />
+                      </ListItem>
+                      <ListItem style={{padding: 0}}>
+                        <ListItemIcon style={{margin: 0}}>
+                          <SignalWifi4BarIcon style={{fill: Constants.Colors.AppBar, transform: 'rotate(-45deg)'}} />
+                        </ListItemIcon>
+                        <ListItemText primary="Learning activities" />
+                      </ListItem>
+                    </List>
                   </Grid>
                 </Grid>
                 <Grid item>
                   <TransitionTimePie
                     transitionTime={this.state.transitionTime}
                     learningActivityTime={this.state.learningActivityTime}
-                    style={{overflow:"hidden", height: '80vh'}}
+                    // style={{overflow:"hidden", height: '80vh'}}
                   />
                 </Grid>
               </Grid>
@@ -673,7 +665,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
                       routines={this.state.sessionRoutines}
                       behaviorManagement={this.state.sessionBehaviorManagement}
                       other={this.state.sessionOther}
-                      style={{alignItems: "center", height: '80vh'}}
+                      // style={{alignItems: "center", height: '80vh'}}
                     />
                   </Grid>
                 </Grid>
@@ -682,7 +674,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
             trendsGraph={
               <TransitionTrendsGraph
                 data={this.handleTrendsFormatData}
-                style={{overflow:"hidden", height: '80vh'}}
+                // style={{overflow:"hidden", height: '80vh'}}
               />
             }
             changeSessionId={this.changeSessionId}
@@ -694,7 +686,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
             questions={
               <TransitionCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />
@@ -702,11 +693,14 @@ class TransitionResultsPage extends React.Component<Props, State> {
             chosenQuestions = {chosenQuestions}
             actionPlanExists={this.state.actionPlanExists}
             conferencePlanExists={this.state.conferencePlanExists}
+            noDataYet={this.state.noDataYet}
           />
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactElement => (
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}
@@ -719,7 +713,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

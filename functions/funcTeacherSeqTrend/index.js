@@ -14,9 +14,9 @@ const bigquery = new BigQuery();
 exports.funcTeacherSeqTrend = functions.https.onCall(async(data, context) => {
   //SQL query to get child trends for AC
   const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
-                    COUNT(CASE WHEN (peopleType = 1) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
-                    COUNT(CASE WHEN (peopleType = 2) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
-                    COUNT(CASE WHEN (peopleType = 2) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support
+                    COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
+                    COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport,
+                    COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support
                     FROM cqrefpwa.observations.sequential
                     WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
                     GROUP BY startDate

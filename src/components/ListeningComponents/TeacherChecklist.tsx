@@ -7,19 +7,17 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import Grid from "@material-ui/core/Grid";
-import KeyboardArrowLeft from "@material-ui/core/es/internal/svg-icons/KeyboardArrowLeft";
-import List from "@material-ui/core/List/List";
-import ListItem from "@material-ui/core/ListItem/ListItem";
-import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
 import Zoom from '@material-ui/core/Zoom';
 import { connect } from 'react-redux';
-import * as Constants from '../../constants';
+import { updateListeningCount } from "../../state/actions/listening-to-children";
+import * as Constants from '../../constants/Constants';
+import * as Types from '../../constants/Types';
 
 
 const styles: object = {
@@ -32,6 +30,49 @@ const styles: object = {
   },
   grow: {
     flexGrow: 1
+  },
+  main: {
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em',
+    height: '100%'
+  },
+  grid: {
+    direction: 'row'
+  },
+  dashboardGrid: {
+    width: '25%',
+    height: '100%'
+  },
+  contentGrid: {
+    width: '75%',
+    height: '100%'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0,
+    }
+  },
+  // ipad portait
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    grid: {
+      direction: 'column'
+    },
+    dashboardGrid: {
+      width: '100%',
+      height: '25%',
+    },
+    contentGrid: {
+      width: '100%',
+      height: '75%'
+    },
   }
 };
 
@@ -40,9 +81,13 @@ const RATING_INTERVAL = 60000;
 interface Props {
   classes: {
     root: string,
-    grow: string
+    grow: string,
+    main: string,
+    grid: string,
+    dashboardGrid: string,
+    contentGrid: string
   },
-  type: string,
+  type: Types.DashboardType,
   firebase: {
     auth: {
       currentUser: {
@@ -52,7 +97,8 @@ interface Props {
     handleSession(mEntry: {teacher: string, observedBy: string, type: string}): void,
     handlePushListening(mEntry: {checked: Array<number>}): Promise<void>
   },
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher,
+  updateListeningCount(behavior: boolean): void
 }
 
 interface State {
@@ -63,25 +109,15 @@ interface State {
   in: boolean
 }
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
-
 /**
  * Teacher Checklist
  * @class TeacherChecklist
  * @return {void}
  */
 class TeacherChecklist extends React.Component<Props, State> {
+  timer: NodeJS.Timeout;
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -109,7 +145,11 @@ class TeacherChecklist extends React.Component<Props, State> {
     if (this.state.time <= 0) {
       clearInterval(this.timer);
       if (this.state.final) {
-        this.handleSubmit(this.state.checked);
+        if (this.state.checked.length > 0) {
+          this.handleSubmit(this.state.checked);
+        } else {
+          this.handleSubmit([7]);
+        }
         this.setState({ final: false })
       } else {
         this.handleTimeUpNotification();
@@ -125,7 +165,7 @@ class TeacherChecklist extends React.Component<Props, State> {
 
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
-    this.timer = setInterval(this.tick, 1000);
+    this.timer = global.setInterval(this.tick, 1000);
   }
 
   /** lifecycle method invoked just before component is unmounted */
@@ -142,7 +182,7 @@ class TeacherChecklist extends React.Component<Props, State> {
       timeUpOpen: false,
       time: 10000,
       final: true
-    }, () => {this.timer = setInterval(this.tick, 1000)})
+    }, () => {this.timer = global.setInterval(this.tick, 1000)})
   }
 
   handleNext = (): void => {
@@ -162,13 +202,18 @@ class TeacherChecklist extends React.Component<Props, State> {
    * @param {Array<number>} checked
    */
   handleSubmit = (checked: Array<number>): void => {
+    if (checked.indexOf(7)===0){
+      this.props.updateListeningCount(false)
+    } else {
+      this.props.updateListeningCount(true)
+    }
     this.setState({in: false}, () => {
       this.props.firebase.handlePushListening({checked}).then(() => {
         this.setState({
           checked: [],
           in: true,
           time: 60000
-        }, () => {this.timer = setInterval(this.tick, 1000)})
+        }, () => {this.timer = global.setInterval(this.tick, 1000)})
       });
     })
   };
@@ -201,7 +246,7 @@ class TeacherChecklist extends React.Component<Props, State> {
       handlePushListening: PropTypes.func
     }).isRequired,
     classes: PropTypes.object.isRequired,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'IN', 'LC', 'SA', 'LI', 'AC', 'RedGraph', 'NotPresent']).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -211,7 +256,8 @@ class TeacherChecklist extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    updateListeningCount: PropTypes.func.isRequired
   }
 
   /**
@@ -261,75 +307,84 @@ class TeacherChecklist extends React.Component<Props, State> {
             </div>
           )}
         </Dialog>
-        <main>
+        <main className={this.props.classes.main}>
           <Grid
             container
             alignItems={"center"}
-            direction={"row"}
-            justify={"center"}
+            justify={"flex-start"}
+            style={{ height: '100%' }}
+            className={this.props.classes.grid}
           >
-            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
+            <Grid item className={this.props.classes.dashboardGrid}>
               <Grid
                 container
                 alignItems={"center"}
                 justify={"center"}
                 direction={"column"}
+                style={{height: '100%'}}
               >
-                <Dashboard
-                  type={this.props.type}
-                  infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
-                  infoPlacement="center"
-                  completeObservation={true}
-                />
+                <Grid item>
+                  <Dashboard
+                    type={this.props.type}
+                    infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
+                    infoPlacement="center"
+                    completeObservation={true}
+                  />
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item className={this.props.classes.contentGrid}>
               <Zoom in={this.state.in}>
-                <Grid container alignItems="center" direction="column" xs={12}>
-                  <div style={{ height: 20 }} />
-                  <Typography variant="h6" align={"center"} style={{paddingBottom: '1em'}}>
+                <Grid container alignItems="center" justify="center" direction="column" style={{height: '100%'}}>
+                  <Typography variant="h6" align={"center"} style={{paddingBottom: '1em', fontFamily: 'Arimo'}}>
                     Select all the teacher behaviors you see:
                   </Typography>
-                  <Grid container direction={"row"} justify="center" alignItems="center" spacing={16} xs={12}>
-                    <Grid item xs={5}>
-                      <Card style={{height: '45vh'}}>
-                        <List>
-                          {Constants.Checklist.LC.TeacherBehaviors.slice(0, 3).map((value, index) => {
-                            return (<ListItem
-                              key={index}
-                              onClick={this.handleCheck(index+1)}
-                              style={{height: '15vh'}}
-                            >
-                              <Checkbox
-                                checked={this.state.checked.includes(index+1)}
-                              />
-                              <ListItemText disableTypography>
-                                {value}
-                              </ListItemText>
-                            </ListItem>);
-                          })}
-                        </List>
-                      </Card>
-                    </Grid>
-                    <Grid item xs={5}>
-                      <Card style={{height: '45vh'}}>
-                        <List>
-                          {Constants.Checklist.LC.TeacherBehaviors.slice(3, 6).map((value, index) => {
-                            return (<ListItem
-                              key={index}
-                              onClick={this.handleCheck(index+4)}
-                              style={{height: '15vh'}}
-                            >
-                              <Checkbox
-                                checked={this.state.checked.includes(index+4)}
-                              />
-                              <ListItemText disableTypography>
-                                {value}
-                              </ListItemText>
-                            </ListItem>);
-                          })}
-                        </List>
-                      </Card>
+                  <Grid item>
+                    <Grid container direction={"row"} justify="center" alignItems="center" xs={12}>
+                      <Grid item xs={5}>
+                        <Card style={{height: '45vh'}}>
+                          <List>
+                            {Constants.Checklist.LC.TeacherBehaviors.slice(0, 3).map((value, index) => {
+                              return (<ListItem
+                                key={index}
+                                onClick={this.handleCheck(index+1)}
+                                style={{height: '15vh'}}
+                              >
+                                <ListItemIcon>
+                                  <Checkbox
+                                    checked={this.state.checked.includes(index+1)}
+                                  />
+                                </ListItemIcon>
+                                <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
+                                  {value}
+                                </ListItemText>
+                              </ListItem>);
+                            })}
+                          </List>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={5}>
+                        <Card style={{height: '45vh'}}>
+                          <List>
+                            {Constants.Checklist.LC.TeacherBehaviors.slice(3, 6).map((value, index) => {
+                              return (<ListItem
+                                key={index}
+                                onClick={this.handleCheck(index+4)}
+                                style={{height: '15vh'}}
+                              >
+                                <ListItemIcon>
+                                  <Checkbox
+                                    checked={this.state.checked.includes(index+4)}
+                                  />
+                                </ListItemIcon>
+                                <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>
+                                  {value}
+                                </ListItemText>
+                              </ListItem>);
+                            })}
+                          </List>
+                        </Card>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -342,10 +397,10 @@ class TeacherChecklist extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state): {teacherSelected: Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };
 };
 
-export default connect(mapStateToProps)(withStyles(styles)(TeacherChecklist));
+export default connect(mapStateToProps, { updateListeningCount })(withStyles(styles)(TeacherChecklist));

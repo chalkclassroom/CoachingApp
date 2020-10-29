@@ -2,14 +2,13 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
 import AppBar from '../../../components/AppBar';
-import { connect } from 'react-redux';
-import { toggleLOISettingType } from '../../../state/actions/level-of-instruction';
 import Dashboard from '../../../components/Dashboard';
 import InstructionCounter from '../../../components/LevelOfInstructionComponents/InstructionCounter';
-import Button from '@material-ui/core/Button';
-import ChevronLeftRoundedIcon from '@material-ui/icons/ChevronLeftRounded';
+import TeacherModal from '../HomeViews/TeacherModal';
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -26,64 +25,106 @@ const styles: object = {
     color: '#333333',
     borderRadius: 3,
     textTransform: 'none'
+  },
+  main: {
+    height: '100%',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
+  },
+  grid: {
+    direction: 'row'
+  },
+  dashboardGrid: {
+    width: '25%'
+  },
+  contentGrid: {
+    width: '75%'
+  },
+  // ipad landscape
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    }
+  },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    main: {
+      height: '90vh',
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    grid: {
+      direction: 'column'
+    },
+    dashboardGrid: {
+      width: '100%',
+      height: '25%'
+    },
+    contentGrid: {
+      width: '100%',
+      height: '75%'
+    }
   }
 };
 
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
+interface State {
+  teacherModal: boolean
+}
 
 interface Props {
-  classes: { root: string, backButton: string },
-  location: { state: { teacher: Teacher, teachers: Array<Teacher>}},
-  history: {
-    replace(
-      param: {
-        pathname: string,
-        state: { type: string }
-      }
-    ): void
-  }
+  classes: {
+    root: string,
+    backButton: string,
+    main: string,
+    grid: string,
+    dashboardGrid: string,
+    contentGrid: string
+  },
+  teacherSelected: Types.Teacher
 }
 
 /**
  * Level Of Instruction Tool
  * @class LevelOfInstructionPage
  */
-class LevelOfInstructionPage extends React.Component<Props, {}> {
+class LevelOfInstructionPage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
+    
+    this.state = {
+      teacherModal: false
+    }
   }
+
+  handleCloseTeacherModal = (): void => {
+    this.setState({ teacherModal: false })
+  };
+
+  /** lifecycle method invoked after component mounts */
+  componentDidMount(): void {
+    if (!this.props.teacherSelected) {
+      this.setState({ teacherModal: true })
+    }
+  };
 
   /**
    * @param {string} type
    */
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.exact({
-      state: PropTypes.exact({
-        teacher: PropTypes.exact({
-          email: PropTypes.string,
-          firstName: PropTypes.string,
-          lastName: PropTypes.string,
-          notes: PropTypes.string,
-          id: PropTypes.string,
-          phone: PropTypes.string,
-          role: PropTypes.string,
-          school: PropTypes.string
-        }).isRequired,
-        teachers: PropTypes.array.isRequired
-      })
+    teacherSelected: PropTypes.exact({
+      email: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      notes: PropTypes.string,
+      id: PropTypes.string,
+      phone: PropTypes.string,
+      role: PropTypes.string,
+      school: PropTypes.string
     }).isRequired
   };
 
@@ -93,60 +134,73 @@ class LevelOfInstructionPage extends React.Component<Props, {}> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
-
     return (
-      <div className={classes.root}>
-        <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
-        </FirebaseContext.Consumer>
-        <header>
-          <Grid container direction="row" alignItems="center" justify="flex-start">
-            <Grid item xs={3}>
-              <Grid container alignItems="center" justify="center">
-                <Grid item>
-                  <Button variant="contained" size="medium" className={classes.backButton}
-                    onClick={(): void => {
-                      this.props.history.replace({
-                        pathname: "/Magic8Menu",
-                        state: {
-                          type: "Observe"
+      this.props.teacherSelected ? (
+        <div className={classes.root}>
+          <FirebaseContext.Consumer>
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
+          </FirebaseContext.Consumer>
+          <main className={classes.main}>
+            <Grid
+              container
+              alignItems="center"
+              justify="space-around"
+              style={{height: '100%'}}
+              className={classes.grid}
+            >
+              <Grid item className={classes.dashboardGrid}>
+                <Grid container alignItems={'center'} justify={'center'} direction={'column'} style={{height: '100%'}}>
+                  <Dashboard
+                    type="IN"
+                    completeObservation={true}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item className={classes.contentGrid}>
+                <Grid container alignItems={'center'} justify={'center'} direction={'column'} style={{height: '100%'}}>
+                  <FirebaseContext.Consumer>
+                    {(firebase: {
+                      auth: {
+                        currentUser: {
+                          uid: string
                         }
-                      })
-                    }}>
-                    <ChevronLeftRoundedIcon />
-                    <b>Back</b>
-                  </Button>
+                      },
+                      handleSession(entry: {teacher: string, observedBy: string, type: string}): void,
+                      handlePushInstruction(insType: string): void,
+                    }): React.ReactNode => (
+                      <InstructionCounter
+                        firebase={firebase}
+                      />
+                    )}
+                  </FirebaseContext.Consumer>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </header>
-        <main style={{ flexGrow: 1 }}>
-          <Grid container alignItems="center" style={{height: '100%'}}>
-            <Grid item xs={3} style={{alignSelf: 'flex-start', paddingTop: '0.5em'}}>
-              <Grid container alignItems={'center'} justify={'center'} direction={'column'}>
-                <Dashboard
-                  type="LI"
-                  completeObservation={true}
-                />
-              </Grid>
-            </Grid>
-            <Grid item xs={9} justify="center" style={{height: '100%'}}>
-              <Grid container alignItems={'center'} justify={'center'} direction={'column'}>
-                <FirebaseContext.Consumer>
-                  {(firebase: object): React.ReactNode => (
-                    <InstructionCounter
-                      firebase={firebase}
-                    />
-                  )}
-                </FirebaseContext.Consumer>
-              </Grid>
-            </Grid>
-          </Grid>
-        </main>
-      </div>
+          </main>
+        </div>
+      ) : (
+        <FirebaseContext.Consumer>
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
+            <TeacherModal
+              handleClose={this.handleCloseTeacherModal}
+              firebase={firebase}
+              type={"Observe"}
+            />
+          )}
+        </FirebaseContext.Consumer>
+      )
     );
   }
 }
 
-export default connect(toggleLOISettingType)(withStyles(styles)(LevelOfInstructionPage));
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher
+} => {
+  return {
+    teacherSelected: state.teacherSelectedState.teacher
+  };
+};
+
+export default connect(mapStateToProps, null)(withStyles(styles)(LevelOfInstructionPage));

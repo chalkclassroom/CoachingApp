@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '../../components/AppBar';
 import LandingPage from './LandingPage';
 import FirebaseContext from "../../components/Firebase/FirebaseContext";
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   root: {
@@ -24,20 +25,28 @@ interface Props {
 class WelcomePage extends React.Component<Props, {}> {
   static propTypes = {
     classes: PropTypes.object.isRequired
-  }  
+  }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const {classes} = this.props;
-    return ( 
+    return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <AppBar firebase={firebase}/>}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase}/>}
         </FirebaseContext.Consumer>
         <FirebaseContext.Consumer>
-          {(firebase: object) => <LandingPage firebase={firebase}/> }
+          {(firebase: {
+            emailListSignUp(email: string): Promise<void>,
+            firebasePilotSignUp(userData: {
+              email: string,
+              program: string,
+              firstName: string,
+              lastName: string
+            }): Promise<void>
+          }): React.ReactNode => <LandingPage firebase={firebase}/> }
         </FirebaseContext.Consumer>
       </div>
     );

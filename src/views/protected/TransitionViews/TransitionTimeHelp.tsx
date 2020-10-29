@@ -6,8 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
-import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import { Tooltip } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 
 /**
  * specifies styling for modal

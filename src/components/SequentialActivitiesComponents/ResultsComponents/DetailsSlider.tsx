@@ -35,7 +35,7 @@ interface Props {
  * @return {void}
  */
 class DetailsSlider extends React.Component<Props, {}> {
-  
+
   static propTypes = {
     sequential1: PropTypes.number.isRequired,
     sequential2: PropTypes.number.isRequired,
@@ -64,7 +64,7 @@ class DetailsSlider extends React.Component<Props, {}> {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
+            <Typography align="center" variant="h5" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
               Child Behaviors
             </Typography>
             <Grid container direction="column" alignItems="center">
@@ -97,7 +97,7 @@ class DetailsSlider extends React.Component<Props, {}> {
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
+            <Typography align="center" variant="h5" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
               Teacher Behaviors
             </Typography>
             <Grid container direction="column" alignItems="center">

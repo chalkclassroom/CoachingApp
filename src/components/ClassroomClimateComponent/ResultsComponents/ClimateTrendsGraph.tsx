@@ -3,7 +3,17 @@ import * as PropTypes from "prop-types";
 import { Line } from "react-chartjs-2";
 
 interface Props {
-  data: {labels: Array<string>, datasets: Array<{label: string, data: number, backgroundColor: string, borderColor: string, fill: boolean, lineTension: number}>}
+  data(): {
+    labels: Array<string>,
+    datasets: Array<{
+      label: string,
+      data: Array<number>,
+      backgroundColor: string,
+      borderColor: string,
+      fill: boolean,
+      lineTension: number
+    }>
+  }
 }
 
 /**
@@ -18,10 +28,30 @@ const climateTrendOptions = {
     fontStyle: "bold"
   },
   scales: {
+    xAxes: [
+      {
+        display: true,
+        scaleLabel: {
+          display: true,
+          labelString: "Date",
+          fontStyle: "bold"
+        }
+      }
+    ],
     yAxes: [
       {
         ticks: {
-          beginAtZero: true
+          beginAtZero: true,
+          min: 0,
+          max: 100,
+          callback: function(value: number): string {
+            return value + "%";
+          }
+        },
+        scaleLabel: {
+          display: true,
+          labelString: "% of Behavior Responses",
+          fontStyle: "bold"
         }
       }
     ]
@@ -37,7 +67,7 @@ const climateTrendOptions = {
  * @class ClimateTrendsGraph
  */
 class ClimateTrendsGraph extends React.Component<Props, {}> {
-  
+
   static propTypes = {
     data: PropTypes.func.isRequired
   };

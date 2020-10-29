@@ -1,14 +1,17 @@
 import * as React from 'react';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext';
-import AppBar from '../../../components/AppBar.js';
+import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableHead,
+  TableBody,
+  TableSortLabel
+} from '@material-ui/core';
 import * as moment from 'moment';
 import TransitionTimeIconImage from '../../../assets/images/TransitionTimeIconImage.svg';
 import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.svg';
@@ -18,62 +21,54 @@ import InstructionIconImage from '../../../assets/images/InstructionIconImage.sv
 import ListeningIconImage from '../../../assets/images/ListeningIconImage.svg';
 import SequentialIconImage from '../../../assets/images/SequentialIconImage.svg';
 import AssocCoopIconImage from '../../../assets/images/AssocCoopIconImage.svg';
+import * as H from 'history';
+import * as Types from '../../../constants/Types';
 
 interface Props {
-  history: {
-    push(
-      param: {
-        pathname: string,
-        state: {
-          actionPlanId: string,
-          teacherId: string
-        }
-      }
-    ): void,
-    replace(
-      param: {
-        pathname: string,
-        state: {
-          actionPlanId: string,
-          teacherId: string
-        }
-      }
-    ): void
-  }
+  history: H.History
 }
 
 interface State {
-  result: Array<{
-    id: string,
-    teacherId: string,
-    teacherLastName: string,
-    teacherFirstName: string,
-    date: {seconds: number, nanoseconds: number},
-    practice: string
-  }>,
+  result: Array<TeacherListInfo>,
   order: 'desc' | 'asc',
-  orderBy: string,
+  orderBy: TeacherListInfoKey,
   // rows: number,
   rowsPerPage: number,
   page: number,
-  selected: Array<any>
+  selected: Array<string>
 }
+
+interface TeacherListInfo {
+  name: string,
+  teacherId: string,
+  teacherFirstName: string,
+  teacherLastName: string,
+  practice: string,
+  id: string,
+  date: {
+    seconds: number,
+    nanoseconds: number
+  },
+  modified: Date
+}
+
+type TeacherListInfoKey = keyof TeacherListInfo;
 
 const headCells = [
   { id: 'modified', numeric: false, disablePadding: false, label: 'Last Modified' },
   { id: 'teacherLastName', numeric: false, disablePadding: false, label: 'Teacher' },
   { id: 'practice', numeric: false, disablePadding: false, label: 'CHALK Practice' },
-  { id: 'deadline', numeric: false, disablePadding: false, label: 'Achieve By:' },
+  { id: 'achieveBy', numeric: false, disablePadding: false, label: 'Achieve By:' },
 ];
 
 /**
- * 
- * @param {any} a 
- * @param {any} b 
- * @param {string} orderBy 
+ *
+ * @param {TeacherListInfo} a
+ * @param {TeacherListInfo} b
+ * @param {TeacherListInfoKey} orderBy
  * @return {number}
  */
-function descendingComparator(a, b, orderBy: string): number {
+function descendingComparator(a: TeacherListInfo, b: TeacherListInfo, orderBy: TeacherListInfoKey): number {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -84,24 +79,24 @@ function descendingComparator(a, b, orderBy: string): number {
 }
 
 /**
- * @param {'desc' | 'asc'} order 
- * @param {string} orderBy
- * @return {any} 
+ * @param {'desc' | 'asc' | TeacherListInfo} order
+ * @param {TeacherListInfoKey} orderBy
+ * @return {any}
  */
-function getComparator(order: string, orderBy: string) {
+function getComparator(order: 'desc' | 'asc' | TeacherListInfo, orderBy: TeacherListInfoKey): any {
   return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+    ? (a: TeacherListInfo, b: TeacherListInfo): number => descendingComparator(a, b, orderBy)
+    : (a: TeacherListInfo, b: TeacherListInfo): number => -descendingComparator(a, b, orderBy);
 }
 
 /**
- * 
- * @param {Array<any>} array 
- * @param {any} comparator 
+ *
+ * @param {Array<TeacherListInfo>} array
+ * @param {any} comparator
  * @return {any}
  */
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
+function stableSort(array: Array<TeacherListInfo>, comparator: typeof getComparator): any {
+  const stabilizedThis: Array<Array<TeacherListInfo, number>> = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -112,12 +107,12 @@ function stableSort(array, comparator) {
 
 interface TableHeadProps {
   order: 'desc' | 'asc',
-  orderBy: string,
+  orderBy: TeacherListInfoKey,
   onRequestSort(event: React.SyntheticEvent, property: string): void
 }
 
 /**
- * 
+ *
  * @param {TableHeadProps} props
  * @return {ReactElement}
  */
@@ -134,7 +129,7 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'checkbox'}
+            padding={headCell.disablePadding ? 'none' : '0.5em'}
             sortDirection={orderBy === headCell.id ? order : false}
             style={{backgroundColor: '#d8ecff'}}
           >
@@ -146,7 +141,7 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
               <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
               {headCell.label}
               {orderBy === headCell.id ? (
-                <span 
+                <span
                   style={{
                     border: 0,
                     clip: 'rect(0 0 0 0)',
@@ -180,9 +175,9 @@ class ActionPlanListPage extends React.Component<Props, State>{
    */
   constructor(props: Props) {
     super(props);
-    
+
     this.state={
-      result: null,
+      result: [],
       order: 'desc',
       orderBy: 'modified',
       rowsPerPage: 5,
@@ -191,36 +186,26 @@ class ActionPlanListPage extends React.Component<Props, State>{
     }
   }
 
-  handleRequestSort = (event: React.SyntheticEvent, property: string): void => {
+  /**
+   * @param {SyntheticEvent} event
+   * @param {TeacherListInfoKey} property
+   */
+  handleRequestSort = (event: React.SyntheticEvent, property: TeacherListInfoKey): void => {
     const isAsc = this.state.orderBy === property && this.state.order === 'asc';
     isAsc ? this.setState({ order: 'desc' }) : this.setState({ order: 'asc' });
     this.setState({ orderBy: property });
   };
 
   /**
-   * 
+   *
    */
   componentDidMount(): void {
     const firebase = this.context;
     firebase.getCoachActionPlans().then(
-      (answer: Array<{
-        id: string,
-        teacherId: string,
-        date: {seconds: number, nanoseconds: number},
-        practice: string,
-        teacherFirstName: string,
-        teacherLastName: string
-      }>) => {
+      (answer: Array<TeacherListInfo>) => {
       answer.forEach((
-        actionPlan: {
-          id: string,
-          teacherId: string,
-          date: {seconds: number, nanoseconds: number},
-          practice: string,
-          teacherFirstName: string,
-          teacherLastName: string
-        }
-      ) => 
+        actionPlan: TeacherListInfo
+      ) => {
         firebase.getTeacherFirstName(actionPlan.teacherId).then((firstName: string) => {
           actionPlan.teacherFirstName = firstName;
         }).then(() => {
@@ -232,8 +217,12 @@ class ActionPlanListPage extends React.Component<Props, State>{
             })
           })
         })
-      )
+      })
     });
+  }
+
+  static propTypes = {
+    history: ReactRouterPropTypes.history.isRequired
   }
 
   /**
@@ -244,7 +233,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
     return (
       <div>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => <AppBar firebase={firebase} />}
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
         </FirebaseContext.Consumer>
         <Grid direction="column" justify="center" alignItems="center">
           <Grid item style={{width: '100%', paddingTop: '2em'}}>
@@ -270,7 +259,8 @@ class ActionPlanListPage extends React.Component<Props, State>{
                           seconds: number,
                           nanoseconds: number
                         },
-                        deadline: string,
+                        achieveBy: firebase.firestore.Timestamp,
+                        // deadline: string,
                         teacherId: string,
                         practice: string,
                         teacherFirstName: string,
@@ -278,6 +268,10 @@ class ActionPlanListPage extends React.Component<Props, State>{
                         modified: Date,
                         name: string
                       }, index: number) => {
+                      // today if achieveBy date does not exist OR if it is a string (from old version)
+                      const achieveBy = (!row.achieveBy || typeof row.achieveBy === 'string')
+                        ? new Date()
+                        : row.achieveBy.toDate();
                       const isItemSelected = isSelected(row.id);
                       const newDate = new Date(0);
                       newDate.setUTCSeconds(row.date.seconds);
@@ -287,7 +281,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
                         <TableRow
                           key={index}
                           selected={isItemSelected}
-                          onClick={() => {
+                          onClick={(): void => {
                             this.props.history.push({
                               pathname: "/ActionPlan",
                               state: {
@@ -297,21 +291,21 @@ class ActionPlanListPage extends React.Component<Props, State>{
                             });
                           }}
                         >
-                          <TableCell padding="checkbox">
+                          <TableCell style={{padding: '0.5em'}}>
                             <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                               {moment(row.modified).format('MM/DD/YYYY')}
                             </Typography>
                           </TableCell>
-                          <TableCell padding="checkbox">
+                          <TableCell style={{padding: '0.5em'}}>
                             <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                               {row.name}
                             </Typography>
                           </TableCell>
-                          <TableCell padding="checkbox">
+                          <TableCell style={{padding: '0.5em'}}>
                             <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                               <Grid container direction="row" justify="flex-start" alignItems="center">
                                 <Grid item xs={9}>
-                                  <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                                  <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
                                     {row.practice}
                                   </Typography>
                                 </Grid>
@@ -331,7 +325,7 @@ class ActionPlanListPage extends React.Component<Props, State>{
                                       src={MathIconImage}
                                       alt="Magic 8 Icon"
                                     />
-                                  ) : row.practice === 'Student Engagement' ? (
+                                  ) : row.practice === 'Level of Engagement' ? (
                                     <img
                                       src={EngagementIconImage}
                                       alt="Magic 8 Icon"
@@ -361,8 +355,10 @@ class ActionPlanListPage extends React.Component<Props, State>{
                               </Grid>
                             </Typography>
                           </TableCell>
-                          <TableCell padding="checkbox">
-                            {row.deadline}
+                          <TableCell style={{padding: '0.5em'}}>
+                            <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                              {moment(achieveBy).format('MM/DD/YYYY')}
+                            </Typography>
                           </TableCell>
                         </TableRow>
                       )

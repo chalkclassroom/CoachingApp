@@ -11,7 +11,8 @@ import SequentialCoachingQuestions from "../../../components/SequentialActivitie
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -25,7 +26,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -61,19 +62,9 @@ interface State {
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
   questionAdded: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  noDataYet: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * sequential results
@@ -115,7 +106,8 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noteAdded: false,
       questionAdded: false,
-      teacherModal: false
+      teacherModal: false,
+      noDataYet: false
     };
   }
 
@@ -185,20 +177,28 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noDataYet: false
     }, () => {
       firebase.fetchSessionDates(teacherId, "sequential").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        this.setState({
-          sessionDates: dates
-        }, () => {
-          if (this.state.sessionDates[0]) {
-            this.setState({ sessionId: this.state.sessionDates[0].id },
-              () => {
-                this.getData();
-              }
-            );
-          }
-        })
+        {if (dates[0]) {
+          this.setState({
+            sessionDates: dates,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else {
+          this.setState({
+            noDataYet: true
+          })
+        }}
       );
     })
   };
@@ -315,24 +315,24 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       datasets: [
         {
           label: "Teacher Not at Center",
-          backgroundColor: Constants.NotPresentColor,
-          borderColor: Constants.NotPresentColor,
+          backgroundColor: Constants.Colors.NotPresent,
+          borderColor: Constants.Colors.NotPresent,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoTeacherOpp
         },
         {
           label: "No Support",
-          backgroundColor: Constants.RedGraphColor,
-          borderColor: Constants.RedGraphColor,
+          backgroundColor: Constants.Colors.RedGraph,
+          borderColor: Constants.Colors.RedGraph,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoSupport
         },
         {
           label: "Teacher Support",
-          backgroundColor: Constants.AppBarColor,
-          borderColor: Constants.AppBarColor,
+          backgroundColor: Constants.Colors.AppBar,
+          borderColor: Constants.Colors.AppBar,
           fill: false,
           lineTension: 0,
           data: this.state.trendsSupport
@@ -512,9 +512,9 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   }
 
   /**
-   * @param {SyntheticEvent} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    */
-  changeSessionId = (event: React.SyntheticEvent): void => {
+  changeSessionId = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     this.setState(
       {
         sessionId: event.target.value
@@ -551,7 +551,9 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -583,7 +585,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
           <ResultsLayout
             teacher={this.props.teacherSelected}
             magic8="Sequential Activities"
-            history={this.props.history}
             summary={
               <SummarySlider
                 sequential={this.state.sequential}
@@ -620,7 +621,6 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
             questions={
               <SequentialCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />
@@ -628,11 +628,14 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
             chosenQuestions={chosenQuestions}
             actionPlanExists={this.state.actionPlanExists}
             conferencePlanExists={this.state.conferencePlanExists}
+            noDataYet={this.state.noDataYet}
           />
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactElement => (
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}
@@ -645,7 +648,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

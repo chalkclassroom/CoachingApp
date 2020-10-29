@@ -10,7 +10,8 @@ import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCoo
 import ACCoachingQuestions from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ACCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
+import * as Types from '../../../constants/Types';
 import TeacherModal from '../HomeViews/TeacherModal';
 
 const styles: object = {
@@ -25,7 +26,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -63,19 +64,9 @@ interface State {
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
   questionAdded: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  noDataYet: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * associative cooperative results
@@ -119,7 +110,8 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       sessionDates: [],
       noteAdded: false,
       questionAdded: false,
-      teacherModal: false
+      teacherModal: false,
+      noDataYet: false
     };
   }
 
@@ -219,20 +211,28 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noDataYet: false
     }, () => {
       firebase.fetchSessionDates(teacherId, "ac").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        this.setState({
-          sessionDates: dates
-        }, () => {
-          if (this.state.sessionDates[0]) {
-            this.setState({ sessionId: this.state.sessionDates[0].id },
-              () => {
-                this.getData();
-              }
-            );
-          }
-        })
+        {if (dates[0]) {
+          this.setState({
+            sessionDates: dates,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else {
+          this.setState({
+            noDataYet: true
+          })
+        }}
       );
     })
   };
@@ -315,8 +315,8 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       datasets: [
         {
           label: "No Opportunity",
-          backgroundColor: Constants.NotPresentColor,
-          borderColor: Constants.NotPresentColor,
+          backgroundColor: Constants.Colors.NotPresent,
+          borderColor: Constants.Colors.NotPresent,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoChildOpp
@@ -361,24 +361,24 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       datasets: [
         {
           label: "Teacher Not at Center",
-          backgroundColor: Constants.NotPresentColor,
-          borderColor: Constants.NotPresentColor,
+          backgroundColor: Constants.Colors.NotPresent,
+          borderColor: Constants.Colors.NotPresent,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoTeacherOpp
         },
         {
           label: "No Support",
-          backgroundColor: Constants.RedGraphColor,
-          borderColor: Constants.RedGraphColor,
+          backgroundColor: Constants.Colors.RedGraph,
+          borderColor: Constants.Colors.RedGraph,
           fill: false,
           lineTension: 0,
           data: this.state.trendsNoSupport
         },
         {
           label: "Teacher Support",
-          backgroundColor: Constants.AppBarColor,
-          borderColor: Constants.AppBarColor,
+          backgroundColor: Constants.Colors.AppBar,
+          borderColor: Constants.Colors.AppBar,
           fill: false,
           lineTension: 0,
           data: this.state.trendsSupport
@@ -560,9 +560,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   }
 
   /**
-   * @param {SyntheticEvent} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    */
-  changeSessionId = (event: React.SyntheticEvent): void => {
+  changeSessionId = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     this.setState(
       {
         sessionId: event.target.value
@@ -574,7 +574,9 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -606,7 +608,6 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
           <ResultsLayout
             teacher={this.props.teacherSelected}
             magic8="AC"
-            history={this.props.history}
             summary={
               <ChildTeacherBehaviorPieSlider
                 ac={this.state.ac}
@@ -615,7 +616,6 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
                 support={this.state.support}
                 noSupport={this.state.noSupport}
                 noTeacherOpp={this.state.noTeacherOpp}
-
               />
             }
             details={
@@ -645,7 +645,6 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
             questions={
               <ACCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />
@@ -653,11 +652,12 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
             chosenQuestions={chosenQuestions}
             actionPlanExists={this.state.actionPlanExists}
             conferencePlanExists={this.state.conferencePlanExists}
+            noDataYet={this.state.noDataYet}
           />
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactElement => (
+          {(firebase: {getTeacherList(): Promise<Types.Teacher[]>} | null): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}
@@ -670,7 +670,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

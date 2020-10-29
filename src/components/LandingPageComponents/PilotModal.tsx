@@ -3,16 +3,16 @@ import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
-import PilotForm from './PilotForm.tsx';
+import PilotForm from './PilotForm';
 import CloseIcon from "@material-ui/icons/Close";
-import Tooltip from "@material-ui/core/es/Tooltip/Tooltip";
-import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import { Tooltip } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -49,7 +49,14 @@ interface Style {
 interface Props {
   classes: Style,
   handleClose(): void,
-  firebase: {}
+  firebase: {
+    firebasePilotSignUp(userData: {
+      email: string,
+      program: string,
+      firstName: string,
+      lastName: string
+    }): Promise<void>
+  }
 }
 
 interface State {
@@ -66,25 +73,27 @@ class PilotModal extends React.Component<Props, State> {
     role: 0
   };
 
-  handleOpen = () => {
+  handleOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
     handleClose: PropTypes.func.isRequired,
-    firebase: PropTypes.object.isRequired
+    firebase: PropTypes.exact({
+      firebasePilotSignUp: PropTypes.func
+    }).isRequired
   };
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

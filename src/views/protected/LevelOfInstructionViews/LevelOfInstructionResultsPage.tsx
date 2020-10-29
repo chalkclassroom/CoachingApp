@@ -8,12 +8,19 @@ import InstructionTypeDetailsChart from "../../../components/LevelOfInstructionC
 import LevelOfInstructionCoachingQuestions from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionCoachingQuestions";
 import LevelOfInstructionSummaryChart from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummaryChart";
 import LevelOfInstructionTrendsGraph from "../../../components/LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph";
-import { Grid, Typography } from "@material-ui/core";
-import PieSliceLOIBasicImage from "../../../assets/images/PieSliceLOIBasicImage.svg";
-import PieSliceLOIInferentialImage from "../../../assets/images/PieSliceLOIInferentialImage.svg";
+import {
+  Grid,
+  Typography,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
+} from "@material-ui/core";
+import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
 import TeacherModal from '../HomeViews/TeacherModal';
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -32,7 +39,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -41,15 +48,17 @@ interface Style {
 }
 
 interface State {
-  highLevelQuesInsCount: number, 
-  followUpInsCount: number,
-  lowLevelInsCount: number,
-  specificSkillInsCount: number,
+  hlqCount: number, 
+  hlqResponseCount: number,
+  llqCount: number,
+  llqResponseCount: number,
   sessionId: string,
   conferencePlanId: string,
   trendsDates: Array<string>,
-  trendsInfer: Array<number>,
-  trendsBasic: Array<number>,
+  trendsHlq: Array<number>,
+  trendsHlqResponse: Array<number>,
+  trendsLlq: Array<number>,
+  trendsLlqResponse: Array<number>,
   notes: Array<{id: string, content: string, timestamp: string}>,
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
@@ -57,19 +66,9 @@ interface State {
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
   questionAdded: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  noDataYet: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * Level Of Instruction Results
@@ -83,15 +82,17 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      highLevelQuesInsCount: 0,      
-      followUpInsCount: 0,
-      lowLevelInsCount: 0,
-      specificSkillInsCount: 0,              
+      hlqCount: 0,      
+      hlqResponseCount: 0,
+      llqCount: 0,
+      llqResponseCount: 0,              
       sessionId: '',
       conferencePlanId: '',
       trendsDates: [],
-      trendsInfer: [],                   
-      trendsBasic: [],                    
+      trendsHlq: [],
+      trendsHlqResponse: [],
+      trendsLlq: [],                   
+      trendsLlqResponse: [],
       notes: [],
       actionPlanExists: false,
       conferencePlanExists: false,
@@ -99,7 +100,8 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noteAdded: false,
       questionAdded: false,
-      teacherModal: false
+      teacherModal: false,
+      noDataYet: false
     };
   }
 
@@ -135,19 +137,24 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   handleTrendsFetching = (teacherId: string): void => {
     const firebase = this.context;
     const dateArray: Array<string> = [];
-    const inferArray: Array<number> = []; 
-    const basicArray: Array<number> = [];
-    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<object>) => {                       
-      console.log("dataset is: ", dataSet);
-      dataSet.forEach((data: {dayOfEvent: {value: string}, inferential: number, basicSkills: number}) => { 
+    const hlqArray: Array<number> = []; 
+    const hlqResponseArray: Array<number> = [];
+    const llqArray: Array<number> = [];
+    const llqResponseArray: Array<number> = [];
+    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}>) => {                       
+      dataSet.forEach((data: {dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}) => { 
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
-        inferArray.push(data.inferential); 
-        basicArray.push(data.basicSkills); 
+        hlqArray.push(Math.round((data.hlq / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
+        hlqResponseArray.push(Math.round((data.hlqResponse / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
+        llqArray.push(Math.round((data.llq / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
+        llqResponseArray.push(Math.round((data.llqResponse / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
       });
       this.setState({
-        trendsDates: dateArray, 
-        trendsInfer: inferArray, 
-        trendsBasic: basicArray, 
+        trendsDates: dateArray,
+        trendsHlq: hlqArray,
+        trendsHlqResponse: hlqResponseArray,
+        trendsLlq: llqArray,
+        trendsLlqResponse: llqResponseArray
       });
     });
   };
@@ -158,7 +165,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   handleNotesFetching = (sessionId: string): void => {
     const firebase = this.context;
     firebase.handleFetchNotesResults(sessionId).then((notesArr: Array<{id: string, content: string, timestamp: {seconds: number, nanoseconds: number}}>) => {
-      console.log(notesArr);
       const formattedNotesArr: Array<{id: string, content: string, timestamp: string}> = [];
       notesArr.forEach(note => {
         const newTimestamp = new Date(
@@ -174,7 +180,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           timestamp: newTimestamp
         });
       });
-      console.log(formattedNotesArr);
       this.setState({
         notes: formattedNotesArr
       });
@@ -187,33 +192,43 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
-      highLevelQuesInsCount: 0,      
-      followUpInsCount: 0,
-      lowLevelInsCount: 0,
-      specificSkillInsCount: 0,              
+      hlqCount: 0,      
+      hlqResponseCount: 0,
+      llqCount: 0,
+      llqResponseCount: 0,              
       sessionId: '',
       conferencePlanId: '',
       trendsDates: [],
-      trendsInfer: [],                   
-      trendsBasic: [],                    
+      trendsHlq: [],                   
+      trendsHlqResponse: [],       
+      trendsLlq: [],                   
+      trendsLlqResponse: [],             
       notes: [],
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "level").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>  
-        this.setState({
-          sessionDates: dates
-        }, () => {
-          if (this.state.sessionDates[0]) {
-            this.setState({ sessionId: this.state.sessionDates[0].id },
-              () => {
-                this.getData();
-              }
-            );
-          }
-        })
+      firebase.fetchSessionDates(teacherId, "level").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+        {if (dates[0]) {
+          this.setState({
+            sessionDates: dates,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else {
+          this.setState({
+            noDataYet: true
+          })
+        }}
       );
     })
   };
@@ -233,16 +248,32 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       labels: this.state.trendsDates,
       datasets: [
         {
-          label: "Basic Skills Instruction",  
-          data: this.state.trendsBasic, 
+          label: "High-Level Question",  
+          data: this.state.trendsHlq, 
           backgroundColor: "#6d9eeb",
           borderColor: "#6d9eeb",
           fill: false,
           lineTension: 0,
         },
         {
-          label: "Inferential Instruction", 
-          data: this.state.trendsInfer,  
+          label: "Response to High-Level Question", 
+          data: this.state.trendsHlqResponse,  
+          backgroundColor: "#6aa84fff",
+          borderColor: "#6aa84fff",
+          fill: false,
+          lineTension: 0,
+        },
+        {
+          label: "Low-Level Question",  
+          data: this.state.trendsLlq, 
+          backgroundColor: "#6d9eeb",
+          borderColor: "#6d9eeb",
+          fill: false,
+          lineTension: 0,
+        },
+        {
+          label: "Response to Low-Level Question", 
+          data: this.state.trendsLlqResponse,  
           backgroundColor: "#6aa84fff",
           borderColor: "#6aa84fff",
           fill: false,
@@ -260,7 +291,15 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     let followUpCount = 0;
     this.handleNotesFetching(this.state.sessionId);
 
-    firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
+    firebase.getConferencePlan(this.state.sessionId).then((
+      conferencePlanData: Array<{
+        id: string,
+        feedback: string,
+        questions: Array<string>,
+        notes: string,
+        date: Date
+      }>
+    ) => {
       if (conferencePlanData[0]) {
         this.setState({
           conferencePlanExists: true,
@@ -276,30 +315,31 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       console.log('unable to retrieve conference plan')
     })
     firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionType: string, count: number}>) => {  
-      json.forEach(instruction => {                                
-        if (instruction.instructionType === "specificSkill") { 
+      json.forEach(instruction => {
+        // if (type === old term || type === new term)                             
+        if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") { 
           specificSkillCount = instruction.count;                       
-        } else if (instruction.instructionType === "lowLevel") {    
+        } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {    
           lowLevelCount = instruction.count;                                 
-        } else if (instruction.instructionType === "highLevel") {            
+        } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {            
           highLevelQuesCount = instruction.count;                                 
-        } else if (instruction.instructionType === "followUp") {            
+        } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {            
           followUpCount = instruction.count;                                 
         }
       });
       this.setState({
-        followUpInsCount: followUpCount,                          
-        highLevelQuesInsCount: highLevelQuesCount,
-        lowLevelInsCount: lowLevelCount,
-        specificSkillInsCount: specificSkillCount                                  
+        hlqResponseCount: followUpCount,                          
+        hlqCount: highLevelQuesCount,
+        llqCount: lowLevelCount,
+        llqResponseCount: specificSkillCount                                  
       });
     });
   }
 
   /**
-   * @param {SyntheticEvent} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    */
-  changeSessionId = (event: React.SyntheticEvent): void => {
+  changeSessionId = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     this.setState(
       {
         sessionId: event.target.value
@@ -373,7 +413,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       newArray.splice(itemIndex, 1);
       this.setState({ addedToPlan: newArray });
     }
-    console.log('handle add to plan session id is: ', sessionId);
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
@@ -422,7 +461,10 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string,
+      comparisonText: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -454,7 +496,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
           <ResultsLayout
             teacher={this.props.teacherSelected}
             magic8="Level of Instruction"
-            history={this.props.history}
             summary={
               <div>
                 <Grid container justify={"center"} direction={"column"}>
@@ -463,37 +504,25 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                   </Typography>
                   <Grid container direction="column" alignItems="center">
                     <Grid item style={{width: '100%'}}>
-                      <Grid container direction="row">
-                        <Grid item xs={1}>
-                          <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                            <Grid item style={{height:"50%"}}>
-                              <img alt="blue" src={PieSliceLOIBasicImage} height="95%"/>
-                            </Grid>
-                            <Grid item style={{height:"50%"}}>
-                              <img alt="green" src={PieSliceLOIInferentialImage} height="95%"/>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={11}>
-                          <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                            <Grid item style={{height:"50%"}}>
-                              <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
-                                Basic skills instruction 
-                              </Typography>
-                            </Grid>
-                            <Grid item style={{height:"50%"}}>
-                              <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                                Inferential instruction
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
+                      <List>
+                      <ListItem style={{padding: 0}}>
+                        <ListItemIcon style={{margin: 0}}>
+                          <SignalWifi4BarIcon style={{fill: '#6d9eeb', transform: 'rotate(-45deg)'}} />
+                        </ListItemIcon>
+                        <ListItemText primary="Low-level instruction" />
+                      </ListItem>
+                      <ListItem style={{padding: 0}}>
+                        <ListItemIcon style={{margin: 0}}>
+                          <SignalWifi4BarIcon style={{fill: '#6aa84f', transform: 'rotate(-45deg)'}} />
+                        </ListItemIcon>
+                        <ListItemText primary="High-level instruction" />
+                      </ListItem>
+                    </List>
                     </Grid>
                   </Grid>
                   <LevelOfInstructionSummaryChart
-                    basicSkillsResponses={this.state.specificSkillInsCount+this.state.lowLevelInsCount}
-                    inferentialResponses={this.state.followUpInsCount+this.state.highLevelQuesInsCount}
+                    lowLevel={this.state.llqResponseCount+this.state.llqCount}
+                    highLevel={this.state.hlqResponseCount+this.state.hlqCount}
                   />
                 </Grid>
               </div>} 
@@ -505,30 +534,20 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
                       Was there a type of instruction the teacher used more often? 
                     </Typography>
                     <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                      Was there a type of instruction they used less often?               
+                      How often did children respond to different question types?              
                     </Typography>
                   </Grid>
                   <InstructionTypeDetailsChart
-                    highLevelQuesInsCount={this.state.highLevelQuesInsCount}               
-                    followUpInsCount={this.state.followUpInsCount}            
-                    lowLevelInsCount={this.state.lowLevelInsCount}             
-                    specificSkillInsCount={this.state.specificSkillInsCount}                  
+                    hlqCount={this.state.hlqCount}               
+                    hlqResponseCount={this.state.hlqResponseCount}            
+                    llqCount={this.state.llqCount}             
+                    llqResponseCount={this.state.llqResponseCount}                  
                   />
                 </Grid>
               </div>
             }
             trendsGraph={
-              <div>
-                <Grid container justify={"center"} direction={"column"}>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Was there a type of instruction the teacher used more often? 
-                  </Typography>
-                  <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    Was there a type of instruction they used less often?               
-                  </Typography>
-                </Grid>
-                <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
-              </div>
+              <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
             }
             changeSessionId={this.changeSessionId}
             sessionId={this.state.sessionId}
@@ -539,7 +558,6 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
             questions={
               <LevelOfInstructionCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />
@@ -547,11 +565,14 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
             chosenQuestions={chosenQuestions}
             actionPlanExists={this.state.actionPlanExists}
             conferencePlanExists={this.state.conferencePlanExists}
+            noDataYet={this.state.noDataYet}
           />
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactElement => (
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}
@@ -564,7 +585,9 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher
+} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

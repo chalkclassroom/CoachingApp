@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TeacherModal from '../HomeViews/TeacherModal';
+import * as Types from '../../../constants/Types';
 
 const styles: object = {
   root: {
@@ -26,7 +27,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -51,19 +52,9 @@ interface State {
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
   questionAdded: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  noDataYet: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * classroom climate results
@@ -71,7 +62,7 @@ interface Teacher {
  */
 class ClassroomClimateResultsPage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -94,7 +85,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noteAdded: false,
       questionAdded: false,
-      teacherModal: false
+      teacherModal: false,
+      noDataYet: false
     };
   }
 
@@ -124,12 +116,11 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     const dateArray: Array<string> = [];
     const posArray: Array<number> = [];
     const negArray: Array<number> = [];
-    firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<object>) => {
-      console.log("dataset is: ", dataSet);
+    firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, positive: number, negative: number}>) => {
       dataSet.forEach((data: {dayOfEvent: {value: string}, positive: number, negative: number}) => {
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
-        posArray.push(data.positive);
-        negArray.push(data.negative);
+        posArray.push(Math.round((data.positive / (data.positive + data.negative)) * 100));
+        negArray.push(Math.round((data.negative / (data.positive + data.negative)) * 100));
       });
       this.setState({
         trendsDates: dateArray,
@@ -188,20 +179,28 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noDataYet: false
     }, () => {
       firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        this.setState({
-          sessionDates: dates
-        }, () => {
-          if (this.state.sessionDates[0]) {
-            this.setState({ sessionId: this.state.sessionDates[0].id },
-              () => {
-                this.getData();
-              }
-            );
-          }
-        })
+        {if (dates[0]) {
+          this.setState({
+            sessionDates: dates,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else {
+          this.setState({
+            noDataYet: true
+          })
+        }}
       );
     })
   };
@@ -291,9 +290,9 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   }
 
   /**
-   * @param {SyntheticEvent} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    */
-  changeSessionId = (event: React.SyntheticEvent): void => {
+  changeSessionId = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     console.log("sessionId", event.target.value, "type is: ", typeof event);
     this.setState(
       {
@@ -368,7 +367,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       newArray.splice(itemIndex, 1);
       this.setState({ addedToPlan: newArray });
     }
-    console.log('handle add to plan session id is: ', sessionId);
     firebase.getConferencePlan(sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: Array<string>, questions: Array<string>, addedQuestions: Array<string>, notes: Array<string>, date: string}>) => {
       if (conferencePlanData[0]) {
@@ -416,8 +414,8 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     })
   };
 
-  /** 
-   * lifecycle method invoked after component updates 
+  /**
+   * lifecycle method invoked after component updates
    * @param {Props} prevProps
    */
   componentDidUpdate(prevProps: Props): void {
@@ -428,7 +426,9 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -460,7 +460,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
         <ResultsLayout
           teacher={this.props.teacherSelected}
           magic8="Classroom Climate"
-          history={this.props.history}
           summary={
             <ClimateSummarySlider
               positiveResponses={this.state.specificBehaviorCount+this.state.nonspecificBehaviorCount}
@@ -506,7 +505,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           questions={
             <ClimateCoachingQuestions
               handleAddToPlan={this.handleAddToPlan}
-              addedToPlan={this.state.addedToPlan}
               sessionId={this.state.sessionId}
               teacherId={this.props.teacherSelected.id}
             />
@@ -514,11 +512,14 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           chosenQuestions={chosenQuestions}
           actionPlanExists={this.state.actionPlanExists}
           conferencePlanExists={this.state.conferencePlanExists}
+          noDataYet={this.state.noDataYet}
         />
       </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactElement => (
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}
@@ -531,7 +532,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

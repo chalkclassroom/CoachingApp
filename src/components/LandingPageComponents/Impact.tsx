@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
+import Grid, { GridItemsAlignment } from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from "@material-ui/core/styles";
 
@@ -39,12 +39,13 @@ interface Style {
 
 interface Props {
   classes: Style,
-  position: string,
-  paddingTop: string,
+  position: GridItemsAlignment,
+  paddingTop?: string,
   color: string,
   icon: string,
   title: string,
-  text: string | object
+  text: string | object,
+  list?: Array<string>
 }
 
 /**
@@ -53,7 +54,7 @@ interface Props {
  */
 class Impact extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props){
     super(props);
@@ -61,7 +62,7 @@ class Impact extends React.Component<Props, {}> {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    position: PropTypes.string.isRequired,
+    position: PropTypes.oneOf<GridItemsAlignment>(['baseline', 'center', 'flex-end', 'flex-start', 'stretch']).isRequired,
     icon: PropTypes.string.isRequired,
     paddingTop: PropTypes.string,
     color: PropTypes.string.isRequired,
@@ -69,13 +70,14 @@ class Impact extends React.Component<Props, {}> {
     text: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object
-    ])
+    ]),
+    list: PropTypes.array
   }
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return(
       <div>
@@ -101,6 +103,19 @@ class Impact extends React.Component<Props, {}> {
                 <Typography className={classes.bodyText}>
                   {this.props.text}
                 </Typography>
+                {this.props.list ? (
+                  <ul>
+                    {this.props.list.map((value, index) => {
+                      return (
+                        <li key={index}>
+                          <Typography className={classes.bodyText}>
+                            {value}
+                          </Typography>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                ) : (null)}
               </Grid>
             </Grid>
             <Grid item xs={2} />
@@ -127,6 +142,19 @@ class Impact extends React.Component<Props, {}> {
                 <Typography className={classes.bodyText}>
                   {this.props.text}
                 </Typography>
+                {this.props.list ? (
+                  <ul>
+                    {this.props.list.map((value, index) => {
+                      return (
+                        <li key={index}>
+                          <Typography className={classes.bodyText}>
+                            {value}
+                          </Typography>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                ) : (null)}
               </Grid>
             </Grid>
           </Grid>
@@ -135,18 +163,5 @@ class Impact extends React.Component<Props, {}> {
     );
   }
 }
-
-Impact.propTypes = {
-  classes: PropTypes.object.isRequired,
-  position: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired,
-  paddingTop: PropTypes.string,
-  color: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  text: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object
-  ])
-};
 
 export default withStyles(styles)(Impact);

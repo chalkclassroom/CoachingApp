@@ -4,7 +4,8 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Line } from "rc-progress";
 import ms from "pretty-ms";
-import * as Constants from '../constants';
+import * as Constants from '../constants/Constants';
+import * as Types from '../constants/Types';
 
 const styles: object = {
   line: {
@@ -17,20 +18,32 @@ const styles: object = {
   timeText: {
     textAlign: "center",
     fontFamily: 'Arimo',
+  },
+  timerContainer: {
+    marginTop: '10vh'
+  },
+  '@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)': {
+    line: {
+      transform: 'rotate(0deg)',
+    },
+    timerContainer: {
+      marginTop: 0
+    }
   }
 };
 
 interface Props {
   classes: Style,
   timerTime: number,
-  type: string,
+  type: Types.DashboardType,
   time: number
 }
 
 interface Style {
-  line: string,
-  lineGrid: string,
-  timeText: string
+  line?: string,
+  lineGrid?: string,
+  timeText?: string,
+  timerContainer?: string
 }
 
 /**
@@ -54,7 +67,7 @@ function Countdown(props: Props): React.ReactElement {
       style={{width: '100%', height: '100%'}}
     >
       <Grid item className={classes.lineGrid}>
-        <div style={{ marginTop: "10vh" }} />
+        <div className={classes.timerContainer} />
         <Line
           className={classes.line}
           percent={100 * (time / timerTime)}
@@ -72,6 +85,13 @@ function Countdown(props: Props): React.ReactElement {
       </Grid>
     </Grid>
   );
+}
+
+Countdown.propTypes = {
+  classes: PropTypes.object.isRequired,
+  timerTime: PropTypes.number.isRequired,
+  type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'IN', 'LC', 'SA', 'LI', 'AC', 'RedGraph', 'NotPresent']).isRequired,
+  time: PropTypes.number.isRequired
 }
 
 export default withStyles(styles)(Countdown);

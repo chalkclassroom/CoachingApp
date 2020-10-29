@@ -1,5 +1,3 @@
-// webpack.config.js
-
 const path = require("path");
 const webpackMerge = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -17,12 +15,17 @@ module.exports = (env, argv) => {
                 path: path.resolve(__dirname, "build"),
                 filename: "bundled.js"
             },
-	    node: {
-	    	net: 'empty',
-		fs: 'empty',
-		tls: 'empty',
-	    },
-	    resolve: {
+            node: {
+              net: 'empty',
+              fs: 'empty',
+              tls: 'empty',
+            },
+            devServer:{
+                historyApiFallback: true,
+                contentBase: './',
+                hot: true
+            },
+            resolve: {
                 extensions: ['.ts', '.tsx', '.js', '.json']
             },
             module: {
@@ -30,6 +33,9 @@ module.exports = (env, argv) => {
                     {
                         test: /\.tsx?$/,
                         loader: 'babel-loader',
+                        options: {
+                            cacheDirectory: true,
+                        }
                     },
                     {
                         test: /\.js$/,
@@ -40,6 +46,9 @@ module.exports = (env, argv) => {
                         test: /\.(js|jsx)$/,
                         exclude: /node_modules/,
                         loader: "babel-loader",
+                        options: {
+                            cacheDirectory: true,
+                        }
                     },
                     {
                         test: /\.svg$/,

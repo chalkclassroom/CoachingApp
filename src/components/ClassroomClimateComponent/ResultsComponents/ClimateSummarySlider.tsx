@@ -5,23 +5,14 @@ import ToneSummary from './ToneSummary';
 import Slider from "react-slick";
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { withStyles } from "@material-ui/core/styles";
-import PieSliceChildNonImage from '../../../assets/images/PieSliceChildNonImage.svg';
-import PieSliceClimateImage from '../../../assets/images/PieSliceClimateImage.svg';
-
-const styles: object = {
-  comparisonText: {
-    paddingLeft: '1em',
-    lineHeight: '0.8em',
-    fontFamily: 'Arimo'
-  }
-};
+import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
+import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import * as Constants from '../../../constants/Constants';
 
 interface Props {
   negativeResponses: number,
   positiveResponses: number,
   averageToneRating: number,
-  classes: {comparisonText: string}
 }
 
 /**
@@ -38,8 +29,7 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
   static propTypes = {
     negativeResponses: PropTypes.number.isRequired,
     positiveResponses: PropTypes.number.isRequired,
-    averageToneRating: PropTypes.number,
-    classes: PropTypes.object.isRequired
+    averageToneRating: PropTypes.number
   }
 
   /**
@@ -47,7 +37,6 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
     const settings = {
       dots: true,
       infinite: true,
@@ -64,32 +53,20 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
             </Typography>
             <Grid container direction="column" alignItems="center">
               <Grid item style={{width: '100%'}}>
-                <Grid container direction="row">
-                  <Grid item xs={1}>
-                    <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                      <Grid item style={{height:"50%"}}>
-                        <img alt="yellow" src={PieSliceClimateImage} height="95%"/>
-                      </Grid>
-                      <Grid item style={{height:"50%"}}>
-                        <img alt="red" src={PieSliceChildNonImage} height="95%"/>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={11}>
-                    <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                      <Grid item style={{height:"50%", paddingBottom: '1em'}}>
-                        <Typography variant="subtitle1" className={classes.comparisonText}>
-                          Approved of children&apos;s behavior.
-                        </Typography>
-                      </Grid>
-                      <Grid item style={{height:"50%"}}>
-                        <Typography variant="subtitle1" className={classes.comparisonText}>
-                          Disapproved of children&apos;s behavior.
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
+                <List>
+                  <ListItem style={{padding: 0}}>
+                    <ListItemIcon style={{margin: 0}}>
+                      <SignalWifi4BarIcon style={{fill: Constants.Colors.CC, transform: 'rotate(-45deg)'}} />
+                    </ListItemIcon>
+                    <ListItemText primary="Approved of children&apos;s behavior." />
+                  </ListItem>
+                  <ListItem style={{padding: 0}}>
+                    <ListItemIcon style={{margin: 0}}>
+                      <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
+                    </ListItemIcon>
+                    <ListItemText primary="Disapproved of children&apos;s behavior." />
+                  </ListItem>
+                </List>
               </Grid>
             </Grid>
             <Grid item style={{paddingTop: '1em'}}>
@@ -115,4 +92,4 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
   }
 }
 
-export default withStyles(styles)(ClimateSummarySlider);
+export default ClimateSummarySlider;

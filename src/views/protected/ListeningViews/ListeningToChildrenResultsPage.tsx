@@ -3,6 +3,8 @@ import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
+import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
@@ -10,11 +12,10 @@ import ListeningSummaryChart from "../../../components/ListeningComponents/Resul
 import ListeningDetailsChart from "../../../components/ListeningComponents/ResultsComponents/ListeningDetailsChart";
 import ListeningTrendsGraph from "../../../components/ListeningComponents/ResultsComponents/ListeningTrendsGraph";
 import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
-import PieSliceListeningImage from '../../../assets/images/PieSliceListeningImage.svg';
-import PieSliceChildNonImage from '../../../assets/images/PieSliceChildNonImage.svg';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
-import * as Constants from '../../../constants';
+import * as Constants from '../../../constants/Constants';
+import * as Types from '../../../constants/Types';
 import TeacherModal from '../HomeViews/TeacherModal';
 
 const styles: object = {
@@ -34,7 +35,7 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Teacher
+  teacherSelected: Types.Teacher
 }
 
 interface Style {
@@ -63,19 +64,9 @@ interface State {
   sessionDates: Array<{id: string, sessionStart: {value: string}}>,
   noteAdded: boolean,
   questionAdded: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  noDataYet: boolean
 }
-
-interface Teacher {
-  email: string,
-  firstName: string,
-  lastName: string,
-  notes: string,
-  id: string,
-  phone: string,
-  role: string,
-  school: string
-};
 
 /**
  * listening to children results
@@ -109,7 +100,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noteAdded: false,
       questionAdded: false,
-      teacherModal: false
+      teacherModal: false,
+      noDataYet: false
     };
   }
 
@@ -170,20 +162,28 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       actionPlanExists: false,
       conferencePlanExists: false,
       addedToPlan: [],
-      sessionDates: []
+      sessionDates: [],
+      noDataYet: false
     }, () => {
       firebase.fetchSessionDates(teacherId, "listening").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        this.setState({
-          sessionDates: dates
-        }, () => {
-          if (this.state.sessionDates[0]) {
-            this.setState({ sessionId: this.state.sessionDates[0].id },
-              () => {
-                this.getData();
-              }
-            );
-          }
-        })
+        {if (dates[0]) {
+          this.setState({
+            sessionDates: dates,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else {
+          this.setState({
+            noDataYet: true
+          })
+        }}
       );
     })
   };
@@ -198,7 +198,6 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     const notListeningArray: Array<number> = [];
     firebase.fetchListeningTrend(teacherId)
     .then((dataSet: Array<{startDate: {value: string}, listening: number, notListening: number}>) => {
-      console.log('handletrendsfetch returns: ', dataSet);
       dataSet.forEach(data => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
@@ -210,7 +209,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
         trendsDates: dateArray,
         trendsListening: listeningArray,
         trendsNotListening: notListeningArray
-      }, () => console.log('listening trends: ', this.state.trendsListening, this.state.trendsNotListening));
+      });
     });
   };
 
@@ -302,9 +301,9 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   }
 
   /**
-   * @param {SyntheticEvent} event
+   * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} event
    */
-  changeSessionId = (event: React.SyntheticEvent): void => {
+  changeSessionId = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
     this.setState(
       {
         sessionId: event.target.value
@@ -451,7 +450,10 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   }
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      root: PropTypes.string,
+      comparisonText: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -483,7 +485,6 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
           <ResultsLayout
             teacher={this.props.teacherSelected}
             magic8="Listening to Children"
-            history={this.props.history}
             summary={
               <Grid container justify={"center"} direction={"column"}>
                 <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
@@ -491,32 +492,20 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                 </Typography>
                 <Grid container direction="column" alignItems="center">
                   <Grid item style={{width: '100%'}}>
-                    <Grid container direction="row">
-                      <Grid item xs={1}>
-                        <Grid container direction="column" alignItems="flex-end" style={{height:'100%'}}>
-                          <Grid item style={{height:"50%"}}>
-                            <img alt="green" src={PieSliceListeningImage} height="95%"/>
-                          </Grid>
-                          <Grid item style={{height:"50%"}}>
-                            <img alt="red" src={PieSliceChildNonImage} height="95%"/>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={11}>
-                        <Grid container direction="column" justify="center" style={{height:'100%'}}>
-                          <Grid item style={{height:"50%"}}>
-                            <Typography align="left" variant="subtitle1" className={classes.comparisonText}>
-                              Listening to children/encouraging child talk
-                            </Typography>
-                          </Grid>
-                          <Grid item style={{height:"50%"}}>
-                            <Typography align="left" variant="subtitle1" className={classes.comparisonText} style={{lineHeight:'1em'}}>
-                              Doing other tasks or activities
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
+                    <List>
+                      <ListItem style={{padding: 0}}>
+                        <ListItemIcon style={{margin: 0}}>
+                          <SignalWifi4BarIcon style={{fill: Constants.Colors.LC, transform: 'rotate(-45deg)'}} />
+                        </ListItemIcon>
+                        <ListItemText primary="Listening to children/encouraging child talk" />
+                      </ListItem>
+                      <ListItem style={{padding: 0}}>
+                        <ListItemIcon style={{margin: 0}}>
+                          <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
+                        </ListItemIcon>
+                        <ListItemText primary="Not doing any target behaviors" />
+                      </ListItem>
+                    </List>
                   </Grid>
                 </Grid>
                 <Grid item>
@@ -571,7 +560,6 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
             questions={
               <ListeningCoachingQuestions
                 handleAddToPlan={this.handleAddToPlan}
-                addedToPlan={this.state.addedToPlan}
                 sessionId={this.state.sessionId}
                 teacherId={this.props.teacherSelected.id}
               />
@@ -579,11 +567,14 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
             chosenQuestions={chosenQuestions}
             actionPlanExists={this.state.actionPlanExists}
             conferencePlanExists={this.state.conferencePlanExists}
+            noDataYet={this.state.noDataYet}
           />
         </div>
       ) : (
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactElement => (
+          {(firebase: {
+            getTeacherList(): Promise<Types.Teacher[]>
+          }): React.ReactElement => (
             <TeacherModal
               handleClose={this.handleCloseTeacherModal}
               firebase={firebase}
@@ -596,7 +587,7 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
   return {
     teacherSelected: state.teacherSelectedState.teacher
   };

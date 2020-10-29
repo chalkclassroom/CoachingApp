@@ -1,13 +1,13 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import AppBar from "../../components/AppBar";
-import FirebaseContext from "../../components/Firebase/FirebaseContext.js";
+import FirebaseContext from "../../components/Firebase/FirebaseContext";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
-import ProjectAdvisor from "../../components/TeamPageComponents/ProjectAdvisor.tsx";
-import TeamMemberCard from "../../components/TeamPageComponents/TeamMemberCard.tsx";
-import TeamMemberExpansion from "../../components/TeamPageComponents/TeamMemberExpansion.tsx";
+import ProjectAdvisor from "../../components/TeamPageComponents/ProjectAdvisor";
+import TeamMemberCard from "../../components/TeamPageComponents/TeamMemberCard";
+import TeamMemberExpansion from "../../components/TeamPageComponents/TeamMemberExpansion";
 import PreschoolPromiseLogoImage from "../../assets/images/PreschoolPromiseLogoImage.jpg";
 import UnitedWayLogoImage from "../../assets/images/UnitedWayLogoImage.jpg";
 import UDaytonLogoImage from "../../assets/images/UDaytonLogoImage.jpg";
@@ -16,7 +16,8 @@ import WondryLogoImage from "../../assets/images/WondryLogoImage.png";
 import VanderbiltEngineeringLogoImage from "../../assets/images/VanderbiltEngineeringLogoImage.png";
 import AbtLogoImage from "../../assets/images/AbtLogoImage.png";
 import MNPSLogoImage from "../../assets/images/MNPSLogoImage.jpg";
-import * as Constants from "../../constants";
+import * as Constants from "../../constants/Constants";
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   root: {
@@ -63,25 +64,25 @@ interface State {
   open: string
 };
 
-/** 
- * class for the team page 
+/**
+ * class for the team page
  * @class TeamPage
 */
 class TeamPage extends React.Component<Props, State> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
     this.state = {
-      open: null
+      open: ''
     };
   }
 
-  openCC = () => {
+  openCC = (): void => {
     if (this.state.open === "CC") {
       this.setState({
-        open: null
+        open: ''
       });
     } else {
       this.setState({
@@ -90,10 +91,10 @@ class TeamPage extends React.Component<Props, State> {
     }
   };
 
-  openDM = () => {
+  openDM = (): void => {
     if (this.state.open === "DM") {
       this.setState({
-        open: null
+        open: ''
       });
     } else {
       this.setState({
@@ -102,10 +103,10 @@ class TeamPage extends React.Component<Props, State> {
     }
   };
 
-  openKN = () => {
+  openKN = (): void => {
     if (this.state.open === "KN") {
       this.setState({
-        open: null
+        open: ''
       });
     } else {
       this.setState({
@@ -114,10 +115,10 @@ class TeamPage extends React.Component<Props, State> {
     }
   };
 
-  openCS = () => {
+  openCS = (): void => {
     if (this.state.open === "CS") {
       this.setState({
-        open: null
+        open: ''
       });
     } else {
       this.setState({
@@ -132,15 +133,15 @@ class TeamPage extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
     return (
       <div>
         <div className={classes.root}>
           <FirebaseContext.Consumer>
-            {(firebase: object) => <AppBar firebase={firebase} />}
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container
@@ -284,10 +285,10 @@ class TeamPage extends React.Component<Props, State> {
                           style={{ paddingBottom: 15 }}
                         >
                           <Grid item xs={6}>
-                            <ProjectAdvisor person={Constants.DS} />
+                            <ProjectAdvisor person={Constants.DR} />
                           </Grid>
                           <Grid item xs={6}>
-                            <ProjectAdvisor person={Constants.JW} />
+                            <ProjectAdvisor person={Constants.DS} />
                           </Grid>
                         </Grid>
                         <Grid
@@ -298,8 +299,19 @@ class TeamPage extends React.Component<Props, State> {
                           style={{ paddingBottom: 15 }}
                         >
                           <Grid item xs={6}>
+                            <ProjectAdvisor person={Constants.JW} />
+                          </Grid>
+                          <Grid item xs={6}>
                             <ProjectAdvisor person={Constants.SJW} />
                           </Grid>
+                        </Grid>
+                        <Grid
+                          container
+                          direction="row"
+                          justify="center"
+                          alignItems="center"
+                          style={{ paddingBottom: 15 }}
+                        >
                           <Grid item xs={6}>
                             <ProjectAdvisor person={Constants.LW} />
                           </Grid>
@@ -465,7 +477,7 @@ class TeamPage extends React.Component<Props, State> {
         </div>
         <div className={classes.mobileRoot}>
           <FirebaseContext.Consumer>
-            {(firebase: object) => <AppBar firebase={firebase} />}
+            {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} />}
           </FirebaseContext.Consumer>
           <Grid
             container

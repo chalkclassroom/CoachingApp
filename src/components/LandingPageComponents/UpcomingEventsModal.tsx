@@ -8,9 +8,9 @@ import ReimagineBadgeImage from "../../assets/images/ReimagineBadgeImage.jpg";
 
 /**
  * specifies styling for modal
- * @return {css}
+ * @return {CSSProperties}
  */
-function getModalStyle() {
+function getModalStyle(): React.CSSProperties {
   return {
     position: "fixed",
     top: `50%`,
@@ -18,7 +18,7 @@ function getModalStyle() {
     transform: `translate(-50%, -50%)`
   } as React.CSSProperties;
 }
-  
+
 const styles: object = {
   root: {
     backgroundColor: '#ffffff'
@@ -107,9 +107,9 @@ class UpcomingEventsModal extends React.Component<Props, State> {
 
   /**
    * render function
-   * @return {ReactElement}
+   * @return {ReactNode}
    */
-  render() {
+  render(): React.ReactNode {
     const { classes } = this.props;
 
     return (

@@ -2,12 +2,12 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { Fab } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { toggleLOISettingType } from '../../state/actions/level-of-instruction';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import ReplySharpIcon from '@material-ui/icons/ReplySharp';
 import { connect } from 'react-redux';
-import { pushOntoLoiStack, popOffLoiStack } from '../../state/actions/level-of-instruction.js';
+import { pushOntoLoiStack, popOffLoiStack } from '../../state/actions/level-of-instruction';
+import * as Types from '../../constants/Types';
 
 const styles: object = {
   category: {
@@ -35,7 +35,7 @@ const styles: object = {
     zIndex: '99',
     textTransform: 'Capitalize',
     fontWeight: 'bold',
-    fontSize: '1.5em',
+    fontSize: '1.2em',
     paddingRight: '0.5em',
     paddingLeft: '0.5em'
   }
@@ -75,7 +75,7 @@ interface Props {
  */
 class InstructionCounter extends React.Component<Props, {}> {
   /**
-   * @param {Props} props 
+   * @param {Props} props
    */
   constructor(props: Props) {
     super(props);
@@ -104,9 +104,12 @@ class InstructionCounter extends React.Component<Props, {}> {
       this.props.firebase.handlePushInstruction('UNDO');
     }
   };
-  
+
   static propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes: PropTypes.exact({
+      category: PropTypes.string,
+      button: PropTypes.string
+    }).isRequired,
     teacherSelected: PropTypes.exact({
       email: PropTypes.string,
       firstName: PropTypes.string,
@@ -119,7 +122,15 @@ class InstructionCounter extends React.Component<Props, {}> {
     }).isRequired,
     pushOntoLoiStack: PropTypes.func.isRequired,
     popOffLoiStack: PropTypes.func.isRequired,
-    firebase: PropTypes.object.isRequired,
+    firebase: PropTypes.exact({
+      auth: PropTypes.exact({
+        currentUser: PropTypes.exact({
+          uid: PropTypes.string
+        })
+      }),
+      handleSession: PropTypes.func,
+      handlePushInstruction: PropTypes.func
+    }).isRequired,
     totalVisitCount: PropTypes.number.isRequired
   }
 
@@ -146,7 +157,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                   style={{ fontFamily: 'Arimo' }}
                 >
                   <Fab
-                    onClick={(): void => this.handlePushFire('highLevel')}
+                    onClick={(): void => this.handlePushFire('hlq')}
                     className={classes.button}
                     style={{
                       backgroundColor: '#38761dff',
@@ -154,7 +165,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                       height: 180
                     }}
                   >
-                    Ask High-Level Question
+                    Teacher Asks High-Level Question
                   </Fab>
                 </Grid>
                 <Grid container alignItems="center" md={5} style={{ fontFamily: 'Arimo' }}>
@@ -163,7 +174,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                     style={{ backgroundColor: '#6aa84fff', color: '#fff!important' }}
                     className={classes.category}
                   >
-                    Inferential Instruction
+                    High-Level Instruction
                   </Button>
                 </Grid>
                 <Grid
@@ -176,7 +187,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                   style={{ fontFamily: 'Arimo' }}
                 >
                   <Fab
-                    onClick={(): void => this.handlePushFire('followUp')}
+                    onClick={(): void => this.handlePushFire('hlqResponse')}
                     classes={{ root: classes.button }}
                     style={{
                       backgroundColor: '#38761dff',
@@ -184,7 +195,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                       height: 180
                     }}
                   >
-                    Follow-up on Children’s Responses
+                    Child Answers High-Level Question
                   </Fab>
                 </Grid>
               </Grid>
@@ -207,7 +218,7 @@ class InstructionCounter extends React.Component<Props, {}> {
               md={5}
               style={{ fontFamily: 'Arimo' }}
             >
-              <div width={100} height={100} style={{ fontSize: '80px' }}>
+              <div style={{ width: 100, height: 100, fontSize: '80px', textAlign: 'center' }}>
                 {this.props.totalVisitCount}
               </div>
             </Grid>
@@ -266,7 +277,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                   style={{ fontFamily: 'Arimo' }}
                 >
                   <Fab
-                    onClick={(): void => this.handlePushFire('lowLevel')}
+                    onClick={(): void => this.handlePushFire('llq')}
                     className={classes.button}
                     style={{
                       backgroundColor: '#1155ccff',
@@ -274,7 +285,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                       height: 180
                     }}
                   >
-                    Ask Low-Level Question
+                    Teacher Asks Low-Level Question
                   </Fab>
                 </Grid>
                 <Grid container alignItems="center" md={5} style={{ fontFamily: 'Arimo' }}>
@@ -283,7 +294,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                     style={{ backgroundColor: '#6d9eebff', color: '#fff!important' }}
                     className={classes.category}
                   >
-                    Basic Skills Instruction
+                    Low-Level Instruction
                   </Button>
                 </Grid>
                 <Grid
@@ -296,7 +307,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                   style={{ fontFamily: 'Arimo' }}
                 >
                   <Fab
-                    onClick={(): void => this.handlePushFire('specificSkill')}
+                    onClick={(): void => this.handlePushFire('llqResponse')}
                     classes={{ root: classes.button }}
                     style={{
                       backgroundColor: '#1155ccff',
@@ -304,7 +315,7 @@ class InstructionCounter extends React.Component<Props, {}> {
                       height: 180
                     }}
                   >
-                    Teach Specific Skills
+                    Child Answers Low-Level Question
                   </Fab>
                 </Grid>
               </Grid>
@@ -316,14 +327,13 @@ class InstructionCounter extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = (state): {currentSetting: string, totalVisitCount: number, teacherSelected: Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {totalVisitCount: number, teacherSelected: Types.Teacher} => {
   return {
-    currentSetting: state.LOIsettingTypeState.settingType,
-    totalVisitCount: state.instructionstackstate.instructionStack.length,
+    totalVisitCount: state.instructionStackState.instructionStack.length,
     teacherSelected: state.teacherSelectedState.teacher
   };
 };
 
 export default withStyles(styles)(
-  connect(mapStateToProps, { toggleLOISettingType, pushOntoLoiStack, popOffLoiStack })(InstructionCounter)
+  connect(mapStateToProps, { pushOntoLoiStack, popOffLoiStack })(InstructionCounter)
 );
