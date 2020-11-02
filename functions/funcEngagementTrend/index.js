@@ -11,26 +11,31 @@ const bigquery = new BigQuery();
  * @param {!express:Request} req HTTP request context.
  * @param {!express:Response} res HTTP response context.
  */
+exports.funcEngagementTrend = functions.https.onCall(async(data, context) => {
+  //SQL query to get engagement trends
+  const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
+  AVG(point) AS average  
+  FROM cqrefpwa.observations.engagement
+  WHERE (teacher = '/user/`+data.teacherId+`'
+  AND observedBy = '/user/`+context.auth.uid+`')
+  AND (point =0 OR point = 1 OR point = 2 OR point = 3)
+  GROUP BY startDate
+  ORDER BY startDate ASC`;
 
-exports.funcEngagementPieSummary = functions.https.onCall(async(data, context) => {
-  //SQL query to get number of checks for each item on checklist
-    const sqlQuery = `SELECT
-    COUNT(CASE WHEN (point = 0)  THEN 'offTask' ELSE NULL END) AS offTask,
-    COUNT(CASE WHEN (point = 1 OR point = 2 OR point = 3) THEN 'engaged' ELSE NULL END) AS engaged,
-    FROM cqrefpwa.observations.engagement
-    WHERE id ='`+data.sessionId+`'`;
-    
-    console.log(sqlQuery); 
-  
-    const options = {
+
+
+
+  console.log(sqlQuery);
+
+  const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
     location: 'US',
   };
-  
+
   const [job] = await bigquery.createQueryJob(options);
   console.log(`Job ${job.id} started.`);
-  
+
   const rows = await job.getQueryResults();
   console.log(rows);
   return rows;

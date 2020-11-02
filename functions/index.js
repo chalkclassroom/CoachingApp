@@ -8,10 +8,7 @@ const functions = require('firebase-functions');
 //   response.send("Hello from Firebase!");
 // });
 
-exports.funcEngagementAvgSummary = require('./engagement/funcEngagementAvgSummary').funcEngagementAvgSummary;
-exports.funcEngagementDetails = require('./engagement/funcEngagementDetails').funcEngagementDetails;
-exports.funcEngagementPieSummary = require('./engagement/funcEngagementPieSummary').funcEngagementPieSummary;
-exports.funcEnagementTrend = require('./engagement/funcEngagementTrends').funcEngagementTrend;
+
 exports.fetchACDetails = require('./fetchACDetails').fetchACDetails;
 exports.fetchAvgToneRating = require('./fetchAvgToneRating').fetchAvgToneRating;
 exports.fetchBehaviourTrend = require('./fetchBehaviourTrend').fetchBehaviourTrend;
@@ -20,6 +17,8 @@ exports.fetchChildACSummary = require('./fetchChildACSummary').fetchChildACSumma
 exports.fetchChildACTrend = require('./fetchChildACTrend').fetchChildACTrend;
 exports.fetchChildSeqSummary = require('./fetchChildSeqSummary').fetchChildSeqSummary;
 exports.fetchChildSeqTrend = require('./fetchChildSeqTrend').fetchChildSeqTrend;
+exports.fetchInstructionTrend = require('./fetchInstructionTrend').fetchInstructionTrend;
+exports.fetchInstructionTypeCount = require('./fetchInstructionTypeCount').fetchInstructionTypeCount;
 exports.fetchSeqDetails = require('./fetchSeqDetails').fetchSeqDetails;
 exports.fetchSessionDates = require('./fetchSessionDates').fetchSessionDates;
 exports.fetchTeacherACSummary = require('./fetchTeacherACSummary').fetchTeacherACSummary;
@@ -28,6 +27,7 @@ exports.fetchTeacherSeqSummary = require('./fetchTeacherSeqSummary').fetchTeache
 exports.fetchTeacherSeqTrend = require('./fetchTeacherSeqTrend').fetchTeacherSeqTrend;
 exports.fetchTransitionLog = require('./fetchTransitionLog').fetchTransitionLog;
 exports.fetchTransitionsTrend = require('./fetchTransitionsTrend').fetchTransitionsTrend;
+
 exports.funcACDetails = require('./funcACDetails').funcACDetails;
 exports.funcAvgToneRating = require('./funcAvgToneRating').funcAvgToneRating;
 exports.funcBehaviourTrend = require('./funcBehaviourTrend').funcBehaviourTrend;
@@ -35,8 +35,20 @@ exports.funcBehaviourTypeCount = require('./funcBehaviourTypeCount').funcBehavio
 exports.funcChildACSummary = require('./funcChildACSummary').funcChildACSummary;
 exports.funcChildACTrend = require('./funcChildACTrend').funcChildACTrend;
 exports.funcChildMathSummary = require('./funcChildMathSummary').funcChildMathSummary;
+exports.funcChildMathTred = require('./funcChildMathTrend').funcChildMathTrend;
 exports.funcChildSeqSummary = require('./funcChildSeqSummary').funcChildSeqSummary;
 exports.funcChildSeqTrend = require('./funcChildSeqTrend').funcChildSeqTrend;
+exports.funcEngagementAvgSummary = require('./funcEngagementAvgSummary').funcEngagementAvgSummary;
+exports.funcEngagementDetails = require('./funcEngagementDetails').funcEngagementDetails;
+exports.funcEngagementPieSummary = require('./funcEngagementPieSummary').funcEngagementPieSummary;
+exports.funcEnagementTrend = require('./funcEngagementTrend').funcEngagementTrend;
+exports.funcInstructionTrend = require('./funcInstructionTrend').funcInstructionTrend;
+exports.funcInstructionTypeCount = require('./funcInstructionTypeCount').funcInstructionTypeCount;
+exports.funcListeningDetails = require('./funcListeningDetails').funcListeningDetails;
+exports.funcListeningSummary = require('./funcListeningSummary').funcListeningSummary;
+exports.funcListeningTrend = require('./funcListeningTrend').funcListeningTrend;
+exports.funcMathDetails = require('./funcMathDetails').funcMathDetails;
+exports.funcSendEmail = require('./funcSendEmail').funcSendEmail;
 exports.funcSeqDetails = require('./funcSeqDetails').funcSeqDetails;
 exports.funcSessionDates = require('./funcSessionDates').funcSessionDates;
 exports.funcSessionDatesTransition = require('./funcSessionDatesTransition').funcSessionDatesTransition;

@@ -15,23 +15,23 @@ const bigquery = new BigQuery();
 exports.funcTeacherSeqSummary = functions.https.onCall(async(data, context) => {
   //SQL query to return count of teacher summary
   const sqlQuery = `SELECT
-					COUNT(CASE WHEN (peopleType = 1) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
-                    COUNT(CASE WHEN (peopleType = 2) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
-                    COUNT(CASE WHEN (peopleType = 2) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport
+					COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) THEN 'noOpportunity' ELSE NULL END) AS noOpportunity,
+                    COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher1 OR checklist.teacher2 OR checklist.teacher3 OR checklist.teacher4) THEN 'support' ELSE NULL END) AS support,
+                    COUNT(CASE WHEN (peopleType = 3) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport
                     FROM cqrefpwa.observations.sequential
                     WHERE id ='`+data.sessionId+`'`;
-  
-    console.log(sqlQuery); 
-  
-    const options = {
+
+  console.log(sqlQuery);
+
+  const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
     location: 'US',
   };
-  
+
   const [job] = await bigquery.createQueryJob(options);
   console.log(`Job ${job.id} started.`);
-  
+
   const rows = await job.getQueryResults();
   console.log(rows);
   return rows;

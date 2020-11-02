@@ -15,22 +15,22 @@ const bigquery = new BigQuery();
 exports.funcChildSeqSummary = functions.https.onCall(async(data, context) => {
   //SQL query to get number of checks for each item on checklist
   const sqlQuery = `SELECT
-                    COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) AND (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'sequential' ELSE NULL END) AS sequential,
-                    COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) AND (checklist.child5) THEN 'notSequential' ELSE NULL END) AS notSequential
+                    COUNT(CASE WHEN (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'sequential' ELSE NULL END) AS sequential,
+                    COUNT(CASE WHEN (checklist.child5) THEN 'notSequential' ELSE NULL END) AS notSequential
                     FROM cqrefpwa.observations.sequential
                     WHERE id ='`+data.sessionId+`'`;
-  
-    console.log(sqlQuery); 
-  
-    const options = {
+
+  console.log(sqlQuery);
+
+  const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
     location: 'US',
   };
-  
+
   const [job] = await bigquery.createQueryJob(options);
   console.log(`Job ${job.id} started.`);
-  
+
   const rows = await job.getQueryResults();
   console.log(rows);
   return rows;

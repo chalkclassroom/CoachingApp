@@ -1,4 +1,4 @@
-  // Imports the Google Cloud client library
+// Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
 
@@ -12,7 +12,7 @@ const bigquery = new BigQuery();
  * @param {!express:Response} res HTTP response context.
  */
 exports.funcChildSeqTrend = functions.https.onCall(async(data, context) => {
-   	console.log(context.auth.uid);  
+  console.log(context.auth.uid);
   console.log(data.teacherId);
   //SQL query to get child trends for AC
   const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
@@ -22,18 +22,18 @@ exports.funcChildSeqTrend = functions.https.onCall(async(data, context) => {
                     WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
                     GROUP BY startDate
                     ORDER BY startDate ASC;`;
-  
-  console.log(sqlQuery); 
-  
-    const options = {
+
+  console.log(sqlQuery);
+
+  const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
     location: 'US',
   };
-  
+
   const [job] = await bigquery.createQueryJob(options);
   console.log(`Job ${job.id} started.`);
-  
+
   const rows = await job.getQueryResults();
   console.log(rows);
   return rows;

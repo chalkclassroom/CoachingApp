@@ -12,11 +12,11 @@ const bigquery = new BigQuery();
  * @param {!express:Response} res HTTP response context.
  */
 exports.funcInstructionTrend = functions.https.onCall(async (data, context) => {
-  //let message = req.query.message || req.body.message || 'Hello World!';
-  console.log(context.auth.uid);  
-  console.log(data.teacherId);
-  // The SQL query to run
-  const sqlQuery = `SELECT 
+    //let message = req.query.message || req.body.message || 'Hello World!';
+    console.log(context.auth.uid);
+    console.log(data.teacherId);
+    // The SQL query to run
+    const sqlQuery = `SELECT 
                     DATE(sessionStart) AS dayOfEvent, 
                     COUNT(CASE WHEN instructionType = 'highLevel' OR instructionType = 'hlq' THEN 'hlq' ELSE NULL END) AS hlq, 
                     COUNT(CASE WHEN instructionType = 'followUp' OR instructionType = 'hlqResponse' THEN 'hlqResponse' ELSE NULL END) AS hlqResponse,
@@ -27,17 +27,17 @@ exports.funcInstructionTrend = functions.https.onCall(async (data, context) => {
                   GROUP BY dayOfEvent
                   ORDER BY dayOfEvent ASC
                   LIMIT 100;`;
-  console.log(sqlQuery);
-  
-  const options = {
-    query: sqlQuery,
-    // Location must match that of the dataset(s) referenced in the query.
-    location: 'US',
-  };
+    console.log(sqlQuery);
 
-  const [job] = await bigquery.createQueryJob(options);
-  console.log(`Job ${job.id} started.`);
-  const rows = await job.getQueryResults();
-  console.log(rows);
-  return rows;
+    const options = {
+        query: sqlQuery,
+        // Location must match that of the dataset(s) referenced in the query.
+        location: 'US',
+    };
+
+    const [job] = await bigquery.createQueryJob(options);
+    console.log(`Job ${job.id} started.`);
+    const rows = await job.getQueryResults();
+    console.log(rows);
+    return rows;
 });
