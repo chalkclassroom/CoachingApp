@@ -1,4 +1,4 @@
-  // Imports the Google Cloud client library
+// Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 
 // Creates a client
@@ -12,7 +12,7 @@ const bigquery = new BigQuery();
  */
 exports.fetchBehaviourTrend = async (req, res) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
-  
+
   // The SQL query to run fin avg tone rating for specific session id /observation id
   const sqlQuery = `SELECT 
                     DATE(start) AS dayOfEvent, 
@@ -23,8 +23,8 @@ exports.fetchBehaviourTrend = async (req, res) => {
                   GROUP BY dayofEvent
                   ORDER BY dayofEvent ASC
                   LIMIT 100;`;
-  
-  
+
+
   const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
@@ -40,6 +40,6 @@ exports.fetchBehaviourTrend = async (req, res) => {
   //  const viewCount = row['view_count'];
   //  console.log(`url: ${url}, ${viewCount} views`);
   //});
-  
+
   res.status(200).send(rows);
 };

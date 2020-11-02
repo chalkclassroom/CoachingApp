@@ -25,18 +25,18 @@ exports.funcACDetails = functions.https.onCall(async(data, context) => {
                     COUNT(CASE WHEN (checklist.teacher4) THEN 'teacher4' ELSE NULL END) AS teacher4,
                     FROM cqrefpwa.observations.ac
                     WHERE id ='`+data.sessionId+`'`;
-  	
-  	console.log(sqlQuery); 
-  
-    const options = {
+
+  console.log(sqlQuery);
+
+  const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
     location: 'US',
   };
-  
+
   const [job] = await bigquery.createQueryJob(options);
   console.log(`Job ${job.id} started.`);
-  
+
   const rows = await job.getQueryResults();
   console.log(rows);
   return rows;

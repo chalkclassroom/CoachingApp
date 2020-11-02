@@ -20,18 +20,18 @@ exports.funcTeacherACSummary = functions.https.onCall(async (data, context) => {
                     COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checklist.teacher5) THEN 'noSupport' ELSE NULL END) AS noSupport
                     FROM cqrefpwa.observations.ac
                     WHERE id ='`+data.sessionId+`'`;
-  
-    console.log(sqlQuery); 
-  
-    const options = {
+
+  console.log(sqlQuery);
+
+  const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
     location: 'US',
   };
-  
+
   const [job] = await bigquery.createQueryJob(options);
   console.log(`Job ${job.id} started.`);
-  
+
   const rows = await job.getQueryResults();
   console.log(rows);
   return rows;

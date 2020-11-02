@@ -28,19 +28,20 @@ exports.funcEngagementDetails = functions.https.onCall(async(data, context) => {
   COUNT(CASE WHEN (point = 3 AND entryType='whole')  THEN 'offTask' ELSE NULL END) AS highlyEngaged1,
   COUNT(CASE WHEN (point = 3 AND entryType='transition')  THEN 'offTask' ELSE NULL END) AS highlyEngaged2,
   FROM cqrefpwa.observations.engagement
-  WHERE id =` + req.query.id;
-  
-    console.log(sqlQuery); 
-  
-    const options = {
+  WHERE id ='`+data.sessionId+`'`;
+
+
+  console.log(sqlQuery);
+
+  const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
     location: 'US',
   };
-  
+
   const [job] = await bigquery.createQueryJob(options);
   console.log(`Job ${job.id} started.`);
-  
+
   const rows = await job.getQueryResults();
   console.log(rows);
   return rows;
