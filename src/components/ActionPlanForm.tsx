@@ -308,7 +308,9 @@ class ActionPlanForm extends React.Component<Props, State> {
       this.setState({
         actionPlanExists: true,
         goal: actionPlanData.goal,
-        goalTimeline: actionPlanData.goalTimeline ? actionPlanData.goalTimeline.toDate() : new Date(),
+        goalTimeline: (actionPlanData.goalTimeline && (typeof actionPlanData.goalTimeline !== 'string')) ?
+          actionPlanData.goalTimeline.toDate() :
+          new Date(),
         benefit: actionPlanData.benefit,
         date: newDate
       });
