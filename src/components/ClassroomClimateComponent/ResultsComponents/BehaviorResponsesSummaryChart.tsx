@@ -36,8 +36,8 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
       datasets: [
         {
           data: [this.props.positiveResponses, this.props.negativeResponses],
-          backgroundColor: [Constants.Colors.CC, "#ec2409"],
-          hoverBackgroundColor: [Constants.Colors.CC, "#ec2409"]
+          backgroundColor: [Constants.ClimateTypeColors.positiveBar, Constants.ClimateTypeColors.negativeBar],
+          hoverBackgroundColor: [Constants.ClimateTypeColors.positiveBar, Constants.ClimateTypeColors.negativeBar]
         }
       ]
     };

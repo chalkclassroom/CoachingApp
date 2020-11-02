@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import BehaviorResponsesSummaryChart from './BehaviorResponsesSummaryChart';
-import ToneSummary from './ToneSummary';
+import AverageTone from './AverageTone';
 import Slider from "react-slick";
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -56,13 +56,13 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
                 <List>
                   <ListItem style={{padding: 0}}>
                     <ListItemIcon style={{margin: 0}}>
-                      <SignalWifi4BarIcon style={{fill: Constants.Colors.CC, transform: 'rotate(-45deg)'}} />
+                      <SignalWifi4BarIcon style={{fill: Constants.ClimateTypeColors.positiveBar, transform: 'rotate(-45deg)'}} />
                     </ListItemIcon>
                     <ListItemText primary="Approved of children&apos;s behavior." />
                   </ListItem>
                   <ListItem style={{padding: 0}}>
                     <ListItemIcon style={{margin: 0}}>
-                      <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
+                      <SignalWifi4BarIcon style={{fill: Constants.ClimateTypeColors.negativeBar, transform: 'rotate(-45deg)'}} />
                     </ListItemIcon>
                     <ListItemText primary="Disapproved of children&apos;s behavior." />
                   </ListItem>
@@ -79,10 +79,10 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"} variant={"h4"}>
+            <Typography align={"center"} variant={"h6"}>
               Average Tone
             </Typography>
-            <ToneSummary
+            <AverageTone
               averageToneRating={this.props.averageToneRating}
             />
           </Grid>

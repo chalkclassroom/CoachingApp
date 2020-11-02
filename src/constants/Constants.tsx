@@ -204,6 +204,15 @@ export const OtherTheme = createMuiTheme({
   }
 });
 
+export const ClimateTypeColors = {
+  specificApproval: '#0988ec',
+  nonSpecificApproval: '#094492',
+  redirection: '#ffa812',
+  disapproval: '#ff7f00',
+  positiveBar: '#0966bf',
+  negativeBar: '#FF9409'
+};
+
 export const CentersFirstHalf = [
   "Blocks",
   "Toys and Games",

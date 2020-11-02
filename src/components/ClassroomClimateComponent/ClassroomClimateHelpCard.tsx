@@ -1,186 +1,89 @@
 import * as React from 'react';
-import * as PropTypes from "prop-types";
+import { useState } from 'react';
 import { withStyles } from "@material-ui/core/styles/index";
-import Typography from '@material-ui/core/Typography';
-import { Table, TableRow, TableBody, TableCell, TableHead } from '@material-ui/core';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import { Tabs, Tab } from "@material-ui/core";
+import TabBar from "@material-ui/core/AppBar";
 import Grid from '@material-ui/core/Grid';
+import BehaviorResponsesHelp from './BehaviorResponsesHelp';
+import TeacherToneHelp from './TeacherToneHelp';
+import * as Constants from '../../constants/Constants';
 
-const styles: object = {
-  disapprovalTitle: {
-    backgroundColor: "#E14B24",
-    color: "white",
-    fontSize: 18,
-    textAlign: "center",
-    width: "25%",
-    padding: '0.5em'
+const styles = {
+  tabBar: {
+    marginBottom: "10px",
+    height: "5%",
+    width: "100%"
   },
-  disapprovalExample: {
-    backgroundColor: "#F9D8CE",
-    padding: '0.5em'
-  },
-  redirectionTitle: {
-    backgroundColor: "#E69129",
-    color: "white",
-    fontSize: 18,
-    textAlign: "center",
-    width: "25%",
-    padding: '0.5em'
-  },
-  redirectionExample: {
-    backgroundColor: "#FAE8CF",
-    padding: '0.5em'
-  },
-  generalTitle: {
-    backgroundColor: "#46D3AA",
-    color: "white",
-    fontSize: 18,
-    textAlign: "center",
-    width: "25%",
-    padding: '0.5em'
-  },
-  generalExample: {
-    backgroundColor: "#D7F6EE",
-    padding: '0.5em'
-  },
-  specificTitle: {
-    backgroundColor: "#0C3C87",
-    color: "white",
-    fontSize: 18,
-    textAlign: "center",
-    width: "25%",
-    padding: '0.5em'
-  },
-  specificExample: {
-    backgroundColor: "#B3D1FA",
-    padding: '0.5em'
-  }
 };
 
 interface Props {
   classes: {
-    disapprovalTitle: string,
-    disapprovalExample: string,
-    redirectionTitle: string,
-    redirectionExample: string,
-    generalTitle: string,
-    generalExample: string,
-    specificTitle: string,
-    specificExample: string
+    tabBar: string
   }
 }
 
 /**
- * @param {Props} props 
+ * @function ClassroomClimateHelp
+ * @param {Props} props
  * @return {ReactElement}
  */
 function ClassroomClimateHelpCard(props: Props): React.ReactElement {
   const { classes } = props;
-  return(
-    <Grid
-      container
-      alignItems="center"
-      direction="column"
-      justify="flex-start"
-    >
-      <Typography variant="h4" gutterBottom>
-        Positive Climate
-      </Typography>
-      <Typography variant="h6" gutterBottom>
-        Hints + Reminders: Classifying Behavior Responses
-      </Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell className={classes.disapprovalTitle}>
-              DISAPPROVAL
-            </TableCell>
-            <TableCell className={classes.redirectionTitle}>
-              REDIRECTION
-            </TableCell>
-            <TableCell className={classes.generalTitle}>
-              GENERAL PRAISE
-            </TableCell>
-            <TableCell className={classes.specificTitle}>
-              SPECIFIC PRAISE
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell className={classes.disapprovalExample}>
-              <strong>
-                Teacher discourages behavior without providing an
-                alternative
-              </strong>
-            </TableCell>
-            <TableCell className={classes.redirectionExample}>
-              <strong>
-                Teacher suggests an alternative to the child&apos;s current
-                behavior
-              </strong>
-            </TableCell>
-            <TableCell className={classes.generalExample}>
-              <strong>
-                Teacher gives a general comment of approval
-              </strong>
-            </TableCell>
-            <TableCell className={classes.specificExample}>
-              <strong>
-                Teacher gives a positive comment on a specific behavior
-              </strong>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.disapprovalExample}>
-              &quot;Stop it.&quot;
-            </TableCell>
-            <TableCell className={classes.redirectionExample}>
-              &quot;Are you making a good choice?&quot;
-            </TableCell>
-            <TableCell className={classes.generalExample}>
-              &quot;Kiss your brain!&quot;
-            </TableCell>
-            <TableCell className={classes.specificExample}>
-              &quot;I like the way you&apos;re using your finger to count the
-              cubes.&quot;
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.disapprovalExample}>
-              &quot;I said stay in your seat.&quot;
-            </TableCell>
-            <TableCell className={classes.redirectionExample}>
-              &quot;Do you want to sit on a letter or a number?&quot;
-            </TableCell>
-            <TableCell className={classes.generalExample}>
-              &quot;Good job!&quot;
-            </TableCell>
-            <TableCell className={classes.specificExample}>
-              &quot;Wow, that puzzle was tricky but you stuck with it!&quot;
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className={classes.disapprovalExample}>
-              Time out
-            </TableCell>
-            <TableCell className={classes.redirectionExample}>
-              &quot;Do you need some quiet time to calm down?&quot;
-            </TableCell>
-            <TableCell className={classes.generalExample}>
-              Nodding, thumbs up, high five
-            </TableCell>
-            <TableCell className={classes.specificExample}>
-              &quot;Thank you for being Super Friends by sharing the trains!&quot;
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </Grid>
-  )
-}
+  const [tabValue, setTabValue] = useState(0);
 
-ClassroomClimateHelpCard.propTypes = {
-  classes: PropTypes.object.isRequired
-};
+  const handleBehaviorResponses = (): void => {
+    if (tabValue !== 0) {
+      setTabValue(0)
+    }
+  };
+
+  const handleTone = (): void => {
+    if (tabValue !== 1) {
+      setTabValue(1)
+    }
+  };
+
+  return (
+    <div>
+      <Grid container direction="column">
+        <Grid item>
+          <MuiThemeProvider theme={Constants.ClimateTheme}>
+            <TabBar position="static" color="default" className={classes.tabBar}>
+              <Tabs
+                value={tabValue}
+                indicatorColor="secondary"
+                variant="fullWidth"
+              >
+                <Tab
+                  label="Behavior Responses"
+                  onClick={handleBehaviorResponses}
+                  style={{
+                    fontFamily: "Arimo",
+                    fontSize: '1em',
+                    color: tabValue === 0? 'white' : 'black',
+                    backgroundColor: tabValue === 0 ? Constants.Colors.CC : '#d3d3d3'
+                  }}
+                />
+                <Tab
+                  label="Teacher Tone"
+                  onClick={handleTone}
+                  style={{
+                    fontFamily: "Arimo",
+                    fontSize: '1em',
+                    backgroundColor: tabValue === 1 ? Constants.Colors.CC: '#d3d3d3'
+                  }}
+                />
+              </Tabs>
+            </TabBar>
+          </MuiThemeProvider>
+        </Grid>
+        <Grid item>
+          {tabValue === 0 ? <BehaviorResponsesHelp /> : <TeacherToneHelp />}
+        </Grid>
+      </Grid>
+    </div>
+  );
+}
 
 export default withStyles(styles)(ClassroomClimateHelpCard);

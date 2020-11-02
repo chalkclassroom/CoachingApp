@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import {HorizontalBar} from 'react-chartjs-2';
-
+import { HorizontalBar } from 'react-chartjs-2';
+import * as Constants from '../../../constants/Constants';
 
 interface Props {
   disapprovalBehaviorCount: number,
@@ -42,9 +42,24 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
         "Disapproval",
       ],
       datasets: [{
-        data: [this.props.specificBehaviorCount, this.props.nonspecificBehaviorCount, this.props.redirectionsBehaviorCount, this.props.disapprovalBehaviorCount],
-        backgroundColor: ["#0988ec", "#84C3F5", "#f37b6b", "#ec2409"],
-        hoverBackgroundColor: ["#0988ec", "#84C3F5", "#f37b6b", "#ec2409"],
+        data: [
+          this.props.specificBehaviorCount,
+          this.props.nonspecificBehaviorCount,
+          this.props.redirectionsBehaviorCount,
+          this.props.disapprovalBehaviorCount
+        ],
+        backgroundColor: [
+          Constants.ClimateTypeColors.specificApproval,
+          Constants.ClimateTypeColors.nonSpecificApproval,
+          Constants.ClimateTypeColors.redirection,
+          Constants.ClimateTypeColors.disapproval
+        ],
+        hoverBackgroundColor: [
+          Constants.ClimateTypeColors.specificApproval,
+          Constants.ClimateTypeColors.nonSpecificApproval,
+          Constants.ClimateTypeColors.redirection,
+          Constants.ClimateTypeColors.disapproval
+        ],
       }]
     };
     return(

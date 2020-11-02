@@ -112,19 +112,19 @@ class RatingModal extends React.Component<Props, State> {
           direction="column"
           justify="flex-start"
         >
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom style={{fontFamily: 'Arimo'}}>
             Teacher Tone Rating
           </Typography>
-          <Typography variant="subtitle2" gutterBottom>
+          <Typography variant="subtitle2" gutterBottom style={{fontFamily: 'Arimo'}}>
             Please rate the teacher&apos;s current tone.
           </Typography>
           <div style={{ height: 20 }} />
           <Grid container direction={"row"} justify={"space-between"}>
             <Grid
-              item
+              container
               alignItems="center"
-              justify="center"
-              direction={"column"}
+              justify="flex-start"
+              direction="column"
               style={{ width: "20%" }}
             >
               <Grid item>
@@ -133,24 +133,24 @@ class RatingModal extends React.Component<Props, State> {
                   variant={this.state.value === "Anger" ? "contained" : "text"}
                   style={{width: "100%"}}
                 >
-                  <Typography variant="h2" align={"center"}>
+                  <Typography variant="h2" align={"center"} style={{fontFamily: 'Arimo'}}>
                     1
                   </Typography>
                   {/* <img alt="angry face" src={ExNegativeFaceImage} width="100vw" /> */}
                 </Button>
-                <Typography variant={"h6"} align={"center"}>
+                <Typography variant={"h6"} align={"center"} style={{fontFamily: 'Arimo'}}>
                   Anger
                 </Typography>
-                <Typography variant={"body1"} align={"center"}>
+                <Typography variant={"body1"} align={"center"} style={{fontFamily: 'Arimo'}}>
                   (yelling, sarcasm)
                 </Typography>
               </Grid>
             </Grid>
             <Grid
-              item
+              container
               alignItems="center"
-              justify="center"
-              direction={"column"}
+              justify="flex-start"
+              direction="column"
               style={{ width: "20%" }}
             >
               <Grid item>
@@ -161,24 +161,24 @@ class RatingModal extends React.Component<Props, State> {
                   }
                   style={{width: "100%"}}
                 >
-                  <Typography variant="h2" align={"center"}>
+                  <Typography variant="h2" align={"center"} style={{fontFamily: 'Arimo'}}>
                     2
                   </Typography>
                   {/* <img alt="irritated face" src={NegativeFaceImage} width="100vw" /> */}
                 </Button>
-                <Typography variant={"h6"} align={"center"}>
+                <Typography variant={"h6"} align={"center"} style={{fontFamily: 'Arimo'}}>
                   Irritation
                 </Typography>
-                <Typography variant={"body1"} align={"center"}>
+                <Typography variant={"body1"} align={"center"} style={{fontFamily: 'Arimo'}}>
                   (grimacing, eye-rolling)
                 </Typography>
               </Grid>
             </Grid>
             <Grid
-              item
+              container
               alignItems="center"
-              justify="center"
-              direction={"column"}
+              justify="flex-start"
+              direction="column"
               style={{ width: "20%" }}
             >
               <Grid item>
@@ -189,27 +189,28 @@ class RatingModal extends React.Component<Props, State> {
                   }
                   style={{width: "100%"}}
                 >
-                  <Typography variant="h2" align={"center"}>
+                  <Typography variant="h2" align={"center"} style={{fontFamily: 'Arimo'}}>
                     3
                   </Typography>
                   {/* <img alt="neutral face" src={NeutralFaceImage} width="100vw" /> */}
                 </Button>
-                <Typography variant={"h6"} align={"center"}>
+                <Typography variant={"h6"} align={"center"} style={{fontFamily: 'Arimo'}}>
                   Neutral
                 </Typography>
-                <Typography variant={"body1"} align={"center"}>
+                <Typography variant={"body1"} align={"center"} style={{fontFamily: 'Arimo'}}>
                   (no facial expression)
                 </Typography>
               </Grid>
             </Grid>
             <Grid
-              item
+              container
               alignItems="center"
-              justify="center"
-              direction={"column"}
+              justify="flex-start"
+              direction="column"
               style={{ width: "20%" }}
             >
               <Button
+                id='positiveInterest'
                 onClick={this.handlePositiveInterestClick}
                 variant={
                   this.state.value === "Positive Interest"
@@ -218,7 +219,7 @@ class RatingModal extends React.Component<Props, State> {
                 }
                 style={{width: "100%"}}
               >
-                <Typography variant="h2" align={"center"}>
+                <Typography variant="h2" align={"center"} style={{fontFamily: 'Arimo'}}>
                   4
                 </Typography>
                 {/* <img
@@ -227,18 +228,18 @@ class RatingModal extends React.Component<Props, State> {
                   width="100vw"
                 /> */}
               </Button>
-              <Typography variant={"h6"} align={"center"}>
+              <Typography variant={"h6"} align={"center"} style={{fontFamily: 'Arimo'}}>
                 Positive Interest
               </Typography>
-              <Typography variant={"body1"} align={"center"}>
+              <Typography variant={"body1"} align={"center"} style={{fontFamily: 'Arimo'}}>
                 (smiling, nodding)
               </Typography>
             </Grid>
             <Grid
-              item
+              container
               alignItems="center"
-              justify="center"
-              direction={"column"}
+              justify="flex-start"
+              direction="column"
               style={{ width: "20%" }}
             >
               <Button
@@ -248,15 +249,15 @@ class RatingModal extends React.Component<Props, State> {
                 }
                 style={{width: "100%"}}
               >
-                <Typography variant="h2" align={"center"}>
+                <Typography variant="h2" align={"center"} style={{fontFamily: 'Arimo'}}>
                   5
                 </Typography>
                 {/* <img alt="excited face" src={VibrantFaceImage} width="100vw" /> */}
               </Button>
-              <Typography variant={"h6"} align={"center"}>
+              <Typography variant={"h6"} align={"center"} style={{fontFamily: 'Arimo'}}>
                 Excitement
               </Typography>
-              <Typography variant={"body1"} align={"center"}>
+              <Typography variant={"body1"} align={"center"} style={{fontFamily: 'Arimo'}}>
                 (laughing, enthusiastic voice)
               </Typography>
             </Grid>
@@ -270,26 +271,6 @@ class RatingModal extends React.Component<Props, State> {
             // style={{ spacing: 4 }}
           >
             <Grid item xs={3} />
-            <Grid item xs={3} justify={"center"}>
-              <Button
-                variant="contained"
-                onClick={
-                  this.state.rating === 0
-                    ? this.props.handleIncomplete
-                    : this.props.handleRatingConfirmation.bind(
-                        this,
-                        this.state.rating
-                      )
-                }
-                style={{
-                  backgroundColor: "#0988ec",
-                  fontSize: "15px",
-                  width: "170px"
-                }}
-              >
-                Confirm Rating
-              </Button>
-            </Grid>
             <Grid item xs={3}>
               <YesNoDialog
                 buttonText={"Skip Rating"}
@@ -303,6 +284,28 @@ class RatingModal extends React.Component<Props, State> {
                 onAcceptParams={0}
                 shouldOpen={true}
               />
+            </Grid>
+            <Grid item xs={3} justify={"center"}>
+              <Button
+                id="confirm"
+                variant="contained"
+                onClick={
+                  this.state.rating === 0
+                    ? this.props.handleIncomplete
+                    : this.props.handleRatingConfirmation.bind(
+                        this,
+                        this.state.rating
+                      )
+                }
+                style={{
+                  backgroundColor: "#0988ec",
+                  fontSize: "15px",
+                  width: "170px",
+                  fontFamily: 'Arimo'
+                }}
+              >
+                Confirm Rating
+              </Button>
             </Grid>
             <Grid item xs={3} />
           </Grid>
