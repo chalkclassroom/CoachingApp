@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { SelectOption } from './MessagingTypes';
 
@@ -17,20 +18,22 @@ interface Teacher {
 }
 
 const RecipentAddress: React.FC<RecipentAddressProps> = (props: RecipentAddressProps) => {
-  const [teacherList, setTeacherList] = useState([]);
+  const [teacherList, setTeacherList] = useState<Array<{value: string, id: string, label: string}>>([]);
   useEffect(() => {
     if (teacherList.length === 0) {
       props.firebase.getFullTeacherList()
         .then((teachers: Teacher[]) => {
-          setTeacherList(teachers.map((teacher: Teacher) => {
-            return {
+          const newTeacherList: Array<{value: string, id: string, label: string}> = [];
+          teachers.forEach((teacher: Teacher) => {
+            newTeacherList.push({
               value: teacher.email,
               id: teacher.id,
-              label: (teacher.firstName + ' ' + teacher.lastName),
-            };
-          }));
+              label: (teacher.firstName + ' ' + teacher.lastName)
+            });
+          });
+          setTeacherList(newTeacherList);
         })
-        .catch((err: any) => console.log(err));
+        .catch((err: Error) => console.log(err));
     }
   });
 

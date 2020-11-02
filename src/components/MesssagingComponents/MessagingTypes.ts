@@ -52,6 +52,8 @@ export enum MenuOptions {
   SENT = 'Sent',
 };
 
+export type MenuOptionsKey = keyof typeof MenuOptions;
+
 // an enum of all the possible theme options for an email
 export enum ThemeOptions {
   ACTION_PLAN = 'Action Plan',
@@ -113,5 +115,6 @@ export interface Message {
 // MaterialUI needs
 export interface SelectOption {
   value: string;
+  id: string;
   label: string;
 }

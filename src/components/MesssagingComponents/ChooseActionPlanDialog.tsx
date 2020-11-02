@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import * as React from 'react';
+import { useState, useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -9,8 +10,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import thankYouIcon from '../../assets/icons/chat-bubbles.svg';
+import FirebaseContext from '../Firebase/FirebaseContext';
+// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+// import thankYouIcon from '../../assets/icons/chat-bubbles.svg';
 import { Attachment, MagicEight } from './MessagingTypes';
 
 interface ChooseActionPlanDialogProps {
@@ -19,19 +21,30 @@ interface ChooseActionPlanDialogProps {
   handleAdd: (value: string) => void;
   // called when the user removes an action plan via the dialog
   handleDelete: (value: string) => void;
-  firebase: any;
+  /* firebase: {
+    getCoachActionPlans(): Promise<Array<{
+      id: string,
+      teacherId: string,
+      date: {seconds: number, nanoseconds: number},
+      practice: string,
+      teacherFirstName: string,
+      teacherLastName: string,
+      achieveBy: firebase.firestore.Timestamp
+    }> | void>
+  }; */
   // list of current attachments to the email
   attachmentList: Attachment[];
 }
 
 const ChooseActionPlanDialog: React.FC<ChooseActionPlanDialogProps> = (props: ChooseActionPlanDialogProps) => {
   // what the left pane value currently is
-  const [value, setValue] = useState(null);
-  const radioGroupRef = useRef<HTMLElement>(null);
+  const [value, setValue] = useState<string>('');
+  // const radioGroupRef = useRef<HTMLElement>(null);
   // currenltly chosen action plan from the list
   const [option, setOption] = useState('All');
   // options available on the right pane
-  const [rightOptions, setRightOptions] = useState([]); 
+  const [rightOptions, setRightOptions] = useState<Array<Attachment>>([]);
+  const firebase = useContext(FirebaseContext); 
 
   // list of options available for the user to choose from
   // "Attached" lists all the current attachments for the user to remove
@@ -55,27 +68,39 @@ const ChooseActionPlanDialog: React.FC<ChooseActionPlanDialogProps> = (props: Ch
       newOptions = props.attachmentList;
       setRightOptions(newOptions);
     } else {
-      firebase.getActionPlans().then((res): void => {
-        res.forEach((r) => {
-          // add to the right pane if the the MagicEight matches with the chosen one
-          if (r.tool === option) {
-            newOptions.push({ 
-              id: r.id,
-              magicEight: r.tool,
-              type: 'Action Plan',
-              date: r.date,
-            });
-          }
-        });
-        setRightOptions(newOptions);
-      })
+      if (firebase !== null) {
+        firebase.getCoachActionPlans().then((res: Array<{
+          id: string,
+          teacherId: string,
+          date: {seconds: number, nanoseconds: number},
+          practice: string,
+          teacherFirstName: string,
+          teacherLastName: string,
+          achieveBy: firebase.firestore.Timestamp
+        }>): void => {
+          res.forEach((r) => {
+            // add to the right pane if the the MagicEight matches with the chosen one
+            if (r.practice === option) {
+              const newDate = new Date(0);
+              newDate.setUTCSeconds(r.date.seconds);
+              newOptions.push({ 
+                id: r.id,
+                magicEight: r.practice as MagicEight,
+                type: 'Action Plan',
+                date: newDate,
+              });
+            }
+          });
+          setRightOptions(newOptions);
+        })
+      }
     }
   };
 
   return (
     <Dialog
       // disabled so user cannot exit dialog without choosing an option or clicking 
-      on the dialog buttons
+      // on the dialog buttons
       disableBackdropClick
       disableEscapeKeyDown
       maxWidth='md'
@@ -99,9 +124,9 @@ const ChooseActionPlanDialog: React.FC<ChooseActionPlanDialogProps> = (props: Ch
         </div>
         <div>
         <RadioGroup
-          ref={radioGroupRef}
+          // ref={radioGroupRef}
           value={value}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>): void => {
+          onChange={(event: React.ChangeEvent<{}>): void => {
             setValue((event.target as HTMLInputElement).value);
           }}
         >

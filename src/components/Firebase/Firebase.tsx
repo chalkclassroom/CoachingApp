@@ -208,8 +208,10 @@ class Firebase {
     );
     return sendEmailFirebaseFunction(msg)
       .then(
-        result =>
-          result
+        result => {
+          result;
+          console.log('result is', result)
+        }
       )
       .catch(error =>
           error

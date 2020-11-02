@@ -1,15 +1,21 @@
-import React from 'react';
+import * as React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
 
-let observations: string[];
-const ChooseObservationDialog: React.FC<{open: boolean, firebase: any, handleClose: (value: string) => void}> = (props) => {
-	props.firebase.getCoachFirstName().then((obs: string) => observations.push(obs));	
-  
+interface ChooseObservationDialogProps {
+  open: boolean,
+  firebase: {
+    getCoachFirstName(): Promise<string>
+  },
+  handleClose: (value: string) => void
+}
 
+const ChooseObservationDialog: React.FC<ChooseObservationDialogProps> = (props: ChooseObservationDialogProps) => {
+  const observations: string[] = [];
+  props.firebase.getCoachFirstName().then((obs: string) => observations.push(obs));	
   return (
     <div>
      <Dialog

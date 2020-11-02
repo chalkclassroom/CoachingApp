@@ -14,13 +14,14 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
   // state to store the list of draft emails
   const [draftList, setDraftList] = useState([]);
   useEffect((): void => {
+    // this function does not exist
     props.firebase.getDraftEmailList()
       .then((res: any): void => {
         if(draftList !== res) {
           setDraftList(res);
         }
       })
-      .catch((err: any): void => {
+      .catch((err: Error): void => {
         console.log(err);
         console.log(draftList);
       });

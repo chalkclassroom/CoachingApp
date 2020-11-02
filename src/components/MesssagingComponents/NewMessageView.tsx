@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import * as React from 'react';
+import { useState, useRef } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -6,13 +7,13 @@ import ChooseTheme from './ChooseTheme';
 import EmailBody from './EmailBody';
 import RecipientAddress from './RecipientAddress';
 import SendButton from './SendButton';
-import DeleteButton from './DeleteButton';
+// import DeleteButton from './DeleteButton';
 import SaveButton from './SaveButton';
 import AttachButton from './AttachButton';
-import AlertDialog from './AlertDialog';
-import ChooseActionPlanDialog from './ChooseActionPlanDialog';
-import { Alerts, ThemeOptions, Message, Attachment } from './MessagingTypes';
-import CryptoJS from 'crypto-js';
+// import AlertDialog from './AlertDialog';
+// import ChooseActionPlanDialog from './ChooseActionPlanDialog';
+import { Alerts, ThemeOptions, Message, Attachment, SelectOption } from './MessagingTypes';
+import * as CryptoJS from 'crypto-js';
 import ActionPlanForm from '../ActionPlanForm';
 
 
@@ -25,7 +26,7 @@ interface NewMessageViewProps {
   draft: Message;
 };
 
-const gridContainer = {
+/* const gridContainer = {
 	display: 'grid',
 	gridTemplateColumns: 'auto 1fr',
 	gridTemplateRows: 'auto 15% 15% 1fr',
@@ -56,7 +57,7 @@ const attachButtonClass = {
     position: 'fixed',
     bottom: '4em',
     right: '1em',
-};
+}; */
 
 const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProps) => {
   // state to store the message theme
@@ -64,7 +65,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   // state to store the current alert
   const [alertEnum, setAlertEnum] = useState(Alerts.NO_ERROR);
   // state to store the current recipient
-  const [recipient, setRecipient] = useState(null);
+  const [recipient, setRecipient] = useState({
+    value: '',
+    id: '',
+    label: ''
+  });
   const [recipientName, setRecipientName] = useState("Katherine");
   // ref to get value from EmailBody
 	const textRef = useRef();
@@ -72,9 +77,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [attachments, setAttachments] = useState(props.draft.attachments);
   const [actionPlanDisplay, setActionPlanDisplay] = useState(false);
   const firebase = props.firebase;
-  const userEmail = firebase.auth.currentUser.email;
+  // const userEmail = firebase.auth.currentUser.email;
   // state to store the current username
-  const [userName, setUserName] = useState(null);
+  const [userName, setUserName] = useState('');
  
   // get the user's name
   if (userName === null) {
@@ -133,6 +138,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         content: 'testing this',
         delivered: false,
         // attachments: sendAttachments,
+        attachments: [{
+          id: 'action plan',
+          date: new Date(),
+        }]
       };
      
       // encrypted with the user's uid from firebase
@@ -142,7 +151,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           .toString();
 
       firebase.sendEmail(encryptedMsg)
-        .then((res: any): void => {
+        .then((res: {data: string}): void => {
           console.log(JSON.stringify(res));
           if(res.data === '200') {
             setAlertEnum(Alerts.EMAIL_SEND_SUCCESS);
@@ -150,7 +159,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             setAlertEnum(Alerts.EMAIL_SEND_FAIL);
           }
         })
-        .catch((err: any): void => {
+        .catch((err: Error): void => {
           console.log(JSON.stringify(err));
           setAlertEnum(Alerts.EMAIL_SEND_FAIL);
         });
@@ -171,7 +180,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     setAttachments(updatedAttachments);
   }
 
-  const removeAttachment = (actionPlanId: string): void => {
+  /* const removeAttachment = (actionPlanId: string): void => {
     const updatedAttachments = attachments.map((attach: Attachment): Attachment => {
       if (attach.id !== actionPlanId) {
         return attach;
@@ -179,7 +188,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     });
     console.log(updatedAttachments);
     setAttachments(updatedAttachments);
-  }
+  } */
 
   const thankYou = (name: string | null): JSX.Element => (<div style={{padding: "5em"}}>
   <h4>Hi {name || ""},</h4>
@@ -316,7 +325,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             <Grid item xs={6}>
               <RecipientAddress
                 selectedOption={recipient}
-                setOption={(newOption: object): void => setRecipient(newOption)}
+                setOption={(newOption: SelectOption): void => setRecipient(newOption)}
                 firebase={firebase}
               />
             </Grid>
@@ -353,7 +362,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 <Grid item>
                   <AttachButton 
                     acceptAttachment={(): void => setActionPlanDisplay(true)} 
-                    disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
+                    // disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
                   />
                 </Grid>
                 <Grid item>

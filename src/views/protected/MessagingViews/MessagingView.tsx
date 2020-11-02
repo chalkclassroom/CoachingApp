@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react';
+import * as React from 'react';
+import { useState, useContext } from 'react';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'; 
@@ -6,10 +7,11 @@ import MessagingMenu from '../../../components/MesssagingComponents/MessagingMen
 import NewMessageView from '../../../components/MesssagingComponents/NewMessageView';
 import DraftView from '../../../components/MesssagingComponents/DraftView';
 import SentView from '../../../components/MesssagingComponents/SentView';
-import { MenuOptions, Message, ThemeOptions, Attachment } from '../../../components/MesssagingComponents/MessagingTypes';
+import { MenuOptions, MenuOptionsKey, Message, ThemeOptions, Attachment } from '../../../components/MesssagingComponents/MessagingTypes';
+import * as Types from '../../../constants/Types';
 
 // CSS for the Grid layout
-const gridContainer = {
+/* const gridContainer = {
 	display: 'grid',
 	gridTemplateColumns: 'auto 1fr',
 	gridTemplateRows: 'auto 15% 1fr',
@@ -29,7 +31,7 @@ const menu = {
 const chosenView = {
 	gridRow: '3 / span 4',
 	gridColumn: '2 / span 4',
-};
+}; */
 
 // No props to maintain API with other major views
 const MessagingView: React.FC<{}> = () => {
@@ -48,7 +50,7 @@ const MessagingView: React.FC<{}> = () => {
     subject: '',
     theme: ThemeOptions.THANK_YOU,
     textContent: '',
-    content: <></>,
+    content: '',
     delivered: false,
     attachments: Array<Attachment>(),
   };
@@ -69,7 +71,7 @@ const MessagingView: React.FC<{}> = () => {
     <Grid container direction="column" style={{height: '100vh', display: 'flex', flexDirection: 'column', overflowX: 'hidden', overflowY: 'auto'}}>
       <Grid item style={{width: '100%'}}>
         <FirebaseContext.Consumer>
-          {(firebase: object): React.ReactNode => (
+          {(firebase: Types.FirebaseAppBar): React.ReactNode => (
             <AppBar firebase={firebase} />
           )}
         </FirebaseContext.Consumer>
@@ -79,7 +81,7 @@ const MessagingView: React.FC<{}> = () => {
           <Grid item xs={3} style={{height: '100%', paddingRight: '1.5em'}}>
             <MessagingMenu
               currentOption={menuOption}
-              changeOption={(newOption: MenuOptions): void => { console.log(newOption); setMenuOption(newOption);}}
+              changeOption={(newOption: MenuOptionsKey): void => { setMenuOption(newOption);}}
             />
           </Grid>
           <Grid item xs={9} style={{border: '1px solid red'}}>
