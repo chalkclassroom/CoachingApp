@@ -331,7 +331,9 @@ class ActionPlanForm extends React.Component<Props, State> {
             step: value.step,
             materials: value.materials,
             person: value.person,
-            timeline: value.timeline ? value.timeline.toDate() : new Date()
+            timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
+              value.timeline.toDate() :
+              new Date(),
           };
         })
       }).then(() => {
