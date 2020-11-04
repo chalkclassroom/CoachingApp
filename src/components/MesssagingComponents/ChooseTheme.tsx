@@ -2,6 +2,17 @@ import * as React from 'react';
 import Select from 'react-select';
 import { SelectOption } from './MessagingTypes';
 
+const customStyles = {
+  indicatorsContainer: (provided) => ({
+    ...provided,
+    backgroundColor: '#D8ECFF'
+  }),
+  valueContainer: (provided) => ({
+    ...provided,
+    backgroundColor: '#D8ECFF'
+  })
+}
+
 interface ChooseThemeProps {
   selectedOption: SelectOption; 
   setOption: (newOption: SelectOption) => void; 
@@ -20,6 +31,7 @@ const ChooseTheme: React.FC<ChooseThemeProps> = (props: ChooseThemeProps) => {
         value={props.selectedOption}
         onChange={props.setOption}
         options={teacherList}
+        styles={customStyles}
       />
     );
 }

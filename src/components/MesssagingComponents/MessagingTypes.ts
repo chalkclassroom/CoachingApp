@@ -47,9 +47,9 @@ export enum MessageActions {
 
 // an enum of all the possible menu options in messaging view
 export enum MenuOptions {
-  NEW_MESSAGE = 'New Message',
-  DRAFTS = 'Drafts',
   SENT = 'Sent',
+  DRAFTS = 'Drafts',
+  NEW_MESSAGE = 'New Message'
 };
 
 export type MenuOptionsKey = keyof typeof MenuOptions;

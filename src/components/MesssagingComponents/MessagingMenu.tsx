@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { List, ListItem, ListItemText, ListItemAvatar } from '@material-ui/core';
+import { List, ListItem, ListItemText, ListItemAvatar, Grid } from '@material-ui/core';
 import { MenuOptions, MenuOptionsKey } from './MessagingTypes';
 import AddIcon from '@material-ui/icons/Add';
 import DraftsIcon from '@material-ui/icons/Drafts';
@@ -30,12 +30,28 @@ const MessagingMenu: React.FC<MessagingMenuProps> = (props: MessagingMenuProps) 
             button
             key={index}
             onClick={(): void => props.changeOption(option as MenuOptionsKey)}
-            style={{marginBottom: '10px', paddingTop: index === 0 ? '1em' : 0}}
+            alignItems='center'
+            style={{
+              marginBottom: '1em',
+              width: '90%',
+              padding: '0.5em',
+              marginLeft: '0.5em',
+              paddingTop: index === 0 ? '1.5em' : 0,
+              // different styling for New Message button
+              backgroundColor: index === 2 ? 'white' : undefined,
+              marginRight: index === 2 ? '0.5em' : undefined,
+              borderRadius: index === 2 ? '1em' : undefined,
+              boxShadow: index === 2 ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : undefined
+            }}
           >
-            <ListItemAvatar>
-              {getIcon(MenuOptions[option as MenuOptionsKey])}
-            </ListItemAvatar>
-            <ListItemText primary={MenuOptions[option as MenuOptionsKey]} />
+            <Grid container style={{height: '100%', width: '100%'}}>
+              <ListItemAvatar>
+                <Grid container justify='center' alignItems='center' style={{height: '100%', width: '100%'}}>
+                  {getIcon(MenuOptions[option as MenuOptionsKey])}
+                </Grid>
+              </ListItemAvatar>
+              <ListItemText primary={MenuOptions[option as MenuOptionsKey]} />
+            </Grid>
           </ListItem>
         ))
       }

@@ -3,6 +3,17 @@ import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { SelectOption } from './MessagingTypes';
 
+const customStyles = {
+  indicatorsContainer: (provided) => ({
+    ...provided,
+    backgroundColor: '#D8ECFF'
+  }),
+  valueContainer: (provided) => ({
+    ...provided,
+    backgroundColor: '#D8ECFF'
+  })
+}
+
 interface RecipentAddressProps {
   selectedOption: SelectOption; 
   setOption: (newOption: SelectOption) => void; 
@@ -43,6 +54,7 @@ const RecipentAddress: React.FC<RecipentAddressProps> = (props: RecipentAddressP
         value={props.selectedOption}
         onChange={props.setOption}
         options={teacherList}
+        styles={customStyles}
       />
     );
 }

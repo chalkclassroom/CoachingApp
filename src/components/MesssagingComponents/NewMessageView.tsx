@@ -337,7 +337,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             </Grid>
           </Grid>
         </Grid>
-        <Grid item>
+        <Grid item style={{paddingTop: '0.5em'}}>
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
             <Grid item xs={6}>
               <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
@@ -352,7 +352,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             </Grid>
           </Grid>
         </Grid>
-        <Grid item style={{width: '100%', height: '75%'}}>
+        <Grid item style={{width: '100%', height: '75%', paddingTop: '1em'}}>
           <Paper style={{backgroundColor: '#d8ecff', height: '100%', padding: '1em'}}>
           <Grid container direction="column" justify='space-between' style={{height: '100%'}}>
             <Grid container direction='row' justify='flex-end'>
