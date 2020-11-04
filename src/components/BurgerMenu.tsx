@@ -277,7 +277,7 @@ class BurgerMenu extends React.Component<Props, State>{
                 <MessagesIcon style={{ fill: Constants.Colors.SE }} />
               </ListItemIcon>
               <ListItemText
-                primary="Messages2"
+                primary="Messages"
                 onClick={(): void => this.props.history.push("/Messaging")}
               />
             </ListItem>

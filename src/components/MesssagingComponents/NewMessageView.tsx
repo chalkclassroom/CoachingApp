@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState, useRef } from 'react';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ChooseTheme from './ChooseTheme';
@@ -12,7 +13,7 @@ import SaveButton from './SaveButton';
 import AttachButton from './AttachButton';
 // import AlertDialog from './AlertDialog';
 // import ChooseActionPlanDialog from './ChooseActionPlanDialog';
-import { Alerts, ThemeOptions, Message, Attachment, SelectOption } from './MessagingTypes';
+import { Alerts, ThemeOptions, Message, Attachment, SelectOption, TemplateOption } from './MessagingTypes';
 import * as CryptoJS from 'crypto-js';
 import ActionPlanForm from '../ActionPlanForm';
 
@@ -61,7 +62,12 @@ const attachButtonClass = {
 
 const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProps) => {
   // state to store the message theme
-  const [theme, setTheme] = useState(props.draft.theme);
+  // const [theme, setTheme] = useState(props.draft.theme);
+  const [theme, setTheme] = useState({
+    id: '',
+    value: '',
+    label: ''
+  });
   // state to store the current alert
   const [alertEnum, setAlertEnum] = useState(Alerts.NO_ERROR);
   // state to store the current recipient
@@ -80,7 +86,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   // const userEmail = firebase.auth.currentUser.email;
   // state to store the current username
   const [userName, setUserName] = useState('');
- 
+
   // get the user's name
   if (userName === null) {
     firebase.getCoachFirstName()
@@ -314,9 +320,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           />
         </>
       </div> */}
-      <Grid direction="column" justify="center" alignItems="center" style={{width: '100%', border: '1px solid green'}}>
-        <Grid item style={{width: '100%', border: '1px solid red'}}>
-          <Grid container direction="row" alignItems="flex-start" justify="center" style={{border: '1px solid blue', width: '80%'}}>
+      <Grid direction="column" justify="center" alignItems="center" style={{width: '100%', height: '80vh'}}>
+        <Grid item style={{width: '100%'}}>
+          <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
             <Grid item xs={6}>
               <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                 Write a new message to:
@@ -332,7 +338,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           </Grid>
         </Grid>
         <Grid item>
-          <Grid container direction="row">
+          <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
             <Grid item xs={6}>
               <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                 Select message template:
@@ -340,18 +346,21 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             </Grid>
             <Grid item xs={6}>
               <ChooseTheme
-                currentTheme={theme}
-                changeTheme={(newTheme: ThemeOptions): void => setTheme(newTheme)}
+                selectedOption={theme}
+                setOption={(newTheme: TemplateOption): void => setTheme(newTheme)}
               />
             </Grid>
           </Grid>
         </Grid>
-        <Grid item style={{width: '100%', backgroundColor: '#d8ecff'}}>
-          <Grid container direction="column">
-            <Grid item>
-              close
+        <Grid item style={{width: '100%', height: '75%'}}>
+          <Paper style={{backgroundColor: '#d8ecff', height: '100%', padding: '1em'}}>
+          <Grid container direction="column" justify='space-between' style={{height: '100%'}}>
+            <Grid container direction='row' justify='flex-end'>
+              <Grid item>
+                X
+              </Grid>
             </Grid>
-            <Grid item style={{width: '80%', height: '50%'}}>
+            <Grid item style={{width: '100%', height: '80%'}}>
               <EmailBody emailText={getEmailText()} emailTextRef={textRef} greetingText={greetingText} />
             </Grid>
             <Grid item>
@@ -373,6 +382,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
               </Grid>
             </Grid>
           </Grid>
+          </Paper>
         </Grid>
       </Grid>
     </div>

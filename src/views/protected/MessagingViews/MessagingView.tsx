@@ -77,14 +77,14 @@ const MessagingView: React.FC<{}> = () => {
         </FirebaseContext.Consumer>
       </Grid>
       <Grid item style={{flexGrow: 1}}>
-        <Grid container direction="row" justify="center" alignItems="flex-start" style={{height: '100%'}}>
+        <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
           <Grid item xs={3} style={{height: '100%', paddingRight: '1.5em'}}>
             <MessagingMenu
               currentOption={menuOption}
               changeOption={(newOption: MenuOptionsKey): void => { setMenuOption(newOption);}}
             />
           </Grid>
-          <Grid item xs={9} style={{border: '1px solid red'}}>
+          <Grid item xs={9} style={{paddingRight: '1.5em'}}>
             <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%'}}>
               <Grid item style={{width: '100%'}}>
               {getBody()}

@@ -23,14 +23,14 @@ const MessagingMenu: React.FC<MessagingMenuProps> = (props: MessagingMenuProps) 
   };
 
   return (
-    <List style={{height: '100%', backgroundColor: '#D8ECFF'}}>
+    <List style={{height: '100%', backgroundColor: '#D8ECFF', margin: 0, padding: 0}}>
       {
         Object.keys(MenuOptions).map((option, index) => (
           <ListItem 
             button
             key={index}
             onClick={(): void => props.changeOption(option as MenuOptionsKey)}
-            style={{marginBottom: '10px'}}
+            style={{marginBottom: '10px', paddingTop: index === 0 ? '1em' : 0}}
           >
             <ListItemAvatar>
               {getIcon(MenuOptions[option as MenuOptionsKey])}

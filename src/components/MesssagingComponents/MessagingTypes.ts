@@ -118,3 +118,9 @@ export interface SelectOption {
   id: string;
   label: string;
 }
+
+export interface TemplateOption {
+  value: string;
+  id: string;
+  label: string;
+}

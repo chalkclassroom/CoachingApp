@@ -15,8 +15,8 @@ interface EmailBodyProps {
 
 const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
     return (
-        <Paper style={{border: '1px solid blue', height: '50%'}}>
-            <div contentEditable={true} ref={props.emailTextRef}>
+        <Paper style={{height: '100%'}}>
+            <div contentEditable={true} style={{height: '100%', padding: '0.5em'}} ref={props.emailTextRef}>
                 {props.emailText}
             </div>
 
