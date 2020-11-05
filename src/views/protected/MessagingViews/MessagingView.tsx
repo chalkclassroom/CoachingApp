@@ -48,7 +48,7 @@ const MessagingView: React.FC<{}> = () => {
     from: firebase.auth.currentUser.email,
     to: '',
     subject: '',
-    theme: ThemeOptions.THANK_YOU,
+    theme: ThemeOptions.CUSTOM,
     textContent: '',
     content: '',
     delivered: false,
@@ -87,7 +87,7 @@ const MessagingView: React.FC<{}> = () => {
           <Grid item xs={9} style={{paddingRight: '1.5em'}}>
             <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%'}}>
               <Grid item style={{width: '100%'}}>
-              {getBody()}
+                {getBody()}
               </Grid>
             </Grid>
           </Grid>

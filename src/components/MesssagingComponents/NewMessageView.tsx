@@ -64,9 +64,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   // state to store the message theme
   // const [theme, setTheme] = useState(props.draft.theme);
   const [theme, setTheme] = useState({
-    id: '',
-    value: '',
-    label: ''
+    id: '0',
+    value: 'None',
+    label: 'None'
   });
   // state to store the current alert
   const [alertEnum, setAlertEnum] = useState(Alerts.NO_ERROR);
@@ -88,7 +88,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [userName, setUserName] = useState('');
 
   // get the user's name
-  if (userName === null) {
+  if (userName === '') {
     firebase.getCoachFirstName()
       .then((name: string): void => {
         setUserName(name);
@@ -196,7 +196,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     setAttachments(updatedAttachments);
   } */
 
-  const thankYou = (name: string | null): JSX.Element => (<div style={{padding: "5em"}}>
+  const thankYou = (name: string | null): JSX.Element => (<div style={{padding: "1em"}}>
   <h4>Hi {name || ""},</h4>
   Thanks for welcoming me into your classroom today. I really enjoyed my visit and look forward to chatting with you soon about CHALK practice.
   <br />
@@ -206,7 +206,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     {userName}
   </div>);
 
-  const custom = (name: string | null): JSX.Element => <div style={{padding: "5em"}}>
+  const custom = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
     <h4>Hi {name || ""},</h4>
   <strong>Create your new message here</strong>
   <br />
@@ -216,7 +216,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     {userName}
   </div>;
 
-  const feedback = (name: string | null): JSX.Element => <div style={{padding: "5em"}}>
+  const feedback = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
     <h4>Hi {name || ""},</h4>
     Thanks for welcoming me today in your classroom! 
     <br />
@@ -232,7 +232,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     	{userName}
   </div>;
  
-  const actionPlan = (name: string | null): JSX.Element => <div style={{padding: "5em"}}>
+  const actionPlan = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
     <h4>Hi {name || ""},</h4>
     Thanks for meeting today and creating this action plan. I think it looks great, and I look forward to working on these goals with you!
     <br />
@@ -260,14 +260,14 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     } else {
       const recipientName = (props.draft.to !== '' ? props.draft.to : (recipient ? recipient.label : ''));
       if (recipientName !== '') {
-        if(theme === ThemeOptions.THANK_YOU) {
+        if(theme.label === ThemeOptions.THANK_YOU) {
           return thankYou(recipientName);
-        } else if (theme === ThemeOptions.ACTION_PLAN){
+        } else if (theme.label === ThemeOptions.ACTION_PLAN){
           return actionPlan(recipientName);
-        } else if (theme === ThemeOptions.CUSTOM) {
-          return custom(recipientName);
-        } else {
+        } else if (theme.label === ThemeOptions.FEEDBACK) {
           return feedback(recipientName);
+        } else {
+          return custom(recipientName);
         }
       } else {
         return chooseOptions();
@@ -276,7 +276,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   };
 
   return (
-    <div style={{width: '100%'}}>
+    <div style={{width: '100%', overflowX: 'scroll'}}>
       {/* <div style={gridContainer}>
         <div style={themeClass}>
           <ChooseTheme currentTheme={theme} changeTheme={(newTheme: ThemeOptions): void => setTheme(newTheme)}/>
@@ -354,34 +354,36 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         </Grid>
         <Grid item style={{width: '100%', height: '75%', paddingTop: '1em'}}>
           <Paper style={{backgroundColor: '#d8ecff', height: '100%', padding: '1em'}}>
-          <Grid container direction="column" justify='space-between' style={{height: '100%'}}>
-            <Grid container direction='row' justify='flex-end'>
+            <Grid container direction="column" justify='space-between' style={{height: '100%'}}>
+              <Grid container direction='row' justify='flex-end'>
+                <Grid item>
+                  X
+                </Grid>
+              </Grid>
+              <Grid item style={{width: '100%', height: '80%'}}>
+                <EmailBody emailText={getEmailText()} emailTextRef={textRef} greetingText={greetingText} />
+              </Grid>
               <Grid item>
-                X
-              </Grid>
-            </Grid>
-            <Grid item style={{width: '100%', height: '80%'}}>
-              <EmailBody emailText={getEmailText()} emailTextRef={textRef} greetingText={greetingText} />
-            </Grid>
-            <Grid item>
-              <Grid container direction="row">
-                <Grid item>
-                  <SendButton sendMail={sendMail}/>
-                </Grid>
-                <Grid item>
-                  <AttachButton 
-                    acceptAttachment={(): void => setActionPlanDisplay(true)} 
-                    // disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
-                  />
-                </Grid>
-                <Grid item>
-                  <SaveButton saveDraft={(): void => setActionPlanDisplay(true)} />
-                </Grid>
-                <Grid item>
+                <Grid container direction="row" justify="space-between" style={{width: '100%'}}>
+                  <Grid item>
+                    <SendButton sendMail={sendMail}/>
+                  </Grid>
+                  <Grid item>
+                    <Grid container direction="row">
+                      <Grid item style={{paddingRight: '1em'}}>
+                        <AttachButton 
+                          acceptAttachment={(): void => setActionPlanDisplay(true)} 
+                          // disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <SaveButton saveDraft={(): void => setActionPlanDisplay(true)} />
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
           </Paper>
         </Grid>
       </Grid>

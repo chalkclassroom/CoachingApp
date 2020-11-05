@@ -40,7 +40,7 @@ const MessagingMenu: React.FC<MessagingMenuProps> = (props: MessagingMenuProps) 
               // different styling for New Message button
               backgroundColor: index === 2 ? 'white' : undefined,
               marginRight: index === 2 ? '0.5em' : undefined,
-              borderRadius: index === 2 ? '1em' : undefined,
+              borderRadius: index === 2 ? '1.5em' : undefined,
               boxShadow: index === 2 ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : undefined
             }}
           >
