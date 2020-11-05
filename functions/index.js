@@ -55,6 +55,7 @@ exports.funcSessionDatesTransition = require('./funcSessionDatesTransition').fun
 exports.funcTeacherACSummary = require('./funcTeacherACSummary').funcTeacherACSummary;
 exports.funcTeacherACTrend = require('./funcTeacherACTrend').funcTeacherACTrend;
 exports.funcTeacherMathTrend = require('./funcTeacherMathTrend').funcTeacherMathTrend;
+exports.funcTeacherMathSummary = require('./funcTeacherMathSummary').funcTeacherMathSummary;
 exports.funcTeacherSeqSummary = require('./funcTeacherSeqSummary').funcTeacherSeqSummary;
 exports.funcTeacherSeqTrend = require('./funcTeacherSeqTrend').funcTeacherSeqTrend;
 exports.funcTransitionLog = require('./funcTransitionLog').funcBehaviourTrend;
