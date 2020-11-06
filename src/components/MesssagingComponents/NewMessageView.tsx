@@ -332,7 +332,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
               <RecipientAddress
                 selectedOption={recipient}
                 setOption={(newOption: SelectOption): void => setRecipient(newOption)}
-                firebase={firebase}
               />
             </Grid>
           </Grid>

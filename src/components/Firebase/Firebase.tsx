@@ -218,22 +218,6 @@ class Firebase {
       );  
   };
 
-  getFullTeacherList = async (): Promise<Array<firebase.firestore.DocumentData> | void | undefined> => {
-    return firebase
-      .firestore()
-      .collection("users")
-      .where("role", "==", "teacher")
-      .get()
-      .then(snapshot => {
-        const teacherList: Array<firebase.firestore.DocumentData> = [];
-        snapshot.forEach(doc =>
-          teacherList.push(doc.data())
-        );
-        return teacherList;
-      })
-      .catch(error => console.error("Error getting teacher list: ", error));
-  };
-
   /**
    * gets list of all teachers linked to current user's account
    */
@@ -249,6 +233,7 @@ class Firebase {
         partners.forEach(partner =>
           teacherList.push(this.getTeacherInfo(partner.id))
         );
+        console.log('teacher list', teacherList);
         return teacherList;
       })
       .catch((error: Error) => console.error("Error getting partner list: ", error));

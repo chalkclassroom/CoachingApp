@@ -54,9 +54,11 @@ import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
 import Grid from '@material-ui/core/Grid';
 import { getCoach } from './state/actions/coach';
 import { getUnlocked } from './state/actions/unlocked';
+import { getTeacherList } from './state/actions/teacher';
 import { connect } from 'react-redux';
 import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 import * as H from 'history';
+import * as Types from './constants/Types';
 
 
 ReactGA.initialize('UA-154034655-1');
@@ -118,10 +120,12 @@ interface Props {
       onAuthStateChanged(arg: any): firebase.User | null
     },
     getCoachFirstName(): Promise<string>,
-    getUnlockedSections(): Promise<Array<number>>
+    getUnlockedSections(): Promise<Array<number>>,
+    getTeacherList(): Promise<Array<Types.Teacher>>
   },
   getCoach(name: string): void,
-  getUnlocked(unlocked: Array<number>): void
+  getUnlocked(unlocked: Array<number>): void,
+  getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>
 }
 
 interface State {
@@ -160,6 +164,20 @@ class App extends React.Component<Props, State> {
         this.props.firebase.getUnlockedSections().then((unlocked: Array<number>) => {
           this.props.getUnlocked(unlocked);
         })
+        this.props.firebase.getTeacherList().then((teacherPromiseList: Array<Types.Teacher>) => {
+          const teacherList: Array<Types.Teacher> = [];
+          teacherPromiseList.forEach(tpromise => {
+            tpromise.then((data: Types.Teacher) => {
+              teacherList.push(data);
+              /* this.setState((previousState) => {
+                return {
+                  teachers: previousState.teachers.concat(data)
+                };
+              }, () => { this.props.getTeacherList(this.state.teachers) }); */
+            });
+          });
+          this.props.getTeacherList(teacherList);
+        });
       } else {
         this.setState({
           auth: false,
@@ -499,5 +517,5 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default hot(connect(null, {getCoach, getUnlocked})(App));
+export default hot(connect(null, {getCoach, getUnlocked, getTeacherList})(App));
 
