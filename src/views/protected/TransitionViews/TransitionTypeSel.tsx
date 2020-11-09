@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
-import { withStyles, MuiThemeProvider } from "@material-ui/core/styles";
+import { makeStyles, MuiThemeProvider } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import ChildWaitingImage from "../../../assets/images/ChildWaitingImage.svg";
 import WaitingInLineImage from "../../../assets/images/WaitingInLineImage.svg";
@@ -11,7 +11,7 @@ import BMDImage from "../../../assets/images/BMDImage.svg";
 import OtherImage from "../../../assets/images/OtherImage.svg";
 import * as Constants from '../../../constants/Constants';
 
-const styles: object = {
+const useStyles = makeStyles({
   button: {
     margin: '0.5em',
     width: '18vh',
@@ -21,16 +21,12 @@ const styles: object = {
     textAlign: "center"
   },
   label: {
-    flexDirection: "column ",
+    flexDirection: "column",
     textAlign: "center"
   }
-};
+});
 
 interface Props {
-  classes: {
-    button: string,
-    label: string
-  },
   handleNotes(open: boolean): void,
   handleTransitionType(type: string | null): void,
   transitionType?: string,
@@ -41,8 +37,9 @@ interface Props {
  * @param {Props} props
  * @return {ReactElement}
  */
-function TransitionTypeSel(props: Props): React.ReactElement {
-  const { classes, handleNotes, handleTransitionType, transitionType } = props;
+export default function TransitionTypeSel(props: Props): React.ReactElement {
+  const { handleNotes, handleTransitionType, transitionType } = props;
+  const classes = useStyles();
 
   /**
    * @param {string} type
@@ -61,10 +58,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
   return (
     <div>
       <Grid container alignItems="flex-start" direction={"row"} style={{fontFamily: 'Arimo'}}>
-        <Grid
-          item
-          xs={6}
-        >
+        <Grid item xs={6}>
           <Grid item>
             <Grid container direction="row" alignItems="flex-start" justify="center">
               <MuiThemeProvider theme={Constants.LineTheme}>
@@ -76,7 +70,9 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   color="primary"
                   style={{
                     color: 'white',
-                    boxShadow: transitionType === "waiting" ? "8px 8px #a9a9a9" : null
+                    boxShadow: transitionType === "waiting" ?
+                      "8px 8px #a9a9a9" :
+                      undefined
                   }}
                 >
                   <img
@@ -115,7 +111,9 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   color="primary"
                   style={{
                     color: 'white',
-                    boxShadow: transitionType === "traveling" ? "8px 8px #a9a9a9" : null
+                    boxShadow: transitionType === "traveling" ?
+                      "8px 8px #a9a9a9" :
+                      undefined
                   }}
                 >
                   <img
@@ -151,7 +149,9 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   color="primary"
                   style={{
                     color: 'white',
-                    boxShadow: transitionType === "child waiting" ? "8px 8px #a9a9a9" : null
+                    boxShadow: transitionType === "child waiting" ?
+                      "8px 8px #a9a9a9" :
+                      undefined
                   }}
                 >
                   <img
@@ -191,7 +191,9 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   color="primary"
                   style={{
                     color: 'white',
-                    boxShadow: transitionType === "classroom routines" ? "8px 8px #a9a9a9" : null
+                    boxShadow: transitionType === "classroom routines" ?
+                      "8px 8px #a9a9a9" :
+                      undefined
                   }}
                 >
                   <img
@@ -230,7 +232,9 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   color="primary"
                   style={{
                     color: 'white',
-                    boxShadow: transitionType === "behavior management disruption" ? "8px 8px #a9a9a9" : null
+                    boxShadow: transitionType === "behavior management disruption" ?
+                      "8px 8px #a9a9a9" :
+                      undefined
                   }}
                 >
                   <img
@@ -269,7 +273,9 @@ function TransitionTypeSel(props: Props): React.ReactElement {
                   color="primary"
                   style={{
                     color: 'white',
-                    boxShadow: transitionType === "other" ? "8px 8px #a9a9a9" : null
+                    boxShadow: transitionType === "other" ?
+                      "8px 8px #a9a9a9" :
+                      undefined
                   }}
                 >
                   <img
@@ -301,10 +307,7 @@ function TransitionTypeSel(props: Props): React.ReactElement {
 }
 
 TransitionTypeSel.propTypes = {
-  classes: PropTypes.object.isRequired,
   transitionType: PropTypes.string,
   handleTransitionType: PropTypes.func.isRequired,
   handleNotes: PropTypes.func.isRequired
 };
-
-export default withStyles(styles)(TransitionTypeSel);

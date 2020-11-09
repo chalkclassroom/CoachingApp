@@ -44,6 +44,7 @@ interface Props {
     }): Promise<void>
   },
   updateTransitionTime(time: number): void,
+  handleStartTransition(): void,
   handleEndTransition(): void,
   pushOntoTransitionStack(entry: {
     start: string,
@@ -59,7 +60,7 @@ interface State {
   percentage: number,
   isOn: boolean,
   time: number,
-  start: Date,
+  start: Date | null,
   startMilliseconds: number,
   openDialog: boolean
 }
@@ -119,6 +120,7 @@ class TransitionTimer extends React.Component<Props, State> {
         this.handleAppend(entry);
         this.props.handleEndTransition();
       } else {
+        this.props.handleStartTransition();
         const startTime = Date.now();
         this.setState({ start: new Date(startTime), startMilliseconds: startTime });
         this.timer = setInterval(() => {
@@ -172,6 +174,7 @@ class TransitionTimer extends React.Component<Props, State> {
       })
     }).isRequired,
     transitionType: PropTypes.string,
+    handleStartTransition: PropTypes.func.isRequired,
     handleEndTransition: PropTypes.func.isRequired,
     pushOntoTransitionStack: PropTypes.func.isRequired,
     updateTransitionTime: PropTypes.func.isRequired,

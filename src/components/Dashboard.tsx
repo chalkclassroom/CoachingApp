@@ -447,8 +447,9 @@ class Dashboard extends React.Component<Props, State> {
               </Grid> 
             </Grid>
             <Grid
-              item
+              container
               className={classes.infoDisplayGrid}
+              justify='center'
               style={{ alignItems: this.props.infoPlacement }}
             >
               {this.props.infoDisplay}

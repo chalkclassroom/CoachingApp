@@ -1,10 +1,9 @@
 import * as React from 'react';
-import * as PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles/index";
+import { makeStyles } from "@material-ui/core/styles/index";
 import { Table, TableRow, TableBody, TableCell } from '@material-ui/core';
 import * as Constants from '../../constants/Constants';
 
-const styles: object = {
+const useStyles = makeStyles({
   header: {
     backgroundColor: '#4fd9b3',
     fontFamily: "Arimo",
@@ -29,22 +28,13 @@ const styles: object = {
     padding: '0.5em',
     verticalAlign: 'top'
   }
-};
-
-interface Props {
-  classes: {
-    header: string,
-    checklistItem: string,
-    example: string,
-  }
-}
+});
 
 /**
- * @param {Props} props
  * @return {ReactElement}
  */
-function ListeningHelp1(props: Props): React.ReactElement {
-  const { classes } = props;
+export default function ListeningHelp1(): React.ReactElement {
+  const classes = useStyles();
   return(
     <Table>
       <TableBody>
@@ -78,12 +68,12 @@ function ListeningHelp1(props: Props): React.ReactElement {
         </TableRow>
         <TableRow>
           <TableCell className={classes.checklistItem}>
-            <strong>Looks at children</strong> with a {" "}
-            <strong>positive expression</strong> to encourage child talk
+            Looks at children with a {" "}
+            <strong>positive </strong>or <strong>interested expression</strong> to encourage child talk
           </TableCell>
           <TableCell className={classes.example}>
             Teacher looks at children with curiosity and
-            tries to make eye contact. The teacher&apos;s body language
+            tries to make eye contact. The teacher&apos;s expression
             shows interest in what children say.
             <ul>
               <li>
@@ -122,9 +112,3 @@ function ListeningHelp1(props: Props): React.ReactElement {
     </Table>
   )
 }
-
-ListeningHelp1.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(ListeningHelp1);
