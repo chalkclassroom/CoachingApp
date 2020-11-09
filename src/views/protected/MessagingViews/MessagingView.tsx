@@ -3,11 +3,11 @@ import { useState, useContext } from 'react';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'; 
-import MessagingMenu from '../../../components/MesssagingComponents/MessagingMenu';
-import NewMessageView from '../../../components/MesssagingComponents/NewMessageView';
-import DraftView from '../../../components/MesssagingComponents/DraftView';
-import SentView from '../../../components/MesssagingComponents/SentView';
-import { MenuOptions, MenuOptionsKey, Message, ThemeOptions, Attachment } from '../../../components/MesssagingComponents/MessagingTypes';
+import MessagingMenu from '../../../components/MessagingComponents/MessagingMenu';
+import NewMessageView from '../../../components/MessagingComponents/NewMessageView';
+import DraftView from '../../../components/MessagingComponents/DraftView';
+import SentView from '../../../components/MessagingComponents/SentView';
+import { MenuOptions, MenuOptionsKey, Message, ThemeOptions, Attachment } from '../../../components/MessagingComponents/MessagingTypes';
 import * as Types from '../../../constants/Types';
 
 // CSS for the Grid layout
