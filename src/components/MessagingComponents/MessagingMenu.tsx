@@ -34,7 +34,6 @@ const MessagingMenu: React.FC<MessagingMenuProps> = (props: MessagingMenuProps) 
             style={{
               marginBottom: '1em',
               width: '90%',
-              // padding: '0.5em',
               marginLeft: '0.5em',
               paddingTop: index === 0 ? '1.5em' : '0.5em',
               paddingBottom: '0.5em',

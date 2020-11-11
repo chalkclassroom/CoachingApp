@@ -7,9 +7,16 @@ import DialogContent from '@material-ui/core/DialogContent';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import { Table, TableRow, TableCell, Typography, Grid } from '@material-ui/core';
+import * as moment from 'moment';
+import TransitionTimeIconImage from '../../assets/images/TransitionTimeIconImage.svg';
+import ClassroomClimateIconImage from '../../assets/images/ClassroomClimateIconImage.svg';
+import MathIconImage from '../../assets/images/MathIconImage.svg';
+import EngagementIconImage from '../../assets/images/EngagementIconImage.svg';
+import InstructionIconImage from '../../assets/images/InstructionIconImage.svg';
+import ListeningIconImage from '../../assets/images/ListeningIconImage.svg';
+import SequentialIconImage from '../../assets/images/SequentialIconImage.svg';
+import AssocCoopIconImage from '../../assets/images/AssocCoopIconImage.svg';
 import FirebaseContext from '../Firebase/FirebaseContext';
 // import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 // import thankYouIcon from '../../assets/icons/chat-bubbles.svg';
@@ -33,7 +40,7 @@ interface ChooseActionPlanDialogProps {
     }> | void>
   }; */
   // list of current attachments to the email
-  attachmentList: Attachment[];
+  attachmentList: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>;
 }
 
 const ChooseActionPlanDialog: React.FC<ChooseActionPlanDialogProps> = (props: ChooseActionPlanDialogProps) => {
@@ -44,7 +51,9 @@ const ChooseActionPlanDialog: React.FC<ChooseActionPlanDialogProps> = (props: Ch
   const [option, setOption] = useState('All');
   // options available on the right pane
   const [rightOptions, setRightOptions] = useState<Array<Attachment>>([]);
-  const firebase = useContext(FirebaseContext); 
+  const firebase = useContext(FirebaseContext);
+  const [selected, setSelected] = useState<string>('');
+  // const isSelected = (id: string): boolean => this.state.selected.includes(id);
 
   // list of options available for the user to choose from
   // "Attached" lists all the current attachments for the user to remove
@@ -109,18 +118,107 @@ const ChooseActionPlanDialog: React.FC<ChooseActionPlanDialogProps> = (props: Ch
     >
       <DialogContent>
         <div>
-          <List>
-            {leftOptions.map((text) => (
+          {/* <List>
+            {props.attachmentList.map((value, index) => (
               <ListItem 
                   button 
-                  key={text} 
-                  onClick={(): void => { setOption(text); updateRightOptions(); }} 
+                  key={index} 
+                  onClick={(): void => { setOption(value.practice); updateRightOptions(); }} 
                   style={{marginBottom: '10px'}}
               >
-                <ListItemText primary={text}/>
+                <ListItemText primary={value.practice}/>
               </ListItem>
             ))}
-          </List>
+          </List> */}
+          <Table>
+            {props.attachmentList.map((value, index) => {
+              const achieveBy = (!value.achieveBy || typeof value.achieveBy === 'string')
+              ? new Date()
+              : value.achieveBy.toDate();
+              
+            // const isItemSelected = isSelected(value.id);
+            const newDate = new Date(0);
+            newDate.setUTCSeconds(value.date.seconds);
+            const dateModified = newDate;
+              return (
+                <TableRow
+                key={index}
+                selected={selected===value.id}
+                onClick={(): void => {setSelected(value.id)}}
+              >
+                <TableCell style={{padding: '0.5em'}}>
+                  <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                    {moment(dateModified).format('MM/DD/YYYY')}
+                  </Typography>
+                </TableCell>
+                {/* <TableCell style={{padding: '0.5em'}}>
+                  <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                    {row.name}
+                  </Typography>
+                </TableCell> */}
+                <TableCell style={{padding: '0.5em'}}>
+                  <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                    <Grid container direction="row" justify="flex-start" alignItems="center">
+                      <Grid item xs={9}>
+                        <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
+                          {value.practice==='AC' ? 'Associative and Cooperative' : value.practice}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        {value.practice === 'Transition Time' ? (
+                          <img
+                            src={TransitionTimeIconImage}
+                            alt="Magic 8 Icon"
+                          />
+                        ) : value.practice === 'Classroom Climate' ? (
+                          <img
+                            src={ClassroomClimateIconImage}
+                            alt="Magic 8 Icon"
+                          />
+                        ) : value.practice === 'Math Instruction' ? (
+                          <img
+                            src={MathIconImage}
+                            alt="Magic 8 Icon"
+                          />
+                        ) : value.practice === 'Level of Engagement' ? (
+                          <img
+                            src={EngagementIconImage}
+                            alt="Magic 8 Icon"
+                          />
+                        ) : value.practice === 'Level of Instruction' ? (
+                          <img
+                            src={InstructionIconImage}
+                            alt="Magic 8 Icon"
+                          />
+                        ) : value.practice === 'Listening to Children' ? (
+                          <img
+                            src={ListeningIconImage}
+                            alt="Magic 8 Icon"
+                          />
+                        ) : value.practice === 'Sequential Activities' ? (
+                          <img
+                            src={SequentialIconImage}
+                            alt="Magic 8 Icon"
+                          />
+                        ) : value.practice === 'AC' ? (
+                          <img
+                            src={AssocCoopIconImage}
+                            alt="Magic 8 Icon"
+                          />
+                        ) : <div />}
+                      </Grid>
+                    </Grid>
+                  </Typography>
+                </TableCell>
+                <TableCell style={{padding: '0.5em'}}>
+                  <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                    {moment(achieveBy).format('MM/DD/YYYY')}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            );
+            })}
+          </Table>
         </div>
         <div>
         <RadioGroup

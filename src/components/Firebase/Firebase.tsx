@@ -1845,7 +1845,7 @@ class Firebase {
   }
 
   /**
-   * finds all action plans for coach and their selected teacher
+   * finds all action plans for coach and their selected teacher for a specific practice
    * @param {string} practice
    * @param {string} teacherId
    */
@@ -1876,6 +1876,46 @@ class Firebase {
         })
         .catch(() => {
           console.log( 'unable to retrieve action plans')
+        })
+      }
+  }
+
+  /**
+   * finds all action plans for coach and their selected teacher
+   * @param {string} teacherId
+   */
+  getAllTeacherActionPlans = async (teacherId: string): Promise<Array<{
+    id: string,
+    date: {seconds: number, nanoseconds: number},
+    practice: string,
+    achieveBy: firebase.firestore.Timestamp
+  }> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("actionPlans")
+        .where("coach", "==", this.auth.currentUser.uid)
+        .where("teacher", "==", teacherId)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const idArr: Array<{
+            id: string,
+            date: {seconds: number, nanoseconds: number},
+            practice: string,
+            achieveBy: firebase.firestore.Timestamp
+          }> = [];
+          querySnapshot.forEach(doc => {
+            console.log('this is the doc', doc.data());
+            idArr.push({
+              id: doc.id,
+              date: doc.data().dateModified,
+              practice: doc.data().tool,
+              achieveBy: doc.data().goalTimeline
+            })
+          })
+          console.log('idArray is', idArr);
+          return idArr;
+        })
+        .catch(() => {
+          console.log('unable to retrieve action plans')
         })
       }
   }

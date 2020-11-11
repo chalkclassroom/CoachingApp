@@ -3,13 +3,18 @@ import Select from 'react-select';
 import { SelectOption } from './MessagingTypes';
 
 const customStyles = {
-  indicatorsContainer: (provided) => ({
+  indicatorsContainer: (provided: React.CSSProperties): React.CSSProperties => ({
     ...provided,
     backgroundColor: '#D8ECFF'
   }),
-  valueContainer: (provided) => ({
+  valueContainer: (provided: React.CSSProperties): React.CSSProperties => ({
     ...provided,
     backgroundColor: '#D8ECFF'
+  }),
+  option: (provided: React.CSSProperties): React.CSSProperties => ({
+    ...provided,
+    backgroundColor: '#ffffff',
+    color: '#000000'
   })
 }
 

@@ -12,7 +12,7 @@ import SendButton from './SendButton';
 import SaveButton from './SaveButton';
 import AttachButton from './AttachButton';
 // import AlertDialog from './AlertDialog';
-// import ChooseActionPlanDialog from './ChooseActionPlanDialog';
+import ChooseActionPlanDialog from './ChooseActionPlanDialog';
 import { Alerts, ThemeOptions, Message, Attachment, SelectOption, TemplateOption } from './MessagingTypes';
 import * as CryptoJS from 'crypto-js';
 import ActionPlanForm from '../ActionPlanForm';
@@ -80,7 +80,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   // ref to get value from EmailBody
 	const textRef = useRef();
   // state to store the current list of attachments
-  const [attachments, setAttachments] = useState(props.draft.attachments);
+  const [attachments, setAttachments] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
   const [actionPlanDisplay, setActionPlanDisplay] = useState(false);
   const firebase = props.firebase;
   // const userEmail = firebase.auth.currentUser.email;
@@ -208,7 +208,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 
   const custom = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
     <h4>Hi {name || ""},</h4>
-  <strong>Create your new message here</strong>
+  {/* <strong>Create your new message here</strong> */}
   <br />
   <br />
   Best,
@@ -247,8 +247,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   
   const greetingText = "Hi " + recipientName;
 
-  const chooseOptions = (): JSX.Element => <div style={{padding: '5em'}}>
-	    <h1>Please choose message topic and the teacher on top</h1>
+  const chooseOptions = (): JSX.Element => <div style={{padding: '1em'}}>
+	    <h3 style={{fontFamily: 'Arimo'}}>Please choose a recipient for your message.</h3>
   </div>;
 
   // get the text for EmailBody according to the states set
@@ -274,6 +274,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       }
     }
   };
+
+  const recipientSelected = (newRecipient: {value: string, id: string, label: string}): void => {
+    setRecipient(newRecipient);
+    firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>) => {
+      console.log('what are the action plans', actionPlans);
+      setAttachments(actionPlans);
+    }).catch(() => {
+      console.log('no action plans');
+    })
+  }
 
   return (
     <div style={{width: '100%', overflowX: 'scroll'}}>
@@ -331,7 +341,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             <Grid item xs={6}>
               <RecipientAddress
                 selectedOption={recipient}
-                setOption={(newOption: SelectOption): void => setRecipient(newOption)}
+                setOption={(newOption: SelectOption): void => recipientSelected(newOption)}
               />
             </Grid>
           </Grid>
@@ -378,6 +388,19 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                       <Grid item>
                         <SaveButton saveDraft={(): void => setActionPlanDisplay(true)} />
                       </Grid>
+                      <ChooseActionPlanDialog 
+            open={actionPlanDisplay} 
+            handleAdd={(newActionPlan: string): void => { 
+              createAddAttachment(newActionPlan);
+              setActionPlanDisplay(false);
+            }} 
+            handleDelete={(existActionPlan: string): void => {
+              removeAttachment(existActionPlan);
+              setActionPlanDisplay(false);
+            }}
+            firebase={props.firebase}
+            attachmentList={attachments}
+          />
                     </Grid>
                   </Grid>
                 </Grid>

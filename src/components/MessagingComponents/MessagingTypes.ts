@@ -74,7 +74,7 @@ export interface Attachment {
   date: Date;
   // which magic eight does the action plan belong too. optional again
   // for the same reason.
-  magicEight?: MagicEight;
+  practice?: MagicEight;
 
   // doesn't have a content field as a message with a lot of attachments
   // could theoretically become too heavy. just storing ids and then retirieving

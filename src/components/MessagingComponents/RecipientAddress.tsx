@@ -13,6 +13,11 @@ const customStyles = {
   valueContainer: (provided: React.CSSProperties): React.CSSProperties => ({
     ...provided,
     backgroundColor: '#D8ECFF'
+  }),
+  option: (provided: React.CSSProperties): React.CSSProperties => ({
+    ...provided,
+    backgroundColor: '#ffffff',
+    color: '#000000'
   })
 }
 
