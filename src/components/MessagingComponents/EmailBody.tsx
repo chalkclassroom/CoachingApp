@@ -19,10 +19,6 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
             <div contentEditable={true} style={{height: '100%', outline: '0px solid transparent', overflowY: 'auto'}} ref={props.emailTextRef}>
               {props.emailText}
             </div>
-
-            {/* <TextField id="greeting" value={props.greetingText} />
-            <TextField id="body" value={props.bodyText} />
-            <TextField id="goodbye" value={props.goodbyeText} /> */}
         </Paper>
     );
 }

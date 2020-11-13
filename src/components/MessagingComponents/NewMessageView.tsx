@@ -12,7 +12,8 @@ import SendButton from './SendButton';
 import SaveButton from './SaveButton';
 import AttachButton from './AttachButton';
 // import AlertDialog from './AlertDialog';
-import ChooseActionPlanDialog from './ChooseActionPlanDialog';
+// import ChooseActionPlanDialog from './ChooseActionPlanDialog';
+import AttachmentDialog from './AttachmentDialog';
 import { Alerts, ThemeOptions, Message, Attachment, SelectOption, TemplateOption } from './MessagingTypes';
 import * as CryptoJS from 'crypto-js';
 import ActionPlanForm from '../ActionPlanForm';
@@ -81,6 +82,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 	const textRef = useRef();
   // state to store the current list of attachments
   const [attachments, setAttachments] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
+  const [actionPlans, setActionPlans] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
   const [actionPlanDisplay, setActionPlanDisplay] = useState(false);
   const firebase = props.firebase;
   // const userEmail = firebase.auth.currentUser.email;
@@ -278,8 +280,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const recipientSelected = (newRecipient: {value: string, id: string, label: string}): void => {
     setRecipient(newRecipient);
     firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>) => {
-      console.log('what are the action plans', actionPlans);
-      setAttachments(actionPlans);
+      setActionPlans(actionPlans);
     }).catch(() => {
       console.log('no action plans');
     })
@@ -388,19 +389,22 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                       <Grid item>
                         <SaveButton saveDraft={(): void => setActionPlanDisplay(true)} />
                       </Grid>
-                      <ChooseActionPlanDialog 
-            open={actionPlanDisplay} 
-            handleAdd={(newActionPlan: string): void => { 
-              createAddAttachment(newActionPlan);
-              setActionPlanDisplay(false);
-            }} 
-            handleDelete={(existActionPlan: string): void => {
-              removeAttachment(existActionPlan);
-              setActionPlanDisplay(false);
-            }}
-            firebase={props.firebase}
-            attachmentList={attachments}
-          />
+                      <AttachmentDialog
+                        recipientId={recipient.id}
+                        actionPlans={actionPlans}
+                        open={actionPlanDisplay}
+                        recipientName={recipient.label}
+                        handleClose={(): void => setActionPlanDisplay(false)}
+                        handleAdd={(newActionPlan: string): void => { 
+                          createAddAttachment(newActionPlan);
+                          setActionPlanDisplay(false);
+                        }} 
+                        handleDelete={(existActionPlan: string): void => {
+                          removeAttachment(existActionPlan);
+                          setActionPlanDisplay(false);
+                        }}
+                        attachmentList={attachments}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>

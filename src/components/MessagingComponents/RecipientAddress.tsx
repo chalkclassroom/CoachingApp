@@ -21,13 +21,13 @@ const customStyles = {
   })
 }
 
-interface RecipentAddressProps {
+interface RecipientAddressProps {
   selectedOption: SelectOption;
   setOption: (newOption: SelectOption) => void;
   teachers: Array<Types.Teacher>;
 }
 
-const RecipentAddress: React.FC<RecipentAddressProps> = (props: RecipentAddressProps) => {
+const RecipientAddress: React.FC<RecipientAddressProps> = (props: RecipientAddressProps) => {
   const teacherList: Array<{value: string, id: string, label: string}> = [];
   useEffect(() => {
     // converts teacher list into proper format for Select component
@@ -59,4 +59,4 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default connect(mapStateToProps, null)(RecipentAddress);
+export default connect(mapStateToProps, null)(RecipientAddress);

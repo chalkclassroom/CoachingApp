@@ -9,6 +9,7 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Table, TableRow, TableCell, Typography, Grid } from '@material-ui/core';
 import * as moment from 'moment';
+import ActionPlanList from '../ActionPlanList';
 import TransitionTimeIconImage from '../../assets/images/TransitionTimeIconImage.svg';
 import ClassroomClimateIconImage from '../../assets/images/ClassroomClimateIconImage.svg';
 import MathIconImage from '../../assets/images/MathIconImage.svg';
@@ -23,6 +24,7 @@ import FirebaseContext from '../Firebase/FirebaseContext';
 import { Attachment, MagicEight } from './MessagingTypes';
 
 interface ChooseActionPlanDialogProps {
+  recipientId: string;
   open: boolean;
   // called when the user adds an action plan via the dialog
   handleAdd: (value: string) => void;
@@ -130,6 +132,8 @@ const ChooseActionPlanDialog: React.FC<ChooseActionPlanDialogProps> = (props: Ch
               </ListItem>
             ))}
           </List> */}
+          {/* <ActionPlanList teacher={props.recipientId} /> */}
+          <ActionPlanList teacher={props.recipientId} />
           <Table>
             {props.attachmentList.map((value, index) => {
               const achieveBy = (!value.achieveBy || typeof value.achieveBy === 'string')
@@ -155,7 +159,7 @@ const ChooseActionPlanDialog: React.FC<ChooseActionPlanDialogProps> = (props: Ch
                   <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                     {row.name}
                   </Typography>
-                </TableCell> */}
+                </TableCell> */} 
                 <TableCell style={{padding: '0.5em'}}>
                   <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                     <Grid container direction="row" justify="flex-start" alignItems="center">
