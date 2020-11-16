@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ChooseTheme from './ChooseTheme';
 import EmailBody from './EmailBody';
+import SubjectLine from './SubjectLine';
 import RecipientAddress from './RecipientAddress';
 import SendButton from './SendButton';
 // import DeleteButton from './DeleteButton';
@@ -84,6 +85,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [attachments, setAttachments] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
   const [actionPlans, setActionPlans] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
   const [actionPlanDisplay, setActionPlanDisplay] = useState(false);
+  const [subject, setSubject] = useState('');
   const firebase = props.firebase;
   // const userEmail = firebase.auth.currentUser.email;
   // state to store the current username
@@ -365,10 +367,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         <Grid item style={{width: '100%', height: '75%', paddingTop: '1em'}}>
           <Paper style={{backgroundColor: '#d8ecff', height: '100%', padding: '1em'}}>
             <Grid container direction="column" justify='space-between' style={{height: '100%'}}>
-              <Grid container direction='row' justify='flex-end'>
-                <Grid item>
-                  X
-                </Grid>
+              <Grid container direction='row' justify='flex-start'>
+                <SubjectLine subject={subject} setSubject={setSubject} />
               </Grid>
               <Grid item style={{width: '100%', height: '80%'}}>
                 <EmailBody emailText={getEmailText()} emailTextRef={textRef} greetingText={greetingText} />
