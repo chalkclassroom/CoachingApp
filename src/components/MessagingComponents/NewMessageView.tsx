@@ -9,7 +9,7 @@ import EmailBody from './EmailBody';
 import SubjectLine from './SubjectLine';
 import RecipientAddress from './RecipientAddress';
 import SendButton from './SendButton';
-// import DeleteButton from './DeleteButton';
+import DeleteButton from './DeleteButton';
 import SaveButton from './SaveButton';
 import AttachButton from './AttachButton';
 // import AlertDialog from './AlertDialog';
@@ -386,8 +386,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           // disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
                         />
                       </Grid>
-                      <Grid item>
+                      <Grid item style={{paddingRight: '1em'}}>
                         <SaveButton saveDraft={(): void => setActionPlanDisplay(true)} />
+                      </Grid>
+                      <Grid item>
+                        <DeleteButton />
                       </Grid>
                       <AttachmentDialog
                         recipientId={recipient.id}
