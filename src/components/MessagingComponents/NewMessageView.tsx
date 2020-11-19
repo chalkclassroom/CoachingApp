@@ -90,6 +90,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   // const userEmail = firebase.auth.currentUser.email;
   // state to store the current username
   const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [emailId, setEmailId] = useState('');
 
   // get the user's name
   if (userName === '') {
@@ -283,56 +285,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     setRecipient(newRecipient);
     firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>) => {
       setActionPlans(actionPlans);
-    }).catch(() => {
-      console.log('no action plans');
     })
   }
 
+  const saveEmail = async (email?: string, subject?: string, recipientId?: string, emailId?: string): void => {
+    const savedEmailId = await firebase.saveEmail(email, subject, recipientId, emailId);
+    setEmailId(savedEmailId);
+  }
+
   return (
-    <div style={{width: '100%', overflowX: 'scroll'}}>
-      {/* <div style={gridContainer}>
-        <div style={themeClass}>
-          <ChooseTheme currentTheme={theme} changeTheme={(newTheme: ThemeOptions): void => setTheme(newTheme)}/>
-        </div>
-        <div style={recipientClass}>
-          <RecipientAddress selectedOption={recipient} setOption={(newOption: object): void => setRecipient(newOption)} firebase={firebase}/>
-        </div>
-        <div style={emailbodyClass}>
-          <EmailBody emailText={getEmailText()} emailTextRef={textRef} />
-        </div>
-        <div style={submitButtonClass}>
-          <SendButton sendMail={sendMail}/>
-        </div>
-        <div style={attachButtonClass}> */}
-          {/* AttachButton only becomes clickable when the user is typing a message of Action Plan theme */}
-          {/* <AttachButton 
-              acceptAttachment={(): void => setActionPlanDisplay(true)} 
-              disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
-          />
-        </div>
-        <div>
-          <DeleteButton deleteDraft={(): void => setActionPlanDisplay(true)}/>
-        </div>
-        <div>
-          <SaveButton saveDraft={(): void => setActionPlanDisplay(true)} />
-        </div>
-        <>
-          <AlertDialog open={alertEnum !== Alerts.NO_ERROR} text={alertEnum} handleYes={(): void => setAlertEnum(Alerts.NO_ERROR)}/>
-          <ChooseActionPlanDialog 
-            open={actionPlanDisplay} 
-            handleAdd={(newActionPlan: string): void => { 
-              createAddAttachment(newActionPlan);
-              setActionPlanDisplay(false);
-            }} 
-            handleDelete={(existActionPlan: string): void => {
-              removeAttachment(existActionPlan);
-              setActionPlanDisplay(false);
-            }}
-            firebase={props.firebase}
-            attachmentList={attachments}
-          />
-        </>
-      </div> */}
+    <div style={{width: '100%', overflowY: 'auto'}}>
       <Grid direction="column" justify="center" alignItems="center" style={{width: '100%', height: '80vh'}}>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
@@ -371,7 +333,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 <SubjectLine subject={subject} setSubject={setSubject} />
               </Grid>
               <Grid item style={{width: '100%', height: '80%'}}>
-                <EmailBody emailText={getEmailText()} emailTextRef={textRef} greetingText={greetingText} />
+                <EmailBody emailText={getEmailText()} emailTextRef={textRef} greetingText={greetingText} email={email} setEmail={setEmail} />
               </Grid>
               <Grid item>
                 <Grid container direction="row" justify="space-between" style={{width: '100%'}}>
@@ -387,7 +349,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                         />
                       </Grid>
                       <Grid item style={{paddingRight: '1em'}}>
-                        <SaveButton saveDraft={(): void => setActionPlanDisplay(true)} />
+                        <SaveButton saveEmail={(): void => {saveEmail(email, subject, recipient.id, emailId)}} saveDraft={(): void => setActionPlanDisplay(true)} />
                       </Grid>
                       <Grid item>
                         <DeleteButton />

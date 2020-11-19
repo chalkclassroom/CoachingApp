@@ -6,7 +6,7 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 interface MessagingMenuProps {
-  currentOption: MenuOptions;
+  currentOption: MenuOptionsKey;
   changeOption: (newOption: MenuOptionsKey) => void;
 };
 

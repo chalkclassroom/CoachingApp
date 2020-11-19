@@ -1903,7 +1903,6 @@ class Firebase {
             achieveBy: firebase.firestore.Timestamp
           }> = [];
           querySnapshot.forEach(doc => {
-            console.log('this is the doc', doc.data());
             idArr.push({
               id: doc.id,
               date: doc.data().dateModified,
@@ -1911,7 +1910,6 @@ class Firebase {
               achieveBy: doc.data().goalTimeline
             })
           })
-          console.log('idArray is', idArr);
           return idArr;
         })
         .catch(() => {
@@ -2271,6 +2269,127 @@ class Firebase {
         dateModified: firebase.firestore.Timestamp.now()
       })
     })
+  }
+
+  /**
+   * adds coaching question to conference plan
+   * @param {string} email
+   * @param {string} subject
+   * @param {string} recipientId
+   * @param {string} emailId
+   */
+  saveEmail = async (email?: string, subject?: string, recipientId?: string, emailId?: string): Promise<string | void> => {
+    // let emailRef: firebase.firestore.DocumentReference | null = null;
+    if (this.auth.currentUser) {
+      if (emailId) {
+        return this.db
+          .collection('emails')
+          .doc(emailId)
+          .update({
+            emailContent: email ? email: null,
+            subject: subject ? subject : null,
+            recipientId: recipientId ? recipientId: null,
+            dateModified: firebase.firestore.FieldValue.serverTimestamp(),
+            type: 'draft'
+          }).then(() => {
+            return emailId
+          })
+          .catch((error: Error) =>
+            console.error("Couldn't update email", error)
+          )
+      } else {
+        const emailRef: firebase.firestore.DocumentReference = this.db.collection("emails").doc();
+        const savedEmail = emailRef.set({
+          emailContent: email ? email: null,
+          subject: subject ? subject : null,
+          recipientId: recipientId ? recipientId: null,
+          dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
+          dateModified: firebase.firestore.FieldValue.serverTimestamp(),
+          type: 'draft',
+          user: this.auth.currentUser.uid,
+          id: emailRef.id
+        })
+        .then(() => {
+          return (emailRef.id)
+        })
+        .catch((error: Error) =>
+          console.error("Couldn't create email", error)
+        )
+        return savedEmail
+      }    
+    }
+  }
+
+  getEmail = async (): Promise<string> => {
+    return this.db
+      .collection("emails")
+      .doc('AJHQApd9yei87yfsZgsG')
+      .get()
+      .then((doc: firebase.firestore.DocumentData) => doc.data().emailContent)
+      .catch((error: Error) => console.error("Error getting cached document:", error));
+  }
+
+  getEmail2 = async (): Promise<{emailContent: string, id: string} | void> => {
+    return this.db
+      .collection("emails")
+      .doc('AJHQApd9yei87yfsZgsG')
+      .get()
+      .then((doc: firebase.firestore.DocumentData) => {
+        const email = {
+          id: doc.id,
+          emailContent: doc.data().emailContent
+        };
+        return email
+      })
+      .catch((error: Error) => console.error("Error getting cached document:", error));
+  }
+
+  /**
+   * finds all email drafts for particular user
+   */
+  getAllDrafts = async (): Promise<Array<{
+    id: string,
+    emailContent: string,
+    subject: string,
+    recipientId: string,
+    type: string,
+    user: string,
+    dateCreated: firebase.firestore.Timestamp,
+    dateModified: firebase.firestore.Timestamp
+  }> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("emails")
+        .where("user", "==", this.auth.currentUser.uid)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const emailArray: Array<{
+            id: string,
+            emailContent: string,
+            subject: string,
+            recipientId: string,
+            type: string,
+            user: string,
+            dateCreated: firebase.firestore.Timestamp,
+            dateModified: firebase.firestore.Timestamp
+          }> = [];
+          querySnapshot.forEach(doc =>
+            emailArray.push({
+              id: doc.data().id,
+              emailContent: doc.data().emailContent,
+              subject: doc.data().subject,
+              recipientId: doc.data().recipientId,
+              type: doc.data().type,
+              user: doc.data().user,
+              dateCreated: doc.data().dateCreated,
+              dateModified: doc.data().dateModified
+            })
+          )
+          return emailArray;
+        })
+        .catch(() => {
+          console.log('unable to find drafts')
+        })
+    }
   }
 
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import AppBar from '../../../components/AppBar';
 import Grid from '@material-ui/core/Grid';
 import FirebaseContext from '../../../components/Firebase/FirebaseContext'; 
@@ -7,7 +7,7 @@ import MessagingMenu from '../../../components/MessagingComponents/MessagingMenu
 import NewMessageView from '../../../components/MessagingComponents/NewMessageView';
 import DraftView from '../../../components/MessagingComponents/DraftView';
 import SentView from '../../../components/MessagingComponents/SentView';
-import { MenuOptions, MenuOptionsKey, Message, ThemeOptions, Attachment } from '../../../components/MessagingComponents/MessagingTypes';
+import { MenuOptions, MenuOptionsKey, Message, ThemeOptions, Attachment, Email } from '../../../components/MessagingComponents/MessagingTypes';
 import * as Types from '../../../constants/Types';
 
 // CSS for the Grid layout
@@ -37,9 +37,18 @@ const chosenView = {
 const MessagingView: React.FC<{}> = () => {
 
   // State to record which option the user chose: New Message, Draft, or Sent
-  const [menuOption, setMenuOption] = useState(MenuOptions.NEW_MESSAGE);
+  const [menuOption, setMenuOption] = useState<MenuOptionsKey>('NEW_MESSAGE');
+  const [drafts, setDrafts] = useState<Array<Email>>([]);
   // Using Firebase
   const firebase = useContext(FirebaseContext);
+
+  useEffect(() => {
+    if (drafts.length === 0) {
+      firebase.getAllDrafts().then((drafts: Array<Email>) => {
+        setDrafts(drafts)
+      })
+    }
+  })
   
   // State to record the message input to NewMessage so that if a user is coming from DraftView, this can be updated
   // to be the message from Draft, else a new message
@@ -58,10 +67,10 @@ const MessagingView: React.FC<{}> = () => {
 
   // Update right pane of the page according to what the user chose on the left pane
   const getBody = (): JSX.Element => {
-    if(menuOption === MenuOptions.NEW_MESSAGE) {
+    if(MenuOptions[menuOption] === MenuOptions.NEW_MESSAGE) {
       return (<NewMessageView firebase={firebase} draft={initMessage}/>);
-    } else if(menuOption === MenuOptions.DRAFTS) {
-      return (<DraftView editDraft={(msg: Message): void => setInitMessage(msg)} firebase={firebase}/>);
+    } else if(MenuOptions[menuOption] === MenuOptions.DRAFTS) {
+      return (<DraftView drafts={drafts} />);
     } else {
       return (<SentView firebase={firebase}/>);
     }

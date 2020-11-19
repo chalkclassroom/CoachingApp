@@ -5,9 +5,6 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ResultsIcon from "@material-ui/icons/PieChart";
 import ActionPlansIcon from "@material-ui/icons/CastForEducation";
 import {
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Typography,
   IconButton,
   Grid,
@@ -49,12 +46,9 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
               <Grid container direction="row" justify={view === 'options' ? "flex-end" : "space-between"} alignItems="center">
                 {view !== 'options' ? (
                   <Grid item xs={3}>
-                    <ListItem button onClick={(): void => setView('options')}>
-                      <ListItemIcon>
-                        <ChevronLeftIcon />
-                      </ListItemIcon>
-                      <ListItemText primary='BACK' />
-                    </ListItem>
+                    <IconButton onClick={(): void => setView('options')} style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                      <ChevronLeftIcon />
+                    </IconButton>
                   </Grid>
                 ) : (null)}
                 <Grid item>
@@ -68,7 +62,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
               <Grid container direction="row" justify="center" alignItems="center">
                 <div style={{width: '100%'}}>
                   {view === 'options' ? (
-                    <Grid container direction="row" justify="space-around" alignItems="center">
+                    <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingTop: '3em'}}>
                       <Grid item xs={5}>
                         <Card onClick={(): void => { setView('actionPlans'); }}>
                           <CardContent>

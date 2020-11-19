@@ -124,3 +124,14 @@ export interface TemplateOption {
   id: string;
   label: string;
 }
+
+export interface Email {
+  id: string,
+  emailContent: string,
+  subject: string,
+  recipientId: string,
+  type: string,
+  user: string,
+  dateCreated: firebase.firestore.Timestamp,
+  dateModified: firebase.firestore.Timestamp
+}

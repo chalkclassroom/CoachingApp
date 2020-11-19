@@ -2,25 +2,50 @@
 // Allows editing of the contents to customise the outgoing email.
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-// import Input from '@material-ui/core/Input';
-// import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 
 interface EmailBodyProps {
-    emailText: JSX.Element, 
-    emailTextRef: React.MutableRefObject<HTMLDivElement>,
-    // greetingText: string,
-    // bodyText: string,
-    // goodbyeText: string
+  email: string,
+  setEmail: React.Dispatch<React.SetStateAction<string>>
 }
 
 const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
-    return (
-        <Paper style={{height: '100%'}}>
-            <div contentEditable={true} style={{height: '100%', outline: '0px solid transparent', overflowY: 'auto'}} ref={props.emailTextRef}>
-              {props.emailText}
-            </div>
-        </Paper>
-    );
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
+    event.persist();
+    props.setEmail(event.target.value);
+  };
+
+  return (
+    <Paper style={{height: '100%'}}>
+      <Grid
+        container
+        direction="row"
+        justify="flex-start"
+        alignItems="flex-start"
+        style={{
+          height: '100%',
+          width: '100%',
+          padding: '1em'
+        }}
+      >
+        <textarea
+          value={props.email}
+          onChange={handleEmailChange}
+          style={{
+            height: '100%',
+            width: '100%',
+            border: 'none',
+            outline: 'none',
+            fontFamily: 'Arimo',
+            resize: 'none',
+            overflowX: 'hidden',
+            overflowY: 'auto'
+          }}
+        />
+      </Grid>
+    </Paper>
+  );
 }
 
 export default EmailBody;
