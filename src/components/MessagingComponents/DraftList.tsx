@@ -32,9 +32,9 @@ interface State {
 type EmailKey = keyof Email;
 
 const headCells = [
-  { id: 'recipient', numeric: false, disablePadding: false, label: 'To:' },
+  { id: 'recipientName', numeric: false, disablePadding: false, label: 'To:' },
   { id: 'subject', numeric: false, disablePadding: false, label: 'Subject:' },
-  { id: 'modified', numeric: false, disablePadding: false, label: 'Edited:' },
+  { id: 'dateModified', numeric: false, disablePadding: false, label: 'Edited:' },
 ];
 
 /**
