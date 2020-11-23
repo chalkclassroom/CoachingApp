@@ -130,8 +130,11 @@ export interface Email {
   emailContent: string,
   subject: string,
   recipientId: string,
+  recipientName: string,
+  recipientEmail: string,
   type: string,
   user: string,
   dateCreated: firebase.firestore.Timestamp,
-  dateModified: firebase.firestore.Timestamp
+  dateModified: firebase.firestore.Timestamp,
+  // attachments
 }

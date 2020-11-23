@@ -288,8 +288,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     })
   }
 
-  const saveEmail = async (email?: string, subject?: string, recipientId?: string, emailId?: string): void => {
-    const savedEmailId = await firebase.saveEmail(email, subject, recipientId, emailId);
+  const saveEmail = async (email?: string, subject?: string, recipient?: {id: string, name: string, email: string}, emailId?: string): Promise<void> => {
+    const savedEmailId = await firebase.saveEmail(email, subject, recipient, emailId);
     setEmailId(savedEmailId);
   }
 
@@ -349,7 +349,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                         />
                       </Grid>
                       <Grid item style={{paddingRight: '1em'}}>
-                        <SaveButton saveEmail={(): void => {saveEmail(email, subject, recipient.id, emailId)}} saveDraft={(): void => setActionPlanDisplay(true)} />
+                        <SaveButton saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId)}} saveDraft={(): void => setActionPlanDisplay(true)} />
                       </Grid>
                       <Grid item>
                         <DeleteButton />

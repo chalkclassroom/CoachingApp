@@ -39,13 +39,18 @@ const MessagingView: React.FC<{}> = () => {
   // State to record which option the user chose: New Message, Draft, or Sent
   const [menuOption, setMenuOption] = useState<MenuOptionsKey>('NEW_MESSAGE');
   const [drafts, setDrafts] = useState<Array<Email>>([]);
+  const [noDrafts, setNoDrafts] = useState(false);
   // Using Firebase
   const firebase = useContext(FirebaseContext);
 
   useEffect(() => {
-    if (drafts.length === 0) {
-      firebase.getAllDrafts().then((drafts: Array<Email>) => {
-        setDrafts(drafts)
+    if (drafts.length === 0 && !noDrafts) {
+      firebase.getAllDrafts().then((result: Array<Email>) => {
+        if (result.length === 0) {
+          setNoDrafts(true)
+        } else {
+          setDrafts(result)
+        }
       })
     }
   })
@@ -70,14 +75,14 @@ const MessagingView: React.FC<{}> = () => {
     if(MenuOptions[menuOption] === MenuOptions.NEW_MESSAGE) {
       return (<NewMessageView firebase={firebase} draft={initMessage}/>);
     } else if(MenuOptions[menuOption] === MenuOptions.DRAFTS) {
-      return (<DraftView drafts={drafts} />);
+      return (<DraftView drafts={drafts} noDrafts={noDrafts} />);
     } else {
       return (<SentView firebase={firebase}/>);
     }
   };
 
   return (
-    <Grid container direction="column" style={{height: '100vh', display: 'flex', flexDirection: 'column', overflowX: 'hidden', overflowY: 'auto'}}>
+    <Grid container direction="column" style={{height: '100%', display: 'flex', flexDirection: 'column', overflowX: 'hidden', overflowY: 'auto'}}>
       <Grid item style={{width: '100%'}}>
         <FirebaseContext.Consumer>
           {(firebase: Types.FirebaseAppBar): React.ReactNode => (
@@ -86,15 +91,15 @@ const MessagingView: React.FC<{}> = () => {
         </FirebaseContext.Consumer>
       </Grid>
       <Grid item style={{flexGrow: 1}}>
-        <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
-          <Grid item xs={3} style={{height: '100%', paddingRight: '1.5em'}}>
+        <Grid container direction="row" justify="center" alignItems="flex-start" style={{height: '100%'}}>
+          <Grid item xs={3} style={{paddingRight: '1.5em', height: '100%'}}>
             <MessagingMenu
               currentOption={menuOption}
               changeOption={(newOption: MenuOptionsKey): void => { setMenuOption(newOption);}}
             />
           </Grid>
-          <Grid item xs={9} style={{paddingRight: '1.5em'}}>
-            <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%'}}>
+          <Grid item xs={9} style={{paddingRight: '1.5em', height: '100%'}}>
+            <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%', height: '100%', paddingTop: '1.5em', paddingBottom: '1.5em'}}>
               <Grid item style={{width: '100%'}}>
                 {getBody()}
               </Grid>

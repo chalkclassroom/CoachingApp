@@ -1,35 +1,24 @@
 import React from 'react';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import { Email } from './MessagingTypes'; 
+import { Email } from './MessagingTypes';
+import DraftList from './DraftList';
+import Typography from '@material-ui/core/Typography';
 
 interface DraftViewProps {
   drafts: Array<Email>;
-  // called when a draft is chosen to be edited
-  // editDraft: (msg: Message) => void;
-  // firebase: any;
+  noDrafts: boolean;
 };
 
 const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
   return (
-    <List>
-      {
-        props.drafts.map((draft: Email) => (
-          <ListItem 
-            button 
-            key={draft.id} 
-            // onClick={(): void => props.editDraft(draft)} 
-            style={{marginBottom: "10px"}}
-          >
-            <ListItemText 
-              primary={draft.recipientId}
-              secondary={draft.subject}
-            />
-          </ListItem>
-        ))
-      }
-    </List>
+    <div>
+      {props.noDrafts ? (
+        <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+          You do not have any drafts.
+        </Typography>
+      ) : (
+        <DraftList drafts={props.drafts} />
+      )}
+    </div>
   );
 };
 

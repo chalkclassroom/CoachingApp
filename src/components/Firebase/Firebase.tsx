@@ -2275,10 +2275,10 @@ class Firebase {
    * adds coaching question to conference plan
    * @param {string} email
    * @param {string} subject
-   * @param {string} recipientId
+   * @param {object} recipient
    * @param {string} emailId
    */
-  saveEmail = async (email?: string, subject?: string, recipientId?: string, emailId?: string): Promise<string | void> => {
+  saveEmail = async (email?: string, subject?: string, recipient?: {id: string, name: string, email: string}, emailId?: string): Promise<string | void> => {
     // let emailRef: firebase.firestore.DocumentReference | null = null;
     if (this.auth.currentUser) {
       if (emailId) {
@@ -2286,9 +2286,11 @@ class Firebase {
           .collection('emails')
           .doc(emailId)
           .update({
-            emailContent: email ? email: null,
+            emailContent: email ? email : null,
             subject: subject ? subject : null,
-            recipientId: recipientId ? recipientId: null,
+            recipientId: recipient ? recipient.id : null,
+            recipientName: recipient ? recipient.name : null,
+            recipientEmail: recipient ? recipient.email : null,
             dateModified: firebase.firestore.FieldValue.serverTimestamp(),
             type: 'draft'
           }).then(() => {
@@ -2300,9 +2302,11 @@ class Firebase {
       } else {
         const emailRef: firebase.firestore.DocumentReference = this.db.collection("emails").doc();
         const savedEmail = emailRef.set({
-          emailContent: email ? email: null,
+          emailContent: email ? email : null,
           subject: subject ? subject : null,
-          recipientId: recipientId ? recipientId: null,
+          recipientId: recipient ? recipient.id : null,
+          recipientName: recipient ? recipient.name : null,
+          recipientEmail: recipient ? recipient.email : null,
           dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
           dateModified: firebase.firestore.FieldValue.serverTimestamp(),
           type: 'draft',
@@ -2352,6 +2356,8 @@ class Firebase {
     emailContent: string,
     subject: string,
     recipientId: string,
+    recipientName: string,
+    recipientEmail: string,
     type: string,
     user: string,
     dateCreated: firebase.firestore.Timestamp,
@@ -2367,6 +2373,8 @@ class Firebase {
             emailContent: string,
             subject: string,
             recipientId: string,
+            recipientName: string,
+            recipientEmail: string,
             type: string,
             user: string,
             dateCreated: firebase.firestore.Timestamp,
@@ -2378,6 +2386,8 @@ class Firebase {
               emailContent: doc.data().emailContent,
               subject: doc.data().subject,
               recipientId: doc.data().recipientId,
+              recipientName: doc.data().recipientName,
+              recipientEmail: doc.data().recipientEmail,
               type: doc.data().type,
               user: doc.data().user,
               dateCreated: doc.data().dateCreated,
