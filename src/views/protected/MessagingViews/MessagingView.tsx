@@ -43,6 +43,15 @@ const MessagingView: React.FC<{}> = () => {
   // Using Firebase
   const firebase = useContext(FirebaseContext);
 
+  const [recipient, setRecipient] = useState({
+    value: '',
+    id: '',
+    label: ''
+  });
+  const [email, setEmail] = useState('');
+  const [emailId, setEmailId] = useState('');
+  const [subject, setSubject] = useState('');
+
   useEffect(() => {
     if (drafts.length === 0 && !noDrafts) {
       firebase.getAllDrafts().then((result: Array<Email>) => {
@@ -73,9 +82,9 @@ const MessagingView: React.FC<{}> = () => {
   // Update right pane of the page according to what the user chose on the left pane
   const getBody = (): JSX.Element => {
     if(MenuOptions[menuOption] === MenuOptions.NEW_MESSAGE) {
-      return (<NewMessageView firebase={firebase} draft={initMessage}/>);
+      return (<NewMessageView firebase={firebase} />);
     } else if(MenuOptions[menuOption] === MenuOptions.DRAFTS) {
-      return (<DraftView drafts={drafts} noDrafts={noDrafts} />);
+      return (<DraftView drafts={drafts} noDrafts={noDrafts} firebase={firebase} />);
     } else {
       return (<SentView firebase={firebase}/>);
     }

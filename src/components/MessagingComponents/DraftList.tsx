@@ -16,7 +16,7 @@ import { Email } from './MessagingTypes';
 
 interface Props {
   drafts?: Array<Email>,
-  // onClick(actionPlanId: string, teacherId: string): void
+  onClick(draft: Email): void
 }
 
 interface State {
@@ -200,6 +200,7 @@ class DraftList extends React.Component<Props, State>{
                 <TableRow
                   key={index}
                   selected={isItemSelected}
+                  onClick={(): void => this.props.onClick(row)}
                 >
                   <TableCell style={{padding: '0.5em'}}>
                     <Typography variant="h6" style={{fontFamily: 'Arimo'}}>

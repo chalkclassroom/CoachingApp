@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -15,7 +15,7 @@ import AttachButton from './AttachButton';
 // import AlertDialog from './AlertDialog';
 // import ChooseActionPlanDialog from './ChooseActionPlanDialog';
 import AttachmentDialog from './AttachmentDialog';
-import { Alerts, ThemeOptions, Message, Attachment, SelectOption, TemplateOption } from './MessagingTypes';
+import { Alerts, ThemeOptions, Message, Attachment, SelectOption, TemplateOption, Email } from './MessagingTypes';
 import * as CryptoJS from 'crypto-js';
 import ActionPlanForm from '../ActionPlanForm';
 
@@ -26,7 +26,15 @@ interface NewMessageViewProps {
   // is a prop as it allows editing drafts to be easier
   // DraftView just modifies two states in the parent component: initialMsg and menuOption
   // and the NewMessageView is loaded with that draft as content
-  draft: Message;
+  draft?: Email;
+  /* email: string;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  emailId: string;
+  setEmailId: React.Dispatch<React.SetStateAction<string>>;
+  subject: string;
+  setSubject: React.Dispatch<React.SetStateAction<string>>;
+  recipient: {value: string, id: string, label: string};
+  setRecipient: React.Dispatch<React.SetStateAction<{value: string, id: string, label: string}>> */
 };
 
 /* const gridContainer = {
@@ -94,12 +102,25 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [emailId, setEmailId] = useState('');
 
   // get the user's name
-  if (userName === '') {
-    firebase.getCoachFirstName()
-      .then((name: string): void => {
-        setUserName(name);
+  useEffect(() => {
+    if (userName === '') {
+      firebase.getCoachFirstName()
+        .then((name: string): void => {
+          setUserName(name);
+        });
+    }
+    if (props.draft && emailId === '') {
+      setEmailId(props.draft.id);
+      setEmail(props.draft.emailContent);
+      setSubject(props.draft.subject);
+      setRecipient({
+        value: props.draft.recipientEmail,
+        id: props.draft.recipientId,
+        label: props.draft.recipientName
       });
-  }
+    }
+  })
+  
 
   const sendMail = (): void => {
     if (recipient === null) {
@@ -258,10 +279,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   </div>;
 
   // get the text for EmailBody according to the states set
-  const getEmailText = (): JSX.Element => {
+  /* const getEmailText = (): JSX.Element => {
     // if the theme of the draft matches with the current theme and the textContent is not null
     // it means that the user is editing a draft message and then that is content shown in the email body
-    if (theme === props.draft.theme && props.draft.textContent !== null) {
+    // if (theme === props.draft.theme && props.draft.textContent !== null) {
+    if (props.draft.theme) {
       return props.draft.content;
     } else {
       const recipientName = (props.draft.to !== '' ? props.draft.to : (recipient ? recipient.label : ''));
@@ -279,7 +301,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         return chooseOptions();
       }
     }
-  };
+  }; */
 
   const recipientSelected = (newRecipient: {value: string, id: string, label: string}): void => {
     setRecipient(newRecipient);
@@ -333,7 +355,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 <SubjectLine subject={subject} setSubject={setSubject} />
               </Grid>
               <Grid item style={{width: '100%', height: '80%'}}>
-                <EmailBody emailText={getEmailText()} emailTextRef={textRef} greetingText={greetingText} email={email} setEmail={setEmail} />
+                <EmailBody email={email} setEmail={setEmail} />
               </Grid>
               <Grid item>
                 <Grid container direction="row" justify="space-between" style={{width: '100%'}}>
