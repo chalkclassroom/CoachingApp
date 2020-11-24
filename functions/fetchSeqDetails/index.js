@@ -18,15 +18,15 @@ exports.fetchSeqDetails = async(req, res) => {
   COUNT(CASE WHEN (peopleType = 3 OR peopleType = 4) AND (checked = 5 OR checked = 6 OR checked = 7 OR checked = 8) THEN 'teacherBehavior' ELSE NULL END) AS teacherBehavior
 FROM cqrefpwa.observations.sequential
 WHERE id =` + req.query.id;
-  
-    const options = {
+
+  const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
     location: 'US',
   };
-  
+
   // Runs the query
   const [rows] = await bigquery.query(options);
-  
+
   res.status(200).send(rows);
 };

@@ -1,4 +1,4 @@
-  // Imports the Google Cloud client library
+// Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
 
@@ -13,7 +13,7 @@ const bigquery = new BigQuery();
  */
 exports.funcBehaviourTrend = functions.https.onCall((data, context) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
- 	console.log(context.auth.uid);  
+  console.log(context.auth.uid);
   console.log(data.sessionId);
   // The SQL query to run
   const sqlQuery = `SELECT transitionStart, transitionEnd, type 
@@ -22,7 +22,7 @@ exports.funcBehaviourTrend = functions.https.onCall((data, context) => {
                     LIMIT 100;`;
 
   console.log(sqlQuery);
-  
+
   const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.

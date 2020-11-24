@@ -1,4 +1,4 @@
-  // Imports the Google Cloud client library
+// Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
 
@@ -13,13 +13,13 @@ const bigquery = new BigQuery();
  */
 exports.funcSessionDates = functions.https.onCall(async (data, context) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
-  console.log(context.auth.uid);  
+  console.log(context.auth.uid);
   console.log(data.teacherId);
   // The SQL query to run
   const sqlQuery = `SELECT DISTINCT id, sessionStart FROM cqrefpwa.observations.`+data.type+` WHERE observedBy = '/user/`+context.auth.uid+`' AND teacher = '/user/`+data.teacherId+`' ORDER BY sessionStart DESC LIMIT 100;`;
-  
+
   console.log(sqlQuery);
-  
+
   const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.

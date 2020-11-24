@@ -19,18 +19,18 @@ exports.funcChildMathSummary = functions.https.onCall(async (data, context) => {
                     COUNT(CASE WHEN (checklist.child5) THEN 'notMath' ELSE NULL END) AS notMath
                     FROM cqrefpwa.observations.math
                     WHERE id ='`+data.sessionId+`'`;
-  
-  	console.log(sqlQuery); 
-  
-    const options = {
+
+  console.log(sqlQuery);
+
+  const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
     location: 'US',
   };
-  
+
   const [job] = await bigquery.createQueryJob(options);
   console.log(`Job ${job.id} started.`);
-  
+
   const rows = await job.getQueryResults();
   console.log(rows);
   return rows;
