@@ -166,11 +166,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         id: '0000001',
         from: 'clare.e.speer@vanderbilt.edu',
         to: 'clare.e.speer@vanderbilt.edu',
-        subject: 'idk',
+        subject: subject ? subject : '',
         theme: ThemeOptions.FEEDBACK,
         // html: textRef.current,
         textContent: 'test',
-        content: 'testing this',
+        content: email ? email : '',
         delivered: false,
         // attachments: sendAttachments,
         attachments: [{
