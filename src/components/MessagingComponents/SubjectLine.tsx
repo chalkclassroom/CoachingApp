@@ -6,7 +6,8 @@ import TextField from '@material-ui/core/TextField';
 
 interface SubjectLineProps {
   subject: string | undefined,
-  setSubject: React.Dispatch<React.SetStateAction<string | undefined>>
+  setSubject: React.Dispatch<React.SetStateAction<string | undefined>>,
+  readOnly: boolean | undefined
 }
 
 const SubjectLine: React.FC<SubjectLineProps> = (props: SubjectLineProps) => {
@@ -23,6 +24,7 @@ const SubjectLine: React.FC<SubjectLineProps> = (props: SubjectLineProps) => {
             value={props.subject}
             onChange={(event: React.ChangeEvent<HTMLInputElement>): void => props.setSubject(event.target.value)}
             fullWidth
+            disabled={props.readOnly}
             InputProps={{
               disableUnderline: true,
               style: {fontFamily: "Arimo", paddingLeft: '0.5em', paddingRight: '0.5em'}

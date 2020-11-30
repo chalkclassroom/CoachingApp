@@ -40,16 +40,29 @@ const MessagingView: React.FC<{}> = () => {
   const [menuOption, setMenuOption] = useState<MenuOptionsKey>('NEW_MESSAGE');
   const [drafts, setDrafts] = useState<Array<Email>>([]);
   const [noDrafts, setNoDrafts] = useState(false);
+  const [sentEmails, setSentEmails] = useState<Array<Email>>([]);
+  const [noSentEmails, setNoSentEmails] = useState(false);
   // Using Firebase
   const firebase = useContext(FirebaseContext);
 
   useEffect(() => {
     if (drafts.length === 0 && !noDrafts) {
-      firebase.getAllDrafts().then((result: Array<Email>) => {
+      firebase.getAllEmails().then((result: Array<Email>) => {
+        const draftsList: Array<Email> = [];
+        const sentEmailsList: Array<Email> = [];
         if (result.length === 0) {
-          setNoDrafts(true)
+          setNoDrafts(true);
+          setNoSentEmails(true);
         } else {
-          setDrafts(result)
+          result.forEach((email: Email) => {
+            if (email.type === 'draft') {
+              draftsList.push(email)
+            } else {
+              sentEmailsList.push(email)
+            }
+          })
+          setDrafts(draftsList);
+          setSentEmails(sentEmailsList);
         }
       })
     }
@@ -84,6 +97,15 @@ const MessagingView: React.FC<{}> = () => {
       setDrafts(newDraftsArray);
     }
   }
+
+  const moveDraftToSent = (email: Email): void => {
+    const draftIndex = drafts.map(function(e) { return e.id; }).indexOf(email.id);
+    const sentEmail = drafts[draftIndex];
+    const allSentEmails = sentEmails;
+    setDrafts(drafts.filter(item => item.id !== sentEmail.id));
+    allSentEmails.push(email);
+    setSentEmails(allSentEmails);
+  }
   
   // State to record the message input to NewMessage so that if a user is coming from DraftView, this can be updated
   // to be the message from Draft, else a new message
@@ -103,11 +125,11 @@ const MessagingView: React.FC<{}> = () => {
   // Update right pane of the page according to what the user chose on the left pane
   const getBody = (): JSX.Element => {
     if(MenuOptions[menuOption] === MenuOptions.NEW_MESSAGE) {
-      return (<NewMessageView updateDrafts={updateDrafts} firebase={firebase} />);
+      return (<NewMessageView updateDrafts={updateDrafts} moveDraftToSent={moveDraftToSent} firebase={firebase} />);
     } else if(MenuOptions[menuOption] === MenuOptions.DRAFTS) {
-      return (<DraftView drafts={drafts} noDrafts={noDrafts} updateDrafts={updateDrafts} firebase={firebase} />);
+      return (<DraftView drafts={drafts} noDrafts={noDrafts} updateDrafts={updateDrafts} moveDraftToSent={moveDraftToSent} firebase={firebase} />);
     } else {
-      return (<SentView firebase={firebase}/>);
+      return (<SentView emails={sentEmails} noEmails={noSentEmails} firebase={firebase}/>);
     }
   };
 

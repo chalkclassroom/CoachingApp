@@ -1,58 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import { Message } from './MessagingTypes'; 
-import ViewEmailDialog from './ViewEmailDialog';
+import React, { useState } from 'react';
+import * as PropTypes from 'prop-types';
+import { Email } from './MessagingTypes';
+import NewMessageView from './NewMessageView';
+import DraftList from './DraftList';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 interface SentViewProps {
+  emails: Array<Email>;
+  noEmails: boolean;
   firebase: any;
-}
+};
 
 const SentView: React.FC<SentViewProps> = (props: SentViewProps) => {
-  // state maintaining the list of sent emails
-  const [sentList, setSentList] = useState([]);
-  const [viewEmail, setViewEmail] = useState(null);
-  
-  useEffect((): void => {
-    props.firebase.getSentEmailList()
-      .then((res: any): void => {
-        if(res !== sentList) {
-          setSentList(res);
-        }
-      })
-      .catch((err: any): void => {
-        console.log(err);
-      });
-  });
-  console.log(viewEmail);
-  
-	return (
-    <>
-      <List>
-        {
-          sentList.map((text: Message) => (
-            <ListItem 
-              button 
-              key={text.id} 
-              onClick={(): void => setViewEmail(text)} 
-              style={{marginBottom: "10px"}}
-            >
-              <ListItemText 
-                primary={text.to} 
-                secondary={text.subject}
-              />
-            </ListItem>
-          ))
-        }
-      </List>
-      <ViewEmailDialog 
-        open={viewEmail !== null} 
-        handleClose={(): void => setViewEmail(null)} 
-        email={viewEmail}
-      />
-    </>
+  const [selectedEmail, setSelectedEmail] = useState<Email>();
+  const onClick = (email: Email): void => {
+    setSelectedEmail(email);
+    console.log('this is the email', email);
+  }
+
+  return (
+    <div>
+      {props.noEmails ? (
+        <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+          You have not sent any emails.
+        </Typography>
+      ) : selectedEmail ? (
+        <Grid container direction="column" justify="center" alignItems="stretch">
+          <Grid item>
+            <Grid container direction="row" justify="flex-start" alignItems="center">
+              <Grid item>
+                <IconButton onClick={(): void => setSelectedEmail(undefined)} style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <NewMessageView draft={selectedEmail} firebase={props.firebase} readOnly={true} />
+          </Grid>
+        </Grid>
+      ) : (
+        <DraftList drafts={props.emails} onClick={onClick} />
+      )}
+    </div>
   );
 };
+
+SentView.propTypes = {
+  emails: PropTypes.array.isRequired,
+  noEmails: PropTypes.bool.isRequired
+}
 
 export default SentView;

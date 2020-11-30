@@ -19,8 +19,9 @@ const customStyles = {
 }
 
 interface ChooseThemeProps {
-  selectedOption: SelectOption; 
-  setOption: (newOption: SelectOption) => void; 
+  selectedOption: SelectOption;
+  setOption: (newOption: SelectOption) => void;
+  readOnly: boolean | undefined;
 }
 
 const ChooseTheme: React.FC<ChooseThemeProps> = (props: ChooseThemeProps) => {
@@ -32,13 +33,14 @@ const ChooseTheme: React.FC<ChooseThemeProps> = (props: ChooseThemeProps) => {
   ];
 
   return (
-      <Select
-        value={props.selectedOption}
-        onChange={props.setOption}
-        options={teacherList}
-        styles={customStyles}
-      />
-    );
+    <Select
+      value={props.selectedOption}
+      onChange={props.setOption}
+      options={teacherList}
+      styles={customStyles}
+      isDisabled={props.readOnly}
+    />
+  );
 }
 
 export default ChooseTheme;

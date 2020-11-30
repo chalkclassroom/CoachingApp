@@ -6,7 +6,8 @@ import Grid from '@material-ui/core/Grid';
 
 interface EmailBodyProps {
   email: string | undefined,
-  setEmail: React.Dispatch<React.SetStateAction<string | undefined>>
+  setEmail: React.Dispatch<React.SetStateAction<string | undefined>>,
+  readOnly: boolean | undefined
 }
 
 const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
@@ -32,6 +33,7 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
         <textarea
           value={props.email}
           onChange={handleEmailChange}
+          readOnly={props.readOnly}
           style={{
             height: '100%',
             width: '100%',

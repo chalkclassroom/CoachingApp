@@ -2356,9 +2356,9 @@ class Firebase {
   }
 
   /**
-   * finds all email drafts for particular user
+   * finds all emails (draft and sent) for particular user
    */
-  getAllDrafts = async (): Promise<Array<MessagingTypes.Email> | void> => {
+  getAllEmails = async (): Promise<Array<MessagingTypes.Email> | void> => {
     if (this.auth.currentUser) {
       this.query = this.db.collection("emails")
         .where("user", "==", this.auth.currentUser.uid)

@@ -12,6 +12,7 @@ interface DraftViewProps {
   drafts: Array<Email>;
   noDrafts: boolean;
   updateDrafts(email: Email): void;
+  moveDraftToSent(email: Email): void;
   firebase: any;
 };
 
@@ -19,7 +20,6 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
   const [selectedDraft, setSelectedDraft] = useState<Email>();
   const onClick = (draft: Email): void => {
     setSelectedDraft(draft);
-    console.log('this is the draft', draft);
   }
 
   return (
@@ -40,7 +40,7 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
             </Grid>
           </Grid>
           <Grid item>
-            <NewMessageView draft={selectedDraft} updateDrafts={props.updateDrafts} firebase={props.firebase} />
+            <NewMessageView draft={selectedDraft} updateDrafts={props.updateDrafts} moveDraftToSent={props.moveDraftToSent} firebase={props.firebase} />
           </Grid>
         </Grid>
       ) : (
@@ -53,7 +53,8 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
 DraftView.propTypes = {
   drafts: PropTypes.array.isRequired,
   noDrafts: PropTypes.bool.isRequired,
-  updateDrafts: PropTypes.func.isRequired
+  updateDrafts: PropTypes.func.isRequired,
+  moveDraftToSent: PropTypes.func.isRequired
 }
 
 export default DraftView;

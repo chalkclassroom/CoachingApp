@@ -36,7 +36,9 @@ interface NewMessageViewProps {
   setSubject: React.Dispatch<React.SetStateAction<string>>;
   recipient: {value: string, id: string, label: string};
   setRecipient: React.Dispatch<React.SetStateAction<{value: string, id: string, label: string}>> */
-  updateDrafts(email: Email): void;
+  updateDrafts?(email: Email): void;
+  readOnly?: boolean;
+  moveDraftToSent?(email: Email): void;
 };
 
 /* const gridContainer = {
@@ -124,7 +126,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   })
   
 
-  const sendMail = (): void => {
+  const sendMail = async (): Promise<void> => {
     if (recipient === null) {
       setAlertEnum(Alerts.NO_RECIPIENT);	
     } else {
@@ -329,11 +331,12 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       email: string
     },
     emailId?: string
-  ): Promise<void> => {
-    firebase.saveEmail(email, subject, recipient, emailId).then((data: Email) => {
+  ): Promise<Email> => {
+    return firebase.saveEmail(email, subject, recipient, emailId).then((data: Email) => {
       props.updateDrafts(data);
       setEmailId(data.id);
-    })
+      return data;
+    });
   };
 
   const saveAndSendEmail = (
@@ -346,8 +349,12 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     },
     emailId?: string
   ): void => {
-    saveEmail(email, subject, recipient, emailId).then(() => {
-      sendMail();
+    saveEmail(email, subject, recipient, emailId).then((email: Email) => {
+      sendMail().then(() => {
+        if (props.moveDraftToSent) {
+          props.moveDraftToSent(email)
+        }
+      })
     })
   }
 
@@ -356,82 +363,91 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       <Grid direction="column" justify="center" alignItems="center" style={{width: '100%', height: '80vh'}}>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
-            <Grid item xs={6}>
-              <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                Write a new message to:
+            <Grid item xs={3}>
+              <Typography variant="h6" align="right" style={{fontFamily: 'Arimo', paddingRight: '1em'}}>
+                {/* {props.readOnly ? 'To:' : 'Write a new message to:'} */}
+                To:
               </Typography>
             </Grid>
             <Grid item xs={6}>
               <RecipientAddress
                 selectedOption={recipient}
                 setOption={(newOption: SelectOption): void => recipientSelected(newOption)}
+                readOnly={props.readOnly}
               />
             </Grid>
           </Grid>
         </Grid>
         <Grid item style={{paddingTop: '0.5em'}}>
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
-            <Grid item xs={6}>
-              <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                Select message template:
+            <Grid item xs={3}>
+              <Typography variant="h6" align="right" style={{fontFamily: 'Arimo', paddingRight: '1em'}}>
+                {/* {props.readOnly ? 'Message template:' : 'Select message template:'} */}
+                Template:
               </Typography>
             </Grid>
             <Grid item xs={6}>
               <ChooseTheme
                 selectedOption={theme}
                 setOption={(newTheme: TemplateOption): void => setTheme(newTheme)}
+                readOnly={props.readOnly}
               />
             </Grid>
           </Grid>
         </Grid>
         <Grid item style={{width: '100%', height: '75%', paddingTop: '1em'}}>
           <Paper style={{backgroundColor: '#d8ecff', height: '100%', padding: '1em'}}>
-            <Grid container direction="column" justify='space-between' style={{height: '100%'}}>
-              <Grid container direction='row' justify='flex-start'>
-                <SubjectLine subject={subject} setSubject={setSubject} />
+            <Grid container direction="column" justify={props.readOnly? 'space-around' : 'space-between'} style={{height: '100%'}}>
+              <Grid item>
+                <Grid container direction='row' justify='flex-start'>
+                  <SubjectLine subject={subject} setSubject={setSubject} readOnly={props.readOnly} />
+                </Grid>
               </Grid>
               <Grid item style={{width: '100%', height: '80%'}}>
-                <EmailBody email={email} setEmail={setEmail} />
+                <EmailBody email={email} setEmail={setEmail} readOnly={props.readOnly} />
               </Grid>
-              <Grid item>
-                <Grid container direction="row" justify="space-between" style={{width: '100%'}}>
-                  <Grid item>
-                    <SendButton sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId)}}/>
-                  </Grid>
-                  <Grid item>
-                    <Grid container direction="row">
-                      <Grid item style={{paddingRight: '1em'}}>
-                        <AttachButton 
-                          acceptAttachment={(): void => setActionPlanDisplay(true)} 
-                          // disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
+              {props.readOnly ? (null) : (
+                <Grid item>
+                  <Grid container direction="row" justify="space-between" style={{width: '100%'}}>
+                    <Grid item>
+                      <SendButton sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId)}}/>
+                    </Grid>
+                    <Grid item>
+                      <Grid container direction="row">
+                        <Grid item style={{paddingRight: '1em'}}>
+                          <AttachButton 
+                            acceptAttachment={(): void => setActionPlanDisplay(true)} 
+                            // disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
+                          />
+                        </Grid>
+                        <Grid item style={{paddingRight: '1em'}}>
+                          <SaveButton saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId)}} saveDraft={(): void => setActionPlanDisplay(true)} />
+                        </Grid>
+                        <Grid item>
+                          <DeleteButton />
+                        </Grid>
+                        <AttachmentDialog
+                          recipientId={recipient.id}
+                          actionPlans={actionPlans}
+                          open={actionPlanDisplay}
+                          recipientName={recipient.label}
+                          handleClose={(): void => setActionPlanDisplay(false)}
+                          handleAdd={(newActionPlan: string): void => { 
+                            createAddAttachment(newActionPlan);
+                            setActionPlanDisplay(false);
+                          }} 
+                          handleDelete={(existActionPlan: string): void => {
+                            removeAttachment(existActionPlan);
+                            setActionPlanDisplay(false);
+                          }}
+                          attachmentList={attachments}
                         />
                       </Grid>
-                      <Grid item style={{paddingRight: '1em'}}>
-                        <SaveButton saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId)}} saveDraft={(): void => setActionPlanDisplay(true)} />
-                      </Grid>
-                      <Grid item>
-                        <DeleteButton />
-                      </Grid>
-                      <AttachmentDialog
-                        recipientId={recipient.id}
-                        actionPlans={actionPlans}
-                        open={actionPlanDisplay}
-                        recipientName={recipient.label}
-                        handleClose={(): void => setActionPlanDisplay(false)}
-                        handleAdd={(newActionPlan: string): void => { 
-                          createAddAttachment(newActionPlan);
-                          setActionPlanDisplay(false);
-                        }} 
-                        handleDelete={(existActionPlan: string): void => {
-                          removeAttachment(existActionPlan);
-                          setActionPlanDisplay(false);
-                        }}
-                        attachmentList={attachments}
-                      />
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              )}
+              
             </Grid>
           </Paper>
         </Grid>
@@ -441,7 +457,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 }
 
 NewMessageView.propTypes = {
-  updateDrafts: PropTypes.func.isRequired
+  updateDrafts: PropTypes.func.isRequired,
+  moveDraftToSent: PropTypes.func.isRequired
 }
 
 export default NewMessageView;

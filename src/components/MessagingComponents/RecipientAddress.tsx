@@ -25,6 +25,7 @@ interface RecipientAddressProps {
   selectedOption: SelectOption;
   setOption: (newOption: SelectOption) => void;
   teachers: Array<Types.Teacher>;
+  readOnly: boolean | undefined;
 }
 
 const RecipientAddress: React.FC<RecipientAddressProps> = (props: RecipientAddressProps) => {
@@ -47,6 +48,7 @@ const RecipientAddress: React.FC<RecipientAddressProps> = (props: RecipientAddre
       onChange={props.setOption}
       options={teacherList}
       styles={customStyles}
+      isDisabled={props.readOnly}
     />
   );
 }
