@@ -351,6 +351,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   ): void => {
     saveEmail(email, subject, recipient, emailId).then((email: Email) => {
       sendMail().then(() => {
+        firebase.changeDraftToSent(email.id);
         if (props.moveDraftToSent) {
           props.moveDraftToSent(email)
         }

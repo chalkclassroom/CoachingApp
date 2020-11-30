@@ -2331,6 +2331,19 @@ class Firebase {
     }
   }
 
+  changeDraftToSent = async (emailId: string): Promise<void> => {
+    const emailRef = this.db.collection('emails').doc(emailId);
+    return emailRef.update({
+      type: 'sent'
+    })
+    .then(function() {
+      console.log("Document successfully updated!");
+    })
+    .catch(function(error) {
+        console.error("Error updating document: ", error);
+    });
+  }
+
   getEmail = async (): Promise<string> => {
     return this.db
       .collection("emails")
