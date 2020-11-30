@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as PropTypes from 'prop-types';
 import { Email } from './MessagingTypes';
 import NewMessageView from './NewMessageView';
 import DraftList from './DraftList';
@@ -10,6 +11,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 interface DraftViewProps {
   drafts: Array<Email>;
   noDrafts: boolean;
+  updateDrafts(email: Email): void;
   firebase: any;
 };
 
@@ -38,7 +40,7 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
             </Grid>
           </Grid>
           <Grid item>
-            <NewMessageView draft={selectedDraft} firebase={props.firebase} />
+            <NewMessageView draft={selectedDraft} updateDrafts={props.updateDrafts} firebase={props.firebase} />
           </Grid>
         </Grid>
       ) : (
@@ -47,5 +49,11 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
     </div>
   );
 };
+
+DraftView.propTypes = {
+  drafts: PropTypes.array.isRequired,
+  noDrafts: PropTypes.bool.isRequired,
+  updateDrafts: PropTypes.func.isRequired
+}
 
 export default DraftView;

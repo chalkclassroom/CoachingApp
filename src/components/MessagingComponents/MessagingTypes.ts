@@ -127,14 +127,14 @@ export interface TemplateOption {
 
 export interface Email {
   id: string,
-  emailContent: string,
-  subject: string,
-  recipientId: string,
-  recipientName: string,
-  recipientEmail: string,
+  emailContent: string | undefined,
+  subject: string | undefined,
+  recipientId: string | undefined,
+  recipientName: string | undefined,
+  recipientEmail: string | undefined,
   type: string,
   user: string,
-  dateCreated: firebase.firestore.Timestamp,
+  dateCreated?: firebase.firestore.Timestamp,
   dateModified: firebase.firestore.Timestamp,
   // attachments
 }

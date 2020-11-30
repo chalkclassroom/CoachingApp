@@ -5,8 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
 interface SubjectLineProps {
-  subject: string,
-  setSubject: React.Dispatch<React.SetStateAction<string>>
+  subject: string | undefined,
+  setSubject: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
 const SubjectLine: React.FC<SubjectLineProps> = (props: SubjectLineProps) => {

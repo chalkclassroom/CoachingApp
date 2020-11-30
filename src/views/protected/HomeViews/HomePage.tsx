@@ -186,7 +186,7 @@ class HomePage extends React.Component<Props, State> {
               <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
                 <Grid item>
                 <Typography variant="h3" align={"center"} style={{fontFamily: 'Arimo', verticalAlign: 'center'}}>
-                  Welcome, {this.props.coachName}!kl
+                  Welcome, {this.props.coachName}!
                 </Typography>
                 </Grid>
               </Grid>

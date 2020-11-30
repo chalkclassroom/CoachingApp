@@ -5,8 +5,8 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 interface EmailBodyProps {
-  email: string,
-  setEmail: React.Dispatch<React.SetStateAction<string>>
+  email: string | undefined,
+  setEmail: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
 const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {

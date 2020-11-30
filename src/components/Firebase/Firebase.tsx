@@ -1,5 +1,6 @@
 import * as firebase from "firebase";
 import {FirebaseFunctions}  from '@firebase/functions-types';
+import * as MessagingTypes from '../MessagingComponents/MessagingTypes';
 // import 'firebase/auth';
 
 // Need to find a new place for this...
@@ -2278,48 +2279,54 @@ class Firebase {
    * @param {object} recipient
    * @param {string} emailId
    */
-  saveEmail = async (email?: string, subject?: string, recipient?: {id: string, name: string, email: string}, emailId?: string): Promise<string | void> => {
-    // let emailRef: firebase.firestore.DocumentReference | null = null;
+  saveEmail = async (
+    email?: string,
+    subject?: string,
+    recipient?: {
+      id: string,
+      name: string,
+      email: string
+    },
+    emailId?: string
+  ): Promise<MessagingTypes.Email | void> => {
     if (this.auth.currentUser) {
       if (emailId) {
+        const data: MessagingTypes.Email = {
+          id: emailId,
+          emailContent: email ? email : '',
+          subject: subject ? subject : '',
+          recipientId: recipient ? recipient.id : '',
+          recipientName: recipient ? recipient.name : '',
+          recipientEmail: recipient ? recipient.email : '',
+          dateModified: firebase.firestore.Timestamp.now(),
+          user: this.auth.currentUser.uid,
+          type: 'draft'
+        };
         return this.db
           .collection('emails')
           .doc(emailId)
-          .update({
-            emailContent: email ? email : null,
-            subject: subject ? subject : null,
-            recipientId: recipient ? recipient.id : null,
-            recipientName: recipient ? recipient.name : null,
-            recipientEmail: recipient ? recipient.email : null,
-            dateModified: firebase.firestore.FieldValue.serverTimestamp(),
-            type: 'draft'
-          }).then(() => {
-            return emailId
+          .update(data).then(() => {
+            return data
           })
           .catch((error: Error) =>
             console.error("Couldn't update email", error)
           )
       } else {
         const emailRef: firebase.firestore.DocumentReference = this.db.collection("emails").doc();
-        const savedEmail = emailRef.set({
-          emailContent: email ? email : null,
-          subject: subject ? subject : null,
-          recipientId: recipient ? recipient.id : null,
-          recipientName: recipient ? recipient.name : null,
-          recipientEmail: recipient ? recipient.email : null,
-          dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
-          dateModified: firebase.firestore.FieldValue.serverTimestamp(),
+        const data: MessagingTypes.Email = {
+          emailContent: email ? email : '',
+          subject: subject ? subject : '',
+          recipientId: recipient ? recipient.id : '',
+          recipientName: recipient ? recipient.name : '',
+          recipientEmail: recipient ? recipient.email : '',
+          dateCreated: firebase.firestore.Timestamp.now(),
+          dateModified: firebase.firestore.Timestamp.now(),
           type: 'draft',
           user: this.auth.currentUser.uid,
           id: emailRef.id
-        })
-        .then(() => {
-          return (emailRef.id)
-        })
-        .catch((error: Error) =>
-          console.error("Couldn't create email", error)
-        )
-        return savedEmail
+        };
+        emailRef.set(data);
+        return data
       }    
     }
   }
@@ -2351,35 +2358,13 @@ class Firebase {
   /**
    * finds all email drafts for particular user
    */
-  getAllDrafts = async (): Promise<Array<{
-    id: string,
-    emailContent: string,
-    subject: string,
-    recipientId: string,
-    recipientName: string,
-    recipientEmail: string,
-    type: string,
-    user: string,
-    dateCreated: firebase.firestore.Timestamp,
-    dateModified: firebase.firestore.Timestamp
-  }> | void> => {
+  getAllDrafts = async (): Promise<Array<MessagingTypes.Email> | void> => {
     if (this.auth.currentUser) {
       this.query = this.db.collection("emails")
         .where("user", "==", this.auth.currentUser.uid)
       return this.query.get()
         .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
-          const emailArray: Array<{
-            id: string,
-            emailContent: string,
-            subject: string,
-            recipientId: string,
-            recipientName: string,
-            recipientEmail: string,
-            type: string,
-            user: string,
-            dateCreated: firebase.firestore.Timestamp,
-            dateModified: firebase.firestore.Timestamp
-          }> = [];
+          const emailArray: Array<MessagingTypes.Email> = [];
           querySnapshot.forEach(doc =>
             emailArray.push({
               id: doc.data().id,

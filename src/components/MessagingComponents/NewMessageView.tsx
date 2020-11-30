@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useRef, useEffect } from 'react';
+import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -35,6 +36,7 @@ interface NewMessageViewProps {
   setSubject: React.Dispatch<React.SetStateAction<string>>;
   recipient: {value: string, id: string, label: string};
   setRecipient: React.Dispatch<React.SetStateAction<{value: string, id: string, label: string}>> */
+  updateDrafts(email: Email): void;
 };
 
 /* const gridContainer = {
@@ -81,7 +83,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   // state to store the current alert
   const [alertEnum, setAlertEnum] = useState(Alerts.NO_ERROR);
   // state to store the current recipient
-  const [recipient, setRecipient] = useState({
+  const [recipient, setRecipient] = useState<{value: string | undefined, id: string | undefined, label: string | undefined}>({
     value: '',
     id: '',
     label: ''
@@ -93,12 +95,12 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [attachments, setAttachments] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
   const [actionPlans, setActionPlans] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
   const [actionPlanDisplay, setActionPlanDisplay] = useState(false);
-  const [subject, setSubject] = useState('');
+  const [subject, setSubject] = useState<string | undefined>('');
   const firebase = props.firebase;
   // const userEmail = firebase.auth.currentUser.email;
   // state to store the current username
   const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
 
   // get the user's name
@@ -305,14 +307,33 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 
   const recipientSelected = (newRecipient: {value: string, id: string, label: string}): void => {
     setRecipient(newRecipient);
-    firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>) => {
+    firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{
+      id: string,
+      date: {
+        seconds: number,
+        nanoseconds: number
+      },
+      practice: string,
+      achieveBy: firebase.firestore.Timestamp
+    }>) => {
       setActionPlans(actionPlans);
     })
   }
 
-  const saveEmail = async (email?: string, subject?: string, recipient?: {id: string, name: string, email: string}, emailId?: string): Promise<void> => {
-    const savedEmailId = await firebase.saveEmail(email, subject, recipient, emailId);
-    setEmailId(savedEmailId);
+  const saveEmail = async (
+    email?: string,
+    subject?: string,
+    recipient?: {
+      id: string,
+      name: string,
+      email: string
+    },
+    emailId?: string
+  ): Promise<void> => {
+    firebase.saveEmail(email, subject, recipient, emailId).then((data: Email) => {
+      props.updateDrafts(data);
+      setEmailId(data.id);
+    })
   }
 
   return (
@@ -402,6 +423,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       </Grid>
     </div>
   );
+}
+
+NewMessageView.propTypes = {
+  updateDrafts: PropTypes.func.isRequired
 }
 
 export default NewMessageView;
