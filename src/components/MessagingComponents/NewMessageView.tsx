@@ -334,6 +334,21 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       props.updateDrafts(data);
       setEmailId(data.id);
     })
+  };
+
+  const saveAndSendEmail = (
+    email?: string,
+    subject?: string,
+    recipient?: {
+      id: string,
+      name: string,
+      email: string
+    },
+    emailId?: string
+  ): void => {
+    saveEmail(email, subject, recipient, emailId).then(() => {
+      sendMail();
+    })
   }
 
   return (
@@ -381,7 +396,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
               <Grid item>
                 <Grid container direction="row" justify="space-between" style={{width: '100%'}}>
                   <Grid item>
-                    <SendButton sendMail={sendMail}/>
+                    <SendButton sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId)}}/>
                   </Grid>
                   <Grid item>
                     <Grid container direction="row">
