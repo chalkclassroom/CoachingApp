@@ -44,7 +44,7 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
           </Grid>
         </Grid>
       ) : (
-        <DraftList drafts={props.drafts} onClick={onClick} />
+        <DraftList emails={props.drafts} onClick={onClick} />
       )}
     </div>
   );

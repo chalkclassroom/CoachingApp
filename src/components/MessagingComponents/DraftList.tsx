@@ -15,8 +15,9 @@ import moment from 'moment';
 import { Email } from './MessagingTypes';
 
 interface Props {
-  drafts?: Array<Email>,
-  onClick(draft: Email): void
+  emails?: Array<Email>,
+  onClick(draft: Email): void,
+  sent?: boolean | undefined
 }
 
 interface State {
@@ -31,10 +32,16 @@ interface State {
 
 type EmailKey = keyof Email;
 
-const headCells = [
+const draftHeadCells = [
   { id: 'recipientName', numeric: false, disablePadding: false, label: 'To:' },
   { id: 'subject', numeric: false, disablePadding: false, label: 'Subject:' },
   { id: 'dateModified', numeric: false, disablePadding: false, label: 'Edited:' },
+];
+
+const sentHeadCells = [
+  { id: 'recipientName', numeric: false, disablePadding: false, label: 'To:' },
+  { id: 'subject', numeric: false, disablePadding: false, label: 'Subject:' },
+  { id: 'dateModified', numeric: false, disablePadding: false, label: 'Sent:' },
 ];
 
 /**
@@ -84,7 +91,8 @@ function stableSort(array: Array<Email>, comparator: typeof getComparator): any 
 interface TableHeadProps {
   order: 'desc' | 'asc',
   orderBy: EmailKey,
-  onRequestSort(event: React.SyntheticEvent, property: string): void
+  onRequestSort(event: React.SyntheticEvent, property: string): void,
+  sent: boolean | undefined
 }
 
 /**
@@ -93,10 +101,11 @@ interface TableHeadProps {
  * @return {ReactElement}
  */
 function TableHeadSort(props: TableHeadProps): React.ReactElement {
-  const { order, orderBy, onRequestSort } = props;
+  const { order, orderBy, onRequestSort, sent } = props;
   const createSortHandler = (property: string) => (event: React.SyntheticEvent): void => {
     onRequestSort(event, property);
   };
+  const headCells = sent ? sentHeadCells : draftHeadCells;
 
   return (
     <TableHead>
@@ -173,7 +182,7 @@ class DraftList extends React.Component<Props, State>{
   };
 
   static propTypes = {
-    drafts: PropTypes.array
+    emails: PropTypes.array
   }
 
   /**
@@ -187,10 +196,11 @@ class DraftList extends React.Component<Props, State>{
           order={this.state.order}
           orderBy={this.state.orderBy}
           onRequestSort={this.handleRequestSort}
+          sent={this.props.sent}
         />
         <TableBody>
-          {this.props.drafts ? (
-            stableSort(this.props.drafts, getComparator(this.state.order, this.state.orderBy))
+          {this.props.emails ? (
+            stableSort(this.props.emails, getComparator(this.state.order, this.state.orderBy))
             // to limit number on each page
             // .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
             .map((row: Email, index: number) => {
@@ -202,12 +212,12 @@ class DraftList extends React.Component<Props, State>{
                   selected={isItemSelected}
                   onClick={(): void => this.props.onClick(row)}
                 >
-                  <TableCell style={{padding: '0.5em'}}>
+                  <TableCell style={{padding: '0.5em', width: '40%'}}>
                     <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                       {row.recipientName}
                     </Typography>
                   </TableCell>
-                  <TableCell style={{padding: '0.5em'}}>
+                  <TableCell style={{padding: '0.5em', width: '40%'}}>
                     <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                       <Grid container direction="row" justify="flex-start" alignItems="center">
                         <Grid item xs={9}>
@@ -218,7 +228,7 @@ class DraftList extends React.Component<Props, State>{
                       </Grid>
                     </Typography>
                   </TableCell>
-                  <TableCell style={{padding: '0.5em'}}>
+                  <TableCell style={{padding: '0.5em', width: '20%'}}>
                     <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                       {moment(modified).format('MM/DD/YYYY')}
                     </Typography>

@@ -43,7 +43,7 @@ const SentView: React.FC<SentViewProps> = (props: SentViewProps) => {
           </Grid>
         </Grid>
       ) : (
-        <DraftList drafts={props.emails} onClick={onClick} />
+        <DraftList emails={props.emails} onClick={onClick} sent={true} />
       )}
     </div>
   );
