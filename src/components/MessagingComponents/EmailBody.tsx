@@ -40,6 +40,7 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
             border: 'none',
             outline: 'none',
             fontFamily: 'Arimo',
+            fontSize: '1.2em',
             resize: 'none',
             overflowX: 'hidden',
             overflowY: 'auto'
