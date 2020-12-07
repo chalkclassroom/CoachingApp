@@ -204,6 +204,15 @@ export const OtherTheme = createMuiTheme({
   }
 });
 
+export const ClimateTypeColors = {
+  specificApproval: '#0988ec',
+  nonSpecificApproval: '#094492',
+  redirection: '#ffa812',
+  disapproval: '#ff7f00',
+  positiveBar: '#0966bf',
+  negativeBar: '#FF9409'
+};
+
 export const CentersFirstHalf = [
   "Blocks",
   "Toys and Games",
@@ -437,7 +446,7 @@ export const Checklist = {
   'LC': {
     'TeacherBehaviors': [
       <div key={0}>At <b>eye-level</b> with children</div>,
-      <div key={1}>Looks at children with a <b>positive expression</b> to <b>encourage child talk</b></div>,
+      <div key={1}>Looks at children with a <b>positive</b> or <b>interested expression</b> to encourage child talk</div>,
       <div key={2}><b>Repeats</b> or <b>clarifies</b> children&apos;s comments</div>,
       <div key={3}>Asks <b>open-ended questions</b> to encourage conversation</div>,
       <div key={4}><b>Expands on children&apos;s play or talk</b> using questions or comments</div>,

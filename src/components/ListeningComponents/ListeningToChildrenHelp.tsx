@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import CloseIcon from "@material-ui/icons/Close";
@@ -21,20 +21,18 @@ function getModalStyle(): React.CSSProperties {
   } as React.CSSProperties;
 }
 
-const styles: object = {
+const useStyles = makeStyles({
   paper: {
     position: "absolute",
     width: "67%",
     backgroundColor: 'white',
     padding: '2em',
-    borderRadius: 8
+    borderRadius: 8,
+    overflowY: 'auto'
   }
-};
+});
 
 interface Props {
-  classes: {
-    paper: string,
-  },
   open: boolean,
   close(): void
 }
@@ -45,8 +43,9 @@ interface Props {
  * @param {Props} props
  * @return {ReactElement}
  */
-function ListeningToChildrenHelp(props: Props): React.ReactElement {
-  const { classes, open, close } = props;
+export default function ListeningToChildrenHelp(props: Props): React.ReactElement {
+  const { open, close } = props;
+  const classes = useStyles();
   return (
     <div>
       <Modal open={open}>
@@ -72,9 +71,6 @@ function ListeningToChildrenHelp(props: Props): React.ReactElement {
 
 
 ListeningToChildrenHelp.propTypes = {
-  classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired
 }
-
-export default withStyles(styles)(ListeningToChildrenHelp);

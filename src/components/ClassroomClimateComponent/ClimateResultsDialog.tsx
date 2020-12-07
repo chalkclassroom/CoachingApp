@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import BehaviorResponsesSummaryChart from './ResultsComponents/BehaviorResponsesSummaryChart';
 import {connect} from 'react-redux';
 import { clearTeacher } from "../../state/actions/teacher";
-import { emptyClimateStack } from "../../state/actions/classroom-climate";
+import { emptyClimateStack, emptyClimateRating } from "../../state/actions/classroom-climate";
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
@@ -20,7 +20,8 @@ interface Props {
   history: H.History,
   clearTeacher(): void,
   climateStack: Array<{timestamp: number, observation: string}>,
-  emptyClimateStack(): void
+  emptyClimateStack(): void,
+  emptyClimateRating(): void
 }
 
 /**
@@ -28,7 +29,7 @@ interface Props {
  * @return {ReactElement}
  */
 function ClimateResultsDialog(props: Props): React.ReactElement {
-  const {open, history, clearTeacher, climateStack, emptyClimateStack} = props;
+  const {open, history, clearTeacher, climateStack, emptyClimateStack, emptyClimateRating} = props;
   let positiveResponses = 0;
   let negativeResponses = 0;
   let i = 0;
@@ -58,10 +59,12 @@ function ClimateResultsDialog(props: Props): React.ReactElement {
           <Grid item>
             <MuiThemeProvider theme={Constants.ClimateTheme}>
               <Button
+                id="returnHome"
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
                   clearTeacher();
                   emptyClimateStack();
+                  emptyClimateRating();
                   history.push('/Home');
                 }}
               >
@@ -101,7 +104,8 @@ ClimateResultsDialog.propTypes = {
   history: ReactRouterPropTypes.history.isRequired,
   clearTeacher: PropTypes.func.isRequired,
   climateStack: PropTypes.array.isRequired,
-  emptyClimateStack: PropTypes.func.isRequired
+  emptyClimateStack: PropTypes.func.isRequired,
+  emptyClimateRating: PropTypes.func.isRequired
 }
 
-export default connect(mapStateToProps, {clearTeacher, emptyClimateStack})(ClimateResultsDialog);
+export default connect(mapStateToProps, {clearTeacher, emptyClimateStack, emptyClimateRating})(ClimateResultsDialog);

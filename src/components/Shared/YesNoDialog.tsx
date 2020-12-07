@@ -131,7 +131,7 @@ class YesNoDialog extends React.Component<Props, State> {
             <Button onClick={this.handleClose} color="primary" style={{fontFamily: 'Arimo'}}>
               No
             </Button>
-            <Button onClick={this.handleAccept} color="primary" style={{fontFamily: 'Arimo'}} autoFocus>
+            <Button id="yes" onClick={this.handleAccept} color="primary" style={{fontFamily: 'Arimo'}} autoFocus>
               Yes
             </Button>
           </DialogActions>

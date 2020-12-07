@@ -1,4 +1,4 @@
-  // Imports the Google Cloud client library
+// Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
 
@@ -13,11 +13,11 @@ const bigquery = new BigQuery();
  */
 exports.funcTransitionTypeSummary = functions.https.onCall(async (data, context) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
-  console.log(context.auth.uid);  
+  console.log(context.auth.uid);
   console.log(data.teacherId);
   // The SQL query to run
-  const sqlQuery = 
-    `SELECT
+  const sqlQuery =
+        `SELECT
       SUM(CASE WHEN type = 'waiting' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS line,
       SUM(CASE WHEN type = 'traveling' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS traveling,
       SUM(CASE WHEN type = 'child waiting' THEN TIMESTAMP_DIFF(transitionEnd ,transitionStart, millisecond) ELSE 0 END) AS waiting,
@@ -28,9 +28,9 @@ exports.funcTransitionTypeSummary = functions.https.onCall(async (data, context)
       FROM cqrefpwa.observations.transition
       WHERE id = '`+data.sessionId+`'
 	  LIMIT 100;`;
-  
+
   console.log(sqlQuery);
-  
+
   const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.

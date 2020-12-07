@@ -1,6 +1,6 @@
 import * as React from 'react';
-import * as PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles/index";
+import { useState } from 'react';
+import { makeStyles } from "@material-ui/core/styles/index";
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { Tabs, Tab } from "@material-ui/core";
 import TabBar from "@material-ui/core/AppBar";
@@ -9,113 +9,73 @@ import * as Constants from '../../constants/Constants';
 import ListeningHelp1 from './ListeningHelp1';
 import ListeningHelp2 from './ListeningHelp2';
 
-const styles = {
+const useStyles = makeStyles({
   tabBar: {
     marginBottom: "10px",
     height: "5%",
     width: "100%"
-  },
-};
-
-interface Props {
-  classes: {
-    tabBar: string
   }
-}
-
-interface State {
-  tabValue: number
-}
+});
 
 /**
- * @class ListeningToChildrenHelpCard
+ * @function ListeningToChildrenHelpCard
+ * @return {ReactElement}
  */
-class ListeningToChildrenHelpCard extends React.Component<Props, State>  {
-  /**
-   * @param {Props} props
-   */
-  constructor(props: Props){
-    super(props);
+export default function ListeningToChildrenHelpCard(): React.ReactElement {
+  const [tabValue, setTabValue] = useState(0);
+  const classes = useStyles();
 
-    this.state = {
-      tabValue: 0,
-    }
-  }
-
-  /**
-   * @return {void}
-   */
-  handleChecklist1 = (): void => {
-    if (this.state.tabValue !== 0) {
-      this.setState({
-        tabValue: 0
-      })
+  const handleChecklist1 = (): void => {
+    if (tabValue !== 0) {
+      setTabValue(0)
     }
   };
 
-  /**
-   * @return {void}
-   */
-  handleChecklist2 = (): void => {
-    if (this.state.tabValue !== 1) {
-      this.setState({
-        tabValue: 1
-      })
+  const handleChecklist2 = (): void => {
+    if (tabValue !== 1) {
+      setTabValue(1)
     }
   };
 
-  static propTypes = {
-    classes: PropTypes.exact({tabBar: PropTypes.string}).isRequired
-  }
-
-  /**
-   * render function
-   * @return {ReactNode}
-   */
-  render(): React.ReactNode {
-    const { classes } = this.props;
-    return (
-      <div>
-        <Grid container direction="column">
-          <Grid item>
-            <MuiThemeProvider theme={Constants.ListeningTheme}>
-              <TabBar position="static" color="default" className={classes.tabBar}>
-                <Tabs
-                  value={this.state.tabValue}
-                  indicatorColor="secondary"
-                  variant="fullWidth"
-                >
-                  <Tab
-                    label="Listening"
-                    onClick={this.handleChecklist1}
-                    style={{
-                      fontFamily: "Arimo",
-                      fontSize: '1em',
-                      color: 'black',
-                      backgroundColor: this.state.tabValue === 0 ? Constants.Colors.LC : '#d3d3d3'
-                    }}
-                  />
-                  <Tab
-                    label="Supporting Child Talk"
-                    onClick={this.handleChecklist2}
-                    style={{
-                      fontFamily: "Arimo",
-                      fontSize: '1em',
-                      color: 'black',
-                      backgroundColor: this.state.tabValue === 1 ? Constants.Colors.LC: '#d3d3d3'
-                    }}
-                  />
-                </Tabs>
-              </TabBar>
-            </MuiThemeProvider>
-          </Grid>
-          <Grid item>
-            {this.state.tabValue === 0 ? <ListeningHelp1 /> : <ListeningHelp2 />}
-          </Grid>
+  return (
+    <div>
+      <Grid container direction="column">
+        <Grid item>
+          <MuiThemeProvider theme={Constants.ListeningTheme}>
+            <TabBar position="static" color="default" className={classes.tabBar}>
+              <Tabs
+                value={tabValue}
+                indicatorColor="secondary"
+                variant="fullWidth"
+              >
+                <Tab
+                  label="Listening"
+                  onClick={handleChecklist1}
+                  style={{
+                    fontFamily: "Arimo",
+                    fontSize: '1em',
+                    color: 'black',
+                    backgroundColor: tabValue === 0 ? Constants.Colors.LC : '#d3d3d3'
+                  }}
+                />
+                <Tab
+                  label="Supporting Child Talk"
+                  onClick={handleChecklist2}
+                  style={{
+                    fontFamily: "Arimo",
+                    fontSize: '1em',
+                    color: 'black',
+                    backgroundColor: tabValue === 1 ? Constants.Colors.LC: '#d3d3d3'
+                  }}
+                />
+              </Tabs>
+            </TabBar>
+          </MuiThemeProvider>
         </Grid>
-      </div>
-    );
-  }
+        <Grid item>
+          {tabValue === 0 ? <ListeningHelp1 /> : <ListeningHelp2 />}
+        </Grid>
+      </Grid>
+    </div>
+  );
 }
-
-export default withStyles(styles)(ListeningToChildrenHelpCard);

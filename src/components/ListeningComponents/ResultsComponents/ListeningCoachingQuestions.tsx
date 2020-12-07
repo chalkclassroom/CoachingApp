@@ -92,10 +92,13 @@ class ListeningCoachingQuestions extends React.Component<Props, State> {
                     <Button 
                       onClick={value.clickFunction}
                       variant="contained"
-                      color={this.state.categoryView === value.categoryView ? 'primary' : 'default'}
-                      style={{width:'9em', height: '9em'}}
+                      style={{
+                        width:'9em',
+                        height: '9em',
+                        backgroundColor: this.state.categoryView === value.categoryView ? Constants.Colors.LC : '#f5f5f5'
+                      }}
                     >
-                      <Typography style={{color: this.state.categoryView === value.categoryView ? 'white' : Constants.Colors.LC}}>
+                      <Typography style={{color: 'black'}}>
                         {value.title}
                       </Typography>
                     </Button >

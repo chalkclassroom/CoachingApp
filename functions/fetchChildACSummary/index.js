@@ -19,15 +19,15 @@ exports.fetchChildACSummary = async(req, res) => {
                     COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND checked = 0 THEN 'noac' ELSE NULL END) AS noac
                     FROM cqrefpwa.observations.ac
                     WHERE id =` + req.query.id;
-  
-    const options = {
+
+  const options = {
     query: sqlQuery,
     // Location must match that of the dataset(s) referenced in the query.
     location: 'US',
   };
-  
+
   // Runs the query
   const [rows] = await bigquery.query(options);
-  
+
   res.status(200).send(rows);
 };

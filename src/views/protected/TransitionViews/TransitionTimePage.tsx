@@ -126,7 +126,7 @@ class TransitionTimePage extends React.Component<Props, State> {
       notes: false,
       transitionType: '',
       open: false,
-      transitionEnded: false,
+      transitionEnded: true,
       teacherModal: false
     };
   }
@@ -136,9 +136,12 @@ class TransitionTimePage extends React.Component<Props, State> {
    */
   handleTransitionType = (type: string): void => {
     if (this.state.transitionEnded) {
-      this.setState({ transitionEnded: false });
+      this.props.toggleNewTransitionType(type);
     }
-    this.props.toggleNewTransitionType(type);
+  };
+
+  handleStartTransition = (): void => {
+    this.setState({ transitionEnded: false })
   };
 
   handleEndTransition = (): void => {
@@ -278,6 +281,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                             typeSelected={
                               this.props.transitionType === null ? false : true
                             }
+                            handleStartTransition={this.handleStartTransition}
                             handleEndTransition={this.handleEndTransition}
                           />
                         )}
