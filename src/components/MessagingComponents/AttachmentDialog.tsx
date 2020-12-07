@@ -16,6 +16,8 @@ import {
   DialogActions
 } from '@material-ui/core';
 import ActionPlanList from '../ActionPlanList';
+import Pdf from './Pdf';
+import { PDFViewer } from '@react-pdf/renderer';
 
 interface AttachmentDialogProps {
   recipientId: string;
@@ -28,8 +30,23 @@ interface AttachmentDialogProps {
   recipientName: string;
 }
 
+/**
+   * @param {string} actionPlanId
+   * @param {string} teacherId
+   */
+  
+
 const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDialogProps) => {
   const [view, setView] = useState('options');
+  const [ap, setAP] = useState('');
+  const [teacher, setTeacher] = useState('');
+
+  const handleChooseActionPlan = (actionPlanId: string, teacherId: string): void => {
+    setView('pdfPreview');
+    setAP(actionPlanId);
+    setTeacher(teacherId);
+    console.log('handled choose action plan');
+  };
 
   return (
     <Dialog
@@ -116,10 +133,18 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                       <Grid item style={{paddingTop: '1em'}}>
                         <ActionPlanList
                           actionPlans={props.actionPlans}
+                          teacherId={props.recipientId}
                           // need to add onClick function
+                          onClick={handleChooseActionPlan}
                         />
                       </Grid>
                     </Grid>
+                  ) : view === 'pdfPreview' ? (
+                    <div>
+                      <PDFViewer>
+                        <Pdf />
+                      </PDFViewer>
+                    </div>
                   ) : (
                     <Typography>
                       Results options will be listed here.

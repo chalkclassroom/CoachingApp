@@ -23,6 +23,7 @@ import AssocCoopIconImage from '../assets/images/AssocCoopIconImage.svg';
 
 interface Props {
   actionPlans?: Array<ActionPlanInfo>,
+  teacherId?: string,
   onClick(actionPlanId: string, teacherId: string): void
 }
 
@@ -320,6 +321,7 @@ class ActionPlanList extends React.Component<Props, State>{
                 <TableRow
                   key={index}
                   selected={isItemSelected}
+                  onClick={(): void => {this.props.onClick(row.id, this.props.teacherId ? this.props.teacherId : '')}}
                 >
                   <TableCell style={{padding: '0.5em'}}>
                     <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
@@ -419,7 +421,7 @@ class ActionPlanList extends React.Component<Props, State>{
                 <TableRow
                   key={index}
                   selected={isItemSelected}
-                  onClick={(): void => this.props.onClick(row.id, row.teacherId)}
+                  onClick={(): void => {this.props.onClick(row.id, row.teacherId)}}
                 >
                   <TableCell style={{padding: '0.5em'}}>
                     <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
