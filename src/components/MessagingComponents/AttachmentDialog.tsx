@@ -28,6 +28,7 @@ interface AttachmentDialogProps {
   attachmentList: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>;
   handleClose: () => void;
   recipientName: string;
+  firebase: any;
 }
 
 /**
@@ -40,12 +41,63 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
   const [view, setView] = useState('options');
   const [ap, setAP] = useState('');
   const [teacher, setTeacher] = useState('');
+  const [goal, setGoal] = useState('');
+  const [goalTimeline, setGoalTimeline] = useState(new Date());
+  const [benefit, setBenefit] = useState('');
+  const [actionStepsArray, setActionStepsArray] = useState<Array<{
+    step: string,
+    materials: string,
+    person: string,
+    timeline: Date
+  }>>([]);
 
   const handleChooseActionPlan = (actionPlanId: string, teacherId: string): void => {
-    setView('pdfPreview');
+    
     setAP(actionPlanId);
     setTeacher(teacherId);
-    console.log('handled choose action plan');
+    props.firebase.getAPInfo(actionPlanId).then((actionPlanData: {
+      sessionId: string,
+      goal: string,
+      goalTimeline: firebase.firestore.Timestamp,
+      benefit: string,
+      dateModified: {seconds: number, nanoseconds: number},
+      dateCreated: {seconds: number, nanoseconds: number},
+      coach: string,
+      teacher: string,
+      tool: string
+    }) => {
+      setGoal(actionPlanData.goal);
+      setGoalTimeline(actionPlanData.goalTimeline ? actionPlanData.goalTimeline.toDate() : new Date());
+      setBenefit(actionPlanData.benefit);
+      const newActionStepsArray: Array<{
+        step: string,
+        materials: string,
+        person: string,
+        timeline: Date
+      }> = [];
+      props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{
+        step: string,
+        materials: string,
+        person: string,
+        timeline: Date
+      }>) => {
+        actionStepsData.forEach((value, index) => {
+          newActionStepsArray[index] = {
+            step: value.step,
+            materials: value.materials,
+            person: value.person,
+            timeline: value.timeline ? value.timeline.toDate() : new Date()
+          };
+        })
+      }).then(() => {
+        setActionStepsArray(newActionStepsArray);
+      }).then(() => {
+        setView('pdfPreview');
+      })
+      .catch(() => {
+        console.log('error retrieving action steps');
+      });
+    })
   };
 
   return (
@@ -141,8 +193,14 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     </Grid>
                   ) : view === 'pdfPreview' ? (
                     <div>
-                      <PDFViewer>
-                        <Pdf />
+                      <PDFViewer style={{width: '100%', height: '50vh', overflowX: 'scroll'}}>
+                        <Pdf
+                          goal={goal}
+                          goalTimeline={goalTimeline}
+                          benefit={benefit}
+                          actionStepsArray={actionStepsArray}
+                          recipientName={props.recipientName}
+                        />
                       </PDFViewer>
                     </div>
                   ) : (

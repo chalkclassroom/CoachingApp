@@ -429,6 +429,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                         </Grid>
                         <AttachmentDialog
                           recipientId={recipient.id}
+                          firebase={firebase}
                           actionPlans={actionPlans}
                           open={actionPlanDisplay}
                           recipientName={recipient.label}
