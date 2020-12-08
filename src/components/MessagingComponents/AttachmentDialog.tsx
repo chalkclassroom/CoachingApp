@@ -193,7 +193,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     </Grid>
                   ) : view === 'pdfPreview' ? (
                     <div>
-                      <PDFViewer style={{width: '100%', height: '50vh', overflowX: 'scroll'}}>
+                      <PDFViewer style={{width: '100%', height: '50vh'}}>
                         <Pdf
                           goal={goal}
                           goalTimeline={goalTimeline}
