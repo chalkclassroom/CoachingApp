@@ -34,7 +34,7 @@
     "crypto-js": "^4.0.0",
     "date-fns": "^2.16.1",
     "firebase": "^5.7.2",
-    "firebase-tools": "^7.13.1",
+    "firebase-tools": "^8.18.0",
     "cypress-react-selector": "^2.2.0",
     "firebase-admin": "^9.4.1",
     "firebase-functions": "^3.11.0",
