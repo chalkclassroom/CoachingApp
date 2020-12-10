@@ -107,7 +107,6 @@ const styles: object = {
 const ViewEnum = {
   CONCEPTS: 1,
   DEFINITIONS: 2,
-  EXAMPLE: 3,
   DEMONSTRATION: 4,
   KNOWLEDGECHECK: 6
 };
@@ -164,12 +163,6 @@ class TrainingLayout extends React.Component<Props, State> {
   definitionsClick = (): void => {
     if (this.state.view !== ViewEnum.DEFINITIONS) {
       this.setState({ view: ViewEnum.DEFINITIONS });
-    }
-  };
-
-  exampleClick = (): void => {
-    if (this.state.view !== ViewEnum.EXAMPLE) {
-      this.setState({ view: ViewEnum.EXAMPLE });
     }
   };
 
@@ -233,7 +226,6 @@ class TrainingLayout extends React.Component<Props, State> {
                   Icon={this.props.icon}
                   conceptsClick={this.conceptsClick}
                   definitionsClick={this.definitionsClick}
-                  exampleClick={this.exampleClick}
                   demonstrationClick={this.demonstrationClick}
                   knowledgeCheckClick={this.knowledgeCheckClick}
                   colorTheme={this.props.colorTheme}
@@ -247,8 +239,6 @@ class TrainingLayout extends React.Component<Props, State> {
                 <div>
                   {this.props.definitions}
                 </div>
-              ) : view === ViewEnum.EXAMPLE ? (
-                <div>EXAMPLE</div>
               ) : view === ViewEnum.DEMONSTRATION ? (
                 <div>
                   <TrainingVideo videoUrl={this.props.demonstrationUrl} />
