@@ -442,6 +442,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                             setActionPlanDisplay(false);
                           }}
                           attachmentList={attachments}
+                          firebase={firebase}
                         />
                       </Grid>
                     </Grid>

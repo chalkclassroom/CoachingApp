@@ -16,8 +16,11 @@ import {
   DialogActions
 } from '@material-ui/core';
 import ActionPlanList from '../ActionPlanList';
-import Pdf from './Pdf';
-import { PDFViewer } from '@react-pdf/renderer';
+import ActionPlanForPdf from './ActionPlanForPdf';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import * as Types from '../../constants/Types';
+import { connect } from 'react-redux';
 
 interface AttachmentDialogProps {
   recipientId: string;
@@ -28,25 +31,117 @@ interface AttachmentDialogProps {
   attachmentList: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>;
   handleClose: () => void;
   recipientName: string;
-}
-
-/**
-   * @param {string} actionPlanId
-   * @param {string} teacherId
-   */
-  
+  firebase: any;
+  teacherList: Array<Types.Teacher>;
+}  
 
 const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDialogProps) => {
   const [view, setView] = useState('options');
   const [ap, setAP] = useState('');
   const [teacher, setTeacher] = useState('');
+  const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
+  const [tool, setTool] = useState('');
+  const [apGoal, setApGoal] = useState('');
+  const [goalTimeline, setGoalTimeline] = useState<Date>();
+  const [benefit, setBenefit] = useState('');
+  const [date, setDate] = useState<Date>();
+  const [actionSteps, setActionSteps] = useState<Array<{
+    step: string,
+    materials: string,
+    person: string,
+    timeline: Date
+  }>>();
 
+  /**
+   * @param {Object} date
+   * @return {Date}
+   */
+  const changeDateType = (date: {seconds: number, nanoseconds: number}): Date => {
+    const newDate = new Date(0);
+    newDate.setUTCSeconds(date.seconds);
+    return newDate
+  }
+
+  /**
+   * @param {string} actionPlanId
+   * @param {string} teacherId
+   */
   const handleChooseActionPlan = (actionPlanId: string, teacherId: string): void => {
-    setView('pdfPreview');
     setAP(actionPlanId);
     setTeacher(teacherId);
+    const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
+      return obj.id === teacherId
+    });
+    setTeacherObject(teacherData[0]);
+    console.log('teacherData', teacherData, typeof teacherData);
+    props.firebase.getAPInfo(actionPlanId).then((actionPlanData: {
+      sessionId: string,
+      goal: string,
+      goalTimeline: firebase.firestore.Timestamp,
+      benefit: string,
+      dateModified: {seconds: number, nanoseconds: number},
+      dateCreated: {seconds: number, nanoseconds: number},
+      coach: string,
+      teacher: string,
+      tool: string
+    }) => {
+      const newDate = changeDateType(actionPlanData.dateModified);
+      setTool(actionPlanData.tool);
+      setApGoal(actionPlanData.goal);
+      if (actionPlanData.goalTimeline && (typeof actionPlanData.goalTimeline !== 'string')) {
+        setGoalTimeline(actionPlanData.goalTimeline.toDate());
+      } else {
+        setGoalTimeline(new Date());
+      }
+      setBenefit(actionPlanData.benefit);
+      setDate(newDate);
+      const newActionStepsArray: Array<{
+        step: string,
+        materials: string,
+        person: string,
+        timeline: Date
+      }> = [];
+      props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{
+        step: string,
+        materials: string,
+        person: string,
+        timeline: firebase.firestore.Timestamp
+      }>) => {
+        actionStepsData.forEach((value, index) => {
+          newActionStepsArray[index] = {
+            step: value.step,
+            materials: value.materials,
+            person: value.person,
+            timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
+              value.timeline.toDate() :
+              new Date(),
+          };
+        })
+      }).then(() => {
+        setActionSteps(newActionStepsArray);
+      }).then(() => {
+        setView('pdfPreview');
+      })
+      .catch(() => {
+        console.log('error retrieving action steps');
+      });
+    })
     console.log('handled choose action plan');
   };
+
+  const printDocument = (): void => {
+    console.log('teacher selected', teacherObject);
+    const input = document.getElementById('divToPrint');
+    html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'JPEG', 15, 40, 180, 180);
+        // pdf.output('dataurlnewwindow');
+        pdf.save("download.pdf");
+      })
+    ;
+  }
 
   return (
     <Dialog
@@ -139,11 +234,29 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                         />
                       </Grid>
                     </Grid>
-                  ) : view === 'pdfPreview' ? (
+                  ) : view === 'pdfPreview' && teacherObject ? (
                     <div>
-                      <PDFViewer>
-                        <Pdf />
-                      </PDFViewer>
+                      <button onClick={(): void => printDocument()}>Download</button>
+                      <div
+                        id="divToPrint"
+                        style={{
+                          backgroundColor: '#ffffff',
+                          width: '210mm',
+                          minHeight: '297mm',
+                          marginLeft: 'auto',
+                          marginRight: 'auto'
+                        }}
+                      >
+                        <ActionPlanForPdf
+                          tool={tool}
+                          apGoal={apGoal}
+                          goalTimeline={goalTimeline}
+                          benefit={benefit}
+                          date={date}
+                          actionSteps={actionSteps}
+                          teacher={teacherObject}
+                        />
+                      </div>
                     </div>
                   ) : (
                     <Typography>
@@ -170,4 +283,15 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
   );
 };
 
-export default AttachmentDialog;
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherList: Array<Types.Teacher>
+} => {
+  return {
+    teacherList: state.teacherListState.teachers
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(AttachmentDialog);
