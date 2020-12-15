@@ -158,7 +158,16 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
               <Grid container direction="row" justify={view === 'options' ? "flex-end" : "space-between"} alignItems="center">
                 {view !== 'options' ? (
                   <Grid item xs={3}>
-                    <IconButton onClick={(): void => setView('options')} style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                    <IconButton
+                      onClick={(): void => {
+                        if (view === 'pdfPreview') {
+                          setView('actionPlans')
+                        } else {
+                          setView('options')
+                        }
+                      }}
+                      style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}
+                    >
                       <ChevronLeftIcon />
                     </IconButton>
                   </Grid>
@@ -242,7 +251,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                         style={{
                           backgroundColor: '#ffffff',
                           width: '210mm',
-                          minHeight: '297mm',
+                          minHeight: '100mm',
                           marginLeft: 'auto',
                           marginRight: 'auto'
                         }}

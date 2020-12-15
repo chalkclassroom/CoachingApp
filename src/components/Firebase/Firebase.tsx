@@ -63,20 +63,20 @@ class Firebase {
       firebase.initializeApp(config);
       this.auth = firebase.auth();
       this.db = firebase.firestore();
-      if (location.hostname === 'localhost') {
+      /* if (location.hostname === 'localhost') {
         this.db.settings({
           host: 'localhost:8080',
           ssl: false,
         })
-      }
+      } */
       this.db
           .enablePersistence({ experimentalTabSynchronization: true })
           .then(() => console.log('Woohoo! Multi-Tab Persistence!'))
           .catch((error: Error) => console.error('Offline Not Working: ', error))
       this.functions = firebase.functions()
-      if (location.hostname === 'localhost') {
+      /* if (location.hostname === 'localhost') {
         this.functions.useFunctionsEmulator('http://localhost:5001')
-      }
+      } */
       // this.sessionRef = null;
     }
   }
