@@ -32,6 +32,7 @@
     "firebase": "^5.7.2",
     "firebase-admin": "^9.4.1",
     "firebase-functions": "^3.11.0",
+    "firebase-tools": "^8.18.0",
     "immortal-db": "^1.0.2",
     "logrocket": "^1.0.5",
     "logrocket-react": "^3.0.1",
