@@ -2,6 +2,7 @@ const path = require("path");
 const webpackMerge = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const SourceMapPlugin = require('webpack').SourceMapDevToolPlugin;
 const modeConfiguration = mode => require(`./build-utils/webpack.${mode}`)(mode);
 module.exports = (env, argv) => {
     console.log(`mode is: ${argv.mode}`);
@@ -10,6 +11,7 @@ module.exports = (env, argv) => {
         {
             mode: argv.mode,
             entry: "./src/index.tsx",
+            devtool: "cheap-module-source-map",
             output: {
                 publicPath: "/",
                 path: path.resolve(__dirname, "build"),
@@ -32,11 +34,11 @@ module.exports = (env, argv) => {
                             cacheDirectory: true,
                         }
                     },
-                    {
-                        test: /\.js$/,
-                        use: ["source-map-loader"],
-                        enforce:    "pre"
-                    },
+                    // {
+                    //     test: /\.js$/,
+                    //     use: ["source-map-loader"],
+                    //     enforce:    "pre"
+                    // },
                     {//Should remove this rule after JS Migration to TS is Done.
                         test: /\.(js|jsx)$/,
                         exclude: /node_modules/,

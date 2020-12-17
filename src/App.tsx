@@ -43,6 +43,7 @@ import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningT
 import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
 import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
 import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage';
+import AdminPage from './views/protected/AdminViews/AdminPage';
 import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import TrainingPage from './views/protected/TrainingPage';
@@ -485,6 +486,12 @@ class App extends React.Component<Props, State> {
               path="/LevelOfInstructionResults"
               component={LevelOfInstructionResultsPage}
             />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/Admin"
+                component={AdminPage}
+            />
+
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
         </MuiThemeProvider>

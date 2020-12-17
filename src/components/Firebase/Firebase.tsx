@@ -1138,6 +1138,15 @@ class Firebase {
   };
 
   /**
+   *
+   * @param {string} tableName
+   */
+  fetchExport = async (tableName:string):Promise< {} | void > => {
+    const exportBqFunction = this.functions.httpsCallable("exportBqData");
+    return exportBqFunction(tableName);
+  }
+
+  /**
    * Associative Cooperative cloud function
    * gets counts of each type of child & teacher behaviors
    * @param {string} sessionId
