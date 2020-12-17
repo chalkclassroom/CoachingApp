@@ -254,10 +254,10 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
           <Grid item xs={12} style={{width: '100%', height: '38vh'}}>
             <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
               <Grid item style={{width: '38%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
-                <Grid container direction="column" style={{width: '100%'}}>
-                  <Grid item>
+                <Grid container direction="column" justify="center" style={{width: '100%', border: '1px solid orange'}}>
+                  <Grid item style={{border: '1px solid blue'}}>
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
-                      <Grid item xs={11}>
+                      <Grid item xs={11} style={{border: '1px solid yellow'}}>
                         <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
                           Action Steps
                         </Typography>
@@ -266,34 +266,31 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item>
-                  <ol style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
+                  <Grid item style={{border: '1px solid red'}}>
                     {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
                       return(
-                        <li key={index}>
-                          <TextField
-                            id={"actionSteps" + index.toString()}
-                            name={"actionSteps" + index.toString()}
-                            type="text"
-                            value={value.step}
-                            margin="normal"
-                            variant="standard"
-                            fullWidth
-                            multiline
-                            rowsMax={4}
-                            rows={4}
-                            className={classes.textField}
-                            InputProps={{
-                              disableUnderline: true,
-                              readOnly: true,
-                              style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                            }}
-                            style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0 }}
-                          />
-                        </li>
+                        <TextField
+                          key={index}
+                          id={"actionSteps" + index.toString()}
+                          name={"actionSteps" + index.toString()}
+                          type="text"
+                          value={(index + 1) + '.  ' + value.step}
+                          margin="normal"
+                          variant="standard"
+                          fullWidth
+                          multiline
+                          rowsMax={4}
+                          rows={4}
+                          className={classes.textField}
+                          InputProps={{
+                            disableUnderline: true,
+                            readOnly: true,
+                            style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
+                          }}
+                          style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0 }}
+                        />
                       );
                     }) : null}
-                  </ol>
                   </Grid>
                   <Grid item>
                     <Grid container direction="row" justify="flex-start" alignItems="center">
@@ -315,33 +312,30 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                     </Grid>
                   </Grid>
                   <Grid item>
-                    <ol style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
-                      {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
-                        return(
-                          <li key={index}>
-                            <TextField
-                              id={"materials" + index.toString()}
-                              name={"materials" + index.toString()}
-                              type="text"
-                              value={value.materials}
-                              margin="normal"
-                              variant="standard"
-                              fullWidth
-                              multiline
-                              rowsMax={4}
-                              rows={4}
-                              className={classes.textField}
-                              InputProps={{
-                                disableUnderline: true,
-                                readOnly: true,
-                                style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                              }}
-                              style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
-                            />
-                          </li>
-                        );
-                      }) : null}
-                    </ol>
+                    {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
+                      return(
+                        <TextField
+                          key={index}
+                          id={"materials" + index.toString()}
+                          name={"materials" + index.toString()}
+                          type="text"
+                          value={(index + 1) + '.  ' + value.materials}
+                          margin="normal"
+                          variant="standard"
+                          fullWidth
+                          multiline
+                          rowsMax={4}
+                          rows={4}
+                          className={classes.textField}
+                          InputProps={{
+                            disableUnderline: true,
+                            readOnly: true,
+                            style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
+                          }}
+                          style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
+                        />
+                      );
+                    }) : null}
                   </Grid>
                 </Grid>
               </Grid>
@@ -359,33 +353,30 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                     </Grid>
                   </Grid>
                   <Grid item>
-                    <ol style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
-                      {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
-                        return(
-                          <li key={index}>
-                            <TextField
-                              id={"person" + index.toString()}
-                              name={"person" + index.toString()}
-                              type="text"
-                              value={value.person}
-                              margin="normal"
-                              variant="standard"
-                              fullWidth
-                              multiline
-                              rowsMax={4}
-                              rows={4}
-                              className={classes.textField}
-                              InputProps={{
-                                disableUnderline: true,
-                                readOnly: true,
-                                style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                              }}
-                              style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
-                            />
-                          </li>
-                        );
-                      }) : null}
-                    </ol>
+                    {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
+                      return(
+                        <TextField
+                          key={index}
+                          id={"person" + index.toString()}
+                          name={"person" + index.toString()}
+                          type="text"
+                          value={(index + 1) + '.  ' + value.person}
+                          margin="normal"
+                          variant="standard"
+                          fullWidth
+                          multiline
+                          rowsMax={4}
+                          rows={4}
+                          className={classes.textField}
+                          InputProps={{
+                            disableUnderline: true,
+                            readOnly: true,
+                            style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
+                          }}
+                          style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
+                        />
+                      );
+                    }) : null}
                   </Grid>
                 </Grid>
               </Grid>
@@ -403,33 +394,30 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                     </Grid>
                   </Grid>
                   <Grid item>
-                    <ol style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
-                      {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
-                        return(
-                          <li key={index}>
-                            <TextField
-                              id={"timeline" + index.toString()}
-                              name={"timeline" + index.toString()}
-                              type="text"
-                              value={moment(value.timeline).format('MM/DD/YYYY')}
-                              margin="normal"
-                              variant="standard"
-                              fullWidth
-                              multiline
-                              rowsMax={4}
-                              rows={4}
-                              className={classes.textField}
-                              InputProps={{
-                                disableUnderline: true,
-                                readOnly: true,
-                                style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                              }}
-                              style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
-                            />
-                          </li>
-                        );
-                      }) : null}
-                    </ol>
+                    {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
+                      return(
+                        <TextField
+                          key={index}
+                          id={"timeline" + index.toString()}
+                          name={"timeline" + index.toString()}
+                          type="text"
+                          value={(index + 1) + '.  ' + moment(value.timeline).format('MM/DD/YYYY')}
+                          margin="normal"
+                          variant="standard"
+                          fullWidth
+                          multiline
+                          rowsMax={4}
+                          rows={4}
+                          className={classes.textField}
+                          InputProps={{
+                            disableUnderline: true,
+                            readOnly: true,
+                            style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
+                          }}
+                          style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
+                        />
+                      );
+                    }) : null}
                   </Grid>
                 </Grid>
               </Grid>

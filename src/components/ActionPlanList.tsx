@@ -9,8 +9,10 @@ import {
   TableCell,
   TableHead,
   TableBody,
-  TableSortLabel
+  TableSortLabel,
+  Checkbox
 } from '@material-ui/core';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import moment from 'moment';
 import TransitionTimeIconImage from '../assets/images/TransitionTimeIconImage.svg';
 import ClassroomClimateIconImage from '../assets/images/ClassroomClimateIconImage.svg';
@@ -20,6 +22,7 @@ import InstructionIconImage from '../assets/images/InstructionIconImage.svg';
 import ListeningIconImage from '../assets/images/ListeningIconImage.svg';
 import SequentialIconImage from '../assets/images/SequentialIconImage.svg';
 import AssocCoopIconImage from '../assets/images/AssocCoopIconImage.svg';
+import * as Constants from '../constants/Constants';
 
 interface Props {
   actionPlans?: Array<ActionPlanInfo>,
@@ -74,9 +77,11 @@ const headCells = [
 ];
 
 const teacherHeadCells = [
+  { id: 'checked', numeric: false, disablePadding: false, label: ''},
   { id: 'modified', numeric: false, disablePadding: false, label: 'Last Modified' },
   { id: 'practice', numeric: false, disablePadding: false, label: 'CHALK Practice' },
   { id: 'achieveBy', numeric: false, disablePadding: false, label: 'Achieve By:' },
+  { id: 'preview', numeric: false, disablePadding: false, label: ''}
 ];
 
 /**
@@ -150,7 +155,7 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === headCell.id ? order : false}
-            style={{backgroundColor: '#d8ecff'}}
+            style={{backgroundColor: '#d8ecff', paddingLeft: 0}}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -253,6 +258,25 @@ class ActionPlanList extends React.Component<Props, State>{
   };
 
   /**
+   * @param {string} id
+   */
+  /* handleCheckActionPlan = (id: string): void => {
+    console.log('action plan id', id);
+    const newCheckedActionPlans = this.props.checkedActionPlans;
+    const index = newCheckedActionPlans.indexOf(id);
+    if (index > -1) {
+      newCheckedActionPlans.splice(index, 1);
+      console.log('spliced', newCheckedActionPlans)
+    } else {
+      newCheckedActionPlans.push(id);
+      console.log('added', newCheckedActionPlans.length)
+    }
+    this.props.setCheckedActionPlans(newCheckedActionPlans);
+    console.log('new', newCheckedActionPlans);
+    console.log('is it included?', this.props.checkedActionPlans.includes(id))
+  } */
+
+  /**
    *
    */
   componentDidMount(): void {
@@ -321,14 +345,16 @@ class ActionPlanList extends React.Component<Props, State>{
                 <TableRow
                   key={index}
                   selected={isItemSelected}
-                  onClick={(): void => {this.props.onClick(row.id, this.props.teacherId ? this.props.teacherId : '')}}
                 >
+                  <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
+                    <Checkbox />
+                  </TableCell>
                   <TableCell style={{padding: '0.5em'}}>
                     <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                       {moment(row.modified).format('MM/DD/YYYY')}
                     </Typography>
                   </TableCell>
-                  <TableCell style={{padding: '0.5em'}}>
+                  <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
                     <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                       <Grid container direction="row" justify="flex-start" alignItems="center">
                         <Grid item xs={9}>
@@ -386,6 +412,12 @@ class ActionPlanList extends React.Component<Props, State>{
                     <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
                       {moment(achieveBy).format('MM/DD/YYYY')}
                     </Typography>
+                  </TableCell>
+                  <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
+                    <VisibilityIcon
+                      style={{fill: Constants.Colors.MI}}
+                      onClick={(): void => {this.props.onClick(row.id, this.props.teacherId ? this.props.teacherId : '')}}
+                    />
                   </TableCell>
                 </TableRow>
               )

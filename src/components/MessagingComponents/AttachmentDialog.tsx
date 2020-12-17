@@ -51,6 +51,23 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     person: string,
     timeline: Date
   }>>();
+  /* const [checkedActionPlans, setCheckedActionPlans] = useState<Array<string>>([]);
+
+  const handleCheckActionPlan = (id: string): void => {
+    console.log('action plan id', id);
+    const newCheckedActionPlans = checkedActionPlans;
+    const index = newCheckedActionPlans.indexOf(id);
+    if (index > -1) {
+      newCheckedActionPlans.splice(index, 1);
+      console.log('spliced', newCheckedActionPlans)
+    } else {
+      newCheckedActionPlans.push(id);
+      console.log('added', newCheckedActionPlans.length)
+    }
+    setCheckedActionPlans(newCheckedActionPlans);
+    console.log('new', newCheckedActionPlans);
+    console.log('is it included?', checkedActionPlans.includes(id))
+  } */
 
   /**
    * @param {Object} date
@@ -134,10 +151,15 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     const input = document.getElementById('divToPrint');
     html2canvas(input)
       .then((canvas) => {
+        const link = document.createElement("a");
+        document.body.appendChild(link);
+        link.download = "html_image.png";
         const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF();
-        pdf.addImage(imgData, 'JPEG', 15, 40, 180, 180);
-        // pdf.output('dataurlnewwindow');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgProps= pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
         pdf.save("download.pdf");
       })
     ;
@@ -238,7 +260,6 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                         <ActionPlanList
                           actionPlans={props.actionPlans}
                           teacherId={props.recipientId}
-                          // need to add onClick function
                           onClick={handleChooseActionPlan}
                         />
                       </Grid>
