@@ -69,15 +69,9 @@ class AdminPage extends React.Component<Props, State> {
      *
      * @param {Event} event
      */
-    handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        const { options } = event.target
-        const value = []
-        for (let i = 0, l = options.length; i < l; i += 1) {
-            if (options[i].selected) {
-                value.push(options[i].value)
-            }
-        }
-        this.setState({ selectedTables: value })
+    handleChange(event: React.ChangeEvent<{ value: unknown }>) {
+        const { value } = event.target
+        this.setState({ selectedTables: value as string[] })
     };
 
     /**
