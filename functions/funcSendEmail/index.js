@@ -2,7 +2,7 @@ const sgMail = require("@sendgrid/mail");
 const functions = require("firebase-functions");
 const CryptoJS = require("crypto-js");
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(functions.config().sendgrid.key);
 
 exports.funcSendEmail = functions.https.onCall(async (data, context) => {
     console.log(context.auth.uid);

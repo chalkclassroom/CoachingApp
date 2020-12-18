@@ -166,7 +166,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         // textContent: textRef.current.textContent,
         // content: textRef.current.innerHTML,
         id: '0000001',
-        from: 'clare.e.speer@vanderbilt.edu',
+        from: 'chalkcoaching@gmail.com',
         to: 'clare.e.speer@vanderbilt.edu',
         subject: subject ? subject : '',
         theme: ThemeOptions.FEEDBACK,
