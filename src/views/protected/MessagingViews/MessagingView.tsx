@@ -142,7 +142,7 @@ const MessagingView: React.FC<{}> = () => {
           )}
         </FirebaseContext.Consumer>
       </Grid>
-      <Grid item style={{flexGrow: 1}}>
+      <Grid item style={{flexGrow: 1, height: '90vh'}}>
         <Grid container direction="row" justify="center" alignItems="flex-start" style={{height: '100%'}}>
           <Grid item xs={3} style={{paddingRight: '1.5em', height: '100%'}}>
             <MessagingMenu

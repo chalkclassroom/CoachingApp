@@ -46,9 +46,9 @@ const MessagingMenu: React.FC<MessagingMenuProps> = (props: MessagingMenuProps) 
               boxShadow: index === 2 ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : undefined
             }}
           >
-            <Grid container style={{height: '100%', width: '100%'}}>
+            <Grid container direction='row' style={{height: '100%', width: '100%'}}>
               <ListItemAvatar>
-                <Grid container justify='center' alignItems='center' style={{height: '100%', width: '100%'}}>
+                <Grid container direction='row' justify='center' alignItems='center' style={{height: '100%', width: '100%'}}>
                   {getIcon(MenuOptions[option as MenuOptionsKey])}
                 </Grid>
               </ListItemAvatar>
