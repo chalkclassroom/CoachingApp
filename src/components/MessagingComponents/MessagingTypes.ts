@@ -65,20 +65,24 @@ export enum ThemeOptions {
 // an interface defining structure of each attachment
 export interface Attachment {
   // string id for each action plan
-  id: string;
+  // id: string;
   // type by default should be "action plan" but is a field
   // here in case in future we decide to have a non-action plan
   // attachments
-  type?: string;
+  // type?: string;
   // date of the action plan meeting
-  date: Date;
+  // date: Date;
   // which magic eight does the action plan belong too. optional again
   // for the same reason.
-  practice?: MagicEight;
+  // practice?: MagicEight;
 
   // doesn't have a content field as a message with a lot of attachments
   // could theoretically become too heavy. just storing ids and then retirieving
   // the content when we are actually sending the email allows us to skip that possibility
+  content: string,
+  filename: string,
+  type: string,
+  disposition: string
 };
 
 // interface defining the structure of each message to be sent to firebase
@@ -108,7 +112,7 @@ export interface Message {
   // than sent or draft.
   delivered: boolean; 
   // to store the list of attachments for each message 
-  attachments: Attachment[];
+  attachments: Attachment[] | undefined;
 };
 
 // interface defining the structure Select from

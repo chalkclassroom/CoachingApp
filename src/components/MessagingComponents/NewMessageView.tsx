@@ -94,7 +94,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   // ref to get value from EmailBody
 	const textRef = useRef();
   // state to store the current list of attachments
-  const [attachments, setAttachments] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
+  // const [attachments, setAttachments] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
   const [actionPlans, setActionPlans] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
   const [actionPlanDisplay, setActionPlanDisplay] = useState(false);
   const [subject, setSubject] = useState<string | undefined>('');
@@ -104,6 +104,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
+  const [attachments, setAttachments] = useState<Array<{content: string, filename: string, type: string, disposition: string}>>();
 
   // get the user's name
   useEffect(() => {
@@ -125,15 +126,24 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   })
   
+  const addAttachment = (content: string): void => {
+    console.log('this is the content', content);
+    setAttachments([{
+      content: content,
+      filename: 'attachment.pdf',
+      type: 'application/pdf',
+      disposition: 'attachment'
+    }])
+  }
 
   const sendMail = async (): Promise<void> => {
     if (recipient === null) {
       setAlertEnum(Alerts.NO_RECIPIENT);	
     } else {
-
+      console.log('this is attachment being sent', attachments);
       // tries to get the html version of all the action plans
       // doesn't convert to pdf but required so
-      const sendAttachments = attachments.map((attach: Attachment) => {
+      /* const sendAttachments = attachments.map((attach: Attachment) => {
         const staticMarkup = renderToStaticMarkup(<ActionPlanForm 
             firebase={props.firebase} 
             actionPlanId={attach.id}
@@ -154,7 +164,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           type: 'application/pdf',
           disposition: 'attachment',
         }
-      });
+      }); */
 
       // create the message object to send to funcSendEmail
       const msg: Message = {
@@ -175,10 +185,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         content: email ? email : '',
         delivered: false,
         // attachments: sendAttachments,
-        attachments: [{
+        /* attachments: [{
           id: 'action plan',
           date: new Date(),
-        }]
+        }] */
+        attachments: attachments
       };
      
       // encrypted with the user's uid from firebase
@@ -186,6 +197,18 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           .encrypt(JSON.stringify(msg), firebase.auth.currentUser.uid)
                           // .encrypt('test', firebase.auth.currentUser.uid)
                           .toString();
+
+      console.log('the message is', msg);
+      console.log('the encrypted message is', encryptedMsg);
+      const bytes  = CryptoJS.AES.decrypt(encryptedMsg, firebase.auth.currentUser.uid);
+      console.log('bytes', bytes);
+      const decryptedData = JSON.parse(JSON.stringify(CryptoJS.enc.Utf8.stringify(bytes)));
+      console.log('decrypted data', decryptedData)
+      console.log('json string decrypted', JSON.stringify(decryptedData));
+      const messageObj = JSON.parse(decryptedData);
+      console.log('message obj', messageObj);
+      console.log('message obj attachment content', messageObj.attachments[0].content);
+      console.log('beginning and end are the same?', msg.attachments[0].content === messageObj.attachments[0].content);
 
       firebase.sendEmail(encryptedMsg)
         .then((res: {data: string}): void => {
@@ -429,6 +452,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                         </Grid>
                         <AttachmentDialog
                           recipientId={recipient.id}
+                          addAttachment={addAttachment}
                           actionPlans={actionPlans}
                           open={actionPlanDisplay}
                           recipientName={recipient.label}

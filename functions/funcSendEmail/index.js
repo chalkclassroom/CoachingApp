@@ -11,13 +11,22 @@ exports.funcSendEmail = functions.https.onCall(async (data, context) => {
     let decryptedData = JSON.parse(JSON.stringify(CryptoJS.enc.Utf8.stringify(bytes)));
     console.log('decrypted data', decryptedData)
     console.log('json string decrypted', JSON.stringify(decryptedData));
-    messageObj = JSON.parse(decryptedData);
-    console.log('message obj', messageObj);
+    let messageObj = JSON.parse(decryptedData);
+    console.log('message obj', messageObj, 'attachment content', messageObj.attachments[0].content);
+    console.log('message obj attachment content', messageObj.attachments[0].content);
     const message = {
         to: messageObj.to,
         from: messageObj.from,
         subject: messageObj.subject,
         text: messageObj.content,
+        attachments : [
+          {
+            content: messageObj.attachments[0].content,
+            filename: messageObj.attachments[0].filename,
+            type: messageObj.attachments[0].type,
+            disposition: messageObj.attachments[0].disposition
+          }
+        ]
         // html: messageObj.textContent
     };
     console.log('message', message);

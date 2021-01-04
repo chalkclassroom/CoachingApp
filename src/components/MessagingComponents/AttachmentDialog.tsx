@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import { useState } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -33,6 +34,7 @@ interface AttachmentDialogProps {
   recipientName: string;
   firebase: any;
   teacherList: Array<Types.Teacher>;
+  addAttachment(content: string): void;
 }  
 
 const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDialogProps) => {
@@ -146,23 +148,45 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     console.log('handled choose action plan');
   };
 
-  const printDocument = (): void => {
+  const printDocument = async (): Promise<string | void> => {
     console.log('teacher selected', teacherObject);
     const input = document.getElementById('divToPrint');
+    let base64data: string | ArrayBuffer | null = null;
     html2canvas(input)
       .then((canvas) => {
         const link = document.createElement("a");
         document.body.appendChild(link);
         link.download = "html_image.png";
         const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
         const imgProps= pdf.getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
         pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
         pdf.save("download.pdf");
-      })
-    ;
+        const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
+        console.log('this is apparently the blob', blobPDF);
+        const reader = new FileReader();
+        reader.readAsDataURL(blobPDF);
+        reader.onloadend = function() {
+          base64data = reader.result;
+          console.log('base64', base64data);
+          // return base64data
+          props.addAttachment(base64data);
+        }
+      }).then(() => {
+        return base64data
+      });
+  }
+
+  const handleAttach = (): void => {
+    printDocument().then((data: string | void) => {
+      console.log('here the data is', data);
+      if (data) {
+        console.log('at this point', data, 'type', typeof data);
+        props.addAttachment(data);
+      }
+    })
   }
 
   return (
@@ -266,7 +290,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     </Grid>
                   ) : view === 'pdfPreview' && teacherObject ? (
                     <div>
-                      <button onClick={(): void => printDocument()}>Download</button>
+                      <button onClick={(): void => handleAttach()}>Download</button>
                       <div
                         id="divToPrint"
                         style={{
@@ -312,6 +336,10 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     </Dialog>
   );
 };
+
+AttachmentDialog.propTypes = {
+  addAttachment: PropTypes.func.isRequired
+}
 
 const mapStateToProps = (state: Types.ReduxState): {
   teacherList: Array<Types.Teacher>
