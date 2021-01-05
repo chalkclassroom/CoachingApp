@@ -54,23 +54,20 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     person: string,
     timeline: Date
   }>>();
-  /* const [checkedActionPlans, setCheckedActionPlans] = useState<Array<string>>([]);
+  const [checkedActionPlans, setCheckedActionPlans] = useState<Array<string>>([]);
 
-  const handleCheckActionPlan = (id: string): void => {
-    console.log('action plan id', id);
+  const removeActionPlan = (id: string): void => {
     const newCheckedActionPlans = checkedActionPlans;
     const index = newCheckedActionPlans.indexOf(id);
-    if (index > -1) {
-      newCheckedActionPlans.splice(index, 1);
-      console.log('spliced', newCheckedActionPlans)
-    } else {
-      newCheckedActionPlans.push(id);
-      console.log('added', newCheckedActionPlans.length)
-    }
+    newCheckedActionPlans.splice(index, 1);
     setCheckedActionPlans(newCheckedActionPlans);
-    console.log('new', newCheckedActionPlans);
-    console.log('is it included?', checkedActionPlans.includes(id))
-  } */
+  }
+
+  const addActionPlan = (id: string): void => {
+    const newCheckedActionPlans = checkedActionPlans;
+    newCheckedActionPlans.push(id);
+    setCheckedActionPlans(newCheckedActionPlans);
+  }
 
   /**
    * @param {Object} date
@@ -299,6 +296,9 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     actionPlans={props.actionPlans}
                     teacherId={props.recipientId}
                     onClick={handleChooseActionPlan}
+                    checkedActionPlans={checkedActionPlans}
+                    addActionPlan={addActionPlan}
+                    removeActionPlan={removeActionPlan}
                   />
                 ) : view === 'pdfPreview' && teacherObject ? (
                   <div>

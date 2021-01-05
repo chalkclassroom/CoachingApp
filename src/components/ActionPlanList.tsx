@@ -10,7 +10,9 @@ import {
   TableHead,
   TableBody,
   TableSortLabel,
-  Checkbox
+  Checkbox,
+  ListItem,
+  ListItemIcon
 } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import moment from 'moment';
@@ -27,7 +29,10 @@ import * as Constants from '../constants/Constants';
 interface Props {
   actionPlans?: Array<ActionPlanInfo>,
   teacherId?: string,
-  onClick(actionPlanId: string, teacherId: string): void
+  onClick(actionPlanId: string, teacherId: string): void,
+  checkedActionPlans: Array<string>,
+  addActionPlan(id: string): void,
+  removeActionPlan(id: string): void
 }
 
 interface State {
@@ -37,7 +42,8 @@ interface State {
   // rows: number,
   rowsPerPage: number,
   page: number,
-  selected: Array<string>
+  selected: Array<string>,
+  checked: Array<string>
 }
 
 interface TeacherListInfo {
@@ -243,7 +249,8 @@ class ActionPlanList extends React.Component<Props, State>{
       orderBy: 'modified',
       rowsPerPage: 5,
       page: 0,
-      selected: []
+      selected: [],
+      checked: ['']
     }
   }
 
@@ -258,28 +265,12 @@ class ActionPlanList extends React.Component<Props, State>{
   };
 
   /**
-   * @param {string} id
-   */
-  /* handleCheckActionPlan = (id: string): void => {
-    console.log('action plan id', id);
-    const newCheckedActionPlans = this.props.checkedActionPlans;
-    const index = newCheckedActionPlans.indexOf(id);
-    if (index > -1) {
-      newCheckedActionPlans.splice(index, 1);
-      console.log('spliced', newCheckedActionPlans)
-    } else {
-      newCheckedActionPlans.push(id);
-      console.log('added', newCheckedActionPlans.length)
-    }
-    this.props.setCheckedActionPlans(newCheckedActionPlans);
-    console.log('new', newCheckedActionPlans);
-    console.log('is it included?', this.props.checkedActionPlans.includes(id))
-  } */
-
-  /**
    *
    */
   componentDidMount(): void {
+    if (!this.state.checked[0]) {
+      this.setState({checked: this.props.checkedActionPlans})
+    }
     const firebase = this.context;
     if (!this.props.actionPlans) {
       firebase.getCoachActionPlans().then(
@@ -301,6 +292,19 @@ class ActionPlanList extends React.Component<Props, State>{
         })
       })
     }
+  }
+
+  handleCheck = (id: string): void => {
+    const newChecked = this.state.checked;
+    const index = newChecked.indexOf(id);
+    if (index === -1) {
+      newChecked.push(id);
+      this.props.addActionPlan(id);
+    } else {
+      newChecked.splice(index, 1);
+      this.props.removeActionPlan(id)
+    }
+    this.setState({checked: newChecked});
   }
 
   static propTypes = {
@@ -346,8 +350,19 @@ class ActionPlanList extends React.Component<Props, State>{
                   key={index}
                   selected={isItemSelected}
                 >
-                  <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
-                    <Checkbox />
+                  <TableCell
+                    style={{
+                      paddingTop: '0.5em',
+                      paddingBottom: '0.5em',
+                      paddingRight: '0.5em',
+                      paddingLeft: 0
+                    }}
+                  >
+                    <ListItem onClick={(): void => {this.handleCheck(row.id)}}>
+                      <ListItemIcon>
+                        <Checkbox checked = {this.state.checked.includes(row.id)} />
+                      </ListItemIcon>
+                    </ListItem>
                   </TableCell>
                   <TableCell style={{padding: '0.5em'}}>
                     <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
