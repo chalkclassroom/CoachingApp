@@ -384,7 +384,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 
   return (
     <div style={{width: '100%', overflowY: 'auto'}}>
-      <Grid direction="column" justify="center" alignItems="center" style={{width: '100%', height: '80vh'}}>
+      <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%'}}>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
             <Grid item xs={3}>
@@ -402,7 +402,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             </Grid>
           </Grid>
         </Grid>
-        <Grid item style={{paddingTop: '0.5em'}}>
+        <Grid item style={{paddingTop: '0.5em', width: '100%'}}>
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
             <Grid item xs={3}>
               <Typography variant="h6" align="right" style={{fontFamily: 'Arimo', paddingRight: '1em'}}>
@@ -427,7 +427,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                   <SubjectLine subject={subject} setSubject={setSubject} readOnly={props.readOnly} />
                 </Grid>
               </Grid>
-              <Grid item style={{width: '100%', height: '80%'}}>
+              <Grid item style={{width: '100%', height: '50vh', paddingTop: '1em', paddingBottom: '1em'}}>
                 <EmailBody email={email} setEmail={setEmail} readOnly={props.readOnly} />
               </Grid>
               {props.readOnly ? (null) : (
