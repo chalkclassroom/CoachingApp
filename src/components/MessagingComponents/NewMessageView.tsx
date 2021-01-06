@@ -95,7 +95,20 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 	const textRef = useRef();
   // state to store the current list of attachments
   // const [attachments, setAttachments] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
-  const [actionPlans, setActionPlans] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
+  const [actionPlans, setActionPlans] = useState<Array<{
+    id: string,
+    date: {
+      seconds: number,
+      nanoseconds: number
+    },
+    practice: string,
+    achieveBy: firebase.firestore.Timestamp
+  }>>([]);
+  const [observations, setObservations] = useState<Array<{
+    id: string,
+    date: firebase.firestore.Timestamp,
+    practice: string
+  }>>([]);
   const [actionPlanDisplay, setActionPlanDisplay] = useState(false);
   const [subject, setSubject] = useState<string | undefined>('');
   const firebase = props.firebase;
@@ -342,6 +355,14 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       achieveBy: firebase.firestore.Timestamp
     }>) => {
       setActionPlans(actionPlans);
+    });
+    firebase.getAllTeacherObservations(newRecipient.id).then((observations: Array<{
+      id: string,
+      date: firebase.firestore.Timestamp,
+      practice: string
+    }>) => {
+      console.log('these are the observations', observations);
+      setObservations(observations);
     })
   }
 
@@ -454,6 +475,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           recipientId={recipient.id}
                           addAttachment={addAttachment}
                           actionPlans={actionPlans}
+                          results={observations}
                           open={actionPlanDisplay}
                           recipientName={recipient.label}
                           handleClose={(): void => setActionPlanDisplay(false)}

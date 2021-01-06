@@ -17,6 +17,7 @@ import {
   DialogContent,
   DialogActions
 } from '@material-ui/core';
+import ResultsList from './ResultsList';
 import ActionPlanList from '../ActionPlanList';
 import ActionPlanForPdf from './ActionPlanForPdf';
 import html2canvas from 'html2canvas';
@@ -30,6 +31,11 @@ interface AttachmentDialogProps {
   handleAdd: (value: string) => void;
   handleDelete: (value: string) => void;
   actionPlans: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>;
+  results: Array<{
+    id: string,
+    date: firebase.firestore.Timestamp,
+    practice: string
+  }>,
   attachmentList: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>;
   handleClose: () => void;
   recipientName: string;
@@ -55,6 +61,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     timeline: Date
   }>>();
   const [checkedActionPlans, setCheckedActionPlans] = useState<Array<string>>([]);
+  const [checkedResults, setCheckedResults] = useState<Array<string>>([]);
 
   const removeActionPlan = (id: string): void => {
     const newCheckedActionPlans = checkedActionPlans;
@@ -67,6 +74,19 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     const newCheckedActionPlans = checkedActionPlans;
     newCheckedActionPlans.push(id);
     setCheckedActionPlans(newCheckedActionPlans);
+  }
+
+  const removeResult = (id: string): void => {
+    const newCheckedResults = checkedResults;
+    const index = newCheckedResults.indexOf(id);
+    newCheckedResults.splice(index, 1);
+    setCheckedResults(newCheckedResults);
+  }
+
+  const addResult = (id: string): void => {
+    const newCheckedResults = checkedResults;
+    newCheckedResults.push(id);
+    setCheckedResults(newCheckedResults);
   }
 
   /**
@@ -225,13 +245,25 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
           <Grid item>
             <Grid container direction="row" justify="center" alignItems="center">
               {view === 'actionPlans' ? (
-                <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
-                  {props.recipientName}&apos;s Action Plans
-                </Typography>
+                props.recipientName ? (
+                  <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
+                    {props.recipientName}&apos;s Action Plans
+                  </Typography>
+                ) : (
+                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                    Please choose a recipient to select an Action Plan.
+                  </Typography>
+                )
               ) : view === 'results' ? (
-                <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
-                  {props.recipientName}&apos;s Results
-                </Typography>
+                props.recipientName ? (
+                  <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
+                    {props.recipientName}&apos;s Results
+                  </Typography>
+                ) : (
+                  <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                    Please choose a recipient to select results.
+                  </Typography>
+                )
               ) : view === 'options' ? (
                 <Typography variant="h4" style={{fontFamily: 'Arimo'}}>
                   Attachments
@@ -292,14 +324,16 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     </Grid>
                   </Grid>
                 ) : view === 'actionPlans' ? (
-                  <ActionPlanList
-                    actionPlans={props.actionPlans}
-                    teacherId={props.recipientId}
-                    onClick={handleChooseActionPlan}
-                    checkedActionPlans={checkedActionPlans}
-                    addActionPlan={addActionPlan}
-                    removeActionPlan={removeActionPlan}
-                  />
+                  props.recipientName ? (
+                    <ActionPlanList
+                      actionPlans={props.actionPlans}
+                      teacherId={props.recipientId}
+                      onClick={handleChooseActionPlan}
+                      checkedActionPlans={checkedActionPlans}
+                      addActionPlan={addActionPlan}
+                      removeActionPlan={removeActionPlan}
+                    />
+                  ) : (null)
                 ) : view === 'pdfPreview' && teacherObject ? (
                   <div>
                     <button onClick={(): void => handleAttach()}>Download</button>
@@ -325,9 +359,15 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     </div>
                   </div>
                 ) : (
-                  <Typography>
-                    Results options will be listed here.
-                  </Typography>
+                  props.recipientName ? (
+                    <ResultsList
+                      results={props.results}
+                      teacherId={props.recipientId}
+                      checkedResults={checkedResults}
+                      addResult={addResult}
+                      removeResult={removeResult}
+                    />
+                  ) : (null)
                 )}
               </div>
             </Grid>

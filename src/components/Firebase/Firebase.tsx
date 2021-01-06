@@ -1928,6 +1928,46 @@ class Firebase {
   }
 
   /**
+   * finds all observations for coach and their selected teacher
+   * @param {string} teacherId
+   */
+  getAllTeacherObservations = async (teacherId: string): Promise<Array<{
+    id: string,
+    date: firebase.firestore.Timestamp,
+    practice: string
+  }> | void> => {
+    if (this.auth.currentUser) {
+      this.query = this.db.collection("observations")
+        .where("observedBy", "==", "/user/" + this.auth.currentUser.uid)
+        .where("teacher", "==", "/user/" + teacherId)
+        // why doesn't this work??
+        // .orderBy("start", "desc")
+        .limit(100)
+      return this.query.get()
+        .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+          const idArr: Array<{
+            id: string,
+            date: firebase.firestore.Timestamp,
+            practice: string
+          }> = [];
+          querySnapshot.forEach(doc => {
+            if (doc.data().end !== doc.data().start) { // check that session was completed
+              idArr.push({
+                id: doc.id,
+                date: doc.data().start,
+                practice: doc.data().type,
+              })
+            }
+          })
+          return idArr;
+        })
+        .catch(() => {
+          console.log('unable to retrieve observations')
+        })
+      }
+  }
+
+  /**
    * gets first name of teacher
    * @param {string} teacherId
    */
