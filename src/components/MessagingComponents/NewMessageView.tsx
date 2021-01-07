@@ -363,9 +363,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     if (newCheckedResults) {
       newCheckedResults[id][type] = false;
     }
-    // console.log('updated checked resutls', newCheckedResults);
     setCheckedResults(newCheckedResults);
-    // console.log('updated', newCheckedResults);
   }
 
   const addResult = (id: string, type: ResultTypeKey): void => {
@@ -373,9 +371,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     if (newCheckedResults) {
       newCheckedResults[id][type] = true;
     }
-    // console.log('updated checked resutls', newCheckedResults);
     setCheckedResults(newCheckedResults);
-    // console.log('updated', newCheckedResults);
   }
 
   const recipientSelected = (newRecipient: {value: string, id: string, label: string}): void => {
@@ -404,7 +400,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       date: firebase.firestore.Timestamp,
       practice: string
     }>) => {
-      // console.log('these are the observations', observations);
       setObservations(observations);
       const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
       if (observations.length > 0) {

@@ -215,7 +215,6 @@ class ResultsList extends React.Component<Props, State>{
       rowsPerPage: 5,
       page: 0,
       selected: [],
-      // checked: {'': {summary: false, details: false, trends: false}}
       checked: null
     }
   }
@@ -234,12 +233,8 @@ class ResultsList extends React.Component<Props, State>{
    *
    */
   componentDidMount(): void {
-    // console.log('first', this.state.checked, 'second', this.props.checkedResults);
     if (!this.state.checked && this.props.checkedResults) {
-      // console.log('it came here');
-      this.setState({checked: this.props.checkedResults}, () => {
-        // console.log('props checked results', this.state.checked)
-      })
+      this.setState({checked: this.props.checkedResults})
     } else {
       const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
       if (this.props.results) {
@@ -247,16 +242,16 @@ class ResultsList extends React.Component<Props, State>{
           unchecked[result.id] = {'summary': false, 'details': false, 'trends': false}
         })
       }
-      this.setState({checked: unchecked}, () => {
-        // console.log('unchecked checked ', this.state.checked)
-      })
+      this.setState({checked: unchecked})
     }
   }
 
+  /**
+   * @param {string} id
+   * @param {ResultTypeKey} resultType
+   */
   handleCheck = (id: string, resultType: ResultTypeKey ): void => {
     const newChecked = this.state.checked;
-    // console.log('is this true 1', newChecked && newChecked[id]);
-    // console.log('what tabout this 1', newChecked[id][resultType]);
     if (newChecked) {
       if (newChecked[id][resultType]) {
         newChecked[id][resultType] = false;
@@ -266,11 +261,7 @@ class ResultsList extends React.Component<Props, State>{
         this.props.addResult(id, resultType);
       }
     }
-    this.setState({checked: newChecked}, () => {
-      // console.log('new state', this.state.checked);
-      // console.log('is this true 2', this.state.checked && this.state.checked[id]);
-      // console.log('what about this 2', this.state.checked[id][resultType]);
-    });
+    this.setState({checked: newChecked});
   }
 
   static propTypes = {

@@ -334,7 +334,6 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     />
                   ) : (
                     <Typography variant="h5" align="center" style={{fontFamily: 'Arimo'}}>
-                      {/* {console.log('no ap message', props.noActionPlansMessage)} */}
                       {props.noActionPlansMessage}
                     </Typography>
                   )
@@ -373,7 +372,6 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     />
                   ) : (
                     <Typography variant="h5" align="center" style={{fontFamily: 'Arimo'}}>
-                      {/* {console.log('no results message', props.noResultsMessage)} */}
                       {props.noResultsMessage}
                     </Typography>
                   )
