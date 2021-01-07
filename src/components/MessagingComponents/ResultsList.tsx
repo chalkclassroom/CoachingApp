@@ -30,9 +30,9 @@ interface Props {
   results?: ResultsInfo[],
   teacherId?: string,
   onClick(actionPlanId: string, teacherId: string): void,
-  checkedResults: Array<string>,
-  addResult(id: string): void,
-  removeResult(id: string): void
+  checkedResults: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} | undefined,
+  addResult(id: string, type: ResultTypeKey): void,
+  removeResult(id: string, type: ResultTypeKey): void
 }
 
 interface State {
@@ -43,7 +43,7 @@ interface State {
   rowsPerPage: number,
   page: number,
   selected: Array<string>,
-  checked: Array<string>
+  checked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} | null
 }
 
 interface TeacherListInfo {
@@ -70,6 +70,14 @@ interface ResultsInfo {
 }
 
 type ResultsInfoKey = keyof ResultsInfo;
+
+interface ResultType {
+  summary: boolean,
+  details: boolean,
+  trends: boolean
+}
+
+type ResultTypeKey = keyof ResultType;
 
 const headCells = [
   { id: 'date', numeric: false, disablePadding: false, label: 'Date' },
@@ -207,7 +215,8 @@ class ResultsList extends React.Component<Props, State>{
       rowsPerPage: 5,
       page: 0,
       selected: [],
-      checked: ['']
+      // checked: {'': {summary: false, details: false, trends: false}}
+      checked: null
     }
   }
 
@@ -225,22 +234,43 @@ class ResultsList extends React.Component<Props, State>{
    *
    */
   componentDidMount(): void {
-    if (!this.state.checked[0]) {
-      this.setState({checked: this.props.checkedResults})
+    // console.log('first', this.state.checked, 'second', this.props.checkedResults);
+    if (!this.state.checked && this.props.checkedResults) {
+      // console.log('it came here');
+      this.setState({checked: this.props.checkedResults}, () => {
+        // console.log('props checked results', this.state.checked)
+      })
+    } else {
+      const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
+      if (this.props.results) {
+        this.props.results.forEach(result => {
+          unchecked[result.id] = {'summary': false, 'details': false, 'trends': false}
+        })
+      }
+      this.setState({checked: unchecked}, () => {
+        // console.log('unchecked checked ', this.state.checked)
+      })
     }
   }
 
-  handleCheck = (id: string): void => {
+  handleCheck = (id: string, resultType: ResultTypeKey ): void => {
     const newChecked = this.state.checked;
-    const index = newChecked.indexOf(id);
-    if (index === -1) {
-      newChecked.push(id);
-      this.props.addResult(id);
-    } else {
-      newChecked.splice(index, 1);
-      this.props.removeResult(id)
+    // console.log('is this true 1', newChecked && newChecked[id]);
+    // console.log('what tabout this 1', newChecked[id][resultType]);
+    if (newChecked) {
+      if (newChecked[id][resultType]) {
+        newChecked[id][resultType] = false;
+        this.props.removeResult(id, resultType);
+      } else {
+        newChecked[id][resultType] = true;
+        this.props.addResult(id, resultType);
+      }
     }
-    this.setState({checked: newChecked});
+    this.setState({checked: newChecked}, () => {
+      // console.log('new state', this.state.checked);
+      // console.log('is this true 2', this.state.checked && this.state.checked[id]);
+      // console.log('what about this 2', this.state.checked[id][resultType]);
+    });
   }
 
   static propTypes = {
@@ -337,7 +367,7 @@ class ResultsList extends React.Component<Props, State>{
                               src={SequentialIconImage}
                               alt="Magic 8 Icon"
                             />
-                          ) : practice === 'Associative and Cooperative' ? (
+                          ) : practice === 'Associative and Cooperativej' ? (
                             <img
                               src={AssocCoopIconImage}
                               alt="Magic 8 Icon"
@@ -348,28 +378,28 @@ class ResultsList extends React.Component<Props, State>{
                     </Typography>
                   </TableCell>
                   <TableCell style={{width: '15%'}}>
-                    <ListItem onClick={(): void => {this.handleCheck(row.id)}} alignItems="center">
+                    <ListItem onClick={(): void => {this.handleCheck(row.id, 'summary')}} alignItems="center">
                       <Grid container direction="row" justify="center" alignItems="center">
                         <ListItemIcon>
-                          <Checkbox checked = {this.state.checked.includes(row.id)} />
+                          <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['summary' as ResultTypeKey] : false} />
                         </ListItemIcon>
                       </Grid>
                     </ListItem>
                   </TableCell>
                   <TableCell style={{width: '15%'}}>
-                    <ListItem onClick={(): void => {this.handleCheck(row.id)}}>
+                    <ListItem onClick={(): void => {this.handleCheck(row.id, 'details')}}>
                       <Grid container direction="row" justify="center" alignItems="center">
                         <ListItemIcon>
-                          <Checkbox checked = {this.state.checked.includes(row.id)} />
+                          <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['details' as ResultTypeKey] : false} />
                         </ListItemIcon>
                       </Grid>
                     </ListItem>
                   </TableCell>
                   <TableCell style={{width: '15%'}}>
-                    <ListItem onClick={(): void => {this.handleCheck(row.id)}}>
+                    <ListItem onClick={(): void => {this.handleCheck(row.id, 'trends')}}>
                       <Grid container direction="row" justify="center" alignItems="center">
                         <ListItemIcon>
-                          <Checkbox checked = {this.state.checked.includes(row.id)} />
+                          <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['trends' as ResultTypeKey] : false} />
                         </ListItemIcon>
                       </Grid>
                     </ListItem>

@@ -36,13 +36,26 @@ interface AttachmentDialogProps {
     date: firebase.firestore.Timestamp,
     practice: string
   }>,
+  checkedResults: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} | undefined,
+  addResult(id: string, type: ResultTypeKey): void,
+  removeResult(id: string, type: ResultTypeKey): void,
   attachmentList: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>;
   handleClose: () => void;
   recipientName: string;
   firebase: any;
   teacherList: Array<Types.Teacher>;
   addAttachment(content: string): void;
-}  
+  noActionPlansMessage: string;
+  noResultsMessage: string;
+}
+
+interface ResultType {
+  summary: boolean,
+  details: boolean,
+  trends: boolean
+}
+
+type ResultTypeKey = keyof ResultType;
 
 const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDialogProps) => {
   const [view, setView] = useState('options');
@@ -61,7 +74,6 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     timeline: Date
   }>>();
   const [checkedActionPlans, setCheckedActionPlans] = useState<Array<string>>([]);
-  const [checkedResults, setCheckedResults] = useState<Array<string>>([]);
 
   const removeActionPlan = (id: string): void => {
     const newCheckedActionPlans = checkedActionPlans;
@@ -74,19 +86,6 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     const newCheckedActionPlans = checkedActionPlans;
     newCheckedActionPlans.push(id);
     setCheckedActionPlans(newCheckedActionPlans);
-  }
-
-  const removeResult = (id: string): void => {
-    const newCheckedResults = checkedResults;
-    const index = newCheckedResults.indexOf(id);
-    newCheckedResults.splice(index, 1);
-    setCheckedResults(newCheckedResults);
-  }
-
-  const addResult = (id: string): void => {
-    const newCheckedResults = checkedResults;
-    newCheckedResults.push(id);
-    setCheckedResults(newCheckedResults);
   }
 
   /**
@@ -110,7 +109,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
       return obj.id === teacherId
     });
     setTeacherObject(teacherData[0]);
-    console.log('teacherData', teacherData, typeof teacherData);
+    // console.log('teacherData', teacherData, typeof teacherData);
     props.firebase.getAPInfo(actionPlanId).then((actionPlanData: {
       sessionId: string,
       goal: string,
@@ -163,11 +162,11 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
         console.log('error retrieving action steps');
       });
     })
-    console.log('handled choose action plan');
+    // console.log('handled choose action plan');
   };
 
   const printDocument = async (): Promise<string | void> => {
-    console.log('teacher selected', teacherObject);
+    // console.log('teacher selected', teacherObject);
     const input = document.getElementById('divToPrint');
     let base64data: string | ArrayBuffer | null = null;
     html2canvas(input)
@@ -183,12 +182,12 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
         pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
         pdf.save("download.pdf");
         const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
-        console.log('this is apparently the blob', blobPDF);
+        // console.log('this is apparently the blob', blobPDF);
         const reader = new FileReader();
         reader.readAsDataURL(blobPDF);
         reader.onloadend = function() {
           base64data = reader.result;
-          console.log('base64', base64data);
+          // console.log('base64', base64data);
           // return base64data
           props.addAttachment(base64data);
         }
@@ -199,9 +198,9 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
 
   const handleAttach = (): void => {
     printDocument().then((data: string | void) => {
-      console.log('here the data is', data);
+      // console.log('here the data is', data);
       if (data) {
-        console.log('at this point', data, 'type', typeof data);
+        // console.log('at this point', data, 'type', typeof data);
         props.addAttachment(data);
       }
     })
@@ -229,7 +228,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                         setView('options')
                       }
                     }}
-                    style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}
+                    style={{boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.25)'}}
                   >
                     <ChevronLeftIcon />
                   </IconButton>
@@ -324,7 +323,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     </Grid>
                   </Grid>
                 ) : view === 'actionPlans' ? (
-                  props.recipientName ? (
+                  (props.recipientName && (props.actionPlans.length > 0)) ? (
                     <ActionPlanList
                       actionPlans={props.actionPlans}
                       teacherId={props.recipientId}
@@ -333,7 +332,12 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                       addActionPlan={addActionPlan}
                       removeActionPlan={removeActionPlan}
                     />
-                  ) : (null)
+                  ) : (
+                    <Typography variant="h5" align="center" style={{fontFamily: 'Arimo'}}>
+                      {/* {console.log('no ap message', props.noActionPlansMessage)} */}
+                      {props.noActionPlansMessage}
+                    </Typography>
+                  )
                 ) : view === 'pdfPreview' && teacherObject ? (
                   <div>
                     <button onClick={(): void => handleAttach()}>Download</button>
@@ -359,15 +363,20 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     </div>
                   </div>
                 ) : (
-                  props.recipientName ? (
+                  (props.recipientName && (props.results.length > 0)) ? (
                     <ResultsList
                       results={props.results}
                       teacherId={props.recipientId}
-                      checkedResults={checkedResults}
-                      addResult={addResult}
-                      removeResult={removeResult}
+                      checkedResults={props.checkedResults}
+                      addResult={props.addResult}
+                      removeResult={props.removeResult}
                     />
-                  ) : (null)
+                  ) : (
+                    <Typography variant="h5" align="center" style={{fontFamily: 'Arimo'}}>
+                      {/* {console.log('no results message', props.noResultsMessage)} */}
+                      {props.noResultsMessage}
+                    </Typography>
+                  )
                 )}
               </div>
             </Grid>
@@ -389,7 +398,9 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
 };
 
 AttachmentDialog.propTypes = {
-  addAttachment: PropTypes.func.isRequired
+  addAttachment: PropTypes.func.isRequired,
+  addResult: PropTypes.func.isRequired,
+  removeResult: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state: Types.ReduxState): {

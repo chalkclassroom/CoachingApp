@@ -41,6 +41,14 @@ interface NewMessageViewProps {
   moveDraftToSent?(email: Email): void;
 };
 
+interface ResultType {
+  summary: boolean,
+  details: boolean,
+  trends: boolean
+}
+
+type ResultTypeKey = keyof ResultType;
+
 /* const gridContainer = {
 	display: 'grid',
 	gridTemplateColumns: 'auto 1fr',
@@ -104,11 +112,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     practice: string,
     achieveBy: firebase.firestore.Timestamp
   }>>([]);
+  const [noActionPlansMessage, setNoActionPlansMessage] = useState<string>('');
   const [observations, setObservations] = useState<Array<{
     id: string,
     date: firebase.firestore.Timestamp,
     practice: string
   }>>([]);
+  const [noObservationsMessage, setNoObservationsMessage] = useState<string>('');
   const [actionPlanDisplay, setActionPlanDisplay] = useState(false);
   const [subject, setSubject] = useState<string | undefined>('');
   const firebase = props.firebase;
@@ -118,6 +128,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
   const [attachments, setAttachments] = useState<Array<{content: string, filename: string, type: string, disposition: string}>>();
+  const [checkedResults, setCheckedResults] = useState<{[id: string]: {
+    summary: boolean,
+    details: boolean,
+    trends: boolean
+  }}>({});
 
   // get the user's name
   useEffect(() => {
@@ -140,7 +155,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   })
   
   const addAttachment = (content: string): void => {
-    console.log('this is the content', content);
+    // console.log('this is the content', content);
     setAttachments([{
       content: content,
       filename: 'attachment.pdf',
@@ -153,7 +168,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     if (recipient === null) {
       setAlertEnum(Alerts.NO_RECIPIENT);	
     } else {
-      console.log('this is attachment being sent', attachments);
+      // console.log('this is attachment being sent', attachments);
       // tries to get the html version of all the action plans
       // doesn't convert to pdf but required so
       /* const sendAttachments = attachments.map((attach: Attachment) => {
@@ -343,6 +358,26 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   }; */
 
+  const removeResult = (id: string, type: ResultTypeKey): void => {
+    const newCheckedResults = checkedResults;
+    if (newCheckedResults) {
+      newCheckedResults[id][type] = false;
+    }
+    // console.log('updated checked resutls', newCheckedResults);
+    setCheckedResults(newCheckedResults);
+    // console.log('updated', newCheckedResults);
+  }
+
+  const addResult = (id: string, type: ResultTypeKey): void => {
+    const newCheckedResults = checkedResults;
+    if (newCheckedResults) {
+      newCheckedResults[id][type] = true;
+    }
+    // console.log('updated checked resutls', newCheckedResults);
+    setCheckedResults(newCheckedResults);
+    // console.log('updated', newCheckedResults);
+  }
+
   const recipientSelected = (newRecipient: {value: string, id: string, label: string}): void => {
     setRecipient(newRecipient);
     firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{
@@ -355,15 +390,38 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       achieveBy: firebase.firestore.Timestamp
     }>) => {
       setActionPlans(actionPlans);
+      if (actionPlans.length > 0) {
+        setNoActionPlansMessage('')
+      } else {
+        setNoActionPlansMessage('You have not created any action plans with ' + newRecipient.label + '.');
+      }
+    }).catch((error : Error) => {
+      console.log('error', error);
+      setNoActionPlansMessage('There was an error retrieving ' + newRecipient.label + '\'s action plans.');
     });
     firebase.getAllTeacherObservations(newRecipient.id).then((observations: Array<{
       id: string,
       date: firebase.firestore.Timestamp,
       practice: string
     }>) => {
-      console.log('these are the observations', observations);
+      // console.log('these are the observations', observations);
       setObservations(observations);
-    })
+      const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
+      if (observations.length > 0) {
+        observations.forEach(result => {
+          unchecked[result.id] = {'summary': false, 'details': false, 'trends': false}
+        })
+      }
+      setCheckedResults(unchecked);
+      if (observations.length > 0) {
+        setNoObservationsMessage('')
+      } else {
+        setNoObservationsMessage('You have no observation data for ' + newRecipient.label + '.');
+      }
+    }).catch((error : Error) => {
+      console.log('error', error);
+      setNoObservationsMessage('There was an error retrieving ' + newRecipient.label + '\'s results.');
+    });
   }
 
   const saveEmail = async (
@@ -475,7 +533,12 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           recipientId={recipient.id}
                           addAttachment={addAttachment}
                           actionPlans={actionPlans}
+                          noActionPlansMessage={noActionPlansMessage}
                           results={observations}
+                          checkedResults={checkedResults}
+                          addResult={addResult}
+                          removeResult={removeResult}
+                          noResultsMessage={noObservationsMessage}
                           open={actionPlanDisplay}
                           recipientName={recipient.label}
                           handleClose={(): void => setActionPlanDisplay(false)}
