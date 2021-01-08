@@ -44,7 +44,8 @@ interface AttachmentDialogProps {
   recipientName: string;
   firebase: any;
   teacherList: Array<Types.Teacher>;
-  addAttachment(content: string): void;
+  addAttachment(content: string, practice: string, date: Date): void;
+  setIncludeAttachments(value: boolean): void;
   noActionPlansMessage: string;
   noResultsMessage: string;
 }
@@ -98,11 +99,122 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     return newDate
   }
 
+  const printDocument = async (practice: string, date: Date): Promise<string | void> => {
+    // console.log('teacher selected', teacherObject);
+    const input = document.getElementById('divToPrint');
+    let base64data: string | ArrayBuffer | null = null;
+    html2canvas(input)
+      .then((canvas) => {
+        const link = document.createElement("a");
+        document.body.appendChild(link);
+        link.download = "html_image.png";
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
+        const imgProps= pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
+        // pdf.save("download.pdf");
+        const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
+        // console.log('this is apparently the blob', blobPDF);
+        const reader = new FileReader();
+        reader.readAsDataURL(blobPDF);
+        reader.onloadend = function() {
+          base64data = reader.result;
+          // console.log('base64', base64data);
+          // return base64data
+          props.addAttachment(base64data, practice, date);
+        }
+      }).then(() => {
+        return base64data
+      });
+  }
+
+  const handleAttach = (practice: string, date: Date): void => {
+    printDocument(practice, date).then((data: string | void) => {
+      // console.log('here the data is', data);
+      if (data) {
+        // console.log('at this point', data, 'type', typeof data);
+        props.addAttachment(data, practice, date);
+      }
+    })
+  }
+
   /**
    * @param {string} actionPlanId
    * @param {string} teacherId
    */
   const handleChooseActionPlan = (actionPlanId: string, teacherId: string): void => {
+    setAP(actionPlanId);
+    setTeacher(teacherId);
+    const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
+      return obj.id === teacherId
+    });
+    setTeacherObject(teacherData[0]);
+    
+    console.log('teacherData', teacherData, typeof teacherData);
+    props.firebase.getAPInfo(actionPlanId).then((actionPlanData: {
+      sessionId: string,
+      goal: string,
+      goalTimeline: firebase.firestore.Timestamp,
+      benefit: string,
+      dateModified: {seconds: number, nanoseconds: number},
+      dateCreated: {seconds: number, nanoseconds: number},
+      coach: string,
+      teacher: string,
+      tool: string
+    }) => {
+      const newDate = changeDateType(actionPlanData.dateModified);
+      setTool(actionPlanData.tool);
+      setApGoal(actionPlanData.goal);
+      if (actionPlanData.goalTimeline && (typeof actionPlanData.goalTimeline !== 'string')) {
+        setGoalTimeline(actionPlanData.goalTimeline.toDate());
+      } else {
+        setGoalTimeline(new Date());
+      }
+      setBenefit(actionPlanData.benefit);
+      setDate(newDate);
+      const newActionStepsArray: Array<{
+        step: string,
+        materials: string,
+        person: string,
+        timeline: Date
+      }> = [];
+      props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{
+        step: string,
+        materials: string,
+        person: string,
+        timeline: firebase.firestore.Timestamp
+      }>) => {
+        actionStepsData.forEach((value, index) => {
+          newActionStepsArray[index] = {
+            step: value.step,
+            materials: value.materials,
+            person: value.person,
+            timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
+              value.timeline.toDate() :
+              new Date(),
+          };
+        })
+      }).then(() => {
+        setActionSteps(newActionStepsArray);
+      }).then(() => {
+        console.log('tool', tool);
+        handleAttach(tool, newDate);
+        // setView('apPreview');
+      })
+      .catch(() => {
+        console.log('error retrieving action steps');
+      });
+    })
+    // console.log('handled choose action plan');
+  };
+
+  /**
+   * @param {string} actionPlanId
+   * @param {string} teacherId
+   */
+  const handleViewActionPlan = (actionPlanId: string, teacherId: string): void => {
     setAP(actionPlanId);
     setTeacher(teacherId);
     const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
@@ -159,7 +271,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
         setView('apPreview');
       })
       .catch(() => {
-        console.log('error retrieving action steps');
+        console.log('error retrieving action step');
       });
     })
     // console.log('handled choose action plan');
@@ -177,47 +289,6 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     setTeacherObject(teacherData[0]);
     setView('resultPreview');
   };
-
-  const printDocument = async (): Promise<string | void> => {
-    // console.log('teacher selected', teacherObject);
-    const input = document.getElementById('divToPrint');
-    let base64data: string | ArrayBuffer | null = null;
-    html2canvas(input)
-      .then((canvas) => {
-        const link = document.createElement("a");
-        document.body.appendChild(link);
-        link.download = "html_image.png";
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
-        const imgProps= pdf.getImageProperties(imgData);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
-        pdf.save("download.pdf");
-        const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
-        // console.log('this is apparently the blob', blobPDF);
-        const reader = new FileReader();
-        reader.readAsDataURL(blobPDF);
-        reader.onloadend = function() {
-          base64data = reader.result;
-          // console.log('base64', base64data);
-          // return base64data
-          props.addAttachment(base64data);
-        }
-      }).then(() => {
-        return base64data
-      });
-  }
-
-  const handleAttach = (): void => {
-    printDocument().then((data: string | void) => {
-      // console.log('here the data is', data);
-      if (data) {
-        // console.log('at this point', data, 'type', typeof data);
-        props.addAttachment(data);
-      }
-    })
-  }
 
   return (
     <Dialog
@@ -339,14 +410,42 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                   </Grid>
                 ) : view === 'actionPlans' ? (
                   (props.recipientName && (props.actionPlans.length > 0)) ? (
+                    <div>
                     <ActionPlanList
                       actionPlans={props.actionPlans}
                       teacherId={props.recipientId}
-                      onClick={handleChooseActionPlan}
+                      onClick={handleViewActionPlan}
                       checkedActionPlans={checkedActionPlans}
                       addActionPlan={addActionPlan}
                       removeActionPlan={removeActionPlan}
+                      handleChooseActionPlan={handleChooseActionPlan}
                     />
+                    {teacherObject ? (
+                      <div
+                      id="divToPrint"
+                      style={{
+                        backgroundColor: '#ffffff',
+                        width: '210mm',
+                        minHeight: '100mm',
+                        marginLeft: 'auto',
+                        marginRight: 'auto'
+                        // display: "none"
+                      }}
+                      display="none"
+                    >
+                      <ActionPlanForPdf
+                        tool={tool}
+                        apGoal={apGoal}
+                        goalTimeline={goalTimeline}
+                        benefit={benefit}
+                        date={date}
+                        actionSteps={actionSteps}
+                        teacher={teacherObject}
+                      />
+                    </div>
+                    ) : (null)}
+                      
+                    </div>
                   ) : (
                     <Typography variant="h5" align="center" style={{fontFamily: 'Arimo'}}>
                       {props.noActionPlansMessage}
@@ -356,7 +455,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                   <div>
                     <button onClick={(): void => handleAttach()}>Download</button>
                     <div
-                      id="divToPrint"
+                      // id="divToPrint"
                       style={{
                         backgroundColor: '#ffffff',
                         width: '210mm',
@@ -380,7 +479,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                   <div>
                     <button onClick={(): void => handleAttach()}>Download</button>
                     <div
-                      id="divToPrint"
+                      // id="divToPrint2"
                       style={{
                         backgroundColor: '#ffffff',
                         width: '210mm',
@@ -429,8 +528,10 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
           <Button
             variant='contained'
             color='primary'
+            disabled={!props.attachmentList}
+            onClick={(): void => props.setIncludeAttachments(true)}
           >
-            Attach
+            Attach1
           </Button>
         ) : (null)}
       </DialogActions>
@@ -441,7 +542,8 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
 AttachmentDialog.propTypes = {
   addAttachment: PropTypes.func.isRequired,
   addResult: PropTypes.func.isRequired,
-  removeResult: PropTypes.func.isRequired
+  removeResult: PropTypes.func.isRequired,
+  setIncludeAttachments: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state: Types.ReduxState): {

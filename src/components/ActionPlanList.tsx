@@ -30,6 +30,7 @@ interface Props {
   actionPlans?: Array<ActionPlanInfo>,
   teacherId?: string,
   onClick(actionPlanId: string, teacherId: string): void,
+  handleChooseActionPlan(actionPlanId: string, teacherId: string): void,
   checkedActionPlans: Array<string>,
   addActionPlan(id: string): void,
   removeActionPlan(id: string): void
@@ -360,7 +361,9 @@ class ActionPlanList extends React.Component<Props, State>{
                   >
                     <ListItem onClick={(): void => {this.handleCheck(row.id)}}>
                       <ListItemIcon>
-                        <Checkbox checked = {this.state.checked.includes(row.id)} />
+                        <Checkbox checked = {this.state.checked.includes(row.id)} onClick={(): void => {
+                          this.props.handleChooseActionPlan(row.id, this.props.teacherId);
+                        }} />
                       </ListItemIcon>
                     </ListItem>
                   </TableCell>

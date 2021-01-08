@@ -128,6 +128,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
   const [attachments, setAttachments] = useState<Array<{content: string, filename: string, type: string, disposition: string}>>();
+  const [includeAttachments, setIncludeAttachments] = useState(true);
   const [checkedResults, setCheckedResults] = useState<{[id: string]: {
     summary: boolean,
     details: boolean,
@@ -154,14 +155,29 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   })
   
-  const addAttachment = (content: string): void => {
+  const addAttachment = (content: string, practice: string, date: Date): void => {
     // console.log('this is the content', content);
-    setAttachments([{
+    console.log('practice and date', practice, date);
+    console.log('attachments in addattachment', attachments);
+    let newAttachments: Array<{content: string, filename: string, type: string, disposition: string}> = [];
+    if (attachments) {
+      console.log('attachments is true');
+      newAttachments = attachments;
+    }
+    newAttachments.push({
+      content: content,
+      filename: practice + 'Action Plan.pdf',
+      type: 'application/pdf',
+      disposition: 'attachment'
+    });
+    setAttachments(newAttachments);
+    console.log('ehre are the attachments', newAttachments);
+    /* setAttachments([{
       content: content,
       filename: 'attachment.pdf',
       type: 'application/pdf',
       disposition: 'attachment'
-    }])
+    }]) */
   }
 
   const sendMail = async (): Promise<void> => {
@@ -205,7 +221,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         // content: textRef.current.innerHTML,
         id: '0000001',
         from: 'chalkcoaching@gmail.com',
-        to: 'clare.e.speer@vanderbilt.edu',
+        to: 'clare.speer@gmail.com',
         subject: subject ? subject : '',
         theme: ThemeOptions.FEEDBACK,
         // html: textRef.current,
@@ -217,8 +233,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           id: 'action plan',
           date: new Date(),
         }] */
+        // attachments: includeAttachments ? attachments : undefined
         attachments: attachments
       };
+      console.log('attachments in msg', msg.attachments);
      
       // encrypted with the user's uid from firebase
       const encryptedMsg = CryptoJS.AES
@@ -235,8 +253,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       console.log('json string decrypted', JSON.stringify(decryptedData));
       const messageObj = JSON.parse(decryptedData);
       console.log('message obj', messageObj);
-      console.log('message obj attachment content', messageObj.attachments[0].content);
-      console.log('beginning and end are the same?', msg.attachments[0].content === messageObj.attachments[0].content);
+      console.log('attachments', messageObj.attachments)
+      if (messageObj.attachments && msg.attachments) {
+        console.log('message obj attachment content', messageObj.attachments[0].content);
+        console.log('beginning and end are same?', msg.attachments[0].content === messageObj.attachments[0].content);
+        console.log('how many are there', messageObj.attachments);
+      }
+      
 
       firebase.sendEmail(encryptedMsg)
         .then((res: {data: string}): void => {
@@ -386,7 +409,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       achieveBy: firebase.firestore.Timestamp
     }>) => {
       setActionPlans(actionPlans);
-      if (actionPlans.length > 0) {
+      console.log('aplans', actionPlans)
+      if (actionPlans && actionPlans.length > 0) {
         setNoActionPlansMessage('')
       } else {
         setNoActionPlansMessage('You have not created any action plans with ' + newRecipient.label + '.');
@@ -402,13 +426,15 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }>) => {
       setObservations(observations);
       const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
-      if (observations.length > 0) {
+      console.log('observations', observations)
+      if (observations && observations.length > 0) {
         observations.forEach(result => {
           unchecked[result.id] = {'summary': false, 'details': false, 'trends': false}
         })
       }
       setCheckedResults(unchecked);
-      if (observations.length > 0) {
+      console.log('observations', observations)
+      if (observations && observations.length > 0) {
         setNoObservationsMessage('')
       } else {
         setNoObservationsMessage('You have no observation data for ' + newRecipient.label + '.');
@@ -527,6 +553,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                         <AttachmentDialog
                           recipientId={recipient.id}
                           addAttachment={addAttachment}
+                          setIncludeAttachments={(value: boolean): void => {
+                            setIncludeAttachments(value)
+                          }}
                           actionPlans={actionPlans}
                           noActionPlansMessage={noActionPlansMessage}
                           results={observations}
