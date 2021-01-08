@@ -156,13 +156,26 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
       }).then(() => {
         setActionSteps(newActionStepsArray);
       }).then(() => {
-        setView('pdfPreview');
+        setView('apPreview');
       })
       .catch(() => {
         console.log('error retrieving action steps');
       });
     })
     // console.log('handled choose action plan');
+  };
+
+  /**
+   * @param {string} sessionId
+   * @param {string} teacherId
+   */
+  const handleChooseResults = (sessionId: string, teacherId: string): void => {
+    setTeacher(teacherId);
+    const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
+      return obj.id === teacherId
+    });
+    setTeacherObject(teacherData[0]);
+    setView('resultPreview');
   };
 
   const printDocument = async (): Promise<string | void> => {
@@ -222,8 +235,10 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                 <Grid item xs={3}>
                   <IconButton
                     onClick={(): void => {
-                      if (view === 'pdfPreview') {
+                      if (view === 'apPreview') {
                         setView('actionPlans')
+                      } else if (view === 'resultPreview') {
+                        setView('results')
                       } else {
                         setView('options')
                       }
@@ -337,7 +352,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                       {props.noActionPlansMessage}
                     </Typography>
                   )
-                ) : view === 'pdfPreview' && teacherObject ? (
+                ) : view === 'apPreview' && teacherObject ? (
                   <div>
                     <button onClick={(): void => handleAttach()}>Download</button>
                     <div
@@ -361,11 +376,39 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                       />
                     </div>
                   </div>
+                ) : view === 'resultPreview' && teacherObject ? (
+                  <div>
+                    <button onClick={(): void => handleAttach()}>Download</button>
+                    <div
+                      id="divToPrint"
+                      style={{
+                        backgroundColor: '#ffffff',
+                        width: '210mm',
+                        minHeight: '100mm',
+                        marginLeft: 'auto',
+                        marginRight: 'auto'
+                      }}
+                    >
+                      {/* <ActionPlanForPdf
+                        tool={tool}
+                        apGoal={apGoal}
+                        goalTimeline={goalTimeline}
+                        benefit={benefit}
+                        date={date}
+                        actionSteps={actionSteps}
+                        teacher={teacherObject}
+                      /> */}
+                      <Typography>
+                        graphs go here
+                      </Typography>
+                    </div>
+                  </div>
                 ) : (
                   (props.recipientName && (props.results.length > 0)) ? (
                     <ResultsList
                       results={props.results}
                       teacherId={props.recipientId}
+                      onClick={handleChooseResults}
                       checkedResults={props.checkedResults}
                       addResult={props.addResult}
                       removeResult={props.removeResult}

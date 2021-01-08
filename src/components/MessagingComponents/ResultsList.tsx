@@ -145,7 +145,7 @@ interface TableHeadProps {
  * @return {ReactElement}
  */
 function TableHeadSort(props: TableHeadProps): React.ReactElement {
-  const { order, orderBy, onRequestSort, results } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property: string) => (event: React.SyntheticEvent): void => {
     onRequestSort(event, property);
   };
@@ -190,7 +190,6 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
               </Typography>
               </Grid>
             </TableSortLabel>
-
           </TableCell>
         ))}
       </TableRow>
@@ -358,7 +357,7 @@ class ResultsList extends React.Component<Props, State>{
                               src={SequentialIconImage}
                               alt="Magic 8 Icon"
                             />
-                          ) : practice === 'Associative and Cooperativej' ? (
+                          ) : practice === 'Associative and Cooperative' ? (
                             <img
                               src={AssocCoopIconImage}
                               alt="Magic 8 Icon"
