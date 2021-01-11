@@ -7,15 +7,12 @@ sgMail.setApiKey(functions.config().sendgrid.key);
 exports.funcSendEmail = functions.https.onCall(async (data, context) => {
     console.log(context.auth.uid);
     let bytes  = CryptoJS.AES.decrypt(data, context.auth.uid);
-    console.log('bytes', bytes);
+    // console.log('bytes', bytes);
     let decryptedData = JSON.parse(JSON.stringify(CryptoJS.enc.Utf8.stringify(bytes)));
-    console.log('decrypted data', decryptedData)
+    // console.log('decrypted data', decryptedData)
     console.log('json string decrypted', JSON.stringify(decryptedData));
     let messageObj = JSON.parse(decryptedData);
-    if (messageObj.attachments) {
-      console.log('message obj', messageObj, 'attachment content', messageObj.attachments[0].content);
-      console.log('message obj attachment content', messageObj.attachments[0].content);
-    }
+    console.log('message obj', messageObj);
     const message = {
       to: messageObj.to,
       from: messageObj.from,
