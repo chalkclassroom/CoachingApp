@@ -236,31 +236,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         // attachments: includeAttachments ? attachments : undefined
         attachments: attachments
       };
-      console.log('attachments in msg', msg.attachments);
      
       // encrypted with the user's uid from firebase
       const encryptedMsg = CryptoJS.AES
-                          .encrypt(JSON.stringify(msg), firebase.auth.currentUser.uid)
-                          // .encrypt('test', firebase.auth.currentUser.uid)
-                          .toString();
-
-      console.log('the message is', msg);
-      console.log('the encrypted message is', encryptedMsg);
-      const bytes  = CryptoJS.AES.decrypt(encryptedMsg, firebase.auth.currentUser.uid);
-      console.log('bytes', bytes);
-      const decryptedData = JSON.parse(JSON.stringify(CryptoJS.enc.Utf8.stringify(bytes)));
-      console.log('decrypted data', decryptedData)
-      console.log('json string decrypted', JSON.stringify(decryptedData));
-      const messageObj = JSON.parse(decryptedData);
-      console.log('message obj', messageObj);
-      console.log('attachments', messageObj.attachments)
-      if (messageObj.attachments && msg.attachments) {
-        console.log('message obj attachment content', messageObj.attachments[0].content);
-        console.log('beginning and end are same?', msg.attachments[0].content === messageObj.attachments[0].content);
-        console.log('how many are there', messageObj.attachments);
-      }
+        .encrypt(JSON.stringify(msg), firebase.auth.currentUser.uid)
+        // .encrypt('test', firebase.auth.currentUser.uid)
+        .toString();
       
-
       firebase.sendEmail(encryptedMsg)
         .then((res: {data: string}): void => {
           console.log(JSON.stringify(res));

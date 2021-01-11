@@ -116,14 +116,15 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
         pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
         // pdf.save("download.pdf");
         const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
-        // console.log('this is apparently the blob', blobPDF);
         const reader = new FileReader();
         reader.readAsDataURL(blobPDF);
-        reader.onloadend = function() {
+        reader.onloadend = function(): void {
           base64data = reader.result;
-          // console.log('base64', base64data);
-          // return base64data
-          props.addAttachment(base64data, practice, date);
+          let newBase64Data = '';
+          if (base64data) {
+            newBase64Data = (base64data as string).replace('data:application/pdf;base64,', '');
+          }
+          props.addAttachment(newBase64Data, practice, date);
         }
       }).then(() => {
         return base64data
