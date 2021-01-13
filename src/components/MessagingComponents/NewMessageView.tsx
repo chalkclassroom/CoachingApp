@@ -13,6 +13,7 @@ import SendButton from './SendButton';
 import DeleteButton from './DeleteButton';
 import SaveButton from './SaveButton';
 import AttachButton from './AttachButton';
+import TemplateDialog from './TemplateDialog';
 // import AlertDialog from './AlertDialog';
 // import ChooseActionPlanDialog from './ChooseActionPlanDialog';
 import AttachmentDialog from './AttachmentDialog';
@@ -90,6 +91,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     value: 'None',
     label: 'None'
   });
+  const [newTheme, setNewTheme] = useState({
+    id: '0',
+    value: 'None',
+    label: 'None'
+  });
   // state to store the current alert
   const [alertEnum, setAlertEnum] = useState(Alerts.NO_ERROR);
   // state to store the current recipient
@@ -134,6 +140,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     details: boolean,
     trends: boolean
   }}>({});
+  const [templateDialog, setTemplateDialog] = useState(false);
 
   // get the user's name
   useEffect(() => {
@@ -283,7 +290,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     setAttachments(updatedAttachments);
   } */
 
-  const thankYou = (name: string | null): JSX.Element => (<div style={{padding: "1em"}}>
+  /* const thankYou = (name: string | null): JSX.Element => (<div style={{padding: "1em"}}>
   <h4>Hi {name || ""},</h4>
   Thanks for welcoming me into your classroom today. I really enjoyed my visit and look forward to chatting with you soon about CHALK practice.
   <br />
@@ -291,7 +298,14 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   Best wishes,
   <br />
     {userName}
-  </div>);
+  </div>); */
+
+  const thankYou = 'Hi ' + recipientName + ', \n \n'
+  + 'Thanks for welcoming me today in your classroom! '
+  + 'I really enjoyed my visit and look forward to '
+  + 'chatting with you soon about Transition Time. \n \n'
+  + 'Best wishes, \n'
+  + 'Clare';
 
   const custom = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
     <h4>Hi {name || ""},</h4>
@@ -303,7 +317,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     {userName}
   </div>;
 
-  const feedback = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
+  /* const feedback = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
     <h4>Hi {name || ""},</h4>
     Thanks for welcoming me today in your classroom! 
     <br />
@@ -317,9 +331,18 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     Best,
     <br />
     	{userName}
-  </div>;
+  </div>; */
+
+  const feedback = 'Hi ' + recipientName + ', \n \n'
+  + 'Thanks for welcoming me today in your classroom! \n \n'
+  + 'It was a joy to see the children so engaged in those small '
+  + 'groups when you used cotton balls to teach counting. \n \n'
+  + 'Please see below for some notes on great teaching strategies '
+  + 'I noticed and why they’re effective for children. \n \n'
+  + 'Best, \n'
+  + 'Clare';
  
-  const actionPlan = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
+  /* const actionPlan = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
     <h4>Hi {name || ""},</h4>
     Thanks for meeting today and creating this action plan. I think it looks great, and I look forward to working on these goals with you!
     <br />
@@ -330,12 +353,20 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     Best,
     <br />
     {userName}
-  </div>;  
-  
+  </div>; */
+
+  const actionPlan = 'Hi ' + recipientName + ', \n \n'
+    + 'Thanks for meeting today and creating this action plan. '
+    + 'I think it looks great, and I look forward to working '
+    + 'on these goals with you! \n \n'
+    + 'Please reach out with questions or ideas anytime. \n \n'
+    + 'Best, \n'
+    + 'Clare';
+
   const greetingText = "Hi " + recipientName;
 
   const chooseOptions = (): JSX.Element => <div style={{padding: '1em'}}>
-	    <h3 style={{fontFamily: 'Arimo'}}>Please choose a recipient for your message.</h3>
+	  <h3 style={{fontFamily: 'Arimo'}}>Please choose a recipient for your message.</h3>
   </div>;
 
   // get the text for EmailBody according to the states set
@@ -462,10 +493,33 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         }
       })
     })
+  };
+
+  const changeTemplate = (chosenTheme: TemplateOption): void => {
+    setTheme(chosenTheme);
+    if (chosenTheme.value === 'Action Plan') {
+      setEmail(actionPlan)
+    } else if (chosenTheme.value === 'Feedback') {
+      setEmail(feedback)
+    } else if (chosenTheme.value === 'Thank You') {
+      setEmail(thankYou)
+    } else {
+      setEmail('')
+    }
+    setTemplateDialog(false)
+  }
+
+  const keepTemplate = (): void => {
+    setTemplateDialog(false)
   }
 
   return (
     <div style={{width: '100%', overflowY: 'auto'}}>
+      <TemplateDialog
+        open={templateDialog}
+        handleYes={(): void => {changeTemplate(newTheme)}}
+        handleNo={keepTemplate}
+      />
       <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%'}}>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
@@ -495,7 +549,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             <Grid item xs={6}>
               <ChooseTheme
                 selectedOption={theme}
-                setOption={(newTheme: TemplateOption): void => setTheme(newTheme)}
+                setOption={(chosenTheme: TemplateOption): void => {
+                  if (chosenTheme !== theme) {
+                    setNewTheme(chosenTheme);
+                    if (email === '' || undefined) {
+                      changeTemplate(chosenTheme);
+                    } else {
+                      setTemplateDialog(true);
+                    }
+                  }
+                }}
                 readOnly={props.readOnly}
               />
             </Grid>

@@ -25,7 +25,7 @@ interface ChooseThemeProps {
 }
 
 const ChooseTheme: React.FC<ChooseThemeProps> = (props: ChooseThemeProps) => {
-  const teacherList = [
+  const themeList = [
     {value: 'None', id: '0', label: 'None'},
     {value: 'Action Plan', id: '1', label: 'Action Plan'},
     {value: 'Feedback', id: '2', label: 'Feedback'},
@@ -36,7 +36,7 @@ const ChooseTheme: React.FC<ChooseThemeProps> = (props: ChooseThemeProps) => {
     <Select
       value={props.selectedOption}
       onChange={props.setOption}
-      options={teacherList}
+      options={themeList}
       styles={customStyles}
       isDisabled={props.readOnly}
     />

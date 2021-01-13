@@ -429,10 +429,10 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                         width: '210mm',
                         minHeight: '100mm',
                         marginLeft: 'auto',
-                        marginRight: 'auto'
-                        // display: "none"
+                        marginRight: 'auto',
+                        display: "none"
                       }}
-                      display="none"
+                      // display="none"
                     >
                       <ActionPlanForPdf
                         tool={tool}
@@ -532,7 +532,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
             disabled={!props.attachmentList}
             onClick={(): void => props.setIncludeAttachments(true)}
           >
-            Attach1
+            Attach
           </Button>
         ) : (null)}
       </DialogActions>
