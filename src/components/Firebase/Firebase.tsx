@@ -2321,7 +2321,7 @@ class Firebase {
   }
 
   /**
-   * adds coaching question to conference plan
+   * saves email in firestore
    * @param {string} email
    * @param {string} subject
    * @param {object} recipient
@@ -2379,6 +2379,33 @@ class Firebase {
     }
   }
 
+  /**
+   * deletes draft email from database
+   * @param {string} emailId
+   */
+  deleteEmail = async (
+    emailId?: string
+  ): Promise<MessagingTypes.Email | void> => {
+    if (this.auth.currentUser) {
+      return this.db
+        .collection("emails")
+        .doc(emailId)
+        .delete()
+        .then(() =>
+          console.log("Draft deleted.")
+        )
+        .catch((error: Error) =>
+          console.error(
+            "An error occurred when deleting the draft", error
+          )
+        );
+      }
+    };
+
+  /**
+   * deletes draft email from database
+   * @param {string} emailId
+   */
   changeDraftToSent = async (emailId: string): Promise<void> => {
     const emailRef = this.db.collection('emails').doc(emailId);
     return emailRef.update({

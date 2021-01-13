@@ -106,6 +106,10 @@ const MessagingView: React.FC<{}> = () => {
     allSentEmails.push(email);
     setSentEmails(allSentEmails);
   }
+
+  const removeFromDrafts = (emailId: string): void => {
+    setDrafts(drafts.filter(item => item.id !== emailId));
+  }
   
   // State to record the message input to NewMessage so that if a user is coming from DraftView, this can be updated
   // to be the message from Draft, else a new message
@@ -125,11 +129,11 @@ const MessagingView: React.FC<{}> = () => {
   // Update right pane of the page according to what the user chose on the left pane
   const getBody = (): JSX.Element => {
     if(MenuOptions[menuOption] === MenuOptions.NEW_MESSAGE) {
-      return (<NewMessageView updateDrafts={updateDrafts} moveDraftToSent={moveDraftToSent} firebase={firebase} />);
+      return (<NewMessageView updateDrafts={updateDrafts} moveDraftToSent={moveDraftToSent} setMenuOption={setMenuOption} removeFromDrafts={removeFromDrafts} firebase={firebase} />);
     } else if(MenuOptions[menuOption] === MenuOptions.DRAFTS) {
-      return (<DraftView drafts={drafts} noDrafts={noDrafts} updateDrafts={updateDrafts} moveDraftToSent={moveDraftToSent} firebase={firebase} />);
+      return (<DraftView drafts={drafts} noDrafts={noDrafts} updateDrafts={updateDrafts} moveDraftToSent={moveDraftToSent} setMenuOption={setMenuOption} removeFromDrafts={removeFromDrafts} firebase={firebase} />);
     } else {
-      return (<SentView emails={sentEmails} noEmails={noSentEmails} firebase={firebase}/>);
+      return (<SentView emails={sentEmails} noEmails={noSentEmails} setMenuOption={setMenuOption} firebase={firebase}/>);
     }
   };
 

@@ -14,6 +14,7 @@ import DeleteButton from './DeleteButton';
 import SaveButton from './SaveButton';
 import AttachButton from './AttachButton';
 import TemplateDialog from './TemplateDialog';
+import DeleteDialog from './DeleteDialog';
 // import AlertDialog from './AlertDialog';
 // import ChooseActionPlanDialog from './ChooseActionPlanDialog';
 import AttachmentDialog from './AttachmentDialog';
@@ -40,6 +41,8 @@ interface NewMessageViewProps {
   updateDrafts?(email: Email): void;
   readOnly?: boolean;
   moveDraftToSent?(email: Email): void;
+  setMenuOption(value: React.SetStateAction<"SENT" | "DRAFTS" | "NEW_MESSAGE">): void;
+  removeFromDrafts?(emailId: string): void
 };
 
 interface ResultType {
@@ -141,6 +144,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     trends: boolean
   }}>({});
   const [templateDialog, setTemplateDialog] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
 
   // get the user's name
   useEffect(() => {
@@ -513,12 +517,39 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     setTemplateDialog(false)
   }
 
+  const handleDelete = (): void => {
+    /* setEmail('');
+    setRecipient({
+      value: '',
+      id: '',
+      label: ''
+    });
+    setTheme({
+      id: '0',
+      value: 'None',
+      label: 'None'
+    }); */
+    props.setMenuOption('SENT');
+    setDeleteDialog(false);
+    if (emailId) {
+      firebase.deleteEmail(emailId);
+      if (props.removeFromDrafts) {
+        props.removeFromDrafts(emailId);
+      }
+    }
+  }
+
   return (
     <div style={{width: '100%', overflowY: 'auto'}}>
       <TemplateDialog
         open={templateDialog}
         handleYes={(): void => {changeTemplate(newTheme)}}
         handleNo={keepTemplate}
+      />
+      <DeleteDialog
+        open={deleteDialog}
+        handleYes={(): void => handleDelete()}
+        handleNo={(): void => setDeleteDialog(false)}
       />
       <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%'}}>
         <Grid item style={{width: '100%'}}>
@@ -593,7 +624,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           <SaveButton saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId)}} saveDraft={(): void => setActionPlanDisplay(true)} />
                         </Grid>
                         <Grid item>
-                          <DeleteButton />
+                          <DeleteButton email={email} onClick={(): void => setDeleteDialog(true)} />
                         </Grid>
                         <AttachmentDialog
                           recipientId={recipient.id}
@@ -638,7 +669,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 
 NewMessageView.propTypes = {
   updateDrafts: PropTypes.func.isRequired,
-  moveDraftToSent: PropTypes.func.isRequired
+  moveDraftToSent: PropTypes.func.isRequired,
+  setMenuOption: PropTypes.func.isRequired,
+  removeFromDrafts: PropTypes.func.isRequired
 }
 
 export default NewMessageView;

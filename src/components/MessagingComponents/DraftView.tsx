@@ -13,6 +13,8 @@ interface DraftViewProps {
   noDrafts: boolean;
   updateDrafts(email: Email): void;
   moveDraftToSent(email: Email): void;
+  setMenuOption(value: React.SetStateAction<"SENT" | "DRAFTS" | "NEW_MESSAGE">): void;
+  removeFromDrafts(emailId: string): void;
   firebase: any;
 };
 
@@ -40,7 +42,7 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
             </Grid>
           </Grid>
           <Grid item>
-            <NewMessageView draft={selectedDraft} updateDrafts={props.updateDrafts} moveDraftToSent={props.moveDraftToSent} firebase={props.firebase} />
+            <NewMessageView draft={selectedDraft} updateDrafts={props.updateDrafts} setMenuOption={props.setMenuOption} removeFromDrafts={props.removeFromDrafts} moveDraftToSent={props.moveDraftToSent} firebase={props.firebase} />
           </Grid>
         </Grid>
       ) : (
@@ -54,7 +56,9 @@ DraftView.propTypes = {
   drafts: PropTypes.array.isRequired,
   noDrafts: PropTypes.bool.isRequired,
   updateDrafts: PropTypes.func.isRequired,
-  moveDraftToSent: PropTypes.func.isRequired
+  moveDraftToSent: PropTypes.func.isRequired,
+  setMenuOption: PropTypes.func.isRequired,
+  removeFromDrafts: PropTypes.func.isRequired
 }
 
 export default DraftView;

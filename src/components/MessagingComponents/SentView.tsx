@@ -11,6 +11,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 interface SentViewProps {
   emails: Array<Email>;
   noEmails: boolean;
+  setMenuOption(value: React.SetStateAction<"SENT" | "DRAFTS" | "NEW_MESSAGE">): void;
   firebase: any;
 };
 
@@ -39,7 +40,7 @@ const SentView: React.FC<SentViewProps> = (props: SentViewProps) => {
             </Grid>
           </Grid>
           <Grid item>
-            <NewMessageView draft={selectedEmail} firebase={props.firebase} readOnly={true} />
+            <NewMessageView draft={selectedEmail} setMenuOption={props.setMenuOption} firebase={props.firebase} readOnly={true} />
           </Grid>
         </Grid>
       ) : (
@@ -51,7 +52,8 @@ const SentView: React.FC<SentViewProps> = (props: SentViewProps) => {
 
 SentView.propTypes = {
   emails: PropTypes.array.isRequired,
-  noEmails: PropTypes.bool.isRequired
+  noEmails: PropTypes.bool.isRequired,
+  setMenuOption: PropTypes.func.isRequired
 }
 
 export default SentView;
