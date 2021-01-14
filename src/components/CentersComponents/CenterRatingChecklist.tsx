@@ -9,7 +9,8 @@ import DialogContentText from "@material-ui/core/DialogContentText/DialogContent
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from '@material-ui/core/DialogActions';
 import Grid from "@material-ui/core/Grid";
-import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText, IconButton } from "@material-ui/core";
+import CloseIcon from '@material-ui/icons/Close';
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
@@ -134,7 +135,8 @@ interface State {
   time: number,
   timeUpOpen: boolean,
   peopleWarning: boolean,
-  confirmReturn: boolean
+  confirmReturn: boolean,
+  final: boolean
 }
 
 /**
@@ -157,7 +159,8 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       time: RATING_INTERVAL,
       timeUpOpen: false,
       peopleWarning: false,
-      confirmReturn: false
+      confirmReturn: false,
+      final: false
     }
   }
 
@@ -165,9 +168,21 @@ class CenterRatingChecklist extends React.Component<Props, State> {
    * @return {void}
    */
   tick = (): void => {
+    console.log('this state people', this.state.people);
     if (this.state.time <= 0) {
       clearInterval(this.timer);
-      this.handleTimeUpNotification();
+      if (this.state.final) {
+        this.handleChecklists();
+        /* if (this.state.checked.length > 0) {
+          this.handleSubmit(this.state.checked);
+        } else {
+          this.handleSubmit([7]);
+        } */
+        // this.setState({ final: false })
+      } else {
+        this.handleTimeUpNotification();
+      }
+      // this.handleTimeUpNotification();
     } else {
       if (this.state.time - 1000 < 0) {
         this.setState({ time: 0 });
@@ -188,7 +203,13 @@ class CenterRatingChecklist extends React.Component<Props, State> {
   }
 
   handleTimeUpNotification = (): void => {
-    this.setState({ timeUpOpen: true });
+    if (this.state.people) {
+      console.log('if this state people');
+      this.setState({ timeUpOpen: true });
+    } else {
+      console.log('else');
+      this.setState({ peopleWarning: true })
+    }
   };
 
   handleTimeUpClose = (): void => {
@@ -203,12 +224,13 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     this.props.toggleScreen();
   };
 
-  handleSubmit = (): void => {
+  handleSubmit = (childChecked: Array<number>, teacherChecked: Array<number>): void => {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
       const mEntry = {
-        checked: [...this.state.childChecked, ...this.state.teacherChecked],
+        // checked: [...this.state.childChecked, ...this.state.teacherChecked],
+        checked: [...childChecked, ...teacherChecked],
         people: this.state.people
       };
       this.props.firebase.handlePushCentersData(mEntry);
@@ -224,6 +246,44 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     }
   };
 
+  handleFinish = (): void => {
+    this.setState({
+      timeUpOpen: false,
+      time: 10000,
+      final: true
+    }, () => {this.timer = global.setInterval(this.tick, 1000)})
+  }
+
+  handleNext = (): void => {
+    this.setState({
+      timeUpOpen: false,
+      time: 60000
+    }, () => {
+      /* if (this.state.childChecked.length > 0 && this.state.teacherChecked.length > 0) {
+        this.handleSubmit(this.state.childChecked, this.state.teacherChecked);
+      } else if (this.state.childChecked.length > 0 && this.state.teacherChecked.length === 0) {
+        this.handleSubmit(this.state.childChecked, [10]);
+      } else if (this.state.childChecked.length === 0 && this.state.teacherChecked.length > 0) {
+        this.handleSubmit([5], this.state.teacherChecked);
+      } else {
+        this.handleSubmit([5], [10]);
+      } */
+      this.handleChecklists();
+    });
+  }
+
+  handleChecklists = (): void => {
+    if (this.state.childChecked.length > 0 && this.state.teacherChecked.length > 0) {
+      this.handleSubmit(this.state.childChecked, this.state.teacherChecked);
+    } else if (this.state.childChecked.length > 0 && this.state.teacherChecked.length === 0) {
+      this.handleSubmit(this.state.childChecked, [10]);
+    } else if (this.state.childChecked.length === 0 && this.state.teacherChecked.length > 0) {
+      this.handleSubmit([5], this.state.teacherChecked);
+    } else {
+      this.handleSubmit([5], [10]);
+    }
+  }
+
   /**
    * @param {number} value
    * @return {void}
@@ -234,7 +294,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     }
     const { childChecked } = this.state;
     const newChecked: Array<number> = [];
-    if (((childChecked.includes(5) && value != 5) ||
+    /* if (((childChecked.includes(5) && value != 5) ||
     (childChecked.includes(1) || childChecked.includes(2) ||
     childChecked.includes(3) || childChecked.includes(4)) && value === 5)) {
       newChecked.splice(0, newChecked.length);
@@ -249,7 +309,15 @@ class CenterRatingChecklist extends React.Component<Props, State> {
         newChecked.splice(currentIndex, 1);
       }
 
-    }
+    } */
+    newChecked.push(...childChecked);
+      const currentIndex = childChecked.indexOf(value);
+
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
     this.setState({childChecked: newChecked});
   }
 
@@ -263,7 +331,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     }
     const { teacherChecked } = this.state;
     const newChecked: Array<number> = [];
-    if (((teacherChecked.includes(10) && value != 10) ||
+    /* if (((teacherChecked.includes(10) && value != 10) ||
     (teacherChecked.includes(6) || teacherChecked.includes(7) ||
     teacherChecked.includes(8) || teacherChecked.includes(9)) && value === 10)) {
       newChecked.splice(0, newChecked.length);
@@ -278,7 +346,15 @@ class CenterRatingChecklist extends React.Component<Props, State> {
         newChecked.splice(currentIndex, 1);
       }
 
-    }
+    } */
+    newChecked.push(...teacherChecked);
+      const currentIndex = teacherChecked.indexOf(value);
+
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
     this.setState({teacherChecked: newChecked});
   }
 
@@ -302,6 +378,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
   };
 
   handleChild1Click = (): void  => {
+    this.handlePeopleWarningClose();
     if (this.state.people !== TeacherChildEnum.CHILD_1) {
       this.setState({ people: TeacherChildEnum.CHILD_1 });
 
@@ -327,11 +404,16 @@ class CenterRatingChecklist extends React.Component<Props, State> {
           newTeacherChecked.splice(currentIndex);
         }
       }
-      this.setState({ teacherChecked: newTeacherChecked });
+      this.setState({ teacherChecked: newTeacherChecked }, () => {
+        if (this.state.time <= 0) {
+          this.setState({ timeUpOpen: true })
+        }
+      });
     }
   };
 
   handleChild2Click = (): void  => {
+    this.handlePeopleWarningClose();
     if (this.state.people !== TeacherChildEnum.CHILD_2) {
       this.setState({ people: TeacherChildEnum.CHILD_2 });
 
@@ -344,18 +426,27 @@ class CenterRatingChecklist extends React.Component<Props, State> {
           newChecked.splice(currentIndex);
         }
       }
-      this.setState({ teacherChecked: newChecked });
+      this.setState({ teacherChecked: newChecked }, () => {
+        if (this.state.time <= 0) {
+          this.setState({ timeUpOpen: true })
+        }
+      });
     }
   };
 
   handleTeacherClick = (): void  => {
+    this.handlePeopleWarningClose();
     if (this.state.people !== TeacherChildEnum.TEACHER) {
-      this.setState({ people: TeacherChildEnum.TEACHER });
+      this.setState({ people: TeacherChildEnum.TEACHER }, () => {
+        if (this.state.time <= 0) {
+          this.setState({ timeUpOpen: true })
+        }
+      });
     }
   };
 
   handleReturnToCenterMenu = (): void => {
-    if (this.state.people === undefined) {
+    if (this.state.people === null) {
       this.props.backToCenterMenu();
     } else {
       this.setState({ confirmReturn: true });
@@ -381,25 +472,65 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     return (
       <div>
         <Dialog
+          open={this.state.timeUpOpen}
+          aria-labelledby="simple-dialog-title"
+          disableBackdropClick
+          disableEscapeKeyDown
+        >
+          {(this.state.childChecked.length > 0 || this.state.teacherChecked.length > 0)? (
+            <div>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
+                  Complete your selections or move to the next observation.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleFinish} color="secondary" variant="contained" style={{fontFamily: 'Arimo'}}>
+                  MAKE FINAL SELECTIONS
+                </Button>
+                <Button onClick={this.handleNext} color="primary" variant="contained" style={{fontFamily: 'Arimo'}} autoFocus>
+                  GO TO NEXT OBSERVATION
+                </Button>
+              </DialogActions>
+            </div>
+          ) : (
+            <div>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
+                  Complete your selections or move to the next observation.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleFinish} color="secondary" variant="contained" style={{fontFamily: 'Arimo'}}>
+                  MAKE FINAL SELECTIONS
+                </Button>
+                <Button onClick={this.handleNext} color="primary" variant="contained" style={{fontFamily: 'Arimo'}} autoFocus>
+                  NO BEHAVIORS OBSERVED
+                </Button>
+              </DialogActions>
+            </div>
+          )}
+        </Dialog>
+        <Dialog
           open={this.state.confirmReturn}
           aria-labelledby="simple-dialog-title"
         >
           <DialogContent>
-            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
               Are you sure you want to return to the center menu?
               You will lose the selection(s) you have made.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={(): void => this.setState({ confirmReturn: false })}>
-              No
-            </Button>
             <Button onClick={(): void => this.props.backToCenterMenu()}>
               Yes
             </Button>
+            <Button onClick={(): void => this.setState({ confirmReturn: false })}>
+              No
+            </Button>
           </DialogActions>
         </Dialog>
-        <Dialog
+        {/* <Dialog
           open={this.state.timeUpOpen}
           onClose={this.handleTimeUpClose}
           aria-labelledby="simple-dialog-title"
@@ -412,20 +543,64 @@ class CenterRatingChecklist extends React.Component<Props, State> {
               You&apos;ve been at the {this.props.currentCenter} center for 1 minute.
             </DialogContentText>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
         <Dialog
           open={this.state.peopleWarning}
           onClose={this.handlePeopleWarningClose}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
+          {/* <DialogTitle id="simple-dialog-title" style={{fontFamily: 'Arimo'}}>
             Wait!
-          </DialogTitle>
+          </DialogTitle> */}
           <DialogContent>
-            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo'}}>
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
               Please select the number of children and teachers at the center
               before submitting your rating.
             </DialogContentText>
+            <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingTop: '1em', paddingBottom: '1em'}}>
+              <Grid item>
+                <Button
+                  onClick={this.handleChild1Click}
+                  size="small"
+                  variant={
+                    this.state.people === TeacherChildEnum.CHILD_1
+                      ? "contained"
+                      : "outlined"
+                  }
+                  style={{fontFamily: 'Arimo'}}
+                >
+                  1 child
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={this.handleChild2Click}
+                  size="small"
+                  variant={
+                    this.state.people === TeacherChildEnum.CHILD_2
+                      ? "contained"
+                      : "outlined"
+                  }
+                  style={{fontFamily: 'Arimo'}}
+                >
+                  2+ children without teacher
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={this.handleTeacherClick}
+                  size="small"
+                  variant={
+                    this.state.people === TeacherChildEnum.TEACHER
+                      ? "contained"
+                      : "outlined"
+                  }
+                  style={{fontFamily: 'Arimo'}}
+                >
+                  1 + child with teacher
+                </Button>
+              </Grid>
+            </Grid>
           </DialogContent>
         </Dialog>
         <main className={classes.main}>
@@ -458,10 +633,20 @@ class CenterRatingChecklist extends React.Component<Props, State> {
             <Grid item className={classes.contentGrid}>
               <Zoom in={true}>
                 <Grid container alignItems="center" direction="column">
-                  <Typography variant="h5" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
-                    {this.props.currentCenter[0].toUpperCase() +
-                      this.props.currentCenter.substr(1)}
-                  </Typography>
+                  <Grid container direction="row" justify="space-between" alignItems="center">
+                    <Grid item xs={2} />
+                    <Grid item>
+                      <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
+                        {this.props.currentCenter[0].toUpperCase() +
+                        this.props.currentCenter.substr(1)}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <IconButton onClick={this.handleReturnToCenterMenu} style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
                   <div style={{ height: '0.5em' }} />
                   <Typography variant={"subtitle2"} style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
                     Please select the number of children and teachers at the
@@ -591,7 +776,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       </Card>
                     </Grid>
                   </Grid>
-                  <Grid
+                  {/* <Grid
                     container
                     alignItems={"center"}
                     justify={"space-between"}
@@ -613,7 +798,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                     >
                       Submit
                     </Button>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Zoom>
             </Grid>
