@@ -4,6 +4,7 @@ import * as xlsx from 'xlsx'
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif'
 import { FirebaseContext } from '../../../components/Firebase'
 import * as Types from '../../../constants/Types'
+import AppBar from '../../../components/AppBar'
 
 interface Props {
     isAdmin: boolean
@@ -68,7 +69,7 @@ const generateExcel = async (selectedTables: Array<string>, setLoading: Function
     const wb = xlsx.utils.book_new()
     results.forEach(r => {
         const wsName = r.table
-        const wsData = r.data.split('\n').map(d => d.split(','))
+        const wsData = r.data.data.split('\n').map(d => d.split(','))
         const ws = xlsx.utils.aoa_to_sheet(wsData)
         xlsx.utils.book_append_sheet(wb, ws, wsName)
     })
@@ -84,6 +85,9 @@ const AdminPage = ():React.ReactNode => {
     const [loading, setLoading] = React.useState(false);
     const [selectedTables, setSelectedTables] = React.useState([])
     return <div className={classes.root}>
+        <FirebaseContext.Consumer>
+            {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
+        </FirebaseContext.Consumer>
         {loading ? <img src={CHALKLogoGIF} alt="Loading" width="80%" /> :
             <React.Fragment>
                 <FormControl className={classes.formControl}>
