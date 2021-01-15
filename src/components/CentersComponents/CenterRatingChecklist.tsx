@@ -262,10 +262,10 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       this.props.finishVisit(this.props.currentCenter);
       if (this.props.type==="AC" && this.state.people===TeacherChildEnum.CHILD_1) {
         this.props.updateCount('noOpp')
-      } else if (this.state.childChecked.includes(5)){
-        this.props.updateCount('false')
-      } else {
+      } else if (this.state.childChecked.includes(1 || 2  || 3 || 4)){
         this.props.updateCount('true')
+      } else {
+        this.props.updateCount('false')
       }
       this.props.toggleScreen();
     }
