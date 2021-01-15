@@ -70,6 +70,7 @@ class NewCenterDialog extends React.Component<Props, {}> {
             onClick={(): void => this.props.handleSubmit(centerName.value)}
             color="primary"
             style={{fontFamily: 'Arimo'}}
+            id='add'
           >
             Add Center
           </Button>

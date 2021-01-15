@@ -64,6 +64,7 @@ function MathResultsDialog(props: Props): React.ReactElement {
                   deleteMICenters();
                   history.push('/Home');
                 }}
+                id='returnHome'
               >
                 Return Home
               </Button>

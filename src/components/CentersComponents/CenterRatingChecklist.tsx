@@ -178,7 +178,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
    * @return {void}
    */
   tick = (): void => {
-    console.log('this state people', this.state.people);
+    // console.log('this state people', this.state.people);
     if (this.state.time <= 0) {
       clearInterval(this.timer);
       if (this.state.final) {
@@ -622,7 +622,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                   }
                   style={{fontFamily: 'Arimo'}}
                 >
-                  1 + child with teacher
+                  1+ child with teacher
                 </Button>
               </Grid>
             </Grid>
@@ -723,7 +723,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                         }
                         style={{fontFamily: 'Arimo'}}
                       >
-                        1 + child with teacher
+                        1+ child with teacher
                       </Button>
                     </Grid>
                   </Grid>
@@ -745,6 +745,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                           (value: JSX.Element, index: number): JSX.Element => {
                             return (<ListItem
                               key={index}
+                              id={'child' + index}
                               onClick={this.handleChildToggle(index+1)}
                               disabled={this.childDisabled()}
                               className={classes.checklistItem}
@@ -784,6 +785,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                           (value: JSX.Element, index: number): JSX.Element => {
                             return (<ListItem
                               key={index}
+                              id={'teacher' + index}
                               onClick={this.handleTeacherToggle(index+6)}
                               disabled={this.teacherDisabled()}
                               className={classes.checklistItem}
