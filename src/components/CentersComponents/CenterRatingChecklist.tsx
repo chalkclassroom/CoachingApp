@@ -6,7 +6,6 @@ import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from '@material-ui/core/DialogActions';
 import Grid from "@material-ui/core/Grid";
 import { List, ListItem, ListItemIcon, ListItemText, IconButton } from "@material-ui/core";
@@ -139,6 +138,17 @@ interface State {
   final: boolean
 }
 
+type ChecklistKey = 'MI' | 'AC' | 'SA';
+
+interface ChecklistContents {
+  ChildInstructions: string,
+  TeacherInstructions: string,
+  ChildBehaviors: JSX.Element[],
+  TeacherBehaviors: JSX.Element[]
+}
+
+type ChecklistContentsKey = keyof ChecklistContents;
+
 /**
  * Center Rating Checklist
  * @class CenterRatingChecklist
@@ -224,13 +234,24 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     this.props.toggleScreen();
   };
 
+  /**
+   * 
+   * @param {Array<number>} childChecked
+   * @param {Array<number>} teacherChecked
+   */
   handleSubmit = (childChecked: Array<number>, teacherChecked: Array<number>): void => {
     if (this.state.people === undefined) {
       this.setState({ peopleWarning: true });
     } else {
+      const ACChildChecked: Array<number> = [];
+      if (this.props.type === 'AC') {
+        childChecked.forEach((value: number) => {
+          ACChildChecked.push(value+1)
+        })
+      }
       const mEntry = {
         // checked: [...this.state.childChecked, ...this.state.teacherChecked],
-        checked: [...childChecked, ...teacherChecked],
+        checked: this.props.type === 'AC' ? ([...ACChildChecked, ...teacherChecked]) : ([...childChecked, ...teacherChecked]),
         people: this.state.people
       };
       this.props.firebase.handlePushCentersData(mEntry);
@@ -713,11 +734,11 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                           align="center"
                           className={classes.instructionText}
                         >
-                          {Constants.Checklist[this.props.type].ChildInstructions}
+                          {Constants.Checklist[this.props.type as ChecklistKey].ChildInstructions}
                         </Typography>
                         <List style={{paddingBottom: 0}}>
-                          {Constants.Checklist[this.props.type].ChildBehaviors.map(
-                          (value: Array<React.ReactElement>, index: number) => {
+                          {Constants.Checklist[this.props.type as ChecklistKey].ChildBehaviors.map(
+                          (value: JSX.Element, index: number): JSX.Element => {
                             return (<ListItem
                               key={index}
                               onClick={this.handleChildToggle(index+1)}
@@ -725,11 +746,14 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                               className={classes.checklistItem}
                             >
                               <ListItemIcon>
+                                { value.props.children ? (
                                 <Checkbox
                                   checked={
                                     !this.childDisabled() && this.state.childChecked.includes(index+1)
                                   }
                                 />
+                                ) : (null)
+                          }
                               </ListItemIcon>
                               <ListItemText disableTypography style={{fontFamily: 'Arimo', fontSize: '1em'}}>
                                 {value}
@@ -749,11 +773,11 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                           align="center"
                           className={classes.instructionText}
                         >
-                          {Constants.Checklist[this.props.type].TeacherInstructions}
+                          {Constants.Checklist[this.props.type as ChecklistKey].TeacherInstructions}
                         </Typography>
                         <List style={{paddingBottom: 0}}>
-                          {Constants.Checklist[this.props.type].TeacherBehaviors.map(
-                          (value: Array<React.ReactElement>, index: number) => {
+                          {Constants.Checklist[this.props.type as ChecklistKey].TeacherBehaviors.map(
+                          (value: JSX.Element, index: number): JSX.Element => {
                             return (<ListItem
                               key={index}
                               onClick={this.handleTeacherToggle(index+6)}

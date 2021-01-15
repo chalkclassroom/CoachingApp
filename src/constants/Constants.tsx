@@ -339,7 +339,32 @@ export const DR = {
 
 
 // Centers Observation Checklists
-export const Checklist = {
+export const Checklist: {
+  MI: {
+    ChildInstructions: string,
+    TeacherInstructions: string,
+    ChildBehaviors: Array<JSX.Element>,
+    TeacherBehaviors: Array<JSX.Element>
+  },
+  AC: {
+    ChildInstructions: string,
+    TeacherInstructions: string,
+    ChildBehaviors: Array<JSX.Element>,
+    TeacherBehaviors: Array<JSX.Element>
+  },
+  SA: {
+    ChildInstructions: string,
+    TeacherInstructions: string,
+    ChildBehaviors: Array<JSX.Element>,
+    TeacherBehaviors: Array<JSX.Element>
+  },
+  LC: {
+    ChildInstructions?: string,
+    TeacherInstructions?: string,
+    ChildBehaviors?: Array<JSX.Element>,
+    TeacherBehaviors: Array<JSX.Element>
+  },
+} = {
   'MI': {
     'ChildInstructions': 'Select the types of math activities children are doing at this center.',
     'TeacherInstructions': 'Select the types of support for math the ' +
@@ -365,23 +390,17 @@ export const Checklist = {
       'teacher is providing at this center.',
     'ChildBehaviors': [
       <div key={0}>
-        Participating in a <b>conversation</b> about a <b>shared activity</b>
-        </div>,
-      <div key={1}>
-        Engaging <b>together</b> in an <b>open-ended activity</b> without clear {" "}
-        roles or order
+        Doing an <b>activity together</b> that DOES NOT have a predetermined sequence
       </div>,
       <div key={2}>
-        Following <b>formal rules of a game</b> and/or taking turns
+        <b>Playing a game</b> together with <b>formal rules</b>
       </div>,
       <div key={3}>
-        Talking about or doing an activity together that has
-        a <b>predetermined sequence</b> 
-        {/* (e.g., acting out
-        restaurant in a dramatic play; doing pattern blocks
-        together) */}
+        Doing an <b>activity together</b> that <b>HAS a predetermined sequence</b>
       </div>,
-      /* <div key={4}> None of the above </div> */
+      <div key={4}>
+
+      </div>
     ],
     'TeacherBehaviors': [
       <div key={0}> <b>Participating</b> in children’s play </div>,
