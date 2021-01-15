@@ -38,16 +38,15 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const childBehaviorsData = {
       labels: [
-        ["Participating in a conversation", "about a shared activity"],
-        ["Engaging in an open-ended", "activity without clear", "roles or order"],
-        ["Following formal rules of a", "game and/or taking turns"],
+        ["Doing an activity together", "that does not have a", "predetermined sequence"],
+        ["Playing a game together", "with formal rules"],
         ["Doing an activity together", "that has a predetermined", "sequence"]
       ],
       datasets: [
         {
-          data: [this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4],
-          backgroundColor: ["#c5afe7", "#c5afe7", Constants.Colors.AC, Constants.Colors.AC],
-          hoverBackgroundColor: ["#c5afe7", "#c5afe7", Constants.Colors.AC, Constants.Colors.AC]
+          data: [this.props.ac1 + this.props.ac2, this.props.ac3, this.props.ac4],
+          backgroundColor: ["#c5afe7", Constants.Colors.AC, Constants.Colors.AC],
+          hoverBackgroundColor: ["#c5afe7", Constants.Colors.AC, Constants.Colors.AC]
         }
       ]
     };
@@ -62,8 +61,8 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
                 ticks: {
                   min: 0,
                   max:
-                    (Math.max(this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4) > 20) ? 
-                    Math.max(this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4) : 20,
+                    (Math.max(this.props.ac1 + this.props.ac2, this.props.ac3, this.props.ac4) > 20) ? 
+                    Math.max(this.props.ac1 + this.props.ac2, this.props.ac3, this.props.ac4) : 20,
                   fontSize: 16,
                   fontColor: 'black'
                 },

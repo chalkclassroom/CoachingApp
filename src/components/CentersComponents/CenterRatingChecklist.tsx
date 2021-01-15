@@ -246,7 +246,11 @@ class CenterRatingChecklist extends React.Component<Props, State> {
       const ACChildChecked: Array<number> = [];
       if (this.props.type === 'AC') {
         childChecked.forEach((value: number) => {
-          ACChildChecked.push(value+1)
+          if (value !== 5) {
+            ACChildChecked.push(value+1)
+          } else {
+            ACChildChecked.push(value)
+          }
         })
       }
       const mEntry = {
