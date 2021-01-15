@@ -6,7 +6,7 @@ const useStyles = makeStyles({
   titleText: {
     backgroundColor: "#a481d9",
     color: "white",
-    width: "50%",
+    // width: "50%",
     fontSize: '1.1em',
     textAlign: "center",
     fontFamily: 'Arimo',
@@ -17,14 +17,14 @@ const useStyles = makeStyles({
     color: "black",
     fontSize: '0.9em',
     textAlign: "center",
-    width: "20%",
+    width: "33%",
     fontFamily: 'Arimo',
     verticalAlign: 'top',
     padding: '0.5em'
   },
   example: {
     backgroundColor: "#f3f3f3",
-    width: "20%",
+    width: "33%",
     fontSize: '0.9em',
     fontFamily: 'Arimo',
     verticalAlign: 'top',
@@ -41,7 +41,7 @@ export default function ACHelpChild(): React.ReactElement {
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell colSpan={2} className={classes.titleText}>
+          <TableCell colSpan={1} className={classes.titleText}>
             <strong>
               Associative Interactions </strong>
           </TableCell>
@@ -55,41 +55,35 @@ export default function ACHelpChild(): React.ReactElement {
       <TableBody>
         <TableRow>
           <TableCell className={classes.checklistItem}>
-            <strong> Participating in a conversation about a shared activity</strong>
+            <strong>Doing an activity together that DOES NOT have a predetermined sequence</strong>
           </TableCell>
           <TableCell className={classes.checklistItem}>
-            <strong>Engaging in an open-ended activity without clear roles or order</strong>
+            <strong>Playing a game together with formal rules</strong>
           </TableCell>
           <TableCell className={classes.checklistItem}>
-            <strong> Following formal rules of a game and/or taking turns</strong>
-          </TableCell>
-          <TableCell className={classes.checklistItem}>
-            <strong>Doing an activity together that has a predetermined sequence </strong>
+            <strong>Doing an activity together that HAS a predetermined sequence</strong>
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell className={classes.example}>
-            Talking about what kind of structure to build at blocks
-          </TableCell>
-          <TableCell className={classes.example}>
-            Pretending to be a family but it’s unclear who is the parent and who is the child; no defined storyline
+            Pretending to be a family but it’s unclear who is the parent
+            and who is the child; no defined storyline
           </TableCell>
           <TableCell className={classes.example}>
             Following the rules for a memory card game
           </TableCell>
           <TableCell className={classes.example}>
-            Pretending to be a customer and server at a restaurant while using role speech (“What would you like to eat?”)
+          Pretending to be a family while acting out a clear storyline
+          and using role speech (The mom says, “Let’s make the baby some food.”)
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell className={classes.example}>
-            Talking while making pretend potions together at the sand table
-          </TableCell>
-          <TableCell className={classes.example} >
-            Drawing together at the dry erase board
+            Talking about what kind of structure to build together at blocks 
+            (Non-example: each child building their own structure with no talking)
           </TableCell>
           <TableCell className={classes.example}>
-            Following a set of rules for an invented game
+            Playing a board game with a teacher and/or peers
           </TableCell>
           <TableCell className={classes.example}>
             Completing a pattern block design together
@@ -97,14 +91,13 @@ export default function ACHelpChild(): React.ReactElement {
         </TableRow>
         <TableRow>
           <TableCell className={classes.example}>
-            Talking to a teacher about a book character
+            Making up a story with a teacher and acting it out with puppets
           </TableCell>
           <TableCell className={classes.example}>
-            Moving cars around the blocks center together
+            Creating and following a set of rules for an invented game
           </TableCell>
           <TableCell className={classes.example}>
-          </TableCell>
-          <TableCell className={classes.example}>
+            Acting out a familiar book with puppets
           </TableCell>
         </TableRow>
       </TableBody>
