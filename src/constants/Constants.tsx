@@ -373,15 +373,13 @@ export const Checklist: {
       <div key={0}> <b>Counting and Numbers</b> </div>,
       <div key={1}> <b>Shapes and Spatial reasoning</b> </div>,
       <div key={2}> <b>Patterns</b> </div>,
-      <div key={3}> <b>Measurement and Data</b> </div>,
-      /* <div key={4}> None of the above </div>, */
+      <div key={3}> <b>Measurement and Data</b> </div>
     ],
     'TeacherBehaviors': [
       <div key={0}> Using <b>math vocabulary</b> </div>,
       <div key={1}> <b>Asking questions</b> about math concepts </div>,
       <div key={2}> <b>Demonstrating</b> math concepts </div>,
-      <div key={3}> Helping children use math to <b>problem solve</b> </div>,
-      /* <div key={4}> None of the above </div>, */
+      <div key={3}> Helping children use math to <b>problem solve</b> </div>
     ]
   },
   'AC': {
@@ -399,7 +397,6 @@ export const Checklist: {
         Doing an <b>activity together</b> that <b>HAS a predetermined sequence</b>
       </div>,
       <div key={4}>
-
       </div>
     ],
     'TeacherBehaviors': [
@@ -414,8 +411,7 @@ export const Checklist: {
       </div>,
       <div key={3}>
         Helping children find the <b>words to communicate</b>
-      </div>,
-      /* <div key={4}> None of the above </div>, */
+      </div>
     ]
   },
   'SA': {
@@ -439,8 +435,7 @@ export const Checklist: {
         Speaking or acting according to a{" "}
         <b>pretend scenario</b> that follows a
         predictable plot
-      </div>,
-      /* <div key={4}> None of the above </div>, */
+      </div>
     ],
     'TeacherBehaviors': [
       <div key={0}>
@@ -458,8 +453,7 @@ export const Checklist: {
       <div key={3}>
         Supporting children as they <b>act out</b> 
         {" "} a dramatic play scenario or book
-      </div>,
-      /* <div key={4}> None of the above </div>, */
+      </div>
     ]
   },
   'LC': {

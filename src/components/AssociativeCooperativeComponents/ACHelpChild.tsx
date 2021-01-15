@@ -6,7 +6,6 @@ const useStyles = makeStyles({
   titleText: {
     backgroundColor: "#a481d9",
     color: "white",
-    // width: "50%",
     fontSize: '1.1em',
     textAlign: "center",
     fontFamily: 'Arimo',

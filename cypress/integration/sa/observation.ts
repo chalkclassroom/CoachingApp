@@ -17,7 +17,7 @@ describe('Sequential Activities Observation', () => {
     cy.contains('Done').click()
   })
 
-  it('Math is empty in Redux store at start of observation', () => {
+  it('Sequential is empty in Redux store at start of observation', () => {
     cy.window().its('store').invoke('getState').its('sequentialCenterState').should('deep.equal', {
       sequentialCenters: [{name: 'blocks', count: 0}, {name: 'writing', count: 0}]
     })
