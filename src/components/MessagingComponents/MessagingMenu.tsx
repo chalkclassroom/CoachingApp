@@ -23,7 +23,7 @@ const MessagingMenu: React.FC<MessagingMenuProps> = (props: MessagingMenuProps) 
   };
 
   return (
-    <List style={{height: '100%', backgroundColor: '#D8ECFF', margin: 0, padding: 0}}>
+    <List style={{height: '100%', backgroundColor: '#D8ECFF', margin: 0, padding: 0, paddingTop: '1em'}}>
       {
         Object.keys(MenuOptions).map((option, index) => (
           <ListItem 
@@ -31,19 +31,36 @@ const MessagingMenu: React.FC<MessagingMenuProps> = (props: MessagingMenuProps) 
             key={index}
             onClick={(): void => props.changeOption(option as MenuOptionsKey)}
             alignItems='center'
-            style={{
+            /* style={{
               marginBottom: '1em',
               width: '90%',
               marginLeft: '0.5em',
-              paddingTop: index === 0 ? '1.5em' : '0.5em',
+              // marginTop: index === 0 ? '1.5em' : '0.5em',
+              paddingTop: '0.5em',
               paddingBottom: '0.5em',
               paddingLeft: '0.5em',
               paddingRight: '0.5em',
               // different styling for New Message button
-              backgroundColor: index === 2 ? 'white' : undefined,
-              marginRight: index === 2 ? '0.5em' : undefined,
-              borderRadius: index === 2 ? '1.5em' : undefined,
-              boxShadow: index === 2 ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : undefined
+              backgroundColor: (option as MenuOptionsKey) === props.currentOption ? 'white' : undefined,
+              marginRight: (option as MenuOptionsKey) === props.currentOption ? '0.5em' : undefined,
+              borderRadius: (option as MenuOptionsKey) === props.currentOption ? '1.5em' : undefined,
+              boxShadow: (option as MenuOptionsKey) === props.currentOption ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : undefined
+            }} */
+            style={{
+              marginBottom: '1em',
+              // width: '90%',
+              width: (option as MenuOptionsKey) === props.currentOption ? '100%' : '90%',
+              // marginLeft: '0.5em',
+              // marginTop: index === 0 ? '1.5em' : '0.5em',
+              paddingTop: '0.5em',
+              paddingBottom: '0.5em',
+              paddingLeft: '0.5em',
+              paddingRight: '0.5em',
+              // different styling for New Message button
+              backgroundColor: (option as MenuOptionsKey) === props.currentOption ? 'white' : undefined,
+              marginRight: (option as MenuOptionsKey) === props.currentOption ? undefined : '0.5em',
+              borderRadius: (option as MenuOptionsKey) === props.currentOption ? undefined : '1.5em' ,
+              boxShadow: (option as MenuOptionsKey) === props.currentOption ? '-10px 0px 4px rgba(0, 0, 0, 0.25)' : '0px 4px 4px rgba(0, 0, 0, 0.25)'
             }}
           >
             <Grid container direction='row' style={{height: '100%', width: '100%'}}>

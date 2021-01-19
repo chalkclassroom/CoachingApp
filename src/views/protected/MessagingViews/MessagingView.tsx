@@ -37,7 +37,7 @@ const chosenView = {
 const MessagingView: React.FC<{}> = () => {
 
   // State to record which option the user chose: New Message, Draft, or Sent
-  const [menuOption, setMenuOption] = useState<MenuOptionsKey>('NEW_MESSAGE');
+  const [menuOption, setMenuOption] = useState<MenuOptionsKey>('SENT');
   const [drafts, setDrafts] = useState<Array<Email>>([]);
   const [noDrafts, setNoDrafts] = useState(false);
   const [sentEmails, setSentEmails] = useState<Array<Email>>([]);
