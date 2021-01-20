@@ -4,16 +4,30 @@ import Button from "@material-ui/core/Button/Button";
 import Card from "@material-ui/core/Card/Card";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 import DialogActions from '@material-ui/core/DialogActions';
 import Grid from "@material-ui/core/Grid";
 import { List, ListItem, ListItemIcon, ListItemText, IconButton } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
+import InfoIcon from '@material-ui/icons/Info';
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
 import Countdown from "../Countdown";
+import Math1 from '../../assets/images/Math1.svg';
+import Math2 from '../../assets/images/Math2.svg';
+import Math3 from '../../assets/images/Math3.svg';
+import Sequential1 from '../../assets/images/Sequential1.svg';
+import Sequential2 from '../../assets/images/Sequential2.svg';
+import Sequential3 from '../../assets/images/Sequential3.svg';
+import AC1 from '../../assets/images/AC1.svg';
+import AC2 from '../../assets/images/AC2.svg';
+import AC3 from '../../assets/images/AC3.svg';
+import Gray1 from '../../assets/images/Gray1.svg';
+import Gray2 from '../../assets/images/Gray2.svg';
+import Gray3 from '../../assets/images/Gray3.svg';
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 import Zoom from '@material-ui/core/Zoom';
@@ -211,6 +225,12 @@ class CenterRatingChecklist extends React.Component<Props, State> {
     this.setState({ peopleWarning: false });
   };
 
+  handlePeopleWarningOpen = (): void => {
+    this.setState({
+      peopleWarning: true
+    });
+  }
+
   handleBackButton = (): void => {
     this.props.toggleScreen();
   };
@@ -287,19 +307,23 @@ class CenterRatingChecklist extends React.Component<Props, State> {
    * @return {void}
    */
   handleChildToggle = (value: number) => (): void => {
-    if (value <=5 && this.childDisabled()) {
-      return;
-    }
-    const { childChecked } = this.state;
-    const newChecked: Array<number> = [];
-    newChecked.push(...childChecked);
-      const currentIndex = childChecked.indexOf(value);
-      if (currentIndex === -1) {
-        newChecked.push(value);
-      } else {
-        newChecked.splice(currentIndex, 1);
+    if (this.state.people === null) {
+      this.setState({ peopleWarning: true })
+    } else {
+      if (value <=5 && this.childDisabled()) {
+        return;
       }
-    this.setState({childChecked: newChecked});
+      const { childChecked } = this.state;
+      const newChecked: Array<number> = [];
+      newChecked.push(...childChecked);
+        const currentIndex = childChecked.indexOf(value);
+        if (currentIndex === -1) {
+          newChecked.push(value);
+        } else {
+          newChecked.splice(currentIndex, 1);
+        }
+      this.setState({childChecked: newChecked});
+    }
   }
 
   /**
@@ -307,19 +331,23 @@ class CenterRatingChecklist extends React.Component<Props, State> {
    * @return {void}
    */
   handleTeacherToggle = (value: number) => (): void  => {
-    if (value >=6 && this.teacherDisabled()) {
-      return;
-    }
-    const { teacherChecked } = this.state;
-    const newChecked: Array<number> = [];
-    newChecked.push(...teacherChecked);
-      const currentIndex = teacherChecked.indexOf(value);
-      if (currentIndex === -1) {
-        newChecked.push(value);
-      } else {
-        newChecked.splice(currentIndex, 1);
+    if (this.state.people === null) {
+      this.setState({ peopleWarning: true })
+    } else {
+      if (value >=6 && this.teacherDisabled()) {
+        return;
       }
-    this.setState({teacherChecked: newChecked});
+      const { teacherChecked } = this.state;
+      const newChecked: Array<number> = [];
+      newChecked.push(...teacherChecked);
+        const currentIndex = teacherChecked.indexOf(value);
+        if (currentIndex === -1) {
+          newChecked.push(value);
+        } else {
+          newChecked.splice(currentIndex, 1);
+        }
+      this.setState({teacherChecked: newChecked});
+    }
   }
 
   childDisabled = (): boolean  => {
@@ -506,56 +534,97 @@ class CenterRatingChecklist extends React.Component<Props, State> {
         </Dialog>
         <Dialog
           open={this.state.peopleWarning}
-          onClose={this.handlePeopleWarningClose}
           aria-labelledby="simple-dialog-title"
         >
+          <DialogTitle id="alert-dialog-title">
+            <Typography align='center' style={{fontFamily: 'Arimo', fontSize: '1.5em', color: 'black'}}>
+              People Present Button
+            </Typography>
+          </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
-              Please select the number of children and teachers at the center
-              before submitting your rating.
+            <DialogContentText id="alert-dialog-description">
+              <Typography align='center' style={{fontFamily: 'Arimo', fontSize: '1.5em', color: 'black'}}>
+                Please select the number of children and teachers at the center.
+              </Typography>
             </DialogContentText>
-            <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingTop: '1em', paddingBottom: '1em'}}>
-              <Grid item>
-                <Button
-                  onClick={this.handleChild1Click}
-                  size="small"
-                  variant={
-                    this.state.people === TeacherChildEnum.CHILD_1
-                      ? "contained"
-                      : "outlined"
-                  }
-                  style={{fontFamily: 'Arimo'}}
-                >
-                  1 child
-                </Button>
+            <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1em', color: 'black'}}>
+              If a teacher or additional students visit the center after you have selected
+              the People Present button, change your selection (if needed) to reflect who is currently present.
+              If anyone leaves the center during the observation, do not change your selection.
+            </DialogContentText>
+            <Grid
+              container
+              direction="row"
+              justify="space-around"
+              alignItems="flex-start"
+              style={{paddingTop: '1em', paddingBottom: '1em'}}
+            >
+              <Grid item xs={4}>
+                <Grid container direction="column" justify="center" alignItems="center">
+                  <Button
+                    onClick={this.handleChild1Click}
+                    size="small"
+                    style={{fontFamily: 'Arimo'}}
+                  >
+                    <img
+                      src={
+                        (this.state.people === 2 || this.state.people === 3) ? Gray1
+                          : this.props.type === 'MI' ? Math1
+                          : this.props.type === 'SA' ? Sequential1
+                          : AC1
+                      }
+                      alt="1 child"
+                    />
+                  </Button>
+                  <Typography variant='h5' align='center' style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
+                    1 child
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Button
-                  onClick={this.handleChild2Click}
-                  size="small"
-                  variant={
-                    this.state.people === TeacherChildEnum.CHILD_2
-                      ? "contained"
-                      : "outlined"
-                  }
-                  style={{fontFamily: 'Arimo'}}
-                >
-                  2+ children without teacher
-                </Button>
+              <Grid item xs={4}>
+                <Grid container direction="column" justify="center" alignItems="center">
+                  <Button
+                    onClick={this.handleChild2Click}
+                    size="small"
+                    style={{fontFamily: 'Arimo'}}
+                  >
+                    <img
+                      src={
+                        (this.state.people === 1 || this.state.people === 3) ? Gray2
+                          : this.props.type === 'MI' ? Math2
+                          : this.props.type === 'SA' ? Sequential2
+                          : AC2
+                      }
+                      
+                      alt="2+ children without teacher"
+                    />
+                  </Button>
+                  <Typography variant='h5' align='center' style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
+                    2+ children without teacher
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Button
-                  onClick={this.handleTeacherClick}
-                  size="small"
-                  variant={
-                    this.state.people === TeacherChildEnum.TEACHER
-                      ? "contained"
-                      : "outlined"
-                  }
-                  style={{fontFamily: 'Arimo'}}
-                >
-                  1+ child with teacher
-                </Button>
+              <Grid item xs={4}>
+                <Grid container direction="column" justify="center" alignItems="center">
+                  <Button
+                    onClick={this.handleTeacherClick}
+                    size="small"
+                    style={{fontFamily: 'Arimo'}}
+                  >
+                    <img
+                      src={
+                        (this.state.people === 1 || this.state.people === 2) ? Gray3
+                          : this.props.type === 'MI' ? Math3
+                          : this.props.type === 'SA' ? Sequential3
+                          : AC3
+                      }
+                      alt="1+ child with teacher"
+                    />
+                  </Button>
+                  <Typography variant='h5' align='center' style={{fontFamily: 'Arimo', fontSize: '1.5em'}}>
+                    1+ child with teacher
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </DialogContent>
@@ -564,7 +633,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
           <Grid
             container
             alignItems={"center"}
-            // direction={"row"}
             justify={"space-around"}
             style={{height: '100%'}}
             className={classes.grid}
@@ -591,28 +659,49 @@ class CenterRatingChecklist extends React.Component<Props, State> {
               <Zoom in={true}>
                 <Grid container alignItems="center" direction="column">
                   <Grid container direction="row" justify="space-between" alignItems="center">
-                    <Grid item xs={2} />
+                    <Grid item xs={2}>
+                      <Grid container direction="row" justify="flex-end" alignItems="center">
+                        <IconButton onClick={this.handleReturnToCenterMenu} style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                          <CloseIcon />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
                     <Grid item>
                       <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
                         {this.props.currentCenter[0].toUpperCase() +
                         this.props.currentCenter.substr(1)}
                       </Typography>
                     </Grid>
-                    <Grid item xs={2}>
-                      <IconButton onClick={this.handleReturnToCenterMenu} style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
-                        <CloseIcon />
-                      </IconButton>
-                    </Grid>
+                    <Grid item xs={2} />
                   </Grid>
                   <div style={{ height: '0.5em' }} />
-                  <Typography variant={"subtitle2"} style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
-                    Please select the number of children and teachers at the
-                    center:
-                  </Typography>
+                  <Grid container direction='row' justify='center' alignItems='center'>
+                    <Grid item xs={2} />
+                    <Grid item xs={8} style={{height: '100%'}}>
+                      <Grid container direction='row' alignItems='flex-end' justify='center'>
+                        <Typography variant={"subtitle2"} align='center' style={{fontFamily: 'Arimo'}}>
+                          Please select the number of children and teachers at the
+                          center:
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <InfoIcon
+                        style={{
+                          fill: "black",
+                          marginRight: '0.3em',
+                          marginTop: '0.1em'
+                        }}
+                        onClick={(): void => {
+                          this.handlePeopleWarningOpen();
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
                   <Grid
                     container
                     direction={"row"}
-                    justify={"space-around"}
+                    justify={"space-evenly"}
                     xs={12}
                     style={{paddingBottom: '0.5em'}}
                   >
@@ -620,55 +709,77 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                       <Button
                         onClick={this.handleChild1Click}
                         size="small"
-                        variant={
-                          this.state.people === TeacherChildEnum.CHILD_1
-                            ? "contained"
-                            : "outlined"
-                        }
                         style={{fontFamily: 'Arimo'}}
                       >
-                        1 child
+                        <img
+                          src={
+                            (this.state.people === 2 || this.state.people === 3) ? Gray1
+                              : this.props.type === 'MI' ? Math1
+                              : this.props.type === 'SA' ? Sequential1
+                              : AC1
+                          }
+                          alt="1 child"
+                        />
                       </Button>
                     </Grid>
                     <Grid item>
                       <Button
                         onClick={this.handleChild2Click}
                         size="small"
-                        variant={
-                          this.state.people === TeacherChildEnum.CHILD_2
-                            ? "contained"
-                            : "outlined"
-                        }
                         style={{fontFamily: 'Arimo'}}
                       >
-                        2+ children without teacher
+                        <img
+                          src={
+                            (this.state.people === 1 || this.state.people === 3) ? Gray2
+                              : this.props.type === 'MI' ? Math2
+                              : this.props.type === 'SA' ? Sequential2
+                              : AC2
+                          }
+                          
+                          alt="2+ children without teacher"
+                        />
                       </Button>
                     </Grid>
                     <Grid item>
                       <Button
                         onClick={this.handleTeacherClick}
                         size="small"
-                        variant={
-                          this.state.people === TeacherChildEnum.TEACHER
-                            ? "contained"
-                            : "outlined"
-                        }
                         style={{fontFamily: 'Arimo'}}
                       >
-                        1+ child with teacher
+                        <img
+                          src={
+                            (this.state.people === 1 || this.state.people === 2) ? Gray3
+                              : this.props.type === 'MI' ? Math3
+                              : this.props.type === 'SA' ? Sequential3
+                              : AC3
+                          }
+                          alt="1+ child with teacher"
+                        />
                       </Button>
                     </Grid>
                   </Grid>
                   <Grid container direction={"row"} spacing={2} xs={12}>
                     <Grid item xs={6}>
                       <Card>
-                        <Typography variant="h6" align="center" style={{fontFamily: 'Arimo'}}>
+                        <Typography
+                          variant="h6"
+                          align="center"
+                          style={{
+                            fontFamily: 'Arimo',
+                            color: (this.childDisabled() || (this.state.people === null)) ? 'gray' : 'black',
+                            opacity: (this.childDisabled() || (this.state.people === null)) ? '0.75' : '1'
+                          }}
+                        >
                           Child Behaviors
                         </Typography>
                         <Typography
                           variant="body1"
                           align="center"
                           className={classes.instructionText}
+                          style={{
+                            color: (this.childDisabled() || (this.state.people === null)) ? 'gray' : 'black',
+                            opacity: (this.childDisabled() || (this.state.people === null)) ? '0.75' : '1'
+                          }}
                         >
                           {Constants.Checklist[this.props.type as ChecklistKey].ChildInstructions}
                         </Typography>
@@ -680,7 +791,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                                   key={index}
                                   id={'child' + index}
                                   onClick={this.handleChildToggle(index+1)}
-                                  disabled={this.childDisabled()}
+                                  disabled={this.childDisabled() || (this.state.people === null)}
                                   className={classes.checklistItem}
                                 >
                                   <ListItemIcon>
@@ -705,13 +816,25 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                     </Grid>
                     <Grid item xs={6}>
                       <Card>
-                        <Typography variant="h6" align={"center"} style={{fontFamily: 'Arimo'}}>
+                        <Typography
+                          variant="h6"
+                          align={"center"}
+                          style={{
+                            fontFamily: 'Arimo',
+                            color: (this.teacherDisabled() || (this.state.people === null)) ? 'gray' : 'black',
+                            opacity: (this.teacherDisabled() || (this.state.people === null)) ? '0.75' : '1'
+                          }}
+                        >
                           Teacher Behaviors
                         </Typography>
                         <Typography
                           variant="body1"
                           align="center"
                           className={classes.instructionText}
+                          style={{
+                            color: (this.teacherDisabled() || (this.state.people === null)) ? 'gray' : 'black',
+                            opacity: (this.teacherDisabled() || (this.state.people === null)) ? '0.75' : '1'
+                          }}
                         >
                           {Constants.Checklist[this.props.type as ChecklistKey].TeacherInstructions}
                         </Typography>
@@ -723,7 +846,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                                   key={index}
                                   id={'teacher' + index}
                                   onClick={this.handleTeacherToggle(index+6)}
-                                  disabled={this.teacherDisabled()}
+                                  disabled={this.teacherDisabled() || (this.state.people === null)}
                                   className={classes.checklistItem}
                                 >
                                   <ListItemIcon>
