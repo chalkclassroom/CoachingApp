@@ -548,7 +548,7 @@ class CenterRatingChecklist extends React.Component<Props, State> {
               </Typography>
             </DialogContentText>
             <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1em', color: 'black'}}>
-              If a teacher or additional students visit the center after you have selected
+              If a teacher or additional children visit the center after you have selected
               the People Present button, change your selection (if needed) to reflect who is currently present.
               If anyone leaves the center during the observation, do not change your selection.
             </DialogContentText>
