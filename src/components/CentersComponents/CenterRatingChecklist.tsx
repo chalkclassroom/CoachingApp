@@ -4,7 +4,6 @@ import Button from "@material-ui/core/Button/Button";
 import Card from "@material-ui/core/Card/Card";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
 import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 import DialogActions from '@material-ui/core/DialogActions';
@@ -536,11 +535,6 @@ class CenterRatingChecklist extends React.Component<Props, State> {
           open={this.state.peopleWarning}
           aria-labelledby="simple-dialog-title"
         >
-          <DialogTitle id="alert-dialog-title">
-            <Typography align='center' style={{fontFamily: 'Arimo', fontSize: '1.5em', color: 'black'}}>
-              People Present Button
-            </Typography>
-          </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               <Typography align='center' style={{fontFamily: 'Arimo', fontSize: '1.5em', color: 'black'}}>
@@ -548,9 +542,10 @@ class CenterRatingChecklist extends React.Component<Props, State> {
               </Typography>
             </DialogContentText>
             <DialogContentText id="alert-dialog-description" style={{fontFamily: 'Arimo', fontSize: '1em', color: 'black'}}>
-              If a teacher or additional children visit the center after you have selected
-              the People Present button, change your selection (if needed) to reflect who is currently present.
-              If anyone leaves the center during the observation, do not change your selection.
+              If teachers or students leave or join while you are observing a center,
+              make sure your final selection reflects the largest number of people
+              that were present at any point during the 1 minute observation in that
+              center. 
             </DialogContentText>
             <Grid
               container
@@ -659,43 +654,41 @@ class CenterRatingChecklist extends React.Component<Props, State> {
               <Zoom in={true}>
                 <Grid container alignItems="center" direction="column">
                   <Grid container direction="row" justify="space-between" alignItems="center">
-                    <Grid item xs={2}>
-                      <Grid container direction="row" justify="flex-end" alignItems="center">
-                        <IconButton onClick={this.handleReturnToCenterMenu} style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
-                          <CloseIcon />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
+                    <Grid item xs={2} />
                     <Grid item>
                       <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
                         {this.props.currentCenter[0].toUpperCase() +
                         this.props.currentCenter.substr(1)}
                       </Typography>
                     </Grid>
-                    <Grid item xs={2} />
+                    <Grid item xs={2} >
+                      <Grid container direction="row" justify="center" alignItems="center">
+                        <IconButton onClick={this.handleReturnToCenterMenu} style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                          <CloseIcon />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <div style={{ height: '0.5em' }} />
                   <Grid container direction='row' justify='center' alignItems='center'>
-                    <Grid item xs={2} />
                     <Grid item xs={8} style={{height: '100%'}}>
                       <Grid container direction='row' alignItems='flex-end' justify='center'>
                         <Typography variant={"subtitle2"} align='center' style={{fontFamily: 'Arimo'}}>
                           Please select the number of children and teachers at the
-                          center:
+                          center.
                         </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <InfoIcon
+                        <InfoIcon
                         style={{
                           fill: "black",
                           marginRight: '0.3em',
-                          marginTop: '0.1em'
+                          marginTop: '0.1em',
+                          paddingLeft: '0.3em'
                         }}
                         onClick={(): void => {
                           this.handlePeopleWarningOpen();
                         }}
                       />
+                      </Grid>
                     </Grid>
                   </Grid>
                   <Grid
