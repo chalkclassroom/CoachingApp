@@ -56,6 +56,7 @@ function SequentialResultsDialog(props: Props): React.ReactElement {
           <Grid item>
             <MuiThemeProvider theme={Constants.SequentialTheme}>
               <Button
+                id='returnHome'
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
                   clearTeacher();

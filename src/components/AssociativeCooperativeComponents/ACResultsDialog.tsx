@@ -62,6 +62,7 @@ function ACResultsDialog(props: Props): React.ReactElement {
           <Grid item>
             <MuiThemeProvider theme={Constants.ACTheme}>
               <Button
+                id='returnHome'
                 style={{fontFamily: 'Arimo'}}
                 onClick={(): void => {
                   clearTeacher();

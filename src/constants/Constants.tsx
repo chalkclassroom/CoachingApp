@@ -339,7 +339,32 @@ export const DR = {
 
 
 // Centers Observation Checklists
-export const Checklist = {
+export const Checklist: {
+  MI: {
+    ChildInstructions: string,
+    TeacherInstructions: string,
+    ChildBehaviors: Array<JSX.Element>,
+    TeacherBehaviors: Array<JSX.Element>
+  },
+  AC: {
+    ChildInstructions: string,
+    TeacherInstructions: string,
+    ChildBehaviors: Array<JSX.Element>,
+    TeacherBehaviors: Array<JSX.Element>
+  },
+  SA: {
+    ChildInstructions: string,
+    TeacherInstructions: string,
+    ChildBehaviors: Array<JSX.Element>,
+    TeacherBehaviors: Array<JSX.Element>
+  },
+  LC: {
+    ChildInstructions?: string,
+    TeacherInstructions?: string,
+    ChildBehaviors?: Array<JSX.Element>,
+    TeacherBehaviors: Array<JSX.Element>
+  },
+} = {
   'MI': {
     'ChildInstructions': 'Select the types of math activities children are doing at this center.',
     'TeacherInstructions': 'Select the types of support for math the ' +
@@ -348,15 +373,13 @@ export const Checklist = {
       <div key={0}> <b>Counting and Numbers</b> </div>,
       <div key={1}> <b>Shapes and Spatial reasoning</b> </div>,
       <div key={2}> <b>Patterns</b> </div>,
-      <div key={3}> <b>Measurement and Data</b> </div>,
-      <div key={4}> None of the above </div>,
+      <div key={3}> <b>Measurement and Data</b> </div>
     ],
     'TeacherBehaviors': [
       <div key={0}> Using <b>math vocabulary</b> </div>,
       <div key={1}> <b>Asking questions</b> about math concepts </div>,
       <div key={2}> <b>Demonstrating</b> math concepts </div>,
-      <div key={3}> Helping children use math to <b>problem solve</b> </div>,
-      <div key={4}> None of the above </div>,
+      <div key={3}> Helping children use math to <b>problem solve</b> </div>
     ]
   },
   'AC': {
@@ -365,23 +388,16 @@ export const Checklist = {
       'teacher is providing at this center.',
     'ChildBehaviors': [
       <div key={0}>
-        Participating in a <b>conversation</b> about a <b>shared activity</b>
-        </div>,
-      <div key={1}>
-        Engaging <b>together</b> in an <b>open-ended activity</b> without clear {" "}
-        roles or order
+        Doing an <b>activity together</b> that DOES NOT have a predetermined sequence
       </div>,
       <div key={2}>
-        Following <b>formal rules of a game</b> and/or taking turns
+        <b>Playing a game</b> together with <b>formal rules</b>
       </div>,
       <div key={3}>
-        Talking about or doing an activity together that has
-        a <b>predetermined sequence</b> 
-        {/* (e.g., acting out
-        restaurant in a dramatic play; doing pattern blocks
-        together) */}
+        Doing an <b>activity together</b> that <b>HAS a predetermined sequence</b>
       </div>,
-      <div key={4}> None of the above </div>
+      <div key={4}>
+      </div>
     ],
     'TeacherBehaviors': [
       <div key={0}> <b>Participating</b> in children’s play </div>,
@@ -395,8 +411,7 @@ export const Checklist = {
       </div>,
       <div key={3}>
         Helping children find the <b>words to communicate</b>
-      </div>,
-      <div key={4}> None of the above </div>,
+      </div>
     ]
   },
   'SA': {
@@ -420,8 +435,7 @@ export const Checklist = {
         Speaking or acting according to a{" "}
         <b>pretend scenario</b> that follows a
         predictable plot
-      </div>,
-      <div key={4}> None of the above </div>,
+      </div>
     ],
     'TeacherBehaviors': [
       <div key={0}>
@@ -439,8 +453,7 @@ export const Checklist = {
       <div key={3}>
         Supporting children as they <b>act out</b> 
         {" "} a dramatic play scenario or book
-      </div>,
-      <div key={4}> None of the above </div>,
+      </div>
     ]
   },
   'LC': {

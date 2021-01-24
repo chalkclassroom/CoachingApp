@@ -36,7 +36,7 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const teacherBehaviorsData = {
       labels: [
-        ["Talking to and playing with children"],
+        ["Participating in children's play"],
         ["Asking questions to extend children's", "thinking about their shared activity"],
         ["Encouraging children to share, work,", "or interact with each other"],
         ["Helping children find the words to", "communicate"]
