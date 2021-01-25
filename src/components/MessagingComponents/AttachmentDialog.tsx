@@ -101,10 +101,18 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
 
   const printDocument = async (practice: string, date: Date): Promise<string | void> => {
     // console.log('teacher selected', teacherObject);
-    const input = document.getElementById('divToPrint');
+    const input: HTMLElement = document.getElementById('divToPrint');
+    // const input = document.createElement('div');
+    // document.body.appendChild(actionPlanDocument);
+    // const input = document.appendChild(actionPlanDocument);
     let base64data: string | ArrayBuffer | null = null;
-    html2canvas(input)
-      .then((canvas) => {
+    html2canvas(input, {
+      onclone: function (clonedDoc) {
+          clonedDoc.getElementById('divToPrint').style.visibility = 'visible';
+          // clonedDoc.getElementById('divToPrint').style.width = '210mm';
+          // clonedDoc.getElementById('divToPrint').style.minHeight = '100mm';
+      }
+    }).then((canvas) => {
         const link = document.createElement("a");
         document.body.appendChild(link);
         link.download = "html_image.png";
@@ -430,9 +438,9 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                         minHeight: '100mm',
                         marginLeft: 'auto',
                         marginRight: 'auto',
-                        display: "none"
+                        // display: "none"
+                        visibility: 'hidden'
                       }}
-                      // display="none"
                     >
                       <ActionPlanForPdf
                         tool={tool}
