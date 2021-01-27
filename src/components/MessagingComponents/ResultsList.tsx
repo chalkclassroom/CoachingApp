@@ -10,6 +10,8 @@ import {
   TableHead,
   TableBody,
   TableSortLabel,
+  TableContainer,
+  TablePagination,
   Checkbox,
   ListItem,
   ListItemIcon
@@ -29,16 +31,17 @@ import * as Constants from '../../constants/Constants';
 interface Props {
   results?: ResultsInfo[],
   teacherId?: string,
-  onClick(actionPlanId: string, teacherId: string): void,
+  onClick(sessionId: string, teacherId: string, date: Date, tool: string): void,
   checkedResults: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} | undefined,
   addResult(id: string, type: ResultTypeKey): void,
-  removeResult(id: string, type: ResultTypeKey): void
+  removeResult(id: string, type: ResultTypeKey): void,
+  handleCheckResult(id: string, resultType: ResultTypeKey): void
 }
 
 interface State {
-  result: Array<TeacherListInfo> | Array<ResultsInfo>,
+  result: Array<ResultsInfo>,
   order: 'desc' | 'asc',
-  orderBy: TeacherListInfoKey,
+  orderBy: ResultsInfoKey,
   // rows: number,
   rowsPerPage: number,
   page: number,
@@ -46,27 +49,11 @@ interface State {
   checked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} | null
 }
 
-interface TeacherListInfo {
-  name: string,
-  teacherId: string,
-  teacherFirstName: string,
-  teacherLastName: string,
-  practice: string,
-  id: string,
-  date: {
-    seconds: number,
-    nanoseconds: number
-  },
-  modified: Date,
-  achieveBy: firebase.firestore.Timestamp
-}
-
-type TeacherListInfoKey = keyof TeacherListInfo;
-
 interface ResultsInfo {
   id: string,
   date: firebase.firestore.Timestamp,
-  practice: string
+  practice: string,
+  modified: Date
 }
 
 type ResultsInfoKey = keyof ResultsInfo;
@@ -90,12 +77,12 @@ const headCells = [
 
 /**
  *
- * @param {TeacherListInfo | ResultsInfo} a
- * @param {TeacherListInfo | ResultsInfo} b
- * @param {TeacherListInfoKey | ResultsInfoKey} orderBy
+ * @param {ResultsInfo} a
+ * @param {ResultsInfo} b
+ * @param {ResultsInfoKey} orderBy
  * @return {number}
  */
-function descendingComparator(a: TeacherListInfo, b: TeacherListInfo, orderBy: TeacherListInfoKey | ResultsInfoKey): number {
+function descendingComparator(a: ResultsInfo, b: ResultsInfo, orderBy: ResultsInfoKey): number {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -106,24 +93,24 @@ function descendingComparator(a: TeacherListInfo, b: TeacherListInfo, orderBy: T
 }
 
 /**
- * @param {'desc' | 'asc' | TeacherListInfo} order
- * @param {TeacherListInfoKey} orderBy
+ * @param {'desc' | 'asc' | ResultsInfo} order
+ * @param {ResultsInfoKey} orderBy
  * @return {any}
  */
-function getComparator(order: 'desc' | 'asc' | TeacherListInfo, orderBy: TeacherListInfoKey): any {
+function getComparator(order: 'desc' | 'asc' | ResultsInfo, orderBy: ResultsInfoKey): any {
   return order === 'desc'
-    ? (a: TeacherListInfo, b: TeacherListInfo): number => descendingComparator(a, b, orderBy)
-    : (a: TeacherListInfo, b: TeacherListInfo): number => -descendingComparator(a, b, orderBy);
+    ? (a: ResultsInfo, b: ResultsInfo): number => descendingComparator(a, b, orderBy)
+    : (a: ResultsInfo, b: ResultsInfo): number => -descendingComparator(a, b, orderBy);
 }
 
 /**
  *
- * @param {Array<TeacherListInfo>} array
+ * @param {Array<ResultsInfo>} array
  * @param {any} comparator
  * @return {any}
  */
-function stableSort(array: Array<TeacherListInfo> | Array<ResultsInfo>, comparator: typeof getComparator): any {
-  const stabilizedThis: Array<Array<TeacherListInfo | ResultsInfo, number>> = array.map((el, index) => [el, index]);
+function stableSort(array: Array<ResultsInfo>, comparator: typeof getComparator): Array<ResultsInfo> {
+  const stabilizedThis: Array<Array<ResultsInfo, number>> = array.map((el: ResultsInfo, index: number) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -134,7 +121,7 @@ function stableSort(array: Array<TeacherListInfo> | Array<ResultsInfo>, comparat
 
 interface TableHeadProps {
   order: 'desc' | 'asc',
-  orderBy: TeacherListInfoKey | ResultsInfoKey,
+  orderBy: ResultsInfoKey,
   onRequestSort(event: React.SyntheticEvent, property: string): void,
   results: boolean
 }
@@ -197,6 +184,11 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
   );
 }
 
+TableHeadSort.propTypes = {
+  order: PropTypes.oneOf<string>(['desc', 'asc']).isRequired,
+  onRequestSort: PropTypes.func.isRequired
+}
+
 /**
  * @class ResultsList
  */
@@ -211,7 +203,7 @@ class ResultsList extends React.Component<Props, State>{
       result: [],
       order: 'desc',
       orderBy: 'modified',
-      rowsPerPage: 5,
+      rowsPerPage: 20,
       page: 0,
       selected: [],
       checked: null
@@ -220,9 +212,9 @@ class ResultsList extends React.Component<Props, State>{
 
   /**
    * @param {SyntheticEvent} event
-   * @param {TeacherListInfoKey | ResultsInfoKey} property
+   * @param {ResultsInfoKey} property
    */
-  handleRequestSort = (event: React.SyntheticEvent, property: TeacherListInfoKey | ResultsInfoKey): void => {
+  handleRequestSort = (event: React.SyntheticEvent, property: ResultsInfoKey): void => {
     const isAsc = this.state.orderBy === property && this.state.order === 'asc';
     isAsc ? this.setState({ order: 'desc' }) : this.setState({ order: 'asc' });
     this.setState({ orderBy: property });
@@ -261,7 +253,24 @@ class ResultsList extends React.Component<Props, State>{
       }
     }
     this.setState({checked: newChecked});
+    this.props.handleCheckResult(id, resultType);
   }
+
+  /**
+   * @param {MouseEvent<HTMLButtonElement, MouseEvent> | null} event
+   * @param {number} newPage
+   */
+  handleChangePage = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number): void => {
+    this.setState({page: newPage});
+  };
+
+  /**
+   * @param {ChangeEvent<HTMLInputElement>} event
+   */
+  handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    this.setState({rowsPerPage: (parseInt(event.target.value, 10))});
+    this.setState({page: 0 });
+  };
 
   static propTypes = {
     results: PropTypes.array,
@@ -274,138 +283,153 @@ class ResultsList extends React.Component<Props, State>{
   render(): React.ReactNode {
     const isSelected = (id: string): boolean => this.state.selected.includes(id);
     return (
-      <Table style={{width: '100%', border: '1px solid #a9a9a9', padding: '1em', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
-        <TableHeadSort
-          order={this.state.order}
-          orderBy={this.state.orderBy}
-          onRequestSort={this.handleRequestSort}
-          results={this.props.results ? true : false}
+      <TableContainer>
+        <Table style={{width: '100%', border: '1px solid #a9a9a9', padding: '1em', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+          <TableHeadSort
+            order={this.state.order}
+            orderBy={this.state.orderBy}
+            onRequestSort={this.handleRequestSort}
+            results={this.props.results ? true : false}
+          />
+          <TableBody>
+            {this.props.results ? (
+              stableSort(this.props.results, getComparator(this.state.order, this.state.orderBy))
+              // to limit number on each page
+              .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+              .map((row: {
+                id: string,
+                date: firebase.firestore.Timestamp,
+                practice: string
+              }, index: number) => {
+                const isItemSelected = isSelected(row.id);
+                const observationDate = row.date.toDate();
+                const practice = 
+                  row.practice === 'transition' ? 'Transition Time'
+                  : row.practice === 'climate' ? 'Classroom Climate'
+                  : row.practice === 'math' ? 'Math Instruction'
+                  : row.practice === 'level' ? 'Level of Instruction'
+                  : row.practice === 'engagement' ? 'Student Engagement'
+                  : row.practice === 'listening' ? 'Listening to Children'
+                  : row.practice === 'sequential' ? 'Sequential Activities'
+                  : 'Associative and Cooperative'
+                ;
+                return (
+                  <TableRow
+                    key={index}
+                    selected={isItemSelected}
+                  >
+                    <TableCell style={{padding: '0.5em', width: '15%'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        {moment(observationDate).format('MM/DD/YYYY')}
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0, width: '30%'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        <Grid container direction="row" justify="flex-start" alignItems="center">
+                          <Grid item xs={9}>
+                            <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
+                              {practice}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2} style={{height: '100%'}}>
+                            {practice === 'Transition Time' ? (
+                              <img
+                                src={TransitionTimeIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : practice === 'Classroom Climate' ? (
+                              <img
+                                src={ClassroomClimateIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : practice === 'Math Instruction' ? (
+                              <img
+                                src={MathIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : practice === 'Student Engagement' ? (
+                              <img
+                                src={EngagementIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : practice === 'Level of Instruction' ? (
+                              <img
+                                src={InstructionIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : practice === 'Listening to Children' ? (
+                              <img
+                                src={ListeningIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : practice === 'Sequential Activities' ? (
+                              <img
+                                src={SequentialIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : practice === 'Associative and Cooperative' ? (
+                              <img
+                                src={AssocCoopIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : <div />}
+                          </Grid>
+                        </Grid>
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{width: '15%'}}>
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'summary')}} alignItems="center">
+                        <Grid container direction="row" justify="center" alignItems="center">
+                          <ListItemIcon>
+                            <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['summary' as ResultTypeKey] : false} />
+                          </ListItemIcon>
+                        </Grid>
+                      </ListItem>
+                    </TableCell>
+                    <TableCell style={{width: '15%'}}>
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'details')}}>
+                        <Grid container direction="row" justify="center" alignItems="center">
+                          <ListItemIcon>
+                            <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['details' as ResultTypeKey] : false} />
+                          </ListItemIcon>
+                        </Grid>
+                      </ListItem>
+                    </TableCell>
+                    <TableCell style={{width: '15%'}}>
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'trends')}}>
+                        <Grid container direction="row" justify="center" alignItems="center">
+                          <ListItemIcon>
+                            <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['trends' as ResultTypeKey] : false} />
+                          </ListItemIcon>
+                        </Grid>
+                      </ListItem>
+                    </TableCell>
+                    <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
+                      <VisibilityIcon
+                        style={{fill: Constants.Colors.MI}}
+                        onClick={(): void => {
+                          console.log('session id', row.id);
+                          this.props.onClick(row.id, this.props.teacherId ? this.props.teacherId : '', observationDate, practice);
+                          // console.log('session id', row.id);
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            ) : (null)}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={this.props.results ? this.props.results.length : 0}
+          rowsPerPage={this.state.rowsPerPage}
+          page={this.state.page}
+          onChangePage={this.handleChangePage}
+          onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
-        <TableBody>
-          {this.props.results ? (
-            stableSort(this.props.results, getComparator(this.state.order, this.state.orderBy))
-            // to limit number on each page
-            // .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-            .map((row: {
-              id: string,
-              date: firebase.firestore.Timestamp,
-              practice: string
-            }, index: number) => {
-              const isItemSelected = isSelected(row.id);
-              const observationDate = row.date.toDate();
-              const practice = 
-                row.practice === 'transition' ? 'Transition Time'
-                : row.practice === 'climate' ? 'Classroom Climate'
-                : row.practice === 'math' ? 'Math Instruction'
-                : row.practice === 'level' ? 'Level of Instruction'
-                : row.practice === 'engagement' ? 'Student Engagement'
-                : row.practice === 'listening' ? 'Listening to Children'
-                : row.practice === 'sequential' ? 'Sequential Activities'
-                : 'Associative and Cooperative'
-              ;
-              return (
-                <TableRow
-                  key={index}
-                  selected={isItemSelected}
-                >
-                  <TableCell style={{padding: '0.5em', width: '15%'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      {moment(observationDate).format('MM/DD/YYYY')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0, width: '30%'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      <Grid container direction="row" justify="flex-start" alignItems="center">
-                        <Grid item xs={9}>
-                          <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
-                            {practice}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={2} style={{height: '100%'}}>
-                          {practice === 'Transition Time' ? (
-                            <img
-                              src={TransitionTimeIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : practice === 'Classroom Climate' ? (
-                            <img
-                              src={ClassroomClimateIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : practice === 'Math Instruction' ? (
-                            <img
-                              src={MathIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : practice === 'Student Engagement' ? (
-                            <img
-                              src={EngagementIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : practice === 'Level of Instruction' ? (
-                            <img
-                              src={InstructionIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : practice === 'Listening to Children' ? (
-                            <img
-                              src={ListeningIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : practice === 'Sequential Activities' ? (
-                            <img
-                              src={SequentialIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : practice === 'Associative and Cooperative' ? (
-                            <img
-                              src={AssocCoopIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : <div />}
-                        </Grid>
-                      </Grid>
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{width: '15%'}}>
-                    <ListItem onClick={(): void => {this.handleCheck(row.id, 'summary')}} alignItems="center">
-                      <Grid container direction="row" justify="center" alignItems="center">
-                        <ListItemIcon>
-                          <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['summary' as ResultTypeKey] : false} />
-                        </ListItemIcon>
-                      </Grid>
-                    </ListItem>
-                  </TableCell>
-                  <TableCell style={{width: '15%'}}>
-                    <ListItem onClick={(): void => {this.handleCheck(row.id, 'details')}}>
-                      <Grid container direction="row" justify="center" alignItems="center">
-                        <ListItemIcon>
-                          <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['details' as ResultTypeKey] : false} />
-                        </ListItemIcon>
-                      </Grid>
-                    </ListItem>
-                  </TableCell>
-                  <TableCell style={{width: '15%'}}>
-                    <ListItem onClick={(): void => {this.handleCheck(row.id, 'trends')}}>
-                      <Grid container direction="row" justify="center" alignItems="center">
-                        <ListItemIcon>
-                          <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['trends' as ResultTypeKey] : false} />
-                        </ListItemIcon>
-                      </Grid>
-                    </ListItem>
-                  </TableCell>
-                  <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
-                    <VisibilityIcon
-                      style={{fill: Constants.Colors.MI}}
-                      onClick={(): void => {this.props.onClick(row.id, this.props.teacherId ? this.props.teacherId : '')}}
-                    />
-                  </TableCell>
-                </TableRow>
-              )
-            })
-          ) : (null)}
-        </TableBody>
-      </Table>
+      </TableContainer>
     );
   }
 }
