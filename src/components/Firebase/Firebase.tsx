@@ -1951,7 +1951,7 @@ class Firebase {
             practice: string
           }> = [];
           querySnapshot.forEach(doc => {
-            if (doc.data().end !== doc.data().start) { // check that session was completed
+            if (doc.data().end > doc.data().start) { // check that session was completed
               idArr.push({
                 id: doc.id,
                 date: doc.data().start,
