@@ -10,6 +10,7 @@ module.exports = (env, argv) => {
         {
             mode: argv.mode,
             entry: "./src/index.tsx",
+            devtool: "cheap-module-source-map",
             output: {
                 publicPath: "/",
                 path: path.resolve(__dirname, "build"),
@@ -37,11 +38,11 @@ module.exports = (env, argv) => {
                             cacheDirectory: true,
                         }
                     },
-                    {
+                    /* {
                         test: /\.js$/,
                         use: ["source-map-loader"],
                         enforce:    "pre"
-                    },
+                    }, */
                     {//Should remove this rule after JS Migration to TS is Done.
                         test: /\.(js|jsx)$/,
                         exclude: /node_modules/,

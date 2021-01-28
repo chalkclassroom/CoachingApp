@@ -10,7 +10,7 @@
     "src/**/*.gif"
   ],
   "compilerOptions": {
-    "outDir": "./build/",
+    "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
