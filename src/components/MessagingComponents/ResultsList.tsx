@@ -52,8 +52,7 @@ interface State {
 interface ResultsInfo {
   id: string,
   date: firebase.firestore.Timestamp,
-  practice: string,
-  modified: Date
+  practice: string
 }
 
 type ResultsInfoKey = keyof ResultsInfo;
@@ -202,8 +201,8 @@ class ResultsList extends React.Component<Props, State>{
     this.state={
       result: [],
       order: 'desc',
-      orderBy: 'modified',
-      rowsPerPage: 20,
+      orderBy: 'date',
+      rowsPerPage: 5,
       page: 0,
       selected: [],
       checked: null
@@ -408,9 +407,7 @@ class ResultsList extends React.Component<Props, State>{
                       <VisibilityIcon
                         style={{fill: Constants.Colors.MI}}
                         onClick={(): void => {
-                          console.log('session id', row.id);
                           this.props.onClick(row.id, this.props.teacherId ? this.props.teacherId : '', observationDate, practice);
-                          // console.log('session id', row.id);
                         }}
                       />
                     </TableCell>

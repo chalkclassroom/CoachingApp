@@ -20,6 +20,7 @@ import {
 import ResultsList from './ResultsList';
 import ActionPlanList from '../ActionPlanList';
 import ActionPlanForPdf from './ActionPlanForPdf';
+import ListeningResultsPdf from './ListeningResultsPdf';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import * as Types from '../../constants/Types';
@@ -75,6 +76,18 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     timeline: Date
   }>>();
   const [checkedActionPlans, setCheckedActionPlans] = useState<Array<string>>([]);
+  const [checkedResults, setCheckedResults] = useState<{[id: string]: {
+    summary: boolean,
+    details: boolean,
+    trends: boolean
+  }}>({});
+  const [sessionIdPreview, setSessionIdPreview] = useState<string>();
+  const [selectionsPreview, setSelectionsPreview] = useState<{
+    summary: boolean,
+    details: boolean,
+    trends: boolean
+  }>();
+  const [datePreview, setDatePreview] = useState<Date>();
 
   const removeActionPlan = (id: string): void => {
     const newCheckedActionPlans = checkedActionPlans;
@@ -90,6 +103,32 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
   }
 
   /**
+   * @param {string} id
+   * @param {ResultTypeKey} resultType
+   */
+  const handleCheckResult = (id: string, resultType: ResultTypeKey): void => {
+    const newCheckedResults = checkedResults;
+    console.log('what are new checked results', checkedResults);
+    if (newCheckedResults[id]) {
+      if (newCheckedResults[id][resultType]) {
+        newCheckedResults[id][resultType] = false;
+      } else {
+        newCheckedResults[id][resultType] = true;
+      }
+    } else {
+      newCheckedResults[id] = {
+        summary: false,
+        details: false,
+        trends: false
+      };
+      newCheckedResults[id][resultType] = true;
+    }
+    // newCheckedActionPlans.push(id);
+    setCheckedResults(newCheckedResults);
+    console.log('new checked results', newCheckedResults)
+  }
+
+  /**
    * @param {Object} date
    * @return {Date}
    */
@@ -99,30 +138,53 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     return newDate
   }
 
-  const printDocument = async (practice: string, date: Date): Promise<string | void> => {
+  /* const saveAs = (uri, filename) => {
+    const link = document.createElement('a');
+    if (typeof link.download === 'string') {
+      link.href = uri;
+      link.download = filename;
+
+      // Firefox requires the link to be in the body
+      document.body.appendChild(link);
+
+      // simulate click
+      link.click();
+
+      // remove the link when done
+      document.body.removeChild(link);
+    } else {
+      window.open(uri);
+    }
+  } */
+
+  const printDocument = async (practice: string, date: Date, id: string): Promise<string | void> => {
     // console.log('teacher selected', teacherObject);
-    const input: HTMLElement = document.getElementById('divToPrint');
+    const input: HTMLElement = document.getElementById(id);
     // const input = document.createElement('div');
     // document.body.appendChild(actionPlanDocument);
     // const input = document.appendChild(actionPlanDocument);
     let base64data: string | ArrayBuffer | null = null;
     html2canvas(input, {
       onclone: function (clonedDoc) {
-          clonedDoc.getElementById('divToPrint').style.visibility = 'visible';
-          // clonedDoc.getElementById('divToPrint').style.width = '210mm';
-          // clonedDoc.getElementById('divToPrint').style.minHeight = '100mm';
-      }
+          clonedDoc.getElementById(id).style.visibility = 'visible';
+      },
+      // logging: true,
+      // letterRendering: 1,
+      // allowTaint: false,
+      // useCORS: true
     }).then((canvas) => {
+      console.log('canvas');
         const link = document.createElement("a");
         document.body.appendChild(link);
         link.download = "html_image.png";
         const imgData = canvas.toDataURL('image/png');
+        // saveAs(imgData, 'canvas.png');
         const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
         const imgProps= pdf.getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
         pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
-        // pdf.save("download.pdf");
+        pdf.save("download.pdf");
         const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
         const reader = new FileReader();
         reader.readAsDataURL(blobPDF);
@@ -132,28 +194,28 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
           if (base64data) {
             newBase64Data = (base64data as string).replace('data:application/pdf;base64,', '');
           }
+          console.log('data is', newBase64Data);
+          console.log('practice is', practice);
+          console.log('date is', date);
           props.addAttachment(newBase64Data, practice, date);
         }
-      }).then(() => {
+        // return base64data
+      })
+      /* .then(() => {
         return base64data
-      });
+      }); */
   }
 
-  const handleAttach = (practice: string, date: Date): void => {
-    printDocument(practice, date).then((data: string | void) => {
-      // console.log('here the data is', data);
-      if (data) {
-        // console.log('at this point', data, 'type', typeof data);
-        props.addAttachment(data, practice, date);
-      }
-    })
+  const handleAttach = (practice: string, date: Date, id: string): void => {
+    printDocument(practice, date, id)
   }
 
   /**
    * @param {string} actionPlanId
    * @param {string} teacherId
+   * @param {string} practice
    */
-  const handleChooseActionPlan = (actionPlanId: string, teacherId: string): void => {
+  const handleChooseActionPlan = (actionPlanId: string, teacherId: string, practice: string): void => {
     setAP(actionPlanId);
     setTeacher(teacherId);
     const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
@@ -209,7 +271,9 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
         setActionSteps(newActionStepsArray);
       }).then(() => {
         console.log('tool', tool);
-        handleAttach(tool, newDate);
+        console.log('practice', practice);
+        console.log('new date', newDate);
+        handleAttach(practice, newDate, 'apPdf');
         // setView('apPreview');
       })
       .catch(() => {
@@ -217,6 +281,36 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
       });
     })
     // console.log('handled choose action plan');
+  };
+
+  /**
+   * @param {string} actionPlanId
+   * @param {string} teacherId
+   * @param {string} practice
+   */
+  const handleAttachResults = (actionPlanId: string, teacherId: string, practice: string): void => {
+    const resultsKeys = Object.keys(checkedResults);
+    const loop = new Promise<void>((resolve, reject) => {
+      resultsKeys.forEach((id: string, index: number) => {
+        const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
+          return obj.id === teacherId
+        });
+        setTeacherObject(teacherData[0]);
+        setSessionIdPreview(id);
+        setSelectionsPreview({
+          summary: checkedResults[id].summary,
+          details: checkedResults[id].details,
+          trends: checkedResults[id].trends,
+        });
+        setDatePreview(new Date())
+        if (index === resultsKeys.length -1) {
+          resolve();
+        }
+      })
+    });
+    loop.then(() => {
+      handleAttach(practice, datePreview, 'resultsPdf');
+    })
   };
 
   /**
@@ -286,18 +380,48 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     // console.log('handled choose action plan');
   };
 
+  const handleViewResultPreview = (sessionId: string, teacherId: string, date: Date, tool: string): void => {
+    const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
+      return obj.id === teacherId
+    });
+    console.log('checked results', checkedResults[sessionId]);
+    setTeacherObject(teacherData[0]);
+    setSessionIdPreview(sessionId);
+    setSelectionsPreview({
+      summary: checkedResults[sessionId].summary,
+      details: checkedResults[sessionId].details,
+      trends: checkedResults[sessionId].trends,
+    });
+    setDatePreview(date);
+    setView('resultPreview')
+  }
+
   /**
    * @param {string} sessionId
    * @param {string} teacherId
    */
-  const handleChooseResults = (sessionId: string, teacherId: string): void => {
-    setTeacher(teacherId);
+  /* const handleViewListeningResults = (sessionId: string, teacherId: string): void => {
     const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
       return obj.id === teacherId
     });
+    let listening = 0;
+    let notListening = 0;
     setTeacherObject(teacherData[0]);
-    setView('resultPreview');
-  };
+    if (checkedResults[sessionId].summary === true) {
+      props.firebase.fetchListeningSummary(sessionId)
+      .then((summary: {listening: number, notListening: number}) => {
+        listening = summary.listening;
+        notListening = summary.notListening;
+      });
+    }
+    if (checkedResults[sessionId].summary === true) {
+      props.firebase.fetchListeningSummary(sessionId)
+      .then((summary: {listening: number, notListening: number}) => {
+        listening = summary.listening;
+        notListening = summary.notListening;
+      });
+    }
+  }; */
 
   return (
     <Dialog
@@ -431,7 +555,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     />
                     {teacherObject ? (
                       <div
-                      id="divToPrint"
+                      id="apPdf"
                       style={{
                         backgroundColor: '#ffffff',
                         width: '210mm',
@@ -489,6 +613,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                     <button onClick={(): void => handleAttach()}>Download</button>
                     <div
                       // id="divToPrint2"
+                      id="resultsPdf"
                       style={{
                         backgroundColor: '#ffffff',
                         width: '210mm',
@@ -497,30 +622,50 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                         marginRight: 'auto'
                       }}
                     >
-                      {/* <ActionPlanForPdf
-                        tool={tool}
-                        apGoal={apGoal}
-                        goalTimeline={goalTimeline}
-                        benefit={benefit}
-                        date={date}
-                        actionSteps={actionSteps}
+                      <ListeningResultsPdf
+                        sessionId={sessionIdPreview}
+                        selections={selectionsPreview}
+                        date={datePreview}
+                        firebase={props.firebase}
                         teacher={teacherObject}
-                      /> */}
-                      <Typography>
-                        graphs go here
-                      </Typography>
+                      />
                     </div>
                   </div>
                 ) : (
                   (props.recipientName && (props.results.length > 0)) ? (
+                    <div>
                     <ResultsList
                       results={props.results}
                       teacherId={props.recipientId}
-                      onClick={handleChooseResults}
+                      onClick={handleViewResultPreview}
                       checkedResults={props.checkedResults}
                       addResult={props.addResult}
                       removeResult={props.removeResult}
+                      handleCheckResult={handleCheckResult}
                     />
+                    {teacherObject && sessionIdPreview && selectionsPreview && datePreview ? (
+                      <div
+                      id="resultsPdf"
+                      style={{
+                        backgroundColor: '#ffffff',
+                        width: '210mm',
+                        minHeight: '101mm',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        // display: "none"
+                        visibility: 'hidden'
+                      }}
+                    >
+                      <ListeningResultsPdf
+                        sessionId={sessionIdPreview}
+                        selections={selectionsPreview}
+                        date={datePreview}
+                        firebase={props.firebase}
+                        teacher={teacherObject}
+                      />
+                    </div>
+                    ) : (null)}
+                    </div>
                   ) : (
                     <Typography variant="h5" align="center" style={{fontFamily: 'Arimo'}}>
                       {props.noResultsMessage}
@@ -537,8 +682,11 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
           <Button
             variant='contained'
             color='primary'
-            disabled={!props.attachmentList}
-            onClick={(): void => props.setIncludeAttachments(true)}
+            // disabled={!props.attachmentList}
+            onClick={(): void => {
+              props.setIncludeAttachments(true);
+              handleAttachResults('01', props.recipientId, 'listening')
+            }}
           >
             Attach
           </Button>

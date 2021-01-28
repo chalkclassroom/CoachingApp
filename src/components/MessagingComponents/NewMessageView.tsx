@@ -20,6 +20,7 @@ import DeleteDialog from './DeleteDialog';
 import AttachmentDialog from './AttachmentDialog';
 import { Alerts, ThemeOptions, Message, Attachment, SelectOption, TemplateOption, Email } from './MessagingTypes';
 import * as CryptoJS from 'crypto-js';
+import moment from 'moment';
 import ActionPlanForm from '../ActionPlanForm';
 
 
@@ -177,7 +178,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
     newAttachments.push({
       content: content,
-      filename: practice + 'Action Plan.pdf',
+      filename: practice + ' ' + moment(date).format('MM.DD.YYYY') + ' Action Plan.pdf',
       type: 'application/pdf',
       disposition: 'attachment'
     });
