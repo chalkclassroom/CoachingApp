@@ -496,6 +496,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         if (props.moveDraftToSent) {
           props.moveDraftToSent(email)
         }
+        props.setMenuOption('SENT');
       })
     })
   };
