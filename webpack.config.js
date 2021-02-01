@@ -3,6 +3,7 @@ const webpackMerge = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const SourceMapPlugin = require('webpack').SourceMapDevToolPlugin;
+const DefinePlugin = require('webpack').DefinePlugin;
 const modeConfiguration = mode => require(`./build-utils/webpack.${mode}`)(mode);
 module.exports = (env, argv) => {
     console.log(`mode is: ${argv.mode}`);
@@ -96,6 +97,9 @@ module.exports = (env, argv) => {
                 ]
             },
             plugins: [
+                new DefinePlugin({
+                    'process.env.USE_LOCAL_FUNCTIONS': process.env.REACT_APP_USE_LOCAL_FUNCTIONS === 'true'
+                }),
                 new HtmlWebpackPlugin({
                     template: "./public/template/index.html"
                 }),

@@ -59,17 +59,22 @@ const tables = {
  */
 
 exports.exportBqData = functions.https.onCall(async(context) => {
-    //SQL query to get number of checks for each item on checklist
-    const table = tables[context];
+    //use lookup table to support dynamic/parameterized table name, but
+    //sanitize the input. AFAIK you can't use 'params' for table names
+    const table = tables[context.tableName];
     if (!table){
-        return []
+        return ''
     }
-    const sqlQuery = `select * from cqrefpwa.observations.${table}`;
+    const sqlQuery = `select * from cqrefpwa.observations.${table} where sessionStart > @from and sessionEnd < @to `;
 
     const options = {
         query: sqlQuery,
         // Location must match that of the dataset(s) referenced in the query.
         location: 'US',
+        params: {
+            from: context.from,
+            to: context.to
+        }
     };
 
     const [job] = await bigquery.createQueryJob(options);
@@ -77,8 +82,8 @@ exports.exportBqData = functions.https.onCall(async(context) => {
 
     //returns [[{result}, {result},etc...]]
     const rows = await job.getQueryResults();
-    if (rows.length === 0){
-        return [];
+    if (rows.length === 0 || rows[0].length === 0){
+        return '';
     }
     const result = rows[0].map(r => JSON.flatten(r));
     const headers = Object.keys(result[0])
