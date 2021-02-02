@@ -1,5 +1,11 @@
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
+const Firestore = require("@google-cloud/firestore");
+const PROJECTID = "cqrefpwa";
+const COLLECTION_NAME = "observations";
+const firestore = new Firestore({
+    projectId: PROJECTID
+});
 
 const bigquery = new BigQuery();
 
@@ -58,13 +64,26 @@ const tables = {
  * @param {!express:Response} res HTTP response context.
  */
 
-exports.exportBqData = functions.https.onCall(async(context) => {
+exports.exportBqData = functions.https.onCall(async(data, context) => {
+    const role = await firestore.collection("users")
+        .doc(context.auth.uid)
+        .get()
+        .then(doc => doc.data().role)
+        .catch(error => console.error("Error getting cached document:", error));
+
+    if (role !== "admin"){
+        console.log(`User ${context.auth.uid} has role ${role} which is not admin`)
+        return '';
+    }
+
     //use lookup table to support dynamic/parameterized table name, but
     //sanitize the input. AFAIK you can't use 'params' for table names
-    const table = tables[context.tableName];
+    const table = tables[data.tableName];
     if (!table){
         return ''
-    }
+    };
+
+
     const sqlQuery = `select * from cqrefpwa.observations.${table} where sessionStart > @from and sessionEnd < @to `;
 
     const options = {
@@ -72,8 +91,8 @@ exports.exportBqData = functions.https.onCall(async(context) => {
         // Location must match that of the dataset(s) referenced in the query.
         location: 'US',
         params: {
-            from: context.from,
-            to: context.to
+            from: data.from,
+            to: data.to
         }
     };
 

@@ -18,6 +18,7 @@ import AppBar from '../../../components/AppBar'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import moment from 'moment'
 import DateFnsUtils from '@date-io/date-fns'
+import { connect } from 'react-redux'
 
 interface Props {
     isAdmin: boolean
@@ -118,8 +119,21 @@ const StyledFormControl = withStyles(() => ({
 /**
  * @return {ReactNode}
  */
-const AdminPage = (): React.ReactNode => {
+const AdminPage = ({isAdmin = false}): React.ReactNode => {
     const classes = useStyles()
+    if (!isAdmin){
+        return <div className={classes.root}>
+            <FirebaseContext.Consumer>
+                {(firebase: Types.FirebaseAppBar | null): React.ReactNode => <AppBar firebase={firebase} />}
+            </FirebaseContext.Consumer>
+            <Grid container spacing={2} className={classes.container}>
+                <Grid item xs={12}>
+                    <Typography>You must be an admin to access this page.</Typography>
+                </Grid>
+            </Grid>
+        </div>
+    }
+
     const [loading, setLoading] = React.useState(false)
     const [selectedTables, setSelectedTables] = React.useState([])
     const [from, setFrom] = React.useState(moment().add(-7, 'days'))
@@ -229,4 +243,5 @@ const AdminPage = (): React.ReactNode => {
     </div>
 }
 
-export default AdminPage
+
+export default connect(state => ({isAdmin: state.coachState.role === 'admin'}))(AdminPage)
