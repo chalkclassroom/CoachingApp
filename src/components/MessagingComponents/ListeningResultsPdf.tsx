@@ -5,8 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import ListeningSummaryChart from '../ListeningComponents/ResultsComponents/ListeningSummaryChart';
 import ListeningDetailsChart from '../ListeningComponents/ResultsComponents/ListeningDetailsChart';
 import ListeningTrendsGraph from '../ListeningComponents/ResultsComponents/ListeningTrendsGraph';
-import ListeningIconImage from '../../assets/images/ListeningIconImage.svg';
-import LogoImage from '../../assets/images/LogoImage.svg';
+import ListeningtoChildrenImage from '../../assets/images/ListeningtoChildrenImage.png';
+import LogoImage from '../../assets/images/LogoImage.png';
 import CHALKLogoGIF from '../../assets/images/CHALKLogoGIF.gif';
 import moment from 'moment';
 import * as Types from '../../constants/Types';
@@ -191,11 +191,11 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
             </Grid>
             <Grid item xs={2}>
               <Grid container direction="row" justify="flex-end" alignItems="center">
-              <img
-                src={ListeningIconImage}
-                alt="Listening to Children"
-                width='50%'
-              />
+                <img
+                  src={ListeningtoChildrenImage}
+                  alt="Listening to Children"
+                  width='50%'
+                />
               </Grid>
             </Grid>
           </Grid>
