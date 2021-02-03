@@ -1940,8 +1940,7 @@ class Firebase {
       this.query = this.db.collection("observations")
         .where("observedBy", "==", "/user/" + this.auth.currentUser.uid)
         .where("teacher", "==", "/user/" + teacherId)
-        // why doesn't this work??
-        // .orderBy("start", "desc")
+        .orderBy("start", "desc")
         .limit(100)
       return this.query.get()
         .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
@@ -1961,8 +1960,8 @@ class Firebase {
           })
           return idArr;
         })
-        .catch(() => {
-          console.log('unable to retrieve observations')
+        .catch((error) => {
+          console.log('unable to retrieve observations', error)
         })
       }
   }
