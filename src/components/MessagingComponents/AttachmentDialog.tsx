@@ -71,7 +71,6 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
   const [date, setDate] = useState<Date>();
   const [actionSteps, setActionSteps] = useState<Array<{
     step: string,
-    materials: string,
     person: string,
     timeline: Date
   }>>();
@@ -247,20 +246,17 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
       setDate(newDate);
       const newActionStepsArray: Array<{
         step: string,
-        materials: string,
         person: string,
         timeline: Date
       }> = [];
       props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{
         step: string,
-        materials: string,
         person: string,
         timeline: firebase.firestore.Timestamp
       }>) => {
         actionStepsData.forEach((value, index) => {
           newActionStepsArray[index] = {
             step: value.step,
-            materials: value.materials,
             person: value.person,
             timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
               value.timeline.toDate() :
@@ -348,20 +344,17 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
       setDate(newDate);
       const newActionStepsArray: Array<{
         step: string,
-        materials: string,
         person: string,
         timeline: Date
       }> = [];
       props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{
         step: string,
-        materials: string,
         person: string,
         timeline: firebase.firestore.Timestamp
       }>) => {
         actionStepsData.forEach((value, index) => {
           newActionStepsArray[index] = {
             step: value.step,
-            materials: value.materials,
             person: value.person,
             timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
               value.timeline.toDate() :

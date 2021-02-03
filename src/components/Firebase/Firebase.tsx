@@ -1774,7 +1774,6 @@ class Firebase {
     actionPlansRef.set(data).then(() => {
       const actionStepsRef = actionPlansRef.collection("actionSteps").doc('0');
       actionStepsRef.set({
-        materials: '',
         person: '',
         step: '',
         timeline: null
@@ -1797,7 +1796,6 @@ class Firebase {
     const actionStepsRef = this.db.collection('actionPlans').doc(actionPlanId).collection("actionSteps").doc(index);
     actionStepsRef.set({
       step: '',
-      materials: '',
       person: '',
       timeline: null
     }).then(() => {
@@ -2021,7 +2019,6 @@ class Firebase {
    */
   getActionSteps = async (actionPlanId: string): Promise<Array<{
     step: string,
-    materials: string,
     person: string,
     timeline: firebase.firestore.Timestamp
   }> | void> => {
@@ -2030,14 +2027,12 @@ class Firebase {
       .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
         const actionStepsArr: Array<{
           step: string,
-          materials: string,
           person: string,
           timeline: firebase.firestore.Timestamp
         }> = [];
         querySnapshot.forEach(doc =>
           actionStepsArr.push({
             step: doc.data().step,
-            materials: doc.data().materials,
             person: doc.data().person,
             timeline: doc.data().timeline
           })
@@ -2082,7 +2077,6 @@ class Firebase {
    * @param {string} actionPlanId
    * @param {string} index
    * @param {string} step
-   * @param {string} materials
    * @param {string} person
    * @param {Date | null} timeline
    */
@@ -2090,14 +2084,12 @@ class Firebase {
     actionPlanId: string,
     index: string,
     step: string,
-    materials: string,
     person: string,
     timeline: Date | null
   ): Promise<void> => {
     const actionStepsRef = this.db.collection("actionPlans").doc(actionPlanId).collection("actionSteps").doc(index);
     return actionStepsRef.update({
       step: step,
-      materials: materials,
       person: person,
       timeline: timeline ? firebase.firestore.Timestamp.fromDate(timeline) : firebase.firestore.Timestamp.fromDate(new Date())
     })

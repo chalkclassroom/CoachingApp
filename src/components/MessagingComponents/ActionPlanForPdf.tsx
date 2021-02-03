@@ -31,7 +31,6 @@ interface Props {
   date: Date | undefined,
   actionSteps: Array<{
     step: string,
-    materials: string,
     person: string,
     timeline: Date
   }> | undefined,
@@ -253,7 +252,7 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
           </Grid>
           <Grid item xs={12} style={{width: '100%', height: '38vh'}}>
             <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
-              <Grid item style={{width: '38%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+              <Grid item style={{width: '48%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                 <Grid container direction="column" justify="center" style={{width: '100%', border: '1px solid orange'}}>
                   <Grid item style={{border: '1px solid blue'}}>
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -298,48 +297,7 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item style={{width: '19%', border: '2px solid #009365', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
-                <Grid container direction="column" style={{width: '100%'}}>
-                  <Grid item>
-                    <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
-                      <Grid item xs={11}>
-                        <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
-                          Materials
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={1}>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
-                      return(
-                        <TextField
-                          key={index}
-                          id={"materials" + index.toString()}
-                          name={"materials" + index.toString()}
-                          type="text"
-                          value={(index + 1) + '.  ' + value.materials}
-                          margin="normal"
-                          variant="standard"
-                          fullWidth
-                          multiline
-                          rowsMax={4}
-                          rows={4}
-                          className={classes.textField}
-                          InputProps={{
-                            disableUnderline: true,
-                            readOnly: true,
-                            style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                          }}
-                          style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
-                        />
-                      );
-                    }) : null}
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item style={{width: '19%', border: '2px solid #ffd300', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+              <Grid item style={{width: '28%', border: '2px solid #ffd300', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                 <Grid container direction="column" style={{width: '100%'}}>
                   <Grid item>
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
