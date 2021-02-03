@@ -192,6 +192,14 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }]) */
   }
 
+  const removeAttachment = (position: number): void => {
+    const newAttachments = attachments;
+    if (newAttachments) {
+      newAttachments.splice(position, 1);
+      setAttachments(newAttachments);
+    }
+  }
+
   const sendMail = async (): Promise<void> => {
     if (recipient === null) {
       setAlertEnum(Alerts.NO_RECIPIENT);	
@@ -606,7 +614,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 </Grid>
               </Grid>
               <Grid item style={{width: '100%', height: '50vh', paddingTop: '1em', paddingBottom: '1em'}}>
-                <EmailBody email={email} setEmail={setEmail} readOnly={props.readOnly} />
+                <EmailBody
+                  email={email}
+                  setEmail={setEmail}
+                  attachments={attachments}
+                  handleDelete={removeAttachment}
+                  readOnly={props.readOnly}
+                />
               </Grid>
               {props.readOnly ? (null) : (
                 <Grid item>
