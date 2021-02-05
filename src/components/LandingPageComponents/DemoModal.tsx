@@ -95,7 +95,7 @@ class DemoModal extends React.Component<Props, State> {
                 </IconButton>
               </Grid>
             </Grid>
-            <DemoVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/demo.mp4?alt=media&token=9121566b-bf61-4887-a903-2a8122e0ed02'} />
+            <DemoVideo videoUrl={'https://firebasestorage.googleapis.com/v0/b/cqrefpwa.appspot.com/o/Homescreen%20Demo%20Video.mp4?alt=media&token=92cd9d44-b8e0-4f81-b7d5-efd435d0671a'} />
           </div>
         </Modal>
       </div>
