@@ -33,7 +33,8 @@ interface Props {
   handleChooseActionPlan(actionPlanId: string, teacherId: string, practice: string): void,
   checkedActionPlans: Array<string>,
   addActionPlan(id: string): void,
-  removeActionPlan(id: string): void
+  removeActionPlan(id: string): void,
+  addActionPlanAttachment?(actionPlanId: string, teacherId: string): void
 }
 
 interface State {
@@ -295,6 +296,9 @@ class ActionPlanList extends React.Component<Props, State>{
     }
   }
 
+  /**
+   * @param {string} id
+   */
   handleCheck = (id: string): void => {
     const newChecked = this.state.checked;
     const index = newChecked.indexOf(id);
@@ -362,7 +366,8 @@ class ActionPlanList extends React.Component<Props, State>{
                     <ListItem onClick={(): void => {this.handleCheck(row.id)}}>
                       <ListItemIcon>
                         <Checkbox checked = {this.state.checked.includes(row.id)} onClick={(): void => {
-                          this.props.handleChooseActionPlan(row.id, this.props.teacherId, row.practice);
+                          // this.props.handleChooseActionPlan(row.id, this.props.teacherId, row.practice);
+                          this.props.addActionPlanAttachment(row.id, this.props.teacherId);
                         }} />
                       </ListItemIcon>
                     </ListItem>

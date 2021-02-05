@@ -21,7 +21,12 @@ import AttachmentDialog from './AttachmentDialog';
 import { Alerts, ThemeOptions, Message, Attachment, SelectOption, TemplateOption, Email } from './MessagingTypes';
 import * as CryptoJS from 'crypto-js';
 import moment from 'moment';
-import ActionPlanForm from '../ActionPlanForm';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import ActionPlanForPdf from './ActionPlanForPdf';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import * as Types from '../../constants/Types';
 
 
 interface NewMessageViewProps {
@@ -43,7 +48,8 @@ interface NewMessageViewProps {
   readOnly?: boolean;
   moveDraftToSent?(email: Email): void;
   setMenuOption(value: React.SetStateAction<"SENT" | "DRAFTS" | "NEW_MESSAGE">): void;
-  removeFromDrafts?(emailId: string): void
+  removeFromDrafts?(emailId: string): void;
+  teacherList: Array<Types.Teacher>;
 };
 
 interface ResultType {
@@ -138,6 +144,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
   const [attachments, setAttachments] = useState<Array<{content: string, filename: string, type: string, disposition: string}>>();
+  const [actionPlanAttachments, setActionPlanAttachments] = useState<Array<string>>();
+  const [resultsAttachments, setResultsAttachments] = useState<Array<{
+    sessionId: string,
+    teacherId: string
+  }>>();
   const [includeAttachments, setIncludeAttachments] = useState(true);
   const [checkedResults, setCheckedResults] = useState<{[id: string]: {
     summary: boolean,
@@ -146,6 +157,19 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   }}>({});
   const [templateDialog, setTemplateDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
+
+  const [tool, setTool] = useState('');
+  const [apGoal, setApGoal] = useState('');
+  const [goalTimeline, setGoalTimeline] = useState<Date>();
+  const [benefit, setBenefit] = useState('');
+  const [date, setDate] = useState<Date>();
+  const [actionSteps, setActionSteps] = useState<Array<{
+    step: string,
+    person: string,
+    timeline: Date
+  }>>();
+  const [renderActionPlan, setRenderActionPlan] = useState(false);
+  const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
 
   // get the user's name
   useEffect(() => {
@@ -165,9 +189,24 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         label: props.draft.recipientName
       });
     }
-  })
+  });
+
+  const addActionPlanAttachment = (actionPlanId: string): void => {
+    const newActionPlanAttachments = actionPlanAttachments;
+    if (newActionPlanAttachments) {
+      if (newActionPlanAttachments.includes(actionPlanId)) {
+        const index = newActionPlanAttachments.indexOf(actionPlanId);
+        newActionPlanAttachments.splice(index, 1);
+      } else {
+        newActionPlanAttachments.push(actionPlanId);
+      }
+      setActionPlanAttachments(newActionPlanAttachments);
+    } else {
+      setActionPlanAttachments([actionPlanId]);
+    }
+  }
   
-  const addAttachment = (content: string, practice: string, date: Date): void => {
+  const addAttachment = async (content: string, practice: string, date: Date): void => {
     // console.log('this is the content', content);
     console.log('practice and date', practice, date);
     console.log('attachments in addattachment', attachments);
@@ -183,7 +222,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       disposition: 'attachment'
     });
     setAttachments(newAttachments);
-    console.log('ehre are the attachments', newAttachments);
+    console.log('ehre are the attachments', attachments);
     /* setAttachments([{
       content: content,
       filename: 'attachment.pdf',
@@ -198,6 +237,155 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       newAttachments.splice(position, 1);
       setAttachments(newAttachments);
     }
+  }
+
+  /**
+   * @param {Object} date
+   * @return {Date}
+   */
+  const changeDateType = (date: {seconds: number, nanoseconds: number}): Date => {
+    const newDate = new Date(0);
+    newDate.setUTCSeconds(date.seconds);
+    return newDate
+  }
+
+  const functionForType = (base64string: string, practice: string, date: Date) => {
+    return;
+  }
+
+  const printDocument = async (practice: string, date: Date, id: string, addToAttachmentList: typeof functionForType ): Promise<void> => {
+    const input: HTMLElement = document.getElementById(id);
+    let base64data: string | ArrayBuffer | null = null;
+    let newBase64Data = '';
+    html2canvas(input, {
+      onclone: function (clonedDoc) {
+        clonedDoc.getElementById(id).style.visibility = 'visible';
+      },
+    }).then((canvas) => {
+      console.log('canvas');
+        const link = document.createElement("a");
+        document.body.appendChild(link);
+        link.download = "html_image.png";
+        const imgData = canvas.toDataURL('image/png');
+        // saveAs(imgData, 'canvas.png');
+        const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
+        const imgProps= pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
+        pdf.save("download.pdf");
+        const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
+        const reader = new FileReader();
+        reader.readAsDataURL(blobPDF);
+        reader.onloadend = function(): void {
+          base64data = reader.result;
+          // let newBase64Data = '';
+          if (base64data) {
+            newBase64Data = (base64data as string).replace('data:application/pdf;base64,', '');
+          }
+          console.log('data is', newBase64Data);
+          console.log('practice is', practice);
+          console.log('date is', date);
+          addToAttachmentList(newBase64Data, practice, date);
+        }
+      })
+  }
+
+  const attachActionPlan = (actionPlanId: string, addToAttachmentList: typeof functionForType): void => {
+    firebase.getAPInfo(actionPlanId).then((actionPlanData: {
+      sessionId: string,
+      goal: string,
+      goalTimeline: firebase.firestore.Timestamp,
+      benefit: string,
+      dateModified: {seconds: number, nanoseconds: number},
+      dateCreated: {seconds: number, nanoseconds: number},
+      coach: string,
+      teacher: string,
+      tool: string
+    }) => {
+      const newDate = changeDateType(actionPlanData.dateModified);
+      setTool(actionPlanData.tool);
+      setApGoal(actionPlanData.goal);
+      if (actionPlanData.goalTimeline && (typeof actionPlanData.goalTimeline !== 'string')) {
+        setGoalTimeline(actionPlanData.goalTimeline.toDate());
+      } else {
+        setGoalTimeline(new Date());
+      }
+      setBenefit(actionPlanData.benefit);
+      setDate(newDate);
+      const newActionStepsArray: Array<{
+        step: string,
+        person: string,
+        timeline: Date
+      }> = [];
+      props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{
+        step: string,
+        person: string,
+        timeline: firebase.firestore.Timestamp
+      }>) => {
+        actionStepsData.forEach((value, index) => {
+          newActionStepsArray[index] = {
+            step: value.step,
+            person: value.person,
+            timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
+              value.timeline.toDate() :
+              new Date(),
+          };
+        })
+      }).then(() => {
+        setActionSteps(newActionStepsArray);
+      }).then(() => {
+        setRenderActionPlan(true);
+      }).then(async () => {
+        printDocument(actionPlanData.tool, newDate, 'apPdf', addToAttachmentList);
+      }).then(() => {
+        setRenderActionPlan(false);
+        setTool('');
+        setApGoal('');
+        setGoalTimeline(undefined);
+        setBenefit('');
+        setDate(undefined)
+        setActionSteps([]);
+      })
+      .catch(() => {
+        console.log('error retrieving action steps');
+      });
+    })
+  }
+
+  const asyncForEach = async (array: Array<string>, callback: unknown): Promise<void> => {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+  }
+
+  const waitFor = (ms: number): Promise<void> => new Promise(r => setTimeout(r, ms));
+
+  const attachAll = async (): Promise<void> => {
+    setActionPlanDisplay(false)
+    let newAttachments: Array<{content: string, filename: string, type: string, disposition: string}> = [];
+    const addToAttachmentList = (base64string: string, practice: string, date: Date): void => {
+      if (attachments) {
+        newAttachments = attachments;
+      }
+      newAttachments.push({
+        content: base64string,
+        filename: practice + ' ' + moment(date).format('MM.DD.YYYY') + ' Action Plan.pdf',
+        type: 'application/pdf',
+        disposition: 'attachment'
+      });
+    }
+    if (actionPlanAttachments) {
+      await asyncForEach(actionPlanAttachments, async (actionPlanId: string) => {
+        await waitFor(10000);
+        if (actionPlanAttachments) {
+          attachActionPlan(actionPlanId, addToAttachmentList);
+        }
+      }).then(() => {
+        setAttachments(newAttachments);
+      })
+    }
+    console.log('Done');
   }
 
   const sendMail = async (): Promise<void> => {
@@ -425,6 +613,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 
   const recipientSelected = (newRecipient: {value: string, id: string, label: string}): void => {
     setRecipient(newRecipient);
+    const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
+      return obj.id === newRecipient.id
+    });
+    setTeacherObject(teacherData[0]);
     firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{
       id: string,
       date: {
@@ -561,6 +753,32 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         handleYes={(): void => handleDelete()}
         handleNo={(): void => setDeleteDialog(false)}
       />
+      {renderActionPlan ? (
+        <div
+          id="apPdf"
+          style={{
+            backgroundColor: '#ffffff',
+            width: '210mm',
+            minHeight: '100mm',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            // display: "none"
+            visibility: 'hidden',
+            position: 'fixed',
+            right: -1000
+          }}
+        >
+          <ActionPlanForPdf
+            tool={tool}
+            apGoal={apGoal}
+            goalTimeline={goalTimeline}
+            benefit={benefit}
+            date={date}
+            actionSteps={actionSteps}
+            teacher={teacherObject}
+          />
+        </div>
+      ) : (null)}
       <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%'}}>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
@@ -648,8 +866,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           setIncludeAttachments={(value: boolean): void => {
                             setIncludeAttachments(value)
                           }}
+                          attachAll={attachAll}
                           actionPlans={actionPlans}
                           noActionPlansMessage={noActionPlansMessage}
+                          addActionPlanAttachment={addActionPlanAttachment}
                           results={observations}
                           checkedResults={checkedResults}
                           addResult={addResult}
@@ -690,4 +910,15 @@ NewMessageView.propTypes = {
   removeFromDrafts: PropTypes.func.isRequired
 }
 
-export default NewMessageView;
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherList: Array<Types.Teacher>
+} => {
+  return {
+    teacherList: state.teacherListState.teachers
+  };
+};
+
+export default compose(connect(
+  mapStateToProps,
+  null
+), NewMessageView);

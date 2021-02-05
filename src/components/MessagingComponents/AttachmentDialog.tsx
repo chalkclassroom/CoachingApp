@@ -47,8 +47,10 @@ interface AttachmentDialogProps {
   teacherList: Array<Types.Teacher>;
   addAttachment(content: string, practice: string, date: Date): void;
   setIncludeAttachments(value: boolean): void;
+  addActionPlanAttachment(actionPlanId: string): void;
   noActionPlansMessage: string;
   noResultsMessage: string;
+  attachAll(): void;
 }
 
 interface ResultType {
@@ -87,6 +89,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
     trends: boolean
   }>();
   const [datePreview, setDatePreview] = useState<Date>();
+  const [selectedActionPlanIds, setSelectedActionPlanIds] = useState<Array<string>>([]);
 
   const removeActionPlan = (id: string): void => {
     const newCheckedActionPlans = checkedActionPlans;
@@ -545,6 +548,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                       addActionPlan={addActionPlan}
                       removeActionPlan={removeActionPlan}
                       handleChooseActionPlan={handleChooseActionPlan}
+                      addActionPlanAttachment={props.addActionPlanAttachment}
                     />
                     {teacherObject ? (
                       <div
@@ -678,7 +682,8 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
             // disabled={!props.attachmentList}
             onClick={(): void => {
               props.setIncludeAttachments(true);
-              handleAttachResults('01', props.recipientId, 'listening')
+              handleAttachResults('01', props.recipientId, 'listening');
+              props.attachAll();
             }}
           >
             Attach
@@ -693,7 +698,9 @@ AttachmentDialog.propTypes = {
   addAttachment: PropTypes.func.isRequired,
   addResult: PropTypes.func.isRequired,
   removeResult: PropTypes.func.isRequired,
-  setIncludeAttachments: PropTypes.func.isRequired
+  setIncludeAttachments: PropTypes.func.isRequired,
+  addActionPlanAttachment: PropTypes.func.isRequired,
+  attachAll: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state: Types.ReduxState): {
