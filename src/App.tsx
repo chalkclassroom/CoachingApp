@@ -43,6 +43,7 @@ import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningT
 import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
 import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
 import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage';
+import AdminPage from './views/protected/AdminViews/AdminPage';
 import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
 import TrainingPage from './views/protected/TrainingPage';
@@ -117,9 +118,10 @@ interface Props {
       onAuthStateChanged(arg: any): firebase.User | null
     },
     getCoachFirstName(): Promise<string>,
+    getUserRole(): Promise<string>,
     getUnlockedSections(): Promise<Array<number>>
   },
-  getCoach(name: string): void,
+  getCoach(name: string, role: string): void,
   getUnlocked(unlocked: Array<number>): void
 }
 
@@ -150,11 +152,14 @@ class App extends React.Component<Props, State> {
     this.removeListener = this.props.firebase.auth.onAuthStateChanged((user: firebase.User) => {
       if (user) {
         this.props.firebase.getCoachFirstName().then((name: string) => {
-          this.props.getCoach(name);
-          this.setState({
-            auth: true,
-            loading: false
-          });
+          this.props.firebase.getUserRole().then((role: string) => {
+            this.props.getCoach(name, role);
+            this.setState({
+              auth: true,
+              loading: false
+            });
+          })
+
         });
         this.props.firebase.getUnlockedSections().then((unlocked: Array<number>) => {
           this.props.getUnlocked(unlocked);
@@ -485,6 +490,12 @@ class App extends React.Component<Props, State> {
               path="/LevelOfInstructionResults"
               component={LevelOfInstructionResultsPage}
             />
+            <PrivateRoute
+                auth={this.state.auth}
+                path="/Admin"
+                component={AdminPage}
+            />
+
             <Route render={(): React.ReactElement => <h3>No Match</h3>} />
           </Switch>
         </MuiThemeProvider>

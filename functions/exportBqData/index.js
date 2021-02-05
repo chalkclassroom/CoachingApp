@@ -1,5 +1,11 @@
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
+const Firestore = require("@google-cloud/firestore");
+const PROJECTID = "cqrefpwa";
+const COLLECTION_NAME = "observations";
+const firestore = new Firestore({
+    projectId: PROJECTID
+});
 
 const bigquery = new BigQuery();
 
@@ -58,18 +64,36 @@ const tables = {
  * @param {!express:Response} res HTTP response context.
  */
 
-exports.exportBqData = functions.https.onCall(async(context) => {
-    //SQL query to get number of checks for each item on checklist
-    const table = tables[context];
-    if (!table){
-        return []
+exports.exportBqData = functions.https.onCall(async(data, context) => {
+    const role = await firestore.collection("users")
+        .doc(context.auth.uid)
+        .get()
+        .then(doc => doc.data().role)
+        .catch(error => console.error("Error getting cached document:", error));
+
+    if (role !== "admin"){
+        console.log(`User ${context.auth.uid} has role ${role} which is not admin`)
+        return '';
     }
-    const sqlQuery = `select * from cqrefpwa.observations.${table}`;
+
+    //use lookup table to support dynamic/parameterized table name, but
+    //sanitize the input. AFAIK you can't use 'params' for table names
+    const table = tables[data.tableName];
+    if (!table){
+        return ''
+    };
+
+
+    const sqlQuery = `select * from cqrefpwa.observations.${table} where sessionStart > @from and sessionEnd < @to `;
 
     const options = {
         query: sqlQuery,
         // Location must match that of the dataset(s) referenced in the query.
         location: 'US',
+        params: {
+            from: data.from,
+            to: data.to
+        }
     };
 
     const [job] = await bigquery.createQueryJob(options);
@@ -77,8 +101,8 @@ exports.exportBqData = functions.https.onCall(async(context) => {
 
     //returns [[{result}, {result},etc...]]
     const rows = await job.getQueryResults();
-    if (rows.length === 0){
-        return [];
+    if (rows.length === 0 || rows[0].length === 0){
+        return '';
     }
     const result = rows[0].map(r => JSON.flatten(r));
     const headers = Object.keys(result[0])
