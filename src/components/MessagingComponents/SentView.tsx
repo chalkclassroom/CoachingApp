@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import * as PropTypes from 'prop-types';
 import { Email } from './MessagingTypes';
 import NewMessageView from './NewMessageView';
-import DraftList from './DraftList';
+import EmailList from './EmailList';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -44,7 +44,7 @@ const SentView: React.FC<SentViewProps> = (props: SentViewProps) => {
           </Grid>
         </Grid>
       ) : (
-        <DraftList emails={props.emails} onClick={onClick} sent={true} />
+        <EmailList emails={props.emails} onClick={onClick} sent={true} />
       )}
     </div>
   );

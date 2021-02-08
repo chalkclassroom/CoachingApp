@@ -9,7 +9,9 @@ import {
   TableCell,
   TableHead,
   TableBody,
-  TableSortLabel
+  TableSortLabel,
+  TableContainer,
+  TablePagination
 } from '@material-ui/core';
 import moment from 'moment';
 import { Email } from './MessagingTypes';
@@ -152,9 +154,9 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
 }
 
 /**
- * @class DraftList
+ * @class EmailList
  */
-class DraftList extends React.Component<Props, State>{
+class EmailList extends React.Component<Props, State>{
   /**
    * @param {Props} props
    */
@@ -165,7 +167,7 @@ class DraftList extends React.Component<Props, State>{
       result: [],
       order: 'desc',
       orderBy: 'dateModified',
-      rowsPerPage: 5,
+      rowsPerPage: 10,
       page: 0,
       selected: []
     }
@@ -181,6 +183,22 @@ class DraftList extends React.Component<Props, State>{
     this.setState({ orderBy: property });
   };
 
+  /**
+   * @param {MouseEvent<HTMLButtonElement, MouseEvent> | null} event
+   * @param {number} newPage
+   */
+  handleChangePage = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number): void => {
+    this.setState({page: newPage});
+  };
+
+  /**
+   * @param {ChangeEvent<HTMLInputElement>} event
+   */
+  handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    this.setState({rowsPerPage: (parseInt(event.target.value, 10))});
+    this.setState({page: 0 });
+  };
+
   static propTypes = {
     emails: PropTypes.array
   }
@@ -191,57 +209,68 @@ class DraftList extends React.Component<Props, State>{
   render(): React.ReactNode {
     const isSelected = (id: string): boolean => this.state.selected.includes(id);
     return (
-      <Table style={{width: '100%', border: '1px solid #a9a9a9', padding: '1em', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
-        <TableHeadSort
-          order={this.state.order}
-          orderBy={this.state.orderBy}
-          onRequestSort={this.handleRequestSort}
-          sent={this.props.sent}
-        />
-        <TableBody>
-          {this.props.emails ? (
-            stableSort(this.props.emails, getComparator(this.state.order, this.state.orderBy))
-            // to limit number on each page
-            // .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-            .map((row: Email, index: number) => {
-              const modified = row.dateModified.toDate();
-              const isItemSelected = isSelected(row.id);
-              return (
-                <TableRow
-                  key={index}
-                  selected={isItemSelected}
-                  onClick={(): void => this.props.onClick(row)}
-                >
-                  <TableCell style={{padding: '0.5em', width: '40%'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      {row.recipientName}
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{padding: '0.5em', width: '40%'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      <Grid container direction="row" justify="flex-start" alignItems="center">
-                        <Grid item xs={9}>
-                          <Typography variant="h6" style={{fontFamily: 'Arimo', color: row.subject ? 'black' : 'gray', paddingRight: '0.2em'}}>
-                            {row.subject ? row.subject : '(no subject)'}
-                          </Typography>
+      <TableContainer>
+        <Table style={{width: '100%', border: '1px solid #a9a9a9', padding: '1em', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+          <TableHeadSort
+            order={this.state.order}
+            orderBy={this.state.orderBy}
+            onRequestSort={this.handleRequestSort}
+            sent={this.props.sent}
+          />
+          <TableBody>
+            {this.props.emails ? (
+              stableSort(this.props.emails, getComparator(this.state.order, this.state.orderBy))
+              // to limit number on each page
+              .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+              .map((row: Email, index: number) => {
+                const modified = row.dateModified.toDate();
+                const isItemSelected = isSelected(row.id);
+                return (
+                  <TableRow
+                    key={index}
+                    selected={isItemSelected}
+                    onClick={(): void => this.props.onClick(row)}
+                  >
+                    <TableCell style={{padding: '0.5em', width: '40%'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        {row.recipientName}
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{padding: '0.5em', width: '40%'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        <Grid container direction="row" justify="flex-start" alignItems="center">
+                          <Grid item xs={9}>
+                            <Typography variant="h6" style={{fontFamily: 'Arimo', color: row.subject ? 'black' : 'gray', paddingRight: '0.2em'}}>
+                              {row.subject ? row.subject : '(no subject)'}
+                            </Typography>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{padding: '0.5em', width: '20%'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      {moment(modified).format('MM/DD/YYYY')}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              )
-            })
-          ): (null)}
-        </TableBody>
-      </Table>
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{padding: '0.5em', width: '20%'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        {moment(modified).format('MM/DD/YYYY')}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            ): (null)}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={this.props.emails ? this.props.emails.length : 0}
+          rowsPerPage={this.state.rowsPerPage}
+          page={this.state.page}
+          onChangePage={this.handleChangePage}
+          onChangeRowsPerPage={this.handleChangeRowsPerPage}
+        />
+      </TableContainer>
     );
   }
 }
 
-DraftList.contextType = FirebaseContext;
-export default DraftList;
+EmailList.contextType = FirebaseContext;
+export default EmailList;

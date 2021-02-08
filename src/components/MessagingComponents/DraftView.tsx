@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import * as PropTypes from 'prop-types';
 import { Email } from './MessagingTypes';
 import NewMessageView from './NewMessageView';
-import DraftList from './DraftList';
+import EmailList from './EmailList';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -46,7 +46,7 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
           </Grid>
         </Grid>
       ) : (
-        <DraftList emails={props.drafts} onClick={onClick} />
+        <EmailList emails={props.drafts} onClick={onClick} />
       )}
     </div>
   );
