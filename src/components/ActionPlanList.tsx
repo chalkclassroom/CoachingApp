@@ -10,6 +10,8 @@ import {
   TableHead,
   TableBody,
   TableSortLabel,
+  TableContainer,
+  TablePagination,
   Checkbox,
   ListItem,
   ListItemIcon
@@ -312,6 +314,22 @@ class ActionPlanList extends React.Component<Props, State>{
     this.setState({checked: newChecked});
   }
 
+  /**
+   * @param {MouseEvent<HTMLButtonElement, MouseEvent> | null} event
+   * @param {number} newPage
+   */
+  handleChangePage = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number): void => {
+    this.setState({page: newPage});
+  };
+
+  /**
+   * @param {ChangeEvent<HTMLInputElement>} event
+   */
+  handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    this.setState({rowsPerPage: (parseInt(event.target.value, 10))});
+    this.setState({page: 0 });
+  };
+
   static propTypes = {
     actionPlans: PropTypes.array,
     onClick: PropTypes.func.isRequired
@@ -323,236 +341,247 @@ class ActionPlanList extends React.Component<Props, State>{
   render(): React.ReactNode {
     const isSelected = (id: string): boolean => this.state.selected.includes(id);
     return (
-      <Table style={{width: '100%', border: '1px solid #a9a9a9', padding: '1em', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
-        <TableHeadSort
-          order={this.state.order}
-          orderBy={this.state.orderBy}
-          onRequestSort={this.handleRequestSort}
-          actionPlans={this.props.actionPlans ? true : false}
-        />
-        <TableBody>
-          {this.state.result ? (this.props.actionPlans ? (
-            stableSort(this.props.actionPlans, getComparator(this.state.order, this.state.orderBy))
-            // to limit number on each page
-            // .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-            .map((row: {
-              id: string,
-              date: {seconds: number, nanoseconds: number},
-              practice: string,
-              achieveBy: firebase.firestore.Timestamp,
-              modified: Date
-            }, index: number) => {
-              // today if achieveBy date does not exist OR if it is a string (from old version)
-              const achieveBy = (!row.achieveBy || typeof row.achieveBy === 'string')
-                ? new Date()
-                : row.achieveBy.toDate();
-              const isItemSelected = isSelected(row.id);
-              const newDate = new Date(0);
-              newDate.setUTCSeconds(row.date.seconds);
-              row.modified = newDate;
-              return (
-                <TableRow
-                  key={index}
-                  selected={isItemSelected}
-                >
-                  <TableCell
-                    style={{
-                      paddingTop: '0.5em',
-                      paddingBottom: '0.5em',
-                      paddingRight: '0.5em',
-                      paddingLeft: 0
-                    }}
-                  >
-                    <ListItem onClick={(): void => {this.handleCheck(row.id)}}>
-                      <ListItemIcon>
-                        <Checkbox checked = {this.state.checked.includes(row.id)} onClick={(): void => {
-                          // this.props.handleChooseActionPlan(row.id, this.props.teacherId, row.practice);
-                          this.props.addActionPlanAttachment(row.id, this.props.teacherId);
-                        }} />
-                      </ListItemIcon>
-                    </ListItem>
-                  </TableCell>
-                  <TableCell style={{padding: '0.5em'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      {moment(row.modified).format('MM/DD/YYYY')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      <Grid container direction="row" justify="flex-start" alignItems="center">
-                        <Grid item xs={9}>
-                          <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
-                            {row.practice === 'AC' ? 'Associative and Cooperative' : row.practice}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={2}>
-                          {row.practice === 'Transition Time' ? (
-                            <img
-                              src={TransitionTimeIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Classroom Climate' ? (
-                            <img
-                              src={ClassroomClimateIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Math Instruction' ? (
-                            <img
-                              src={MathIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Level of Engagement' ? (
-                            <img
-                              src={EngagementIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Level of Instruction' ? (
-                            <img
-                              src={InstructionIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Listening to Children' ? (
-                            <img
-                              src={ListeningIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Sequential Activities' ? (
-                            <img
-                              src={SequentialIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'AC' ? (
-                            <img
-                              src={AssocCoopIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : <div />}
-                        </Grid>
-                      </Grid>
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{padding: '0.5em'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      {moment(achieveBy).format('MM/DD/YYYY')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
-                    <VisibilityIcon
-                      style={{fill: Constants.Colors.MI}}
-                      onClick={(): void => {this.props.onClick(row.id, this.props.teacherId ? this.props.teacherId : '')}}
-                    />
-                  </TableCell>
-                </TableRow>
-              )
-            })
-          ) : (
-            stableSort(this.state.result, getComparator(this.state.order, this.state.orderBy))
-            // to limit number on each page
-            // .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-            .map((row: {
+      <TableContainer>
+        <Table style={{width: '100%', border: '1px solid #a9a9a9', padding: '1em', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+          <TableHeadSort
+            order={this.state.order}
+            orderBy={this.state.orderBy}
+            onRequestSort={this.handleRequestSort}
+            actionPlans={this.props.actionPlans ? true : false}
+          />
+          <TableBody>
+            {this.state.result ? (this.props.actionPlans ? (
+              stableSort(this.props.actionPlans, getComparator(this.state.order, this.state.orderBy))
+              // to limit number on each page
+              .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+              .map((row: {
                 id: string,
-                date: {
-                  seconds: number,
-                  nanoseconds: number
-                },
-                achieveBy: firebase.firestore.Timestamp,
-                teacherId: string,
+                date: {seconds: number, nanoseconds: number},
                 practice: string,
-                teacherFirstName: string,
-                teacherLastName: string,
-                modified: Date,
-                name: string
+                achieveBy: firebase.firestore.Timestamp,
+                modified: Date
               }, index: number) => {
-              // today if achieveBy date does not exist OR if it is a string (from old version)
-              const achieveBy = (!row.achieveBy || typeof row.achieveBy === 'string')
-                ? new Date()
-                : row.achieveBy.toDate();
-              const isItemSelected = isSelected(row.id);
-              const newDate = new Date(0);
-              newDate.setUTCSeconds(row.date.seconds);
-              row.modified = newDate;
-              row.name = row.teacherLastName + ', ' + row.teacherFirstName;
-              return (
-                <TableRow
-                  key={index}
-                  selected={isItemSelected}
-                  onClick={(): void => {this.props.onClick(row.id, row.teacherId)}}
-                >
-                  <TableCell style={{padding: '0.5em'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      {moment(row.modified).format('MM/DD/YYYY')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{padding: '0.5em'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      {row.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{padding: '0.5em'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      <Grid container direction="row" justify="flex-start" alignItems="center">
-                        <Grid item xs={9}>
-                          <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
-                            {row.practice}
-                          </Typography>
+                // today if achieveBy date does not exist OR if it is a string (from old version)
+                const achieveBy = (!row.achieveBy || typeof row.achieveBy === 'string')
+                  ? new Date()
+                  : row.achieveBy.toDate();
+                const isItemSelected = isSelected(row.id);
+                const newDate = new Date(0);
+                newDate.setUTCSeconds(row.date.seconds);
+                row.modified = newDate;
+                return (
+                  <TableRow
+                    key={index}
+                    selected={isItemSelected}
+                  >
+                    <TableCell
+                      style={{
+                        paddingTop: '0.5em',
+                        paddingBottom: '0.5em',
+                        paddingRight: '0.5em',
+                        paddingLeft: 0
+                      }}
+                    >
+                      <ListItem onClick={(): void => {this.handleCheck(row.id)}}>
+                        <ListItemIcon>
+                          <Checkbox checked = {this.state.checked.includes(row.id)} onClick={(): void => {
+                            // this.props.handleChooseActionPlan(row.id, this.props.teacherId, row.practice);
+                            this.props.addActionPlanAttachment(row.id, this.props.teacherId);
+                          }} />
+                        </ListItemIcon>
+                      </ListItem>
+                    </TableCell>
+                    <TableCell style={{padding: '0.5em'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        {moment(row.modified).format('MM/DD/YYYY')}
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        <Grid container direction="row" justify="flex-start" alignItems="center">
+                          <Grid item xs={9}>
+                            <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
+                              {row.practice === 'AC' ? 'Associative and Cooperative' : row.practice}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            {row.practice === 'Transition Time' ? (
+                              <img
+                                src={TransitionTimeIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Classroom Climate' ? (
+                              <img
+                                src={ClassroomClimateIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Math Instruction' ? (
+                              <img
+                                src={MathIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Level of Engagement' ? (
+                              <img
+                                src={EngagementIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Level of Instruction' ? (
+                              <img
+                                src={InstructionIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Listening to Children' ? (
+                              <img
+                                src={ListeningIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Sequential Activities' ? (
+                              <img
+                                src={SequentialIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'AC' ? (
+                              <img
+                                src={AssocCoopIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : <div />}
+                          </Grid>
                         </Grid>
-                        <Grid item xs={2}>
-                          {row.practice === 'Transition Time' ? (
-                            <img
-                              src={TransitionTimeIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Classroom Climate' ? (
-                            <img
-                              src={ClassroomClimateIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Math Instruction' ? (
-                            <img
-                              src={MathIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Level of Engagement' ? (
-                            <img
-                              src={EngagementIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Level of Instruction' ? (
-                            <img
-                              src={InstructionIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Listening to Children' ? (
-                            <img
-                              src={ListeningIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'Sequential Activities' ? (
-                            <img
-                              src={SequentialIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : row.practice === 'AC' ? (
-                            <img
-                              src={AssocCoopIconImage}
-                              alt="Magic 8 Icon"
-                            />
-                          ) : <div />}
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{padding: '0.5em'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        {moment(achieveBy).format('MM/DD/YYYY')}
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
+                      <VisibilityIcon
+                        style={{fill: Constants.Colors.MI}}
+                        onClick={(): void => {this.props.onClick(row.id, this.props.teacherId ? this.props.teacherId : '')}}
+                      />
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            ) : (
+              stableSort(this.state.result, getComparator(this.state.order, this.state.orderBy))
+              // to limit number on each page
+              // .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+              .map((row: {
+                  id: string,
+                  date: {
+                    seconds: number,
+                    nanoseconds: number
+                  },
+                  achieveBy: firebase.firestore.Timestamp,
+                  teacherId: string,
+                  practice: string,
+                  teacherFirstName: string,
+                  teacherLastName: string,
+                  modified: Date,
+                  name: string
+                }, index: number) => {
+                // today if achieveBy date does not exist OR if it is a string (from old version)
+                const achieveBy = (!row.achieveBy || typeof row.achieveBy === 'string')
+                  ? new Date()
+                  : row.achieveBy.toDate();
+                const isItemSelected = isSelected(row.id);
+                const newDate = new Date(0);
+                newDate.setUTCSeconds(row.date.seconds);
+                row.modified = newDate;
+                row.name = row.teacherLastName + ', ' + row.teacherFirstName;
+                return (
+                  <TableRow
+                    key={index}
+                    selected={isItemSelected}
+                    onClick={(): void => {this.props.onClick(row.id, row.teacherId)}}
+                  >
+                    <TableCell style={{padding: '0.5em'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        {moment(row.modified).format('MM/DD/YYYY')}
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{padding: '0.5em'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        {row.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{padding: '0.5em'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        <Grid container direction="row" justify="flex-start" alignItems="center">
+                          <Grid item xs={9}>
+                            <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
+                              {row.practice}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            {row.practice === 'Transition Time' ? (
+                              <img
+                                src={TransitionTimeIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Classroom Climate' ? (
+                              <img
+                                src={ClassroomClimateIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Math Instruction' ? (
+                              <img
+                                src={MathIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Level of Engagement' ? (
+                              <img
+                                src={EngagementIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Level of Instruction' ? (
+                              <img
+                                src={InstructionIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Listening to Children' ? (
+                              <img
+                                src={ListeningIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'Sequential Activities' ? (
+                              <img
+                                src={SequentialIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : row.practice === 'AC' ? (
+                              <img
+                                src={AssocCoopIconImage}
+                                alt="Magic 8 Icon"
+                              />
+                            ) : <div />}
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{padding: '0.5em'}}>
-                    <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                      {moment(achieveBy).format('MM/DD/YYYY')}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              )
-            })
-          )) : (null)}
-        </TableBody>
-      </Table>
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{padding: '0.5em'}}>
+                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                        {moment(achieveBy).format('MM/DD/YYYY')}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            )) : (null)}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={this.props.actionPlans ? this.props.actionPlans.length : 0}
+          rowsPerPage={this.state.rowsPerPage}
+          page={this.state.page}
+          onChangePage={this.handleChangePage}
+          onChangeRowsPerPage={this.handleChangeRowsPerPage}
+        />
+      </TableContainer>
     );
   }
 }
