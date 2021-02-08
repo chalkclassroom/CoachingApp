@@ -467,7 +467,7 @@ class ActionPlanList extends React.Component<Props, State>{
             ) : (
               stableSort(this.state.result, getComparator(this.state.order, this.state.orderBy))
               // to limit number on each page
-              // .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+              .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
               .map((row: {
                   id: string,
                   date: {
@@ -512,7 +512,7 @@ class ActionPlanList extends React.Component<Props, State>{
                         <Grid container direction="row" justify="flex-start" alignItems="center">
                           <Grid item xs={9}>
                             <Typography variant="h6" style={{fontFamily: 'Arimo', paddingRight: '0.2em'}}>
-                              {row.practice}
+                              {row.practice === 'AC' ? 'Associative and Cooperative' : row.practice}
                             </Typography>
                           </Grid>
                           <Grid item xs={2}>
@@ -575,7 +575,7 @@ class ActionPlanList extends React.Component<Props, State>{
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={this.props.actionPlans ? this.props.actionPlans.length : 0}
+          count={this.props.actionPlans ? this.props.actionPlans.length : this.state.result.length}
           rowsPerPage={this.state.rowsPerPage}
           page={this.state.page}
           onChangePage={this.handleChangePage}
