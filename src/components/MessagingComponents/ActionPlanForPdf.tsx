@@ -4,6 +4,15 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { TextField } from '@material-ui/core';
+import TransitionTimeImage from '../../assets/images/TransitionTimeImage.png';
+import ClassroomClimateIconImage from '../../assets/images/ClassroomClimateIconImage.png';
+import MathIconImage from '../../assets/images/MathIconImage.png';
+import LevelofInstructionImage from '../../assets/images/LevelofInstructionImage.png';
+import EngagementIconImage from '../../assets/images/EngagementIconImage.png';
+import ListeningtoChildrenImage from '../../assets/images/ListeningtoChildrenImage.png';
+import SequentialActivitiesImage from '../../assets/images/SequentialActivitiesImage.png';
+import AssocCoopInteractionsImage from '../../assets/images/AssocCoopInteractionsImage.png';
+import LogoImage from '../../assets/images/LogoImage.png';
 import moment from 'moment';
 import * as Types from '../../constants/Types';
 
@@ -100,7 +109,13 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
               alignItems="center"
               style={{width: '100%', paddingTop: '0.5em', paddingBottom: '1em'}}
             >
-              <Grid item xs={2} />
+              <Grid item xs={2}>
+                <img
+                  src={LogoImage}
+                  alt='CHALK'
+                  width='50%'
+                />
+              </Grid>
               <Grid item xs={8}>
                 <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
                   <Typography variant="h4" style={{fontFamily: "Arimo"}}>
@@ -108,7 +123,24 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid item xs={2} />
+              <Grid item xs={2}>
+                <Grid container direction="row" justify="flex-end" alignItems="center">
+                  <img
+                    src={
+                      this.props.tool === 'Transition Time' ? TransitionTimeImage
+                        : this.props.tool === 'Classroom Climate' ? ClassroomClimateIconImage
+                        : this.props.tool === 'Math Instruction' ? MathIconImage
+                        : this.props.tool === 'Level of Instruction' ? LevelofInstructionImage
+                        : this.props.tool === 'Student Engagement' ? EngagementIconImage
+                        : this.props.tool === 'Listening to Children' ? ListeningtoChildrenImage
+                        : this.props.tool === 'Sequential Activities' ? SequentialActivitiesImage
+                        : AssocCoopInteractionsImage
+                    }
+                    alt="Icon"
+                    width='50%'
+                  />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
           <Grid item style={{width: '100%'}}>
