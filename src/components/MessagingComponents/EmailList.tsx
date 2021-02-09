@@ -118,7 +118,10 @@ function TableHeadSort(props: TableHeadProps): React.ReactElement {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === headCell.id ? order : false}
-            style={{backgroundColor: '#d8ecff'}}
+            style={{
+              backgroundColor: '#d8ecff',
+              width: headCell.id === 'dateModified' ? '20%' : '40%'
+            }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -210,7 +213,7 @@ class EmailList extends React.Component<Props, State>{
     const isSelected = (id: string): boolean => this.state.selected.includes(id);
     return (
       <TableContainer>
-        <Table style={{width: '100%', border: '1px solid #a9a9a9', padding: '1em', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+        <Table style={{width: '100%', border: '1px solid #a9a9a9', padding: '1em', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', tableLayout: 'fixed'}}>
           <TableHeadSort
             order={this.state.order}
             orderBy={this.state.orderBy}
@@ -232,20 +235,18 @@ class EmailList extends React.Component<Props, State>{
                     onClick={(): void => this.props.onClick(row)}
                   >
                     <TableCell style={{padding: '0.5em', width: '40%'}}>
-                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
+                      <Typography variant="h6" noWrap style={{fontFamily: 'Arimo'}}>
                         {row.recipientName}
                       </Typography>
                     </TableCell>
                     <TableCell style={{padding: '0.5em', width: '40%'}}>
-                      <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                        <Grid container direction="row" justify="flex-start" alignItems="center">
-                          <Grid item xs={9}>
-                            <Typography variant="h6" style={{fontFamily: 'Arimo', color: row.subject ? 'black' : 'gray', paddingRight: '0.2em'}}>
-                              {row.subject ? row.subject : '(no subject)'}
-                            </Typography>
-                          </Grid>
+                      <Grid container direction="row" justify="flex-start" alignItems="center">
+                        <Grid item xs={9}>
+                          <Typography variant="h6" noWrap style={{fontFamily: 'Arimo', color: row.subject ? 'black' : 'gray', paddingRight: '0.2em'}}>
+                            {row.subject ? row.subject : '(no subject)'}
+                          </Typography>
                         </Grid>
-                      </Typography>
+                      </Grid>
                     </TableCell>
                     <TableCell style={{padding: '0.5em', width: '20%'}}>
                       <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
