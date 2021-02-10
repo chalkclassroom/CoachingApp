@@ -131,7 +131,7 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                         : this.props.tool === 'Classroom Climate' ? ClassroomClimateIconImage
                         : this.props.tool === 'Math Instruction' ? MathIconImage
                         : this.props.tool === 'Level of Instruction' ? LevelofInstructionImage
-                        : this.props.tool === 'Student Engagement' ? EngagementIconImage
+                        : this.props.tool === 'Level of Engagement' ? EngagementIconImage
                         : this.props.tool === 'Listening to Children' ? ListeningtoChildrenImage
                         : this.props.tool === 'Sequential Activities' ? SequentialActivitiesImage
                         : AssocCoopInteractionsImage
@@ -285,10 +285,10 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
           <Grid item xs={12} style={{width: '100%', height: '38vh'}}>
             <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
               <Grid item style={{width: '48%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
-                <Grid container direction="column" justify="center" style={{width: '100%', border: '1px solid orange'}}>
-                  <Grid item style={{border: '1px solid blue'}}>
+                <Grid container direction="column" justify="center" style={{width: '100%'}}>
+                  <Grid item>
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
-                      <Grid item xs={11} style={{border: '1px solid yellow'}}>
+                      <Grid item xs={11}>
                         <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
                           Action Steps
                         </Typography>
@@ -297,7 +297,7 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{border: '1px solid red'}}>
+                  <Grid item>
                     {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
                       return(
                         <TextField

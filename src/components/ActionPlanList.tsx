@@ -36,7 +36,7 @@ interface Props {
   checkedActionPlans: Array<string>,
   addActionPlan(id: string): void,
   removeActionPlan(id: string): void,
-  addActionPlanAttachment?(actionPlanId: string, teacherId: string): void
+  addActionPlanAttachment?(actionPlanId: string, teacherId: string, title: string): void
 }
 
 interface State {
@@ -386,7 +386,7 @@ class ActionPlanList extends React.Component<Props, State>{
                         <ListItemIcon>
                           <Checkbox checked = {this.state.checked.includes(row.id)} onClick={(): void => {
                             // this.props.handleChooseActionPlan(row.id, this.props.teacherId, row.practice);
-                            this.props.addActionPlanAttachment(row.id, this.props.teacherId);
+                            this.props.addActionPlanAttachment(row.id, this.props.teacherId, (row.practice === 'AC' ? 'Associative and Cooperative' : row.practice) + ' ' + moment(row.modified).format('MM.DD.YYYY') + ' Action Plan.pdf');
                           }} />
                         </ListItemIcon>
                       </ListItem>

@@ -29,7 +29,6 @@ import { connect } from 'react-redux';
 interface AttachmentDialogProps {
   recipientId: string;
   open: boolean;
-  handleAdd: (value: string) => void;
   handleDelete: (value: string) => void;
   actionPlans: Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>;
   results: Array<{
@@ -47,7 +46,7 @@ interface AttachmentDialogProps {
   teacherList: Array<Types.Teacher>;
   addAttachment(content: string, practice: string, date: Date): void;
   setIncludeAttachments(value: boolean): void;
-  addActionPlanAttachment(actionPlanId: string): void;
+  addActionPlanAttachment(actionPlanId: string, teacherId: string, title: string): void;
   noActionPlansMessage: string;
   noResultsMessage: string;
   attachAll(): void;

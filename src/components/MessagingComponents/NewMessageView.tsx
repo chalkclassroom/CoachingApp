@@ -118,7 +118,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   // ref to get value from EmailBody
 	const textRef = useRef();
   // state to store the current list of attachments
-  // const [attachments, setAttachments] = useState<Array<{id: string, date: {seconds: number, nanoseconds: number}, practice: string, achieveBy: firebase.firestore.Timestamp}>>([]);
   const [actionPlans, setActionPlans] = useState<Array<{
     id: string,
     date: {
@@ -143,8 +142,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
-  const [attachments, setAttachments] = useState<Array<{content: string, filename: string, type: string, disposition: string}>>();
-  const [actionPlanAttachments, setActionPlanAttachments] = useState<Array<string>>();
+  const [attachments, setAttachments] = useState<Array<{
+    content: string,
+    filename: string,
+    type: string,
+    disposition: string,
+    id: string,
+    teacherId: string,
+    actionPlan: boolean,
+    result: boolean
+  }>>();
   const [resultsAttachments, setResultsAttachments] = useState<Array<{
     sessionId: string,
     teacherId: string
@@ -191,44 +198,47 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   });
 
-  const addActionPlanAttachment = (actionPlanId: string): void => {
-    const newActionPlanAttachments = actionPlanAttachments;
-    if (newActionPlanAttachments) {
-      if (newActionPlanAttachments.includes(actionPlanId)) {
-        const index = newActionPlanAttachments.indexOf(actionPlanId);
-        newActionPlanAttachments.splice(index, 1);
+  const addActionPlanAttachment = (actionPlanId: string, teacherId: string, title: string): void => {
+    const newAttachments = attachments;
+    const idMatch = (element: {
+      content: string,
+      filename: string,
+      type: string,
+      disposition: string,
+      id: string,
+      teacherId: string,
+      actionPlan: boolean,
+      result: boolean
+    }): boolean => element.id === actionPlanId;
+    if (newAttachments) {
+      const index = newAttachments.findIndex(idMatch);
+      if (index !== -1) {
+        newAttachments.splice(index, 1);
       } else {
-        newActionPlanAttachments.push(actionPlanId);
+        newAttachments.push({
+          content: '',
+          filename: title,
+          type: 'application/pdf',
+          disposition: 'attachment',
+          id: actionPlanId,
+          teacherId: teacherId,
+          actionPlan: true,
+          result: false
+        });
       }
-      setActionPlanAttachments(newActionPlanAttachments);
+      setAttachments(newAttachments);
     } else {
-      setActionPlanAttachments([actionPlanId]);
+      setAttachments([{
+        content: '',
+        filename: title,
+        type: 'application/pdf',
+        disposition: 'attachment',
+        id: actionPlanId,
+        teacherId: teacherId,
+        actionPlan: true,
+        result: false
+      }]);
     }
-  }
-  
-  const addAttachment = async (content: string, practice: string, date: Date): void => {
-    // console.log('this is the content', content);
-    console.log('practice and date', practice, date);
-    console.log('attachments in addattachment', attachments);
-    let newAttachments: Array<{content: string, filename: string, type: string, disposition: string}> = [];
-    if (attachments) {
-      console.log('attachments is true');
-      newAttachments = attachments;
-    }
-    newAttachments.push({
-      content: content,
-      filename: practice + ' ' + moment(date).format('MM.DD.YYYY') + ' Action Plan.pdf',
-      type: 'application/pdf',
-      disposition: 'attachment'
-    });
-    setAttachments(newAttachments);
-    console.log('ehre are the attachments', attachments);
-    /* setAttachments([{
-      content: content,
-      filename: 'attachment.pdf',
-      type: 'application/pdf',
-      disposition: 'attachment'
-    }]) */
   }
 
   const removeAttachment = (position: number): void => {
@@ -249,17 +259,17 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     return newDate
   }
 
-  const functionForType = (base64string: string, practice: string, date: Date) => {
+  const functionForType = (base64string: string, id: string) => {
     return;
   }
 
-  const printDocument = async (practice: string, date: Date, id: string, addToAttachmentList: typeof functionForType ): Promise<void> => {
-    const input: HTMLElement = document.getElementById(id);
+  const printDocument = async (practice: string, date: Date, elementId: string, addToAttachmentList: typeof functionForType, id: string): Promise<void> => {
+    const input: HTMLElement = document.getElementById(elementId);
     let base64data: string | ArrayBuffer | null = null;
     let newBase64Data = '';
     html2canvas(input, {
       onclone: function (clonedDoc) {
-        clonedDoc.getElementById(id).style.visibility = 'visible';
+        clonedDoc.getElementById(elementId).style.visibility = 'visible';
       },
     }).then((canvas) => {
       console.log('canvas');
@@ -286,7 +296,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           console.log('data is', newBase64Data);
           console.log('practice is', practice);
           console.log('date is', date);
-          addToAttachmentList(newBase64Data, practice, date);
+          addToAttachmentList(newBase64Data, id);
         }
       })
   }
@@ -337,7 +347,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       }).then(() => {
         setRenderActionPlan(true);
       }).then(async () => {
-        printDocument(actionPlanData.tool, newDate, 'apPdf', addToAttachmentList);
+        printDocument(actionPlanData.tool, newDate, 'apPdf', addToAttachmentList, actionPlanId);
       }).then(() => {
         setRenderActionPlan(false);
         setTool('');
@@ -353,7 +363,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     })
   }
 
-  const asyncForEach = async (array: Array<string>, callback: unknown): Promise<void> => {
+  const asyncForEach = async (array: Array<{
+    content: string,
+    filename: string,
+    type: string,
+    disposition: string,
+    id: string,
+    teacherId: string,
+    actionPlan: boolean,
+    result: boolean
+  }>, callback: unknown): Promise<void> => {
     for (let index = 0; index < array.length; index++) {
       await callback(array[index], index, array);
     }
@@ -362,26 +381,62 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const waitFor = (ms: number): Promise<void> => new Promise(r => setTimeout(r, ms));
 
   const attachAll = async (): Promise<void> => {
-    setActionPlanDisplay(false)
-    let newAttachments: Array<{content: string, filename: string, type: string, disposition: string}> = [];
-    const addToAttachmentList = (base64string: string, practice: string, date: Date): void => {
+    setActionPlanDisplay(false);
+    console.log('these are the attachments', attachments);
+    let newAttachments: Array<{
+      content: string,
+      filename: string,
+      type: string,
+      disposition: string,
+      id: string,
+      teacherId: string,
+      actionPlan: boolean,
+      result: boolean
+    }> = [];
+    const addToAttachmentList = (base64string: string, id: string): void => {
+      const idMatch = (element: {
+        content: string,
+        filename: string,
+        type: string,
+        disposition: string,
+        id: string,
+        teacherId: string,
+        actionPlan: boolean,
+        result: boolean
+      }): boolean => element.id === id;
+      console.log('id is', id);
       if (attachments) {
+        console.log('id of attachments', attachments[0].id);
+        if (attachments[1]) {
+          console.log('id of second attachments', attachments[1].id);
+        }
         newAttachments = attachments;
+        const index = newAttachments.findIndex(idMatch);
+        console.log('this is the index', index);
+        console.log('this is the attachment', newAttachments[index]);
+        newAttachments[index].content = base64string;
       }
-      newAttachments.push({
-        content: base64string,
-        filename: practice + ' ' + moment(date).format('MM.DD.YYYY') + ' Action Plan.pdf',
-        type: 'application/pdf',
-        disposition: 'attachment'
-      });
     }
-    if (actionPlanAttachments) {
-      await asyncForEach(actionPlanAttachments, async (actionPlanId: string) => {
+    if (attachments) {
+      await asyncForEach(attachments, async (actionPlan: {
+        content: string,
+        filename: string,
+        type: string,
+        disposition: string,
+        id: string,
+        teacherId: string,
+        actionPlan: boolean,
+        result: boolean
+      }) => {
         await waitFor(10000);
-        if (actionPlanAttachments) {
-          attachActionPlan(actionPlanId, addToAttachmentList);
+        if (attachments) {
+          attachActionPlan(actionPlan.id, addToAttachmentList);
         }
       }).then(() => {
+        for (let i = 0; i < newAttachments.length; i++) {
+          console.log('i', i, 'attachment content', newAttachments[i].content)
+        }
+        console.log('calling set attachments with', newAttachments);
         setAttachments(newAttachments);
       })
     }
@@ -442,7 +497,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           date: new Date(),
         }] */
         // attachments: includeAttachments ? attachments : undefined
-        attachments: attachments
+        // attachments: attachments,
+        attachments: attachments ? (attachments.map(function(item) { return {
+          'content': item['content'],
+          'filename': item['filename'],
+          'type': item['type'],
+          'disposition': item['disposition'],
+        }; })) : (undefined)
       };
      
       // encrypted with the user's uid from firebase
@@ -466,20 +527,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         });
     }
   };
-
-  const createAddAttachment = (newActionPlan: string): void => {
-    // the values in this should be updated according to how the action plan
-    // is stored in the firestore and therefore is very much a placeholder info
-    const newAttachment: Attachment = {
-      id: newActionPlan,
-      type: 'action_plan',
-      date: new Date()
-    }
-
-    const updatedAttachments = attachments;
-    attachments.push(newAttachment);
-    setAttachments(updatedAttachments);
-  }
 
   /* const removeAttachment = (actionPlanId: string): void => {
     const updatedAttachments = attachments.map((attach: Attachment): Attachment => {
@@ -862,7 +909,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                         </Grid>
                         <AttachmentDialog
                           recipientId={recipient.id}
-                          addAttachment={addAttachment}
+                          // addAttachment={addAttachment}
                           setIncludeAttachments={(value: boolean): void => {
                             setIncludeAttachments(value)
                           }}
@@ -878,10 +925,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           open={actionPlanDisplay}
                           recipientName={recipient.label}
                           handleClose={(): void => setActionPlanDisplay(false)}
-                          handleAdd={(newActionPlan: string): void => { 
-                            createAddAttachment(newActionPlan);
-                            setActionPlanDisplay(false);
-                          }} 
                           handleDelete={(existActionPlan: string): void => {
                             removeAttachment(existActionPlan);
                             setActionPlanDisplay(false);
