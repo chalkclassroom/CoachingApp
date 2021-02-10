@@ -8,6 +8,7 @@ import Card from '@material-ui/core/Card';
 import CloseIcon from '@material-ui/icons/Close';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 interface EmailBodyProps {
   email: string | undefined,
@@ -19,6 +20,7 @@ interface EmailBodyProps {
 
 interface AttachmentBarProps {
   title: string,
+  content: string,
   handleDelete(): void,
   handlePreview(): void
 }
@@ -37,7 +39,12 @@ const AttachmentBar: React.FC<AttachmentBarProps> = (props: AttachmentBarProps) 
         </Grid>
         <Grid item>
           <Grid container direction="row" justify="flex-end" alignItems="center">
-            <Grid item onClick={(): void => props.handlePreview()}>
+            {props.content === '' ? (
+              <Grid item>
+                <CircularProgress size='1.5em' />
+              </Grid>
+            ) : (null)}
+            <Grid item onClick={(): void => props.handlePreview()} style={{paddingLeft: '1em'}}>
               <VisibilityIcon />
             </Grid>
             <Grid item onClick={(): void => props.handleDelete()} style={{paddingLeft: '1em'}}>
@@ -48,10 +55,11 @@ const AttachmentBar: React.FC<AttachmentBarProps> = (props: AttachmentBarProps) 
       </Grid>
     </Card>
   )
-}
+};
 
 AttachmentBar.propTypes = {
   title: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
   handleDelete: PropTypes.func.isRequired,
   handlePreview: PropTypes.func.isRequired
 }
@@ -100,6 +108,7 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
               return(
                 <AttachmentBar
                   key={index}
+                  content={attachment.content}
                   title={attachment.filename}
                   handleDelete={(): void => props.handleDelete(index)}
                   handlePreview={(): void => console.log('insert preview func here')}
