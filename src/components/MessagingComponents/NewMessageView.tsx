@@ -24,6 +24,7 @@ import moment from 'moment';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import ActionPlanForPdf from './ActionPlanForPdf';
+import ListeningResultsPdf from './ListeningResultsPdf';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import * as Types from '../../constants/Types';
@@ -59,6 +60,23 @@ interface ResultType {
 }
 
 type ResultTypeKey = keyof ResultType;
+
+type ListeningData = {
+  summary: {listening: number, notListening: number} | undefined,
+    details: {
+      listening1: number,
+      listening2: number,
+      listening3: number,
+      listening4: number,
+      listening5: number,
+      listening6: number
+    } | undefined,
+    trends: Array<{
+      startDate: {value: string},
+      listening: number,
+      notListening: number
+    }> | undefined
+}
 
 /* const gridContainer = {
 	display: 'grid',
@@ -150,7 +168,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     id: string,
     teacherId: string,
     actionPlan: boolean,
-    result: boolean
+    result: boolean,
+    summary?: boolean,
+    details?: boolean,
+    trends?: boolean,
+    practice?: string
   }>>();
   const [resultsAttachments, setResultsAttachments] = useState<Array<{
     sessionId: string,
@@ -176,7 +198,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     timeline: Date
   }>>();
   const [renderActionPlan, setRenderActionPlan] = useState(false);
+  const [renderListeningPdf, setRenderListeningPdf] = useState(false);
   const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
+  const [listening, setListening]= useState<ListeningData>();
 
   // get the user's name
   useEffect(() => {
@@ -241,6 +265,86 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   }
 
+  const addResultsAttachment = (
+    sessionId: string,
+    teacherId: string,
+    title: string,
+    graphType: 'summary' | 'details' | 'trends',
+    practice: string
+  ): void => {
+    const newAttachments = attachments;
+    const newResultObject = {
+      content: '',
+      filename: title,
+      type: 'application/pdf',
+      disposition: 'attachment',
+      id: sessionId,
+      teacherId: teacherId,
+      actionPlan: false,
+      result: true,
+      summary: graphType === 'summary' ? true : false,
+      details: graphType === 'details' ? true : false,
+      trends: graphType === 'trends' ? true : false,
+      practice: practice
+    };
+    const idMatch = (element: {
+      content: string,
+      filename: string,
+      type: string,
+      disposition: string,
+      id: string,
+      teacherId: string,
+      actionPlan: boolean,
+      result: boolean,
+      summary?: boolean,
+      details?: boolean,
+      trends?: boolean,
+      practice?: string
+    }): boolean => element.id === sessionId;
+    if (newAttachments) {
+      const index = newAttachments.findIndex(idMatch);
+      if (index !== -1) {
+        if (graphType === 'summary') {
+          if (newAttachments[index].summary) {
+            if (!newAttachments[index].details && !newAttachments[index].trends) {
+              newAttachments.splice(index, 1);
+            } else {
+              newAttachments[index].summary = false;
+            }
+          } else {
+            newAttachments[index].summary = true;
+          }
+        } else if (graphType === 'details') {
+          if (newAttachments[index].details) {
+            if (!newAttachments[index].summary && !newAttachments[index].trends) {
+              newAttachments.splice(index, 1)
+            } else {
+              newAttachments[index].details = false;
+            }
+          } else {
+            newAttachments[index].details = true;
+          }
+        } else {
+          if (newAttachments[index].trends) {
+            if (!newAttachments[index].summary && !newAttachments[index].details) {
+              newAttachments.splice(index, 1)
+            } else {
+              newAttachments[index].trends = false;
+            }
+          } else {
+            newAttachments[index].trends = true;
+          }
+        }
+      } else {
+        newAttachments.push(newResultObject);
+      }
+      console.log('SET ATTACHMENTS', newAttachments);
+      setAttachments(newAttachments);
+    } else {
+      setAttachments([newResultObject]);
+    }
+  }
+
   const removeAttachment = (position: number): void => {
     const newAttachments = attachments;
     if (newAttachments) {
@@ -263,7 +367,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     return;
   }
 
-  const printDocument = async (practice: string, date: Date, elementId: string, addToAttachmentList: typeof functionForType, id: string): Promise<void> => {
+  const printDocument = async (practice: string | undefined, date: Date, elementId: string, addToAttachmentList: typeof functionForType, id: string): Promise<void> => {
     const input: HTMLElement = document.getElementById(elementId);
     let base64data: string | ArrayBuffer | null = null;
     let newBase64Data = '';
@@ -363,6 +467,57 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     })
   }
 
+  const waitFor = (ms: number): Promise<void> => new Promise(r => setTimeout(r, ms));
+
+  const getAllData = (
+    sessionId: string,
+    practice: string | undefined,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined
+  ): Promise<[
+    ListeningData['summary'] | undefined,
+    ListeningData['details'] | undefined,
+    ListeningData['trends'] | undefined
+  ]> => {
+    if (practice === 'listening') {
+      return Promise.all([
+        summary ? props.firebase.fetchListeningSummary(sessionId).then((data: ListeningData['summary']) => {return data}) : null,
+        details ? props.firebase.fetchListeningDetails(sessionId).then((details: ListeningData['details']) => {return details}) : null,
+        trends ? props.firebase.fetchListeningTrend(teacherObject ? teacherObject.id : '').then((trends: ListeningData['trends']) => {return trends}) : null
+      ])
+    }
+    return;
+  }
+
+  const attachResult = (
+    sessionId: string,
+    practice: string | undefined,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined,
+    addToAttachmentList: typeof functionForType
+  ): void => {
+    getAllData(sessionId, practice, summary, details, trends).then((data) => {
+      Promise.all([
+        setListening({
+          summary: data[0],
+          details: data[1],
+          trends: data[2]
+        }),
+        setDate(new Date())
+      ])
+    .then(() => {
+      setRenderListeningPdf(true);
+    }).then(() => {
+      setTimeout(()=> {printDocument(practice, new Date(), 'LC', addToAttachmentList, sessionId)}, 10000)
+    }).then(() => {
+        setTimeout(() => {setRenderListeningPdf(false)}, 10000);
+        setTimeout(() => {setListening(undefined)}, 10000);
+      })
+    })
+  }
+
   const asyncForEach = async (array: Array<{
     content: string,
     filename: string,
@@ -374,15 +529,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     result: boolean
   }>, callback: unknown): Promise<void> => {
     for (let index = 0; index < array.length; index++) {
-      await callback(array[index], index, array);
+      if (index > 0) {
+        setTimeout(() => {callback(array[index], index, array)}, 8000)
+      } else {
+        await callback(array[index], index, array)
+      }
     }
   }
 
-  const waitFor = (ms: number): Promise<void> => new Promise(r => setTimeout(r, ms));
-
   const attachAll = async (): Promise<void> => {
     setActionPlanDisplay(false);
-    console.log('these are the attachments', attachments);
     let newAttachments: Array<{
       content: string,
       filename: string,
@@ -391,7 +547,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       id: string,
       teacherId: string,
       actionPlan: boolean,
-      result: boolean
+      result: boolean,
+      summary?: boolean,
+      details?: boolean,
+      trends?: boolean,
+      practice?: string
     }> = [];
     const addToAttachmentList = (base64string: string, id: string): void => {
       const idMatch = (element: {
@@ -402,23 +562,20 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         id: string,
         teacherId: string,
         actionPlan: boolean,
-        result: boolean
+        result: boolean,
+        summary?: boolean,
+        details?: boolean,
+        trends?: boolean,
+        practice?: string
       }): boolean => element.id === id;
-      console.log('id is', id);
       if (attachments) {
-        console.log('id of attachments', attachments[0].id);
-        if (attachments[1]) {
-          console.log('id of second attachments', attachments[1].id);
-        }
         newAttachments = attachments;
         const index = newAttachments.findIndex(idMatch);
-        console.log('this is the index', index);
-        console.log('this is the attachment', newAttachments[index]);
         newAttachments[index].content = base64string;
       }
     }
     if (attachments) {
-      await asyncForEach(attachments, async (actionPlan: {
+      await asyncForEach(attachments, async (attachment: {
         content: string,
         filename: string,
         type: string,
@@ -426,21 +583,22 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         id: string,
         teacherId: string,
         actionPlan: boolean,
-        result: boolean
+        result: boolean,
+        summary?: boolean,
+        details?: boolean,
+        trends?: boolean,
+        practice?: string
       }) => {
         await waitFor(10000);
         if (attachments) {
-          attachActionPlan(actionPlan.id, addToAttachmentList);
+          if (attachment.actionPlan) {
+            attachActionPlan(attachment.id, addToAttachmentList);
+          } else if (attachment.result) {
+            attachResult(attachment.id, attachment.practice, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+          }
         }
-      }).then(() => {
-        for (let i = 0; i < newAttachments.length; i++) {
-          console.log('i', i, 'attachment content', newAttachments[i].content)
-        }
-        console.log('calling set attachments with', newAttachments);
-        setAttachments(newAttachments);
       })
     }
-    console.log('Done');
   }
 
   const sendMail = async (): Promise<void> => {
@@ -826,6 +984,27 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           />
         </div>
       ) : (null)}
+      {renderListeningPdf ? (
+        <div
+        id="LC"
+        style={{
+          backgroundColor: '#ffffff',
+          width: '210mm',
+          minHeight: '100mm',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          visibility: 'hidden',
+          position: 'fixed',
+          right: -1000
+        }}
+      >
+        <ListeningResultsPdf
+          data={listening}
+          date={date}
+          teacher={teacherObject}
+        />
+      </div>
+      ) : (null)}
       <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%'}}>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
@@ -917,6 +1096,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           actionPlans={actionPlans}
                           noActionPlansMessage={noActionPlansMessage}
                           addActionPlanAttachment={addActionPlanAttachment}
+                          addResultsAttachment={addResultsAttachment}
                           results={observations}
                           checkedResults={checkedResults}
                           addResult={addResult}
@@ -965,3 +1145,8 @@ export default compose(connect(
   mapStateToProps,
   null
 ), NewMessageView);
+
+/* export default connect(
+  mapStateToProps,
+  null
+)(NewMessageView); */

@@ -47,6 +47,13 @@ interface AttachmentDialogProps {
   addAttachment(content: string, practice: string, date: Date): void;
   setIncludeAttachments(value: boolean): void;
   addActionPlanAttachment(actionPlanId: string, teacherId: string, title: string): void;
+  addResultsAttachment(
+    sessionId: string,
+    teacherId: string,
+    title: string,
+    graphType: 'summary' | 'details' | 'trends',
+    practice: string
+  ): void;
   noActionPlansMessage: string;
   noResultsMessage: string;
   attachAll(): void;
@@ -638,6 +645,7 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
                       addResult={props.addResult}
                       removeResult={props.removeResult}
                       handleCheckResult={handleCheckResult}
+                      addResultsAttachment={props.addResultsAttachment}
                     />
                     {teacherObject && sessionIdPreview && selectionsPreview && datePreview ? (
                       <div
@@ -680,8 +688,6 @@ const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDial
             color='primary'
             // disabled={!props.attachmentList}
             onClick={(): void => {
-              props.setIncludeAttachments(true);
-              handleAttachResults('01', props.recipientId, 'listening');
               props.attachAll();
             }}
           >
@@ -699,6 +705,7 @@ AttachmentDialog.propTypes = {
   removeResult: PropTypes.func.isRequired,
   setIncludeAttachments: PropTypes.func.isRequired,
   addActionPlanAttachment: PropTypes.func.isRequired,
+  addResultsAttachment: PropTypes.func.isRequired,
   attachAll: PropTypes.func.isRequired
 }
 

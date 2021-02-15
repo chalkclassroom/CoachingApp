@@ -35,7 +35,14 @@ interface Props {
   checkedResults: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} | undefined,
   addResult(id: string, type: ResultTypeKey): void,
   removeResult(id: string, type: ResultTypeKey): void,
-  handleCheckResult(id: string, resultType: ResultTypeKey): void
+  handleCheckResult(id: string, resultType: ResultTypeKey): void,
+  addResultsAttachment(
+    sessionId: string,
+    teacherId: string,
+    title: string,
+    graphType: 'summary' | 'details' | 'trends',
+    practice: string
+  ): void
 }
 
 interface State {
@@ -239,8 +246,10 @@ class ResultsList extends React.Component<Props, State>{
   /**
    * @param {string} id
    * @param {ResultTypeKey} resultType
+   * @param {Date} observationDate
+   * @param {string} practice
    */
-  handleCheck = (id: string, resultType: ResultTypeKey ): void => {
+  handleCheck = (id: string, resultType: ResultTypeKey, observationDate: Date, practice: string): void => {
     const newChecked = this.state.checked;
     if (newChecked) {
       if (newChecked[id][resultType]) {
@@ -253,6 +262,13 @@ class ResultsList extends React.Component<Props, State>{
     }
     this.setState({checked: newChecked});
     this.props.handleCheckResult(id, resultType);
+    this.props.addResultsAttachment(
+      id,
+      this.props.teacherId ? this.props.teacherId : '',
+      practice + ' ' + moment(observationDate).format('MM.DD.YYYY') + ' Results.pdf',
+      resultType,
+      practice
+    );
   }
 
   /**
@@ -377,7 +393,7 @@ class ResultsList extends React.Component<Props, State>{
                       </Typography>
                     </TableCell>
                     <TableCell style={{width: '15%'}}>
-                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'summary')}} alignItems="center">
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'summary', observationDate, row.practice === 'AC' ? 'Associative and Cooperative' : row.practice)}} alignItems="center">
                         <Grid container direction="row" justify="center" alignItems="center">
                           <ListItemIcon>
                             <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['summary' as ResultTypeKey] : false} />
@@ -386,7 +402,7 @@ class ResultsList extends React.Component<Props, State>{
                       </ListItem>
                     </TableCell>
                     <TableCell style={{width: '15%'}}>
-                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'details')}}>
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'details', observationDate, row.practice === 'AC' ? 'Associative and Cooperative' : row.practice)}}>
                         <Grid container direction="row" justify="center" alignItems="center">
                           <ListItemIcon>
                             <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['details' as ResultTypeKey] : false} />
@@ -395,7 +411,7 @@ class ResultsList extends React.Component<Props, State>{
                       </ListItem>
                     </TableCell>
                     <TableCell style={{width: '15%'}}>
-                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'trends')}}>
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'trends', observationDate, row.practice === 'AC' ? 'Associative and Cooperative' : row.practice)}}>
                         <Grid container direction="row" justify="center" alignItems="center">
                           <ListItemIcon>
                             <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['trends' as ResultTypeKey] : false} />
