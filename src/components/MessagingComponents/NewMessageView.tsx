@@ -25,6 +25,7 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import ActionPlanForPdf from './ActionPlanForPdf';
 import TransitionResultsPdf from './ResultsPdfs/TransitionResultsPdf';
+import ClimateResultsPdf from './ResultsPdfs/ClimateResultsPdf';
 import ListeningResultsPdf from './ListeningResultsPdf';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -88,6 +89,23 @@ type TransitionData = {
     total: number,
     sessionTotal: number,
     startDate: {value: string}
+  }> | undefined
+}
+
+type ClimateData = {
+  summary: {
+    toneRating: number
+  } | undefined,
+  details: {
+    specificCount: number,
+    nonspecificCount: number,
+    disapprovalCount: number,
+    redirectionCount: number
+  } | undefined,
+  trends: Array<{
+    dayOfEvent: {value: string},
+    positive: number,
+    negative: number
   }> | undefined
 }
 
@@ -229,9 +247,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   }>>();
   const [renderActionPlan, setRenderActionPlan] = useState(false);
   const [renderTransitionPdf, setRenderTransitionPdf] = useState(false);
+  const [renderClimatePdf, setRenderClimatePdf] = useState(false);
   const [renderListeningPdf, setRenderListeningPdf] = useState(false);
   const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
   const [transition, setTransition] = useState<TransitionData>();
+  const [climate, setClimate] = useState<ClimateData>();
   const [listening, setListening]= useState<ListeningData>();
 
   // get the user's name
@@ -558,6 +578,57 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     ])
   }
 
+  const getClimateData = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined
+  ): Promise<[
+    ClimateData['summary'] | undefined,
+    ClimateData['details'] | undefined,
+    ClimateData['trends'] | undefined
+  ]> => {
+    return Promise.all([
+      summary ? props.firebase.fetchAvgToneRating(sessionId).then((rating: number) => {
+        const summary = {
+          toneRating: rating
+        };
+        return summary
+      }) : null,
+      (summary || details) ? props.firebase.fetchBehaviourTypeCount(sessionId).then((details: Array<{
+        behaviorResponse: string,
+        count: number
+      }>) => {
+        let specificCount = 0;
+        let nonspecificCount = 0;
+        let disapprovalCount = 0;
+        let redirectionCount = 0;
+        details.forEach(behavior => {
+          if (behavior.behaviorResponse === "specificapproval") {
+            specificCount = behavior.count;
+          } else if (behavior.behaviorResponse === "nonspecificapproval") {
+            nonspecificCount = behavior.count;
+          } else if (behavior.behaviorResponse === "disapproval") {
+            disapprovalCount = behavior.count;
+          } else if (behavior.behaviorResponse === "redirection") {
+            redirectionCount = behavior.count;
+          }
+        });
+        return {
+          specificCount: specificCount,
+          nonspecificCount: nonspecificCount,
+          disapprovalCount: disapprovalCount,
+          redirectionCount: redirectionCount
+        }
+      }) : null,
+      trends ? props.firebase.fetchBehaviourTrend(teacherObject ? teacherObject.id : '').then((trends: Array<{
+        dayOfEvent: {value: string},
+        positive: number,
+        negative: number
+      }>) => {return trends}) : null
+    ])
+  }
+
   const attachTransitionResult = (
     sessionId: string,
     summary: boolean | undefined,
@@ -581,7 +652,34 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       setTimeout(()=> {printDocument('transition', new Date(), 'TT', addToAttachmentList, sessionId)}, 10000)
     }).then(() => {
       setTimeout(() => {setRenderTransitionPdf(false)}, 10000);
-      setTimeout(() => {setListening(undefined)}, 10000);
+      setTimeout(() => {setTransition(undefined)}, 10000);
+    })
+  }
+
+  const attachClimateResult = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined,
+    addToAttachmentList: typeof functionForType
+  ): void => {
+    getClimateData(sessionId, summary, details, trends).then((data) => {
+      return Promise.all([
+        setClimate({
+          summary: data[0],
+          details: data[1],
+          trends: data[2]
+        }),
+        setDate(new Date())
+      ])
+    })
+    .then(() => {
+      setRenderClimatePdf(true);
+    }).then(() => {
+      setTimeout(()=> {printDocument('climate', new Date(), 'CC', addToAttachmentList, sessionId)}, 10000)
+    }).then(() => {
+      setTimeout(() => {setRenderClimatePdf(false)}, 10000);
+      setTimeout(() => {setClimate(undefined)}, 10000);
     })
   }
 
@@ -690,8 +788,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           } else if (attachment.result) {
             if (attachment.practice === 'transition') {
               attachTransitionResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+            } else if (attachment.practice === 'climate') {
+              attachClimateResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'listening') {
-              attachListeningResult(attachment.id, attachment.practice, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+              attachListeningResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             }
           }
         }
@@ -1098,6 +1198,27 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       >
         <TransitionResultsPdf
           data={transition}
+          date={date}
+          teacher={teacherObject}
+        />
+      </div>
+      ) : (null)}
+      {renderClimatePdf ? (
+        <div
+        id="CC"
+        style={{
+          backgroundColor: '#ffffff',
+          width: '210mm',
+          minHeight: '100mm',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          visibility: 'hidden',
+          position: 'fixed',
+          right: -1000
+        }}
+      >
+        <ClimateResultsPdf
+          data={climate}
           date={date}
           teacher={teacherObject}
         />

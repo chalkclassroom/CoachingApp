@@ -13,7 +13,7 @@ interface Props {
       fill: boolean,
       lineTension: number
     }>
-  }
+  } | undefined
 }
 
 /**
