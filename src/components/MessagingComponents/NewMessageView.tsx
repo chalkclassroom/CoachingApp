@@ -24,6 +24,7 @@ import moment from 'moment';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import ActionPlanForPdf from './ActionPlanForPdf';
+import TransitionResultsPdf from './ResultsPdfs/TransitionResultsPdf';
 import ListeningResultsPdf from './ListeningResultsPdf';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -61,21 +62,50 @@ interface ResultType {
 
 type ResultTypeKey = keyof ResultType;
 
+type TransitionData = {
+  summary: {
+    total: number,
+    sessionTotal: number,
+    startDate: {value: string}
+  } | undefined,
+  details: Array<{
+    line: number,
+    traveling: number,
+    waiting: number,
+    routines: number,
+    behaviorManagement: number,
+    other: number,
+    total: number
+  }> | undefined,
+  trends: Array<{
+    id: string,
+    line: number,
+    traveling: number,
+    waiting: number,
+    routines: number,
+    behaviorManagement: number,
+    other: number,
+    total: number,
+    sessionTotal: number,
+    startDate: {value: string}
+  }> | undefined
+}
+
 type ListeningData = {
   summary: {listening: number, notListening: number} | undefined,
-    details: {
-      listening1: number,
-      listening2: number,
-      listening3: number,
-      listening4: number,
-      listening5: number,
-      listening6: number
-    } | undefined,
-    trends: Array<{
-      startDate: {value: string},
-      listening: number,
-      notListening: number
-    }> | undefined
+  details: {
+    listening1: number,
+    listening2: number,
+    listening3: number,
+    listening4: number,
+    listening5: number,
+    listening6: number
+  } | undefined,
+  trends: Array<{
+    startDate: {value: string},
+    listening: number,
+    notListening: number
+  }> | undefined
 }
 
 /* const gridContainer = {
@@ -198,8 +228,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     timeline: Date
   }>>();
   const [renderActionPlan, setRenderActionPlan] = useState(false);
+  const [renderTransitionPdf, setRenderTransitionPdf] = useState(false);
   const [renderListeningPdf, setRenderListeningPdf] = useState(false);
   const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
+  const [transition, setTransition] = useState<TransitionData>();
   const [listening, setListening]= useState<ListeningData>();
 
   // get the user's name
@@ -469,9 +501,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 
   const waitFor = (ms: number): Promise<void> => new Promise(r => setTimeout(r, ms));
 
-  const getAllData = (
+  const getListeningData = (
     sessionId: string,
-    practice: string | undefined,
     summary: boolean | undefined,
     details: boolean | undefined,
     trends: boolean | undefined
@@ -480,43 +511,106 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     ListeningData['details'] | undefined,
     ListeningData['trends'] | undefined
   ]> => {
-    if (practice === 'listening') {
       return Promise.all([
-        summary ? props.firebase.fetchListeningSummary(sessionId).then((data: ListeningData['summary']) => {return data}) : null,
+        summary ? props.firebase.fetchListeningSummary(sessionId).then((summary: ListeningData['summary']) => {return summary}) : null,
         details ? props.firebase.fetchListeningDetails(sessionId).then((details: ListeningData['details']) => {return details}) : null,
         trends ? props.firebase.fetchListeningTrend(teacherObject ? teacherObject.id : '').then((trends: ListeningData['trends']) => {return trends}) : null
       ])
-    }
-    return;
   }
 
-  const attachResult = (
+  const getTransitionData = (
     sessionId: string,
-    practice: string | undefined,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined
+  ): Promise<[
+    TransitionData['summary'] | undefined,
+    TransitionData['details'] | undefined,
+    TransitionData['trends'] | undefined
+  ]> => {
+    return Promise.all([
+      summary ? props.firebase.fetchTransitionSummary(sessionId).then((summary: Array<{
+        total: number,
+        sessionTotal: number,
+        startDate: {value: string}
+      }>) => {return summary}) : null,
+      details ? props.firebase.fetchTransitionTypeSummary(sessionId).then((details: Array<{
+        line: number,
+        traveling: number,
+        waiting: number,
+        routines: number,
+        behaviorManagement: number,
+        other: number,
+        total: number
+      }>) => {return details}) : null,
+      trends ? props.firebase.fetchTransitionTrend(teacherObject ? teacherObject.id : '').then((trends: Array<{
+        id: string,
+        line: number,
+        traveling: number,
+        waiting: number,
+        routines: number,
+        behaviorManagement: number,
+        other: number,
+        total: number,
+        sessionTotal: number,
+        startDate: {value: string}
+      }>) => {return trends}) : null
+    ])
+  }
+
+  const attachTransitionResult = (
+    sessionId: string,
     summary: boolean | undefined,
     details: boolean | undefined,
     trends: boolean | undefined,
     addToAttachmentList: typeof functionForType
   ): void => {
-    getAllData(sessionId, practice, summary, details, trends).then((data) => {
-      Promise.all([
-        setListening({
+    getTransitionData(sessionId, summary, details, trends).then((data) => {
+      return Promise.all([
+        setTransition({
           summary: data[0],
           details: data[1],
           trends: data[2]
         }),
         setDate(new Date())
       ])
+    })
+    .then(() => {
+      setRenderTransitionPdf(true);
+    }).then(() => {
+      setTimeout(()=> {printDocument('transition', new Date(), 'TT', addToAttachmentList, sessionId)}, 10000)
+    }).then(() => {
+      setTimeout(() => {setRenderTransitionPdf(false)}, 10000);
+      setTimeout(() => {setListening(undefined)}, 10000);
+    })
+  }
+
+  const attachListeningResult = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined,
+    addToAttachmentList: typeof functionForType
+  ): void => {
+      getListeningData(sessionId, summary, details, trends).then((data) => {
+        return Promise.all([
+          setListening({
+            summary: data[0],
+            details: data[1],
+            trends: data[2]
+          }),
+          setDate(new Date())
+        ])
+      })
     .then(() => {
       setRenderListeningPdf(true);
     }).then(() => {
-      setTimeout(()=> {printDocument(practice, new Date(), 'LC', addToAttachmentList, sessionId)}, 10000)
+      setTimeout(()=> {printDocument('listening', new Date(), 'LC', addToAttachmentList, sessionId)}, 10000)
     }).then(() => {
         setTimeout(() => {setRenderListeningPdf(false)}, 10000);
         setTimeout(() => {setListening(undefined)}, 10000);
       })
-    })
-  }
+    }
 
   const asyncForEach = async (array: Array<{
     content: string,
@@ -594,7 +688,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           if (attachment.actionPlan) {
             attachActionPlan(attachment.id, addToAttachmentList);
           } else if (attachment.result) {
-            attachResult(attachment.id, attachment.practice, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+            if (attachment.practice === 'transition') {
+              attachTransitionResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+            } else if (attachment.practice === 'listening') {
+              attachListeningResult(attachment.id, attachment.practice, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+            }
           }
         }
       })
@@ -983,6 +1081,27 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             teacher={teacherObject}
           />
         </div>
+      ) : (null)}
+      {renderTransitionPdf ? (
+        <div
+        id="TT"
+        style={{
+          backgroundColor: '#ffffff',
+          width: '210mm',
+          minHeight: '100mm',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          visibility: 'hidden',
+          position: 'fixed',
+          right: -1000
+        }}
+      >
+        <TransitionResultsPdf
+          data={transition}
+          date={date}
+          teacher={teacherObject}
+        />
+      </div>
       ) : (null)}
       {renderListeningPdf ? (
         <div
