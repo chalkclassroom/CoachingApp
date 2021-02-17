@@ -419,6 +419,25 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     return;
   }
 
+  const saveAs = (uri, filename) => {
+    const link = document.createElement('a');
+    if (typeof link.download === 'string') {
+      link.href = uri;
+      link.download = filename;
+
+      // Firefox requires the link to be in the body
+      document.body.appendChild(link);
+
+      // simulate click
+      link.click();
+
+      // remove the link when done
+      document.body.removeChild(link);
+    } else {
+      window.open(uri);
+    }
+  }
+
   const printDocument = async (practice: string | undefined, date: Date, elementId: string, addToAttachmentList: typeof functionForType, id: string): Promise<void> => {
     const input: HTMLElement = document.getElementById(elementId);
     let base64data: string | ArrayBuffer | null = null;
@@ -429,16 +448,59 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       },
     }).then((canvas) => {
       console.log('canvas');
+    // canvas context
+    const context = canvas.getContext("2d");
+    // get the current ImageData for the canvas
+    const data = context.getImageData(0, 0, canvas.width, canvas.height);
+    // store the current globalCompositeOperation
+    const compositeOperation = context.globalCompositeOperation;
+    // set to draw behind current content
+    context.globalCompositeOperation = "destination-over";
+    //set background color
+    context.fillStyle = "#FFFFFF";
+    // draw background/rectangle on entire canvas
+    context.fillRect(0,0,canvas.width,canvas.height);
+
+    const tempCanvas = document.createElement("canvas");
+    const tCtx = tempCanvas.getContext("2d");
+
+    tempCanvas.width = 1588;
+    tempCanvas.height = 2000;
+
+    tCtx.drawImage(canvas,0,0);
+
+    // write on screen
+    const imgData2 = tempCanvas.toDataURL("image/png");
+    saveAs(imgData2, 'cropped.png');
+
         const link = document.createElement("a");
         document.body.appendChild(link);
         link.download = "html_image.png";
         const imgData = canvas.toDataURL('image/png');
-        // saveAs(imgData, 'canvas.png');
+        // console.log('IMGDATA', imgData);
+        saveAs(imgData, 'canvas.png');
+        // const config1 = {width: 100, height: 100, top: 50, left: 30};
+        const imgWidth = 190; 
+        const pageHeight = 235;
+        // const imgWidth = 190; 
+        // const pageHeight = 215;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        let heightLeft = imgHeight;
         const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
+        let position = 10;
         const imgProps= pdf.getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
+        // pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
+        // pdf.addImage(imgData2, 'PNG', 10, 10, 190, 220);
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 10, position - 30, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
         pdf.save("download.pdf");
         const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
         const reader = new FileReader();
@@ -781,7 +843,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         trends?: boolean,
         practice?: string
       }) => {
-        await waitFor(10000);
+        // await waitFor(10000);
         if (attachments) {
           if (attachment.actionPlan) {
             attachActionPlan(attachment.id, addToAttachmentList);

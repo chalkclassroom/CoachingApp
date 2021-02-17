@@ -75,7 +75,7 @@ const ClimateResultsPdf: React.FC<TransitionResultsProps> = (props: TransitionRe
       return
     };
   };
-  
+
   return (
     <div style={{width: '100%'}} id='ap'>
       <Grid
@@ -146,14 +146,14 @@ const ClimateResultsPdf: React.FC<TransitionResultsProps> = (props: TransitionRe
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '1em'}}>
+            <Grid item style={{paddingTop: '8em'}}>
               {props.data && props.data.summary && props.data.summary.toneRating ? (
                 <AverageTone
                   averageToneRating={props.data.summary.toneRating}
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '1em'}}>
+            <Grid item style={{paddingTop: '8em'}}>
               {props.data && props.data.details ? (
                 <BehaviorResponsesDetailsChart
                   specificBehaviorCount={props.data.details.specificCount}
@@ -163,7 +163,7 @@ const ClimateResultsPdf: React.FC<TransitionResultsProps> = (props: TransitionRe
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '2em'}}>
+            <Grid item style={{paddingTop: '8em'}}>
               {props.data && props.data.trends ? (
                 <ClimateTrendsGraph
                   data={(): {

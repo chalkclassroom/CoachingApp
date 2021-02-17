@@ -197,7 +197,7 @@ const TransitionResultsPdf: React.FC<TransitionResultsProps> = (props: Transitio
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '1em'}}>
+            <Grid item style={{paddingTop: '8em'}}>
               {props.data && props.data.details ? (
                 <TransitionBarChart
                   line={props.data.details[0].line}
@@ -209,7 +209,7 @@ const TransitionResultsPdf: React.FC<TransitionResultsProps> = (props: Transitio
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '2em'}}>
+            <Grid item style={{paddingTop: '8em'}}>
               {props.data && props.data.trends ? (
                 <TransitionTrendsGraph
                   data={(): {

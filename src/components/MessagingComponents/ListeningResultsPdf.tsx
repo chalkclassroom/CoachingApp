@@ -141,7 +141,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '1em'}}>
+            <Grid item style={{paddingTop: '8em'}}>
               {props.data.details ? (
                 <ListeningDetailsChart
                   listening1={props.data.details.listening1}
@@ -153,7 +153,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '2em'}}>
+            <Grid item style={{paddingTop: '8em'}}>
               {props.data.trends ? (
                 <ListeningTrendsGraph
                   data={(): {

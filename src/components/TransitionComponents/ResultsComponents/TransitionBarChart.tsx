@@ -148,7 +148,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
           }
         }}
         width={650}
-        height={300}
+        height={400}
       />
     );
   }
