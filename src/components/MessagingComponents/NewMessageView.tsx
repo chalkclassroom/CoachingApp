@@ -26,6 +26,7 @@ import { jsPDF } from 'jspdf';
 import ActionPlanForPdf from './ActionPlanForPdf';
 import TransitionResultsPdf from './ResultsPdfs/TransitionResultsPdf';
 import ClimateResultsPdf from './ResultsPdfs/ClimateResultsPdf';
+import MathResultsPdf from './ResultsPdfs/MathResultsPdf';
 import ListeningResultsPdf from './ListeningResultsPdf';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -106,6 +107,41 @@ type ClimateData = {
     dayOfEvent: {value: string},
     positive: number,
     negative: number
+  }> | undefined
+}
+
+type MathData = {
+  childSummary: {
+    math: number,
+    notMath: number
+  } | undefined,
+  teacherSummary: {
+    support: number,
+    noSupport: number,
+    noOpportunity: number
+  } | undefined,
+  childDetails: {
+    math1: number,
+    math2: number,
+    math3: number,
+    math4: number
+  } | undefined,
+  teacherDetails: {
+    teacher1: number,
+    teacher2: number,
+    teacher3: number,
+    teacher4: number
+  } | undefined,
+  childTrends: Array<{
+    startDate: {value: string},
+    math: number,
+    notMath: number
+  }> | undefined,
+  teacherTrends: Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    support: number,
+    noSupport: number
   }> | undefined
 }
 
@@ -248,10 +284,12 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [renderActionPlan, setRenderActionPlan] = useState(false);
   const [renderTransitionPdf, setRenderTransitionPdf] = useState(false);
   const [renderClimatePdf, setRenderClimatePdf] = useState(false);
+  const [renderMathPdf, setRenderMathPdf] = useState(false);
   const [renderListeningPdf, setRenderListeningPdf] = useState(false);
   const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
   const [transition, setTransition] = useState<TransitionData>();
   const [climate, setClimate] = useState<ClimateData>();
+  const [math, setMath] = useState<MathData>();
   const [listening, setListening]= useState<ListeningData>();
 
   // get the user's name
@@ -691,6 +729,49 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     ])
   }
 
+  const getMathData = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined
+  ): Promise<[
+    MathData['childSummary'] | undefined,
+    MathData['teacherSummary'] | undefined,
+    {
+      math1: number,
+      math2: number,
+      math3: number,
+      math4: number,
+      teacher1: number,
+      teacher2: number,
+      teacher3: number,
+      teacher4: number
+    } | undefined,
+    MathData['childTrends'] | undefined,
+    MathData['teacherTrends'] | undefined
+  ]> => {
+      return Promise.all([
+        summary ? props.firebase.fetchChildMathSummary(sessionId)
+          .then((summary: MathData['childSummary']) => {return summary}) : null,
+        summary ? props.firebase.fetchTeacherMathSummary(sessionId)
+          .then((summary: MathData['teacherSummary']) => {return summary}) : null,
+        details ? props.firebase.fetchMathDetails(sessionId).then((details: {
+          math1: number,
+          math2: number,
+          math3: number,
+          math4: number,
+          teacher1: number,
+          teacher2: number,
+          teacher3: number,
+          teacher4: number
+        }) => {return details}) : null,
+        trends ? props.firebase.fetchChildMathTrend(teacherObject ? teacherObject.id : '')
+          .then((trends: MathData['childTrends']) => {return trends}) : null,
+        trends ? props.firebase.fetchTeacherMathTrend(teacherObject ? teacherObject.id : '')
+          .then((trends: MathData['childTrends']) => {return trends}) : null
+      ])
+  }
+
   const attachTransitionResult = (
     sessionId: string,
     summary: boolean | undefined,
@@ -742,6 +823,36 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }).then(() => {
       setTimeout(() => {setRenderClimatePdf(false)}, 10000);
       setTimeout(() => {setClimate(undefined)}, 10000);
+    })
+  }
+
+  const attachMathResult = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined,
+    addToAttachmentList: typeof functionForType
+  ): void => {
+    getMathData(sessionId, summary, details, trends).then((data) => {
+      return Promise.all([
+        setMath({
+          childSummary: data[0],
+          teacherSummary: data[1],
+          childDetails: data[2] ? {math1: data[2].math1, math2: data[2].math2, math3: data[2].math3, math4: data[2].math4} : undefined,
+          teacherDetails: data[2] ? {teacher1: data[2].teacher1, teacher2: data[2].teacher2, teacher3: data[2].teacher3, teacher4: data[2].teacher4} : undefined,
+          childTrends: data[3],
+          teacherTrends: data[4]
+        }),
+        setDate(new Date())
+      ])
+    })
+    .then(() => {
+      setRenderMathPdf(true);
+    }).then(() => {
+      setTimeout(()=> {printDocument('math', new Date(), 'MI', addToAttachmentList, sessionId)}, 10000)
+    }).then(() => {
+      setTimeout(() => {setRenderMathPdf(false)}, 10000);
+      setTimeout(() => {setMath(undefined)}, 10000);
     })
   }
 
@@ -852,6 +963,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
               attachTransitionResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'climate') {
               attachClimateResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+            } else if (attachment.practice === 'math') {
+              attachMathResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'listening') {
               attachListeningResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             }
@@ -1281,6 +1394,27 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       >
         <ClimateResultsPdf
           data={climate}
+          date={date}
+          teacher={teacherObject}
+        />
+      </div>
+      ) : (null)}
+      {renderMathPdf ? (
+        <div
+        id="MI"
+        style={{
+          backgroundColor: '#ffffff',
+          width: '210mm',
+          minHeight: '100mm',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          visibility: 'hidden',
+          position: 'fixed',
+          right: -1000
+        }}
+      >
+        <MathResultsPdf
+          data={math}
           date={date}
           teacher={teacherObject}
         />
