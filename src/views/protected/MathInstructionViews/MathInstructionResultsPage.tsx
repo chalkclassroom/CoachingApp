@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import * as moment from "moment";
+import moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import SummarySlider from "../../../components/MathInstructionComponents/ResultsComponents/SummarySlider";
 import DetailsSlider from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSlider";

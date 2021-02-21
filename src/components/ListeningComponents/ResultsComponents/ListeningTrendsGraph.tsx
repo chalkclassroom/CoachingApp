@@ -34,7 +34,7 @@ const listeningTrendOptions = {
     intersect: true
   },
   title: {
-    display: true,
+    display: false,
     text: "Teacher Listening Trends",
     fontSize: 20,
     fontStyle: "bold"
@@ -46,7 +46,9 @@ const listeningTrendOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date",
-          fontStyle: "bold"
+          fontSize: 18,
+          fontColor: 'black',
+          fontFamily: 'Arimo'
         }
       }
     ],
@@ -62,8 +64,10 @@ const listeningTrendOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: "% of Visits",
-          fontStyle: "bold"
+          labelString: "% of 1-minute Intervals",
+          fontSize: 18,
+          fontColor: 'black',
+          fontFamily: 'Arimo'
         }
       }
     ]
@@ -72,7 +76,14 @@ const listeningTrendOptions = {
     datalabels: {
       display: "auto",
       color: "gray",
-      align: "top",
+      align: function(value: {
+        dataIndex: number,
+        dataset: {
+          data: Array<number>
+        }
+      }): string {
+        return value.dataset.data[value.dataIndex] >= 95 ? "bottom" : "top";
+      },
       formatter: function(value: number): string {
         return value + "%";
       }

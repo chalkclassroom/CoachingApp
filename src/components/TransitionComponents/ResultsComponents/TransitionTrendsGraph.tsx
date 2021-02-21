@@ -46,7 +46,6 @@ const transitionTrendOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date & Total Time in Transition",
-          // fontStyle: "bold",
           fontSize: 18,
           fontColor: 'black',
           fontFamily: 'Arimo'
@@ -68,8 +67,7 @@ const transitionTrendOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: "Percentage of Time Spent in Transition",
-          // fontStyle: "bold",
+          labelString: "% of Time Spent in Transition",
           fontSize: 18,
           fontColor: 'black',
           fontFamily: 'Arimo'
@@ -81,7 +79,14 @@ const transitionTrendOptions = {
     datalabels: {
       display: 'auto',
       color: 'black',
-      align: 'top',
+      align: function(value: {
+        dataIndex: number,
+        dataset: {
+          data: Array<number>
+        }
+      }): string {
+        return value.dataset.data[value.dataIndex] >= 95 ? "bottom" : "top";
+      },
       formatter: function(value: number): string {
         return value + "%";
       }

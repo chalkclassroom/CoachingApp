@@ -74,7 +74,7 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
               }
             },
             title: {
-              display: true,
+              display: false,
               text: "Listening to Children",
               fontSize: 20,
               fontStyle: "bold"

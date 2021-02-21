@@ -94,7 +94,7 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
                   fontSize: 16
                 },
                 scaleLabel: {
-                  display: true,
+                  display: false,
                   labelString: "Behavior Responses",
                   fontSize: 18,
                   fontColor: "#000000"
@@ -113,7 +113,7 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
             display: false,
           },
           title: {
-            display: true,
+            display: false,
             text: "Classroom Climate Details",
             fontSize: 20,
             fontStyle: "bold"

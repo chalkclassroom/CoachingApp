@@ -466,6 +466,11 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           details={
             <div>
               <Grid container justify={"center"} direction={"column"}>
+                <Grid item style={{paddingTop: '1em'}}>
+                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                    Behavior Responses 
+                  </Typography>
+                </Grid>
                 <Grid container justify={"center"} direction={"column"}>
                   <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
                     What behavior responses did the teacher give children
@@ -491,7 +496,16 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
               </Grid>
             </div>
           }
-          trendsGraph={<ClimateTrendsGraph data={this.trendsFormatData}/>}
+          trendsGraph={
+            <Grid container direction="column" justify="center">
+              <Grid item style={{paddingTop: '1em', paddingBottom: '0.5em'}}>
+                <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                  Behavior Responses
+                </Typography>
+              </Grid>
+              <ClimateTrendsGraph data={this.trendsFormatData}/>
+            </Grid>    
+          }
           changeSessionId={this.changeSessionId}
           sessionId={this.state.sessionId}
           sessionDates={this.state.sessionDates}
