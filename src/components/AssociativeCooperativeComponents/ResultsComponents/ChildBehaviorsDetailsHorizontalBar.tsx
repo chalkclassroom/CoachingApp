@@ -8,7 +8,8 @@ interface Props {
   ac1: number,
   ac2: number,
   ac3: number,
-  ac4: number
+  ac4: number,
+  totalVisits: number
 }
 
 /**
@@ -28,7 +29,8 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
     ac1: PropTypes.number.isRequired,
     ac2: PropTypes.number.isRequired,
     ac3: PropTypes.number.isRequired,
-    ac4: PropTypes.number.isRequired
+    ac4: PropTypes.number.isRequired,
+    totalVisits: PropTypes.number.isRequired
   };
 
   /**
@@ -60,9 +62,9 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max:
-                    (Math.max(this.props.ac1 + this.props.ac2, this.props.ac3, this.props.ac4) > 20) ? 
-                    Math.max(this.props.ac1 + this.props.ac2, this.props.ac3, this.props.ac4) : 20,
+                  max: this.props.totalVisits,
+                  stepSize: 1,
+                  fixedStepSize: 1,
                   fontSize: 16,
                   fontColor: 'black'
                 },

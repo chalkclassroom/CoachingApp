@@ -605,6 +605,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
                 teacher2={this.state.teacher2}
                 teacher3={this.state.teacher3}
                 teacher4={this.state.teacher4}
+                totalVisits={this.state.math + this.state.notMath}
               />
             }
             trendsGraph={

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import * as moment from "moment";
+import moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import ChildTeacherBehaviorPieSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
 import ChildTeacherBehaviorDetailsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
@@ -628,6 +628,7 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
                 teacher2={this.state.teacher2}
                 teacher3={this.state.teacher3}
                 teacher4={this.state.teacher4}
+                totalVisits={this.state.ac + this.state.noAc + this.state.noChildOpp}
               />
             }
             trendsGraph={
