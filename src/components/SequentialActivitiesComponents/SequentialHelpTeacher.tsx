@@ -37,17 +37,17 @@ function SequentialHelpTeacher(props: Props): React.ReactElement {
             </strong>
           </TableCell>
           <TableCell className={classes.example}>
+            <strong>
+              Supporting children as they draw images or write messages
+            </strong>
+          </TableCell>
+          <TableCell className={classes.example}>
             <strong>Demonstrating the steps to an activity or game</strong>
           </TableCell>
           <TableCell className={classes.example}>
             <strong>
               Supporting children as they act out a dramatic play scenario
               or book
-            </strong>
-          </TableCell>
-          <TableCell className={classes.example}>
-            <strong>
-              Supporting children&apos;s drawing of an image or writing a message
             </strong>
           </TableCell>
         </TableRow>
@@ -57,19 +57,24 @@ function SequentialHelpTeacher(props: Props): React.ReactElement {
             to tallest
           </TableCell>
           <TableCell className={classes.example}>
+            Asking children to talk about their drawing and/or discussing
+            details they could add
+          </TableCell>
+          <TableCell className={classes.example}>
             Modeling the steps for playing a dice game
           </TableCell>
           <TableCell className={classes.example}>
             Inviting children to act out a book with puppets
           </TableCell>
-          <TableCell className={classes.example}>
-            Asking children to talk about their drawing and/or discussing
-            details they could add
-          </TableCell>
         </TableRow>
         <TableRow>
           <TableCell className={classes.example}>
             Showing children a new puzzle
+          </TableCell>
+          <TableCell className={classes.example}>
+            Inviting children to create a message based on their developmental
+            level (scribbles, letter-like forms, or letters representing
+            beginning sounds)
           </TableCell>
           <TableCell className={classes.example}>
             Demonstrating how to sort objects into groups by color, shape,
@@ -78,11 +83,6 @@ function SequentialHelpTeacher(props: Props): React.ReactElement {
           <TableCell className={classes.example}>
             Joining children&apos;s pretend play as a character to help them act
             out a predictable scenario (doctor&apos;s office, restaurant, etc.)
-          </TableCell>
-          <TableCell className={classes.example}>
-            Inviting children to create a message based on their developmental
-            level (scribbles, letter-like forms, or letters representing
-            beginning sounds)
           </TableCell>
         </TableRow>
       </TableBody>
