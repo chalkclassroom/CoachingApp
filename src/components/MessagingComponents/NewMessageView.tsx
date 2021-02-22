@@ -29,6 +29,7 @@ import ClimateResultsPdf from './ResultsPdfs/ClimateResultsPdf';
 import MathResultsPdf from './ResultsPdfs/MathResultsPdf';
 import ListeningResultsPdf from './ListeningResultsPdf';
 import SequentialResultsPdf from './ResultsPdfs/SequentialResultsPdf';
+import ACResultsPdf from './ResultsPdfs/ACResultsPdf';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import * as Types from '../../constants/Types';
@@ -198,6 +199,43 @@ type SequentialData = {
   }> | undefined
 }
 
+type ACData = {
+  childSummary: {
+    ac: number,
+    noac: number,
+    noOpportunity: number
+  },
+  teacherSummary: {
+    support: number,
+    noSupport: number,
+    noOpportunity: number
+  } | undefined,
+  childDetails: {
+    ac1: number,
+    ac2: number,
+    ac3: number,
+    ac4: number
+  } | undefined,
+  teacherDetails: {
+    teacher1: number,
+    teacher2: number,
+    teacher3: number,
+    teacher4: number
+  } | undefined,
+  childTrends: Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    noac: number,
+    ac: number
+  }> | undefined,
+  teacherTrends: Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    support: number,
+    nosupport: number
+  }> | undefined
+}
+
 /* const gridContainer = {
 	display: 'grid',
 	gridTemplateColumns: 'auto 1fr',
@@ -323,12 +361,14 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [renderMathPdf, setRenderMathPdf] = useState(false);
   const [renderListeningPdf, setRenderListeningPdf] = useState(false);
   const [renderSequentialPdf, setRenderSequentialPdf] = useState(false);
+  const [renderACPdf, setRenderACPdf] = useState(false);
   const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
   const [transition, setTransition] = useState<TransitionData>();
   const [climate, setClimate] = useState<ClimateData>();
   const [math, setMath] = useState<MathData>();
   const [listening, setListening]= useState<ListeningData>();
   const [sequential, setSequential] = useState<SequentialData>();
+  const [ac, setAC] = useState<ACData>();
 
   // get the user's name
   useEffect(() => {
@@ -806,7 +846,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       trends ? props.firebase.fetchChildMathTrend(teacherObject ? teacherObject.id : '')
         .then((trends: MathData['childTrends']) => {return trends}) : null,
       trends ? props.firebase.fetchTeacherMathTrend(teacherObject ? teacherObject.id : '')
-        .then((trends: MathData['childTrends']) => {return trends}) : null
+        .then((trends: MathData['teacherTrends']) => {return trends}) : null
     ])
   }
 
@@ -849,7 +889,56 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       trends ? props.firebase.fetchChildSeqTrend(teacherObject ? teacherObject.id : '')
         .then((trends: SequentialData['childTrends']) => {return trends}) : null,
       trends ? props.firebase.fetchTeacherSeqTrend(teacherObject ? teacherObject.id : '')
-        .then((trends: SequentialData['childTrends']) => {return trends}) : null
+        .then((trends: SequentialData['teacherTrends']) => {return trends}) : null
+    ])
+  }
+
+  const getACData = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined
+  ): Promise<[
+    ACData['childSummary'],
+    ACData['teacherSummary'] | undefined,
+    {
+      ac1: number,
+      ac2: number,
+      ac3: number,
+      ac4: number,
+      teacher1: number,
+      teacher2: number,
+      teacher3: number,
+      teacher4: number
+    } | undefined,
+    ACData['childTrends'] | undefined,
+    ACData['teacherTrends'] | undefined
+  ]> => {
+    return Promise.all([
+      props.firebase.fetchChildACSummary(sessionId)
+        .then((summary: ACData['childSummary']) => {
+          console.log('hello', summary);
+          return summary
+        }),
+      summary ? props.firebase.fetchTeacherACSummary(sessionId)
+        .then((summary: ACData['teacherSummary']) => {return summary}) : null,
+      details ? props.firebase.fetchACDetails(sessionId).then((details: {
+        ac1: number,
+        ac2: number,
+        ac3: number,
+        ac4: number,
+        teacher1: number,
+        teacher2: number,
+        teacher3: number,
+        teacher4: number
+      }) => {return details}) : null,
+      trends ? props.firebase.fetchChildACTrend(teacherObject ? teacherObject.id : '')
+        .then((trends: ACData['childTrends']) => {return trends}) : null,
+      trends ? props.firebase.fetchTeacherACTrend(teacherObject ? teacherObject.id : '')
+        .then((trends: ACData['teacherTrends']) => {
+          console.log('here aret eacher trends', trends);
+          return trends
+        }) : null
     ])
   }
 
@@ -994,6 +1083,37 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     })
   }
 
+  const attachACResult = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined,
+    addToAttachmentList: typeof functionForType
+  ): void => {
+    getACData(sessionId, summary, details, trends).then((data) => {
+      console.log('CALLED GETACDATA');
+      return Promise.all([
+        setAC({
+          childSummary: data[0],
+          teacherSummary: data[1],
+          childDetails: data[2] ? {ac1: data[2].ac1, ac2: data[2].ac2, ac3: data[2].ac3, ac4: data[2].ac4} : undefined,
+          teacherDetails: data[2] ? {teacher1: data[2].teacher1, teacher2: data[2].teacher2, teacher3: data[2].teacher3, teacher4: data[2].teacher4} : undefined,
+          childTrends: data[3],
+          teacherTrends: data[4]
+        }),
+        setDate(new Date())
+      ])
+    })
+    .then(() => {
+      setRenderACPdf(true);
+    }).then(() => {
+      setTimeout(()=> {printDocument('Associative and Cooperative', new Date(), 'AC', addToAttachmentList, sessionId)}, 10000)
+    }).then(() => {
+      setTimeout(() => {setRenderACPdf(false)}, 10000);
+      setTimeout(() => {setAC(undefined)}, 10000);
+    })
+  }
+
   const asyncForEach = async (array: Array<{
     content: string,
     filename: string,
@@ -1065,11 +1185,14 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         trends?: boolean,
         practice?: string
       }) => {
+        console.log('this is the attachment practice', attachment.practice);
         // await waitFor(10000);
         if (attachments) {
+          console.log('if attachments')
           if (attachment.actionPlan) {
             attachActionPlan(attachment.id, addToAttachmentList);
           } else if (attachment.result) {
+            console.log('else if attachmen.result');
             if (attachment.practice === 'transition') {
               attachTransitionResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'climate') {
@@ -1080,6 +1203,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
               attachListeningResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'sequential') {
               attachSequentialResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+            } else if (attachment.practice === 'Associative and Cooperative') {
+              attachACResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             }
           }
         }
@@ -1570,6 +1695,27 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       >
         <SequentialResultsPdf
           data={sequential}
+          date={date}
+          teacher={teacherObject}
+        />
+      </div>
+      ) : (null)}
+      {renderACPdf ? (
+        <div
+        id="AC"
+        style={{
+          backgroundColor: '#ffffff',
+          width: '210mm',
+          minHeight: '100mm',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          visibility: 'hidden',
+          position: 'fixed',
+          right: -1000
+        }}
+      >
+        <ACResultsPdf
+          data={ac}
           date={date}
           teacher={teacherObject}
         />
