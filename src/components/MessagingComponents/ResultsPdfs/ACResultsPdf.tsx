@@ -5,8 +5,8 @@ import ChildBehaviorsPie from '../../AssociativeCooperativeComponents/ResultsCom
 import TeacherBehaviorsPie from '../../AssociativeCooperativeComponents/ResultsComponents/TeacherBehaviorsPie';
 import ChildBehaviorsDetailsHorizontalBar from '../../AssociativeCooperativeComponents/ResultsComponents/ChildBehaviorsDetailsHorizontalBar';
 import TeacherBehaviorsDetailsHorizontalBar from '../../AssociativeCooperativeComponents/ResultsComponents/TeacherBehaviorsDetailsHorizontalBar';
-import ChildLineTrends from '../../MathInstructionComponents/ResultsComponents/ChildLineTrends';
-import TeacherLineTrends from '../../MathInstructionComponents/ResultsComponents/TeacherLineTrends';
+import ChildLineTrends from './ChildLineTrends';
+import TeacherLineTrends from './TeacherLineTrends';
 import AssocCoopInteractionsImage from '../../../assets/images/AssocCoopInteractionsImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
 import moment from 'moment';

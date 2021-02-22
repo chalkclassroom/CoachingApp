@@ -2,18 +2,20 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { Line } from "react-chartjs-2";
 
+type TrendsData = {
+  labels: Array<string>,
+  datasets: Array<{
+    label: string,
+    backgroundColor: string,
+    borderColor: string,
+    fill: boolean,
+    lineTension: number,
+    data: Array<number>
+  }>
+}
+
 interface Props {
-  data(): {
-    labels: Array<string>,
-    datasets: Array<{
-      label: string,
-      backgroundColor: string,
-      borderColor: string,
-      fill: boolean,
-      lineTension: number,
-      data: Array<number>
-    }>
-  } | undefined
+  data(): TrendsData | undefined
 }
 
 const TeacherBehaviorTrendsOptions = {
@@ -35,7 +37,9 @@ const TeacherBehaviorTrendsOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date",
-          fontStyle: "bold"
+          fontFamily: 'Arimo',
+          fontSize: 18,
+          fontColor: 'black'
         }
       }
     ],
@@ -51,8 +55,10 @@ const TeacherBehaviorTrendsOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: "% of Visits",
-          fontStyle: "bold"
+          labelString: "% of 1-minute Intervals",
+          fontFamily: 'Arimo',
+          fontSize: 18,
+          fontColor: 'black'
         }
       }
     ]
@@ -61,7 +67,15 @@ const TeacherBehaviorTrendsOptions = {
     datalabels: {
       display: "auto",
       color: "gray",
-      align: "top",
+      align: function(value: {
+        dataIndex: number,
+        dataset: {
+          data: Array<number>
+        }
+      }): string {
+        console.log('ALIGN', value.dataset.data[value.dataIndex], 'therefore', value.dataset.data[value.dataIndex] >= 95 ? "bottom" : "top")
+        return value.dataset.data[value.dataIndex] >= 95 ? "bottom" : "top";
+      },
       formatter: function(value: number): string {
         return value + "%";
       }
@@ -73,7 +87,7 @@ const TeacherLineTrends: React.FC<Props> = (props: Props) => {
 
   return (
     <Line
-      data={props.data}
+      data={(): TrendsData | undefined => props.data()}
       options={TeacherBehaviorTrendsOptions}
       width={650}
       height={400}

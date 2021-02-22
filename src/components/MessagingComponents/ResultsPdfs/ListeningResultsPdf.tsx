@@ -1,14 +1,14 @@
 import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import ListeningSummaryChart from '../ListeningComponents/ResultsComponents/ListeningSummaryChart';
-import ListeningDetailsChart from '../ListeningComponents/ResultsComponents/ListeningDetailsChart';
-import ListeningTrendsGraph from '../ListeningComponents/ResultsComponents/ListeningTrendsGraph';
-import ListeningtoChildrenImage from '../../assets/images/ListeningtoChildrenImage.png';
-import LogoImage from '../../assets/images/LogoImage.png';
+import ListeningSummaryChart from '../../ListeningComponents/ResultsComponents/ListeningSummaryChart';
+import ListeningDetailsChart from '../../ListeningComponents/ResultsComponents/ListeningDetailsChart';
+import ListeningTrendsGraph from '../../ListeningComponents/ResultsComponents/ListeningTrendsGraph';
+import ListeningtoChildrenImage from '../../../assets/images/ListeningtoChildrenImage.png';
+import LogoImage from '../../../assets/images/LogoImage.png';
 import moment from 'moment';
-import * as Types from '../../constants/Types';
-import * as Constants from '../../constants/Constants';
+import * as Types from '../../../constants/Types';
+import * as Constants from '../../../constants/Constants';
 
 interface ListeningResultsProps {
   data: {
@@ -47,28 +47,32 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
       lineTension: number,
       data: Array<number>
     }>
-  } => {
-    return {
-      labels: props.data.trends ? [props.data.trends.map(observation => moment(observation.startDate.value).format("MMM Do"))] : [],
-      datasets: [
-        {
-          label: "Teacher Listening",
-          backgroundColor: Constants.Colors.LC,
-          borderColor: Constants.Colors.LC,
-          fill: false,
-          lineTension: 0,
-          data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.listening / (observation.listening + observation.notListening)) * 100)) : []
-        },
-        {
-          label: "Other Tasks or Behaviors",
-          backgroundColor: Constants.Colors.RedGraph,
-          borderColor: Constants.Colors.RedGraph,
-          fill: false,
-          lineTension: 0,
-          data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.notListening / (observation.listening + observation.notListening)) * 100)) : []
-        }
-      ]
-    };
+  } | undefined => {
+    if (props.data) {
+      return {
+        labels: props.data.trends ? [props.data.trends.map(observation => moment(observation.startDate.value).format("MMM Do"))] : [],
+        datasets: [
+          {
+            label: "Teacher Listening",
+            backgroundColor: Constants.Colors.LC,
+            borderColor: Constants.Colors.LC,
+            fill: false,
+            lineTension: 0,
+            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.listening / (observation.listening + observation.notListening)) * 100)) : []
+          },
+          {
+            label: "Other Tasks or Behaviors",
+            backgroundColor: Constants.Colors.RedGraph,
+            borderColor: Constants.Colors.RedGraph,
+            fill: false,
+            lineTension: 0,
+            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.notListening / (observation.listening + observation.notListening)) * 100)) : []
+          }
+        ]
+      };
+    } else {
+      return;
+    }
   };
 
   return (
@@ -121,7 +125,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
             style={{fontFamily: 'Arimo'}}
           >
             <Grid item xs={4}>
-              {props.teacher.firstName + " " + props.teacher.lastName}
+              {props.teacher ? (props.teacher.firstName + " " + props.teacher.lastName) : (null)}
             </Grid>
             <Grid item xs={4} />
             <Grid item xs={4}>
@@ -134,7 +138,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
             <Grid item style={{paddingTop: '1em'}}>
-              {props.data.summary ? (
+              {props.data && props.data.summary ? (
                 <ListeningSummaryChart
                   listening={props.data.summary.listening}
                   notListening={props.data.summary.notListening}
@@ -142,7 +146,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data.details ? (
+              {props.data && props.data.details ? (
                 <ListeningDetailsChart
                   listening1={props.data.details.listening1}
                   listening2={props.data.details.listening2}
@@ -154,18 +158,19 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data.trends ? (
+              {props.data && props.data.trends ? (
                 <ListeningTrendsGraph
                   data={(): {
                     labels: Array<Array<string>>;
                     datasets: Array<{
-                        label: string;
-                        backgroundColor: string;
-                        borderColor: string;
-                        fill: boolean;
-                        lineTension: number;
-                        data: Array<number>;
-                    }>} => handleTrendsFormatData()}
+                      label: string;
+                      backgroundColor: string;
+                      borderColor: string;
+                      fill: boolean;
+                      lineTension: number;
+                      data: Array<number>;
+                    }>
+                  } | undefined => handleTrendsFormatData()}
                 />
               ) : (null)}
             </Grid>

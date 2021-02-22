@@ -27,7 +27,7 @@ import ActionPlanForPdf from './ActionPlanForPdf';
 import TransitionResultsPdf from './ResultsPdfs/TransitionResultsPdf';
 import ClimateResultsPdf from './ResultsPdfs/ClimateResultsPdf';
 import MathResultsPdf from './ResultsPdfs/MathResultsPdf';
-import ListeningResultsPdf from './ListeningResultsPdf';
+import ListeningResultsPdf from './ResultsPdfs/ListeningResultsPdf';
 import SequentialResultsPdf from './ResultsPdfs/SequentialResultsPdf';
 import ACResultsPdf from './ResultsPdfs/ACResultsPdf';
 import { connect } from 'react-redux';
@@ -116,7 +116,7 @@ type MathData = {
   childSummary: {
     math: number,
     notMath: number
-  } | undefined,
+  },
   teacherSummary: {
     support: number,
     noSupport: number,
@@ -168,7 +168,7 @@ type SequentialData = {
   childSummary: {
     sequential: number,
     notSequential: number
-  } | undefined,
+  },
   teacherSummary: {
     support: number,
     noSupport: number,
@@ -813,7 +813,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     details: boolean | undefined,
     trends: boolean | undefined
   ): Promise<[
-    MathData['childSummary'] | undefined,
+    MathData['childSummary'],
     MathData['teacherSummary'] | undefined,
     {
       math1: number,
@@ -829,8 +829,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     MathData['teacherTrends'] | undefined
   ]> => {
     return Promise.all([
-      summary ? props.firebase.fetchChildMathSummary(sessionId)
-        .then((summary: MathData['childSummary']) => {return summary}) : null,
+      props.firebase.fetchChildMathSummary(sessionId)
+        .then((summary: MathData['childSummary']) => {return summary}),
       summary ? props.firebase.fetchTeacherMathSummary(sessionId)
         .then((summary: MathData['teacherSummary']) => {return summary}) : null,
       details ? props.firebase.fetchMathDetails(sessionId).then((details: {
@@ -856,7 +856,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     details: boolean | undefined,
     trends: boolean | undefined
   ): Promise<[
-    SequentialData['childSummary'] | undefined,
+    SequentialData['childSummary'],
     SequentialData['teacherSummary'] | undefined,
     {
       sequential1: number,
@@ -872,8 +872,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     SequentialData['teacherTrends'] | undefined
   ]> => {
     return Promise.all([
-      summary ? props.firebase.fetchChildSeqSummary(sessionId)
-        .then((summary: SequentialData['childSummary']) => {return summary}) : null,
+      props.firebase.fetchChildSeqSummary(sessionId)
+        .then((summary: SequentialData['childSummary']) => {return summary}),
       summary ? props.firebase.fetchTeacherSeqSummary(sessionId)
         .then((summary: SequentialData['teacherSummary']) => {return summary}) : null,
       details ? props.firebase.fetchSeqDetails(sessionId).then((details: {

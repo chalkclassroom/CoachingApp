@@ -14,7 +14,7 @@ interface Props {
       lineTension: number,
       data: Array<number>
     }>
-  }
+  } | undefined
 }
 
 /**

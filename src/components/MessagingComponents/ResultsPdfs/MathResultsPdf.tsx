@@ -5,8 +5,8 @@ import ChildPieSummary from '../../MathInstructionComponents/ResultsComponents/C
 import TeacherPieSummary from '../../MathInstructionComponents/ResultsComponents/TeacherPieSummary';
 import ChildBarDetails from '../../MathInstructionComponents/ResultsComponents/ChildBarDetails';
 import TeacherBarDetails from '../../MathInstructionComponents/ResultsComponents/TeacherBarDetails';
-import ChildLineTrends from '../../MathInstructionComponents/ResultsComponents/ChildLineTrends';
-import TeacherLineTrends from '../../MathInstructionComponents/ResultsComponents/TeacherLineTrends';
+import ChildLineTrends from './ChildLineTrends';
+import TeacherLineTrends from './TeacherLineTrends';
 import MathIconImage from '../../../assets/images/MathIconImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
 import moment from 'moment';
@@ -18,7 +18,7 @@ interface Props {
     childSummary: {
       math: number,
       notMath: number
-    } | undefined,
+    },
     teacherSummary: {
       support: number,
       noSupport: number,
@@ -208,7 +208,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
         </Grid>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
-            {props.data && props.data.childSummary ? (
+            {props.data && props.data.childSummary && props.data.teacherSummary ? (
               <Grid item style={{paddingTop: '1em'}}>
                 <ChildPieSummary
                   math={props.data.childSummary.math}
@@ -232,6 +232,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
                   math2={props.data.childDetails.math2}
                   math3={props.data.childDetails.math3}
                   math4={props.data.childDetails.math4}
+                  totalVisits={props.data.childSummary.math + props.data.childSummary.notMath}
                 />
               </Grid>
             ) : (null)}
@@ -242,6 +243,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
                   teacher2={props.data.teacherDetails.teacher2}
                   teacher3={props.data.teacherDetails.teacher3}
                   teacher4={props.data.teacherDetails.teacher4}
+                  totalVisits={props.data.childSummary.math + props.data.childSummary.notMath}
                 />
               </Grid>
             ) : (null)}
@@ -262,7 +264,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.childTrends ? (
+            {props.data && props.data.teacherTrends ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <TeacherLineTrends
                   data={(): {

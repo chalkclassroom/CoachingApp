@@ -5,8 +5,8 @@ import ChildPieSummary from '../../SequentialActivitiesComponents/ResultsCompone
 import TeacherPieSummary from '../../SequentialActivitiesComponents/ResultsComponents/TeacherPieSummary';
 import ChildBarDetails from '../../SequentialActivitiesComponents/ResultsComponents/ChildBarDetails';
 import TeacherBarDetails from '../../SequentialActivitiesComponents/ResultsComponents/TeacherBarDetails';
-import ChildLineTrends from '../../MathInstructionComponents/ResultsComponents/ChildLineTrends';
-import TeacherLineTrends from '../../MathInstructionComponents/ResultsComponents/TeacherLineTrends';
+import ChildLineTrends from './ChildLineTrends';
+import TeacherLineTrends from './TeacherLineTrends';
 import SequentialActivitiesImage from '../../../assets/images/SequentialActivitiesImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
 import moment from 'moment';
@@ -18,7 +18,7 @@ interface Props {
     childSummary: {
       sequential: number,
       notSequential: number
-    } | undefined,
+    },
     teacherSummary: {
       support: number,
       noSupport: number,
@@ -208,7 +208,7 @@ const SequentialResultsPdf: React.FC<Props> = (props: Props) => {
         </Grid>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
-            {props.data && props.data.childSummary ? (
+            {props.data && props.data.childSummary && props.data.teacherSummary ? (
               <Grid item style={{paddingTop: '1em'}}>
                 <ChildPieSummary
                   sequential={props.data.childSummary.sequential}
@@ -232,6 +232,7 @@ const SequentialResultsPdf: React.FC<Props> = (props: Props) => {
                   sequential2={props.data.childDetails.sequential2}
                   sequential3={props.data.childDetails.sequential3}
                   sequential4={props.data.childDetails.sequential4}
+                  totalVisits={props.data.childSummary.sequential + props.data.childSummary.notSequential}
                 />
               </Grid>
             ) : (null)}
@@ -242,6 +243,7 @@ const SequentialResultsPdf: React.FC<Props> = (props: Props) => {
                   teacher2={props.data.teacherDetails.teacher2}
                   teacher3={props.data.teacherDetails.teacher3}
                   teacher4={props.data.teacherDetails.teacher4}
+                  totalVisits={props.data.childSummary.sequential + props.data.childSummary.notSequential}
                 />
               </Grid>
             ) : (null)}
@@ -262,7 +264,7 @@ const SequentialResultsPdf: React.FC<Props> = (props: Props) => {
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.childTrends ? (
+            {props.data && props.data.teacherTrends ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <TeacherLineTrends
                   data={(): {

@@ -20,7 +20,7 @@ import {
 import ResultsList from './ResultsList';
 import ActionPlanList from '../ActionPlanList';
 import ActionPlanForPdf from './ActionPlanForPdf';
-import ListeningResultsPdf from './ListeningResultsPdf';
+import ListeningResultsPdf from './ResultsPdfs/ListeningResultsPdf';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import * as Types from '../../constants/Types';
