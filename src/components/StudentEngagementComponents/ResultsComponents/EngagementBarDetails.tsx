@@ -83,9 +83,10 @@ class EngagementBarDetails extends React.Component<Props, {}> {
                   fontColor: 'black'
                 },
                 scaleLabel: {
-                  display: false,
-                  labelString: 'Number of Times Observed',
-                  fontSize: 16,
+                  display: true,
+                  labelString: 'Number Observed',
+                  fontSize: 18,
+                  fontFamily: 'Arimo',
                   fontColor: 'black'
                 }
               }
@@ -121,7 +122,8 @@ class EngagementBarDetails extends React.Component<Props, {}> {
             }
           }
         }}
-        width={260}
+        width={650}
+        height={400}
       />
     );
   }

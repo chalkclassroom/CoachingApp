@@ -8,7 +8,8 @@ interface Props {
   ac1: number,
   ac2: number,
   ac3: number,
-  ac4: number
+  ac4: number,
+  totalVisits: number
 }
 
 /**
@@ -28,7 +29,8 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
     ac1: PropTypes.number.isRequired,
     ac2: PropTypes.number.isRequired,
     ac3: PropTypes.number.isRequired,
-    ac4: PropTypes.number.isRequired
+    ac4: PropTypes.number.isRequired,
+    totalVisits: PropTypes.number.isRequired
   };
 
   /**
@@ -38,16 +40,15 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const childBehaviorsData = {
       labels: [
-        ["Participating in a conversation", "about a shared activity"],
-        ["Engaging in an open-ended", "activity without clear", "roles or order"],
-        ["Following formal rules of a", "game and/or taking turns"],
+        ["Doing an activity together", "that does not have a", "predetermined sequence"],
+        ["Playing a game together", "with formal rules"],
         ["Doing an activity together", "that has a predetermined", "sequence"]
       ],
       datasets: [
         {
-          data: [this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4],
-          backgroundColor: ["#c5afe7", "#c5afe7", Constants.Colors.AC, Constants.Colors.AC],
-          hoverBackgroundColor: ["#c5afe7", "#c5afe7", Constants.Colors.AC, Constants.Colors.AC]
+          data: [this.props.ac1 + this.props.ac2, this.props.ac3, this.props.ac4],
+          backgroundColor: ["#c5afe7", Constants.Colors.AC, Constants.Colors.AC],
+          hoverBackgroundColor: ["#c5afe7", Constants.Colors.AC, Constants.Colors.AC]
         }
       ]
     };
@@ -61,9 +62,9 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max:
-                    (Math.max(this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4) > 20) ? 
-                    Math.max(this.props.ac1, this.props.ac2, this.props.ac3, this.props.ac4) : 20,
+                  max: this.props.totalVisits,
+                  stepSize: 1,
+                  fixedStepSize: 1,
                   fontSize: 16,
                   fontColor: 'black'
                 },

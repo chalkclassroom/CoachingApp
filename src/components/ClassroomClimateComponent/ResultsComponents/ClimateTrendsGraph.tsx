@@ -22,7 +22,7 @@ interface Props {
  */
 const climateTrendOptions = {
   title: {
-    display: true,
+    display: false,
     text: "Classroom Climate Trends",
     fontSize: 20,
     fontStyle: "bold"
@@ -34,7 +34,9 @@ const climateTrendOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date",
-          fontStyle: "bold"
+          fontSize: 18,
+          fontColor: 'black',
+          fontFamily: 'Arimo'
         }
       }
     ],
@@ -50,8 +52,10 @@ const climateTrendOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: "% of Behavior Responses",
-          fontStyle: "bold"
+          labelString: "% of Behavior Response Type",
+          fontSize: 18,
+          fontColor: 'black',
+          fontFamily: 'Arimo'
         }
       }
     ]

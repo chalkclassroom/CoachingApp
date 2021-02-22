@@ -8,7 +8,8 @@ interface Props {
   sequential1: number,
   sequential2: number,
   sequential3: number,
-  sequential4: number
+  sequential4: number,
+  totalVisits: number
 }
 
 /**
@@ -28,7 +29,8 @@ class ChildBarDetails extends React.Component<Props, {}> {
     sequential1: PropTypes.number.isRequired,
     sequential2: PropTypes.number.isRequired,
     sequential3: PropTypes.number.isRequired,
-    sequential4: PropTypes.number.isRequired
+    sequential4: PropTypes.number.isRequired,
+    totalVisits: PropTypes.number.isRequired
   };
 
   /**
@@ -61,9 +63,9 @@ class ChildBarDetails extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max:
-                    (Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) > 20) ?
-                    Math.max(this.props.sequential1, this.props.sequential2, this.props.sequential3, this.props.sequential4) : 20,
+                  max: this.props.totalVisits,
+                  stepSize: 1,
+                  fixedStepSize: 1,
                   fontSize: 16,
                   fontColor: 'black'
                 },

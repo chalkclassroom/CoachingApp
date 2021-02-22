@@ -6,7 +6,8 @@ interface Props {
   teacher1: number,
   teacher2: number,
   teacher3: number,
-  teacher4: number
+  teacher4: number,
+  totalVisits: number
 }
 
 /**
@@ -26,7 +27,8 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
     teacher1: PropTypes.number.isRequired,
     teacher2: PropTypes.number.isRequired,
     teacher3: PropTypes.number.isRequired,
-    teacher4: PropTypes.number.isRequired
+    teacher4: PropTypes.number.isRequired,
+    totalVisits: PropTypes.number.isRequired
   };
 
   /**
@@ -36,7 +38,7 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const teacherBehaviorsData = {
       labels: [
-        ["Talking to and playing with children"],
+        ["Participating in children's play"],
         ["Asking questions to extend children's", "thinking about their shared activity"],
         ["Encouraging children to share, work,", "or interact with each other"],
         ["Helping children find the words to", "communicate"]
@@ -59,9 +61,9 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max:
-                    (Math.max(this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4) > 20) ?
-                    Math.max(this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4) : 20,
+                  max: this.props.totalVisits,
+                  stepSize: 1,
+                  fixedStepSize: 1,
                   fontSize: 16,
                   fontColor: 'black'
                 },

@@ -502,6 +502,11 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
             summary={
               <div>
                 <Grid container justify={"center"} direction={"column"}>
+                  <Grid item style={{paddingTop: '1em'}}>
+                    <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                      Level of Instruction
+                    </Typography>
+                  </Grid>
                   <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
                     Compare how often the teacher provided: 
                   </Typography>
@@ -532,6 +537,11 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
             details={
               <div>
                 <Grid container justify={"center"} direction={"column"}>
+                  <Grid item style={{paddingTop: '1em'}}>
+                    <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                      Teacher and Child Behaviors
+                    </Typography>
+                  </Grid>
                   <Grid container justify={"center"} direction={"column"}>
                     <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
                       Was there a type of instruction the teacher used more often? 
@@ -550,7 +560,14 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
               </div>
             }
             trendsGraph={
-              <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
+              <Grid container direction="column" justify="center">
+                <Grid item style={{paddingTop: '1em', paddingBottom: '0.5em'}}>
+                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                    Teacher and Child Behaviors
+                  </Typography>
+                </Grid>
+                <LevelOfInstructionTrendsGraph data={this.trendsFormatData}/>
+              </Grid>
             }
             changeSessionId={this.changeSessionId}
             sessionId={this.state.sessionId}

@@ -35,7 +35,7 @@ class TeacherPieSummary extends React.Component<Props, {}> {
   render(): React.ReactNode {
     const teacherBehaviorsData = {
       labels: [
-        "Teacher Support for Assoc./Coop. Interactions",
+        "Teacher Support for Sequential Activities",
         "Teacher Present, No Support",
         "Teacher Not at Center"
       ],

@@ -5,17 +5,19 @@ import {
 } from "../actions/coach";
 
 interface CoachState {
-  coachName: string
+  coachName: string,
+  role: string
 }
 
-const initialState: CoachState = { coachName: null };
+const initialState: CoachState = { coachName: null, role: '' };
 
 export default (state = initialState, action: CoachTypes): CoachState => {
   switch (action.type) {
     case GET_COACH:
       return {
         ...state,
-        coachName: action.coachName
+        coachName: action.coachName,
+        role: action.role
       };
     case CLEAR_COACH:
       return {

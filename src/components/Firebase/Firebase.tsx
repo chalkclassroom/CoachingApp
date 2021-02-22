@@ -74,9 +74,9 @@ class Firebase {
           .then(() => console.log('Woohoo! Multi-Tab Persistence!'))
           .catch((error: Error) => console.error('Offline Not Working: ', error))
       this.functions = firebase.functions()
-      /* if (location.hostname === 'localhost') {
+      if (process.env.USE_LOCAL_FUNCTIONS) {
         this.functions.useFunctionsEmulator('http://localhost:5001')
-      } */
+      }
       // this.sessionRef = null;
     }
   }
@@ -461,7 +461,8 @@ class Firebase {
       })
       .catch(error => console.error("Error getting documents: ", error));
   }; */
-
+  // TODO: I don't love this, is there a reason we don't just load the user
+  //       once and store the whole doc in redux?
   /**
    * gets first name of current user
    */
@@ -475,6 +476,20 @@ class Firebase {
       .catch((error: Error) => console.error("Error getting cached document:", error));
     }
   };
+
+  /**
+   * gets the 'role' of the user. for controlling access to app sections.
+   */
+  getUserRole = async (): Promise<string | void> => {
+    if (this.auth.currentUser) {
+      return this.db
+          .collection("users")
+          .doc(this.auth.currentUser.uid)
+          .get()
+          .then((doc: firebase.firestore.DocumentData) => doc.data().role)
+          .catch((error: Error) => console.error("Error getting cached document:", error));
+    }
+  }
 
   /**
    * gets last name of current user
@@ -1156,6 +1171,15 @@ class Firebase {
       console.error("Error occurred getting transition trend: ", error)
     );
   };
+
+  /**
+   *
+   * @param {string} tableName
+   */
+  fetchExport = async (tableName:string, from:string, to:string):Promise< {} | void > => {
+    const exportBqFunction = this.functions.httpsCallable("exportBqData");
+    return exportBqFunction({tableName, from, to});
+  }
 
   /**
    * Associative Cooperative cloud function

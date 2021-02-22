@@ -107,7 +107,7 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
                   padding: 8
                 },
                 scaleLabel: {
-                  display: true,
+                  display: false,
                   labelString: "Listening",
                   fontSize: 18,
                   fontColor: "#000000"
@@ -126,7 +126,7 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
             display: false,
           },
           title: {
-            display: true,
+            display: false,
             text: "Listening to Children Details",
             fontSize: 20,
             fontStyle: "bold"

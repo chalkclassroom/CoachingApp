@@ -135,7 +135,6 @@ interface Props {
   ViewEnum: {
     CONCEPTS: number,
     DEFINITIONS: number,
-    EXAMPLE: number,
     DEMONSTRATION: number,
     KNOWLEDGECHECK: number
   },
@@ -143,7 +142,6 @@ interface Props {
   Icon: string,
   conceptsClick(): void,
   definitionsClick(): void,
-  exampleClick(): void,
   demonstrationClick(): void,
   knowledgeCheckClick(): void,
   colorTheme: Theme
@@ -162,7 +160,6 @@ function TrainingDashboard(props: Props): React.ReactElement {
     Icon,
     conceptsClick,
     definitionsClick,
-    exampleClick,
     demonstrationClick,
     knowledgeCheckClick,
     colorTheme
@@ -222,21 +219,6 @@ function TrainingDashboard(props: Props): React.ReactElement {
                 size="large"
                 color={"primary"}
                 fullWidth={true}
-                variant={view === ViewEnum.EXAMPLE ? "contained" : "outlined"}
-                onClick={exampleClick}
-                style={{ fontSize: '1em' }}
-                disabled
-              >
-                EXAMPLE
-              </Button>
-            </MuiThemeProvider>
-          </ListItem>
-          <ListItem>
-            <MuiThemeProvider theme={colorTheme}>
-              <Button
-                size="large"
-                color={"primary"}
-                fullWidth={true}
                 variant={view === ViewEnum.KNOWLEDGECHECK ? "contained" : "outlined"}
                 onClick={knowledgeCheckClick}
                 style={{ fontSize: '1em' }}
@@ -261,7 +243,6 @@ TrainingDashboard.propTypes = {
   ViewEnum: PropTypes.exact({
     CONCEPTS: PropTypes.number,
     DEFINITIONS: PropTypes.number,
-    EXAMPLE: PropTypes.number,
     DEMONSTRATION: PropTypes.number,
     KNOWLEDGECHECK: PropTypes.number
   }).isRequired,
@@ -269,7 +250,6 @@ TrainingDashboard.propTypes = {
   Icon: PropTypes.string.isRequired,
   conceptsClick: PropTypes.func.isRequired,
   definitionsClick: PropTypes.func.isRequired,
-  exampleClick: PropTypes.func.isRequired,
   demonstrationClick: PropTypes.func.isRequired,
   knowledgeCheckClick: PropTypes.func.isRequired,
 };

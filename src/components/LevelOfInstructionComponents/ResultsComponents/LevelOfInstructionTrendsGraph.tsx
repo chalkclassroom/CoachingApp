@@ -23,7 +23,7 @@ interface Props {
  */
 const instructionTrendOptions = {
   title: {
-    display: true,
+    display: false,
     text: "Level Of Instruction Trends",
     fontSize: 20,
     fontStyle: "bold"
@@ -35,8 +35,9 @@ const instructionTrendOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date",
-          fontStyle: "bold",
-          fontSize: 16
+          fontFamily: "Arimo",
+          fontSize: 18,
+          color: 'black'
         }
       }
     ],
@@ -52,13 +53,31 @@ const instructionTrendOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: "% of Each Instruction Type",
-          fontStyle: "bold",
-          fontSize: 16
+          labelString: "% of Each Behavior",
+          fontFamily: "Arimo",
+          fontSize: 18,
+          color: 'black'
         }
       }
     ]
   },
+  plugins: {
+    datalabels: {
+      display: "auto",
+      color: "gray",
+      align: function(value: {
+        dataIndex: number,
+        dataset: {
+          data: Array<number>
+        }
+      }): string {
+        return value.dataset.data[value.dataIndex] >= 95 ? "bottom" : "top";
+      },
+      formatter: function(value: number): string {
+        return value + "%";
+      }
+    }
+  }
 };
 
 /**

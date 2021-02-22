@@ -166,7 +166,8 @@ type Props = RouteComponentProps & {
   infoPlacement?: string,
   infoDisplay?: React.ReactElement,
   completeObservation: boolean,
-  updateSessionTime(time: number): void
+  updateSessionTime(time: number): void,
+  stopTimer?(): void
 }
 
 interface State {
@@ -503,6 +504,9 @@ class Dashboard extends React.Component<Props, State> {
                           shouldOpen={true}
                           onAccept={(): void => {
                             this.setState({resultsDialog: this.props.type});
+                            if (this.props.stopTimer) {
+                              this.props.stopTimer()
+                            }
                             if (this.props.type === "TT") {
                               const sessionEnd = Date.now();
                               this.props.updateSessionTime(sessionEnd);

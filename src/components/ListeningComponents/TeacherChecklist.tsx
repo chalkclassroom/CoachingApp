@@ -177,6 +177,10 @@ class TeacherChecklist extends React.Component<Props, State> {
     this.setState({ timeUpOpen: true });
   };
 
+  stopTimer = (): void => {
+    clearInterval(this.timer);
+  }
+
   handleFinish = (): void => {
     this.setState({
       timeUpOpen: false,
@@ -329,6 +333,7 @@ class TeacherChecklist extends React.Component<Props, State> {
                     infoDisplay={<Countdown type={this.props.type} time={this.state.time} timerTime={60000} />}
                     infoPlacement="center"
                     completeObservation={true}
+                    stopTimer={this.stopTimer}
                   />
                 </Grid>
               </Grid>

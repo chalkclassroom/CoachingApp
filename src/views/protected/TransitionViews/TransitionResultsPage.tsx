@@ -602,10 +602,10 @@ class TransitionResultsPage extends React.Component<Props, State> {
             magic8="Transition Time"
             // history={this.props.history}
             summary={
-              <Grid container justify={"center"} direction={"column"}>
-                <Grid item style={{padding: '1em'}}>
+              <Grid container justify={"space-between"} direction={"column"}>
+                <Grid item style={{paddingTop: '1em'}}>
                   <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
-                    Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
+                    Transition Time
                   </Typography>
                 </Grid>
                 <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
@@ -636,14 +636,19 @@ class TransitionResultsPage extends React.Component<Props, State> {
                     // style={{overflow:"hidden", height: '80vh'}}
                   />
                 </Grid>
+                <Grid item>
+                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                    Total Session Time: {Math.floor((this.state.sessionTotal/1000)/60)}m {Math.round((((this.state.sessionTotal/1000)/60) % 1) * 60) }s
+                  </Typography>
+                </Grid>
               </Grid>
             }
             details={
               <div>
-                <Grid container justify={"center"} direction={"column"}>
-                  <Grid item style={{padding: '1em'}}>
+                <Grid container justify={"space-between"} direction={"column"}>
+                  <Grid item style={{paddingTop: '1em'}}>
                     <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
-                      Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
+                      Transition Types
                     </Typography>
                   </Grid>
                   <Grid container justify={"center"} direction={"column"}>
@@ -657,7 +662,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
                       Which transitions were longer?              
                     </Typography>
                   </Grid>
-                  <Grid item style={{paddingTop: '1em', paddingBottom: '1em'}}>
+                  <Grid item style={{paddingTop: '0.5em', paddingBottom: '0.5em'}}>
                     <TransitionBarChart
                       line={this.state.sessionLine}
                       traveling={this.state.sessionTraveling}
@@ -668,14 +673,26 @@ class TransitionResultsPage extends React.Component<Props, State> {
                       // style={{alignItems: "center", height: '80vh'}}
                     />
                   </Grid>
+                  <Grid item style={{paddingTop: '0.5em'}}>
+                    <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                      Total Transition Time: {Math.floor((this.state.transitionTime/1000)/60)}m {Math.round((((this.state.transitionTime/1000)/60) % 1) * 60) }s
+                    </Typography>
+                  </Grid>
                 </Grid>
               </div>
             }
             trendsGraph={
-              <TransitionTrendsGraph
-                data={this.handleTrendsFormatData}
-                // style={{overflow:"hidden", height: '80vh'}}
-              />
+              <Grid container direction="column" justify="center">
+                <Grid item style={{padding: '1em'}}>
+                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                    Transition Time
+                  </Typography>
+                </Grid>
+                <TransitionTrendsGraph
+                  data={this.handleTrendsFormatData}
+                  // style={{overflow:"hidden", height: '80vh'}}
+                />
+              </Grid>
             }
             changeSessionId={this.changeSessionId}
             sessionId={this.state.sessionId}

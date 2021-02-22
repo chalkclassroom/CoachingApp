@@ -1,9 +1,8 @@
 import * as React from 'react';
-import * as PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles/index";
+import { makeStyles } from "@material-ui/core/styles/index";
 import { Table, TableRow, TableBody, TableCell } from '@material-ui/core';
 
-const styles: object = {
+const useStyles = makeStyles({
   checklistItem: {
     backgroundColor: "#f3f3f3",
     color: "black",
@@ -22,21 +21,13 @@ const styles: object = {
     padding: '0.5em',
     verticalAlign: 'top',
   },
-};
-
-interface Props {
-  classes: {
-    checklistItem: string,
-    example: string,
-  }
-}
+});
 
 /**
- * @param {Props} props
  * @return {ReactElement}
  */
-function ACHelpTeacher(props: Props): React.ReactElement {
-  const { classes } = props;
+export default function ACHelpTeacher(): React.ReactElement {
+  const classes = useStyles();
   return(
     <Table>
       <TableBody>
@@ -60,26 +51,30 @@ function ACHelpTeacher(props: Props): React.ReactElement {
           </TableCell>
           <TableCell className={classes.example}>
             Asking children what will happen next during dramatic play
+            (e.g., teacher asks, “What ingredients do we need?” while pretending to be the cook)
           </TableCell>
           <TableCell className={classes.example}>
             Demonstrating how to play a new game
           </TableCell>
           <TableCell className={classes.example}>
-            Prompting children to ask peers to play or share a material
+            Giving children a sentence starter to help them interact
+            with peers (Say, “I want to play…”)
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell className={classes.example}>
-            Co-writing a label with a child for his drawing
+            Sorting buttons with children
           </TableCell>
           <TableCell className={classes.example} >
-            Asking children what shape of blocks they will need to keep their building from falling
+            Asking children what shape of blocks they will need to keep
+            their building from falling
           </TableCell>
           <TableCell className={classes.example}>
-            Modeling the steps for sharing
+            Prompting children to ask peers to play or modeling how to share
           </TableCell>
           <TableCell className={classes.example}>
-            Helping children solve problems during games or other shared activities (Say, “It’s my turn.”)
+            Helping children solve problems during games or other shared
+            activities (Say, “It’s my turn.”)
           </TableCell>
         </TableRow>
         <TableRow>
@@ -99,9 +94,3 @@ function ACHelpTeacher(props: Props): React.ReactElement {
     </Table>
   )
 }
-
-ACHelpTeacher.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(ACHelpTeacher);
