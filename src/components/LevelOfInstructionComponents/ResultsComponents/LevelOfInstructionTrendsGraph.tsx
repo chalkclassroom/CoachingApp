@@ -14,7 +14,7 @@ interface Props {
       data: Array<number>,
       borderDash?: Array<number>
     }>
-  }
+  } | undefined
 }
 
 /**

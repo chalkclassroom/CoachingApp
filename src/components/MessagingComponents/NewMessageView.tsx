@@ -27,6 +27,7 @@ import ActionPlanForPdf from './ActionPlanForPdf';
 import TransitionResultsPdf from './ResultsPdfs/TransitionResultsPdf';
 import ClimateResultsPdf from './ResultsPdfs/ClimateResultsPdf';
 import MathResultsPdf from './ResultsPdfs/MathResultsPdf';
+import InstructionResultsPdf from './ResultsPdfs/InstructionResultsPdf';
 import ListeningResultsPdf from './ResultsPdfs/ListeningResultsPdf';
 import SequentialResultsPdf from './ResultsPdfs/SequentialResultsPdf';
 import ACResultsPdf from './ResultsPdfs/ACResultsPdf';
@@ -144,6 +145,28 @@ type MathData = {
     noOpportunity: number,
     support: number,
     noSupport: number
+  }> | undefined
+}
+
+type InstructionData = {
+  summary: {
+    highLevelQuestion: number,
+    lowLevelQuestion: number,
+    highLevelResponse: number,
+    lowLevelResponse: number
+  } | undefined,
+  details: {
+    highLevelQuestion: number,
+    lowLevelQuestion: number,
+    highLevelResponse: number,
+    lowLevelResponse: number
+  } | undefined,
+  trends: Array<{
+    dayOfEvent: {value: string},
+    hlq: number,
+    hlqResponse: number,
+    llq: number,
+    llqResponse: number
   }> | undefined
 }
 
@@ -359,6 +382,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [renderTransitionPdf, setRenderTransitionPdf] = useState(false);
   const [renderClimatePdf, setRenderClimatePdf] = useState(false);
   const [renderMathPdf, setRenderMathPdf] = useState(false);
+  const [renderInstructionPdf, setRenderInstructionPdf] = useState(false);
   const [renderListeningPdf, setRenderListeningPdf] = useState(false);
   const [renderSequentialPdf, setRenderSequentialPdf] = useState(false);
   const [renderACPdf, setRenderACPdf] = useState(false);
@@ -366,6 +390,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [transition, setTransition] = useState<TransitionData>();
   const [climate, setClimate] = useState<ClimateData>();
   const [math, setMath] = useState<MathData>();
+  const [instruction, setInstruction] = useState<InstructionData>();
   const [listening, setListening]= useState<ListeningData>();
   const [sequential, setSequential] = useState<SequentialData>();
   const [ac, setAC] = useState<ACData>();
@@ -850,6 +875,79 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     ])
   }
 
+  const getInstructionData = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined
+  ): Promise<[
+    InstructionData['summary'] | undefined,
+    InstructionData['details'] | undefined,
+    InstructionData['trends'] | undefined
+  ]> => {
+    return Promise.all([
+      summary ? props.firebase.fetchInstructionTypeCount(sessionId).then((details: Array<{
+        instructionType: string,
+        count: number
+      }>) => {
+        let highLevelQuestion = 0;
+        let lowLevelQuestion = 0;
+        let highLevelResponse = 0;
+        let lowLevelResponse = 0;
+        details.forEach(instruction => {
+          if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") { 
+            lowLevelResponse = instruction.count;                       
+          } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {    
+            lowLevelQuestion = instruction.count;                                 
+          } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {            
+            highLevelQuestion = instruction.count;                                 
+          } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {            
+            highLevelResponse = instruction.count;                                 
+          }
+        });
+        return {
+          highLevelQuestion: highLevelQuestion,
+          lowLevelQuestion: lowLevelQuestion,
+          highLevelResponse: highLevelResponse,
+          lowLevelResponse: lowLevelResponse
+        }
+      }) : null,
+      details ? props.firebase.fetchInstructionTypeCount(sessionId).then((details: Array<{
+        instructionType: string,
+        count: number
+      }>) => {
+        let highLevelQuestion = 0;
+        let lowLevelQuestion = 0;
+        let highLevelResponse = 0;
+        let lowLevelResponse = 0;
+        details.forEach(instruction => {
+          if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") { 
+            lowLevelResponse = instruction.count;                       
+          } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {    
+            lowLevelQuestion = instruction.count;                                 
+          } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {            
+            highLevelQuestion = instruction.count;                                 
+          } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {            
+            highLevelResponse = instruction.count;                                 
+          }
+        });
+        return {
+          highLevelQuestion: highLevelQuestion,
+          lowLevelQuestion: lowLevelQuestion,
+          highLevelResponse: highLevelResponse,
+          lowLevelResponse: lowLevelResponse
+        }
+      }) : null,
+      trends ? props.firebase.fetchInstructionTrend(teacherObject ? teacherObject.id : '').then((trends: Array<{
+        dayOfEvent: {value: string},
+        hlq: number,
+        hlqResponse: number,
+        llq: number,
+        llqResponse: number
+      }>) => {return trends}) : null
+    ])
+  }
+
   const getSequentialData = (
     sessionId: string,
     summary: boolean | undefined,
@@ -1026,6 +1124,33 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     })
   }
 
+  const attachInstructionResult = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined,
+    addToAttachmentList: typeof functionForType
+  ): void => {
+    getInstructionData(sessionId, summary, details, trends).then((data) => {
+      return Promise.all([
+        setInstruction({
+          summary: data[0],
+          details: data[1],
+          trends: data[2]
+        }),
+        setDate(new Date())
+      ])
+    })
+    .then(() => {
+      setRenderInstructionPdf(true);
+    }).then(() => {
+      setTimeout(()=> {printDocument('Level of Instruction', new Date(), 'IN', addToAttachmentList, sessionId)}, 10000)
+    }).then(() => {
+      setTimeout(() => {setRenderInstructionPdf(false)}, 10000);
+      setTimeout(() => {setInstruction(undefined)}, 10000);
+    })
+  }
+
   const attachListeningResult = (
     sessionId: string,
     summary: boolean | undefined,
@@ -1199,6 +1324,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
               attachClimateResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'math') {
               attachMathResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+            } else if (attachment.practice === 'level') {
+              attachInstructionResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'listening') {
               attachListeningResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'sequential') {
@@ -1653,6 +1780,27 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       >
         <MathResultsPdf
           data={math}
+          date={date}
+          teacher={teacherObject}
+        />
+      </div>
+      ) : (null)}
+      {renderInstructionPdf ? (
+        <div
+        id="IN"
+        style={{
+          backgroundColor: '#ffffff',
+          width: '210mm',
+          minHeight: '100mm',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          visibility: 'hidden',
+          position: 'fixed',
+          right: -1000
+        }}
+      >
+        <InstructionResultsPdf
+          data={instruction}
           date={date}
           teacher={teacherObject}
         />
