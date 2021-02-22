@@ -28,6 +28,7 @@ import TransitionResultsPdf from './ResultsPdfs/TransitionResultsPdf';
 import ClimateResultsPdf from './ResultsPdfs/ClimateResultsPdf';
 import MathResultsPdf from './ResultsPdfs/MathResultsPdf';
 import ListeningResultsPdf from './ListeningResultsPdf';
+import SequentialResultsPdf from './ResultsPdfs/SequentialResultsPdf';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import * as Types from '../../constants/Types';
@@ -162,6 +163,41 @@ type ListeningData = {
   }> | undefined
 }
 
+type SequentialData = {
+  childSummary: {
+    sequential: number,
+    notSequential: number
+  } | undefined,
+  teacherSummary: {
+    support: number,
+    noSupport: number,
+    noOpportunity: number
+  } | undefined,
+  childDetails: {
+    sequential1: number,
+    sequential2: number,
+    sequential3: number,
+    sequential4: number
+  } | undefined,
+  teacherDetails: {
+    teacher1: number,
+    teacher2: number,
+    teacher3: number,
+    teacher4: number
+  } | undefined,
+  childTrends: Array<{
+    startDate: {value: string},
+    sequential: number,
+    notSequential: number
+  }> | undefined,
+  teacherTrends: Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    support: number,
+    noSupport: number
+  }> | undefined
+}
+
 /* const gridContainer = {
 	display: 'grid',
 	gridTemplateColumns: 'auto 1fr',
@@ -286,11 +322,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [renderClimatePdf, setRenderClimatePdf] = useState(false);
   const [renderMathPdf, setRenderMathPdf] = useState(false);
   const [renderListeningPdf, setRenderListeningPdf] = useState(false);
+  const [renderSequentialPdf, setRenderSequentialPdf] = useState(false);
   const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
   const [transition, setTransition] = useState<TransitionData>();
   const [climate, setClimate] = useState<ClimateData>();
   const [math, setMath] = useState<MathData>();
   const [listening, setListening]= useState<ListeningData>();
+  const [sequential, setSequential] = useState<SequentialData>();
 
   // get the user's name
   useEffect(() => {
@@ -750,26 +788,69 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     MathData['childTrends'] | undefined,
     MathData['teacherTrends'] | undefined
   ]> => {
-      return Promise.all([
-        summary ? props.firebase.fetchChildMathSummary(sessionId)
-          .then((summary: MathData['childSummary']) => {return summary}) : null,
-        summary ? props.firebase.fetchTeacherMathSummary(sessionId)
-          .then((summary: MathData['teacherSummary']) => {return summary}) : null,
-        details ? props.firebase.fetchMathDetails(sessionId).then((details: {
-          math1: number,
-          math2: number,
-          math3: number,
-          math4: number,
-          teacher1: number,
-          teacher2: number,
-          teacher3: number,
-          teacher4: number
-        }) => {return details}) : null,
-        trends ? props.firebase.fetchChildMathTrend(teacherObject ? teacherObject.id : '')
-          .then((trends: MathData['childTrends']) => {return trends}) : null,
-        trends ? props.firebase.fetchTeacherMathTrend(teacherObject ? teacherObject.id : '')
-          .then((trends: MathData['childTrends']) => {return trends}) : null
-      ])
+    return Promise.all([
+      summary ? props.firebase.fetchChildMathSummary(sessionId)
+        .then((summary: MathData['childSummary']) => {return summary}) : null,
+      summary ? props.firebase.fetchTeacherMathSummary(sessionId)
+        .then((summary: MathData['teacherSummary']) => {return summary}) : null,
+      details ? props.firebase.fetchMathDetails(sessionId).then((details: {
+        math1: number,
+        math2: number,
+        math3: number,
+        math4: number,
+        teacher1: number,
+        teacher2: number,
+        teacher3: number,
+        teacher4: number
+      }) => {return details}) : null,
+      trends ? props.firebase.fetchChildMathTrend(teacherObject ? teacherObject.id : '')
+        .then((trends: MathData['childTrends']) => {return trends}) : null,
+      trends ? props.firebase.fetchTeacherMathTrend(teacherObject ? teacherObject.id : '')
+        .then((trends: MathData['childTrends']) => {return trends}) : null
+    ])
+  }
+
+  const getSequentialData = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined
+  ): Promise<[
+    SequentialData['childSummary'] | undefined,
+    SequentialData['teacherSummary'] | undefined,
+    {
+      sequential1: number,
+      sequential2: number,
+      sequential3: number,
+      sequential4: number,
+      teacher1: number,
+      teacher2: number,
+      teacher3: number,
+      teacher4: number
+    } | undefined,
+    SequentialData['childTrends'] | undefined,
+    SequentialData['teacherTrends'] | undefined
+  ]> => {
+    return Promise.all([
+      summary ? props.firebase.fetchChildSeqSummary(sessionId)
+        .then((summary: SequentialData['childSummary']) => {return summary}) : null,
+      summary ? props.firebase.fetchTeacherSeqSummary(sessionId)
+        .then((summary: SequentialData['teacherSummary']) => {return summary}) : null,
+      details ? props.firebase.fetchSeqDetails(sessionId).then((details: {
+        sequential1: number,
+        sequential2: number,
+        sequential3: number,
+        sequential4: number,
+        teacher1: number,
+        teacher2: number,
+        teacher3: number,
+        teacher4: number
+      }) => {return details}) : null,
+      trends ? props.firebase.fetchChildSeqTrend(teacherObject ? teacherObject.id : '')
+        .then((trends: SequentialData['childTrends']) => {return trends}) : null,
+      trends ? props.firebase.fetchTeacherSeqTrend(teacherObject ? teacherObject.id : '')
+        .then((trends: SequentialData['childTrends']) => {return trends}) : null
+    ])
   }
 
   const attachTransitionResult = (
@@ -792,7 +873,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     .then(() => {
       setRenderTransitionPdf(true);
     }).then(() => {
-      setTimeout(()=> {printDocument('transition', new Date(), 'TT', addToAttachmentList, sessionId)}, 10000)
+      setTimeout(()=> {printDocument('Transition Time', new Date(), 'TT', addToAttachmentList, sessionId)}, 10000)
     }).then(() => {
       setTimeout(() => {setRenderTransitionPdf(false)}, 10000);
       setTimeout(() => {setTransition(undefined)}, 10000);
@@ -819,7 +900,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     .then(() => {
       setRenderClimatePdf(true);
     }).then(() => {
-      setTimeout(()=> {printDocument('climate', new Date(), 'CC', addToAttachmentList, sessionId)}, 10000)
+      setTimeout(()=> {printDocument('Classroom Climate', new Date(), 'CC', addToAttachmentList, sessionId)}, 10000)
     }).then(() => {
       setTimeout(() => {setRenderClimatePdf(false)}, 10000);
       setTimeout(() => {setClimate(undefined)}, 10000);
@@ -849,7 +930,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     .then(() => {
       setRenderMathPdf(true);
     }).then(() => {
-      setTimeout(()=> {printDocument('math', new Date(), 'MI', addToAttachmentList, sessionId)}, 10000)
+      setTimeout(()=> {printDocument('Math Instruction', new Date(), 'MI', addToAttachmentList, sessionId)}, 10000)
     }).then(() => {
       setTimeout(() => {setRenderMathPdf(false)}, 10000);
       setTimeout(() => {setMath(undefined)}, 10000);
@@ -863,25 +944,55 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     trends: boolean | undefined,
     addToAttachmentList: typeof functionForType
   ): void => {
-      getListeningData(sessionId, summary, details, trends).then((data) => {
-        return Promise.all([
-          setListening({
-            summary: data[0],
-            details: data[1],
-            trends: data[2]
-          }),
-          setDate(new Date())
-        ])
-      })
+    getListeningData(sessionId, summary, details, trends).then((data) => {
+      return Promise.all([
+        setListening({
+          summary: data[0],
+          details: data[1],
+          trends: data[2]
+        }),
+        setDate(new Date())
+      ])
+    })
+  .then(() => {
+    setRenderListeningPdf(true);
+  }).then(() => {
+    setTimeout(()=> {printDocument('Listening to Children', new Date(), 'LC', addToAttachmentList, sessionId)}, 10000)
+  }).then(() => {
+      setTimeout(() => {setRenderListeningPdf(false)}, 10000);
+      setTimeout(() => {setListening(undefined)}, 10000);
+    })
+  }
+
+  const attachSequentialResult = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined,
+    addToAttachmentList: typeof functionForType
+  ): void => {
+    getSequentialData(sessionId, summary, details, trends).then((data) => {
+      return Promise.all([
+        setSequential({
+          childSummary: data[0],
+          teacherSummary: data[1],
+          childDetails: data[2] ? {sequential1: data[2].sequential1, sequential2: data[2].sequential2, sequential3: data[2].sequential3, sequential4: data[2].sequential4} : undefined,
+          teacherDetails: data[2] ? {teacher1: data[2].teacher1, teacher2: data[2].teacher2, teacher3: data[2].teacher3, teacher4: data[2].teacher4} : undefined,
+          childTrends: data[3],
+          teacherTrends: data[4]
+        }),
+        setDate(new Date())
+      ])
+    })
     .then(() => {
-      setRenderListeningPdf(true);
+      setRenderSequentialPdf(true);
     }).then(() => {
-      setTimeout(()=> {printDocument('listening', new Date(), 'LC', addToAttachmentList, sessionId)}, 10000)
+      setTimeout(()=> {printDocument('Sequential Activities', new Date(), 'SA', addToAttachmentList, sessionId)}, 10000)
     }).then(() => {
-        setTimeout(() => {setRenderListeningPdf(false)}, 10000);
-        setTimeout(() => {setListening(undefined)}, 10000);
-      })
-    }
+      setTimeout(() => {setRenderSequentialPdf(false)}, 10000);
+      setTimeout(() => {setSequential(undefined)}, 10000);
+    })
+  }
 
   const asyncForEach = async (array: Array<{
     content: string,
@@ -967,6 +1078,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
               attachMathResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'listening') {
               attachListeningResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+            } else if (attachment.practice === 'sequential') {
+              attachSequentialResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             }
           }
         }
@@ -1436,6 +1549,27 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       >
         <ListeningResultsPdf
           data={listening}
+          date={date}
+          teacher={teacherObject}
+        />
+      </div>
+      ) : (null)}
+      {renderSequentialPdf ? (
+        <div
+        id="SA"
+        style={{
+          backgroundColor: '#ffffff',
+          width: '210mm',
+          minHeight: '100mm',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          visibility: 'hidden',
+          position: 'fixed',
+          right: -1000
+        }}
+      >
+        <SequentialResultsPdf
+          data={sequential}
           date={date}
           teacher={teacherObject}
         />

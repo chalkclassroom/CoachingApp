@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import ChildPieSummary from '../../MathInstructionComponents/ResultsComponents/ChildPieSummary';
-import TeacherPieSummary from '../../MathInstructionComponents/ResultsComponents/TeacherPieSummary';
-import ChildBarDetails from '../../MathInstructionComponents/ResultsComponents/ChildBarDetails';
-import TeacherBarDetails from '../../MathInstructionComponents/ResultsComponents/TeacherBarDetails';
+import ChildPieSummary from '../../SequentialActivitiesComponents/ResultsComponents/ChildPieSummary';
+import TeacherPieSummary from '../../SequentialActivitiesComponents/ResultsComponents/TeacherPieSummary';
+import ChildBarDetails from '../../SequentialActivitiesComponents/ResultsComponents/ChildBarDetails';
+import TeacherBarDetails from '../../SequentialActivitiesComponents/ResultsComponents/TeacherBarDetails';
 import ChildLineTrends from '../../MathInstructionComponents/ResultsComponents/ChildLineTrends';
 import TeacherLineTrends from '../../MathInstructionComponents/ResultsComponents/TeacherLineTrends';
-import MathIconImage from '../../../assets/images/MathIconImage.png';
+import SequentialActivitiesImage from '../../../assets/images/SequentialActivitiesImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
 import moment from 'moment';
 import * as Types from '../../../constants/Types';
@@ -16,8 +16,8 @@ import * as Constants from '../../../constants/Constants';
 interface Props {
   data: {
     childSummary: {
-      math: number,
-      notMath: number
+      sequential: number,
+      notSequential: number
     } | undefined,
     teacherSummary: {
       support: number,
@@ -25,10 +25,10 @@ interface Props {
       noOpportunity: number
     } | undefined,
     childDetails: {
-      math1: number,
-      math2: number,
-      math3: number,
-      math4: number
+      sequential1: number,
+      sequential2: number,
+      sequential3: number,
+      sequential4: number
     } | undefined,
     teacherDetails: {
       teacher1: number,
@@ -38,8 +38,8 @@ interface Props {
     } | undefined,
     childTrends: Array<{
       startDate: {value: string},
-      math: number,
-      notMath: number
+      sequential: number,
+      notSequential: number
     }> | undefined,
     teacherTrends: Array<{
       startDate: {value: string},
@@ -52,7 +52,7 @@ interface Props {
   teacher: Types.Teacher | undefined
 }
 
-const MathResultsPdf: React.FC<Props> = (props: Props) => {
+const SequentialResultsPdf: React.FC<Props> = (props: Props) => {
   
   /**
    * specifies formatting for child trends
@@ -74,18 +74,18 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
         labels: props.data.childTrends ? props.data.childTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
         datasets: [
           {
-            label: "Non-Math Activities",
-            data: props.data.childTrends ? props.data.childTrends.map(observation => Math.round((observation.notMath / (observation.math + observation.notMath)) * 100)) : [],
+            label: "Non-Sequential Activities",
+            data: props.data.childTrends ? props.data.childTrends.map(observation => Math.round((observation.notSequential / (observation.sequential + observation.notSequential)) * 100)) : [],
             backgroundColor: '#ec2409',
             borderColor: '#ec2409',
             fill: false,
             lineTension: 0
           },
           {
-            label: "Math",
-            data: props.data.childTrends ? props.data.childTrends.map(observation => Math.round((observation.math / (observation.math + observation.notMath)) * 100)) : [],
-            backgroundColor: Constants.Colors.MI,
-            borderColor: Constants.Colors.MI,
+            label: "Sequential Activities",
+            data: props.data.childTrends ? props.data.childTrends.map(observation => Math.round((observation.sequential / (observation.sequential + observation.notSequential)) * 100)) : [],
+            backgroundColor: Constants.Colors.SA,
+            borderColor: Constants.Colors.SA,
             fill: false,
             lineTension: 0
           }
@@ -173,15 +173,15 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
             <Grid item xs={8}>
               <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
                 <Typography variant="h4" align="center" style={{fontFamily: "Arimo"}}>
-                  MATH INSTRUCTION RESULTS
+                  SEQUENTIAL ACTIVITIES RESULTS
                 </Typography>
               </Grid>
             </Grid>
             <Grid item xs={2}>
               <Grid container direction="row" justify="flex-end" alignItems="center">
                 <img
-                  src={MathIconImage}
-                  alt="Math Instruction"
+                  src={SequentialActivitiesImage}
+                  alt="Sequential Activities"
                   width='50%'
                 />
               </Grid>
@@ -211,8 +211,8 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
             {props.data && props.data.childSummary ? (
               <Grid item style={{paddingTop: '1em'}}>
                 <ChildPieSummary
-                  math={props.data.childSummary.math}
-                  notMath={props.data.childSummary.notMath}
+                  sequential={props.data.childSummary.sequential}
+                  notSequential={props.data.childSummary.notSequential}
                 />
               </Grid>
             ) : (null)}
@@ -228,10 +228,10 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
             {props.data && props.data.childDetails ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <ChildBarDetails
-                  math1={props.data.childDetails.math1}
-                  math2={props.data.childDetails.math2}
-                  math3={props.data.childDetails.math3}
-                  math4={props.data.childDetails.math4}
+                  sequential1={props.data.childDetails.sequential1}
+                  sequential2={props.data.childDetails.sequential2}
+                  sequential3={props.data.childDetails.sequential3}
+                  sequential4={props.data.childDetails.sequential4}
                 />
               </Grid>
             ) : (null)}
@@ -286,4 +286,4 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
   );
 }
 
-export default (MathResultsPdf);
+export default (SequentialResultsPdf);

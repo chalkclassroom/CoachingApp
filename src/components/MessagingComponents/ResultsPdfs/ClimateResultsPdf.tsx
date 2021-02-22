@@ -11,7 +11,7 @@ import moment from 'moment';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
 
-interface TransitionResultsProps {
+interface Props {
   data: {
     summary: {
       toneRating: number
@@ -32,7 +32,7 @@ interface TransitionResultsProps {
   teacher: Types.Teacher | undefined
 }
 
-const ClimateResultsPdf: React.FC<TransitionResultsProps> = (props: TransitionResultsProps) => {
+const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
   
   /**
    * specifies formatting for child trends
