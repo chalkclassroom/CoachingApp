@@ -487,6 +487,11 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
             magic8="Listening to Children"
             summary={
               <Grid container justify={"center"} direction={"column"}>
+                <Grid item style={{paddingTop: '1em'}}>
+                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                    Listening to Children
+                  </Typography>
+                </Grid>
                 <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
                   Compare how often the teacher was: 
                 </Typography>
@@ -524,6 +529,11 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
             details={
               <div>
                 <Grid container justify={"center"} direction={"column"}>
+                  <Grid item style={{paddingTop: '1em'}}>
+                    <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                      Teacher Behaviors
+                    </Typography>
+                  </Grid>
                   <Grid container justify={"center"} direction={"column"}>
                     <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
                       What behaviors did the teacher use during the observation?
@@ -547,9 +557,16 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
               </div>
             }
             trendsGraph={
-              <ListeningTrendsGraph
-                data={this.handleTrendsFormatData}
-              />
+              <Grid container direction="column" justify="center">
+                <Grid item style={{paddingTop: '1em', paddingBottom: '0.5em'}}>
+                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                    Teacher Behaviors
+                  </Typography>
+                </Grid>
+                <ListeningTrendsGraph
+                  data={this.handleTrendsFormatData}
+                />
+              </Grid>
             }
             changeSessionId={this.changeSessionId}
             sessionId={this.state.sessionId}

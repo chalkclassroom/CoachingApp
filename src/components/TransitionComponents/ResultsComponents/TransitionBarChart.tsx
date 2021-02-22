@@ -74,16 +74,21 @@ class TransitionBarChart extends React.Component<Props, {}> {
                 ticks: {
                   min: 0,
                   // max: 100,
-                  max: 20,
+                  max: (Math.max(this.props.line/1000/60, this.props.traveling/1000/60, this.props.waiting/1000/60, this.props.routines/1000/60, this.props.behaviorManagement/1000/60, this.props.other/1000/60) > 20) ?
+                  Math.max(this.props.line/1000/60, this.props.traveling/1000/60, this.props.waiting/1000/60, this.props.routines/1000/60, this.props.behaviorManagement/1000/60, this.props.other/1000/60) : 
+                    20,
                   fontSize: 16,
-                  fontFamily: 'Arimo'
+                  fontFamily: 'Arimo',
+                  padding: 0
                 },
                 scaleLabel: {
                   display: true,
                   labelString: "Time (minutes) in Each Transition Type",
                   fontSize: 18,
                   fontColor: "#000000",
-                  fontFamily: 'Arimo'
+                  fontFamily: 'Arimo',
+                  padding: 0,
+                  lineHeight: 1
                 },
                 afterFit: function(scale: { height: number }): void {
                   scale.height = 100 // creates pading between ticks and scaleLabel
@@ -97,7 +102,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
                   fontFamily: 'Arimo'
                 },
                 scaleLabel: {
-                  display: true,
+                  display: false,
                   labelString: "Transition Types",
                   fontSize: 18,
                   fontColor: "#000000",
@@ -148,7 +153,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
           }
         }}
         width={650}
-        height={300}
+        height={400}
       />
     );
   }

@@ -52,11 +52,10 @@ class DetailsSlider extends React.Component<Props, {}> {
       slidesToScroll: 1
     };
     return (
-      <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align="center" variant="h4" style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}>
-              Engagement Details
+            <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo', paddingTop: '1em', paddingBottom: '0.5em'}}>
+              Student Engagement
             </Typography>
             <Grid container direction="column" alignItems="center">
               <Grid item style={{width: '100%'}}>
@@ -86,7 +85,6 @@ class DetailsSlider extends React.Component<Props, {}> {
             />
           </Grid>
         </div>
-      </Slider>
     );
   }
 }

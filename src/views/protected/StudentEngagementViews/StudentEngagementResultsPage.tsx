@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
@@ -484,9 +486,16 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
               />
             }
             trendsGraph={
-              <TrendsSlider
-                data={this.handleTrendsFormatData}
-              />
+              <Grid container direction="column" justify="center">
+                <Grid item style={{paddingTop: '1em', paddingBottom: '0.5em'}}>
+                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                    Average Student Engagement
+                  </Typography>
+                </Grid>
+                <TrendsSlider
+                  data={this.handleTrendsFormatData}
+                />
+              </Grid>
             }
             changeSessionId={this.changeSessionId}
             sessionId={this.state.sessionId}

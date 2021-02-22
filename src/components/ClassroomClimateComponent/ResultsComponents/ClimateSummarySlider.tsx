@@ -48,6 +48,11 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
       <Slider {...settings}>
         <div>
           <Grid justify={"center"} direction={"column"}>
+            <Grid item style={{paddingTop: '1em'}}>
+              <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                Classroom Climate
+              </Typography>
+            </Grid>
             <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em', paddingBottom: '1em'}}>
               Compare how often the teacher: 
             </Typography>
@@ -79,9 +84,11 @@ class ClimateSummarySlider extends React.Component<Props, {}> {
         </div>
         <div>
           <Grid justify={"center"} direction={"column"}>
-            <Typography align={"center"} variant={"h6"}>
-              Average Tone
-            </Typography>
+            <Grid item style={{paddingTop: '1em'}}>
+              <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+                Average Tone
+              </Typography>
+            </Grid>
             <AverageTone
               averageToneRating={this.props.averageToneRating}
             />

@@ -43,10 +43,13 @@ class SummarySlider extends React.Component<Props, {}> {
     };
     return (
       <div>
+        <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo', paddingTop: '1em', paddingBottom: '0.5em'}}>
+          Student Engagement
+        </Typography>
         <Slider {...settings}>
           <div>
             <Grid container justify={"center"} direction={"column"}>
-              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
+              <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo'}}>
                 Compare how often the children were:
               </Typography>
               <Grid container direction="column" alignItems="center">

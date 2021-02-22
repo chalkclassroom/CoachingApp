@@ -7,7 +7,8 @@ interface Props {
   teacher1: number,
   teacher2: number,
   teacher3: number,
-  teacher4: number
+  teacher4: number,
+  totalVisits: number
 }
 
 /**
@@ -27,7 +28,8 @@ class TeacherBarDetails extends React.Component<Props, {}> {
     teacher1: PropTypes.number.isRequired,
     teacher2: PropTypes.number.isRequired,
     teacher3: PropTypes.number.isRequired,
-    teacher4: PropTypes.number.isRequired
+    teacher4: PropTypes.number.isRequired,
+    totalVisits: PropTypes.number.isRequired
   };
 
   /**
@@ -60,9 +62,9 @@ class TeacherBarDetails extends React.Component<Props, {}> {
               {
                 ticks: {
                   min: 0,
-                  max: 
-                    (Math.max(this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4) > 20) ? 
-                    Math.max(this.props.teacher1, this.props.teacher2, this.props.teacher3, this.props.teacher4) : 20,
+                  max: this.props.totalVisits,
+                  stepSize: 1,
+                  fixedStepSize: 1,
                   fontSize: 16,
                   fontColor: 'black'
                 },

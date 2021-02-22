@@ -24,6 +24,7 @@ interface Props {
   teacher2: number,
   teacher3: number,
   teacher4: number,
+  totalVisits: number,
   classes: {
     questionText: string
   }
@@ -45,6 +46,7 @@ class DetailsSlider extends React.Component<Props, {}> {
     teacher2: PropTypes.number.isRequired,
     teacher3: PropTypes.number.isRequired,
     teacher4: PropTypes.number.isRequired,
+    totalVisits: PropTypes.number.isRequired
   }
 
   /**
@@ -92,6 +94,7 @@ class DetailsSlider extends React.Component<Props, {}> {
               sequential2={this.props.sequential2}
               sequential3={this.props.sequential3}
               sequential4={this.props.sequential4}
+              totalVisits={this.props.totalVisits}
             />
           </Grid>
         </div>
@@ -125,6 +128,7 @@ class DetailsSlider extends React.Component<Props, {}> {
               teacher2={this.props.teacher2}
               teacher3={this.props.teacher3}
               teacher4={this.props.teacher4}
+              totalVisits={this.props.totalVisits}
             />
           </Grid>
         </div>

@@ -32,7 +32,6 @@ import { TextField } from '@material-ui/core';
 import Fab from '@material-ui/core/Fab';
 import iPadImage from '../../assets/images/iPadImage.svg';
 import CoachingCycleFullImage from '../../assets/images/CoachingCycleFullImage.svg';
-import CoachingCycleFullMobileImage from '../../assets/images/CoachingCycleFullMobileImage.svg';
 import CoachLandingImage from '../../assets/images/CoachLandingImage.jpg';
 import CoachLandingLargeImage from '../../assets/images/CoachLandingLargeImage.jpg';
 import CoachLandingMobileImage from '../../assets/images/CoachLandingMobileImage.jpg';
@@ -876,7 +875,7 @@ class LandingPage extends React.Component<Props, State> {
               </Grid>
               <Grid item>
                 <Grid container direction="row" justify="center" alignItems="center">
-                  <img src={CoachingCycleFullMobileImage} alt="Coaching Cycle" width="90%" style={{paddingBottom: 20}}/>
+                  <img src={CoachingCycleFullImage} alt="Coaching Cycle" width="90%" style={{paddingBottom: 20}}/>
                 </Grid>
               </Grid>
             </Grid>

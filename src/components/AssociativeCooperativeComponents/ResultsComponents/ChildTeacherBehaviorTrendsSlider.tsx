@@ -27,7 +27,9 @@ const ChildBehaviorTrendsOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date",
-          fontStyle: "bold"
+          fontFamily: 'Arimo',
+          fontSize: 18,
+          fontColor: 'black'
         }
       }
     ],
@@ -43,8 +45,10 @@ const ChildBehaviorTrendsOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: "% of Visits",
-          fontStyle: "bold"
+          labelString: "% of 1-minute Intervals",
+          fontFamily: 'Arimo',
+          fontSize: 18,
+          fontColor: 'black'
         }
       }
     ]
@@ -53,7 +57,14 @@ const ChildBehaviorTrendsOptions = {
     datalabels: {
       display: "auto",
       color: "gray",
-      align: "top",
+      align: function(value: {
+        dataIndex: number,
+        dataset: {
+          data: Array<number>
+        }
+      }): string {
+        return value.dataset.data[value.dataIndex] >= 95 ? "bottom" : "top";
+      },
       formatter: function(value: number): string {
         return value + "%";
       }
@@ -80,7 +91,9 @@ const TeacherBehaviorTrendsOptions = {
         scaleLabel: {
           display: true,
           labelString: "Date",
-          fontStyle: "bold"
+          fontFamily: 'Arimo',
+          fontSize: 18,
+          fontColor: 'black'
         }
       }
     ],
@@ -96,8 +109,10 @@ const TeacherBehaviorTrendsOptions = {
         },
         scaleLabel: {
           display: true,
-          labelString: "% of Visits",
-          fontStyle: "bold"
+          labelString: "% of 1-minute Intervals",
+          fontFamily: 'Arimo',
+          fontSize: 18,
+          fontColor: 'black'
         }
       }
     ]
@@ -106,7 +121,14 @@ const TeacherBehaviorTrendsOptions = {
     datalabels: {
       display: "auto",
       color: "gray",
-      align: "top",
+      align: function(value: {
+        dataIndex: number,
+        dataset: {
+          data: Array<number>
+        }
+      }): string {
+        return value.dataset.data[value.dataIndex] >= 95 ? "bottom" : "top";
+      },
       formatter: function(value: number): string {
         return value + "%";
       }

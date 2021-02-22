@@ -62,7 +62,7 @@ export default function AverageTone(props: Props): React.ReactElement {
         <Slider
           aria-labelledby="continuous-slider"
           step={1}
-          value={averageToneRating}
+          value={Math.round(averageToneRating*10)/10} // one decimal place
           min={1}
           max={5}
           marks={marks}
