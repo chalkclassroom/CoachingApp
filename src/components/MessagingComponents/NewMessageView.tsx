@@ -28,6 +28,7 @@ import TransitionResultsPdf from './ResultsPdfs/TransitionResultsPdf';
 import ClimateResultsPdf from './ResultsPdfs/ClimateResultsPdf';
 import MathResultsPdf from './ResultsPdfs/MathResultsPdf';
 import InstructionResultsPdf from './ResultsPdfs/InstructionResultsPdf';
+import EngagementResultsPdf from './ResultsPdfs/EngagementResultsPdf';
 import ListeningResultsPdf from './ResultsPdfs/ListeningResultsPdf';
 import SequentialResultsPdf from './ResultsPdfs/SequentialResultsPdf';
 import ACResultsPdf from './ResultsPdfs/ACResultsPdf';
@@ -167,6 +168,32 @@ type InstructionData = {
     hlqResponse: number,
     llq: number,
     llqResponse: number
+  }> | undefined
+}
+
+type EngagementData = {
+  summary: {
+    offTask: number,
+    engaged: number,
+    avgRating: number
+  } | undefined,
+  details: {
+    offTask0: number,
+    offTask1: number,
+    offTask2: number,
+    mildlyEngaged0: number,
+    mildlyEngaged1: number,
+    mildlyEngaged2: number,
+    engaged0: number,
+    engaged1: number,
+    engaged2: number,
+    highlyEngaged0: number,
+    highlyEngaged1: number,
+    highlyEngaged2: number,
+  } | undefined,
+  trends: Array<{
+    startDate: {value: string},
+    average: number
   }> | undefined
 }
 
@@ -383,6 +410,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [renderClimatePdf, setRenderClimatePdf] = useState(false);
   const [renderMathPdf, setRenderMathPdf] = useState(false);
   const [renderInstructionPdf, setRenderInstructionPdf] = useState(false);
+  const [renderEngagementPdf, setRenderEngagementPdf] = useState(false);
   const [renderListeningPdf, setRenderListeningPdf] = useState(false);
   const [renderSequentialPdf, setRenderSequentialPdf] = useState(false);
   const [renderACPdf, setRenderACPdf] = useState(false);
@@ -391,6 +419,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [climate, setClimate] = useState<ClimateData>();
   const [math, setMath] = useState<MathData>();
   const [instruction, setInstruction] = useState<InstructionData>();
+  const [engagement, setEngagement] = useState<EngagementData>();
   const [listening, setListening]= useState<ListeningData>();
   const [sequential, setSequential] = useState<SequentialData>();
   const [ac, setAC] = useState<ACData>();
@@ -734,11 +763,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     ListeningData['details'] | undefined,
     ListeningData['trends'] | undefined
   ]> => {
-      return Promise.all([
-        summary ? props.firebase.fetchListeningSummary(sessionId).then((summary: ListeningData['summary']) => {return summary}) : null,
-        details ? props.firebase.fetchListeningDetails(sessionId).then((details: ListeningData['details']) => {return details}) : null,
-        trends ? props.firebase.fetchListeningTrend(teacherObject ? teacherObject.id : '').then((trends: ListeningData['trends']) => {return trends}) : null
-      ])
+    return Promise.all([
+      summary ? props.firebase.fetchListeningSummary(sessionId).then((summary: ListeningData['summary']) => {return summary}) : null,
+      details ? props.firebase.fetchListeningDetails(sessionId).then((details: ListeningData['details']) => {return details}) : null,
+      trends ? props.firebase.fetchListeningTrend(teacherObject ? teacherObject.id : '').then((trends: ListeningData['trends']) => {return trends}) : null
+    ])
   }
 
   const getTransitionData = (
@@ -948,6 +977,33 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     ])
   }
 
+  const getEngagementData = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined
+  ): Promise<[
+    {
+      offTask: number,
+      engaged: number
+    } | undefined,
+    {
+      avgRating: number
+    } | undefined,
+    EngagementData['details'] | undefined,
+    EngagementData['trends'] | undefined
+  ]> => {
+    return Promise.all([
+      summary ? props.firebase.fetchEngagementPieSummary(sessionId).then((summary: {
+        offTask: number,
+        engaged: number
+      }) => {return summary}) : null,
+      summary ? props.firebase.fetchEngagementAvgSummary(sessionId).then((summary: {average: number}) => {return summary}) : null,
+      details ? props.firebase.fetchEngagementDetails(sessionId).then((details: EngagementData['details']) => {return details}) : null,
+      trends ? props.firebase.fetchEngagementTrend(teacherObject ? teacherObject.id : '').then((trends: EngagementData['trends']) => {return trends}) : null
+    ])
+  }
+
   const getSequentialData = (
     sessionId: string,
     summary: boolean | undefined,
@@ -1151,6 +1207,37 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     })
   }
 
+  const attachEngagementResult = (
+    sessionId: string,
+    summary: boolean | undefined,
+    details: boolean | undefined,
+    trends: boolean | undefined,
+    addToAttachmentList: typeof functionForType
+  ): void => {
+    getEngagementData(sessionId, summary, details, trends).then((data) => {
+      return Promise.all([
+        setEngagement({
+          summary: data[0] && data[1] ? {
+            offTask: data[0].offTask,
+            engaged: data[0].engaged,
+            avgRating: data[1].average
+          } : undefined,
+          details: data[2],
+          trends: data[3]
+        }),
+        setDate(new Date())
+      ])
+    })
+  .then(() => {
+    setRenderEngagementPdf(true);
+  }).then(() => {
+    setTimeout(()=> {printDocument('Student Engagement', new Date(), 'SE', addToAttachmentList, sessionId)}, 10000)
+  }).then(() => {
+      setTimeout(() => {setRenderEngagementPdf(false)}, 10000);
+      setTimeout(() => {setEngagement(undefined)}, 10000);
+    })
+  }
+
   const attachListeningResult = (
     sessionId: string,
     summary: boolean | undefined,
@@ -1326,6 +1413,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
               attachMathResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'level') {
               attachInstructionResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
+            } else if (attachment.practice === 'engagement') {
+              attachEngagementResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'listening') {
               attachListeningResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'sequential') {
@@ -1801,6 +1890,27 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       >
         <InstructionResultsPdf
           data={instruction}
+          date={date}
+          teacher={teacherObject}
+        />
+      </div>
+      ) : (null)}
+      {renderEngagementPdf ? (
+        <div
+        id="SE"
+        style={{
+          backgroundColor: '#ffffff',
+          width: '210mm',
+          minHeight: '100mm',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          visibility: 'hidden',
+          position: 'fixed',
+          right: -1000
+        }}
+      >
+        <EngagementResultsPdf
+          data={engagement}
           date={date}
           teacher={teacherObject}
         />

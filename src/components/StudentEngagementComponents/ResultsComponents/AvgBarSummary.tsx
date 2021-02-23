@@ -43,7 +43,7 @@ class AvgBarSummary extends React.Component<Props, {}> {
     return (
       <HorizontalBar
         data={avgEngagementData}
-        width={260}
+        width={650}
         height={50}
         options={{
           responsive: true,
