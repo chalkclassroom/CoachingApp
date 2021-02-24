@@ -139,6 +139,10 @@ class StudentEngagementPage extends React.Component<Props, State> {
     this.timer = setInterval(this.tick, 1000);
   }
 
+  stopTimer = (): void => {
+    clearInterval(this.timer);
+  }
+
   handleCloseTeacherModal = (): void => {
     this.setState({ teacherModal: false })
   };
@@ -205,6 +209,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
                       }
                       infoPlacement="center"
                       completeObservation={this.state.completeEnabled}
+                      stopTimer={this.stopTimer}
                     />
                   </Grid>
                 </Grid>

@@ -186,6 +186,10 @@ class ClassroomClimatePage extends React.Component<Props, State> {
     this.setState({ teacherModal: false })
   };
 
+  stopTimer = (): void => {
+    clearInterval(this.timer);
+  }
+
   /** lifecycle method invoked after component mounts */
   componentDidMount(): void {
     if (!this.props.teacherSelected) {
@@ -267,6 +271,7 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                         }
                         infoPlacement="center"
                         completeObservation={true}
+                        stopTimer={this.stopTimer}
                       />
                     </Grid>
                   </Grid>
