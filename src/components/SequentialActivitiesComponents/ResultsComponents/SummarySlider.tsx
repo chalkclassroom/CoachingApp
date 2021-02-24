@@ -120,9 +120,6 @@ class SummarySlider extends React.Component<Props, {}> {
             </Grid>
           </div>
         </Slider>
-        <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
-          Total Center Observations: {this.props.sequential + this.props.notSequential}
-        </Typography>
       </div>
     );
   }

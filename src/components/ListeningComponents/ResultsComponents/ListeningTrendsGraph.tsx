@@ -76,14 +76,7 @@ const listeningTrendOptions = {
     datalabels: {
       display: "auto",
       color: "gray",
-      align: function(value: {
-        dataIndex: number,
-        dataset: {
-          data: Array<number>
-        }
-      }): string {
-        return value.dataset.data[value.dataIndex] >= 95 ? "bottom" : "top";
-      },
+      align: "right",
       formatter: function(value: number): string {
         return value + "%";
       }

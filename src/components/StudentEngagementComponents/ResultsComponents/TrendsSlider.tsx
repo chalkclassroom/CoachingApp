@@ -71,14 +71,7 @@ const EngagementTrendsOptions = {
       display: "auto",
       color: "gray",
       fontFamily: 'Arimo',
-      align: function(value: {
-        dataIndex: number,
-        dataset: {
-          data: Array<number>
-        }
-      }): string {
-        return value.dataset.data[value.dataIndex] >= 4.9 ? "bottom" : "top";
-      }
+      align: "right"
     }
   }
 };

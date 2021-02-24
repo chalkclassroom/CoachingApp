@@ -73,7 +73,7 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
               }
             },
             title: {
-              display: true,
+              display: false,
               text: "Teacher Instruction",
               fontSize: 20,
               fontStyle: "bold"

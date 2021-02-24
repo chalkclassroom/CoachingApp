@@ -112,7 +112,7 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
             display: false,
           },
           title: {
-            display: true,
+            display: false,
             text: "Level of Instruction Details",
             fontSize: 20,
             fontStyle: "bold"
