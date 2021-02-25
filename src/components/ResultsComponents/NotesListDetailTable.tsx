@@ -32,19 +32,23 @@ const styles: object = {
   paper: {
     position: "absolute",
     width: "70%",
+    height: '60vh',
     backgroundColor: 'white',
     padding: '2em',
-    borderRadius: 8
+    borderRadius: 8,
+    overflowY: 'scroll'
   },
   tableHeader: {
     color: "white",
     fontSize: '1.5em',
-    fontFamily: 'Arimo'
+    fontFamily: 'Arimo',
+    maxWidth: '30vw'
   },
   tableText: {
     color: 'black',
     fontSize: '1.2em',
-    fontFamily: 'Arimo'
+    fontFamily: 'Arimo',
+    maxWidth: '30vw'
   }
 };
 
@@ -142,7 +146,7 @@ class NotesListDetailTable extends React.Component<Props, {}> {
                       <TableCell component="th" scope="row" className={classes.tableText}>
                         {row.timestamp}
                       </TableCell>
-                      <TableCell align="left" className={classes.tableText}>{row.content}</TableCell>
+                      <TableCell align="left" className={classes.tableText} style={{whiteSpace: 'normal', wordWrap: 'break-word'}}>{row.content}</TableCell>
                       <TableCell align="center" className={classes.tableText}>
                         <Button onClick={(): void => {this.props.addNoteToPlan(this.props.conferencePlanId, row.content)}}>
                           <AddCircleIcon style={{fill: color}} />

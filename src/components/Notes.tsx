@@ -245,7 +245,7 @@ class Notes extends React.Component<Props, State> {
                     </TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody style={{overflowY: 'auto'}}>
                   {this.state.notes ? (
                     this.state.notes.map((note, index) => (
                       <TableRow className="note" key={index}>
