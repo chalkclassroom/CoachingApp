@@ -60,6 +60,16 @@ const climateTrendOptions = {
       }
     ]
   },
+  plugins: {
+    datalabels: {
+      display: "auto",
+      color: "gray",
+      align: "right",
+      formatter: function(value: number): string {
+        return value + "%";
+      }
+    }
+  }
   /* tooltips: {
     displayColors: true,
     multiKeyBackground: "white"

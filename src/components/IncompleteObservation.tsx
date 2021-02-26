@@ -29,7 +29,8 @@ const styles: object = {
 };
 
 interface Props {
-  classes: { paper: string }
+  classes: { paper: string },
+  type: string
 }
 
 interface State {
@@ -69,13 +70,27 @@ class IncompleteObservation extends React.Component<Props, State> {
               <Typography variant="h4" gutterBottom style={{fontFamily: 'Arimo'}}>
                 Incomplete Observation
               </Typography>
-              <Typography variant="subtitle2" gutterBottom style={{fontFamily: 'Arimo'}}>
-                You have not completed your observation yet.
-              </Typography>
-              <Typography variant="subtitle2" gutterBottom style={{fontFamily: 'Arimo'}}>
-                Please <strong>Submit</strong> this observation or press the{" "}
-                <strong>Back</strong> button.
-              </Typography>
+              {this.props.type === 'TT' ? (
+                <div>
+                  <Typography variant="subtitle1" gutterBottom style={{fontFamily: 'Arimo'}}>
+                    You have not finished observing the current transition.
+                  </Typography>
+                  <Typography variant="subtitle1" gutterBottom style={{fontFamily: 'Arimo'}}>
+                    Please either <strong>END</strong> the current transition or{" "}
+                    <strong>CANCEL</strong> it before completing your observation.
+                  </Typography>
+                </div>
+              ) : (
+                <div>
+                  <Typography variant="subtitle1" gutterBottom style={{fontFamily: 'Arimo'}}>
+                    You have not completed your observation yet.
+                  </Typography>
+                  <Typography variant="subtitle1" gutterBottom style={{fontFamily: 'Arimo'}}>
+                    Please <strong>Submit</strong> this observation or press the{" "}
+                    <strong>Back</strong> button.
+                  </Typography>
+                </div>
+              )}
             </Grid>
           </div>
         </Modal>

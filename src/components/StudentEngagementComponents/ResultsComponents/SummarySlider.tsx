@@ -88,9 +88,6 @@ class SummarySlider extends React.Component<Props, {}> {
             </Grid>
           </div>
         </Slider>
-        <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
-          Total Engagement Observations: {this.props.offTask + this.props.engaged}
-        </Typography>
       </div>
     );
   }

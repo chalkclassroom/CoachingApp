@@ -74,7 +74,7 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
             }
           },
           title: {
-            display: true,
+            display: false,
             text: "Classroom Climate Summary",
             fontSize: 20,
             fontStyle: "bold"

@@ -395,8 +395,6 @@ export const Checklist: {
       </div>,
       <div key={3}>
         Doing an <b>activity together</b> that <b>HAS a predetermined sequence</b>
-      </div>,
-      <div key={4}>
       </div>
     ],
     'TeacherBehaviors': [

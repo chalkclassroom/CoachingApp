@@ -419,7 +419,7 @@ class Dashboard extends React.Component<Props, State> {
           </FirebaseContext.Consumer>
         ) : this.state.incomplete ? (
           <ClickAwayListener onClickAway={this.handleClickAwayIncomplete}>
-            <IncompleteObservation />
+            <IncompleteObservation type={this.props.type} />
           </ClickAwayListener>
         ) : (
           <div />

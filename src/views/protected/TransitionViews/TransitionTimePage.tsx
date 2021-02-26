@@ -234,7 +234,7 @@ class TransitionTimePage extends React.Component<Props, State> {
                       type="TT"
                       infoDisplay={<TransitionLog />}
                       infoPlacement="center"
-                      completeObservation={true}
+                      completeObservation={this.state.transitionEnded}
                     />
                   </Grid>
                 </Grid>

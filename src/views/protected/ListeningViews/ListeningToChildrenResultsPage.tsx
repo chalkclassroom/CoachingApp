@@ -519,11 +519,6 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
                     notListening={this.state.notListening}
                   />
                 </Grid>
-                <Grid item>
-                <Typography variant="subtitle1" align="center" style={{paddingTop: '1.5em', fontFamily: 'Arimo'}}>
-                  Total Observations: {this.state.listening + this.state.notListening}
-                </Typography>
-                </Grid>
               </Grid>
             }
             details={
