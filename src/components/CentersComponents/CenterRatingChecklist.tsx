@@ -253,10 +253,16 @@ class CenterRatingChecklist extends React.Component<Props, State> {
           }
         })
       }
+      let validChildChecked = this.props.type === 'AC' ? ACChildChecked : childChecked;
+      if (validChildChecked.includes(5) && validChildChecked.length > 1) {
+        validChildChecked = validChildChecked.filter(e => e !== 5)
+      }
+      let validTeacherChecked = teacherChecked;
+      if (teacherChecked.includes(10) && teacherChecked.length > 1) {
+        validTeacherChecked = teacherChecked.filter(e => e !== 10)
+      }
       const mEntry = {
-        checked: this.props.type === 'AC' ? 
-          [...ACChildChecked, ...teacherChecked]
-          : [...childChecked, ...teacherChecked],
+        checked: [...validChildChecked, ...validTeacherChecked],
         people: this.state.people
       };
       this.props.firebase.handlePushCentersData(mEntry);
@@ -809,6 +815,9 @@ class CenterRatingChecklist extends React.Component<Props, State> {
                               );
                             }
                           )}
+                          {this.props.type === 'AC' ? (
+                            <div className={classes.checklistItem} />
+                          ) : (null)}
                         </List>
                       </Card>
                     </Grid>
