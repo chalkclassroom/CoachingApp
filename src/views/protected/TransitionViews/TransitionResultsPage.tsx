@@ -14,6 +14,7 @@ import Grid from '@material-ui/core/Grid';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
+import { addTransitionResult } from '../../../state/actions/results';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
@@ -37,6 +38,11 @@ const styles: object = {
 interface Props {
   classes: { root: string, comparisonText: string },
   teacherSelected: Types.Teacher,
+  addTransitionResult(summary: {
+    total: number,
+    sessionTotal: number,
+    startDate: {value: string}
+  }): void
 }
 
 interface State {
@@ -392,7 +398,13 @@ class TransitionResultsPage extends React.Component<Props, State> {
         transitionTime: summary[0].total,
         sessionTotal: summary[0].sessionTotal,
         learningActivityTime: summary[0].sessionTotal - summary[0].total
-      })
+      });
+      this.props.addTransitionResult({
+          sessionId: this.state.sessionId,
+          total: summary[0].total,
+          sessionTotal: summary[0].sessionTotal,
+          startDate: {value: summary[0].startDate.value}
+      });
     });
 
     firebase.getConferencePlan(this.state.sessionId)
@@ -737,4 +749,4 @@ const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teach
 };
 
 TransitionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps)(TransitionResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {addTransitionResult})(TransitionResultsPage));

@@ -9,6 +9,7 @@ export const getTeacherListForResults = (teachers: Array<string>): GetTeacherLis
 });
 
 export const addTransitionResult = (entry: {
+  sessionId: string,
   summary: {
     total: number,
     sessionTotal: number,
@@ -49,7 +50,7 @@ interface AddTransitionResult {
   index: number;
   type: typeof ADD_TRANSITION_RESULT,
   entry: {
-    sessionId: number,
+    sessionId: string,
     sessionDate: Date,
     summary: {
       total: number,

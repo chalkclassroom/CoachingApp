@@ -130,10 +130,10 @@ class TeacherModal extends React.Component<Props, State> {
               /* this.state.teachers.forEach((teacher) => {
                 this.props.getTeacherListForResults(teacher.id)
               }) */
-              this.state.teachers.forEach((teacher) => {
+              /* this.state.teachers.forEach((teacher) => {
                 teacherIds.push(teacher.id)
               })
-              this.props.getTeacherListForResults(teacherIds);
+              this.props.getTeacherListForResults(teacherIds); */
               // this.props.getTeacherListForResults(this.state.teachers);
             });
           });
