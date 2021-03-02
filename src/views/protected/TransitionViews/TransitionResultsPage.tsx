@@ -14,7 +14,7 @@ import Grid from '@material-ui/core/Grid';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
-import { addTransitionResult } from '../../../state/actions/results';
+import { addTransitionSummary } from '../../../state/actions/transition-results';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
@@ -38,11 +38,19 @@ const styles: object = {
 interface Props {
   classes: { root: string, comparisonText: string },
   teacherSelected: Types.Teacher,
-  addTransitionResult(summary: {
+  addTransitionSummary(summary: {
     total: number,
     sessionTotal: number,
     startDate: {value: string}
-  }): void
+  }): void,
+  transitionResultsState: Array<{
+    teacherId: string,
+    sessionId: string,
+    sessionDate: Date | undefined,
+    summary: Types.TransitionData['summary'],
+    details: Types.TransitionData['details'],
+    trends: Types.TransitionData['trends']
+  }>
 }
 
 interface State {
@@ -389,23 +397,33 @@ class TransitionResultsPage extends React.Component<Props, State> {
     const firebase = this.context;
     this.handleNotesFetching(this.state.sessionId);
 
-    firebase.fetchTransitionSummary(this.state.sessionId).then((summary: Array<{
-      total: number,
-      sessionTotal: number,
-      startDate: {value: string}
-    }>)=>{
+    const reduxIndex = this.props.transitionResultsState.map(e => e.sessionId).indexOf(this.state.sessionId);
+
+    if ((reduxIndex > -1) && this.props.transitionResultsState[reduxIndex].summary !== undefined) {
       this.setState({
-        transitionTime: summary[0].total,
-        sessionTotal: summary[0].sessionTotal,
-        learningActivityTime: summary[0].sessionTotal - summary[0].total
+        transitionTime: this.props.transitionResultsState[reduxIndex].summary.total,
+        sessionTotal: this.props.transitionResultsState[reduxIndex].summary.sessionTotal,
+        learningActivityTime: this.props.transitionResultsState[reduxIndex].summary.sessionTotal - this.props.transitionResultsState[reduxIndex].summary.total
       });
-      this.props.addTransitionResult({
-          sessionId: this.state.sessionId,
-          total: summary[0].total,
+    } else {
+      firebase.fetchTransitionSummary(this.state.sessionId).then((summary: Array<{
+        total: number,
+        sessionTotal: number,
+        startDate: {value: string}
+      }>)=>{
+        this.setState({
+          transitionTime: summary[0].total,
           sessionTotal: summary[0].sessionTotal,
-          startDate: {value: summary[0].startDate.value}
+          learningActivityTime: summary[0].sessionTotal - summary[0].total
+        });
+        this.props.addTransitionSummary({
+            sessionId: this.state.sessionId,
+            total: summary[0].total,
+            sessionTotal: summary[0].sessionTotal,
+            startDate: {value: summary[0].startDate.value}
+        });
       });
-    });
+    }    
 
     firebase.getConferencePlan(this.state.sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
@@ -590,6 +608,14 @@ class TransitionResultsPage extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
+    }).isRequired,
+    transitionResultsState: PropTypes.exact({
+      teacherId: PropTypes.string,
+      sessionId: PropTypes.string,
+      sessionDate: PropTypes.object,
+      summary: PropTypes.object,
+      details: PropTypes.object,
+      trends: PropTypes.object
     }).isRequired
   };
 
@@ -742,11 +768,20 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher, transitionResultsState: Array<{
+    teacherId: string,
+    sessionId: string,
+    sessionDate: Date | undefined,
+    summary: Types.TransitionData['summary'],
+    details: Types.TransitionData['details'],
+    trends: Types.TransitionData['trends']
+  }>
+} => {
   return {
-    teacherSelected: state.teacherSelectedState.teacher
+    teacherSelected: state.teacherSelectedState.teacher,
+    transitionResultsState: state.transitionResultsState.transitionResults
   };
 };
 
 TransitionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps, {addTransitionResult})(TransitionResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {addTransitionSummary})(TransitionResultsPage));

@@ -5,6 +5,35 @@ export type DashboardType = 'AppBar' | 'TT' | 'CC' | 'MI' | 'SE' | 'IN' | 'LC' |
 export type Selected = 'TransitionTime' | 'ClassroomClimate' | 'MathInstruction' | 'StudentEngagement' |
 'LevelOfInstruction' | 'ListeningToChildren' | 'SequentialActivities' | 'LiteracyInstruction' | 'AssociativeCooperativeInteractions' | 'none';
 
+export interface TransitionData {
+  summary: {
+    total: number,
+    sessionTotal: number,
+    startDate: {value: string}
+  } | undefined,
+  details: Array<{
+    line: number,
+    traveling: number,
+    waiting: number,
+    routines: number,
+    behaviorManagement: number,
+    other: number,
+    total: number
+  }> | undefined,
+  trends: Array<{
+    id: string,
+    line: number,
+    traveling: number,
+    waiting: number,
+    routines: number,
+    behaviorManagement: number,
+    other: number,
+    total: number,
+    sessionTotal: number,
+    startDate: {value: string}
+  }> | undefined
+}
+
 export interface ReduxState {
   associativeCenterState: {
     associativeCenters: Array<{
@@ -82,6 +111,16 @@ export interface ReduxState {
       end: string,
       start: string,
       transitionType: string
+    }>
+  },
+  transitionResultsState: {
+    transitionResults: Array<{
+      teacherId: string,
+      sessionId: string,
+      sessionDate: Date | undefined,
+      summary: TransitionData['summary'],
+      details: TransitionData['details'],
+      trends: TransitionData['trends']
     }>
   },
   transitionTimeState: {

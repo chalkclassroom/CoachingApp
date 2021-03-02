@@ -18,7 +18,7 @@ import teacherSelectedState from "./reducers/teacher-selected-state";
 import teacherListState from "./reducers/teacher-list-state";
 import coachState from './reducers/coach-state';
 import unlockedState from './reducers/unlocked-state';
-import resultsState from './reducers/results-state';
+import transitionResultsState from './reducers/transition-results-state';
 
 export default combineReducers({
   associativeCenterState,
@@ -40,5 +40,5 @@ export default combineReducers({
   teacherListState,
   coachState,
   unlockedState,
-  resultsState
+  transitionResultsState
 });

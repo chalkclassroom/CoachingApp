@@ -16,7 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import StarsIcon from '@material-ui/icons/Stars';
 import { changeTeacher, getTeacherList } from '../../../state/actions/teacher';
-import { getTeacherListForResults } from '../../../state/actions/results';
+import { getTeacherListForResults } from '../../../state/actions/transition-results';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
