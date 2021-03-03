@@ -127,6 +127,12 @@ export interface ReduxState {
       trends: TransitionData['trends']
     }>
   },
+  transitionSessionDatesState: {
+    sessions: Array<{
+      teacherId: string,
+      dates: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  },
   transitionTimeState: {
     transitionTime: number
   },

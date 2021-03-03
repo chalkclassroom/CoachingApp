@@ -15,6 +15,7 @@ import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
 import { addTransitionSummary, addTransitionDetails, addTransitionTrends } from '../../../state/actions/transition-results';
+import { getSessionDates } from '../../../state/actions/session-dates';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
@@ -56,6 +57,14 @@ interface Props {
     teacherId: string,
     trends: Types.TransitionData['trends']
   }): void,
+  getSessionDates(sessions: {
+    teacherId: string,
+    dates: Array<{id: string, sessionStart: {value: string}}>
+  }): void,
+  sessionDates: Array<{
+    teacherId: string,
+    dates: Array<{id: string, sessionStart: {value: string}}>
+  }>,
   transitionResultsState: Array<{
     teacherId: string,
     sessionId: string,
@@ -459,10 +468,11 @@ class TransitionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        {if (dates[0]) {
+      const reduxIndex = this.props.sessionDates.map(e => e.teacherId).indexOf(teacherId);
+      if (reduxIndex > -1) {
+        {if (this.props.sessionDates[reduxIndex].dates.length > 0) {
           this.setState({
-            sessionDates: dates,
+            sessionDates: this.props.sessionDates[reduxIndex].dates,
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
@@ -478,7 +488,32 @@ class TransitionResultsPage extends React.Component<Props, State> {
             noDataYet: true
           })
         }}
-      );
+      } else {
+        firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+          if (dates[0]) {
+            this.setState({
+              sessionDates: dates,
+              noDataYet: false
+            }, () => {
+              if (this.state.sessionDates[0]) {
+                this.setState({ sessionId: this.state.sessionDates[0].id },
+                  () => {
+                    this.getData();
+                  }
+                );
+              }
+            })
+          } else {
+            this.setState({
+              noDataYet: true
+            })
+          }
+          this.props.getSessionDates({
+            teacherId: teacherId,
+            dates: dates
+          });
+        });
+      }
     })
   };
 
@@ -891,6 +926,10 @@ class TransitionResultsPage extends React.Component<Props, State> {
 
 const mapStateToProps = (state: Types.ReduxState): {
   teacherSelected: Types.Teacher,
+  sessionDates: Array<{
+    teacherId: string,
+    dates: Array<{id: string, sessionStart: {value: string}}>
+  }>,
   transitionResultsState: Array<{
     teacherId: string,
     sessionId: string,
@@ -906,10 +945,11 @@ const mapStateToProps = (state: Types.ReduxState): {
 } => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,
+    sessionDates: state.transitionSessionDatesState.sessions,
     transitionResultsState: state.transitionResultsState.transitionResults,
     transitionTrendsState: state.transitionResultsState.transitionTrends
   };
 };
 
 TransitionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps, {addTransitionSummary, addTransitionDetails, addTransitionTrends})(TransitionResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {addTransitionSummary, addTransitionDetails, addTransitionTrends, getSessionDates})(TransitionResultsPage));
