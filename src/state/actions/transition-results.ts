@@ -2,6 +2,8 @@ import * as Types from '../../constants/Types';
 
 export const GET_TEACHER_LIST_FOR_RESULTS = "get_teacher_list";
 export const ADD_TRANSITION_SUMMARY = "add_transition_summary";
+export const ADD_TRANSITION_DETAILS = "add_transition_details";
+export const ADD_TRANSITION_TRENDS = "add_transition_trends";
 
 export const getTeacherListForResults = (teachers: Array<string>): GetTeacherListForResults => ({
   type: GET_TEACHER_LIST_FOR_RESULTS,
@@ -10,34 +12,27 @@ export const getTeacherListForResults = (teachers: Array<string>): GetTeacherLis
 
 export const addTransitionSummary = (entry: {
   sessionId: string,
-  summary: {
-    total: number,
-    sessionTotal: number,
-    startDate: {value: string}
-  } | undefined,
-  details: Array<{
-    line: number,
-    traveling: number,
-    waiting: number,
-    routines: number,
-    behaviorManagement: number,
-    other: number,
-    total: number
-  }> | undefined,
-  trends: Array<{
-    id: string,
-    line: number,
-    traveling: number,
-    waiting: number,
-    routines: number,
-    behaviorManagement: number,
-    other: number,
-    total: number,
-    sessionTotal: number,
-    startDate: {value: string}
-  }> | undefined
-}): AddTransitionResult => ({
+  teacherId: string,
+  summary: Types.TransitionData['summary'] | undefined
+}): AddTransitionSummary => ({
   type: ADD_TRANSITION_SUMMARY,
+  entry
+});
+
+export const addTransitionDetails = (entry: {
+  sessionId: string,
+  teacherId: string,
+  details: Types.TransitionData['details'] | undefined
+}): AddTransitionDetails => ({
+  type: ADD_TRANSITION_DETAILS,
+  entry
+});
+
+export const addTransitionTrends = (entry: {
+  teacherId: string,
+  trends: Types.TransitionData['trends'] | undefined
+}): AddTransitionTrends => ({
+  type: ADD_TRANSITION_TRENDS,
   entry
 });
 
@@ -46,41 +41,34 @@ interface GetTeacherListForResults {
   teachers: Array<string>
 }
 
-interface AddTransitionResult {
-  index: number;
+interface AddTransitionSummary {
   type: typeof ADD_TRANSITION_SUMMARY,
   entry: {
     sessionId: string,
-    sessionDate: Date,
-    summary: {
-      total: number,
-      sessionTotal: number,
-      startDate: {value: string}
-    } | undefined,
-    details: Array<{
-      line: number,
-      traveling: number,
-      waiting: number,
-      routines: number,
-      behaviorManagement: number,
-      other: number,
-      total: number
-    }> | undefined,
-    trends: Array<{
-      id: string,
-      line: number,
-      traveling: number,
-      waiting: number,
-      routines: number,
-      behaviorManagement: number,
-      other: number,
-      total: number,
-      sessionTotal: number,
-      startDate: {value: string}
-    }> | undefined
+    teacherId: string,
+    summary: Types.TransitionData['summary'] | undefined
+  }
+}
+
+interface AddTransitionDetails {
+  type: typeof ADD_TRANSITION_DETAILS,
+  entry: {
+    sessionId: string,
+    teacherId: string,
+    details: Types.TransitionData['details'] | undefined
+  }
+}
+
+interface AddTransitionTrends {
+  type: typeof ADD_TRANSITION_TRENDS,
+  entry: {
+    teacherId: string,
+    trends: Types.TransitionData['trends'] | undefined
   }
 }
 
 export type ResultsTypes =
   GetTeacherListForResults |
-  AddTransitionResult
+  AddTransitionSummary |
+  AddTransitionDetails |
+  AddTransitionTrends

@@ -14,7 +14,7 @@ import Grid from '@material-ui/core/Grid';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
-import { addTransitionSummary } from '../../../state/actions/transition-results';
+import { addTransitionSummary, addTransitionDetails, addTransitionTrends } from '../../../state/actions/transition-results';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
@@ -39,9 +39,22 @@ interface Props {
   classes: { root: string, comparisonText: string },
   teacherSelected: Types.Teacher,
   addTransitionSummary(summary: {
-    total: number,
-    sessionTotal: number,
-    startDate: {value: string}
+    sessionId: string,
+    teacherId: string,
+    summary: {
+      total: number,
+      sessionTotal: number,
+      startDate: {value: string}
+    }
+  }): void,
+  addTransitionDetails(details: {
+    sessionId: string,
+    teacherId: string,
+    details: Types.TransitionData['details']
+  }): void,
+  addTransitionTrends(trends: {
+    teacherId: string,
+    trends: Types.TransitionData['trends']
   }): void,
   transitionResultsState: Array<{
     teacherId: string,
@@ -49,6 +62,10 @@ interface Props {
     sessionDate: Date | undefined,
     summary: Types.TransitionData['summary'],
     details: Types.TransitionData['details'],
+    trends: Types.TransitionData['trends']
+  }>,
+  transitionTrendsState: Array<{
+    teacherId: string,
     trends: Types.TransitionData['trends']
   }>
 }
@@ -147,7 +164,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
   /**
    * @param {string} teacherId
    */
-  handleTrendsFetch = (teacherId: string): void => {
+  handleTrendsFetch = async (teacherId: string): Promise<void> => {
     const firebase = this.context;
     const dateArray: Array<Array<string>> = [];
     const lineArray: Array<number> = [];
@@ -158,19 +175,12 @@ class TransitionResultsPage extends React.Component<Props, State> {
     const otherArray: Array<number> = [];
     const totalArray: Array<number> = [];
     let formattedTime;
-    firebase.fetchTransitionTrend(teacherId).then((dataSet: Array<{
-      id: string,
-      line: number,
-      traveling: number,
-      waiting: number,
-      routines: number,
-      behaviorManagement: number,
-      other: number,
-      total: number,
-      sessionTotal: number,
-      startDate: {value: string}
-    }>) => {
-      dataSet.forEach(data => {
+
+    const reduxIndex = this.props.transitionTrendsState.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.TransitionData['trends']): Promise<void> => {
+      console.log('HANDLING TRENDS DATA', trendsData)
+      trendsData.forEach(data => {
         formattedTime = this.handleTrendsFormatTime(data.total);
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
@@ -184,8 +194,21 @@ class TransitionResultsPage extends React.Component<Props, State> {
         otherArray.push(Math.round(data.other / data.sessionTotal * 100));
         totalArray.push(Math.round((data.total / data.sessionTotal) * 100));
       });
+      // return 'hi'
+      /* return {
+        dates: dateArray,
+        lines: lineArray,
+        traveling: travelingArray,
+        waiting: waitingArray,
+        routines: routinesArray,
+        bm: behaviorManagementArray,
+        other: otherArray,
+        total: totalArray
+      } */
 
-      this.setState({
+      // console.log('TOTAL ARRAY', totalArray)
+
+      /* this.setState({
         trendsDates: dateArray,
         trendsLine: lineArray,
         trendsTraveling: travelingArray,
@@ -194,8 +217,76 @@ class TransitionResultsPage extends React.Component<Props, State> {
         trendsBehaviorManagement: behaviorManagementArray,
         trendsOther: otherArray,
         trendsTotal: totalArray
+      }, () => {console.log('trends states have been set')}); */
+    };
+
+    // if (this.props.)
+    if ((reduxIndex > -1) && (this.props.transitionTrendsState[reduxIndex].trends !== undefined)) {
+      handleTrendsData(this.props.transitionTrendsState[reduxIndex].trends).then(() => {
+        // console.log('hi', data)
+        /* this.setState({
+          trendsDates: data.dates,
+          trendsLine: data.lines,
+          trendsTraveling: data.traveling,
+          trendsWaiting: data.waiting,
+          trendsRoutines: data.routines,
+          trendsBehaviorManagement: data.bm,
+          trendsOther: data.other,
+          trendsTotal: data.total
+        }, () => {console.log('trends total', this.state.trendsTotal)}) */
+        this.setState({
+          trendsDates: dateArray,
+          trendsLine: lineArray,
+          trendsTraveling: travelingArray,
+          trendsWaiting: waitingArray,
+          trendsRoutines: routinesArray,
+          trendsBehaviorManagement: behaviorManagementArray,
+          trendsOther: otherArray,
+          trendsTotal: totalArray
+        }, () => {console.log('trends total', this.state.trendsTotal)})
+      })
+    } else {
+      firebase.fetchTransitionTrend(teacherId).then((dataSet: Array<{
+        id: string,
+        line: number,
+        traveling: number,
+        waiting: number,
+        routines: number,
+        behaviorManagement: number,
+        other: number,
+        total: number,
+        sessionTotal: number,
+        startDate: {value: string}
+      }>) => {
+        handleTrendsData(dataSet).then(() => {
+          this.setState({
+            trendsDates: dateArray,
+            trendsLine: lineArray,
+            trendsTraveling: travelingArray,
+            trendsWaiting: waitingArray,
+            trendsRoutines: routinesArray,
+            trendsBehaviorManagement: behaviorManagementArray,
+            trendsOther: otherArray,
+            trendsTotal: totalArray
+          }, () => {console.log('trends total', this.state.trendsTotal)})
+        })
+        this.props.addTransitionTrends({
+          teacherId: teacherId,
+          trends: dataSet
+        })
       });
-    });
+    }
+    /* console.log('TOTAL ARRAY OUTSIDE OF LOOP', totalArray);
+    this.setState({
+      trendsDates: dateArray,
+      trendsLine: lineArray,
+      trendsTraveling: travelingArray,
+      trendsWaiting: waitingArray,
+      trendsRoutines: routinesArray,
+      trendsBehaviorManagement: behaviorManagementArray,
+      trendsOther: otherArray,
+      trendsTotal: totalArray
+    }, () => {console.log('trends total', this.state.trendsTotal, totalArray)}); */
   };
 
   /**
@@ -238,6 +329,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
       data: Array<number>
     }>
   } => {
+    console.log('TRENDS TOTAL STATE', this.state.trendsTotal)
     return {
       labels: this.state.trendsDates,
       datasets:  [
@@ -418,9 +510,12 @@ class TransitionResultsPage extends React.Component<Props, State> {
         });
         this.props.addTransitionSummary({
             sessionId: this.state.sessionId,
-            total: summary[0].total,
-            sessionTotal: summary[0].sessionTotal,
-            startDate: {value: summary[0].startDate.value}
+            teacherId: this.props.teacherSelected.id,
+            summary: {
+              total: summary[0].total,
+              sessionTotal: summary[0].sessionTotal,
+              startDate: {value: summary[0].startDate.value}
+            }
         });
       });
     }    
@@ -441,25 +536,51 @@ class TransitionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchTransitionTypeSummary(this.state.sessionId).then((type: Array<{
-      line: number,
-      traveling: number,
-      waiting: number,
-      routines: number,
-      behaviorManagement: number,
-      other: number,
-      total: number
-    }>) => {
+
+    if ((reduxIndex > -1) && this.props.transitionResultsState[reduxIndex].summary !== undefined) {
       this.setState({
-        sessionLine: type[0].line,
-        sessionTraveling: type[0].traveling,
-        sessionWaiting: type[0].waiting,
-        sessionRoutines: type[0].routines,
-        sessionBehaviorManagement: type[0].behaviorManagement,
-        sessionOther: type[0].other,
-        transitionTime: type[0].total
-      })
-    });
+        sessionLine: this.props.transitionResultsState[reduxIndex].details[0].line,
+        sessionTraveling: this.props.transitionResultsState[reduxIndex].details[0].traveling,
+        sessionWaiting: this.props.transitionResultsState[reduxIndex].details[0].waiting,
+        sessionRoutines: this.props.transitionResultsState[reduxIndex].details[0].routines,
+        sessionBehaviorManagement: this.props.transitionResultsState[reduxIndex].details[0].behaviorManagement,
+        sessionOther: this.props.transitionResultsState[reduxIndex].details[0].other,
+        transitionTime: this.props.transitionResultsState[reduxIndex].details[0].total,
+      });
+    } else {
+      firebase.fetchTransitionTypeSummary(this.state.sessionId).then((type: Array<{
+        line: number,
+        traveling: number,
+        waiting: number,
+        routines: number,
+        behaviorManagement: number,
+        other: number,
+        total: number
+      }>) => {
+        this.setState({
+          sessionLine: type[0].line,
+          sessionTraveling: type[0].traveling,
+          sessionWaiting: type[0].waiting,
+          sessionRoutines: type[0].routines,
+          sessionBehaviorManagement: type[0].behaviorManagement,
+          sessionOther: type[0].other,
+          transitionTime: type[0].total
+        })
+        this.props.addTransitionDetails({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          details: [{
+            line: type[0].line,
+            traveling: type[0].traveling,
+            waiting: type[0].waiting,
+            routines: type[0].routines,
+            behaviorManagement: type[0].behaviorManagement,
+            other: type[0].other,
+            total: type[0].total
+          }]
+      });
+      });
+    }
   }
 
   /**
@@ -768,20 +889,27 @@ class TransitionResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher, transitionResultsState: Array<{
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  transitionResultsState: Array<{
     teacherId: string,
     sessionId: string,
     sessionDate: Date | undefined,
     summary: Types.TransitionData['summary'],
     details: Types.TransitionData['details'],
     trends: Types.TransitionData['trends']
+  }>,
+  transitionTrendsState: Array<{
+    teacherId: string,
+    trends: Types.TransitionData['trends']
   }>
 } => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,
-    transitionResultsState: state.transitionResultsState.transitionResults
+    transitionResultsState: state.transitionResultsState.transitionResults,
+    transitionTrendsState: state.transitionResultsState.transitionTrends
   };
 };
 
 TransitionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps, {addTransitionSummary})(TransitionResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {addTransitionSummary, addTransitionDetails, addTransitionTrends})(TransitionResultsPage));

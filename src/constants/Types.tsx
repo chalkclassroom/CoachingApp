@@ -10,7 +10,7 @@ export interface TransitionData {
     total: number,
     sessionTotal: number,
     startDate: {value: string}
-  } | undefined,
+  },
   details: Array<{
     line: number,
     traveling: number,
@@ -19,7 +19,7 @@ export interface TransitionData {
     behaviorManagement: number,
     other: number,
     total: number
-  }> | undefined,
+  }>,
   trends: Array<{
     id: string,
     line: number,
@@ -31,7 +31,7 @@ export interface TransitionData {
     total: number,
     sessionTotal: number,
     startDate: {value: string}
-  }> | undefined
+  }>
 }
 
 export interface ReduxState {
@@ -120,6 +120,10 @@ export interface ReduxState {
       sessionDate: Date | undefined,
       summary: TransitionData['summary'],
       details: TransitionData['details'],
+      trends: TransitionData['trends']
+    }>,
+    transitionTrends: Array<{
+      teacherId: string,
       trends: TransitionData['trends']
     }>
   },
