@@ -1,20 +1,50 @@
-export const GET_SESSION_DATES = "get_session_dates";
+export const ADD_TEACHER = "add_teacher";
+export const ADD_TOOL = "add_tool";
 
-export const getSessionDates = (sessions: {
+export const addTeacher = (dates: {
   teacherId: string,
-  dates: Array<{id: string, sessionStart: {value: string}}>
-}): GetSessionDates => ({
-  type: GET_SESSION_DATES,
-  sessions
+  data: Array<{
+    tool: string,
+    sessions: Array<{id: string, sessionStart: {value: string}}>
+  }>
+}): AddTeacher => ({
+  type: ADD_TEACHER,
+  dates
 });
 
-interface GetSessionDates {
-  type: typeof GET_SESSION_DATES,
-  sessions: {
+export const addTool = (dates: Array<{
+  teacherId: string,
+  data: Array<{
+    tool: string,
+    sessions: Array<{id: string, sessionStart: {value: string}}>
+  }>
+}>): AddTool => ({
+  type: ADD_TOOL,
+  dates
+});
+
+interface AddTeacher {
+  type: typeof ADD_TEACHER,
+  dates: {
     teacherId: string,
-    dates: Array<{id: string, sessionStart: {value: string}}>
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
   }
 }
 
+interface AddTool {
+  type: typeof ADD_TOOL,
+  dates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>
+}
+
 export type SessionDatesTypes =
-  GetSessionDates
+  AddTeacher |
+  AddTool

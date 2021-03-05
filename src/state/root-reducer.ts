@@ -18,7 +18,7 @@ import teacherSelectedState from "./reducers/teacher-selected-state";
 import teacherListState from "./reducers/teacher-list-state";
 import coachState from './reducers/coach-state';
 import unlockedState from './reducers/unlocked-state';
-import transitionSessionDatesState from './reducers/transition-session-dates-state';
+import sessionDatesState from './reducers/session-dates-state';
 import transitionResultsState from './reducers/transition-results-state';
 
 export default combineReducers({
@@ -41,6 +41,6 @@ export default combineReducers({
   teacherListState,
   coachState,
   unlockedState,
-  transitionSessionDatesState,
+  sessionDatesState,
   transitionResultsState
 });

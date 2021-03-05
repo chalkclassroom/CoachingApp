@@ -10,6 +10,7 @@ import ClimateCoachingQuestions from "../../../components/ClassroomClimateCompon
 import ClimateSummarySlider from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateSummarySlider";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
+import { addTeacher, addTool } from '../../../state/actions/session-dates';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TeacherModal from '../HomeViews/TeacherModal';
@@ -28,7 +29,28 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  addTeacher(dates: {
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }): void,
+  addTool(dates: [{
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }]): void,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>
 }
 
 interface Style {
@@ -182,7 +204,81 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+      const teacherIndex = this.props.sessionDates.map(e => e.teacherId).indexOf(teacherId);
+      if (teacherIndex > -1) { // if teacher in redux sessionDatesState
+        const toolIndex = this.props.sessionDates[teacherIndex].data.map(e => e.tool).indexOf('CC');
+        if (toolIndex > -1 && this.props.sessionDates[teacherIndex].data[toolIndex].sessions.length > 0) { // if climate for this teacher in sessionDatesState
+          this.setState({
+            sessionDates: this.props.sessionDates[teacherIndex].data[toolIndex].sessions,
+            noDataYet: false
+          }, () => {
+            if (this.state.sessionDates[0]) {
+              this.setState({ sessionId: this.state.sessionDates[0].id },
+                () => {
+                  this.getData();
+                }
+              );
+            }
+          })
+        } else { // teacher exists but not climate
+          firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+            if (dates[0]) {
+              this.setState({
+                sessionDates: dates,
+                noDataYet: false
+              }, () => {
+                if (this.state.sessionDates[0]) {
+                  this.setState({ sessionId: this.state.sessionDates[0].id },
+                    () => {
+                      this.getData();
+                    }
+                  );
+                }
+              })
+            } else {
+              this.setState({
+                noDataYet: true
+              })
+            }
+            this.props.addTool([{
+              teacherId: teacherId,
+              data: [{
+                tool: 'CC',
+                sessions: dates
+              }]
+            }]);
+          });
+        }
+      } else { // teacher not in redux sessionDatesState
+        firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+          if (dates[0]) {
+            this.setState({
+              sessionDates: dates,
+              noDataYet: false
+            }, () => {
+              if (this.state.sessionDates[0]) {
+                this.setState({ sessionId: this.state.sessionDates[0].id },
+                  () => {
+                    this.getData();
+                  }
+                );
+              }
+            })
+          } else {
+            this.setState({
+              noDataYet: true
+            })
+          }
+          this.props.addTeacher({
+            teacherId: teacherId,
+            data: [{
+              tool: 'CC',
+              sessions: dates
+            }]
+          });
+        });
+      }
+      /* firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
         {if (dates[0]) {
           this.setState({
             sessionDates: dates,
@@ -201,7 +297,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
             noDataYet: true
           })
         }}
-      );
+      ); */
     })
   };
 
@@ -542,11 +638,21 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>
+} => {
   return {
-    teacherSelected: state.teacherSelectedState.teacher
+    teacherSelected: state.teacherSelectedState.teacher,
+    sessionDates: state.sessionDatesState.dates
   };
 };
 
 ClassroomClimateResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps)(ClassroomClimateResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {addTeacher, addTool})(ClassroomClimateResultsPage));

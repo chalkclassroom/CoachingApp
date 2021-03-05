@@ -15,7 +15,7 @@ import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
 import { addTransitionSummary, addTransitionDetails, addTransitionTrends } from '../../../state/actions/transition-results';
-import { getSessionDates } from '../../../state/actions/session-dates';
+import { addTeacher, addTool } from '../../../state/actions/session-dates';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
@@ -57,13 +57,26 @@ interface Props {
     teacherId: string,
     trends: Types.TransitionData['trends']
   }): void,
-  getSessionDates(sessions: {
+  addTeacher(dates: {
     teacherId: string,
-    dates: Array<{id: string, sessionStart: {value: string}}>
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
   }): void,
+  addTool(dates: [{
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }]): void,
   sessionDates: Array<{
     teacherId: string,
-    dates: Array<{id: string, sessionStart: {value: string}}>
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
   }>,
   transitionResultsState: Array<{
     teacherId: string,
@@ -188,7 +201,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
     const reduxIndex = this.props.transitionTrendsState.map(e => e.teacherId).indexOf(teacherId);
 
     const handleTrendsData = async (trendsData: Types.TransitionData['trends']): Promise<void> => {
-      console.log('HANDLING TRENDS DATA', trendsData)
       trendsData.forEach(data => {
         formattedTime = this.handleTrendsFormatTime(data.total);
         dateArray.push([
@@ -203,46 +215,10 @@ class TransitionResultsPage extends React.Component<Props, State> {
         otherArray.push(Math.round(data.other / data.sessionTotal * 100));
         totalArray.push(Math.round((data.total / data.sessionTotal) * 100));
       });
-      // return 'hi'
-      /* return {
-        dates: dateArray,
-        lines: lineArray,
-        traveling: travelingArray,
-        waiting: waitingArray,
-        routines: routinesArray,
-        bm: behaviorManagementArray,
-        other: otherArray,
-        total: totalArray
-      } */
-
-      // console.log('TOTAL ARRAY', totalArray)
-
-      /* this.setState({
-        trendsDates: dateArray,
-        trendsLine: lineArray,
-        trendsTraveling: travelingArray,
-        trendsWaiting: waitingArray,
-        trendsRoutines: routinesArray,
-        trendsBehaviorManagement: behaviorManagementArray,
-        trendsOther: otherArray,
-        trendsTotal: totalArray
-      }, () => {console.log('trends states have been set')}); */
     };
 
-    // if (this.props.)
     if ((reduxIndex > -1) && (this.props.transitionTrendsState[reduxIndex].trends !== undefined)) {
       handleTrendsData(this.props.transitionTrendsState[reduxIndex].trends).then(() => {
-        // console.log('hi', data)
-        /* this.setState({
-          trendsDates: data.dates,
-          trendsLine: data.lines,
-          trendsTraveling: data.traveling,
-          trendsWaiting: data.waiting,
-          trendsRoutines: data.routines,
-          trendsBehaviorManagement: data.bm,
-          trendsOther: data.other,
-          trendsTotal: data.total
-        }, () => {console.log('trends total', this.state.trendsTotal)}) */
         this.setState({
           trendsDates: dateArray,
           trendsLine: lineArray,
@@ -252,7 +228,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
           trendsBehaviorManagement: behaviorManagementArray,
           trendsOther: otherArray,
           trendsTotal: totalArray
-        }, () => {console.log('trends total', this.state.trendsTotal)})
+        })
       })
     } else {
       firebase.fetchTransitionTrend(teacherId).then((dataSet: Array<{
@@ -277,7 +253,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
             trendsBehaviorManagement: behaviorManagementArray,
             trendsOther: otherArray,
             trendsTotal: totalArray
-          }, () => {console.log('trends total', this.state.trendsTotal)})
+          })
         })
         this.props.addTransitionTrends({
           teacherId: teacherId,
@@ -285,17 +261,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
         })
       });
     }
-    /* console.log('TOTAL ARRAY OUTSIDE OF LOOP', totalArray);
-    this.setState({
-      trendsDates: dateArray,
-      trendsLine: lineArray,
-      trendsTraveling: travelingArray,
-      trendsWaiting: waitingArray,
-      trendsRoutines: routinesArray,
-      trendsBehaviorManagement: behaviorManagementArray,
-      trendsOther: otherArray,
-      trendsTotal: totalArray
-    }, () => {console.log('trends total', this.state.trendsTotal, totalArray)}); */
   };
 
   /**
@@ -338,7 +303,6 @@ class TransitionResultsPage extends React.Component<Props, State> {
       data: Array<number>
     }>
   } => {
-    console.log('TRENDS TOTAL STATE', this.state.trendsTotal)
     return {
       labels: this.state.trendsDates,
       datasets:  [
@@ -468,11 +432,12 @@ class TransitionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      const reduxIndex = this.props.sessionDates.map(e => e.teacherId).indexOf(teacherId);
-      if (reduxIndex > -1) {
-        {if (this.props.sessionDates[reduxIndex].dates.length > 0) {
+      const teacherIndex = this.props.sessionDates.map(e => e.teacherId).indexOf(teacherId);
+      if (teacherIndex > -1) { // if teacher in redux results
+        const toolIndex = this.props.sessionDates[teacherIndex].data.map(e => e.tool).indexOf('TT');
+        if (toolIndex > -1 && this.props.sessionDates[teacherIndex].data[toolIndex].sessions.length > 0) { // if transition
           this.setState({
-            sessionDates: this.props.sessionDates[reduxIndex].dates,
+            sessionDates: this.props.sessionDates[teacherIndex].data[toolIndex].sessions,
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
@@ -483,12 +448,36 @@ class TransitionResultsPage extends React.Component<Props, State> {
               );
             }
           })
-        } else {
-          this.setState({
-            noDataYet: true
-          })
-        }}
-      } else {
+        } else { // teacher exists but not transition
+          firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+            if (dates[0]) {
+              this.setState({
+                sessionDates: dates,
+                noDataYet: false
+              }, () => {
+                if (this.state.sessionDates[0]) {
+                  this.setState({ sessionId: this.state.sessionDates[0].id },
+                    () => {
+                      this.getData();
+                    }
+                  );
+                }
+              })
+            } else {
+              this.setState({
+                noDataYet: true
+              })
+            }
+            this.props.addTool([{
+              teacherId: teacherId,
+              data: [{
+                tool: 'TT',
+                sessions: dates
+              }]
+            }]);
+          });
+        }
+      } else { // teacher not in redux results
         firebase.fetchSessionDates(teacherId, "transition").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
           if (dates[0]) {
             this.setState({
@@ -508,9 +497,12 @@ class TransitionResultsPage extends React.Component<Props, State> {
               noDataYet: true
             })
           }
-          this.props.getSessionDates({
+          this.props.addTeacher({
             teacherId: teacherId,
-            dates: dates
+            data: [{
+              tool: 'TT',
+              sessions: dates
+            }]
           });
         });
       }
@@ -928,7 +920,10 @@ const mapStateToProps = (state: Types.ReduxState): {
   teacherSelected: Types.Teacher,
   sessionDates: Array<{
     teacherId: string,
-    dates: Array<{id: string, sessionStart: {value: string}}>
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
   }>,
   transitionResultsState: Array<{
     teacherId: string,
@@ -945,11 +940,11 @@ const mapStateToProps = (state: Types.ReduxState): {
 } => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,
-    sessionDates: state.transitionSessionDatesState.sessions,
+    sessionDates: state.sessionDatesState.dates,
     transitionResultsState: state.transitionResultsState.transitionResults,
     transitionTrendsState: state.transitionResultsState.transitionTrends
   };
 };
 
 TransitionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps, {addTransitionSummary, addTransitionDetails, addTransitionTrends, getSessionDates})(TransitionResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {addTransitionSummary, addTransitionDetails, addTransitionTrends, addTeacher, addTool})(TransitionResultsPage));
