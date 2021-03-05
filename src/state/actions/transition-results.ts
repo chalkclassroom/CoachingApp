@@ -1,14 +1,8 @@
 import * as Types from '../../constants/Types';
 
-export const GET_TEACHER_LIST_FOR_RESULTS = "get_teacher_list";
 export const ADD_TRANSITION_SUMMARY = "add_transition_summary";
 export const ADD_TRANSITION_DETAILS = "add_transition_details";
 export const ADD_TRANSITION_TRENDS = "add_transition_trends";
-
-export const getTeacherListForResults = (teachers: Array<string>): GetTeacherListForResults => ({
-  type: GET_TEACHER_LIST_FOR_RESULTS,
-  teachers
-});
 
 export const addTransitionSummary = (entry: {
   sessionId: string,
@@ -35,11 +29,6 @@ export const addTransitionTrends = (entry: {
   type: ADD_TRANSITION_TRENDS,
   entry
 });
-
-interface GetTeacherListForResults {
-  type: typeof GET_TEACHER_LIST_FOR_RESULTS,
-  teachers: Array<string>
-}
 
 interface AddTransitionSummary {
   type: typeof ADD_TRANSITION_SUMMARY,
@@ -68,7 +57,6 @@ interface AddTransitionTrends {
 }
 
 export type ResultsTypes =
-  GetTeacherListForResults |
   AddTransitionSummary |
   AddTransitionDetails |
   AddTransitionTrends

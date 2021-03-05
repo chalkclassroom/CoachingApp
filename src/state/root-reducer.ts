@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import associativeCenterState from "./reducers/associative-center-state";
 import associativeCountState from "./reducers/associative-count-state";
 import climateRatingsState from "./reducers/climate-ratings-state";
+import climateResultsState from "./reducers/climate-results-state";
 import climateStackState from "./reducers/climate-stack-state";
 import sequentialCenterState from "./reducers/sequential-center-state";
 import sequentialCountState from "./reducers/sequential-count-state";
@@ -25,6 +26,7 @@ export default combineReducers({
   associativeCenterState,
   associativeCountState,
   climateRatingsState,
+  climateResultsState,
   climateStackState,
   sequentialCenterState,
   sequentialCountState,

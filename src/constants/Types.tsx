@@ -34,6 +34,23 @@ export interface TransitionData {
   }>
 }
 
+export interface ClimateData {
+  summary: {
+    toneRating: number
+  },
+  details: {
+    specificCount: number,
+    nonspecificCount: number,
+    disapprovalCount: number,
+    redirectionCount: number
+  },
+  trends: Array<{
+    dayOfEvent: {value: string},
+    positive: number,
+    negative: number
+  }>
+}
+
 export interface ReduxState {
   associativeCenterState: {
     associativeCenters: Array<{
@@ -50,6 +67,18 @@ export interface ReduxState {
     climateRatings: Array<{
       timestamp: number,
       rating: number
+    }>
+  },
+  climateResultsState: {
+    climateResults: Array<{
+      teacherId: string,
+      sessionId: string,
+      summary: ClimateData['summary'],
+      details: ClimateData['details'],
+    }>,
+    climateTrends: Array<{
+      teacherId: string,
+      trends: ClimateData['trends']
     }>
   },
   climateStackState: {

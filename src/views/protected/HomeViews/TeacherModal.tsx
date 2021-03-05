@@ -16,7 +16,6 @@ import IconButton from "@material-ui/core/IconButton";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import StarsIcon from '@material-ui/icons/Stars';
 import { changeTeacher, getTeacherList } from '../../../state/actions/teacher';
-import { getTeacherListForResults } from '../../../state/actions/transition-results';
 import { connect } from 'react-redux';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
@@ -73,7 +72,6 @@ type Props = RouteComponentProps & {
   handleClose(): void,
   changeTeacher(teacher: Types.Teacher): Types.Teacher,
   getTeacherList(teachers: Array<Types.Teacher>): Array<Types.Teacher>,
-  getTeacherListForResults(teachers: Array<Types.Teacher>): Array<Types.Teacher>,
   teacherSelected?: Types.Teacher,
   teacherList: Array<Types.Teacher>
 }
@@ -125,16 +123,7 @@ class TeacherModal extends React.Component<Props, State> {
                 teachers: previousState.teachers.concat(data)
               };
             }, () => { 
-              const teacherIds: Array<string> = [];
               this.props.getTeacherList(this.state.teachers);
-              /* this.state.teachers.forEach((teacher) => {
-                this.props.getTeacherListForResults(teacher.id)
-              }) */
-              /* this.state.teachers.forEach((teacher) => {
-                teacherIds.push(teacher.id)
-              })
-              this.props.getTeacherListForResults(teacherIds); */
-              // this.props.getTeacherListForResults(this.state.teachers);
             });
           });
         });
@@ -270,5 +259,5 @@ const mapStateToProps = (state: Types.ReduxState): {
 
 export default withRouter(connect(
   mapStateToProps,
-  { changeTeacher, getTeacherList, getTeacherListForResults }
+  { changeTeacher, getTeacherList }
 )(withStyles(styles)(TeacherModal)));

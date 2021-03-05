@@ -564,7 +564,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
       console.log('unable to retrieve conference plan')
     })
 
-    if ((reduxIndex > -1) && this.props.transitionResultsState[reduxIndex].summary !== undefined) {
+    if ((reduxIndex > -1) && this.props.transitionResultsState[reduxIndex].details !== undefined) {
       this.setState({
         sessionLine: this.props.transitionResultsState[reduxIndex].details[0].line,
         sessionTraveling: this.props.transitionResultsState[reduxIndex].details[0].traveling,
@@ -605,7 +605,7 @@ class TransitionResultsPage extends React.Component<Props, State> {
             other: type[0].other,
             total: type[0].total
           }]
-      });
+        });
       });
     }
   }

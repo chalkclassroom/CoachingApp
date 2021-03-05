@@ -10,6 +10,7 @@ import ClimateCoachingQuestions from "../../../components/ClassroomClimateCompon
 import ClimateSummarySlider from "../../../components/ClassroomClimateComponent/ResultsComponents/ClimateSummarySlider";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
+import { addClimateSummary, addClimateDetails, addClimateTrends } from '../../../state/actions/climate-results';
 import { addTeacher, addTool } from '../../../state/actions/session-dates';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -50,6 +51,30 @@ interface Props {
       tool: string,
       sessions: Array<{id: string, sessionStart: {value: string}}>
     }>
+  }>,
+  addClimateSummary(summary: {
+    sessionId: string,
+    teacherId: string,
+    summary: Types.ClimateData['summary']
+  }): void,
+  addClimateDetails(details: {
+    sessionId: string,
+    teacherId: string,
+    details: Array<Types.ClimateData['details']>
+  }): void,
+  addClimateTrends(trends: {
+    teacherId: string,
+    trends: Types.ClimateData['trends']
+  }): void,
+  climateResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    summary: Types.ClimateData['summary'],
+    details: Array<Types.ClimateData['details']>
+  }>,
+  climateTrends: Array<{
+    teacherId: string,
+    trends: Types.ClimateData['trends']
   }>
 }
 
@@ -138,7 +163,43 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     const dateArray: Array<string> = [];
     const posArray: Array<number> = [];
     const negArray: Array<number> = [];
-    firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, positive: number, negative: number}>) => {
+
+    const reduxIndex = this.props.climateTrends.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.ClimateData['trends']): Promise<void> => {
+      trendsData.forEach((data: {dayOfEvent: {value: string}, positive: number, negative: number}) => {
+        dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
+        posArray.push(Math.round((data.positive / (data.positive + data.negative)) * 100));
+        negArray.push(Math.round((data.negative / (data.positive + data.negative)) * 100));
+      });
+    };
+
+    if ((reduxIndex > -1) && (this.props.climateTrends[reduxIndex].trends !== undefined)) {
+      handleTrendsData(this.props.climateTrends[reduxIndex].trends).then(() => {
+        this.setState({
+          trendsDates: dateArray,
+          trendsPos: posArray,
+          trendsNeg: negArray
+        })
+      })
+    } else {
+      firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, positive: number, negative: number}>) => {
+        handleTrendsData(dataSet).then(() => {
+          this.setState({
+            trendsDates: dateArray,
+            trendsPos: posArray,
+            trendsNeg: negArray
+          })
+        })
+        this.props.addClimateTrends({
+          teacherId: teacherId,
+          trends: dataSet
+        })
+      });
+    }
+
+
+    /* firebase.fetchBehaviourTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, positive: number, negative: number}>) => {
       dataSet.forEach((data: {dayOfEvent: {value: string}, positive: number, negative: number}) => {
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
         posArray.push(Math.round((data.positive / (data.positive + data.negative)) * 100));
@@ -149,7 +210,7 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
         trendsPos: posArray,
         trendsNeg: negArray,
       });
-    });
+    }); */
   };
 
   /**
@@ -342,9 +403,26 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     let disapprovalCount = 0;
     let redirectionCount = 0;
     this.handleNotesFetching(this.state.sessionId);
-    firebase.fetchAvgToneRating(this.state.sessionId).then((rating: number) => {
-      this.setState({ averageToneRating: rating });
-    });
+
+    const reduxIndex = this.props.climateResults.map(e => e.sessionId).indexOf(this.state.sessionId);
+
+    if ((reduxIndex > -1) && this.props.climateResults[reduxIndex].summary !== undefined) {
+      this.setState({
+        averageToneRating: this.props.climateResults[reduxIndex].summary.toneRating
+      });
+    } else {
+      firebase.fetchAvgToneRating(this.state.sessionId).then((rating: number) => {
+        this.setState({ averageToneRating: rating });
+        this.props.addClimateSummary({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          summary: {
+            toneRating: rating
+          }
+        });
+      });
+    }
+
     firebase.getConferencePlan(this.state.sessionId).then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
       if (conferencePlanData[0]) {
         this.setState({
@@ -360,25 +438,45 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchBehaviourTypeCount(this.state.sessionId).then((json: Array<{behaviorResponse: string, count: number}>) => {
-      json.forEach(behavior => {
-        if (behavior.behaviorResponse === "specificapproval") {
-          specificCount = behavior.count;
-        } else if (behavior.behaviorResponse === "nonspecificapproval") {
-          nonspecificCount = behavior.count;
-        } else if (behavior.behaviorResponse === "disapproval") {
-          disapprovalCount = behavior.count;
-        } else if (behavior.behaviorResponse === "redirection") {
-          redirectionCount = behavior.count;
-        }
-      });
+
+    if ((reduxIndex > -1) && this.props.climateResults[reduxIndex].details !== undefined) {
       this.setState({
-        redirectionsBehaviorCount: redirectionCount,
-        disapprovalBehaviorCount: disapprovalCount,
-        nonspecificBehaviorCount: nonspecificCount,
-        specificBehaviorCount: specificCount
+        redirectionsBehaviorCount: this.props.climateResults[reduxIndex].details[0].redirectionCount,
+        disapprovalBehaviorCount: this.props.climateResults[reduxIndex].details[0].disapprovalCount,
+        nonspecificBehaviorCount: this.props.climateResults[reduxIndex].details[0].nonspecificCount,
+        specificBehaviorCount: this.props.climateResults[reduxIndex].details[0].specificCount
       });
-    });
+    } else {
+      firebase.fetchBehaviourTypeCount(this.state.sessionId).then((json: Array<{behaviorResponse: string, count: number}>) => {
+        json.forEach(behavior => {
+          if (behavior.behaviorResponse === "specificapproval") {
+            specificCount = behavior.count;
+          } else if (behavior.behaviorResponse === "nonspecificapproval") {
+            nonspecificCount = behavior.count;
+          } else if (behavior.behaviorResponse === "disapproval") {
+            disapprovalCount = behavior.count;
+          } else if (behavior.behaviorResponse === "redirection") {
+            redirectionCount = behavior.count;
+          }
+        });
+        this.setState({
+          redirectionsBehaviorCount: redirectionCount,
+          disapprovalBehaviorCount: disapprovalCount,
+          nonspecificBehaviorCount: nonspecificCount,
+          specificBehaviorCount: specificCount
+        });
+        this.props.addClimateDetails({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          details: [{
+            redirectionCount: redirectionCount,
+            disapprovalCount: disapprovalCount,
+            nonspecificCount: nonspecificCount,
+            specificCount: specificCount
+          }]
+        });
+      });
+    }
   }
 
   /**
@@ -530,6 +628,12 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
       phone: PropTypes.string,
       role: PropTypes.string,
       school: PropTypes.string
+    }).isRequired,
+    climateResults: PropTypes.exact({
+      teacherId: PropTypes.string,
+      sessionId: PropTypes.string,
+      summary: PropTypes.object,
+      details: PropTypes.object
     }).isRequired
   };
 
@@ -646,13 +750,25 @@ const mapStateToProps = (state: Types.ReduxState): {
       tool: string,
       sessions: Array<{id: string, sessionStart: {value: string}}>
     }>
+  }>,
+  climateResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    summary: Types.ClimateData['summary'],
+    details: Array<Types.ClimateData['details']>
+  }>,
+  climateTrends: Array<{
+    teacherId: string,
+    trends: Types.ClimateData['trends']
   }>
 } => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,
-    sessionDates: state.sessionDatesState.dates
+    sessionDates: state.sessionDatesState.dates,
+    climateResults: state.climateResultsState.climateResults,
+    climateTrends: state.climateResultsState.climateTrends
   };
 };
 
 ClassroomClimateResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps, {addTeacher, addTool})(ClassroomClimateResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {addTeacher, addTool, addClimateSummary, addClimateDetails, addClimateTrends})(ClassroomClimateResultsPage));
