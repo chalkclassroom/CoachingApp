@@ -51,6 +51,41 @@ export interface ClimateData {
   }>
 }
 
+export interface MathData {
+  childSummary: {
+    math: number,
+    notMath: number
+  },
+  teacherSummary: {
+    support: number,
+    noSupport: number,
+    noOpportunity: number
+  },
+  childDetails: {
+    math1: number,
+    math2: number,
+    math3: number,
+    math4: number
+  },
+  teacherDetails: {
+    teacher1: number,
+    teacher2: number,
+    teacher3: number,
+    teacher4: number
+  },
+  childTrends: Array<{
+    startDate: {value: string},
+    math: number,
+    notMath: number
+  }>,
+  teacherTrends: Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    support: number,
+    noSupport: number
+  }>
+}
+
 export interface ReduxState {
   associativeCenterState: {
     associativeCenters: Array<{
@@ -112,6 +147,25 @@ export interface ReduxState {
     mathCenters: Array<{
       name: string,
       count: number
+    }>
+  },
+  mathResultsState: {
+    mathResults: Array<{
+      teacherId: string,
+      sessionId: string,
+      childSummary: MathData['childSummary'],
+      teacherSummary: MathData['teacherSummary'],
+      details: MathData['childDetails'] & MathData['teacherDetails']
+      // childDetails: MathData['childDetails'],
+      // teacherDetails: MathData['teacherDetails'],
+    }>,
+    mathChildTrends: Array<{
+      teacherId: string,
+      childTrends: MathData['childTrends']
+    }>,
+    mathTeacherTrends: Array<{
+      teacherId: string,
+      teacherTrends: MathData['teacherTrends']
     }>
   },
   sequentialCenterState: {

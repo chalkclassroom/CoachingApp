@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import moment from "moment";
+import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import SummarySlider from "../../../components/MathInstructionComponents/ResultsComponents/SummarySlider";
 import DetailsSlider from "../../../components/MathInstructionComponents/ResultsComponents/DetailsSlider";
@@ -11,6 +11,14 @@ import MathCoachingQuestions from "../../../components/MathInstructionComponents
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
+import {
+  addMathChildSummary,
+  addMathTeacherSummary,
+  addMathDetails,
+  addMathChildTrends,
+  addMathTeacherTrends
+} from '../../../state/actions/math-results';
+import { addTeacher, addTool } from '../../../state/actions/session-dates';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 
@@ -26,7 +34,66 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  addTeacher(dates: {
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }): void,
+  addTool(dates: [{
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }]): void,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  addMathChildSummary(childSummary: {
+    sessionId: string,
+    teacherId: string,
+    childSummary: Types.MathData['childSummary']
+  }): void,
+  addMathTeacherSummary(teacherSummary: {
+    sessionId: string,
+    teacherId: string,
+    teacherSummary: Types.MathData['teacherSummary']
+  }): void,
+  addMathDetails(childDetails: {
+    sessionId: string,
+    teacherId: string,
+    details: Types.MathData['childDetails'] & Types.MathData['teacherDetails']
+  }): void,
+  addMathChildTrends(childTrends: {
+    teacherId: string,
+    childTrends: Types.MathData['childTrends'] | undefined
+  }): void,
+  addMathTeacherTrends(teacherTrends: {
+    teacherId: string,
+    teacherTrends: Types.MathData['teacherTrends'] | undefined
+  }): void,
+  mathResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    childSummary: Types.MathData['childSummary'],
+    teacherSummary: Types.MathData['teacherSummary'],
+    details: Types.MathData['childDetails'] & Types.MathData['teacherDetails']
+  }>,
+  mathChildTrends: Array<{
+    teacherId: string,
+    childTrends: Types.MathData['childTrends']
+  }>,
+  mathTeacherTrends: Array<{
+    teacherId: string,
+    teacherTrends: Types.MathData['teacherTrends']
+  }>
 }
 
 interface Style {
@@ -180,10 +247,12 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "math").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        {if (dates[0]) {
+      const teacherIndex = this.props.sessionDates.map(e => e.teacherId).indexOf(teacherId);
+      if (teacherIndex > -1) { // if teacher in redux sessionDatesState
+        const toolIndex = this.props.sessionDates[teacherIndex].data.map(e => e.tool).indexOf('MI');
+        if (toolIndex > -1 && this.props.sessionDates[teacherIndex].data[toolIndex].sessions.length > 0) { // if math for this teacher in sessionDatesState
           this.setState({
-            sessionDates: dates,
+            sessionDates: this.props.sessionDates[teacherIndex].data[toolIndex].sessions,
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
@@ -194,12 +263,64 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
               );
             }
           })
-        } else {
-          this.setState({
-            noDataYet: true
-          })
-        }}
-      );
+        } else { // teacher exists but not math
+          firebase.fetchSessionDates(teacherId, "math").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+            if (dates[0]) {
+              this.setState({
+                sessionDates: dates,
+                noDataYet: false
+              }, () => {
+                if (this.state.sessionDates[0]) {
+                  this.setState({ sessionId: this.state.sessionDates[0].id },
+                    () => {
+                      this.getData();
+                    }
+                  );
+                }
+              })
+            } else {
+              this.setState({
+                noDataYet: true
+              })
+            }
+            this.props.addTool([{
+              teacherId: teacherId,
+              data: [{
+                tool: 'MI',
+                sessions: dates
+              }]
+            }]);
+          });
+        }
+      } else { // teacher not in redux sessionDatesState
+        firebase.fetchSessionDates(teacherId, "math").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+          if (dates[0]) {
+            this.setState({
+              sessionDates: dates,
+              noDataYet: false
+            }, () => {
+              if (this.state.sessionDates[0]) {
+                this.setState({ sessionId: this.state.sessionDates[0].id },
+                  () => {
+                    this.getData();
+                  }
+                );
+              }
+            })
+          } else {
+            this.setState({
+              noDataYet: true
+            })
+          }
+          this.props.addTeacher({
+            teacherId: teacherId,
+            data: [{
+              tool: 'MI',
+              sessions: dates
+            }]
+          });
+        });
+      }
     })
   };
 
@@ -211,22 +332,49 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     const dateArray: Array<Array<string>> = [];
     const mathArray: Array<number> = [];
     const notMathArray: Array<number> = [];
-    firebase.fetchChildMathTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, math: number, notMath: number}>) => {
-      dataSet.forEach(data => {
+
+    const reduxIndex = this.props.mathChildTrends.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.MathData['childTrends']): Promise<void> => {
+      trendsData.forEach((data: {startDate: {value: string}, math: number, notMath: number}) => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
         mathArray.push(Math.round((data.math / (data.math + data.notMath)) * 100));
         notMathArray.push(Math.round((data.notMath / (data.math + data.notMath)) * 100));
       });
+    };
 
-      this.setState({
-        trendsDates: dateArray,
-        trendsMath: mathArray,
-        trendsNotMath: notMathArray
-      }, () => console.log('math trends: ', this.state.trendsMath, this.state.trendsNotMath));
-    });
+    if ((reduxIndex > -1) && (this.props.mathChildTrends[reduxIndex].childTrends !== undefined)) {
+      handleTrendsData(this.props.mathChildTrends[reduxIndex].childTrends).then(() => {
+        this.setState({
+          trendsDates: dateArray,
+          trendsMath: mathArray,
+          trendsNotMath: notMathArray
+        })
+      })
+    } else {
+      firebase.fetchChildMathTrend(teacherId)
+      .then((dataSet: Array<{startDate: {value: string}, math: number, notMath: number}>) => {
+        dataSet.forEach(data => {
+          dateArray.push([
+            moment(data.startDate.value).format("MMM Do"),
+          ]);
+          mathArray.push(Math.round((data.math / (data.math + data.notMath)) * 100));
+          notMathArray.push(Math.round((data.notMath / (data.math + data.notMath)) * 100));
+        });
+
+        this.setState({
+          trendsDates: dateArray,
+          trendsMath: mathArray,
+          trendsNotMath: notMathArray
+        });
+        this.props.addMathChildTrends({
+          teacherId: teacherId,
+          childTrends: dataSet
+        })
+      });
+    }
   };
 
   /**
@@ -238,9 +386,11 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     const supportArray: Array<number> = [];
     const noSupportArray: Array<number> = [];
     const noOppArray: Array<number> = [];
-    firebase.fetchTeacherMathTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
-      dataSet.forEach(data => {
+
+    const reduxIndex = this.props.mathTeacherTrends.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.MathData['teacherTrends']): Promise<void> => {
+      trendsData.forEach((data: {startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}) => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
@@ -248,13 +398,40 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
         noSupportArray.push(Math.round((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
         noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
       });
-      this.setState({
-        trendsDates: dateArray,
-        trendsSupport: supportArray,
-        trendsNoSupport: noSupportArray,
-        trendsNoTeacherOpp: noOppArray
+    };
+
+    if ((reduxIndex > -1) && (this.props.mathTeacherTrends[reduxIndex].teacherTrends !== undefined)) {
+      handleTrendsData(this.props.mathTeacherTrends[reduxIndex].teacherTrends).then(() => {
+        this.setState({
+          trendsDates: dateArray,
+          trendsSupport: supportArray,
+          trendsNoSupport: noSupportArray,
+          trendsNoTeacherOpp: noOppArray
+        })
+      })
+    } else {
+      firebase.fetchTeacherMathTrend(teacherId)
+      .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
+        dataSet.forEach(data => {
+          dateArray.push([
+            moment(data.startDate.value).format("MMM Do"),
+          ]);
+          supportArray.push(Math.round((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
+          noSupportArray.push(Math.round((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
+          noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        });
+        this.setState({
+          trendsDates: dateArray,
+          trendsSupport: supportArray,
+          trendsNoSupport: noSupportArray,
+          trendsNoTeacherOpp: noOppArray
+        });
+        this.props.addMathTeacherTrends({
+          teacherId: teacherId,
+          teacherTrends: dataSet
+        })
       });
-    });
+    }
   };
 
   /**
@@ -363,43 +540,107 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchChildMathSummary(this.state.sessionId)
-    .then((summary: {math: number, notMath: number}) => {
+
+    const reduxIndex = this.props.mathResults.map(e => e.sessionId).indexOf(this.state.sessionId);
+
+    if ((reduxIndex > -1) && this.props.mathResults[reduxIndex].childSummary !== undefined) {
       this.setState({
-        math: summary.math,
-        notMath: summary.notMath,
+        math: this.props.mathResults[reduxIndex].childSummary.math,
+        notMath: this.props.mathResults[reduxIndex].childSummary.notMath,
       });
-    });
-    firebase.fetchTeacherMathSummary(this.state.sessionId)
-    .then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
-      this.setState({
-        noTeacherOpp: summary.noOpportunity,
-        noSupport: summary.noSupport,
-        support: summary.support,
+    } else {
+      firebase.fetchChildMathSummary(this.state.sessionId)
+      .then((summary: {math: number, notMath: number}) => {
+        this.setState({
+          math: summary.math,
+          notMath: summary.notMath,
+        });
+        this.props.addMathChildSummary({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          childSummary: {
+            math: summary.math,
+            notMath: summary.notMath
+          }
+        })
       });
-    });
-    firebase.fetchMathDetails(this.state.sessionId)
-    .then((summary: {
-      math1: number,
-      math2: number,
-      math3: number,
-      math4: number,
-      teacher1: number,
-      teacher2: number,
-      teacher3: number,
-      teacher4: number
-    }) => {
+    }
+
+    if ((reduxIndex > -1) && this.props.mathResults[reduxIndex].teacherSummary !== undefined) {
       this.setState({
-        math1: summary.math1,
-        math2: summary.math2,
-        math3: summary.math3,
-        math4: summary.math4,
-        teacher1: summary.teacher1,
-        teacher2: summary.teacher2,
-        teacher3: summary.teacher3,
-        teacher4: summary.teacher4
+        support: this.props.mathResults[reduxIndex].teacherSummary.support,
+        noSupport: this.props.mathResults[reduxIndex].teacherSummary.support,
+        noTeacherOpp: this.props.mathResults[reduxIndex].teacherSummary.noOpportunity,
+      });
+    } else {
+      firebase.fetchTeacherMathSummary(this.state.sessionId)
+      .then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
+        this.setState({
+          noTeacherOpp: summary.noOpportunity,
+          noSupport: summary.noSupport,
+          support: summary.support,
+        });
+        this.props.addMathTeacherSummary({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          teacherSummary: {
+            support: summary.support,
+            noSupport: summary.noSupport,
+            noOpportunity: summary.noOpportunity
+          }
+        })
+      });
+    }
+
+    if ((reduxIndex > -1) && this.props.mathResults[reduxIndex].details !== undefined) {
+      this.setState({
+        math1: this.props.mathResults[reduxIndex].details.math1,
+        math2: this.props.mathResults[reduxIndex].details.math2,
+        math3: this.props.mathResults[reduxIndex].details.math3,
+        math4: this.props.mathResults[reduxIndex].details.math4,
+        teacher1: this.props.mathResults[reduxIndex].details.teacher1,
+        teacher2: this.props.mathResults[reduxIndex].details.teacher2,
+        teacher3: this.props.mathResults[reduxIndex].details.teacher3,
+        teacher4: this.props.mathResults[reduxIndex].details.teacher4
+      });
+    } else {
+      firebase.fetchMathDetails(this.state.sessionId)
+      .then((summary: {
+        math1: number,
+        math2: number,
+        math3: number,
+        math4: number,
+        teacher1: number,
+        teacher2: number,
+        teacher3: number,
+        teacher4: number
+      }) => {
+        this.setState({
+          math1: summary.math1,
+          math2: summary.math2,
+          math3: summary.math3,
+          math4: summary.math4,
+          teacher1: summary.teacher1,
+          teacher2: summary.teacher2,
+          teacher3: summary.teacher3,
+          teacher4: summary.teacher4
+        });
+        this.props.addMathDetails({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          details: {
+            math1: summary.math1,
+            math2: summary.math2,
+            math3: summary.math3,
+            math4: summary.math4,
+            teacher1: summary.teacher1,
+            teacher2: summary.teacher2,
+            teacher3: summary.teacher3,
+            teacher4: summary.teacher4
+          }
+        })
       })
-    })
+    }
   }
 
   /**
@@ -650,11 +891,47 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  mathResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    childSummary: Types.MathData['childSummary'],
+    teacherSummary: Types.MathData['teacherSummary'],
+    details: Types.MathData['childDetails'] & Types.MathData['teacherDetails']
+  }>,
+  mathChildTrends: Array<{
+    teacherId: string,
+    childTrends: Types.MathData['childTrends']
+  }>,
+  mathTeacherTrends: Array<{
+    teacherId: string,
+    teacherTrends: Types.MathData['teacherTrends']
+  }>,
+} => {
   return {
-    teacherSelected: state.teacherSelectedState.teacher
+    teacherSelected: state.teacherSelectedState.teacher,
+    sessionDates: state.sessionDatesState.dates,
+    mathResults: state.mathResultsState.mathResults,
+    mathChildTrends: state.mathResultsState.mathChildTrends,
+    mathTeacherTrends: state.mathResultsState.mathTeacherTrends
   };
 };
 
 MathInstructionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps)(MathInstructionResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {
+  addMathChildSummary,
+  addMathTeacherSummary,
+  addMathDetails,
+  addMathChildTrends,
+  addMathTeacherTrends,
+  addTeacher,
+  addTool
+})(MathInstructionResultsPage));
