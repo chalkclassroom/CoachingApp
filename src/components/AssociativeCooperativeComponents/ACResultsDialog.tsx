@@ -4,6 +4,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ChildBehaviorsPie from './ResultsComponents/ChildBehaviorsPie';
 import {connect} from 'react-redux';
@@ -52,11 +53,20 @@ function ACResultsDialog(props: Props): React.ReactElement {
           Results Preview
         </DialogTitle>
         <DialogContent>
-          <ChildBehaviorsPie
-            ac={acCount}
-            noAc={noACCount}
-            noChildOpp={noOppCount}
-          />
+          <Grid container direction="column" justify="center">
+            <Typography
+              align="center"
+              variant="h5"
+              style={{fontFamily: 'Arimo', paddingBottom: '0.5em'}}
+            >
+              Child Behaviors
+            </Typography>
+            <ChildBehaviorsPie
+              ac={acCount}
+              noAc={noACCount}
+              noChildOpp={noOppCount}
+            />
+          </Grid>
         </DialogContent>
         <Grid container direction="row" justify="space-around" alignItems="center" style={{paddingBottom: '1em'}}>
           <Grid item>
