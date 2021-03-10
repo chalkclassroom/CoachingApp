@@ -112,7 +112,9 @@ interface State {
   ratingIsOpen: boolean,
   recs: boolean,
   incompleteRating: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  sessionId: string,
+  sessionStart: string
 }
 
 /**
@@ -127,7 +129,9 @@ class ClassroomClimatePage extends React.Component<Props, State> {
     ratingIsOpen: false,
     recs: true,
     incompleteRating: false,
-    teacherModal: false
+    teacherModal: false,
+    sessionId: '',
+    sessionStart: ''
   };
 
   tick = (): void => {
@@ -272,6 +276,8 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                         infoPlacement="center"
                         completeObservation={true}
                         stopTimer={this.stopTimer}
+                        sessionId={this.state.sessionId}
+                        sessionStart={this.state.sessionStart}
                       />
                     </Grid>
                   </Grid>
@@ -296,6 +302,8 @@ class ClassroomClimatePage extends React.Component<Props, State> {
                       }): React.ReactNode => (
                         <BehaviorCounter
                           firebase={firebase}
+                          setSessionId={(id: string): void => {this.setState({sessionId: id})}}
+                          setSessionDate={(date: string): void => {this.setState({sessionStart: date})}}
                         />
                       )}
                     </FirebaseContext.Consumer>

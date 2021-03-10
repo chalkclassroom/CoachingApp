@@ -109,7 +109,7 @@ export interface ReduxState {
       teacherId: string,
       sessionId: string,
       summary: ClimateData['summary'],
-      details: ClimateData['details'],
+      details: Array<ClimateData['details']>,
     }>,
     climateTrends: Array<{
       teacherId: string,

@@ -167,7 +167,9 @@ type Props = RouteComponentProps & {
   infoDisplay?: React.ReactElement,
   completeObservation: boolean,
   updateSessionTime(time: number): void,
-  stopTimer?(): void
+  stopTimer?(): void,
+  sessionId: string,
+  sessionStart: string
 }
 
 interface State {
@@ -338,6 +340,8 @@ class Dashboard extends React.Component<Props, State> {
       role: PropTypes.string,
       school: PropTypes.string
     }).isRequired,
+    sessionId: PropTypes.string.isRequired,
+    sessionStart: PropTypes.string.isRequired
   }
 
   /**
@@ -355,6 +359,9 @@ class Dashboard extends React.Component<Props, State> {
         <ClimateResultsDialog
           open={this.state.resultsDialog==='CC'}
           history={this.props.history}
+          sessionId={this.props.sessionId}
+          sessionStart={this.props.sessionStart}
+          teacherId={this.props.teacherSelected.id}
         />
         <MathResultsDialog
           open={this.state.resultsDialog==="MI"}

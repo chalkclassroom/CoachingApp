@@ -12,6 +12,7 @@ import {
   Fab,
   Typography
 } from '@material-ui/core';
+import * as moment from 'moment';
 import ReplySharpIcon from '@material-ui/icons/ReplySharp';
 import * as Types from '../../constants/Types';
 import * as Constants from '../../constants/Constants';
@@ -55,7 +56,7 @@ interface Props {
         uid: string
       }
     },
-    handleSession(entry: object): void,
+    handleSession(entry: object): Promise<void>,
     handlePushClimate(entry: object): void
   },
   pushOntoClimateStack(entry: object): void,
@@ -74,7 +75,9 @@ interface Props {
   classes: {
     category: string,
     button: string
-  }
+  },
+  setSessionId(id: string): void,
+  setSessionDate(date: string): void
 }
 
 /**
@@ -93,7 +96,10 @@ class BehaviorCounter extends React.Component<Props, {}> {
       observedBy: this.props.firebase.auth.currentUser.uid,
       type: "climate"
     };
-    this.props.firebase.handleSession(mEntry);
+    this.props.firebase.handleSession(mEntry).then((sessionId: string) => {
+      this.props.setSessionId(sessionId);
+      this.props.setSessionDate(moment(new Date()).format('YYYY-MM-DD'))
+    });
   }
 
   /**

@@ -540,9 +540,9 @@ class Firebase {
     teacher: string,
     type: string,
     start?: Date
-  }): Promise<void> => {
+  }): Promise<string | void> => {
     this.sessionRef = this.db.collection("observations").doc();
-    this.sessionRef
+    return this.sessionRef
       .set({
         observedBy: "/user/" + mEntry.observedBy,
         start: mEntry.start ? mEntry.start : firebase.firestore.FieldValue.serverTimestamp(),
@@ -550,6 +550,8 @@ class Firebase {
         end: firebase.firestore.FieldValue.serverTimestamp(),
         type: mEntry.type,
         completed: false
+      }).then(() => {
+        return this.sessionRef.id
       })
       .catch((error: Error) => console.error("Error setting session ref: ", error));
   };

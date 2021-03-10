@@ -91,11 +91,19 @@ export default (state = initialState, action: ResultsTypes): ClimateResultsState
         climateResults: [...detailsResult]
       };
     case ADD_CLIMATE_TRENDS:
-      const trendsResult = state.climateTrends.slice();
-      trendsResult.push({
-        teacherId: action.entry.teacherId,
-        trends: action.entry.trends
-      });
+      const teacherIndex = state.climateTrends.map(e => e.teacherId).indexOf(action.entry.teacherId);
+      let trendsResult = state.climateTrends.slice();
+      if (teacherIndex > -1) {
+        const updated = trendsResult.filter(e => e.teacherId === action.entry.teacherId);
+        trendsResult = trendsResult.filter(e => e.teacherId !== action.entry.teacherId);
+        updated[0].trends.push(action.entry.trends[0])
+        trendsResult.push(updated[0]);
+      } else {
+        trendsResult.push({
+          teacherId: action.entry.teacherId,
+          trends: action.entry.trends
+        });
+      }
       return {
         ...state,
         climateTrends: trendsResult
