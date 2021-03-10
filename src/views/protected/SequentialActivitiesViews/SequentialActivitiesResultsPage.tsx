@@ -11,6 +11,14 @@ import SequentialCoachingQuestions from "../../../components/SequentialActivitie
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from 'react-redux';
+import {
+  addSequentialChildSummary,
+  addSequentialTeacherSummary,
+  addSequentialDetails,
+  addSequentialChildTrends,
+  addSequentialTeacherTrends
+} from '../../../state/actions/sequential-results';
+import { addTeacher, addTool } from '../../../state/actions/session-dates';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 
@@ -26,7 +34,66 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  addTeacher(dates: {
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }): void,
+  addTool(dates: [{
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }]): void,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  addSequentialChildSummary(childSummary: {
+    sessionId: string,
+    teacherId: string,
+    childSummary: Types.SequentialData['childSummary']
+  }): void,
+  addSequentialTeacherSummary(teacherSummary: {
+    sessionId: string,
+    teacherId: string,
+    teacherSummary: Types.SequentialData['teacherSummary']
+  }): void,
+  addSequentialDetails(childDetails: {
+    sessionId: string,
+    teacherId: string,
+    details: Types.SequentialData['childDetails'] & Types.SequentialData['teacherDetails']
+  }): void,
+  addSequentialChildTrends(childTrends: {
+    teacherId: string,
+    childTrends: Types.SequentialData['childTrends'] | undefined
+  }): void,
+  addSequentialTeacherTrends(teacherTrends: {
+    teacherId: string,
+    teacherTrends: Types.SequentialData['teacherTrends'] | undefined
+  }): void,
+  sequentialResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    childSummary: Types.SequentialData['childSummary'],
+    teacherSummary: Types.SequentialData['teacherSummary'],
+    details: Types.SequentialData['childDetails'] & Types.SequentialData['teacherDetails']
+  }>,
+  sequentialChildTrends: Array<{
+    teacherId: string,
+    childTrends: Types.SequentialData['childTrends']
+  }>,
+  sequentialTeacherTrends: Array<{
+    teacherId: string,
+    teacherTrends: Types.SequentialData['teacherTrends']
+  }>
 }
 
 interface Style {
@@ -180,10 +247,12 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "sequential").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        {if (dates[0]) {
+      const teacherIndex = this.props.sessionDates.map(e => e.teacherId).indexOf(teacherId);
+      if (teacherIndex > -1) { // if teacher in redux sessionDatesState
+        const toolIndex = this.props.sessionDates[teacherIndex].data.map(e => e.tool).indexOf('SA');
+        if (toolIndex > -1 && this.props.sessionDates[teacherIndex].data[toolIndex].sessions.length > 0) { // if sequential for this teacher in sessionDatesState
           this.setState({
-            sessionDates: dates,
+            sessionDates: this.props.sessionDates[teacherIndex].data[toolIndex].sessions,
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
@@ -194,12 +263,64 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
               );
             }
           })
-        } else {
-          this.setState({
-            noDataYet: true
-          })
-        }}
-      );
+        } else { // teacher exists but not sequential
+          firebase.fetchSessionDates(teacherId, "sequential").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+            if (dates[0]) {
+              this.setState({
+                sessionDates: dates,
+                noDataYet: false
+              }, () => {
+                if (this.state.sessionDates[0]) {
+                  this.setState({ sessionId: this.state.sessionDates[0].id },
+                    () => {
+                      this.getData();
+                    }
+                  );
+                }
+              })
+            } else {
+              this.setState({
+                noDataYet: true
+              })
+            }
+            this.props.addTool([{
+              teacherId: teacherId,
+              data: [{
+                tool: 'SA',
+                sessions: dates
+              }]
+            }]);
+          });
+        }
+      } else { // teacher not in redux sessionDatesState
+        firebase.fetchSessionDates(teacherId, "sequential").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+          if (dates[0]) {
+            this.setState({
+              sessionDates: dates,
+              noDataYet: false
+            }, () => {
+              if (this.state.sessionDates[0]) {
+                this.setState({ sessionId: this.state.sessionDates[0].id },
+                  () => {
+                    this.getData();
+                  }
+                );
+              }
+            })
+          } else {
+            this.setState({
+              noDataYet: true
+            })
+          }
+          this.props.addTeacher({
+            teacherId: teacherId,
+            data: [{
+              tool: 'SA',
+              sessions: dates
+            }]
+          });
+        });
+      }
     })
   };
 
@@ -211,22 +332,49 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     const dateArray: Array<Array<string>> = [];
     const notSequentialArray: Array<number> = [];
     const sequentialArray: Array<number> = [];
-    firebase.fetchChildSeqTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, sequential: number, notSequential: number}>) => {
-      dataSet.forEach(data => {
+
+    const reduxIndex = this.props.sequentialChildTrends.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.SequentialData['childTrends']): Promise<void> => {
+      trendsData.forEach((data: {startDate: {value: string}, sequential: number, notSequential: number}) => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
         notSequentialArray.push(Math.round((data.notSequential / (data.notSequential + data.sequential)) * 100));
         sequentialArray.push(Math.round((data.sequential / (data.notSequential + data.sequential)) * 100));
       });
+    };
 
-      this.setState({
-        trendsDates: dateArray,
-        trendsNotSequential: notSequentialArray,
-        trendsSequential: sequentialArray
+    if ((reduxIndex > -1) && (this.props.sequentialChildTrends[reduxIndex].childTrends !== undefined)) {
+      handleTrendsData(this.props.sequentialChildTrends[reduxIndex].childTrends).then(() => {
+        this.setState({
+          trendsDates: dateArray,
+          trendsNotSequential: notSequentialArray,
+          trendsSequential: sequentialArray
+        })
+      })
+    } else {
+      firebase.fetchChildSeqTrend(teacherId)
+      .then((dataSet: Array<{startDate: {value: string}, sequential: number, notSequential: number}>) => {
+        dataSet.forEach(data => {
+          dateArray.push([
+            moment(data.startDate.value).format("MMM Do"),
+          ]);
+          notSequentialArray.push(Math.round((data.notSequential / (data.notSequential + data.sequential)) * 100));
+          sequentialArray.push(Math.round((data.sequential / (data.notSequential + data.sequential)) * 100));
+        });
+
+        this.setState({
+          trendsDates: dateArray,
+          trendsNotSequential: notSequentialArray,
+          trendsSequential: sequentialArray
+        });
+        this.props.addSequentialChildTrends({
+          teacherId: teacherId,
+          childTrends: dataSet
+        })
       });
-    });
+    }
   };
 
   /**
@@ -238,9 +386,11 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     const noSupportArray: Array<number> = [];
     const supportArray: Array<number> = [];
     const noOppArray: Array<number> = [];
-    firebase.fetchTeacherSeqTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
-      dataSet.forEach(data => {
+
+    const reduxIndex = this.props.sequentialTeacherTrends.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.SequentialData['teacherTrends']): Promise<void> => {
+      trendsData.forEach((data: {startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}) => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
@@ -248,13 +398,40 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
         supportArray.push(Math.round((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
         noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
       });
-      this.setState({
-        trendsDates: dateArray,
-        trendsNoSupport: noSupportArray,
-        trendsSupport: supportArray,
-        trendsNoTeacherOpp: noOppArray
+    };
+
+    if ((reduxIndex > -1) && (this.props.sequentialTeacherTrends[reduxIndex].teacherTrends !== undefined)) {
+      handleTrendsData(this.props.sequentialTeacherTrends[reduxIndex].teacherTrends).then(() => {
+        this.setState({
+          trendsDates: dateArray,
+          trendsNoSupport: noSupportArray,
+          trendsSupport: supportArray,
+          trendsNoTeacherOpp: noOppArray
+        })
+      })
+    } else {
+      firebase.fetchTeacherSeqTrend(teacherId)
+      .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
+        dataSet.forEach(data => {
+          dateArray.push([
+            moment(data.startDate.value).format("MMM Do"),
+          ]);
+          noSupportArray.push(Math.round((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
+          supportArray.push(Math.round((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
+          noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
+        });
+        this.setState({
+          trendsDates: dateArray,
+          trendsNoSupport: noSupportArray,
+          trendsSupport: supportArray,
+          trendsNoTeacherOpp: noOppArray
+        });
+        this.props.addSequentialTeacherTrends({
+          teacherId: teacherId,
+          teacherTrends: dataSet
+        })
       });
-    });
+    }
   };
 
   /**
@@ -473,42 +650,106 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
       }
     }).catch(() => {
       console.log('unable to retrieve conference plan')
-    })
-    firebase.fetchChildSeqSummary(this.state.sessionId).then((summary: {notSequential: number, sequential: number}) => {
-      this.setState({
-        notSequential: summary.notSequential,
-        sequential: summary.sequential,
-      });
     });
-    firebase.fetchTeacherSeqSummary(this.state.sessionId).then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
+
+    const reduxIndex = this.props.sequentialResults.map(e => e.sessionId).indexOf(this.state.sessionId);
+
+    if ((reduxIndex > -1) && this.props.sequentialResults[reduxIndex].childSummary !== undefined) {
       this.setState({
-        noTeacherOpp: summary.noOpportunity,
-        noSupport: summary.noSupport,
-        support: summary.support,
+        sequential: this.props.sequentialResults[reduxIndex].childSummary.sequential,
+        notSequential: this.props.sequentialResults[reduxIndex].childSummary.notSequential,
       });
-    });
-    firebase.fetchSeqDetails(this.state.sessionId)
-    .then((summary: {
-      sequential1: number,
-      sequential2: number,
-      sequential3: number,
-      sequential4: number,
-      teacher1: number,
-      teacher2: number,
-      teacher3: number,
-      teacher4: number
-    }) => {
+    } else {
+      firebase.fetchChildSeqSummary(this.state.sessionId).then((summary: {notSequential: number, sequential: number}) => {
+        this.setState({
+          notSequential: summary.notSequential,
+          sequential: summary.sequential,
+        });
+        this.props.addSequentialChildSummary({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          childSummary: {
+            sequential: summary.sequential,
+            notSequential: summary.notSequential
+          }
+        })
+      });
+    }
+
+    if ((reduxIndex > -1) && this.props.sequentialResults[reduxIndex].teacherSummary !== undefined) {
       this.setState({
-        sequential1: summary.sequential1,
-        sequential2: summary.sequential2,
-        sequential3: summary.sequential3,
-        sequential4: summary.sequential4,
-        teacher1: summary.teacher1,
-        teacher2: summary.teacher2,
-        teacher3: summary.teacher3,
-        teacher4: summary.teacher4
+        support: this.props.sequentialResults[reduxIndex].teacherSummary.support,
+        noSupport: this.props.sequentialResults[reduxIndex].teacherSummary.support,
+        noTeacherOpp: this.props.sequentialResults[reduxIndex].teacherSummary.noOpportunity,
+      });
+    } else {
+      firebase.fetchTeacherSeqSummary(this.state.sessionId).then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
+        this.setState({
+          noTeacherOpp: summary.noOpportunity,
+          noSupport: summary.noSupport,
+          support: summary.support,
+        });
+        this.props.addSequentialTeacherSummary({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          teacherSummary: {
+            support: summary.support,
+            noSupport: summary.noSupport,
+            noOpportunity: summary.noOpportunity
+          }
+        })
+      });
+    }
+
+    if ((reduxIndex > -1) && this.props.sequentialResults[reduxIndex].details !== undefined) {
+      this.setState({
+        sequential1: this.props.sequentialResults[reduxIndex].details.sequential1,
+        sequential2: this.props.sequentialResults[reduxIndex].details.sequential2,
+        sequential3: this.props.sequentialResults[reduxIndex].details.sequential3,
+        sequential4: this.props.sequentialResults[reduxIndex].details.sequential4,
+        teacher1: this.props.sequentialResults[reduxIndex].details.teacher1,
+        teacher2: this.props.sequentialResults[reduxIndex].details.teacher2,
+        teacher3: this.props.sequentialResults[reduxIndex].details.teacher3,
+        teacher4: this.props.sequentialResults[reduxIndex].details.teacher4
+      });
+    } else {
+      firebase.fetchSeqDetails(this.state.sessionId)
+      .then((summary: {
+        sequential1: number,
+        sequential2: number,
+        sequential3: number,
+        sequential4: number,
+        teacher1: number,
+        teacher2: number,
+        teacher3: number,
+        teacher4: number
+      }) => {
+        this.setState({
+          sequential1: summary.sequential1,
+          sequential2: summary.sequential2,
+          sequential3: summary.sequential3,
+          sequential4: summary.sequential4,
+          teacher1: summary.teacher1,
+          teacher2: summary.teacher2,
+          teacher3: summary.teacher3,
+          teacher4: summary.teacher4
+        });
+        this.props.addSequentialDetails({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          details: {
+            sequential1: summary.sequential1,
+            sequential2: summary.sequential2,
+            sequential3: summary.sequential3,
+            sequential4: summary.sequential4,
+            teacher1: summary.teacher1,
+            teacher2: summary.teacher2,
+            teacher3: summary.teacher3,
+            teacher4: summary.teacher4
+          }
+        })
       })
-    })
+    }
   }
 
   /**
@@ -649,11 +890,47 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  sequentialResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    childSummary: Types.SequentialData['childSummary'],
+    teacherSummary: Types.SequentialData['teacherSummary'],
+    details: Types.SequentialData['childDetails'] & Types.SequentialData['teacherDetails']
+  }>,
+  sequentialChildTrends: Array<{
+    teacherId: string,
+    childTrends: Types.SequentialData['childTrends']
+  }>,
+  sequentialTeacherTrends: Array<{
+    teacherId: string,
+    teacherTrends: Types.SequentialData['teacherTrends']
+  }>,
+} => {
   return {
-    teacherSelected: state.teacherSelectedState.teacher
+    teacherSelected: state.teacherSelectedState.teacher,
+    sessionDates: state.sessionDatesState.dates,
+    sequentialResults: state.sequentialResultsState.sequentialResults,
+    sequentialChildTrends: state.sequentialResultsState.sequentialChildTrends,
+    sequentialTeacherTrends: state.sequentialResultsState.sequentialTeacherTrends
   };
 };
 
 SequentialActivitiesResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps)(SequentialActivitiesResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {
+  addSequentialChildSummary,
+  addSequentialTeacherSummary,
+  addSequentialDetails,
+  addSequentialChildTrends,
+  addSequentialTeacherTrends,
+  addTeacher,
+  addTool
+})(SequentialActivitiesResultsPage));

@@ -6,6 +6,7 @@ import climateResultsState from "./reducers/climate-results-state";
 import climateStackState from "./reducers/climate-stack-state";
 import sequentialCenterState from "./reducers/sequential-center-state";
 import sequentialCountState from "./reducers/sequential-count-state";
+import sequentialResultsState from "./reducers/sequential-results-state";
 import transitionLogState from "./reducers/transition-log-state";
 import transitionTimeState from "./reducers/transition-time-state";
 import sessionTimeState from "./reducers/session-time-state";
@@ -31,6 +32,7 @@ export default combineReducers({
   climateStackState,
   sequentialCenterState,
   sequentialCountState,
+  sequentialResultsState,
   transitionLogState,
   transitionTimeState,
   sessionTimeState,

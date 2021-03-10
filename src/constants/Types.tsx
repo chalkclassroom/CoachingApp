@@ -86,6 +86,41 @@ export interface MathData {
   }>
 }
 
+export interface SequentialData {
+  childSummary: {
+    sequential: number,
+    notSequential: number
+  },
+  teacherSummary: {
+    support: number,
+    noSupport: number,
+    noOpportunity: number
+  },
+  childDetails: {
+    sequential1: number,
+    sequential2: number,
+    sequential3: number,
+    sequential4: number
+  },
+  teacherDetails: {
+    teacher1: number,
+    teacher2: number,
+    teacher3: number,
+    teacher4: number
+  },
+  childTrends: Array<{
+    startDate: {value: string},
+    sequential: number,
+    notSequential: number
+  }>,
+  teacherTrends: Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    support: number,
+    noSupport: number
+  }>
+}
+
 export interface ReduxState {
   associativeCenterState: {
     associativeCenters: Array<{
@@ -177,6 +212,23 @@ export interface ReduxState {
   sequentialCountState: {
     noSequentialCount: number,
     sequentialCount: number
+  },
+  sequentialResultsState: {
+    sequentialResults: Array<{
+      teacherId: string,
+      sessionId: string,
+      childSummary: SequentialData['childSummary'],
+      teacherSummary: SequentialData['teacherSummary'],
+      details: SequentialData['childDetails'] & SequentialData['teacherDetails']
+    }>,
+    sequentialChildTrends: Array<{
+      teacherId: string,
+      childTrends: SequentialData['childTrends']
+    }>,
+    sequentialTeacherTrends: Array<{
+      teacherId: string,
+      teacherTrends: SequentialData['teacherTrends']
+    }>
   },
   sessionDatesState: {
     dates: Array<{
