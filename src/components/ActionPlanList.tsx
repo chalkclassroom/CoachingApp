@@ -32,7 +32,7 @@ interface Props {
   actionPlans?: Array<ActionPlanInfo>,
   teacherId?: string,
   onClick(actionPlanId: string, teacherId: string): void,
-  handleChooseActionPlan(actionPlanId: string, teacherId: string, practice: string): void,
+  // handleChooseActionPlan(actionPlanId: string, teacherId: string, practice: string): void,
   checkedActionPlans: Array<string>,
   addActionPlan(id: string): void,
   removeActionPlan(id: string): void,

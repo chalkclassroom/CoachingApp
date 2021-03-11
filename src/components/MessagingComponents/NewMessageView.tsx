@@ -20,7 +20,7 @@ import DeleteDialog from './DeleteDialog';
 import AttachmentDialog from './AttachmentDialog';
 import { Alerts, ThemeOptions, Message, Attachment, SelectOption, TemplateOption, Email } from './MessagingTypes';
 import * as CryptoJS from 'crypto-js';
-import moment from 'moment';
+import * as moment from 'moment';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import ActionPlanForPdf from './ActionPlanForPdf';
@@ -286,42 +286,7 @@ type ACData = {
   }> | undefined
 }
 
-/* const gridContainer = {
-	display: 'grid',
-	gridTemplateColumns: 'auto 1fr',
-	gridTemplateRows: 'auto 15% 15% 1fr',
-	gridGap: '0.1em',
-};
-
-const themeClass = {
-  gridColumn: '2 / span 4',
-  gridRow: '2 / 2', 
-};
-const recipientClass = {
-		gridColumn: '2 / span 4',
-		gridRow: '3 / 3', 
-};
-
-const emailbodyClass = {
-		gridRow: '4 / span 5',
-		gridColumn: '2 / span 4',
-};
-
-const submitButtonClass = {
-    position: 'fixed',
-    bottom: '4em',
-    right: '1em',
-};
-
-const attachButtonClass = {
-    position: 'fixed',
-    bottom: '4em',
-    right: '1em',
-}; */
-
 const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProps) => {
-  // state to store the message theme
-  // const [theme, setTheme] = useState(props.draft.theme);
   const [theme, setTheme] = useState({
     id: '0',
     value: 'None',
@@ -332,18 +297,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     value: 'None',
     label: 'None'
   });
-  // state to store the current alert
   const [alertEnum, setAlertEnum] = useState(Alerts.NO_ERROR);
-  // state to store the current recipient
   const [recipient, setRecipient] = useState<{value: string | undefined, id: string | undefined, label: string | undefined}>({
     value: '',
     id: '',
     label: ''
   });
   const [recipientName, setRecipientName] = useState("Katherine");
-  // ref to get value from EmailBody
-	const textRef = useRef();
-  // state to store the current list of attachments
   const [actionPlans, setActionPlans] = useState<Array<{
     id: string,
     date: {
@@ -363,8 +323,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [actionPlanDisplay, setActionPlanDisplay] = useState(false);
   const [subject, setSubject] = useState<string | undefined>('');
   const firebase = props.firebase;
-  // const userEmail = firebase.auth.currentUser.email;
-  // state to store the current username
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
@@ -394,7 +352,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   }}>({});
   const [templateDialog, setTemplateDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
-
   const [tool, setTool] = useState('');
   const [apGoal, setApGoal] = useState('');
   const [goalTimeline, setGoalTimeline] = useState<Date>();
@@ -423,6 +380,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [listening, setListening]= useState<ListeningData>();
   const [sequential, setSequential] = useState<SequentialData>();
   const [ac, setAC] = useState<ACData>();
+  const [actionPlanData, setActionPlanData] = useState<Array<{
+    actionPlanId: string,
+    tool: string,
+    sessionId: string,
+    goal: string,
+    goalTimeline: Date,
+    benefit: string,
+    date: Date,
+    actionSteps: Array<{step: string, person: string, timeline: Date}>
+  }>>();
 
   // get the user's name
   useEffect(() => {
@@ -560,7 +527,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       } else {
         newAttachments.push(newResultObject);
       }
-      console.log('SET ATTACHMENTS', newAttachments);
       setAttachments(newAttachments);
     } else {
       setAttachments([newResultObject]);
@@ -689,6 +655,91 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       })
   }
 
+  const getAPData = async (addToAttachmentList: typeof functionForType): Promise<Array<{
+    actionPlanId: string,
+    tool: string,
+    sessionId: string,
+    goal: string,
+    goalTimeline: Date,
+    benefit: string,
+    date: Date,
+    actionSteps: Array<{step: string, person: string, timeline: Date}>
+  }>> => {
+    const actionPlanData: Array<{
+      actionPlanId: string,
+      tool: string,
+      sessionId: string,
+      goal: string,
+      goalTimeline: Date,
+      benefit: string,
+      date: Date,
+      actionSteps: Array<{step: string, person: string, timeline: Date}>
+    }> = [];
+    if (attachments) {
+      const attachedActionPlans = attachments.filter(obj => {
+        return obj.actionPlan === true
+      });
+      attachedActionPlans.forEach((actionPlan) => {
+        firebase.getAPInfo(actionPlan.id).then((data: {
+          sessionId: string,
+          goal: string,
+          goalTimeline: firebase.firestore.Timestamp,
+          benefit: string,
+          dateModified: {seconds: number, nanoseconds: number},
+          dateCreated: {seconds: number, nanoseconds: number},
+          coach: string,
+          teacher: string,
+          tool: string
+        }) => {
+          console.log('what IS THE SESSION ID', data)
+          const thisActionPlan = {
+            actionPlanId: actionPlan.id,
+            tool: data.tool,
+            sessionId: data.sessionId,
+            goal: data.goal,
+            goalTimeline: (data.goalTimeline && (typeof data.goalTimeline !== 'string')) ?
+              data.goalTimeline.toDate() : new Date(),
+            benefit: data.benefit,
+            date: changeDateType(data.dateModified),
+            actionSteps: [{step: '', person: '', timeline: new Date()}]
+          };
+          const newActionStepsArray: Array<{
+            step: string,
+            person: string,
+            timeline: Date
+          }> = [];
+          props.firebase.getActionSteps(actionPlan.id).then((actionStepsData: Array<{
+            step: string,
+            person: string,
+            timeline: firebase.firestore.Timestamp
+          }>) => {
+            actionStepsData.forEach((value, index) => {
+              newActionStepsArray[index] = {
+                step: value.step,
+                person: value.person,
+                timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
+                  value.timeline.toDate() :
+                  new Date()
+              };
+            })
+          }).then(() => {
+            thisActionPlan.actionSteps = newActionStepsArray;
+            console.log('IS IT A NUMBER?', thisActionPlan);
+            setRenderActionPlan(true);
+            const copyActionPlanData = [...actionPlanData];
+            copyActionPlanData.push(thisActionPlan);
+            setActionPlanData(copyActionPlanData)
+            printDocument(thisActionPlan.tool, thisActionPlan.date, thisActionPlan.actionPlanId, addToAttachmentList, thisActionPlan.actionPlanId)
+            console.log('what is this action plan', thisActionPlan);
+          }).then(() => {
+            actionPlanData.push(thisActionPlan)
+          })
+        })
+      })
+    }
+    return actionPlanData
+  }
+
   const attachActionPlan = (actionPlanId: string, addToAttachmentList: typeof functionForType): void => {
     firebase.getAPInfo(actionPlanId).then((actionPlanData: {
       sessionId: string,
@@ -735,8 +786,17 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       }).then(() => {
         setRenderActionPlan(true);
       }).then(async () => {
-        printDocument(actionPlanData.tool, newDate, 'apPdf', addToAttachmentList, actionPlanId);
-      }).then(() => {
+        printDocument(actionPlanData.tool, newDate, 'apPdf', addToAttachmentList, actionPlanId).then(() => {
+          setRenderActionPlan(false);
+          setTool('');
+          setApGoal('');
+          setGoalTimeline(undefined);
+          setBenefit('');
+          setDate(undefined)
+          setActionSteps([]);
+        })
+      })
+      /* .then(() => {
         setRenderActionPlan(false);
         setTool('');
         setApGoal('');
@@ -744,7 +804,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         setBenefit('');
         setDate(undefined)
         setActionSteps([]);
-      })
+      }) */
       .catch(() => {
         console.log('error retrieving action steps');
       });
@@ -1402,7 +1462,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         if (attachments) {
           console.log('if attachments')
           if (attachment.actionPlan) {
-            attachActionPlan(attachment.id, addToAttachmentList);
+            // attachActionPlan(attachment.id, addToAttachmentList);
+            getAPData(addToAttachmentList).then((aPData) => {
+              console.log('this is the apdata', aPData, aPData.length);
+              setRenderActionPlan(true);
+            })
           } else if (attachment.result) {
             console.log('else if attachmen.result');
             if (attachment.practice === 'transition') {
@@ -1432,57 +1496,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     if (recipient === null) {
       setAlertEnum(Alerts.NO_RECIPIENT);	
     } else {
-      // console.log('this is attachment being sent', attachments);
-      // tries to get the html version of all the action plans
-      // doesn't convert to pdf but required so
-      /* const sendAttachments = attachments.map((attach: Attachment) => {
-        const staticMarkup = renderToStaticMarkup(<ActionPlanForm 
-            firebase={props.firebase} 
-            actionPlanId={attach.id}
-            readOnly={true}
-            actionPlanExists={true}
-            teacherId={recipient.id}
-          />);
-        
-        // convert staticMarkup to pdf here
-        
-        // encodes the pdf in a base64 string
-        const attachContent: string = btoa(staticMarkup);
-
-        // returns in the format sendgrid requires
-        return {
-          content: attachContent,
-          filename: (attach.type + ' ' + attach.date.toString()),
-          type: 'application/pdf',
-          disposition: 'attachment',
-        }
-      }); */
-
       // create the message object to send to funcSendEmail
       const msg: Message = {
-        // id: props.draft.id,
-        // from: userEmail,
-        // to: (props.draft.to !== '' ? props.draft.to : recipient.value),
-        // subject: theme,
-        // theme: theme,
-        // textContent: textRef.current.textContent,
-        // content: textRef.current.innerHTML,
         id: '0000001',
         from: 'chalkcoaching@gmail.com',
         to: 'clare.speer@gmail.com',
         subject: subject ? subject : '',
         theme: ThemeOptions.FEEDBACK,
-        // html: textRef.current,
         textContent: 'test',
         content: email ? email : '',
         delivered: false,
-        // attachments: sendAttachments,
-        /* attachments: [{
-          id: 'action plan',
-          date: new Date(),
-        }] */
-        // attachments: includeAttachments ? attachments : undefined
-        // attachments: attachments,
         attachments: attachments ? (attachments.map(function(item) { return {
           'content': item['content'],
           'filename': item['filename'],
@@ -1513,58 +1536,12 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   };
 
-  /* const removeAttachment = (actionPlanId: string): void => {
-    const updatedAttachments = attachments.map((attach: Attachment): Attachment => {
-      if (attach.id !== actionPlanId) {
-        return attach;
-      }
-    });
-    console.log(updatedAttachments);
-    setAttachments(updatedAttachments);
-  } */
-
-  /* const thankYou = (name: string | null): JSX.Element => (<div style={{padding: "1em"}}>
-  <h4>Hi {name || ""},</h4>
-  Thanks for welcoming me into your classroom today. I really enjoyed my visit and look forward to chatting with you soon about CHALK practice.
-  <br />
-  <br />
-  Best wishes,
-  <br />
-    {userName}
-  </div>); */
-
   const thankYou = 'Hi ' + recipientName + ', \n \n'
   + 'Thanks for welcoming me today in your classroom! '
   + 'I really enjoyed my visit and look forward to '
   + 'chatting with you soon about Transition Time. \n \n'
   + 'Best wishes, \n'
   + 'Clare';
-
-  const custom = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
-    <h4>Hi {name || ""},</h4>
-  {/* <strong>Create your new message here</strong> */}
-  <br />
-  <br />
-  Best,
-  <br />
-    {userName}
-  </div>;
-
-  /* const feedback = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
-    <h4>Hi {name || ""},</h4>
-    Thanks for welcoming me today in your classroom! 
-    <br />
-    It was a joy to see the children so engaged in those small 
-    groups when you used cotton balls to teach counting. 
-    <br />
-    <br />
-    Please see below for some notes on great teaching strategies I noticed and why they’re effective for children.
-    <br />
-    <br />
-    Best,
-    <br />
-    	{userName}
-  </div>; */
 
   const feedback = 'Hi ' + recipientName + ', \n \n'
   + 'Thanks for welcoming me today in your classroom! \n \n'
@@ -1574,19 +1551,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   + 'I noticed and why they’re effective for children. \n \n'
   + 'Best, \n'
   + 'Clare';
- 
-  /* const actionPlan = (name: string | null): JSX.Element => <div style={{padding: "1em"}}>
-    <h4>Hi {name || ""},</h4>
-    Thanks for meeting today and creating this action plan. I think it looks great, and I look forward to working on these goals with you!
-    <br />
-    <br />
-    Please reach out with questions or ideas anytime.
-    <br />
-    <br />
-    Best,
-    <br />
-    {userName}
-  </div>; */
 
   const actionPlan = 'Hi ' + recipientName + ', \n \n'
     + 'Thanks for meeting today and creating this action plan. '
@@ -1601,31 +1565,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const chooseOptions = (): JSX.Element => <div style={{padding: '1em'}}>
 	  <h3 style={{fontFamily: 'Arimo'}}>Please choose a recipient for your message.</h3>
   </div>;
-
-  // get the text for EmailBody according to the states set
-  /* const getEmailText = (): JSX.Element => {
-    // if the theme of the draft matches with the current theme and the textContent is not null
-    // it means that the user is editing a draft message and then that is content shown in the email body
-    // if (theme === props.draft.theme && props.draft.textContent !== null) {
-    if (props.draft.theme) {
-      return props.draft.content;
-    } else {
-      const recipientName = (props.draft.to !== '' ? props.draft.to : (recipient ? recipient.label : ''));
-      if (recipientName !== '') {
-        if(theme.label === ThemeOptions.THANK_YOU) {
-          return thankYou(recipientName);
-        } else if (theme.label === ThemeOptions.ACTION_PLAN){
-          return actionPlan(recipientName);
-        } else if (theme.label === ThemeOptions.FEEDBACK) {
-          return feedback(recipientName);
-        } else {
-          return custom(recipientName);
-        }
-      } else {
-        return chooseOptions();
-      }
-    }
-  }; */
 
   const removeResult = (id: string, type: ResultTypeKey): void => {
     const newCheckedResults = checkedResults;
@@ -1752,17 +1691,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   }
 
   const handleDelete = (): void => {
-    /* setEmail('');
-    setRecipient({
-      value: '',
-      id: '',
-      label: ''
-    });
-    setTheme({
-      id: '0',
-      value: 'None',
-      label: 'None'
-    }); */
     props.setMenuOption('SENT');
     setDeleteDialog(false);
     if (emailId) {
@@ -1785,31 +1713,35 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         handleYes={(): void => handleDelete()}
         handleNo={(): void => setDeleteDialog(false)}
       />
-      {renderActionPlan ? (
-        <div
-          id="apPdf"
-          style={{
-            backgroundColor: '#ffffff',
-            width: '210mm',
-            minHeight: '100mm',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            // display: "none"
-            visibility: 'hidden',
-            position: 'fixed',
-            right: -1000
-          }}
-        >
-          <ActionPlanForPdf
-            tool={tool}
-            apGoal={apGoal}
-            goalTimeline={goalTimeline}
-            benefit={benefit}
-            date={date}
-            actionSteps={actionSteps}
-            teacher={teacherObject}
-          />
-        </div>
+      {renderActionPlan && actionPlanData ? (
+        actionPlanData.map((actionPlan, index) => {
+          return (
+            <div
+              key={index}
+              id={actionPlan.actionPlanId}
+              style={{
+                backgroundColor: '#ffffff',
+                width: '210mm',
+                minHeight: '100mm',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                visibility: 'hidden',
+                position: 'fixed',
+                right: -1000
+              }}
+            >
+              <ActionPlanForPdf
+                tool={actionPlan.tool}
+                apGoal={actionPlan.goal}
+                goalTimeline={actionPlan.goalTimeline}
+                benefit={actionPlan.benefit}
+                date={actionPlan.date}
+                actionSteps={actionPlan.actionSteps}
+                teacher={teacherObject}
+              />
+            </div>
+          )
+        })
       ) : (null)}
       {renderTransitionPdf ? (
         <div
@@ -1984,7 +1916,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
             <Grid item xs={3}>
               <Typography variant="h6" align="right" style={{fontFamily: 'Arimo', paddingRight: '1em'}}>
-                {/* {props.readOnly ? 'To:' : 'Write a new message to:'} */}
                 To:
               </Typography>
             </Grid>
@@ -2001,7 +1932,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           <Grid container direction="row" alignItems="flex-start" justify="center" style={{width: '100%'}}>
             <Grid item xs={3}>
               <Typography variant="h6" align="right" style={{fontFamily: 'Arimo', paddingRight: '1em'}}>
-                {/* {props.readOnly ? 'Message template:' : 'Select message template:'} */}
                 Template:
               </Typography>
             </Grid>
@@ -2079,10 +2009,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           open={actionPlanDisplay}
                           recipientName={recipient.label}
                           handleClose={(): void => setActionPlanDisplay(false)}
-                          handleDelete={(existActionPlan: string): void => {
+                          /* handleDelete={(existActionPlan: string): void => {
                             removeAttachment(existActionPlan);
                             setActionPlanDisplay(false);
-                          }}
+                          }} */
                           attachmentList={attachments}
                           firebase={firebase}
                         />
@@ -2120,7 +2050,4 @@ export default compose(connect(
   null
 ), NewMessageView);
 
-/* export default connect(
-  mapStateToProps,
-  null
-)(NewMessageView); */
+// export default connect(mapStateToProps)(NewMessageView);
