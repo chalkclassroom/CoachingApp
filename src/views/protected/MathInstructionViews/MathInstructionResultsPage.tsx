@@ -569,7 +569,7 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     if ((reduxIndex > -1) && this.props.mathResults[reduxIndex].teacherSummary !== undefined) {
       this.setState({
         support: this.props.mathResults[reduxIndex].teacherSummary.support,
-        noSupport: this.props.mathResults[reduxIndex].teacherSummary.support,
+        noSupport: this.props.mathResults[reduxIndex].teacherSummary.noSupport,
         noTeacherOpp: this.props.mathResults[reduxIndex].teacherSummary.noOpportunity,
       });
     } else {

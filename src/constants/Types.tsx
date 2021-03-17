@@ -121,6 +121,43 @@ export interface SequentialData {
   }>
 }
 
+export interface ACData {
+  childSummary: {
+    ac: number,
+    noac: number,
+    noOpportunity: number
+  },
+  teacherSummary: {
+    support: number,
+    noSupport: number,
+    noOpportunity: number
+  },
+  childDetails: {
+    ac1: number,
+    ac2: number,
+    ac3: number,
+    ac4: number
+  },
+  teacherDetails: {
+    teacher1: number,
+    teacher2: number,
+    teacher3: number,
+    teacher4: number
+  },
+  childTrends: Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    noac: number,
+    ac: number
+  }>,
+  teacherTrends: Array<{
+    startDate: {value: string},
+    noOpportunity: number,
+    support: number,
+    nosupport: number
+  }>
+}
+
 export interface ReduxState {
   associativeCenterState: {
     associativeCenters: Array<{
@@ -132,6 +169,23 @@ export interface ReduxState {
     acCount: number,
     noACCount: number,
     noOppCount: number
+  },
+  acResultsState: {
+    acResults: Array<{
+      teacherId: string,
+      sessionId: string,
+      childSummary: ACData['childSummary'],
+      teacherSummary: ACData['teacherSummary'],
+      details: ACData['childDetails'] & ACData['teacherDetails']
+    }>,
+    acChildTrends: Array<{
+      teacherId: string,
+      childTrends: ACData['childTrends']
+    }>,
+    acTeacherTrends: Array<{
+      teacherId: string,
+      teacherTrends: ACData['teacherTrends']
+    }>
   },
   climateRatingsState: {
     climateRatings: Array<{

@@ -679,7 +679,7 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     if ((reduxIndex > -1) && this.props.sequentialResults[reduxIndex].teacherSummary !== undefined) {
       this.setState({
         support: this.props.sequentialResults[reduxIndex].teacherSummary.support,
-        noSupport: this.props.sequentialResults[reduxIndex].teacherSummary.support,
+        noSupport: this.props.sequentialResults[reduxIndex].teacherSummary.noSupport,
         noTeacherOpp: this.props.sequentialResults[reduxIndex].teacherSummary.noOpportunity,
       });
     } else {

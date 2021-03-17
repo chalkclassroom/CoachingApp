@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import moment from "moment";
+import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import ChildTeacherBehaviorPieSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorPieSlider";
 import ChildTeacherBehaviorDetailsSlider from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ChildTeacherBehaviorDetailsSlider";
@@ -10,6 +10,14 @@ import ChildTeacherBehaviorTrendsSlider from "../../../components/AssociativeCoo
 import ACCoachingQuestions from "../../../components/AssociativeCooperativeComponents/ResultsComponents/ACCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
+import {
+  addACChildSummary,
+  addACTeacherSummary,
+  addACDetails,
+  addACChildTrends,
+  addACTeacherTrends
+} from '../../../state/actions/ac-results';
+import { addTeacher, addTool } from '../../../state/actions/session-dates';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import TeacherModal from '../HomeViews/TeacherModal';
@@ -26,7 +34,66 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  addTeacher(dates: {
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }): void,
+  addTool(dates: [{
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }]): void,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  addACChildSummary(childSummary: {
+    sessionId: string,
+    teacherId: string,
+    childSummary: Types.ACData['childSummary']
+  }): void,
+  addACTeacherSummary(teacherSummary: {
+    sessionId: string,
+    teacherId: string,
+    teacherSummary: Types.ACData['teacherSummary']
+  }): void,
+  addACDetails(childDetails: {
+    sessionId: string,
+    teacherId: string,
+    details: Types.ACData['childDetails'] & Types.ACData['teacherDetails']
+  }): void,
+  addACChildTrends(childTrends: {
+    teacherId: string,
+    childTrends: Types.ACData['childTrends'] | undefined
+  }): void,
+  addACTeacherTrends(teacherTrends: {
+    teacherId: string,
+    teacherTrends: Types.ACData['teacherTrends'] | undefined
+  }): void,
+  acResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    childSummary: Types.ACData['childSummary'],
+    teacherSummary: Types.ACData['teacherSummary'],
+    details: Types.ACData['childDetails'] & Types.ACData['teacherDetails']
+  }>,
+  acChildTrends: Array<{
+    teacherId: string,
+    childTrends: Types.ACData['childTrends']
+  }>,
+  acTeacherTrends: Array<{
+    teacherId: string,
+    teacherTrends: Types.ACData['teacherTrends']
+  }>
 }
 
 interface Style {
@@ -214,10 +281,12 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "ac").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        {if (dates[0]) {
+      const teacherIndex = this.props.sessionDates.map(e => e.teacherId).indexOf(teacherId);
+      if (teacherIndex > -1) { // if teacher in redux sessionDatesState
+        const toolIndex = this.props.sessionDates[teacherIndex].data.map(e => e.tool).indexOf('AC');
+        if (toolIndex > -1 && this.props.sessionDates[teacherIndex].data[toolIndex].sessions.length > 0) { // if ac for this teacher in sessionDatesState
           this.setState({
-            sessionDates: dates,
+            sessionDates: this.props.sessionDates[teacherIndex].data[toolIndex].sessions,
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
@@ -228,12 +297,64 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
               );
             }
           })
-        } else {
-          this.setState({
-            noDataYet: true
-          })
-        }}
-      );
+        } else { // teacher exists but not ac
+          firebase.fetchSessionDates(teacherId, "ac").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+            if (dates[0]) {
+              this.setState({
+                sessionDates: dates,
+                noDataYet: false
+              }, () => {
+                if (this.state.sessionDates[0]) {
+                  this.setState({ sessionId: this.state.sessionDates[0].id },
+                    () => {
+                      this.getData();
+                    }
+                  );
+                }
+              })
+            } else {
+              this.setState({
+                noDataYet: true
+              })
+            }
+            this.props.addTool([{
+              teacherId: teacherId,
+              data: [{
+                tool: 'AC',
+                sessions: dates
+              }]
+            }]);
+          });
+        }
+      } else { // teacher not in redux sessionDatesState
+        firebase.fetchSessionDates(teacherId, "ac").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+          if (dates[0]) {
+            this.setState({
+              sessionDates: dates,
+              noDataYet: false
+            }, () => {
+              if (this.state.sessionDates[0]) {
+                this.setState({ sessionId: this.state.sessionDates[0].id },
+                  () => {
+                    this.getData();
+                  }
+                );
+              }
+            })
+          } else {
+            this.setState({
+              noDataYet: true
+            })
+          }
+          this.props.addTeacher({
+            teacherId: teacherId,
+            data: [{
+              tool: 'AC',
+              sessions: dates
+            }]
+          });
+        });
+      }
     })
   };
 
@@ -246,9 +367,11 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     const noOppArray: Array<number> = [];
     const noACArray: Array<number> = [];
     const ACArray: Array<number> = [];
-    firebase.fetchChildACTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, ac: number, noac: number}>) => {
-      dataSet.forEach(data => {
+
+    const reduxIndex = this.props.acChildTrends.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.ACData['childTrends']): Promise<void> => {
+      trendsData.forEach((data: {startDate: {value: string}, ac: number, noac: number, noOpportunity: number}) => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
@@ -256,14 +379,41 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         noACArray.push(Math.round((data.noac / (data.noOpportunity + data.noac + data.ac)) * 100));
         ACArray.push(Math.round((data.ac / (data.noOpportunity + data.noac + data.ac)) * 100));
       });
+    };
 
-      this.setState({
-        trendsDates: dateArray,
-        trendsNoChildOpp: noOppArray,
-        trendsNoAC: noACArray,
-        trendsAC: ACArray
+    if ((reduxIndex > -1) && (this.props.acChildTrends[reduxIndex].childTrends !== undefined)) {
+      handleTrendsData(this.props.acChildTrends[reduxIndex].childTrends).then(() => {
+        this.setState({
+          trendsDates: dateArray,
+          trendsNoChildOpp: noOppArray,
+          trendsNoAC: noACArray,
+          trendsAC: ACArray
+        })
+      })
+    } else {
+      firebase.fetchChildACTrend(teacherId)
+      .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, ac: number, noac: number}>) => {
+        dataSet.forEach(data => {
+          dateArray.push([
+            moment(data.startDate.value).format("MMM Do"),
+          ]);
+          noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noac + data.ac)) * 100));
+          noACArray.push(Math.round((data.noac / (data.noOpportunity + data.noac + data.ac)) * 100));
+          ACArray.push(Math.round((data.ac / (data.noOpportunity + data.noac + data.ac)) * 100));
+        });
+
+        this.setState({
+          trendsDates: dateArray,
+          trendsNoChildOpp: noOppArray,
+          trendsNoAC: noACArray,
+          trendsAC: ACArray
+        });
+        this.props.addACChildTrends({
+          teacherId: teacherId,
+          childTrends: dataSet
+        })
       });
-    });
+    }
   };
 
   /**
@@ -275,9 +425,11 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     const noSupportArray: Array<number> = [];
     const supportArray: Array<number> = [];
     const noOppArray: Array<number> = [];
-    firebase.fetchTeacherACTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, nosupport: number}>) => {
-      dataSet.forEach(data => {
+
+    const reduxIndex = this.props.acTeacherTrends.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.ACData['teacherTrends']): Promise<void> => {
+      trendsData.forEach((data: {startDate: {value: string}, noOpportunity: number, support: number, nosupport: number}) => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
@@ -285,14 +437,41 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
         supportArray.push(Math.round((data.support / (data.noOpportunity + data.nosupport + data.support)) * 100));
         noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.nosupport + data.support)) * 100));
       });
+    };
 
-      this.setState({
-        trendsDates: dateArray,
-        trendsNoSupport: noSupportArray,
-        trendsSupport: supportArray,
-        trendsNoTeacherOpp: noOppArray
+    if ((reduxIndex > -1) && (this.props.acTeacherTrends[reduxIndex].teacherTrends !== undefined)) {
+      handleTrendsData(this.props.acTeacherTrends[reduxIndex].teacherTrends).then(() => {
+        this.setState({
+          trendsDates: dateArray,
+          trendsNoSupport: noSupportArray,
+          trendsSupport: supportArray,
+          trendsNoTeacherOpp: noOppArray
+        })
+      })
+    } else {
+      firebase.fetchTeacherACTrend(teacherId)
+      .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, nosupport: number}>) => {
+        dataSet.forEach(data => {
+          dateArray.push([
+            moment(data.startDate.value).format("MMM Do"),
+          ]);
+          noSupportArray.push(Math.round((data.nosupport / (data.noOpportunity + data.nosupport + data.support)) * 100));
+          supportArray.push(Math.round((data.support / (data.noOpportunity + data.nosupport + data.support)) * 100));
+          noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.nosupport + data.support)) * 100));
+        });
+
+        this.setState({
+          trendsDates: dateArray,
+          trendsNoSupport: noSupportArray,
+          trendsSupport: supportArray,
+          trendsNoTeacherOpp: noOppArray
+        });
+        this.props.addACTeacherTrends({
+          teacherId: teacherId,
+          teacherTrends: dataSet
+        })
       });
-    });
+    }
   };
 
   /**
@@ -519,44 +698,107 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    
-    firebase.fetchChildACSummary(this.state.sessionId).then((summary: {noOpportunity: number, noac: number, ac: number}) => {
-      this.setState({
-        noChildOpp: summary.noOpportunity,
-        noAc: summary.noac,
-        ac: summary.ac,
-      });
-    });
 
-    firebase.fetchTeacherACSummary(this.state.sessionId).then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
-      this.setState({
-        noTeacherOpp: summary.noOpportunity,
-        noSupport: summary.noSupport,
-        support: summary.support,
-      });
-    });
+    const reduxIndex = this.props.acResults.map(e => e.sessionId).indexOf(this.state.sessionId);
 
-    firebase.fetchACDetails(this.state.sessionId).then((summary: {
-      ac1: number,
-      ac2: number,
-      ac3: number,
-      ac4: number,
-      teacher1: number,
-      teacher2: number,
-      teacher3: number,
-      teacher4: number
-    }) => {
+    if ((reduxIndex > -1) && this.props.acResults[reduxIndex].childSummary !== undefined) {
       this.setState({
-        ac1: summary.ac1,
-        ac2: summary.ac2,
-        ac3: summary.ac3,
-        ac4: summary.ac4,
-        teacher1: summary.teacher1,
-        teacher2: summary.teacher2,
-        teacher3: summary.teacher3,
-        teacher4: summary.teacher4
+        ac: this.props.acResults[reduxIndex].childSummary.ac,
+        noAc: this.props.acResults[reduxIndex].childSummary.noac,
+        noChildOpp: this.props.acResults[reduxIndex].childSummary.noOpportunity
+      });
+    } else {
+      firebase.fetchChildACSummary(this.state.sessionId).then((summary: {noOpportunity: number, noac: number, ac: number}) => {
+        this.setState({
+          noChildOpp: summary.noOpportunity,
+          noAc: summary.noac,
+          ac: summary.ac,
+        });
+        this.props.addACChildSummary({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          childSummary: {
+            ac: summary.ac,
+            noac: summary.noac,
+            noOpportunity: summary.noOpportunity
+          }
+        })
+      });
+    }
+
+    if ((reduxIndex > -1) && this.props.acResults[reduxIndex].teacherSummary !== undefined) {
+      this.setState({
+        support: this.props.acResults[reduxIndex].teacherSummary.support,
+        noSupport: this.props.acResults[reduxIndex].teacherSummary.noSupport,
+        noTeacherOpp: this.props.acResults[reduxIndex].teacherSummary.noOpportunity,
+      });
+    } else {
+      firebase.fetchTeacherACSummary(this.state.sessionId).then((summary: {noOpportunity: number, noSupport: number, support: number}) => {
+        this.setState({
+          noTeacherOpp: summary.noOpportunity,
+          noSupport: summary.noSupport,
+          support: summary.support,
+        });
+        this.props.addACTeacherSummary({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          teacherSummary: {
+            support: summary.support,
+            noSupport: summary.noSupport,
+            noOpportunity: summary.noOpportunity
+          }
+        })
+      });
+    }
+
+    if ((reduxIndex > -1) && this.props.acResults[reduxIndex].details !== undefined) {
+      this.setState({
+        ac1: this.props.acResults[reduxIndex].details.ac1,
+        ac2: this.props.acResults[reduxIndex].details.ac2,
+        ac3: this.props.acResults[reduxIndex].details.ac3,
+        ac4: this.props.acResults[reduxIndex].details.ac4,
+        teacher1: this.props.acResults[reduxIndex].details.teacher1,
+        teacher2: this.props.acResults[reduxIndex].details.teacher2,
+        teacher3: this.props.acResults[reduxIndex].details.teacher3,
+        teacher4: this.props.acResults[reduxIndex].details.teacher4
+      });
+    } else {
+      firebase.fetchACDetails(this.state.sessionId).then((summary: {
+        ac1: number,
+        ac2: number,
+        ac3: number,
+        ac4: number,
+        teacher1: number,
+        teacher2: number,
+        teacher3: number,
+        teacher4: number
+      }) => {
+        this.setState({
+          ac1: summary.ac1,
+          ac2: summary.ac2,
+          ac3: summary.ac3,
+          ac4: summary.ac4,
+          teacher1: summary.teacher1,
+          teacher2: summary.teacher2,
+          teacher3: summary.teacher3,
+          teacher4: summary.teacher4
+        });
+        this.props.addACDetails({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          details: {
+            ac1: summary.ac1,
+            ac2: summary.ac2,
+            ac3: summary.ac3,
+            ac4: summary.ac4,
+            teacher1: summary.teacher1,
+            teacher2: summary.teacher2,
+            teacher3: summary.teacher3,
+            teacher4: summary.teacher4
+          }
+        });
       })
-    })
+    }
   }
 
   /**
@@ -671,11 +913,47 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  acResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    childSummary: Types.ACData['childSummary'],
+    teacherSummary: Types.ACData['teacherSummary'],
+    details: Types.ACData['childDetails'] & Types.ACData['teacherDetails']
+  }>,
+  acChildTrends: Array<{
+    teacherId: string,
+    childTrends: Types.ACData['childTrends']
+  }>,
+  acTeacherTrends: Array<{
+    teacherId: string,
+    teacherTrends: Types.ACData['teacherTrends']
+  }>
+} => {
   return {
-    teacherSelected: state.teacherSelectedState.teacher
+    teacherSelected: state.teacherSelectedState.teacher,
+    sessionDates: state.sessionDatesState.dates,
+    acResults: state.acResultsState.acResults,
+    acChildTrends: state.acResultsState.acChildTrends,
+    acTeacherTrends: state.acResultsState.acTeacherTrends
   };
 };
 
 AssociativeCooperativeInteractionsResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps)(AssociativeCooperativeInteractionsResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {
+  addACChildSummary,
+  addACTeacherSummary,
+  addACDetails,
+  addACChildTrends,
+  addACTeacherTrends,
+  addTeacher,
+  addTool
+})(AssociativeCooperativeInteractionsResultsPage));
