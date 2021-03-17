@@ -356,19 +356,13 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     } else {
       firebase.fetchChildMathTrend(teacherId)
       .then((dataSet: Array<{startDate: {value: string}, math: number, notMath: number}>) => {
-        dataSet.forEach(data => {
-          dateArray.push([
-            moment(data.startDate.value).format("MMM Do"),
-          ]);
-          mathArray.push(Math.round((data.math / (data.math + data.notMath)) * 100));
-          notMathArray.push(Math.round((data.notMath / (data.math + data.notMath)) * 100));
-        });
-
-        this.setState({
-          trendsDates: dateArray,
-          trendsMath: mathArray,
-          trendsNotMath: notMathArray
-        });
+        handleTrendsData(dataSet).then(() => {
+          this.setState({
+            trendsDates: dateArray,
+            trendsMath: mathArray,
+            trendsNotMath: notMathArray
+          });
+        })
         this.props.addMathChildTrends({
           teacherId: teacherId,
           childTrends: dataSet
@@ -412,20 +406,14 @@ class MathInstructionResultsPage extends React.Component<Props, State> {
     } else {
       firebase.fetchTeacherMathTrend(teacherId)
       .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
-        dataSet.forEach(data => {
-          dateArray.push([
-            moment(data.startDate.value).format("MMM Do"),
-          ]);
-          supportArray.push(Math.round((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
-          noSupportArray.push(Math.round((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
-          noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        });
-        this.setState({
-          trendsDates: dateArray,
-          trendsSupport: supportArray,
-          trendsNoSupport: noSupportArray,
-          trendsNoTeacherOpp: noOppArray
-        });
+        handleTrendsData(dataSet).then(() => {
+          this.setState({
+            trendsDates: dateArray,
+            trendsSupport: supportArray,
+            trendsNoSupport: noSupportArray,
+            trendsNoTeacherOpp: noOppArray
+          });
+        })
         this.props.addMathTeacherTrends({
           teacherId: teacherId,
           teacherTrends: dataSet

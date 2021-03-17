@@ -356,19 +356,13 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     } else {
       firebase.fetchChildSeqTrend(teacherId)
       .then((dataSet: Array<{startDate: {value: string}, sequential: number, notSequential: number}>) => {
-        dataSet.forEach(data => {
-          dateArray.push([
-            moment(data.startDate.value).format("MMM Do"),
-          ]);
-          notSequentialArray.push(Math.round((data.notSequential / (data.notSequential + data.sequential)) * 100));
-          sequentialArray.push(Math.round((data.sequential / (data.notSequential + data.sequential)) * 100));
-        });
-
-        this.setState({
-          trendsDates: dateArray,
-          trendsNotSequential: notSequentialArray,
-          trendsSequential: sequentialArray
-        });
+        handleTrendsData(dataSet).then(() => {
+          this.setState({
+            trendsDates: dateArray,
+            trendsNotSequential: notSequentialArray,
+            trendsSequential: sequentialArray
+          });
+        })
         this.props.addSequentialChildTrends({
           teacherId: teacherId,
           childTrends: dataSet
@@ -412,20 +406,14 @@ class SequentialActivitiesResultsPage extends React.Component<Props, State> {
     } else {
       firebase.fetchTeacherSeqTrend(teacherId)
       .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, support: number, noSupport: number}>) => {
-        dataSet.forEach(data => {
-          dateArray.push([
-            moment(data.startDate.value).format("MMM Do"),
-          ]);
-          noSupportArray.push(Math.round((data.noSupport / (data.noOpportunity + data.noSupport + data.support)) * 100));
-          supportArray.push(Math.round((data.support / (data.noOpportunity + data.noSupport + data.support)) * 100));
-          noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noSupport + data.support)) * 100));
-        });
-        this.setState({
-          trendsDates: dateArray,
-          trendsNoSupport: noSupportArray,
-          trendsSupport: supportArray,
-          trendsNoTeacherOpp: noOppArray
-        });
+        handleTrendsData(dataSet).then(() => {
+          this.setState({
+            trendsDates: dateArray,
+            trendsNoSupport: noSupportArray,
+            trendsSupport: supportArray,
+            trendsNoTeacherOpp: noOppArray
+          });
+        })
         this.props.addSequentialTeacherTrends({
           teacherId: teacherId,
           teacherTrends: dataSet

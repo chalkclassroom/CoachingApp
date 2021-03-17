@@ -339,26 +339,6 @@ class ClassroomClimateResultsPage extends React.Component<Props, State> {
           });
         });
       }
-      /* firebase.fetchSessionDates(teacherId, "climate").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        {if (dates[0]) {
-          this.setState({
-            sessionDates: dates,
-            noDataYet: false
-          }, () => {
-            if (this.state.sessionDates[0]) {
-              this.setState({ sessionId: this.state.sessionDates[0].id },
-                () => {
-                  this.getData();
-                }
-              );
-            }
-          })
-        } else {
-          this.setState({
-            noDataYet: true
-          })
-        }}
-      ); */
     })
   };
 

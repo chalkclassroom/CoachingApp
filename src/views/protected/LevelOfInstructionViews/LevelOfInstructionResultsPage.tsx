@@ -19,6 +19,8 @@ import {
 import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
+import { addInstructionDetails, addInstructionTrends } from '../../../state/actions/instruction-results';
+import { addTeacher, addTool } from '../../../state/actions/session-dates';
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Types from '../../../constants/Types';
 
@@ -39,7 +41,46 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  addTeacher(dates: {
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }): void,
+  addTool(dates: [{
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }]): void,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  addInstructionDetails(details: {
+    sessionId: string,
+    teacherId: string,
+    details: Types.InstructionData['details']
+  }): void,
+  addInstructionTrends(trends: {
+    teacherId: string,
+    trends: Types.InstructionData['trends']
+  }): void,
+  instructionResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    details: Types.InstructionData['details']
+  }>,
+  instructionTrends: Array<{
+    teacherId: string,
+    trends: Types.InstructionData['trends']
+  }>
 }
 
 interface Style {
@@ -141,22 +182,46 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     const hlqResponseArray: Array<number> = [];
     const llqArray: Array<number> = [];
     const llqResponseArray: Array<number> = [];
-    firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}>) => {                       
-      dataSet.forEach((data: {dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}) => { 
+
+    const reduxIndex = this.props.instructionTrends.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.InstructionData['trends']): Promise<void> => {
+      trendsData.forEach((data: {dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}) => {
         dateArray.push(moment(data.dayOfEvent.value).format("MMM Do YYYY"));
         hlqArray.push(Math.round((data.hlq / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
         hlqResponseArray.push(Math.round((data.hlqResponse / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
         llqArray.push(Math.round((data.llq / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
         llqResponseArray.push(Math.round((data.llqResponse / (data.hlq + data.hlqResponse + data.llq + data.llqResponse)) * 100));
       });
-      this.setState({
-        trendsDates: dateArray,
-        trendsHlq: hlqArray,
-        trendsHlqResponse: hlqResponseArray,
-        trendsLlq: llqArray,
-        trendsLlqResponse: llqResponseArray
+    };
+
+    if ((reduxIndex > -1) && (this.props.instructionTrends[reduxIndex].trends !== undefined)) {
+      handleTrendsData(this.props.instructionTrends[reduxIndex].trends).then(() => {
+        this.setState({
+          trendsDates: dateArray,
+          trendsHlq: hlqArray,
+          trendsHlqResponse: hlqResponseArray,
+          trendsLlq: llqArray,
+          trendsLlqResponse: llqResponseArray
+        })
+      })
+    } else {
+      firebase.fetchInstructionTrend(teacherId).then((dataSet: Array<{dayOfEvent: {value: string}, hlq: number, hlqResponse: number, llq: number, llqResponse: number}>) => {                       
+        handleTrendsData(dataSet).then(() => {
+          this.setState({
+            trendsDates: dateArray,
+            trendsHlq: hlqArray,
+            trendsHlqResponse: hlqResponseArray,
+            trendsLlq: llqArray,
+            trendsLlqResponse: llqResponseArray
+          });
+        });
+        this.props.addInstructionTrends({
+          teacherId: teacherId,
+          trends: dataSet
+        })
       });
-    });
+    }
   };
 
   /**
@@ -210,10 +275,12 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "level").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        {if (dates[0]) {
+      const teacherIndex = this.props.sessionDates.map(e => e.teacherId).indexOf(teacherId);
+      if (teacherIndex > -1) { // if teacher in redux sessionDatesState
+        const toolIndex = this.props.sessionDates[teacherIndex].data.map(e => e.tool).indexOf('IN');
+        if (toolIndex > -1 && this.props.sessionDates[teacherIndex].data[toolIndex].sessions.length > 0) { // if LOI for this teacher in sessionDatesState
           this.setState({
-            sessionDates: dates,
+            sessionDates: this.props.sessionDates[teacherIndex].data[toolIndex].sessions,
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
@@ -224,12 +291,64 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
               );
             }
           })
-        } else {
-          this.setState({
-            noDataYet: true
-          })
-        }}
-      );
+        } else { // teacher exists but not LOI
+          firebase.fetchSessionDates(teacherId, "level").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+            if (dates[0]) {
+              this.setState({
+                sessionDates: dates,
+                noDataYet: false
+              }, () => {
+                if (this.state.sessionDates[0]) {
+                  this.setState({ sessionId: this.state.sessionDates[0].id },
+                    () => {
+                      this.getData();
+                    }
+                  );
+                }
+              })
+            } else {
+              this.setState({
+                noDataYet: true
+              })
+            }
+            this.props.addTool([{
+              teacherId: teacherId,
+              data: [{
+                tool: 'IN',
+                sessions: dates
+              }]
+            }]);
+          });
+        }
+      } else { // teacher not in redux sessionDatesState
+        firebase.fetchSessionDates(teacherId, "level").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+          if (dates[0]) {
+            this.setState({
+              sessionDates: dates,
+              noDataYet: false
+            }, () => {
+              if (this.state.sessionDates[0]) {
+                this.setState({ sessionId: this.state.sessionDates[0].id },
+                  () => {
+                    this.getData();
+                  }
+                );
+              }
+            })
+          } else {
+            this.setState({
+              noDataYet: true
+            })
+          }
+          this.props.addTeacher({
+            teacherId: teacherId,
+            data: [{
+              tool: 'IN',
+              sessions: dates
+            }]
+          });
+        });
+      }
     })
   };
 
@@ -317,26 +436,48 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionType: string, count: number}>) => {  
-      json.forEach(instruction => {
-        // if (type === old term || type === new term)                             
-        if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") { 
-          specificSkillCount = instruction.count;                       
-        } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {    
-          lowLevelCount = instruction.count;                                 
-        } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {            
-          highLevelQuesCount = instruction.count;                                 
-        } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {            
-          followUpCount = instruction.count;                                 
-        }
-      });
+
+    const reduxIndex = this.props.instructionResults.map(e => e.sessionId).indexOf(this.state.sessionId);
+
+    if ((reduxIndex > -1) && this.props.instructionResults[reduxIndex].details !== undefined) {
       this.setState({
-        hlqResponseCount: followUpCount,                          
-        hlqCount: highLevelQuesCount,
-        llqCount: lowLevelCount,
-        llqResponseCount: specificSkillCount                                  
+        hlqResponseCount: this.props.instructionResults[reduxIndex].details.highLevelResponse,
+        hlqCount: this.props.instructionResults[reduxIndex].details.highLevelQuestion,
+        llqCount: this.props.instructionResults[reduxIndex].details.lowLevelQuestion,
+        llqResponseCount: this.props.instructionResults[reduxIndex].details.lowLevelResponse
       });
-    });
+    } else {
+      firebase.fetchInstructionTypeCount(this.state.sessionId).then((json: Array<{instructionType: string, count: number}>) => {
+        json.forEach(instruction => {
+          // if (type === old term || type === new term)                             
+          if (instruction.instructionType === "specificSkill" || instruction.instructionType === "llqResponse") { 
+            specificSkillCount = instruction.count;                       
+          } else if (instruction.instructionType === "lowLevel" || instruction.instructionType === "llq") {    
+            lowLevelCount = instruction.count;                                 
+          } else if (instruction.instructionType === "highLevel" || instruction.instructionType === "hlq") {            
+            highLevelQuesCount = instruction.count;                                 
+          } else if (instruction.instructionType === "followUp" || instruction.instructionType === "hlqResponse") {            
+            followUpCount = instruction.count;                                 
+          }
+        });
+        this.setState({
+          hlqResponseCount: followUpCount,                          
+          hlqCount: highLevelQuesCount,
+          llqCount: lowLevelCount,
+          llqResponseCount: specificSkillCount                                  
+        });
+        this.props.addInstructionDetails({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          details: {
+            highLevelQuestion: highLevelQuesCount,
+            lowLevelQuestion: lowLevelCount,
+            highLevelResponse: followUpCount,
+            lowLevelResponse: specificSkillCount
+          }
+        });
+      });
+    }
   }
 
   /**
@@ -606,12 +747,36 @@ class LevelOfInstructionResultsPage extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: Types.ReduxState): {
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  instructionResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    details: Types.InstructionData['details']
+  }>,
+  instructionTrends: Array<{
+    teacherId: string,
+    trends: Types.InstructionData['trends']
+  }>
 } => {
   return {
-    teacherSelected: state.teacherSelectedState.teacher
+    teacherSelected: state.teacherSelectedState.teacher,
+    sessionDates: state.sessionDatesState.dates,
+    instructionResults: state.instructionResultsState.instructionResults,
+    instructionTrends: state.instructionResultsState.instructionTrends
   };
 };
 
 LevelOfInstructionResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps)(LevelOfInstructionResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {
+  addTeacher,
+  addTool,
+  addInstructionDetails,
+  addInstructionTrends
+})(LevelOfInstructionResultsPage));

@@ -393,21 +393,14 @@ class AssociativeCooperativeInteractionsResultsPage extends React.Component<Prop
     } else {
       firebase.fetchChildACTrend(teacherId)
       .then((dataSet: Array<{startDate: {value: string}, noOpportunity: number, ac: number, noac: number}>) => {
-        dataSet.forEach(data => {
-          dateArray.push([
-            moment(data.startDate.value).format("MMM Do"),
-          ]);
-          noOppArray.push(Math.round((data.noOpportunity / (data.noOpportunity + data.noac + data.ac)) * 100));
-          noACArray.push(Math.round((data.noac / (data.noOpportunity + data.noac + data.ac)) * 100));
-          ACArray.push(Math.round((data.ac / (data.noOpportunity + data.noac + data.ac)) * 100));
-        });
-
-        this.setState({
-          trendsDates: dateArray,
-          trendsNoChildOpp: noOppArray,
-          trendsNoAC: noACArray,
-          trendsAC: ACArray
-        });
+        handleTrendsData(dataSet).then(() => {
+          this.setState({
+            trendsDates: dateArray,
+            trendsNoChildOpp: noOppArray,
+            trendsNoAC: noACArray,
+            trendsAC: ACArray
+          });
+        })
         this.props.addACChildTrends({
           teacherId: teacherId,
           childTrends: dataSet

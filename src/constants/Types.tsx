@@ -86,6 +86,28 @@ export interface MathData {
   }>
 }
 
+export interface InstructionData {
+  summary: {
+    highLevelQuestion: number,
+    lowLevelQuestion: number,
+    highLevelResponse: number,
+    lowLevelResponse: number
+  },
+  details: {
+    highLevelQuestion: number,
+    lowLevelQuestion: number,
+    highLevelResponse: number,
+    lowLevelResponse: number
+  },
+  trends: Array<{
+    dayOfEvent: {value: string},
+    hlq: number,
+    hlqResponse: number,
+    llq: number,
+    llqResponse: number
+  }>
+}
+
 export interface SequentialData {
   childSummary: {
     sequential: number,
@@ -217,6 +239,17 @@ export interface ReduxState {
   engagementCountState: {
     engagedCount: number,
     notEngagedCount: number
+  },
+  instructionResultsState: {
+    instructionResults: Array<{
+      teacherId: string,
+      sessionId: string,
+      details: InstructionData['details'],
+    }>,
+    instructionTrends: Array<{
+      teacherId: string,
+      trends: InstructionData['trends']
+    }>
   },
   instructionStackState: {
     instructionStack: Array<{
