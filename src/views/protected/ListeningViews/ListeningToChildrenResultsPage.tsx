@@ -14,6 +14,12 @@ import ListeningTrendsGraph from "../../../components/ListeningComponents/Result
 import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
 import FadeAwayModal from '../../../components/FadeAwayModal';
 import { connect } from 'react-redux';
+import {
+  addListeningSummary,
+  addListeningDetails,
+  addListeningTrends
+} from '../../../state/actions/listening-results';
+import { addTeacher, addTool } from '../../../state/actions/session-dates';
 import * as Constants from '../../../constants/Constants';
 import * as Types from '../../../constants/Types';
 import TeacherModal from '../HomeViews/TeacherModal';
@@ -35,7 +41,52 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  addTeacher(dates: {
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }): void,
+  addTool(dates: [{
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }]): void,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  addListeningSummary(summary: {
+    sessionId: string,
+    teacherId: string,
+    summary: Types.ListeningData['summary']
+  }): void,
+  addListeningDetails(details: {
+    sessionId: string,
+    teacherId: string,
+    details: Types.ListeningData['details']
+  }): void,
+  addListeningTrends(trends: {
+    teacherId: string,
+    trends: Types.ListeningData['trends'] | undefined
+  }): void,
+  listeningResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    summary: Types.ListeningData['summary'],
+    details: Types.ListeningData['details']
+  }>,
+  listeningTrends: Array<{
+    teacherId: string,
+    trends: Types.ListeningData['trends']
+  }>
 }
 
 interface Style {
@@ -165,10 +216,12 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "listening").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        {if (dates[0]) {
+      const teacherIndex = this.props.sessionDates.map(e => e.teacherId).indexOf(teacherId);
+      if (teacherIndex > -1) { // if teacher in redux sessionDatesState
+        const toolIndex = this.props.sessionDates[teacherIndex].data.map(e => e.tool).indexOf('LC');
+        if (toolIndex > -1 && this.props.sessionDates[teacherIndex].data[toolIndex].sessions.length > 0) { // if listening for this teacher in sessionDatesState
           this.setState({
-            sessionDates: dates,
+            sessionDates: this.props.sessionDates[teacherIndex].data[toolIndex].sessions,
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
@@ -179,12 +232,64 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
               );
             }
           })
-        } else {
-          this.setState({
-            noDataYet: true
-          })
-        }}
-      );
+        } else { // teacher exists but not listening
+          firebase.fetchSessionDates(teacherId, "listening").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+            if (dates[0]) {
+              this.setState({
+                sessionDates: dates,
+                noDataYet: false
+              }, () => {
+                if (this.state.sessionDates[0]) {
+                  this.setState({ sessionId: this.state.sessionDates[0].id },
+                    () => {
+                      this.getData();
+                    }
+                  );
+                }
+              })
+            } else {
+              this.setState({
+                noDataYet: true
+              })
+            }
+            this.props.addTool([{
+              teacherId: teacherId,
+              data: [{
+                tool: 'LC',
+                sessions: dates
+              }]
+            }]);
+          });
+        }
+      } else { // teacher not in redux sessionDatesState
+        firebase.fetchSessionDates(teacherId, "listening").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+          if (dates[0]) {
+            this.setState({
+              sessionDates: dates,
+              noDataYet: false
+            }, () => {
+              if (this.state.sessionDates[0]) {
+                this.setState({ sessionId: this.state.sessionDates[0].id },
+                  () => {
+                    this.getData();
+                  }
+                );
+              }
+            })
+          } else {
+            this.setState({
+              noDataYet: true
+            })
+          }
+          this.props.addTeacher({
+            teacherId: teacherId,
+            data: [{
+              tool: 'LC',
+              sessions: dates
+            }]
+          });
+        });
+      }
     })
   };
 
@@ -196,21 +301,43 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     const dateArray: Array<Array<string>> = [];
     const listeningArray: Array<number> = [];
     const notListeningArray: Array<number> = [];
-    firebase.fetchListeningTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, listening: number, notListening: number}>) => {
-      dataSet.forEach(data => {
+
+    const reduxIndex = this.props.listeningTrends.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.ListeningData['trends']): Promise<void> => {
+      trendsData.forEach((data: {startDate: {value: string}, listening: number, notListening: number}) => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
         listeningArray.push(Math.round((data.listening / (data.listening + data.notListening)) * 100));
         notListeningArray.push(Math.round((data.notListening / (data.listening + data.notListening)) * 100));
       });
-      this.setState({
-        trendsDates: dateArray,
-        trendsListening: listeningArray,
-        trendsNotListening: notListeningArray
+    };
+
+    if ((reduxIndex > -1) && (this.props.listeningTrends[reduxIndex].childTrends !== undefined)) {
+      handleTrendsData(this.props.listeningTrends[reduxIndex].childTrends).then(() => {
+        this.setState({
+          trendsDates: dateArray,
+          trendsListening: listeningArray,
+          trendsNotListening: notListeningArray
+        })
+      })
+    } else {
+      firebase.fetchListeningTrend(teacherId)
+      .then((dataSet: Array<{startDate: {value: string}, listening: number, notListening: number}>) => {
+        handleTrendsData(dataSet).then(() => {
+          this.setState({
+            trendsDates: dateArray,
+            trendsListening: listeningArray,
+            trendsNotListening: notListeningArray
+          });
+        })
+        this.props.addListeningTrends({
+          teacherId: teacherId,
+          trends: dataSet
+        })
       });
-    });
+    }
   };
 
   /**
@@ -273,31 +400,72 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchListeningSummary(this.state.sessionId)
-    .then((summary: {listening: number, notListening: number}) => {
+    const reduxIndex = this.props.listeningResults.map(e => e.sessionId).indexOf(this.state.sessionId);
+
+    if ((reduxIndex > -1) && this.props.listeningResults[reduxIndex].summary !== undefined) {
       this.setState({
-        listening: summary.listening,
-        notListening: summary.notListening,
+        listening: this.props.listeningResults[reduxIndex].summary.listening,
+        notListening: this.props.listeningResults[reduxIndex].summary.notListening,
       });
-    });
-    firebase.fetchListeningDetails(this.state.sessionId)
-    .then((summary: {
-      listening1: number,
-      listening2: number,
-      listening3: number,
-      listening4: number,
-      listening5: number,
-      listening6: number,
-    }) => {
+    } else {
+      firebase.fetchListeningSummary(this.state.sessionId)
+      .then((summary: {listening: number, notListening: number}) => {
+        this.setState({
+          listening: summary.listening,
+          notListening: summary.notListening
+        });
+        this.props.addListeningSummary({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          summary: {
+            listening: summary.listening,
+            notListening: summary.notListening
+          }
+        })
+      });
+    }
+
+    if ((reduxIndex > -1) && this.props.listeningResults[reduxIndex].details !== undefined) {
       this.setState({
-        listening1: summary.listening1,
-        listening2: summary.listening2,
-        listening3: summary.listening3,
-        listening4: summary.listening4,
-        listening5: summary.listening5,
-        listening6: summary.listening6,
+        listening1: this.props.listeningResults[reduxIndex].details.listening1,
+        listening2: this.props.listeningResults[reduxIndex].details.listening2,
+        listening3: this.props.listeningResults[reduxIndex].details.listening3,
+        listening4: this.props.listeningResults[reduxIndex].details.listening4,
+        listening5: this.props.listeningResults[reduxIndex].details.listening5,
+        listening6: this.props.listeningResults[reduxIndex].details.listening6
+      });
+    } else {
+      firebase.fetchListeningDetails(this.state.sessionId)
+      .then((summary: {
+        listening1: number,
+        listening2: number,
+        listening3: number,
+        listening4: number,
+        listening5: number,
+        listening6: number,
+      }) => {
+        this.setState({
+          listening1: summary.listening1,
+          listening2: summary.listening2,
+          listening3: summary.listening3,
+          listening4: summary.listening4,
+          listening5: summary.listening5,
+          listening6: summary.listening6,
+        });
+        this.props.addListeningDetails({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          details: {
+            listening1: summary.listening1,
+            listening2: summary.listening2,
+            listening3: summary.listening3,
+            listening4: summary.listening4,
+            listening5: summary.listening5,
+            listening6: summary.listening6,
+          }
+        })
       })
-    })
+    }
   }
 
   /**
@@ -599,11 +767,39 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teacher} => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  listeningResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    summary: Types.ListeningData['summary'],
+    details: Types.ListeningData['details']
+  }>,
+  listeningTrends: Array<{
+    teacherId: string,
+    trends: Types.ListeningData['trends']
+  }>,
+} => {
   return {
-    teacherSelected: state.teacherSelectedState.teacher
+    teacherSelected: state.teacherSelectedState.teacher,
+    sessionDates: state.sessionDatesState.dates,
+    listeningResults: state.listeningResultsState.listeningResults,
+    listeningTrends: state.listeningResultsState.listeningTrends
   };
 };
 
 ListeningToChildrenResultsPage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps)(ListeningToChildrenResultsPage));
+export default withStyles(styles)(connect(mapStateToProps, {
+  addListeningSummary,
+  addListeningDetails,
+  addListeningTrends,
+  addTeacher,
+  addTool
+})(ListeningToChildrenResultsPage));

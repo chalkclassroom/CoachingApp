@@ -108,6 +108,23 @@ export interface InstructionData {
   }>
 }
 
+export interface ListeningData {
+  summary: {listening: number, notListening: number},
+  details: {
+    listening1: number,
+    listening2: number,
+    listening3: number,
+    listening4: number,
+    listening5: number,
+    listening6: number
+  },
+  trends: Array<{
+    startDate: {value: string},
+    listening: number,
+    notListening: number
+  }>
+}
+
 export interface SequentialData {
   childSummary: {
     sequential: number,
@@ -260,6 +277,18 @@ export interface ReduxState {
   listeningCountState: {
     listeningCount: number,
     noListeningCount: number
+  },
+  listeningResultsState: {
+    listeningResults: Array<{
+      teacherId: string,
+      sessionId: string,
+      summary: ListeningData['summary'],
+      details: ListeningData['details']
+    }>,
+    listeningTrends: Array<{
+      teacherId: string,
+      trends: ListeningData['trends']
+    }>,
   },
   mathCountState: {
     mathCount: number,
