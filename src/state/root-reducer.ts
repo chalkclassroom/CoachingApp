@@ -16,6 +16,7 @@ import mathCentersState from "./reducers/math-instruction-state";
 import mathCountState from "./reducers/math-count-state";
 import mathResultsState from "./reducers/math-results-state";
 import engagementCountState from "./reducers/engagement-count-state";
+import engagementResultsState from "./reducers/engagement-results-state";
 import instructionStackState from "./reducers/instruction-stack-state";
 import instructionResultsState from "./reducers/instruction-results-state";
 import listeningCountState from "./reducers/listening-count-state";
@@ -45,6 +46,7 @@ export default combineReducers({
   mathCountState,
   mathResultsState,
   engagementCountState,
+  engagementResultsState,
   instructionStackState,
   instructionResultsState,
   listeningCountState,

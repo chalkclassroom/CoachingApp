@@ -108,6 +108,32 @@ export interface InstructionData {
   }>
 }
 
+export interface EngagementData {
+  summary: {
+    offTask: number,
+    engaged: number,
+    avgRating: number
+  },
+  details: {
+    offTask0: number,
+    offTask1: number,
+    offTask2: number,
+    mildlyEngaged0: number,
+    mildlyEngaged1: number,
+    mildlyEngaged2: number,
+    engaged0: number,
+    engaged1: number,
+    engaged2: number,
+    highlyEngaged0: number,
+    highlyEngaged1: number,
+    highlyEngaged2: number
+  },
+  trends: Array<{
+    startDate: {value: string},
+    average: number
+  }>
+}
+
 export interface ListeningData {
   summary: {listening: number, notListening: number},
   details: {
@@ -256,6 +282,18 @@ export interface ReduxState {
   engagementCountState: {
     engagedCount: number,
     notEngagedCount: number
+  },
+  engagementResultsState: {
+    engagementResults: Array<{
+      teacherId: string,
+      sessionId: string,
+      summary: EngagementData['summary'],
+      details: EngagementData['details']
+    }>,
+    engagementTrends: Array<{
+      teacherId: string,
+      trends: EngagementData['trends']
+    }>,
   },
   instructionResultsState: {
     instructionResults: Array<{

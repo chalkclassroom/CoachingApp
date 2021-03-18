@@ -314,8 +314,8 @@ class ListeningToChildrenResultsPage extends React.Component<Props, State> {
       });
     };
 
-    if ((reduxIndex > -1) && (this.props.listeningTrends[reduxIndex].childTrends !== undefined)) {
-      handleTrendsData(this.props.listeningTrends[reduxIndex].childTrends).then(() => {
+    if ((reduxIndex > -1) && (this.props.listeningTrends[reduxIndex].trends !== undefined)) {
+      handleTrendsData(this.props.listeningTrends[reduxIndex].trends).then(() => {
         this.setState({
           trendsDates: dateArray,
           trendsListening: listeningArray,
@@ -785,7 +785,7 @@ const mapStateToProps = (state: Types.ReduxState): {
   listeningTrends: Array<{
     teacherId: string,
     trends: Types.ListeningData['trends']
-  }>,
+  }>
 } => {
   return {
     teacherSelected: state.teacherSelectedState.teacher,

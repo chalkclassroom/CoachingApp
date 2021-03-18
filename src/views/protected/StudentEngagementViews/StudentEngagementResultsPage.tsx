@@ -11,6 +11,12 @@ import DetailsSlider from "../../../components/StudentEngagementComponents/Resul
 import TrendsSlider from "../../../components/StudentEngagementComponents/ResultsComponents/TrendsSlider";
 import * as Constants from '../../../constants/Constants';
 import {connect} from "react-redux";
+import {
+  addEngagementSummary,
+  addEngagementDetails,
+  addEngagementTrends
+} from '../../../state/actions/engagement-results';
+import { addTeacher, addTool } from '../../../state/actions/session-dates';
 import StudentEngagementCoachingQuestions
   from "../../../components/StudentEngagementComponents/ResultsComponents/StudentEngagementCoachingQuestions";
 import TeacherModal from '../HomeViews/TeacherModal';
@@ -29,7 +35,52 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  addTeacher(dates: {
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }): void,
+  addTool(dates: [{
+    teacherId: string,
+    data: [{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }]
+  }]): void,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  addEngagementSummary(summary: {
+    sessionId: string,
+    teacherId: string,
+    summary: Types.EngagementData['summary']
+  }): void,
+  addEngagementDetails(details: {
+    sessionId: string,
+    teacherId: string,
+    details: Types.EngagementData['details']
+  }): void,
+  addEngagementTrends(trends: {
+    teacherId: string,
+    trends: Types.EngagementData['trends'] | undefined
+  }): void,
+  engagementResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    summary: Types.EngagementData['summary'],
+    details: Types.EngagementData['details']
+  }>,
+  engagementTrends: Array<{
+    teacherId: string,
+    trends: Types.EngagementData['trends']
+  }>
 }
 
 interface Style {
@@ -152,10 +203,12 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "engagement").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
-        {if (dates[0]) {
+      const teacherIndex = this.props.sessionDates.map(e => e.teacherId).indexOf(teacherId);
+      if (teacherIndex > -1) { // if teacher in redux sessionDatesState
+        const toolIndex = this.props.sessionDates[teacherIndex].data.map(e => e.tool).indexOf('SE');
+        if (toolIndex > -1 && this.props.sessionDates[teacherIndex].data[toolIndex].sessions.length > 0) { // if engagement for this teacher in sessionDatesState
           this.setState({
-            sessionDates: dates,
+            sessionDates: this.props.sessionDates[teacherIndex].data[toolIndex].sessions,
             noDataYet: false
           }, () => {
             if (this.state.sessionDates[0]) {
@@ -166,12 +219,64 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
               );
             }
           })
-        } else {
-          this.setState({
-            noDataYet: true
-          })
-        }}
-      );
+        } else { // teacher exists but not engagement
+          firebase.fetchSessionDates(teacherId, "engagement").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+            if (dates[0]) {
+              this.setState({
+                sessionDates: dates,
+                noDataYet: false
+              }, () => {
+                if (this.state.sessionDates[0]) {
+                  this.setState({ sessionId: this.state.sessionDates[0].id },
+                    () => {
+                      this.getData();
+                    }
+                  );
+                }
+              })
+            } else {
+              this.setState({
+                noDataYet: true
+              })
+            }
+            this.props.addTool([{
+              teacherId: teacherId,
+              data: [{
+                tool: 'SE',
+                sessions: dates
+              }]
+            }]);
+          });
+        }
+      } else { // teacher not in redux sessionDatesState
+        firebase.fetchSessionDates(teacherId, "engagement").then((dates: Array<{id: string, sessionStart: {value: string}}>) => {
+          if (dates[0]) {
+            this.setState({
+              sessionDates: dates,
+              noDataYet: false
+            }, () => {
+              if (this.state.sessionDates[0]) {
+                this.setState({ sessionId: this.state.sessionDates[0].id },
+                  () => {
+                    this.getData();
+                  }
+                );
+              }
+            })
+          } else {
+            this.setState({
+              noDataYet: true
+            })
+          }
+          this.props.addTeacher({
+            teacherId: teacherId,
+            data: [{
+              tool: 'SE',
+              sessions: dates
+            }]
+          });
+        });
+      }
     })
   };
 
@@ -183,19 +288,39 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
     const dateArray: Array<Array<string>> = [];
     const avgArray: Array<number> = [];
 
-    firebase.fetchEngagementTrend(teacherId)
-    .then((dataSet: Array<{startDate: {value: string}, average: number}>) => {
-      dataSet.forEach(data => {
+    const reduxIndex = this.props.engagementTrends.map(e => e.teacherId).indexOf(teacherId);
+
+    const handleTrendsData = async (trendsData: Types.EngagementData['trends']): Promise<void> => {
+      trendsData.forEach((data: {startDate: {value: string}, average: number}) => {
         dateArray.push([
           moment(data.startDate.value).format("MMM Do"),
         ]);
-          avgArray.push(Math.round((data.average + Number.EPSILON) * 100) / 100);
+        avgArray.push(Math.round((data.average + Number.EPSILON) * 100) / 100);
       });
-      this.setState({
-        trendsDates: dateArray,
-        trendsAvg: avgArray,
+    };
+
+    if ((reduxIndex > -1) && (this.props.engagementTrends[reduxIndex].trends !== undefined)) {
+      handleTrendsData(this.props.engagementTrends[reduxIndex].trends).then(() => {
+        this.setState({
+          trendsDates: dateArray,
+          trendsAvg: avgArray
+        })
+      })
+    } else {
+      firebase.fetchEngagementTrend(teacherId)
+      .then((dataSet: Array<{startDate: {value: string}, average: number}>) => {
+        handleTrendsData(dataSet).then(() => {
+          this.setState({
+            trendsDates: dateArray,
+            trendsAvg: avgArray
+          });
+        })
+        this.props.addEngagementTrends({
+          teacherId: teacherId,
+          trends: dataSet
+        })
       });
-    });
+    }
   };
 
 
@@ -363,39 +488,108 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchEngagementPieSummary(this.state.sessionId).then((summary: {offTask: number, engaged: number}) => {
+
+    const reduxIndex = this.props.engagementResults.map(e => e.sessionId).indexOf(this.state.sessionId);
+
+    if ((reduxIndex > -1) && this.props.engagementResults[reduxIndex].summary !== undefined) {
       this.setState({
-        offTaskSummaryCount: summary.offTask,
-        engagedSummaryCount: summary.engaged,
+        offTaskSummaryCount: this.props.engagementResults[reduxIndex].summary.offTask,
+        engagedSummaryCount: this.props.engagementResults[reduxIndex].summary.engaged,
+        avgEngagementSummary: this.props.engagementResults[reduxIndex].summary.avgRating
       });
-    });
-    firebase.fetchEngagementAvgSummary(this.state.sessionId).then((summary: {average: number}) => {
-      this.setState({
-        avgEngagementSummary: summary.average,
-      });
-    });
-    firebase.fetchEngagementDetails(this.state.sessionId)
-    .then((detail: {
-      offTask0: number,
-      offTask1: number,
-      offTask2: number,
-      mildlyEngaged0: number,
-      mildlyEngaged1: number,
-      mildlyEngaged2: number,
-      engaged0: number,
-      engaged1: number,
-      engaged2: number,
-      highlyEngaged0: number,
-      highlyEngaged1: number,
-      highlyEngaged2: number,
-    }) => {
-      this.setState({
-        offTaskDetailSplit: [detail.offTask0,detail.offTask1,detail.offTask2],
-        mildlyEngagedDetailSplit: [detail.mildlyEngaged0,detail.mildlyEngaged1,detail.mildlyEngaged2],
-        engagedDetailSplit: [detail.engaged0,detail.engaged1,detail.engaged2],
-        highlyEngagedDetailSplit: [detail.highlyEngaged0, detail.highlyEngaged1, detail.highlyEngaged2],
+    } else {
+      firebase.fetchEngagementPieSummary(this.state.sessionId).then((summary: {offTask: number, engaged: number}) => {
+        this.setState({
+          offTaskSummaryCount: summary.offTask,
+          engagedSummaryCount: summary.engaged,
+        });
+        return {
+          offTask: summary.offTask,
+          engaged: summary.engaged
+        }
+      }).then((data: {offTask: number, engaged: number}) => {
+        firebase.fetchEngagementAvgSummary(this.state.sessionId).then((summary: {average: number}) => {
+          this.setState({
+            avgEngagementSummary: summary.average,
+          });
+          this.props.addEngagementSummary({
+            sessionId: this.state.sessionId,
+            teacherId: this.props.teacherSelected.id,
+            summary: {
+              offTask: data.offTask,
+              engaged: data.engaged,
+              avgRating: summary.average
+            }
+          })
+        });
       })
-    })
+    }
+
+    if ((reduxIndex > -1) && this.props.engagementResults[reduxIndex].details !== undefined) {
+      this.setState({
+        offTaskDetailSplit: [
+          this.props.engagementResults[reduxIndex].details.offTask0,
+          this.props.engagementResults[reduxIndex].details.offTask1,
+          this.props.engagementResults[reduxIndex].details.offTask2
+        ],
+        mildlyEngagedDetailSplit: [
+          this.props.engagementResults[reduxIndex].details.mildlyEngaged0,
+          this.props.engagementResults[reduxIndex].details.mildlyEngaged1,
+          this.props.engagementResults[reduxIndex].details.mildlyEngaged2
+        ],
+        engagedDetailSplit: [
+          this.props.engagementResults[reduxIndex].details.engaged0,
+          this.props.engagementResults[reduxIndex].details.engaged1,
+          this.props.engagementResults[reduxIndex].details.engaged2
+        ],
+        highlyEngagedDetailSplit: [
+          this.props.engagementResults[reduxIndex].details.highlyEngaged0,
+          this.props.engagementResults[reduxIndex].details.highlyEngaged1,
+          this.props.engagementResults[reduxIndex].details.highlyEngaged2
+        ]
+      });
+    } else {
+      firebase.fetchEngagementDetails(this.state.sessionId)
+      .then((detail: {
+        offTask0: number,
+        offTask1: number,
+        offTask2: number,
+        mildlyEngaged0: number,
+        mildlyEngaged1: number,
+        mildlyEngaged2: number,
+        engaged0: number,
+        engaged1: number,
+        engaged2: number,
+        highlyEngaged0: number,
+        highlyEngaged1: number,
+        highlyEngaged2: number,
+      }) => {
+        this.setState({
+          offTaskDetailSplit: [detail.offTask0,detail.offTask1,detail.offTask2],
+          mildlyEngagedDetailSplit: [detail.mildlyEngaged0,detail.mildlyEngaged1,detail.mildlyEngaged2],
+          engagedDetailSplit: [detail.engaged0,detail.engaged1,detail.engaged2],
+          highlyEngagedDetailSplit: [detail.highlyEngaged0, detail.highlyEngaged1, detail.highlyEngaged2],
+        });
+        this.props.addEngagementDetails({
+          sessionId: this.state.sessionId,
+          teacherId: this.props.teacherSelected.id,
+          details: {
+            offTask0: detail.offTask0,
+            offTask1: detail.offTask1,
+            offTask2: detail.offTask2,
+            mildlyEngaged0: detail.mildlyEngaged0,
+            mildlyEngaged1: detail.mildlyEngaged1,
+            mildlyEngaged2: detail.mildlyEngaged2,
+            engaged0: detail.engaged0,
+            engaged1: detail.engaged1,
+            engaged2: detail.engaged2,
+            highlyEngaged0: detail.highlyEngaged0,
+            highlyEngaged1: detail.highlyEngaged1,
+            highlyEngaged2: detail.highlyEngaged2,
+          }
+        })
+      })
+    }
   }
 
   /**
@@ -533,13 +727,41 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): { teacherSelected: Types.Teacher } => {
+const mapStateToProps = (state: Types.ReduxState): {
+  teacherSelected: Types.Teacher,
+  sessionDates: Array<{
+    teacherId: string,
+    data: Array<{
+      tool: string,
+      sessions: Array<{id: string, sessionStart: {value: string}}>
+    }>
+  }>,
+  engagementResults: Array<{
+    teacherId: string,
+    sessionId: string,
+    summary: Types.EngagementData['summary'],
+    details: Types.EngagementData['details']
+  }>,
+  engagementTrends: Array<{
+    teacherId: string,
+    trends: Types.EngagementData['trends']
+  }>
+} => {
   return {
-    teacherSelected: state.teacherSelectedState.teacher
+    teacherSelected: state.teacherSelectedState.teacher,
+    sessionDates: state.sessionDatesState.dates,
+    engagementResults: state.engagementResultsState.engagementResults,
+    engagementTrends: state.engagementResultsState.engagementTrends
   };
 };
 
 StudentEngagementResultsPage.contextType = FirebaseContext;
-export default connect(mapStateToProps, {})(
+export default connect(mapStateToProps, {
+  addEngagementSummary,
+  addEngagementDetails,
+  addEngagementTrends,
+  addTeacher,
+  addTool
+})(
   withStyles(styles)(StudentEngagementResultsPage)
 );
