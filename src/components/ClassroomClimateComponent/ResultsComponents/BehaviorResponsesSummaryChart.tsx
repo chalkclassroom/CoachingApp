@@ -7,6 +7,7 @@ import * as Constants from '../../../constants/Constants';
 interface Props {
   positiveResponses: number,
   negativeResponses: number,
+  completed?(): void
 }
 
 /**
@@ -42,10 +43,16 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
       ]
     };
     const total = this.props.positiveResponses + this.props.negativeResponses;
+    const isCompleted = this.props.completed;
     return (
       <Pie
         data={behaviorResponseData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },

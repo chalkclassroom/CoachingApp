@@ -305,7 +305,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   });
   const [recipientName, setRecipientName] = useState("Katherine");
   const [actionPlans, setActionPlans] = useState<Array<{
-    id: string,
+   id: string,
     date: {
       seconds: number,
       nanoseconds: number
@@ -373,7 +373,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [renderACPdf, setRenderACPdf] = useState(false);
   const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
   const [transition, setTransition] = useState<TransitionData>();
-  const [climate, setClimate] = useState<ClimateData>();
+  const [climate, setClimate] = useState<Array<{
+    sessionId: string,
+    date: Date,
+    summary: ClimateData['summary'],
+    details: ClimateData['details'],
+    trends: ClimateData['trends'],
+  }>>([]);
   const [math, setMath] = useState<MathData>();
   const [instruction, setInstruction] = useState<InstructionData>();
   const [engagement, setEngagement] = useState<EngagementData>();
@@ -381,6 +387,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [sequential, setSequential] = useState<SequentialData>();
   const [ac, setAC] = useState<ACData>();
   const [actionPlanData, setActionPlanData] = useState<Array<{
+    actionPlanId: string,
+    tool: string,
+    sessionId: string,
+    goal: string,
+    goalTimeline: Date,
+    benefit: string,
+    date: Date,
+    actionSteps: Array<{step: string, person: string, timeline: Date}>
+  }>>();
+  const [transitionData, setTransitionData] = useState<Array<{
     actionPlanId: string,
     tool: string,
     sessionId: string,
@@ -572,9 +588,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     } else {
       window.open(uri);
     }
-  }
+ }
 
   const printDocument = async (practice: string | undefined, date: Date, elementId: string, addToAttachmentList: typeof functionForType, id: string): Promise<void> => {
+    console.log('PRINT DOCUMENT CALLED')
     const input: HTMLElement = document.getElementById(elementId);
     let base64data: string | ArrayBuffer | null = null;
     let newBase64Data = '';
@@ -582,7 +599,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       onclone: function (clonedDoc) {
         clonedDoc.getElementById(elementId).style.visibility = 'visible';
       },
-    }).then((canvas) => {
+   }).then((canvas) => {
       console.log('canvas');
     // canvas context
     const context = canvas.getContext("2d");
@@ -724,13 +741,11 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             })
           }).then(() => {
             thisActionPlan.actionSteps = newActionStepsArray;
-            console.log('IS IT A NUMBER?', thisActionPlan);
             setRenderActionPlan(true);
             const copyActionPlanData = [...actionPlanData];
             copyActionPlanData.push(thisActionPlan);
-            setActionPlanData(copyActionPlanData)
+            setActionPlanData(copyActionPlanData);
             printDocument(thisActionPlan.tool, thisActionPlan.date, thisActionPlan.actionPlanId, addToAttachmentList, thisActionPlan.actionPlanId)
-            console.log('what is this action plan', thisActionPlan);
           }).then(() => {
             actionPlanData.push(thisActionPlan)
           })
@@ -747,7 +762,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       goalTimeline: firebase.firestore.Timestamp,
       benefit: string,
       dateModified: {seconds: number, nanoseconds: number},
-      dateCreated: {seconds: number, nanoseconds: number},
+     dateCreated: {seconds: number, nanoseconds: number},
       coach: string,
       teacher: string,
       tool: string
@@ -1178,36 +1193,101 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }).then(() => {
       setTimeout(()=> {printDocument('Transition Time', new Date(), 'TT', addToAttachmentList, sessionId)}, 10000)
     }).then(() => {
-      setTimeout(() => {setRenderTransitionPdf(false)}, 10000);
-      setTimeout(() => {setTransition(undefined)}, 10000);
+      // setTimeout(() => {setRenderTransitionPdf(false)}, 10000);
+      // setTimeout(() => {setTransition(undefined)}, 10000);
     })
   }
 
-  const attachClimateResult = (
+  const attachClimateResultOld = async (
     sessionId: string,
     summary: boolean | undefined,
     details: boolean | undefined,
     trends: boolean | undefined,
     addToAttachmentList: typeof functionForType
-  ): void => {
+  ): Promise<void> => {
     getClimateData(sessionId, summary, details, trends).then((data) => {
-      return Promise.all([
-        setClimate({
+      if (climate === undefined) {
+        console.log('CLIMATE UNDEFINED HERE');
+        return Promise.all([
+          setClimate([{
+            sessionId: sessionId,
+            summary: data[0],
+            details: data[1],
+            trends: data[2],
+            date: new Date()
+          }]),
+          setDate(new Date())
+        ])
+      } else {
+        console.log('CLIMATE defined HERE');
+        const newClimate = [...climate];
+        newClimate.push({
+          sessionId: sessionId,
           summary: data[0],
           details: data[1],
-          trends: data[2]
-        }),
-        setDate(new Date())
-      ])
+          trends: data[2],
+          date: new Date()
+        });
+        return Promise.all([
+          setClimate([...climate, {
+            sessionId: sessionId,
+            summary: data[0],
+            details: data[1],
+            trends: data[2],
+            date: new Date()
+          }]),
+          setDate(new Date())
+        ])
+      }
     })
-    .then(() => {
+    /* .then(() => {
       setRenderClimatePdf(true);
     }).then(() => {
-      setTimeout(()=> {printDocument('Classroom Climate', new Date(), 'CC', addToAttachmentList, sessionId)}, 10000)
+      console.log('this is what climate is now', climate);
+      setTimeout(()=> {printDocument('Classroom Climate', new Date(), sessionId, addToAttachmentList, sessionId)}, 10000)
     }).then(() => {
-      setTimeout(() => {setRenderClimatePdf(false)}, 10000);
-      setTimeout(() => {setClimate(undefined)}, 10000);
-    })
+      // setTimeout(() => {setRenderClimatePdf(false)}, 10000);
+      // setTimeout(() => {setClimate(undefined)}, 10000);
+    }) */
+  }
+
+  const attachClimateResult = async (
+    climateResults: Array<typeof attachments>
+  ): Promise<Array<{
+    sessionId: string,
+    summary: ClimateData['summary'],
+    details: ClimateData['details'],
+    trends: ClimateData['trends'],
+    date: Date
+  }> | void> => {
+    const climateData: Array<{
+      sessionId: string,
+      summary: ClimateData['summary'],
+      details: ClimateData['details'],
+      trends: ClimateData['trends'],
+      date: Date
+    }> = [];
+    const getData = function (result: typeof attachments[0]): Promise<void> {
+      return getClimateData(result.id, result.summary, result.details, result.trends).then((data) => {
+        climateData.push({
+          sessionId: result.id,
+          summary: data[0],
+          details: data[1],
+          trends: data[2],
+          date: new Date()
+        })
+      })
+    };
+    if (climateResults.length > 0) {
+      const getDataForAll = Promise.all(climateResults.map(getData))
+      getDataForAll.then(() => {
+        setClimate(climateData);
+        setRenderClimatePdf(true);
+        return climateData
+      })
+    } else {
+      return;
+    }
   }
 
   const attachMathResult = (
@@ -1235,8 +1315,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }).then(() => {
       setTimeout(()=> {printDocument('Math Instruction', new Date(), 'MI', addToAttachmentList, sessionId)}, 10000)
     }).then(() => {
-      setTimeout(() => {setRenderMathPdf(false)}, 10000);
-      setTimeout(() => {setMath(undefined)}, 10000);
+      // setTimeout(() => {setRenderMathPdf(false)}, 10000);
+      // setTimeout(() => {setMath(undefined)}, 10000);
     })
   }
 
@@ -1262,8 +1342,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }).then(() => {
       setTimeout(()=> {printDocument('Level of Instruction', new Date(), 'IN', addToAttachmentList, sessionId)}, 10000)
     }).then(() => {
-      setTimeout(() => {setRenderInstructionPdf(false)}, 10000);
-      setTimeout(() => {setInstruction(undefined)}, 10000);
+      // setTimeout(() => {setRenderInstructionPdf(false)}, 10000);
+      // setTimeout(() => {setInstruction(undefined)}, 10000);
     })
   }
 
@@ -1386,6 +1466,102 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     })
   }
 
+  const getResultsData = async (addToAttachmentList: typeof functionForType): Promise<void> => {
+    let i = 0;
+    if (attachments) {
+      const attachedResults = attachments.filter(obj => {
+        return obj.result === true
+      });
+      const climateResults = attachedResults.filter(obj => {
+        return obj.practice === 'climate'
+      })
+      attachedResults.forEach((result) => {
+        i++;
+        console.log(i, 'doing this for results', result.practice, result.id)
+        if (result.practice === 'transition') {
+          attachTransitionResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+        } else if (result.practice === 'climate') {
+          console.log('CLIMATE', attachments);
+          attachClimateResult(climateResults).then((climateData) => {
+            console.log('THIS IS THE CLIMATE DATA1', climateData);
+          })
+        } else if (result.practice === 'math') {
+          attachMathResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+        } else if (result.practice === 'level') {
+          attachInstructionResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+        } else if (result.practice === 'engagement') {
+          attachEngagementResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+        } else if (result.practice === 'listening') {
+          attachListeningResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+        } else if (result.practice === 'sequential') {
+          attachSequentialResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+        } else if (result.practice === 'Associative and Cooperative') {
+          attachACResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+        }
+        // }
+        /* firebase.getAPInfo(actionPlan.id).then((data: {
+          sessionId: string,
+          goal: string,
+          goalTimeline: firebase.firestore.Timestamp,
+          benefit: string,
+          dateModified: {seconds: number, nanoseconds: number},
+          dateCreated: {seconds: number, nanoseconds: number},
+          coach: string,
+          teacher: string,
+          tool: string
+        }) => {
+          console.log('what IS THE SESSION ID', data)
+          const thisActionPlan = {
+            actionPlanId: actionPlan.id,
+            tool: data.tool,
+            sessionId: data.sessionId,
+            goal: data.goal,
+            goalTimeline: (data.goalTimeline && (typeof data.goalTimeline !== 'string')) ?
+              data.goalTimeline.toDate() : new Date(),
+            benefit: data.benefit,
+            date: changeDateType(data.dateModified),
+            actionSteps: [{step: '', person: '', timeline: new Date()}]
+          };
+          const newActionStepsArray: Array<{
+            step: string,
+            person: string,
+            timeline: Date
+          }> = [];
+          props.firebase.getActionSteps(actionPlan.id).then((actionStepsData: Array<{
+            step: string,
+            person: string,
+            timeline: firebase.firestore.Timestamp
+          }>) => {
+            actionStepsData.forEach((value, index) => {
+              newActionStepsArray[index] = {
+                step: value.step,
+                person: value.person,
+                timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
+                  value.timeline.toDate() :
+                  new Date()
+              };
+            })
+          }).then(() => {
+            console.log('what are the attachments now?', attachments);
+            thisActionPlan.actionSteps = newActionStepsArray;
+            console.log('IS IT A NUMBER?', thisActionPlan);
+            setRenderActionPlan(true);
+            const copyActionPlanData = [...actionPlanData];
+            copyActionPlanData.push(thisActionPlan);
+            setActionPlanData(copyActionPlanData);
+            console.log('getAPData calling print document');
+            printDocument(thisActionPlan.tool, thisActionPlan.date, thisActionPlan.actionPlanId, addToAttachmentList, thisActionPlan.actionPlanId)
+            console.log('what is this action plan', thisActionPlan);
+          }).then(() => {
+            actionPlanData.push(thisActionPlan)
+          })
+        }) */
+      })
+      // console.log('ACTION PLAN DATA ARRAY', actionPlanData, 'length', actionPlanData.length)
+    }
+    // return actionPlanData
+  }
+
   const asyncForEach = async (array: Array<{
     content: string,
     filename: string,
@@ -1405,8 +1581,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   }
 
-  const attachAll = async (): Promise<void> => {
-    setActionPlanDisplay(false);
+  const addToAttachmentList = (base64string: string, id: string): void => {
+    console.log('add to attachment list called');
     let newAttachments: Array<{
       content: string,
       filename: string,
@@ -1421,28 +1597,40 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       trends?: boolean,
       practice?: string
     }> = [];
-    const addToAttachmentList = (base64string: string, id: string): void => {
-      const idMatch = (element: {
-        content: string,
-        filename: string,
-        type: string,
-        disposition: string,
-        id: string,
-        teacherId: string,
-        actionPlan: boolean,
-        result: boolean,
-        summary?: boolean,
-        details?: boolean,
-        trends?: boolean,
-        practice?: string
-      }): boolean => element.id === id;
-      if (attachments) {
-        newAttachments = attachments;
-        const index = newAttachments.findIndex(idMatch);
-        newAttachments[index].content = base64string;
-      }
-    }
+    const idMatch = (element: {
+      content: string,
+      filename: string,
+      type: string,
+      disposition: string,
+      id: string,
+      teacherId: string,
+      actionPlan: boolean,
+      result: boolean,
+      summary?: boolean,
+      details?: boolean,
+      trends?: boolean,
+      practice?: string
+    }): boolean => element.id === id;
     if (attachments) {
+      newAttachments = attachments;
+      const index = newAttachments.findIndex(idMatch);
+      newAttachments[index].content = base64string;
+    }
+  }
+
+  const attachAll = async (): Promise<void> => {
+    setActionPlanDisplay(false);
+    if (attachments) {
+      console.log('what are the attachments before getapdata', attachments);
+      getAPData(addToAttachmentList).then((aPData) => {
+        console.log('this is the apdata', aPData, aPData.length);
+        setRenderActionPlan(true);
+      });
+      getResultsData(addToAttachmentList).then((climateData) => {
+        console.log('THE CLIMATE DATA', climateData)
+        // setClimate(climateData);
+        setRenderClimatePdf(true);
+      });
       await asyncForEach(attachments, async (attachment: {
         content: string,
         filename: string,
@@ -1463,13 +1651,14 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           console.log('if attachments')
           if (attachment.actionPlan) {
             // attachActionPlan(attachment.id, addToAttachmentList);
-            getAPData(addToAttachmentList).then((aPData) => {
+            /* getAPData(addToAttachmentList).then((aPData) => {
               console.log('this is the apdata', aPData, aPData.length);
               setRenderActionPlan(true);
-            })
+            }) */
+            console.log('THIS ATTACHMENT IS AN ACTION PLAN');
           } else if (attachment.result) {
             console.log('else if attachmen.result');
-            if (attachment.practice === 'transition') {
+            /* if (attachment.practice === 'transition') {
               attachTransitionResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'climate') {
               attachClimateResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
@@ -1485,7 +1674,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
               attachSequentialResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
             } else if (attachment.practice === 'Associative and Cooperative') {
               attachACResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
-            }
+            } */
           }
         }
       })
@@ -1494,7 +1683,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 
   const sendMail = async (): Promise<void> => {
     if (recipient === null) {
-      setAlertEnum(Alerts.NO_RECIPIENT);	
+      setAlertEnum(Alerts.NO_RECIPIENT);             
     } else {
       // create the message object to send to funcSendEmail
       const msg: Message = {
@@ -1563,7 +1752,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const greetingText = "Hi " + recipientName;
 
   const chooseOptions = (): JSX.Element => <div style={{padding: '1em'}}>
-	  <h3 style={{fontFamily: 'Arimo'}}>Please choose a recipient for your message.</h3>
+                <h3 style={{fontFamily: 'Arimo'}}>Please choose a recipient for your message.</h3>
   </div>;
 
   const removeResult = (id: string, type: ResultTypeKey): void => {
@@ -1764,27 +1953,35 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         />
       </div>
       ) : (null)}
-      {renderClimatePdf ? (
-        <div
-        id="CC"
-        style={{
-          backgroundColor: '#ffffff',
-          width: '210mm',
-          minHeight: '100mm',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          visibility: 'hidden',
-          position: 'fixed',
-          right: -1000
-        }}
-      >
-        <ClimateResultsPdf
-          data={climate}
-          date={date}
-          teacher={teacherObject}
-        />
-      </div>
-      ) : (null)}
+      {renderClimatePdf && climate ? (
+        climate.map((result, index) => {
+          return (
+            <div
+              key={index}
+              id={result.sessionId}
+              style={{
+                backgroundColor: '#ffffff',
+                width: '210mm',
+                minHeight: '100mm',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                visibility: 'hidden',
+                position: 'fixed',
+                right: -1000
+              }}
+            >
+              <ClimateResultsPdf
+                printDocument={printDocument}
+                id={result.sessionId}
+                data={climate[index]}
+                date={date}
+                teacher={teacherObject}
+                addToAttachmentList={addToAttachmentList}
+              />
+            </div>
+          )
+        })
+       ) : (null)}
       {renderMathPdf ? (
         <div
         id="MI"

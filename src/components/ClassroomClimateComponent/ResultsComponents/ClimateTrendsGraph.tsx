@@ -13,8 +13,10 @@ interface Props {
       fill: boolean,
       lineTension: number
     }>
-  } | undefined
+  } | undefined,
+  completed?(): void
 }
+
 
 /**
  * formatting for transition trends graph, including title and scales for the axes
@@ -82,11 +84,56 @@ class ClimateTrendsGraph extends React.Component<Props, {}> {
    */
   render(): React.ReactElement {
     // const { classes } = this.props;
-
+    const isCompleted = this.props.completed;
     return (
       <Line
         data={this.props.data}
-        options={climateTrendOptions}
+        options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
+          title: {
+            display: false,
+            text: "Classroom Climate Trends",
+            fontSize: 20,
+            fontStyle: "bold"
+          },
+          scales: {
+            xAxes: [
+              {
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: "Date",
+                  fontSize: 18,
+                  fontColor: 'black',
+                  fontFamily: 'Arimo'
+                }
+              }
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 100,
+                  callback: function(value: number): string {
+                    return value + "%";
+                  }
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: "% of Behavior Response Type",
+                  fontSize: 18,
+                  fontColor: 'black',
+                  fontFamily: 'Arimo'
+                }
+              }
+            ]
+          }
+        }}
         width={650}
         height={400}
       />

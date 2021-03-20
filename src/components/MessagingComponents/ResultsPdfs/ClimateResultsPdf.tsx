@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import BehaviorResponsesSummaryChart from '../../ClassroomClimateComponent/ResultsComponents/BehaviorResponsesSummaryChart';
@@ -7,7 +9,7 @@ import BehaviorResponsesDetailsChart from '../../ClassroomClimateComponent/Resul
 import ClimateTrendsGraph from '../../ClassroomClimateComponent/ResultsComponents/ClimateTrendsGraph';
 import ClassroomClimateIconImage from '../../../assets/images/ClassroomClimateIconImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
 
@@ -29,11 +31,28 @@ interface Props {
     }> | undefined
   } | undefined,
   date: Date | undefined,
-  teacher: Types.Teacher | undefined
+  teacher: Types.Teacher | undefined,
+  id: string,
+  printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
+  addToAttachmentList(base64string: string, id: string): void
 }
 
 const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
   
+  // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
+  const [summary, setSummary] = useState(props.data && props.data.summary ? false : true);
+  const [details, setDetails] = useState(props.data && props.data.details ? false : true);
+  const [trends, setTrends] = useState(props.data && props.data.trends ? false : true);
+  const [attached, setAttached] = useState(false);
+
+  useEffect(() => {
+    // generate PDF once all graphs have rendered
+    if (summary && details && trends && !attached) {
+      props.printDocument('Classroom Climate', new Date(), props.id, props.addToAttachmentList, props.id);
+      setAttached(true);
+    }
+  })
+
   /**
    * specifies formatting for child trends
    * @return {object}
@@ -103,7 +122,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
             <Grid item xs={8}>
               <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
                 <Typography variant="h4" align="center" style={{fontFamily: "Arimo"}}>
-                  CLASSROOM CLIMATE RESULTS
+                  CLASSROOM CLIMATE RESULTS {props.id}
                 </Typography>
               </Grid>
             </Grid>
@@ -143,6 +162,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
                 <BehaviorResponsesSummaryChart
                   positiveResponses={props.data.details.specificCount + props.data.details.nonspecificCount}
                   negativeResponses={props.data.details.disapprovalCount + props.data.details.redirectionCount}
+                  completed={(): void => {setSummary(true)}}
                 />
               ) : (null)}
             </Grid>
@@ -160,6 +180,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
                   nonspecificBehaviorCount={props.data.details.nonspecificCount}
                   disapprovalBehaviorCount={props.data.details.disapprovalCount}
                   redirectionsBehaviorCount={props.data.details.redirectionCount}
+                  completed={(): void => {setDetails(true)}}
                 />
               ) : (null)}
             </Grid>
@@ -176,7 +197,10 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
                         lineTension: number;
                         data: Array<number>;
                     }>
-                  } | undefined => handleTrendsFormatData()}
+                  } | undefined => handleTrendsFormatData()
+                  
+                }
+                completed={(): void => {setTrends(true)}}
                 />
               ) : (null)}
             </Grid>
@@ -185,6 +209,11 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
       </Grid>
     </div>
   );
+}
+
+ClimateResultsPdf.propTypes = {
+  printDocument: PropTypes.func.isRequired,
+  addToAttachmentList: PropTypes.func.isRequired
 }
 
 export default (ClimateResultsPdf);
