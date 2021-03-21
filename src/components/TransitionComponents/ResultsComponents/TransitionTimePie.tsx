@@ -7,6 +7,7 @@ import * as Constants from "../../../constants/Constants";
 interface Props {
   transitionTime: number,
   learningActivityTime: number,
+  completed?(): void
 }
 
 /**
@@ -42,11 +43,16 @@ class TransitionTimePie extends React.Component<Props, {}> {
       ]
     };
     const total = this.props.transitionTime + this.props.learningActivityTime;
-
+    const isCompleted = this.props.completed;
     return (
       <Pie
         data={transitionData}
-        options={{ 
+        options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },

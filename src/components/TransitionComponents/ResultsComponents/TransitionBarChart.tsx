@@ -9,7 +9,8 @@ interface Props {
   waiting: number,
   routines: number,
   behaviorManagement: number,
-  other: number
+  other: number,
+  completed?(): void
 }
 
 /**
@@ -38,6 +39,7 @@ class TransitionBarChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const transitionData = {
       labels: [
         "Waiting in Line",
@@ -68,6 +70,11 @@ class TransitionBarChart extends React.Component<Props, {}> {
       <HorizontalBar
         data={transitionData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {

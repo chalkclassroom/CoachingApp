@@ -372,7 +372,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [renderSequentialPdf, setRenderSequentialPdf] = useState(false);
   const [renderACPdf, setRenderACPdf] = useState(false);
   const [teacherObject, setTeacherObject] = useState<Types.Teacher>();
-  const [transition, setTransition] = useState<TransitionData>();
+  const [transition, setTransition] = useState<Array<{
+    sessionId: string,
+    date: Date,
+    summary: TransitionData['summary'],
+    details: TransitionData['details'],
+    trends: TransitionData['trends'],
+  }>>([]);
   const [climate, setClimate] = useState<Array<{
     sessionId: string,
     date: Date,
@@ -591,7 +597,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
  }
 
   const printDocument = async (practice: string | undefined, date: Date, elementId: string, addToAttachmentList: typeof functionForType, id: string): Promise<void> => {
-    console.log('PRINT DOCUMENT CALLED')
+    console.log('PRINT DOCUMENT CALLED');
+    console.log('this is climate', climate)
     const input: HTMLElement = document.getElementById(elementId);
     let base64data: string | ArrayBuffer | null = null;
     let newBase64Data = '';
@@ -1171,31 +1178,43 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     ])
   }
 
-  const attachTransitionResult = (
+  const attachTransitionResult = async (
+    transitionResults: Array<typeof attachments>
+  ): Promise<Array<{
     sessionId: string,
-    summary: boolean | undefined,
-    details: boolean | undefined,
-    trends: boolean | undefined,
-    addToAttachmentList: typeof functionForType
-  ): void => {
-    getTransitionData(sessionId, summary, details, trends).then((data) => {
-      return Promise.all([
-        setTransition({
+    summary: TransitionData['summary'],
+    details: TransitionData['details'],
+    trends: TransitionData['trends'],
+    date: Date
+  }> | void> => {
+    const transitionData: Array<{
+      sessionId: string,
+      summary: TransitionData['summary'],
+      details: TransitionData['details'],
+      trends: TransitionData['trends'],
+      date: Date
+    }> = [];
+    const getData = function (result: typeof attachments[0]): Promise<void> {
+      return getTransitionData(result.id, result.summary, result.details, result.trends).then((data) => {
+        transitionData.push({
+          sessionId: result.id,
           summary: data[0],
           details: data[1],
-          trends: data[2]
-        }),
-        setDate(new Date())
-      ])
-    })
-    .then(() => {
-      setRenderTransitionPdf(true);
-    }).then(() => {
-      setTimeout(()=> {printDocument('Transition Time', new Date(), 'TT', addToAttachmentList, sessionId)}, 10000)
-    }).then(() => {
-      // setTimeout(() => {setRenderTransitionPdf(false)}, 10000);
-      // setTimeout(() => {setTransition(undefined)}, 10000);
-    })
+          trends: data[2],
+          date: new Date()
+        })
+      })
+    };
+    if (transitionResults.length > 0) {
+      const getDataForAll = Promise.all(transitionResults.map(getData))
+      getDataForAll.then(() => {
+        setTransition(transitionData);
+        setRenderTransitionPdf(true);
+        return transitionData
+      })
+    } else {
+      return;
+    }
   }
 
   const attachClimateResultOld = async (
@@ -1472,19 +1491,29 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       const attachedResults = attachments.filter(obj => {
         return obj.result === true
       });
+      const transitionResults = attachedResults.filter(obj => {
+        return obj.practice === 'transition'
+      })
       const climateResults = attachedResults.filter(obj => {
         return obj.practice === 'climate'
       })
+      if (transitionResults.length > 0) {
+        attachTransitionResult(transitionResults)
+      }
+      if (climateResults.length > 0) {
+        attachClimateResult(climateResults)
+      }
       attachedResults.forEach((result) => {
         i++;
         console.log(i, 'doing this for results', result.practice, result.id)
         if (result.practice === 'transition') {
-          attachTransitionResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+          console.log('transition')
+          // attachTransitionResult(transitionResults)
         } else if (result.practice === 'climate') {
           console.log('CLIMATE', attachments);
-          attachClimateResult(climateResults).then((climateData) => {
+          /* attachClimateResult(climateResults).then((climateData) => {
             console.log('THIS IS THE CLIMATE DATA1', climateData);
-          })
+          }) */
         } else if (result.practice === 'math') {
           attachMathResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'level') {
@@ -1629,7 +1658,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       getResultsData(addToAttachmentList).then((climateData) => {
         console.log('THE CLIMATE DATA', climateData)
         // setClimate(climateData);
-        setRenderClimatePdf(true);
+        // setRenderClimatePdf(true);
       });
       await asyncForEach(attachments, async (attachment: {
         content: string,
@@ -1932,26 +1961,34 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           )
         })
       ) : (null)}
-      {renderTransitionPdf ? (
-        <div
-        id="TT"
-        style={{
-          backgroundColor: '#ffffff',
-          width: '210mm',
-          minHeight: '100mm',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          visibility: 'hidden',
-          position: 'fixed',
-          right: -1000
-        }}
-      >
-        <TransitionResultsPdf
-          data={transition}
-          date={date}
-          teacher={teacherObject}
-        />
-      </div>
+      {renderTransitionPdf && transition ? (
+        transition.map((result, index) => {
+          return (
+            <div
+              key={index}
+              id={result.sessionId}
+              style={{
+                backgroundColor: '#ffffff',
+                width: '210mm',
+                minHeight: '100mm',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                visibility: 'hidden',
+                position: 'fixed',
+                right: -1000
+              }}
+            >
+              <TransitionResultsPdf
+                printDocument={printDocument}
+                id={result.sessionId}
+                data={transition[index]}
+                date={date}
+                teacher={teacherObject}
+                addToAttachmentList={addToAttachmentList}
+              />
+            </div>
+          )
+        })
       ) : (null)}
       {renderClimatePdf && climate ? (
         climate.map((result, index) => {

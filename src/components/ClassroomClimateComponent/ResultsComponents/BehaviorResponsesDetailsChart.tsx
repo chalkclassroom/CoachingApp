@@ -145,7 +145,6 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
         }}
         width={650}
         height={400}
-        onComplete
       />
     );
   }

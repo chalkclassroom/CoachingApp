@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TransitionTimePie from '../../TransitionComponents/ResultsComponents/TransitionTimePie';
@@ -6,7 +8,7 @@ import TransitionBarChart from '../../TransitionComponents/ResultsComponents/Tra
 import TransitionTrendsGraph from '../../TransitionComponents/ResultsComponents/TransitionTrendsGraph';
 import TransitionTimeImage from '../../../assets/images/TransitionTimeImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
 
@@ -40,11 +42,28 @@ interface Props {
     }> | undefined
   } | undefined,
   date: Date | undefined,
-  teacher: Types.Teacher | undefined
+  teacher: Types.Teacher | undefined,
+  id: string,
+  printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
+  addToAttachmentList(base64string: string, id: string): void
 }
 
 const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
   
+  // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
+  const [summary, setSummary] = useState(props.data && props.data.summary ? false : true);
+  const [details, setDetails] = useState(props.data && props.data.details ? false : true);
+  const [trends, setTrends] = useState(props.data && props.data.trends ? false : true);
+  const [attached, setAttached] = useState(false);
+
+  useEffect(() => {
+    // generate PDF once all graphs have rendered
+    if (summary && details && trends && !attached) {
+      props.printDocument('Transition Time', new Date(), props.id, props.addToAttachmentList, props.id);
+      setAttached(true);
+    }
+  })
+
   /**
    * specifies formatting for child trends
    * @return {object}
@@ -194,6 +213,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
                 <TransitionTimePie
                   transitionTime={props.data.summary[0].total}
                   learningActivityTime={props.data.summary[0].sessionTotal - props.data.summary[0].total}
+                  completed={(): void => {setSummary(true)}}
                 />
               ) : (null)}
             </Grid>
@@ -206,6 +226,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
                   routines={props.data.details[0].routines}
                   behaviorManagement={props.data.details[0].behaviorManagement}
                   other={props.data.details[0].other}
+                  completed={(): void => {setDetails(true)}}
                 />
               ) : (null)}
             </Grid>
@@ -223,6 +244,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
                         data: Array<number>;
                     }>
                   } | undefined => handleTrendsFormatData()}
+                  completed={(): void => {setTrends(true)}}
                 />
               ) : (null)}
             </Grid>
@@ -231,6 +253,11 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
       </Grid>
     </div>
   );
+}
+
+TransitionResultsPdf.propTypes = {
+  printDocument: PropTypes.func.isRequired,
+  addToAttachmentList: PropTypes.func.isRequired
 }
 
 export default (TransitionResultsPdf);

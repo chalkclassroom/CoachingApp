@@ -5,97 +5,9 @@ import { Line } from "react-chartjs-2";
 
 const styles = {};
 
-
-/**
- * specifies data sets (and formatting) for transition trends graph
- * @type {{datasets: *[], labels: string[][]}}
- */
-
-/**
- * formatting for transition trends graph, including title and scales for the axes
- * @type {{showScale: boolean, pointDot: boolean, scales: {yAxes: {ticks: {min: number, max: number, callback: (function(*): string), beginAtZero: boolean}, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[], xAxes: {display: boolean, scaleLabel: {labelString: string, display: boolean, fontStyle: string}}[]}, title: {display: boolean, fontSize: number, text: string, fontStyle: string}, showLines: boolean}}
- */
-const transitionTrendOptions = {
-  showScale: true,
-  pointDot: true,
-  showLines: true,
-  // title: {
-  //     display: true,
-  //     text: 'Transition Time Trends',
-  //     fontSize: 20,
-  //     fontStyle: 'bold'
-  // },
-  tooltips: {
-    mode: "index",
-    intersect: false
-  },
-  hover: {
-    mode: "nearest",
-    intersect: true
-  },
-  legend: {
-    display: true,
-    labels: {
-      fontColor: 'black'
-    }
-  },
-  scales: {
-    xAxes: [
-      {
-        display: true,
-        scaleLabel: {
-          display: true,
-          labelString: "Date & Total Time in Transition",
-          fontSize: 18,
-          fontColor: 'black',
-          fontFamily: 'Arimo'
-        },
-        ticks: {
-
-        }
-      }
-    ],
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: true,
-          min: 0,
-          max: 100,
-          callback: function(value: number): string {
-            return value + "%";
-          }
-        },
-        scaleLabel: {
-          display: true,
-          labelString: "% of Time Spent in Transition",
-          fontSize: 18,
-          fontColor: 'black',
-          fontFamily: 'Arimo'
-        }
-      }
-    ]
-  },
-  plugins: {
-    datalabels: {
-      display: 'auto',
-      color: 'black',
-      align: function(value: {
-        dataIndex: number,
-        dataset: {
-          data: Array<number>
-        }
-      }): string {
-        return value.dataset.data[value.dataIndex] >= 95 ? "bottom" : "top";
-      },
-      formatter: function(value: number): string {
-        return value + "%";
-      }
-    }
-  }
-};
-
 interface Props {
-  data: object
+  data: object,
+  completed?(): void
 }
 
 /**
@@ -111,10 +23,93 @@ class TransitionTrendsGraph extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     return (
       <Line
         data={this.props.data}
-        options={transitionTrendOptions}
+        options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
+          showScale: true,
+          pointDot: true,
+          showLines: true,
+          // title: {
+          //     display: true,
+          //     text: 'Transition Time Trends',
+          //     fontSize: 20,
+          //     fontStyle: 'bold'
+          // },
+          tooltips: {
+            mode: "index",
+            intersect: false
+          },
+          hover: {
+            mode: "nearest",
+            intersect: true
+          },
+          legend: {
+            display: true,
+            labels: {
+              fontColor: 'black'
+            }
+          },
+          scales: {
+            xAxes: [
+              {
+                display: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: "Date & Total Time in Transition",
+                  fontSize: 18,
+                  fontColor: 'black',
+                  fontFamily: 'Arimo'
+                },
+                ticks: {
+
+                }
+              }
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 100,
+                  callback: function(value: number): string {
+                    return value + "%";
+                  }
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: "% of Time Spent in Transition",
+                  fontSize: 18,
+                  fontColor: 'black',
+                  fontFamily: 'Arimo'
+                }
+              }
+            ]
+          },
+          plugins: {
+            datalabels: {
+              display: 'auto',
+              color: 'black',
+              align: function(value: {
+                dataIndex: number,
+                dataset: {
+                  data: Array<number>
+                }
+              }): string {
+                return value.dataset.data[value.dataIndex] >= 95 ? "bottom" : "top";
+              },
+              formatter: function(value: number): string {
+                return value + "%";
+              }
+            }
+          }
+        }}
         width={600}
         height={350}
       />

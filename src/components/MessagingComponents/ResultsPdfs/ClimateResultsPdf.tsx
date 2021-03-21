@@ -122,7 +122,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
             <Grid item xs={8}>
               <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
                 <Typography variant="h4" align="center" style={{fontFamily: "Arimo"}}>
-                  CLASSROOM CLIMATE RESULTS {props.id}
+                  CLASSROOM CLIMATE RESULTS
                 </Typography>
               </Grid>
             </Grid>
