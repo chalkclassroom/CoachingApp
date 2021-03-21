@@ -6,6 +6,7 @@ import * as Constants from '../../../constants/Constants';
 interface Props {
   sequential: number,
   notSequential: number,
+  completed?(): void
 }
 
 /**
@@ -31,6 +32,7 @@ class ChildPieSummary extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const childBehaviorsData = {
       labels: [
         "Sequential Activities",
@@ -50,6 +52,11 @@ class ChildPieSummary extends React.Component<Props, {}> {
       <Pie
         data={childBehaviorsData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },

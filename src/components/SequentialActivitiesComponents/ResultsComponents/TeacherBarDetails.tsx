@@ -7,7 +7,8 @@ interface Props {
   teacher2: number,
   teacher3: number,
   teacher4: number,
-  totalVisits: number
+  totalVisits: number,
+  completed?(): void
 }
 
 /**
@@ -36,6 +37,7 @@ class TeacherBarDetails extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const teacherBehaviorsData = {
       labels: [
         ["Helping children do sequential", "activities with manipulatives or toys"],
@@ -56,6 +58,11 @@ class TeacherBarDetails extends React.Component<Props, {}> {
       <HorizontalBar
         data={teacherBehaviorsData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
