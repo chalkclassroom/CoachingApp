@@ -6,7 +6,8 @@ import * as Constants from "../../../constants/Constants";
 interface Props {
   support: number,
   noSupport: number,
-  noTeacherOpp: number
+  noTeacherOpp: number,
+  completed?(): void
 }
 
 /**
@@ -33,6 +34,7 @@ class TeacherPieSummary extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const teacherBehaviorsData = {
       labels: [
         "Teacher Support for Math",
@@ -54,6 +56,11 @@ class TeacherPieSummary extends React.Component<Props, {}> {
       <Pie
         data={teacherBehaviorsData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },

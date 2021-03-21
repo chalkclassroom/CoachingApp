@@ -386,7 +386,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     details: ClimateData['details'],
     trends: ClimateData['trends'],
   }>>([]);
-  const [math, setMath] = useState<MathData>();
+  const [math, setMath] = useState<Array<{
+    sessionId: string,
+    date: Date,
+    childSummary: MathData['childSummary'],
+    teacherSummary: MathData['teacherSummary'],
+    childDetails: MathData['childDetails'],
+    teacherDetails: MathData['teacherDetails'],
+    childTrends: MathData['childTrends'],
+    teacherTrends: MathData['teacherTrends']
+  }>>();
   const [instruction, setInstruction] = useState<InstructionData>();
   const [engagement, setEngagement] = useState<EngagementData>();
   const [listening, setListening]= useState<ListeningData>();
@@ -598,7 +607,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
 
   const printDocument = async (practice: string | undefined, date: Date, elementId: string, addToAttachmentList: typeof functionForType, id: string): Promise<void> => {
     console.log('PRINT DOCUMENT CALLED');
-    console.log('this is climate', climate)
     const input: HTMLElement = document.getElementById(elementId);
     let base64data: string | ArrayBuffer | null = null;
     let newBase64Data = '';
@@ -1309,34 +1317,53 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   }
 
-  const attachMathResult = (
+  const attachMathResult = async (
+    mathResults: Array<typeof attachments>
+  ): Promise<Array<{
     sessionId: string,
-    summary: boolean | undefined,
-    details: boolean | undefined,
-    trends: boolean | undefined,
-    addToAttachmentList: typeof functionForType
-  ): void => {
-    getMathData(sessionId, summary, details, trends).then((data) => {
-      return Promise.all([
-        setMath({
+    childSummary: MathData['childSummary'],
+    teacherSummary: MathData['teacherSummary'],
+    childDetails: MathData['childDetails'],
+    teacherDetails: MathData['teacherDetails'],
+    childTrends: MathData['childTrends'],
+    teacherTrends: MathData['teacherTrends'],
+    date: Date
+  }> | void> => {
+    const mathData: Array<{
+      sessionId: string,
+      childSummary: MathData['childSummary'],
+      teacherSummary: MathData['teacherSummary'],
+      childDetails: MathData['childDetails'],
+      teacherDetails: MathData['teacherDetails'],
+      childTrends: MathData['childTrends'],
+      teacherTrends: MathData['teacherTrends'],
+      date: Date
+    }> = [];
+    const getData = function (result: typeof attachments[0]): Promise<void> {
+      return getMathData(result.id, result.summary, result.details, result.trends).then((data) => {
+        mathData.push({
+          sessionId: result.id,
           childSummary: data[0],
           teacherSummary: data[1],
           childDetails: data[2] ? {math1: data[2].math1, math2: data[2].math2, math3: data[2].math3, math4: data[2].math4} : undefined,
           teacherDetails: data[2] ? {teacher1: data[2].teacher1, teacher2: data[2].teacher2, teacher3: data[2].teacher3, teacher4: data[2].teacher4} : undefined,
           childTrends: data[3],
-          teacherTrends: data[4]
-        }),
-        setDate(new Date())
-      ])
-    })
-    .then(() => {
-      setRenderMathPdf(true);
-    }).then(() => {
-      setTimeout(()=> {printDocument('Math Instruction', new Date(), 'MI', addToAttachmentList, sessionId)}, 10000)
-    }).then(() => {
-      // setTimeout(() => {setRenderMathPdf(false)}, 10000);
-      // setTimeout(() => {setMath(undefined)}, 10000);
-    })
+          teacherTrends: data[4],
+          date: new Date()
+        })
+      })
+    };
+    if (mathResults.length > 0) {
+      const getDataForAll = Promise.all(mathResults.map(getData))
+      getDataForAll.then(() => {
+        console.log('THIS IS MATH DATA', mathData)
+        setMath(mathData);
+        setRenderMathPdf(true);
+        return mathData
+      })
+    } else {
+      return;
+    }
   }
 
   const attachInstructionResult = (
@@ -1493,15 +1520,21 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       });
       const transitionResults = attachedResults.filter(obj => {
         return obj.practice === 'transition'
-      })
+      });
       const climateResults = attachedResults.filter(obj => {
         return obj.practice === 'climate'
+      });
+      const mathResults = attachedResults.filter(obj => {
+        return obj.practice === 'math'
       })
       if (transitionResults.length > 0) {
         attachTransitionResult(transitionResults)
       }
       if (climateResults.length > 0) {
         attachClimateResult(climateResults)
+      }
+      if (mathResults.length > 0) {
+        attachMathResult(mathResults)
       }
       attachedResults.forEach((result) => {
         i++;
@@ -1515,7 +1548,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
             console.log('THIS IS THE CLIMATE DATA1', climateData);
           }) */
         } else if (result.practice === 'math') {
-          attachMathResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+          // attachMathResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'level') {
           attachInstructionResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'engagement') {
@@ -2019,26 +2052,34 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           )
         })
        ) : (null)}
-      {renderMathPdf ? (
-        <div
-        id="MI"
-        style={{
-          backgroundColor: '#ffffff',
-          width: '210mm',
-          minHeight: '100mm',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          visibility: 'hidden',
-          position: 'fixed',
-          right: -1000
-        }}
-      >
-        <MathResultsPdf
-          data={math}
-          date={date}
-          teacher={teacherObject}
-        />
-      </div>
+      {renderMathPdf && math ? (
+        math.map((result, index) => {
+          return (
+            <div
+              key={index}
+              id={result.sessionId}
+              style={{
+                backgroundColor: '#ffffff',
+                width: '210mm',
+                minHeight: '100mm',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                visibility: 'hidden',
+                position: 'fixed',
+                right: -1000
+              }}
+            >
+              <MathResultsPdf
+                printDocument={printDocument}
+                id={result.sessionId}
+                data={math[index]}
+                date={date}
+                teacher={teacherObject}
+                addToAttachmentList={addToAttachmentList}
+              />
+            </div>
+          )
+        })
       ) : (null)}
       {renderInstructionPdf ? (
         <div

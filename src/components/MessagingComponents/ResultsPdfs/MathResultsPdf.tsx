@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ChildPieSummary from '../../MathInstructionComponents/ResultsComponents/ChildPieSummary';
@@ -9,7 +11,7 @@ import ChildLineTrends from './ChildLineTrends';
 import TeacherLineTrends from './TeacherLineTrends';
 import MathIconImage from '../../../assets/images/MathIconImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
 
@@ -49,11 +51,33 @@ interface Props {
     }> | undefined,
   } | undefined,
   date: Date | undefined,
-  teacher: Types.Teacher | undefined
+  teacher: Types.Teacher | undefined,
+  id: string,
+  printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
+  addToAttachmentList(base64string: string, id: string): void
 }
 
 const MathResultsPdf: React.FC<Props> = (props: Props) => {
+
+  const {printDocument, id, addToAttachmentList, data, date, teacher} = props;
   
+  // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
+  const [childSummary, setChildSummary] = useState(data && data.childSummary ? false : true);
+  const [teacherSummary, setTeacherSummary] = useState(data && data.teacherSummary ? false : true);
+  const [childDetails, setChildDetails] = useState(data && data.childDetails ? false : true);
+  const [teacherDetails, setTeacherDetails] = useState(data && data.teacherDetails ? false : true);
+  const [childTrends, setChildTrends] = useState(data && data.childTrends ? false : true);
+  const [teacherTrends, setTeacherTrends] = useState(data && data.teacherTrends ? false : true);
+  const [attached, setAttached] = useState(false);
+
+  useEffect(() => {
+    // generate PDF once all graphs have rendered
+    if (childSummary && teacherSummary && childDetails && teacherDetails && childTrends && teacherTrends && !attached) {
+      printDocument('Math Instruction', new Date(), id, addToAttachmentList, id);
+      setAttached(true);
+    }
+  })
+
   /**
    * specifies formatting for child trends
    * @return {object}
@@ -69,13 +93,13 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
       data: Array<number>
     }>
   } | undefined => {
-    if (props.data) {
+    if (data) {
       return {
-        labels: props.data.childTrends ? props.data.childTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
+        labels: data.childTrends ? data.childTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
         datasets: [
           {
             label: "Non-Math Activities",
-            data: props.data.childTrends ? props.data.childTrends.map(observation => Math.round((observation.notMath / (observation.math + observation.notMath)) * 100)) : [],
+            data: data.childTrends ? data.childTrends.map(observation => Math.round((observation.notMath / (observation.math + observation.notMath)) * 100)) : [],
             backgroundColor: '#ec2409',
             borderColor: '#ec2409',
             fill: false,
@@ -83,7 +107,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
           },
           {
             label: "Math",
-            data: props.data.childTrends ? props.data.childTrends.map(observation => Math.round((observation.math / (observation.math + observation.notMath)) * 100)) : [],
+            data: data.childTrends ? data.childTrends.map(observation => Math.round((observation.math / (observation.math + observation.notMath)) * 100)) : [],
             backgroundColor: Constants.Colors.MI,
             borderColor: Constants.Colors.MI,
             fill: false,
@@ -111,9 +135,9 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
       data: Array<number>
     }>,
   } | undefined => {
-    if (props.data) {
+    if (data) {
       return {
-        labels: props.data.teacherTrends ? props.data.teacherTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
+        labels: data.teacherTrends ? data.teacherTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
         datasets: [
           {
             label: "Teacher Not at Center",
@@ -121,7 +145,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.Colors.NotPresent,
             fill: false,
             lineTension: 0,
-            data: props.data.teacherTrends ? props.data.teacherTrends.map(observation => Math.round((observation.noOpportunity / (observation.noOpportunity + observation.noSupport + observation.support)) * 100)) : [],
+            data: data.teacherTrends ? data.teacherTrends.map(observation => Math.round((observation.noOpportunity / (observation.noOpportunity + observation.noSupport + observation.support)) * 100)) : [],
           },
           {
             label: "No Support",
@@ -129,7 +153,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.Colors.RedGraph,
             fill: false,
             lineTension: 0,
-            data: props.data.teacherTrends ? props.data.teacherTrends.map(observation => Math.round((observation.noSupport / (observation.noOpportunity + observation.noSupport + observation.support)) * 100)) : [],
+            data: data.teacherTrends ? data.teacherTrends.map(observation => Math.round((observation.noSupport / (observation.noOpportunity + observation.noSupport + observation.support)) * 100)) : [],
           },
           {
             label: "Teacher Support",
@@ -137,7 +161,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.Colors.AppBar,
             fill: false,
             lineTension: 0,
-            data: props.data.teacherTrends ? props.data.teacherTrends.map(observation => Math.round((observation.support / (observation.noOpportunity + observation.noSupport + observation.support)) * 100)) : [],
+            data: data.teacherTrends ? data.teacherTrends.map(observation => Math.round((observation.support / (observation.noOpportunity + observation.noSupport + observation.support)) * 100)) : [],
           },
         ]
       };
@@ -196,58 +220,62 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
             style={{fontFamily: 'Arimo'}}
           >
             <Grid item xs={4}>
-              {props.teacher ? (props.teacher.firstName + " " + props.teacher.lastName) : (null)}
+              {teacher ? (teacher.firstName + " " + teacher.lastName) : (null)}
             </Grid>
             <Grid item xs={4} />
             <Grid item xs={4}>
               <Grid container direction="row" justify="flex-end">
-                {moment(props.date).format('MM/DD/YYYY')}
+                {moment(date).format('MM/DD/YYYY')}
               </Grid>
             </Grid>
           </Grid>
         </Grid>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
-            {props.data && props.data.childSummary && props.data.teacherSummary ? (
+            {data && data.childSummary && data.teacherSummary ? (
               <Grid item style={{paddingTop: '1em'}}>
                 <ChildPieSummary
-                  math={props.data.childSummary.math}
-                  notMath={props.data.childSummary.notMath}
+                  math={data.childSummary.math}
+                  notMath={data.childSummary.notMath}
+                  completed={(): void => {setChildSummary(true)}}
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.teacherSummary ? (
+            {data && data.teacherSummary ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <TeacherPieSummary
-                  support={props.data.teacherSummary.support}
-                  noSupport={props.data.teacherSummary.noSupport}
-                  noTeacherOpp={props.data.teacherSummary.noOpportunity}
+                  support={data.teacherSummary.support}
+                  noSupport={data.teacherSummary.noSupport}
+                  noTeacherOpp={data.teacherSummary.noOpportunity}
+                  completed={(): void => {setTeacherSummary(true)}}
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.childDetails ? (
+            {data && data.childDetails ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <ChildBarDetails
-                  math1={props.data.childDetails.math1}
-                  math2={props.data.childDetails.math2}
-                  math3={props.data.childDetails.math3}
-                  math4={props.data.childDetails.math4}
-                  totalVisits={props.data.childSummary.math + props.data.childSummary.notMath}
+                  math1={data.childDetails.math1}
+                  math2={data.childDetails.math2}
+                  math3={data.childDetails.math3}
+                  math4={data.childDetails.math4}
+                  totalVisits={data.childSummary.math + data.childSummary.notMath}
+                  completed={(): void => {setChildDetails(true)}}
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.teacherDetails ? (
+            {data && data.teacherDetails ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <TeacherBarDetails
-                  teacher1={props.data.teacherDetails.teacher1}
-                  teacher2={props.data.teacherDetails.teacher2}
-                  teacher3={props.data.teacherDetails.teacher3}
-                  teacher4={props.data.teacherDetails.teacher4}
-                  totalVisits={props.data.childSummary.math + props.data.childSummary.notMath}
+                  teacher1={data.teacherDetails.teacher1}
+                  teacher2={data.teacherDetails.teacher2}
+                  teacher3={data.teacherDetails.teacher3}
+                  teacher4={data.teacherDetails.teacher4}
+                  totalVisits={data.childSummary.math + data.childSummary.notMath}
+                  completed={(): void => {setTeacherDetails(true)}}
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.childTrends ? (
+            {data && data.childTrends ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <ChildLineTrends
                   data={(): {
@@ -261,10 +289,11 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
                       data: Array<number>;
                     }>
                   } | undefined => handleTrendsChildFormatData()}
+                  completed={(): void => {setChildTrends(true)}}
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.teacherTrends ? (
+            {data && data.teacherTrends ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <TeacherLineTrends
                   data={(): {
@@ -278,6 +307,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
                       data: Array<number>;
                     }>
                   } | undefined => handleTrendsTeacherFormatData()}
+                  completed={(): void => {setTeacherTrends(true)}}
                 />
               </Grid>
             ) : (null)}
@@ -286,6 +316,11 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
       </Grid>
     </div>
   );
+}
+
+MathResultsPdf.propTypes = {
+  printDocument: PropTypes.func.isRequired,
+  addToAttachmentList: PropTypes.func.isRequired
 }
 
 export default (MathResultsPdf);

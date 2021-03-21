@@ -9,7 +9,8 @@ interface Props {
   math2: number,
   math3: number,
   math4: number,
-  totalVisits: number
+  totalVisits: number,
+  completed?(): void
 }
 
 /**
@@ -38,6 +39,7 @@ class ChildBarDetails extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const childBehaviorsData = {
       labels: [
         "Counting and Numbers",
@@ -58,6 +60,11 @@ class ChildBarDetails extends React.Component<Props, {}> {
       <HorizontalBar
         data={childBehaviorsData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
