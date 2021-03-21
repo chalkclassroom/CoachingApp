@@ -9,7 +9,8 @@ interface Props {
   ac2: number,
   ac3: number,
   ac4: number,
-  totalVisits: number
+  totalVisits: number,
+  completed?(): void
 }
 
 /**
@@ -30,7 +31,8 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
     ac2: PropTypes.number.isRequired,
     ac3: PropTypes.number.isRequired,
     ac4: PropTypes.number.isRequired,
-    totalVisits: PropTypes.number.isRequired
+    totalVisits: PropTypes.number.isRequired,
+    completed: PropTypes.func
   };
 
   /**
@@ -38,6 +40,7 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const childBehaviorsData = {
       labels: [
         ["Doing an activity together", "that does not have a", "predetermined sequence"],
@@ -57,6 +60,11 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
       <HorizontalBar
         data={childBehaviorsData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {

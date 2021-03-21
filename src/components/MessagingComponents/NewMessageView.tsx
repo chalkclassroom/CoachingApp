@@ -409,7 +409,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     childTrends: SequentialData['childTrends'],
     teacherTrends: SequentialData['teacherTrends']
   }>>();
-  const [ac, setAC] = useState<ACData>();
+  const [ac, setAC] = useState<Array<{
+    sessionId: string,
+    date: Date,
+    childSummary: ACData['childSummary'],
+    teacherSummary: ACData['teacherSummary'],
+    childDetails: ACData['childDetails'],
+    teacherDetails: ACData['teacherDetails'],
+    childTrends: ACData['childTrends'],
+    teacherTrends: ACData['teacherTrends']
+  }>>();
   const [actionPlanData, setActionPlanData] = useState<Array<{
     actionPlanId: string,
     tool: string,
@@ -1509,37 +1518,56 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   }
 
-  const attachSequentialResult2 = (
+  const attachACResult = async (
+    acResults: Array<typeof attachments>
+  ): Promise<Array<{
     sessionId: string,
-    summary: boolean | undefined,
-    details: boolean | undefined,
-    trends: boolean | undefined,
-    addToAttachmentList: typeof functionForType
-  ): void => {
-    getSequentialData(sessionId, summary, details, trends).then((data) => {
-      return Promise.all([
-        setSequential({
+    childSummary: ACData['childSummary'],
+    teacherSummary: ACData['teacherSummary'],
+    childDetails: ACData['childDetails'],
+    teacherDetails: ACData['teacherDetails'],
+    childTrends: ACData['childTrends'],
+    teacherTrends: ACData['teacherTrends'],
+    date: Date
+  }> | void> => {
+    const acData: Array<{
+      sessionId: string,
+      childSummary: ACData['childSummary'],
+      teacherSummary: ACData['teacherSummary'],
+      childDetails: ACData['childDetails'],
+      teacherDetails: ACData['teacherDetails'],
+      childTrends: ACData['childTrends'],
+      teacherTrends: ACData['teacherTrends'],
+      date: Date
+    }> = [];
+    const getData = function (result: typeof attachments[0]): Promise<void> {
+      return getACData(result.id, result.summary, result.details, result.trends).then((data) => {
+        acData.push({
+          sessionId: result.id,
           childSummary: data[0],
           teacherSummary: data[1],
-          childDetails: data[2] ? {sequential1: data[2].sequential1, sequential2: data[2].sequential2, sequential3: data[2].sequential3, sequential4: data[2].sequential4} : undefined,
+          childDetails: data[2] ? {ac1: data[2].ac1, ac2: data[2].ac2, ac3: data[2].ac3, ac4: data[2].ac4} : undefined,
           teacherDetails: data[2] ? {teacher1: data[2].teacher1, teacher2: data[2].teacher2, teacher3: data[2].teacher3, teacher4: data[2].teacher4} : undefined,
           childTrends: data[3],
-          teacherTrends: data[4]
-        }),
-        setDate(new Date())
-      ])
-    })
-    .then(() => {
-      setRenderSequentialPdf(true);
-    }).then(() => {
-      setTimeout(()=> {printDocument('Sequential Activities', new Date(), 'SA', addToAttachmentList, sessionId)}, 10000)
-    }).then(() => {
-      setTimeout(() => {setRenderSequentialPdf(false)}, 10000);
-      setTimeout(() => {setSequential(undefined)}, 10000);
-    })
+          teacherTrends: data[4],
+          date: new Date()
+        })
+      })
+    };
+    if (acResults.length > 0) {
+      const getDataForAll = Promise.all(acResults.map(getData))
+      getDataForAll.then(() => {
+        console.log('THIS IS AC DATA', acData)
+        setAC(acData);
+        setRenderACPdf(true);
+        return acData
+      })
+    } else {
+      return;
+    }
   }
 
-  const attachACResult = (
+  const attachACResult2 = (
     sessionId: string,
     summary: boolean | undefined,
     details: boolean | undefined,
@@ -1588,6 +1616,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       const sequentialResults = attachedResults.filter(obj => {
         return obj.practice === 'sequential'
       })
+      const acResults = attachedResults.filter(obj => {
+        return obj.practice === 'Associative and Cooperative'
+      });
       if (transitionResults.length > 0) {
         attachTransitionResult(transitionResults)
       }
@@ -1599,6 +1630,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       }
       if (sequentialResults.length > 0) {
         attachSequentialResult(sequentialResults)
+      }
+      if (acResults.length > 0) {
+        attachACResult(acResults)
       }
       attachedResults.forEach((result) => {
         i++;
@@ -1622,7 +1656,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         } else if (result.practice === 'sequential') {
           // attachSequentialResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'Associative and Cooperative') {
-          attachACResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+          // attachACResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         }
         // }
         /* firebase.getAPInfo(actionPlan.id).then((data: {
@@ -2237,26 +2271,34 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           )
         })
       ) : (null)}
-      {renderACPdf ? (
-        <div
-        id="AC"
-        style={{
-          backgroundColor: '#ffffff',
-          width: '210mm',
-          minHeight: '100mm',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          visibility: 'hidden',
-          position: 'fixed',
-          right: -1000
-        }}
-      >
-        <ACResultsPdf
-          data={ac}
-          date={date}
-          teacher={teacherObject}
-        />
-      </div>
+      {renderACPdf && ac ? (
+        ac.map((result, index) => {
+          return (
+            <div
+              key={index}
+              id={result.sessionId}
+              style={{
+                backgroundColor: '#ffffff',
+                width: '210mm',
+                minHeight: '100mm',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                visibility: 'hidden',
+                position: 'fixed',
+                right: -1000
+              }}
+            >
+              <ACResultsPdf
+                printDocument={printDocument}
+                id={result.sessionId}
+                data={ac[index]}
+                date={date}
+                teacher={teacherObject}
+                addToAttachmentList={addToAttachmentList}
+              />
+            </div>
+          )
+        })
       ) : (null)}
       <Grid container direction="column" justify="flex-start" alignItems="center" style={{width: '100%'}}>
         <Grid item style={{width: '100%'}}>

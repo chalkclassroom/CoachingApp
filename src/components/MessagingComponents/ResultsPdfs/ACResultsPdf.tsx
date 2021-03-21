@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ChildBehaviorsPie from '../../AssociativeCooperativeComponents/ResultsComponents/ChildBehaviorsPie';
@@ -9,7 +11,7 @@ import ChildLineTrends from './ChildLineTrends';
 import TeacherLineTrends from './TeacherLineTrends';
 import AssocCoopInteractionsImage from '../../../assets/images/AssocCoopInteractionsImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
 
@@ -51,11 +53,33 @@ interface Props {
     }> | undefined,
   } | undefined,
   date: Date | undefined,
-  teacher: Types.Teacher | undefined
+  teacher: Types.Teacher | undefined,
+  id: string,
+  printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
+  addToAttachmentList(base64string: string, id: string): void
 }
 
 const ACResultsPdf: React.FC<Props> = (props: Props) => {
   
+  const {printDocument, id, addToAttachmentList, data, date, teacher} = props;
+  
+  // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
+  const [childSummary, setChildSummary] = useState(data && data.childSummary ? false : true);
+  const [teacherSummary, setTeacherSummary] = useState(data && data.teacherSummary ? false : true);
+  const [childDetails, setChildDetails] = useState(data && data.childDetails ? false : true);
+  const [teacherDetails, setTeacherDetails] = useState(data && data.teacherDetails ? false : true);
+  const [childTrends, setChildTrends] = useState(data && data.childTrends ? false : true);
+  const [teacherTrends, setTeacherTrends] = useState(data && data.teacherTrends ? false : true);
+  const [attached, setAttached] = useState(false);
+
+  useEffect(() => {
+    // generate PDF once all graphs have rendered
+    if (childSummary && teacherSummary && childDetails && teacherDetails && childTrends && teacherTrends && !attached) {
+      printDocument('Associative and Cooperative', new Date(), id, addToAttachmentList, id);
+      setAttached(true);
+    }
+  })
+
   /**
    * specifies formatting for child trends
    * @return {object}
@@ -71,9 +95,9 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
       data: Array<number>
     }>
   } | undefined => {
-    if (props.data) {
+    if (data) {
       return {
-        labels: props.data.childTrends ? props.data.childTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
+        labels: data.childTrends ? data.childTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
         datasets: [
           {
             label: "No Opportunity",
@@ -81,7 +105,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.Colors.NotPresent,
             fill: false,
             lineTension: 0,
-            data: props.data.childTrends ? props.data.childTrends.map(observation => Math.round((observation.noOpportunity / (observation.noOpportunity + observation.noac + observation.ac)) * 100)) : []
+            data: data.childTrends ? data.childTrends.map(observation => Math.round((observation.noOpportunity / (observation.noOpportunity + observation.noac + observation.ac)) * 100)) : []
           },
           {
             label: "No Assoc./Coop. Interaction",
@@ -89,7 +113,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: '#ec2409',
             fill: false,
             lineTension: 0,
-            data: props.data.childTrends ? props.data.childTrends.map(observation => Math.round((observation.noac / (observation.noOpportunity + observation.noac + observation.ac)) * 100)) : []
+            data: data.childTrends ? data.childTrends.map(observation => Math.round((observation.noac / (observation.noOpportunity + observation.noac + observation.ac)) * 100)) : []
           },
           {
             label: "Associative and/or Cooperative",
@@ -97,7 +121,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.Colors.AC,
             fill: false,
             lineTension: 0,
-            data: props.data.childTrends ? props.data.childTrends.map(observation => Math.round((observation.ac / (observation.noOpportunity + observation.noac + observation.ac)) * 100)) : []
+            data: data.childTrends ? data.childTrends.map(observation => Math.round((observation.ac / (observation.noOpportunity + observation.noac + observation.ac)) * 100)) : []
           }
         ]
       }
@@ -121,9 +145,9 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
       data: Array<number>
     }>,
   } | undefined => {
-    if (props.data) {
+    if (data) {
       return {
-        labels: props.data.teacherTrends ? props.data.teacherTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
+        labels: data.teacherTrends ? data.teacherTrends.map(observation => moment(observation.startDate.value).format("MMM Do")) : [],
         datasets: [
           {
             label: "Teacher Not at Center",
@@ -131,7 +155,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.Colors.NotPresent,
             fill: false,
             lineTension: 0,
-            data: props.data.teacherTrends ? props.data.teacherTrends.map(observation => Math.round((observation.noOpportunity / (observation.noOpportunity + observation.nosupport + observation.support)) * 100)) : [],
+            data: data.teacherTrends ? data.teacherTrends.map(observation => Math.round((observation.noOpportunity / (observation.noOpportunity + observation.nosupport + observation.support)) * 100)) : [],
           },
           {
             label: "No Support",
@@ -139,7 +163,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.Colors.RedGraph,
             fill: false,
             lineTension: 0,
-            data: props.data.teacherTrends ? props.data.teacherTrends.map(observation => Math.round((observation.nosupport / (observation.noOpportunity + observation.nosupport + observation.support)) * 100)) : [],
+            data: data.teacherTrends ? data.teacherTrends.map(observation => Math.round((observation.nosupport / (observation.noOpportunity + observation.nosupport + observation.support)) * 100)) : [],
           },
           {
             label: "Teacher Support",
@@ -147,7 +171,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.Colors.AppBar,
             fill: false,
             lineTension: 0,
-            data: props.data.teacherTrends ? props.data.teacherTrends.map(observation => Math.round((observation.support / (observation.noOpportunity + observation.nosupport + observation.support)) * 100)) : [],
+            data: data.teacherTrends ? data.teacherTrends.map(observation => Math.round((observation.support / (observation.noOpportunity + observation.nosupport + observation.support)) * 100)) : [],
           },
         ]
       };
@@ -206,67 +230,71 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
             style={{fontFamily: 'Arimo'}}
           >
             <Grid item xs={4}>
-              {props.teacher ? (props.teacher.firstName + " " + props.teacher.lastName) : (null)}
+              {teacher ? (teacher.firstName + " " + teacher.lastName) : (null)}
             </Grid>
             <Grid item xs={4} />
             <Grid item xs={4}>
               <Grid container direction="row" justify="flex-end">
-                {moment(props.date).format('MM/DD/YYYY')}
+                {moment(date).format('MM/DD/YYYY')}
               </Grid>
             </Grid>
           </Grid>
         </Grid>
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
-            {props.data && props.data.childSummary && props.data.teacherSummary ? (
+            {data && data.childSummary && data.teacherSummary ? (
               <Grid item style={{paddingTop: '1em'}}>
                 <ChildBehaviorsPie
-                  ac={props.data.childSummary.ac}
-                  noAc={props.data.childSummary.noac}
-                  noChildOpp={props.data.childSummary.noOpportunity}
+                  ac={data.childSummary.ac}
+                  noAc={data.childSummary.noac}
+                  noChildOpp={data.childSummary.noOpportunity}
+                  completed={(): void => {setChildSummary(true)}}
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.teacherSummary ? (
+            {data && data.teacherSummary ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <TeacherBehaviorsPie
-                  support={props.data.teacherSummary.support}
-                  noSupport={props.data.teacherSummary.noSupport}
-                  noTeacherOpp={props.data.teacherSummary.noOpportunity}
+                  support={data.teacherSummary.support}
+                  noSupport={data.teacherSummary.noSupport}
+                  noTeacherOpp={data.teacherSummary.noOpportunity}
+                  completed={(): void => {setTeacherSummary(true)}}
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.childDetails ? (
+            {data && data.childDetails ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <ChildBehaviorsDetailsHorizontalBar
-                  ac1={props.data.childDetails.ac1}
-                  ac2={props.data.childDetails.ac2}
-                  ac3={props.data.childDetails.ac3}
-                  ac4={props.data.childDetails.ac4}
+                  ac1={data.childDetails.ac1}
+                  ac2={data.childDetails.ac2}
+                  ac3={data.childDetails.ac3}
+                  ac4={data.childDetails.ac4}
                   totalVisits={
-                    props.data.childSummary.ac +
-                    props.data.childSummary.noac +
-                    props.data.childSummary.noOpportunity
+                    data.childSummary.ac +
+                    data.childSummary.noac +
+                    data.childSummary.noOpportunity
                   }
+                  completed={(): void => {setChildDetails(true)}}
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.teacherDetails ? (
+            {data && data.teacherDetails ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <TeacherBehaviorsDetailsHorizontalBar
-                  teacher1={props.data.teacherDetails.teacher1}
-                  teacher2={props.data.teacherDetails.teacher2}
-                  teacher3={props.data.teacherDetails.teacher3}
-                  teacher4={props.data.teacherDetails.teacher4}
+                  teacher1={data.teacherDetails.teacher1}
+                  teacher2={data.teacherDetails.teacher2}
+                  teacher3={data.teacherDetails.teacher3}
+                  teacher4={data.teacherDetails.teacher4}
                   totalVisits={
-                    props.data.childSummary.ac +
-                    props.data.childSummary.noac +
-                    props.data.childSummary.noOpportunity
+                    data.childSummary.ac +
+                    data.childSummary.noac +
+                    data.childSummary.noOpportunity
                   }
+                  completed={(): void => {setTeacherDetails(true)}}
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.childTrends ? (
+            {data && data.childTrends ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <ChildLineTrends
                   data={(): {
@@ -280,10 +308,11 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
                       data: Array<number>;
                     }>
                   } | undefined => handleTrendsChildFormatData()}
+                  completed={(): void => {setChildTrends(true)}}
                 />
               </Grid>
             ) : (null)}
-            {props.data && props.data.teacherTrends ? (
+            {data && data.teacherTrends ? (
               <Grid item style={{paddingTop: '8em'}}>
                 <TeacherLineTrends
                   data={(): {
@@ -297,6 +326,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
                       data: Array<number>;
                     }>
                   } | undefined => handleTrendsTeacherFormatData()}
+                  completed={(): void => {setTeacherTrends(true)}}
                 />
               </Grid>
             ) : (null)}
@@ -305,6 +335,11 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
       </Grid>
     </div>
   );
+}
+
+ACResultsPdf.propTypes = {
+  printDocument: PropTypes.func.isRequired,
+  addToAttachmentList: PropTypes.func.isRequired
 }
 
 export default (ACResultsPdf);

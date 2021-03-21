@@ -6,7 +6,8 @@ import * as Constants from "../../../constants/Constants";
 interface Props {
   ac: number,
   noAc: number,
-  noChildOpp: number
+  noChildOpp: number,
+  completed?(): void
 }
 
 /**
@@ -26,6 +27,7 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
     ac: PropTypes.number.isRequired,
     noAc: PropTypes.number.isRequired,
     noChildOpp: PropTypes.number.isRequired,
+    completed: PropTypes.func
   };
 
   /**
@@ -33,6 +35,7 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const childBehaviorsData = {
       labels: [
         "Assoc./Coop. Interaction",
@@ -52,6 +55,11 @@ class ChildBehaviorsPie extends React.Component<Props, {}> {
       <Pie
         data={childBehaviorsData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
