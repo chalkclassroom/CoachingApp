@@ -68,6 +68,21 @@ interface ResultType {
 
 type ResultTypeKey = keyof ResultType;
 
+type Attachment = {
+  content: string,
+  filename: string,
+  type: string,
+  disposition: string,
+  id: string,
+  teacherId: string,
+  actionPlan: boolean,
+  result: boolean,
+  summary?: boolean,
+  details?: boolean,
+  trends?: boolean,
+  practice?: string
+}
+
 type TransitionData = {
   summary: {
     total: number,
@@ -326,20 +341,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
-  const [attachments, setAttachments] = useState<Array<{
-    content: string,
-    filename: string,
-    type: string,
-    disposition: string,
-    id: string,
-    teacherId: string,
-    actionPlan: boolean,
-    result: boolean,
-    summary?: boolean,
-    details?: boolean,
-    trends?: boolean,
-    practice?: string
-  }>>();
+  const [attachments, setAttachments] = useState<Array<Attachment>>();
   const [resultsAttachments, setResultsAttachments] = useState<Array<{
     sessionId: string,
     teacherId: string
@@ -396,7 +398,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     childTrends: MathData['childTrends'],
     teacherTrends: MathData['teacherTrends']
   }>>();
-  const [instruction, setInstruction] = useState<InstructionData>();
+  const [instruction, setInstruction] = useState<Array<{
+    sessionId: string,
+    date: Date,
+    summary: InstructionData['summary'],
+    details: InstructionData['details'],
+    trends: InstructionData['trends'],
+  }>>([]);
   const [engagement, setEngagement] = useState<EngagementData>();
   const [listening, setListening]= useState<ListeningData>();
   const [sequential, setSequential] = useState<Array<{
@@ -1205,7 +1213,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   }
 
   const attachTransitionResult = async (
-    transitionResults: Array<typeof attachments>
+    transitionResults: Array<Attachment>
   ): Promise<Array<{
     sessionId: string,
     summary: TransitionData['summary'],
@@ -1220,7 +1228,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       trends: TransitionData['trends'],
       date: Date
     }> = [];
-    const getData = function (result: typeof attachments[0]): Promise<void> {
+    const getData = function (result: Attachment): Promise<void> {
       return getTransitionData(result.id, result.summary, result.details, result.trends).then((data) => {
         transitionData.push({
           sessionId: result.id,
@@ -1297,7 +1305,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   }
 
   const attachClimateResult = async (
-    climateResults: Array<typeof attachments>
+    climateResults: Array<Attachment>
   ): Promise<Array<{
     sessionId: string,
     summary: ClimateData['summary'],
@@ -1312,7 +1320,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       trends: ClimateData['trends'],
       date: Date
     }> = [];
-    const getData = function (result: typeof attachments[0]): Promise<void> {
+    const getData = function (result: Attachment): Promise<void> {
       return getClimateData(result.id, result.summary, result.details, result.trends).then((data) => {
         climateData.push({
           sessionId: result.id,
@@ -1336,7 +1344,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   }
 
   const attachMathResult = async (
-    mathResults: Array<typeof attachments>
+    mathResults: Array<Attachment>
   ): Promise<Array<{
     sessionId: string,
     childSummary: MathData['childSummary'],
@@ -1357,7 +1365,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       teacherTrends: MathData['teacherTrends'],
       date: Date
     }> = [];
-    const getData = function (result: typeof attachments[0]): Promise<void> {
+    const getData = function (result: Attachment): Promise<void> {
       return getMathData(result.id, result.summary, result.details, result.trends).then((data) => {
         mathData.push({
           sessionId: result.id,
@@ -1384,31 +1392,43 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   }
 
-  const attachInstructionResult = (
+  const attachInstructionResult = async (
+    instructionResults: Array<Attachment>
+  ): Promise<Array<{
     sessionId: string,
-    summary: boolean | undefined,
-    details: boolean | undefined,
-    trends: boolean | undefined,
-    addToAttachmentList: typeof functionForType
-  ): void => {
-    getInstructionData(sessionId, summary, details, trends).then((data) => {
-      return Promise.all([
-        setInstruction({
+    summary: InstructionData['summary'],
+    details: InstructionData['details'],
+    trends: InstructionData['trends'],
+    date: Date
+  }> | void> => {
+    const instructionData: Array<{
+      sessionId: string,
+      summary: InstructionData['summary'],
+      details: InstructionData['details'],
+      trends: InstructionData['trends'],
+      date: Date
+    }> = [];
+    const getData = function (result: Attachment): Promise<void> {
+      return getInstructionData(result.id, result.summary, result.details, result.trends).then((data) => {
+        instructionData.push({
+          sessionId: result.id,
           summary: data[0],
           details: data[1],
-          trends: data[2]
-        }),
-        setDate(new Date())
-      ])
-    })
-    .then(() => {
-      setRenderInstructionPdf(true);
-    }).then(() => {
-      setTimeout(()=> {printDocument('Level of Instruction', new Date(), 'IN', addToAttachmentList, sessionId)}, 10000)
-    }).then(() => {
-      // setTimeout(() => {setRenderInstructionPdf(false)}, 10000);
-      // setTimeout(() => {setInstruction(undefined)}, 10000);
-    })
+          trends: data[2],
+          date: new Date()
+        })
+      })
+    };
+    if (instructionResults.length > 0) {
+      const getDataForAll = Promise.all(instructionResults.map(getData))
+      getDataForAll.then(() => {
+        setInstruction(instructionData);
+        setRenderInstructionPdf(true);
+        return instructionData
+      })
+    } else {
+      return;
+    }
   }
 
   const attachEngagementResult = (
@@ -1470,7 +1490,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   }
 
   const attachSequentialResult = async (
-    sequentialResults: Array<typeof attachments>
+    sequentialResults: Array<Attachment>
   ): Promise<Array<{
     sessionId: string,
     childSummary: SequentialData['childSummary'],
@@ -1491,7 +1511,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       teacherTrends: SequentialData['teacherTrends'],
       date: Date
     }> = [];
-    const getData = function (result: typeof attachments[0]): Promise<void> {
+    const getData = function (result: Attachment): Promise<void> {
       return getSequentialData(result.id, result.summary, result.details, result.trends).then((data) => {
         sequentialData.push({
           sessionId: result.id,
@@ -1519,7 +1539,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   }
 
   const attachACResult = async (
-    acResults: Array<typeof attachments>
+    acResults: Array<Attachment>
   ): Promise<Array<{
     sessionId: string,
     childSummary: ACData['childSummary'],
@@ -1540,7 +1560,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       teacherTrends: ACData['teacherTrends'],
       date: Date
     }> = [];
-    const getData = function (result: typeof attachments[0]): Promise<void> {
+    const getData = function (result: Attachment): Promise<void> {
       return getACData(result.id, result.summary, result.details, result.trends).then((data) => {
         acData.push({
           sessionId: result.id,
@@ -1567,37 +1587,6 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   }
 
-  const attachACResult2 = (
-    sessionId: string,
-    summary: boolean | undefined,
-    details: boolean | undefined,
-    trends: boolean | undefined,
-    addToAttachmentList: typeof functionForType
-  ): void => {
-    getACData(sessionId, summary, details, trends).then((data) => {
-      console.log('CALLED GETACDATA');
-      return Promise.all([
-        setAC({
-          childSummary: data[0],
-          teacherSummary: data[1],
-          childDetails: data[2] ? {ac1: data[2].ac1, ac2: data[2].ac2, ac3: data[2].ac3, ac4: data[2].ac4} : undefined,
-          teacherDetails: data[2] ? {teacher1: data[2].teacher1, teacher2: data[2].teacher2, teacher3: data[2].teacher3, teacher4: data[2].teacher4} : undefined,
-          childTrends: data[3],
-          teacherTrends: data[4]
-        }),
-        setDate(new Date())
-      ])
-    })
-    .then(() => {
-      setRenderACPdf(true);
-    }).then(() => {
-      setTimeout(()=> {printDocument('Associative and Cooperative', new Date(), 'AC', addToAttachmentList, sessionId)}, 10000)
-    }).then(() => {
-      setTimeout(() => {setRenderACPdf(false)}, 10000);
-      setTimeout(() => {setAC(undefined)}, 10000);
-    })
-  }
-
   const getResultsData = async (addToAttachmentList: typeof functionForType): Promise<void> => {
     let i = 0;
     if (attachments) {
@@ -1613,9 +1602,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       const mathResults = attachedResults.filter(obj => {
         return obj.practice === 'math'
       });
+      const instructionResults = attachedResults.filter(obj => {
+        return obj.practice === 'level'
+      });
+      console.log('INSTRUCTION RESULTS', instructionResults)
       const sequentialResults = attachedResults.filter(obj => {
         return obj.practice === 'sequential'
-      })
+      });
       const acResults = attachedResults.filter(obj => {
         return obj.practice === 'Associative and Cooperative'
       });
@@ -1627,6 +1620,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       }
       if (mathResults.length > 0) {
         attachMathResult(mathResults)
+      }
+      if (instructionResults.length > 0) {
+        attachInstructionResult(instructionResults)
       }
       if (sequentialResults.length > 0) {
         attachSequentialResult(sequentialResults)
@@ -1648,7 +1644,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         } else if (result.practice === 'math') {
           // attachMathResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'level') {
-          attachInstructionResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+          // attachInstructionResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'engagement') {
           attachEngagementResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'listening') {
@@ -2179,26 +2175,34 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           )
         })
       ) : (null)}
-      {renderInstructionPdf ? (
-        <div
-        id="IN"
-        style={{
-          backgroundColor: '#ffffff',
-          width: '210mm',
-          minHeight: '100mm',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          visibility: 'hidden',
-          position: 'fixed',
-          right: -1000
-        }}
-      >
-        <InstructionResultsPdf
-          data={instruction}
-          date={date}
-          teacher={teacherObject}
-        />
-      </div>
+      {renderInstructionPdf && instruction ? (
+        instruction.map((result, index) => {
+          return (
+            <div
+              key={index}
+              id={result.sessionId}
+              style={{
+                backgroundColor: '#ffffff',
+                width: '210mm',
+                minHeight: '100mm',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                visibility: 'hidden',
+                position: 'fixed',
+                right: -1000
+              }}
+            >
+              <InstructionResultsPdf
+                printDocument={printDocument}
+                id={result.sessionId}
+                data={instruction[index]}
+                date={date}
+                teacher={teacherObject}
+                addToAttachmentList={addToAttachmentList}
+              />
+            </div>
+          )
+        })
       ) : (null)}
       {renderEngagementPdf ? (
         <div

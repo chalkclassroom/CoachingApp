@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import LevelOfInstructionSummaryChart from '../../LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionSummaryChart';
@@ -6,7 +8,7 @@ import InstructionTypeDetailsChart from '../../LevelOfInstructionComponents/Resu
 import LevelOfInstructionTrendsGraph from '../../LevelOfInstructionComponents/ResultsComponents/LevelOfInstructionTrendsGraph';
 import LevelofInstructionImage from '../../../assets/images/LevelofInstructionImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as Types from '../../../constants/Types';
 
 interface Props {
@@ -32,10 +34,29 @@ interface Props {
     }> | undefined
   } | undefined,
   date: Date | undefined,
-  teacher: Types.Teacher | undefined
+  teacher: Types.Teacher | undefined,
+  id: string,
+  printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
+  addToAttachmentList(base64string: string, id: string): void
 }
 
 const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
+
+  const {printDocument, id, addToAttachmentList, data, date, teacher} = props;
+
+  // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
+  const [summary, setSummary] = useState(data && data.summary ? false : true);
+  const [details, setDetails] = useState(data && data.details ? false : true);
+  const [trends, setTrends] = useState(data && data.trends ? false : true);
+  const [attached, setAttached] = useState(false);
+
+  useEffect(() => {
+    // generate PDF once all graphs have rendered
+    if (summary && details && trends && !attached) {
+      printDocument('Level of Instruction', new Date(), id, addToAttachmentList, id);
+      setAttached(true);
+    }
+  })
   
   /**
    * specifies formatting for child trends
@@ -53,13 +74,13 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
       data: Array<number>
     }>
   } | undefined => {
-    if (props.data) {
+    if (data) {
       return {
-        labels: props.data.trends ? props.data.trends.map(observation => moment(observation.dayOfEvent.value).format("MMM Do")) : [],
+        labels: data.trends ? data.trends.map(observation => moment(observation.dayOfEvent.value).format("MMM Do")) : [],
         datasets: [
           {
             label: "High-Level Question",
-            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.hlq / (observation.hlq + observation.hlqResponse + observation.llq + observation.llqResponse)) * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round((observation.hlq / (observation.hlq + observation.hlqResponse + observation.llq + observation.llqResponse)) * 100)) : [],
             backgroundColor: "#6aa84fff",
             borderColor: "#6aa84fff",
             fill: false,
@@ -67,7 +88,7 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
           },
           {
             label: "Response to High-Level Question",
-            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.hlqResponse / (observation.hlq + observation.hlqResponse + observation.llq + observation.llqResponse)) * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round((observation.hlqResponse / (observation.hlq + observation.hlqResponse + observation.llq + observation.llqResponse)) * 100)) : [],
             backgroundColor: "#6aa84fff",
             borderColor: "#6aa84fff",
             fill: false,
@@ -76,7 +97,7 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
           },
           {
             label: "Low-Level Question",
-            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.llq / (observation.hlq + observation.hlqResponse + observation.llq + observation.llqResponse)) * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round((observation.llq / (observation.hlq + observation.hlqResponse + observation.llq + observation.llqResponse)) * 100)) : [],
             backgroundColor: "#6d9eeb",
             borderColor: "#6d9eeb",
             fill: false,
@@ -84,7 +105,7 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
           },
           {
             label: "Response to Low-Level Question",
-            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.llqResponse / (observation.hlq + observation.hlqResponse + observation.llq + observation.llqResponse)) * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round((observation.llqResponse / (observation.hlq + observation.hlqResponse + observation.llq + observation.llqResponse)) * 100)) : [],
             backgroundColor: "#6d9eeb",
             borderColor: "#6d9eeb",
             fill: false,
@@ -148,12 +169,12 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
             style={{fontFamily: 'Arimo'}}
           >
             <Grid item xs={4}>
-              {props.teacher ? (props.teacher.firstName + " " + props.teacher.lastName) : (null)}
+              {teacher ? (teacher.firstName + " " + teacher.lastName) : (null)}
             </Grid>
             <Grid item xs={4} />
             <Grid item xs={4}>
               <Grid container direction="row" justify="flex-end">
-                {moment(props.date).format('MM/DD/YYYY')}
+                {moment(date).format('MM/DD/YYYY')}
               </Grid>
             </Grid>
           </Grid>
@@ -161,25 +182,27 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
             <Grid item style={{paddingTop: '1em'}}>
-              {props.data && props.data.summary && props.data.details ? (
+              {data && data.summary && data.details ? (
                 <LevelOfInstructionSummaryChart
-                  lowLevel={props.data.summary.lowLevelQuestion + props.data.summary.lowLevelResponse}
-                  highLevel={props.data.summary.highLevelQuestion + props.data.summary.highLevelResponse}
+                  lowLevel={data.summary.lowLevelQuestion + data.summary.lowLevelResponse}
+                  highLevel={data.summary.highLevelQuestion + data.summary.highLevelResponse}
+                  completed={(): void => {setSummary(true)}}
                 />
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.details ? (
+              {data && data.details ? (
                 <InstructionTypeDetailsChart
-                  hlqCount={props.data.details.highLevelQuestion}
-                  hlqResponseCount={props.data.details.highLevelResponse}
-                  llqCount={props.data.details.lowLevelQuestion}
-                  llqResponseCount={props.data.details.lowLevelResponse}
+                  hlqCount={data.details.highLevelQuestion}
+                  hlqResponseCount={data.details.highLevelResponse}
+                  llqCount={data.details.lowLevelQuestion}
+                  llqResponseCount={data.details.lowLevelResponse}
+                  completed={(): void => {setDetails(true)}}
                 />
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.trends ? (
+              {data && data.trends ? (
                 <LevelOfInstructionTrendsGraph
                   data={(): {
                     labels: Array<string>;
@@ -193,6 +216,7 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
                       data: Array<number>;
                     }>
                   } | undefined => handleTrendsFormatData()}
+                  completed={(): void => {setTrends(true)}}
                 />
               ) : (null)}
             </Grid>
@@ -201,6 +225,11 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
       </Grid>
     </div>
   );
+}
+
+InstructionResultsPdf.propTypes = {
+  printDocument: PropTypes.func.isRequired,
+  addToAttachmentList: PropTypes.func.isRequired
 }
 
 export default (InstructionResultsPdf);
