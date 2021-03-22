@@ -2034,9 +2034,16 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       name: string,
       email: string
     },
-    emailId?: string
+    emailId?: string,
+    attachments?: Array<Attachment>
   ): Promise<Email> => {
     return firebase.saveEmail(email, subject, recipient, emailId).then((data: Email) => {
+      if (attachments) {
+        attachments.forEach((attachment) => {
+          console.log('saving', attachment)
+          firebase.saveAttachment(data.id, attachment)
+        })
+      }
       props.updateDrafts(data);
       setEmailId(data.id);
       return data;
@@ -2051,9 +2058,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       name: string,
       email: string
     },
-    emailId?: string
+    emailId?: string,
+    attachments?: Array<Attachment>
   ): void => {
-    saveEmail(email, subject, recipient, emailId).then((email: Email) => {
+    saveEmail(email, subject, recipient, emailId, attachments).then((email: Email) => {
       sendMail().then(() => {
         firebase.changeDraftToSent(email.id);
         if (props.moveDraftToSent) {
@@ -2430,7 +2438,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 <Grid item>
                   <Grid container direction="row" justify="space-between" style={{width: '100%'}}>
                     <Grid item>
-                      <SendButton sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId)}}/>
+                      <SendButton sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId, attachments)}}/>
                     </Grid>
                     <Grid item>
                       <Grid container direction="row">
@@ -2441,7 +2449,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           />
                         </Grid>
                         <Grid item style={{paddingRight: '1em'}}>
-                          <SaveButton saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId)}} saveDraft={(): void => setActionPlanDisplay(true)} />
+                          <SaveButton saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId, attachments)}} saveDraft={(): void => setActionPlanDisplay(true)} />
                         </Grid>
                         <Grid item>
                           <DeleteButton email={email} onClick={(): void => setDeleteDialog(true)} />

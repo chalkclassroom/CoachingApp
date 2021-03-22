@@ -2397,6 +2397,51 @@ class Firebase {
   }
 
   /**
+   * saves email attachment
+   * @param {string} emailId
+   * @param {object} attachment
+   */
+  saveAttachment = async (
+    emailId: string,
+    attachment: {
+      content: string,
+      filename: string,
+      type: string,
+      disposition: string,
+      id: string,
+      teacherId: string,
+      actionPlan: boolean,
+      result: boolean,
+      summary?: boolean,
+      details?: boolean,
+      trends?: boolean,
+      practice?: string
+    }
+  ): Promise<void> => {
+    const attachmentRef = this.db.collection("emails").doc(emailId).collection("attachments").doc(attachment.id);
+    return attachmentRef.set({
+      content: attachment.content,
+      filename: attachment.filename,
+      type: attachment.type,
+      disposition: attachment.disposition,
+      id: attachment.id,
+      teacherId: attachment.teacherId,
+      actionPlan: attachment.actionPlan,
+      result: attachment.result,
+      summary: attachment.summary,
+      details: attachment.details,
+      trends: attachment.trends,
+      practice: attachment.practice
+    })
+    .then(() => {
+      console.log("Attachment saved successfully!");
+    })
+    .catch((error: Error) => {
+      console.error("Error saving attachment: ", error);
+    })
+  }
+
+  /**
    * deletes draft email from database
    * @param {string} emailId
    */
