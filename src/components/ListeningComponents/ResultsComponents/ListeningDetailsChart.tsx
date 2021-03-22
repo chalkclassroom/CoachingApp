@@ -9,7 +9,8 @@ interface Props {
   listening3: number,
   listening4: number,
   listening5: number,
-  listening6: number
+  listening6: number,
+  completed?(): void
 }
 
 /**
@@ -30,7 +31,8 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
     listening3: PropTypes.number.isRequired,
     listening4: PropTypes.number.isRequired,
     listening5: PropTypes.number.isRequired,
-    listening6: PropTypes.number.isRequired
+    listening6: PropTypes.number.isRequired,
+    completed: PropTypes.func
   }
 
   /**
@@ -38,6 +40,7 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const listeningData = {  
       labels: [
         "At eye-level",
@@ -64,6 +67,11 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
       <HorizontalBar
         data={listeningData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {

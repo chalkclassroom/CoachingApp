@@ -412,7 +412,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     details: EngagementData['details'],
     trends: EngagementData['trends'],
   }>>([]);
-  const [listening, setListening]= useState<ListeningData>();
+  const [listening, setListening] = useState<Array<{
+    sessionId: string,
+    date: Date,
+    summary: ListeningData['summary'],
+    details: ListeningData['details'],
+    trends: ListeningData['trends'],
+  }>>([]);
   const [sequential, setSequential] = useState<Array<{
     sessionId: string,
     date: Date,
@@ -1480,62 +1486,43 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   }
 
-  const attachEngagementResult2 = (
+  const attachListeningResult = async (
+    listeningResults: Array<Attachment>
+  ): Promise<Array<{
     sessionId: string,
-    summary: boolean | undefined,
-    details: boolean | undefined,
-    trends: boolean | undefined,
-    addToAttachmentList: typeof functionForType
-  ): void => {
-    getEngagementData(sessionId, summary, details, trends).then((data) => {
-      return Promise.all([
-        setEngagement({
-          summary: data[0] && data[1] ? {
-            offTask: data[0].offTask,
-            engaged: data[0].engaged,
-            avgRating: data[1].average
-          } : undefined,
-          details: data[2],
-          trends: data[3]
-        }),
-        setDate(new Date())
-      ])
-    })
-  .then(() => {
-    setRenderEngagementPdf(true);
-  }).then(() => {
-    setTimeout(()=> {printDocument('Student Engagement', new Date(), 'SE', addToAttachmentList, sessionId)}, 10000)
-  }).then(() => {
-      setTimeout(() => {setRenderEngagementPdf(false)}, 10000);
-      setTimeout(() => {setEngagement(undefined)}, 10000);
-    })
-  }
-
-  const attachListeningResult = (
-    sessionId: string,
-    summary: boolean | undefined,
-    details: boolean | undefined,
-    trends: boolean | undefined,
-    addToAttachmentList: typeof functionForType
-  ): void => {
-    getListeningData(sessionId, summary, details, trends).then((data) => {
-      return Promise.all([
-        setListening({
+    summary: ListeningData['summary'],
+    details: ListeningData['details'],
+    trends: ListeningData['trends'],
+    date: Date
+  }> | void> => {
+    const listeningData: Array<{
+      sessionId: string,
+      summary: ListeningData['summary'],
+      details: ListeningData['details'],
+      trends: ListeningData['trends'],
+      date: Date
+    }> = [];
+    const getData = function (result: Attachment): Promise<void> {
+      return getListeningData(result.id, result.summary, result.details, result.trends).then((data) => {
+        listeningData.push({
+          sessionId: result.id,
           summary: data[0],
           details: data[1],
-          trends: data[2]
-        }),
-        setDate(new Date())
-      ])
-    })
-  .then(() => {
-    setRenderListeningPdf(true);
-  }).then(() => {
-    setTimeout(()=> {printDocument('Listening to Children', new Date(), 'LC', addToAttachmentList, sessionId)}, 10000)
-  }).then(() => {
-      setTimeout(() => {setRenderListeningPdf(false)}, 10000);
-      setTimeout(() => {setListening(undefined)}, 10000);
-    })
+          trends: data[2],
+          date: new Date()
+        })
+      })
+    };
+    if (listeningResults.length > 0) {
+      const getDataForAll = Promise.all(listeningResults.map(getData))
+      getDataForAll.then(() => {
+        setListening(listeningData);
+        setRenderListeningPdf(true);
+        return listeningData
+      })
+    } else {
+      return;
+    }
   }
 
   const attachSequentialResult = async (
@@ -1657,6 +1644,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       const engagementResults = attachedResults.filter(obj => {
         return obj.practice === 'engagement'
       });
+      const listeningResults = attachedResults.filter(obj => {
+        return obj.practice === 'listening'
+      });
       const sequentialResults = attachedResults.filter(obj => {
         return obj.practice === 'sequential'
       });
@@ -1677,6 +1667,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       }
       if (engagementResults.length > 0) {
         attachEngagementResult(engagementResults)
+      }
+      if (listeningResults.length > 0) {
+        attachListeningResult(listeningResults)
       }
       if (sequentialResults.length > 0) {
         attachSequentialResult(sequentialResults)
@@ -1702,7 +1695,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         } else if (result.practice === 'engagement') {
           // attachEngagementResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'listening') {
-          attachListeningResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+          // attachListeningResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'sequential') {
           // attachSequentialResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'Associative and Cooperative') {
@@ -2287,26 +2280,34 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           )
         })
       ) : (null)}
-      {renderListeningPdf ? (
-        <div
-        id="LC"
-        style={{
-          backgroundColor: '#ffffff',
-          width: '210mm',
-          minHeight: '100mm',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          visibility: 'hidden',
-          position: 'fixed',
-          right: -1000
-        }}
-      >
-        <ListeningResultsPdf
-          data={listening}
-          date={date}
-          teacher={teacherObject}
-        />
-      </div>
+      {renderListeningPdf && listening ? (
+        listening.map((result, index) => {
+          return (
+            <div
+              key={index}
+              id={result.sessionId}
+              style={{
+                backgroundColor: '#ffffff',
+                width: '210mm',
+                minHeight: '100mm',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                visibility: 'hidden',
+                position: 'fixed',
+                right: -1000
+              }}
+            >
+              <ListeningResultsPdf
+                printDocument={printDocument}
+                id={result.sessionId}
+                data={listening[index]}
+                date={date}
+                teacher={teacherObject}
+                addToAttachmentList={addToAttachmentList}
+              />
+            </div>
+          )
+        })
       ) : (null)}
       {renderSequentialPdf && sequential ? (
         sequential.map((result, index) => {

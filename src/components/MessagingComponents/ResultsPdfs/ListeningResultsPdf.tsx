@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ListeningSummaryChart from '../../ListeningComponents/ResultsComponents/ListeningSummaryChart';
@@ -6,7 +8,7 @@ import ListeningDetailsChart from '../../ListeningComponents/ResultsComponents/L
 import ListeningTrendsGraph from '../../ListeningComponents/ResultsComponents/ListeningTrendsGraph';
 import ListeningtoChildrenImage from '../../../assets/images/ListeningtoChildrenImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
 
@@ -28,11 +30,30 @@ interface ListeningResultsProps {
     }> | undefined
   } | undefined,
   date: Date | undefined,
-  teacher: Types.Teacher | undefined
+  teacher: Types.Teacher | undefined,
+  id: string,
+  printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
+  addToAttachmentList(base64string: string, id: string): void
 }
 
 const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningResultsProps) => {
   
+  const {printDocument, id, addToAttachmentList, data, date, teacher} = props;
+
+  // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
+  const [summary, setSummary] = useState(data && data.summary ? false : true);
+  const [details, setDetails] = useState(data && data.details ? false : true);
+  const [trends, setTrends] = useState(data && data.trends ? false : true);
+  const [attached, setAttached] = useState(false);
+
+  useEffect(() => {
+    // generate PDF once all graphs have rendered
+    if (summary && details && trends && !attached) {
+      printDocument('Listening to Children', new Date(), id, addToAttachmentList, id);
+      setAttached(true);
+    }
+  })
+
   /**
    * specifies formatting for child trends
    * @return {object}
@@ -48,9 +69,9 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
       data: Array<number>
     }>
   } | undefined => {
-    if (props.data) {
+    if (data) {
       return {
-        labels: props.data.trends ? [props.data.trends.map(observation => moment(observation.startDate.value).format("MMM Do"))] : [],
+        labels: data.trends ? [data.trends.map(observation => moment(observation.startDate.value).format("MMM Do"))] : [],
         datasets: [
           {
             label: "Teacher Listening",
@@ -58,7 +79,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
             borderColor: Constants.Colors.LC,
             fill: false,
             lineTension: 0,
-            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.listening / (observation.listening + observation.notListening)) * 100)) : []
+            data: data.trends ? data.trends.map(observation => Math.round((observation.listening / (observation.listening + observation.notListening)) * 100)) : []
           },
           {
             label: "Other Tasks or Behaviors",
@@ -66,7 +87,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
             borderColor: Constants.Colors.RedGraph,
             fill: false,
             lineTension: 0,
-            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.notListening / (observation.listening + observation.notListening)) * 100)) : []
+            data: data.trends ? data.trends.map(observation => Math.round((observation.notListening / (observation.listening + observation.notListening)) * 100)) : []
           }
         ]
       };
@@ -125,12 +146,12 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
             style={{fontFamily: 'Arimo'}}
           >
             <Grid item xs={4}>
-              {props.teacher ? (props.teacher.firstName + " " + props.teacher.lastName) : (null)}
+              {teacher ? (teacher.firstName + " " + teacher.lastName) : (null)}
             </Grid>
             <Grid item xs={4} />
             <Grid item xs={4}>
               <Grid container direction="row" justify="flex-end">
-                {moment(props.date).format('MM/DD/YYYY')}
+                {moment(date).format('MM/DD/YYYY')}
               </Grid>
             </Grid>
           </Grid>
@@ -138,27 +159,29 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
             <Grid item style={{paddingTop: '1em'}}>
-              {props.data && props.data.summary ? (
+              {data && data.summary ? (
                 <ListeningSummaryChart
-                  listening={props.data.summary.listening}
-                  notListening={props.data.summary.notListening}
+                  listening={data.summary.listening}
+                  notListening={data.summary.notListening}
+                  completed={(): void => {setSummary(true)}}
                 />
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.details ? (
+              {data && data.details ? (
                 <ListeningDetailsChart
-                  listening1={props.data.details.listening1}
-                  listening2={props.data.details.listening2}
-                  listening3={props.data.details.listening3}
-                  listening4={props.data.details.listening4}
-                  listening5={props.data.details.listening5}
-                  listening6={props.data.details.listening6}
+                  listening1={data.details.listening1}
+                  listening2={data.details.listening2}
+                  listening3={data.details.listening3}
+                  listening4={data.details.listening4}
+                  listening5={data.details.listening5}
+                  listening6={data.details.listening6}
+                  completed={(): void => {setDetails(true)}}
                 />
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.trends ? (
+              {data && data.trends ? (
                 <ListeningTrendsGraph
                   data={(): {
                     labels: Array<Array<string>>;
@@ -171,6 +194,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
                       data: Array<number>;
                     }>
                   } | undefined => handleTrendsFormatData()}
+                  completed={(): void => {setTrends(true)}}
                 />
               ) : (null)}
             </Grid>
@@ -179,6 +203,11 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
       </Grid>
     </div>
   );
+}
+
+ListeningResultsPdf.propTypes = {
+  printDocument: PropTypes.func.isRequired,
+  addToAttachmentList: PropTypes.func.isRequired
 }
 
 export default (ListeningResultsPdf);

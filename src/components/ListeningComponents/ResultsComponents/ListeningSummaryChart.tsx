@@ -7,6 +7,7 @@ import * as Constants from '../../../constants/Constants';
 interface Props {
   listening: number,
   notListening: number,
+  completed?(): void
 }
 
 /**
@@ -23,6 +24,7 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
   static propTypes = {
     listening: PropTypes.number.isRequired,
     notListening: PropTypes.number.isRequired,
+    completed: PropTypes.func
   }
 
   /**
@@ -30,6 +32,7 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const listeningData = {
       labels: ["Listening/Encouraging", "No Target Behaviors Observed"],
       datasets: [
@@ -46,6 +49,11 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
         <Pie
           data={listeningData}
           options={{
+            animation: {
+              onComplete: function(): void {
+                isCompleted ? isCompleted() : null
+              }
+            },
             tooltips: {
               callbacks: {
                 label: function(tooltipItem: { datasetIndex: number, index: number },
