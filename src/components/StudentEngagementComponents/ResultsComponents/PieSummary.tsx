@@ -6,7 +6,8 @@ import * as Constants from "../../../constants/Constants";
 interface Props {
   offTask: number,
   engaged: number,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -25,7 +26,8 @@ class PieSummary extends React.Component<Props, {}> {
   static propTypes = {
     offTask: PropTypes.number.isRequired,
     engaged: PropTypes.number.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -84,6 +86,14 @@ class PieSummary extends React.Component<Props, {}> {
               fontSize: 14,
               fontFamily: 'Arimo'
             }
+          },
+          title: {
+            display: this.props.title,
+            text: "Summary",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

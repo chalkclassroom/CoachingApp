@@ -105,7 +105,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
         alignItems="flex-start"
         style={{width: '100%'}}
       >
-        <Grid item style={{width: '100%'}}>
+        <Grid item style={{width: '100%', height: '148px'}}>
           <Grid
             container
             direction="row"
@@ -164,6 +164,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
                   listening={data.summary.listening}
                   notListening={data.summary.notListening}
                   completed={(): void => {setSummary(true)}}
+                  title={true}
                 />
               ) : (null)}
             </Grid>
@@ -177,27 +178,32 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
                   listening5={data.details.listening5}
                   listening6={data.details.listening6}
                   completed={(): void => {setDetails(true)}}
+                  title={true}
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '8em'}}>
-              {data && data.trends ? (
-                <ListeningTrendsGraph
-                  data={(): {
-                    labels: Array<Array<string>>;
-                    datasets: Array<{
-                      label: string;
-                      backgroundColor: string;
-                      borderColor: string;
-                      fill: boolean;
-                      lineTension: number;
-                      data: Array<number>;
-                    }>
-                  } | undefined => handleTrendsFormatData()}
-                  completed={(): void => {setTrends(true)}}
-                />
-              ) : (null)}
-            </Grid>
+            {data && data.trends ? (
+              <div>
+                {(data.summary && data.details) ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: (data.summary && data.details) ? '1em' : '8em'}}>
+                  <ListeningTrendsGraph
+                    data={(): {
+                      labels: Array<Array<string>>;
+                      datasets: Array<{
+                        label: string;
+                        backgroundColor: string;
+                        borderColor: string;
+                        fill: boolean;
+                        lineTension: number;
+                        data: Array<number>;
+                      }>
+                    } | undefined => handleTrendsFormatData()}
+                    completed={(): void => {setTrends(true)}}
+                    title={true}
+                  />
+                </Grid>
+              </div>
+            ) : (null)}
           </Grid>
         </Grid>
       </Grid>

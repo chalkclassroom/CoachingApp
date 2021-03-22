@@ -7,7 +7,8 @@ import * as Constants from '../../../constants/Constants';
 interface Props {
   listening: number,
   notListening: number,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -24,7 +25,8 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
   static propTypes = {
     listening: PropTypes.number.isRequired,
     notListening: PropTypes.number.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -82,9 +84,11 @@ class ListeningSummaryChart extends React.Component<Props, {}> {
               }
             },
             title: {
-              display: false,
-              text: "Listening to Children",
+              display: this.props.title,
+              text: "Summary",
               fontSize: 20,
+              fontColor: 'black',
+              fontFamily: 'Arimo',
               fontStyle: "bold"
             },
             plugins: {

@@ -687,7 +687,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         saveAs(imgData, 'canvas.png');
         // const config1 = {width: 100, height: 100, top: 50, left: 30};
         const imgWidth = 190; 
-        const pageHeight = 235;
+        const pageHeight = 265;
         // const imgWidth = 190; 
         // const pageHeight = 215;
         const imgHeight = canvas.height * imgWidth / canvas.width;
@@ -700,11 +700,20 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         // pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
         // pdf.addImage(imgData2, 'PNG', 10, 10, 190, 220);
         pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        console.log('this is the pdfWidth', pdfWidth, 'height:', pdfHeight, ' or this?', pdf.internal.pageSize.getHeight());
+        console.log('this is the img width', imgWidth);
+        console.log('image height', imgHeight);
+        console.log('this is the height left 1', heightLeft);
         heightLeft -= pageHeight;
+        let i = 0;
         while (heightLeft >= 0) {
+          i++;
+          console.log('this is the height left in while', heightLeft);
           position = heightLeft - imgHeight;
+          // position = heightLeft - pageHeight
+          console.log('this is the position', position, 'and position - 30 why?', position - 30)
           pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 10, position - 30, imgWidth, imgHeight);
+          pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
           heightLeft -= pageHeight;
         }
         pdf.save("download.pdf");
@@ -1116,7 +1125,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       engaged: number
     } | undefined,
     {
-      avgRating: number
+      average: number
     } | undefined,
     EngagementData['details'] | undefined,
     EngagementData['trends'] | undefined
@@ -1466,7 +1475,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           summary: data[0] && data[1] ? {
             offTask: data[0].offTask,
             engaged: data[0].engaged,
-            avgRating: data[1].avgRating
+            avgRating: data[1].average
           } : undefined,
           details: data[2],
           trends: data[3],

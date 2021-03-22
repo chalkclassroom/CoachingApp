@@ -14,7 +14,8 @@ interface Props {
       lineTension: number
     }>
   } | undefined,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -25,7 +26,8 @@ class ClimateTrendsGraph extends React.Component<Props, {}> {
 
   static propTypes = {
     data: PropTypes.func.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -45,9 +47,11 @@ class ClimateTrendsGraph extends React.Component<Props, {}> {
             }
           },
           title: {
-            display: false,
-            text: "Classroom Climate Trends",
+            display: this.props.title,
+            text: "Trends",
             fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
             fontStyle: "bold"
           },
           scales: {

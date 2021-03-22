@@ -181,7 +181,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div style={{width: '100%'}} id='ap'>
+    <div style={{width: '100%'}}>
       <Grid
         container
         direction="column"
@@ -189,7 +189,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
         alignItems="flex-start"
         style={{width: '100%'}}
       >
-        <Grid item style={{width: '100%'}}>
+        <Grid item style={{width: '100%'}} id="hello">
           <Grid
             container
             direction="row"
@@ -249,6 +249,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
                   noAc={data.childSummary.noac}
                   noChildOpp={data.childSummary.noOpportunity}
                   completed={(): void => {setChildSummary(true)}}
+                  title={true}
                 />
               </Grid>
             ) : (null)}
@@ -259,24 +260,29 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
                   noSupport={data.teacherSummary.noSupport}
                   noTeacherOpp={data.teacherSummary.noOpportunity}
                   completed={(): void => {setTeacherSummary(true)}}
+                  title={true}
                 />
               </Grid>
             ) : (null)}
             {data && data.childDetails ? (
-              <Grid item style={{paddingTop: '8em'}}>
-                <ChildBehaviorsDetailsHorizontalBar
-                  ac1={data.childDetails.ac1}
-                  ac2={data.childDetails.ac2}
-                  ac3={data.childDetails.ac3}
-                  ac4={data.childDetails.ac4}
-                  totalVisits={
-                    data.childSummary.ac +
-                    data.childSummary.noac +
-                    data.childSummary.noOpportunity
-                  }
-                  completed={(): void => {setChildDetails(true)}}
-                />
-              </Grid>
+              <div>
+                {data.teacherSummary ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: data.teacherSummary ? '1em' : '8em'}}>
+                  <ChildBehaviorsDetailsHorizontalBar
+                    ac1={data.childDetails.ac1}
+                    ac2={data.childDetails.ac2}
+                    ac3={data.childDetails.ac3}
+                    ac4={data.childDetails.ac4}
+                    totalVisits={
+                      data.childSummary.ac +
+                      data.childSummary.noac +
+                      data.childSummary.noOpportunity
+                    }
+                    completed={(): void => {setChildDetails(true)}}
+                    title={true}
+                  />
+                </Grid>
+              </div>
             ) : (null)}
             {data && data.teacherDetails ? (
               <Grid item style={{paddingTop: '8em'}}>
@@ -291,26 +297,31 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
                     data.childSummary.noOpportunity
                   }
                   completed={(): void => {setTeacherDetails(true)}}
+                  title={true}
                 />
               </Grid>
             ) : (null)}
             {data && data.childTrends ? (
-              <Grid item style={{paddingTop: '8em'}}>
-                <ChildLineTrends
-                  data={(): {
-                    labels: Array<string>;
-                    datasets: Array<{
-                      label: string;
-                      backgroundColor: string;
-                      borderColor: string;
-                      fill: boolean;
-                      lineTension: number;
-                      data: Array<number>;
-                    }>
-                  } | undefined => handleTrendsChildFormatData()}
-                  completed={(): void => {setChildTrends(true)}}
-                />
-              </Grid>
+              <div>
+                {(data.teacherSummary || data.childDetails) ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: (data.teacherSummary || data.childDetails) ? '1em' : '8em'}}>
+                  <ChildLineTrends
+                    data={(): {
+                      labels: Array<string>;
+                      datasets: Array<{
+                        label: string;
+                        backgroundColor: string;
+                        borderColor: string;
+                        fill: boolean;
+                        lineTension: number;
+                        data: Array<number>;
+                      }>
+                    } | undefined => handleTrendsChildFormatData()}
+                    completed={(): void => {setChildTrends(true)}}
+                    title={true}
+                  />
+                </Grid>
+              </div>
             ) : (null)}
             {data && data.teacherTrends ? (
               <Grid item style={{paddingTop: '8em'}}>
@@ -327,6 +338,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
                     }>
                   } | undefined => handleTrendsTeacherFormatData()}
                   completed={(): void => {setTeacherTrends(true)}}
+                  title={true}
                 />
               </Grid>
             ) : (null)}

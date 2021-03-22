@@ -16,11 +16,12 @@ type TrendsData = {
 
 interface Props {
   data(): TrendsData | undefined,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 const ChildLineTrends: React.FC<Props> = (props: Props) => {
-  const { completed } = props;
+  const { completed, title } = props;
   return (
     <Line
       data={(): TrendsData | undefined => props.data()}
@@ -40,6 +41,14 @@ const ChildLineTrends: React.FC<Props> = (props: Props) => {
         hover: {
           mode: "nearest",
           intersect: true
+        },
+        title: {
+          display: title,
+          text: "Child Trends",
+          fontSize: 20,
+          fontColor: 'black',
+          fontFamily: 'Arimo',
+          fontStyle: "bold"
         },
         scales: {
           xAxes: [

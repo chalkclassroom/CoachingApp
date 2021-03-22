@@ -7,7 +7,8 @@ interface Props {
   noSupport: number,
   support: number,
   noTeacherOpp: number,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -27,7 +28,8 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
     noSupport: PropTypes.number.isRequired,
     support: PropTypes.number.isRequired,
     noTeacherOpp: PropTypes.number.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -87,6 +89,14 @@ class TeacherBehaviorsPie extends React.Component<Props, {}> {
               fontSize: 14,
               fontFamily: 'Arimo'
             }
+          },
+          title: {
+            display: this.props.title,
+            text: "Teacher Summary",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

@@ -5,7 +5,8 @@ import * as Constants from '../../../constants/Constants';
 
 interface Props {
   avgRating: number,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -23,7 +24,8 @@ class AvgBarSummary extends React.Component<Props, {}> {
 
   static propTypes = {
     avgRating: PropTypes.number.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -79,6 +81,14 @@ class AvgBarSummary extends React.Component<Props, {}> {
                 }
               }
             }]
+          },
+          title: {
+            display: this.props.title,
+            text: "Average Rating",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

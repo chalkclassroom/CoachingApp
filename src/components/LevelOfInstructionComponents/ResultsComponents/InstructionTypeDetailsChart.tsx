@@ -7,7 +7,8 @@ interface Props {
   hlqResponseCount: number,
   llqCount: number,
   llqResponseCount: number,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -27,7 +28,8 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
     hlqResponseCount: PropTypes.number.isRequired,
     llqCount: PropTypes.number.isRequired,
     llqResponseCount: PropTypes.number.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -120,9 +122,11 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
             display: false,
           },
           title: {
-            display: true,
-            text: "Level of Instruction Details",
+            display: this.props.title,
+            text: "Details",
             fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
             fontStyle: "bold"
           },
           plugins: {

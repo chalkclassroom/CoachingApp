@@ -9,7 +9,8 @@ interface Props {
   mildlyEngagedDetailSplit: Array<number>,
   engagedDetailSplit: Array<number>,
   highlyEngagedDetailSplit: Array<number>,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -30,7 +31,8 @@ class EngagementBarDetails extends React.Component<Props, {}> {
     mildlyEngagedDetailSplit: PropTypes.array.isRequired,
     engagedDetailSplit: PropTypes.array.isRequired,
     highlyEngagedDetailSplit: PropTypes.array.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -111,6 +113,14 @@ class EngagementBarDetails extends React.Component<Props, {}> {
           },
           legend: {
             display: true
+          },
+          title: {
+            display: this.props.title,
+            text: "Details",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

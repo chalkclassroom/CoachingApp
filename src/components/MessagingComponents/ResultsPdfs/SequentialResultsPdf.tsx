@@ -179,7 +179,7 @@ const SequentialResultsPdf: React.FC<Props> = (props: Props) => {
         alignItems="flex-start"
         style={{width: '100%'}}
       >
-        <Grid item style={{width: '100%'}}>
+        <Grid item style={{width: '100%', height: '148px'}}>
           <Grid
             container
             direction="row"
@@ -238,6 +238,7 @@ const SequentialResultsPdf: React.FC<Props> = (props: Props) => {
                   sequential={data.childSummary.sequential}
                   notSequential={data.childSummary.notSequential}
                   completed={(): void => {setChildSummary(true)}}
+                  title={true}
                 />
               </Grid>
             ) : (null)}
@@ -248,20 +249,25 @@ const SequentialResultsPdf: React.FC<Props> = (props: Props) => {
                   noSupport={data.teacherSummary.noSupport}
                   noTeacherOpp={data.teacherSummary.noOpportunity}
                   completed={(): void => {setTeacherSummary(true)}}
+                  title={true}
                 />
               </Grid>
             ) : (null)}
             {data && data.childDetails ? (
-              <Grid item style={{paddingTop: '8em'}}>
-                <ChildBarDetails
-                  sequential1={data.childDetails.sequential1}
-                  sequential2={data.childDetails.sequential2}
-                  sequential3={data.childDetails.sequential3}
-                  sequential4={data.childDetails.sequential4}
-                  totalVisits={data.childSummary.sequential + data.childSummary.notSequential}
-                  completed={(): void => {setChildDetails(true)}}
-                />
-              </Grid>
+              <div>
+                {data.teacherSummary ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: data.teacherSummary ? '1em' : '8em'}}>
+                  <ChildBarDetails
+                    sequential1={data.childDetails.sequential1}
+                    sequential2={data.childDetails.sequential2}
+                    sequential3={data.childDetails.sequential3}
+                    sequential4={data.childDetails.sequential4}
+                    totalVisits={data.childSummary.sequential + data.childSummary.notSequential}
+                    completed={(): void => {setChildDetails(true)}}
+                    title={true}
+                  />
+                </Grid>
+              </div>
             ) : (null)}
             {data && data.teacherDetails ? (
               <Grid item style={{paddingTop: '8em'}}>
@@ -272,26 +278,31 @@ const SequentialResultsPdf: React.FC<Props> = (props: Props) => {
                   teacher4={data.teacherDetails.teacher4}
                   totalVisits={data.childSummary.sequential + data.childSummary.notSequential}
                   completed={(): void => {setTeacherDetails(true)}}
+                  title={true}
                 />
               </Grid>
             ) : (null)}
             {data && data.childTrends ? (
-              <Grid item style={{paddingTop: '8em'}}>
-                <ChildLineTrends
-                  data={(): {
-                    labels: Array<string>;
-                    datasets: Array<{
-                      label: string;
-                      backgroundColor: string;
-                      borderColor: string;
-                      fill: boolean;
-                      lineTension: number;
-                      data: Array<number>;
-                    }>
-                  } | undefined => handleTrendsChildFormatData()}
-                  completed={(): void => {setChildTrends(true)}}
-                />
-              </Grid>
+              <div>
+                {(data.teacherSummary || data.childDetails) ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: (data.teacherSummary || data.childDetails || (!data.teacherSummary && !data.childDetails)) ? '1em' : '8em'}}>
+                  <ChildLineTrends
+                    data={(): {
+                      labels: Array<string>;
+                      datasets: Array<{
+                        label: string;
+                        backgroundColor: string;
+                        borderColor: string;
+                        fill: boolean;
+                        lineTension: number;
+                        data: Array<number>;
+                      }>
+                    } | undefined => handleTrendsChildFormatData()}
+                    completed={(): void => {setChildTrends(true)}}
+                    title={true}
+                  />
+                </Grid>
+              </div>
             ) : (null)}
             {data && data.teacherTrends ? (
               <Grid item style={{paddingTop: '8em'}}>
@@ -308,6 +319,7 @@ const SequentialResultsPdf: React.FC<Props> = (props: Props) => {
                     }>
                   } | undefined => handleTrendsTeacherFormatData()}
                   completed={(): void => {setTeacherTrends(true)}}
+                  title={true}
                 />
               </Grid>
             ) : (null)}

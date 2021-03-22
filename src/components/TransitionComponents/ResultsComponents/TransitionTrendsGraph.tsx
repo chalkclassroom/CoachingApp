@@ -7,7 +7,8 @@ const styles = {};
 
 interface Props {
   data: object,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -16,7 +17,9 @@ interface Props {
  */
 class TransitionTrendsGraph extends React.Component<Props, {}> {
   static propTypes = {
-    data: PropTypes.func.isRequired
+    data: PropTypes.func.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
   /**
    * render function
@@ -55,6 +58,14 @@ class TransitionTrendsGraph extends React.Component<Props, {}> {
             labels: {
               fontColor: 'black'
             }
+          },
+          title: {
+            display: this.props.title,
+            text: "Trends",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           scales: {
             xAxes: [

@@ -7,7 +7,8 @@ import * as Constants from '../../../constants/Constants';
 interface Props {
   positiveResponses: number,
   negativeResponses: number,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -25,6 +26,8 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
   static propTypes = {
     positiveResponses: PropTypes.number.isRequired,
     negativeResponses: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -81,9 +84,11 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
             }
           },
           title: {
-            display: true,
-            text: "Classroom Climate Summary",
+            display: this.props.title,
+            text: "Summary",
             fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
             fontStyle: "bold"
           },
           plugins: {

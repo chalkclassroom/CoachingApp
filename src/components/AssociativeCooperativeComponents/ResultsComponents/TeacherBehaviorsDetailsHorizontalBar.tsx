@@ -8,7 +8,8 @@ interface Props {
   teacher3: number,
   teacher4: number,
   totalVisits: number,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -30,7 +31,8 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
     teacher3: PropTypes.number.isRequired,
     teacher4: PropTypes.number.isRequired,
     totalVisits: PropTypes.number.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -94,6 +96,14 @@ class TeacherBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
           },
           legend: {
             display: false
+          },
+          title: {
+            display: this.props.title,
+            text: "Teacher Details",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

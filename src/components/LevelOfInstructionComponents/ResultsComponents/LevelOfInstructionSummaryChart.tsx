@@ -6,7 +6,8 @@ import FirebaseContext from "../../Firebase/FirebaseContext";
 interface Props {
   lowLevel: number, 
   highLevel: number,
-  completed?(): void 
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -23,7 +24,8 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
   static propTypes = {
     lowLevel: PropTypes.number.isRequired, 
     highLevel: PropTypes.number.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -81,9 +83,11 @@ class LevelOfInstructionSummaryChart extends React.Component<Props, {}> {
               }
             },
             title: {
-              display: true,
-              text: "Teacher Instruction",
+              display: this.props.title,
+              text: "Summary",
               fontSize: 20,
+              fontColor: 'black',
+              fontFamily: 'Arimo',
               fontStyle: "bold"
             },
             plugins: {

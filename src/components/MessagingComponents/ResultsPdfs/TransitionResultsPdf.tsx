@@ -49,17 +49,19 @@ interface Props {
 }
 
 const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
+
+  const { data, date, teacher, id, printDocument, addToAttachmentList } = props;
   
   // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
-  const [summary, setSummary] = useState(props.data && props.data.summary ? false : true);
-  const [details, setDetails] = useState(props.data && props.data.details ? false : true);
-  const [trends, setTrends] = useState(props.data && props.data.trends ? false : true);
+  const [summary, setSummary] = useState(data && data.summary ? false : true);
+  const [details, setDetails] = useState(data && data.details ? false : true);
+  const [trends, setTrends] = useState(data && data.trends ? false : true);
   const [attached, setAttached] = useState(false);
 
   useEffect(() => {
     // generate PDF once all graphs have rendered
     if (summary && details && trends && !attached) {
-      props.printDocument('Transition Time', new Date(), props.id, props.addToAttachmentList, props.id);
+      printDocument('Transition Time', new Date(), id, addToAttachmentList, id);
       setAttached(true);
     }
   })
@@ -79,9 +81,9 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
       data: Array<number>
     }>
   } | undefined => {
-    if (props.data) {
+    if (data) {
       return {
-        labels: props.data.trends ? [props.data.trends.map(observation => moment(observation.startDate.value).format("MMM Do"))] : [],
+        labels: data.trends ? [data.trends.map(observation => moment(observation.startDate.value).format("MMM Do"))] : [],
         datasets: [
           {
             label: 'TOTAL',
@@ -89,7 +91,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.Colors.TT,
             fill: false,
             lineTension: 0,
-            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.total / observation.sessionTotal) * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round((observation.total / observation.sessionTotal) * 100)) : [],
           },
           {
             label: 'WAITING IN LINE',
@@ -97,7 +99,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.TransitionTypeColors.lineColor,
             fill: false,
             lineTension: 0,
-            data: props.data.trends ? props.data.trends.map(observation => Math.round(observation.line / observation.sessionTotal * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round(observation.line / observation.sessionTotal * 100)) : [],
           },
           {
             label: 'TRAVELING',
@@ -105,7 +107,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.TransitionTypeColors.travelingColor,
             fill: false,
             lineTension: 0,
-            data: props.data.trends ? props.data.trends.map(observation => Math.round(observation.traveling / observation.sessionTotal * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round(observation.traveling / observation.sessionTotal * 100)) : [],
           },
           {
             label: 'CHILD WAITING',
@@ -113,7 +115,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.TransitionTypeColors.waitingColor,
             fill: false,
             lineTension: 0,
-            data: props.data.trends ? props.data.trends.map(observation => Math.round(observation.waiting / observation.sessionTotal * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round(observation.waiting / observation.sessionTotal * 100)) : [],
           },
           {
             label: 'ROUTINES',
@@ -121,7 +123,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.TransitionTypeColors.routinesColor,
             fill: false,
             lineTension: 0,
-            data: props.data.trends ? props.data.trends.map(observation => Math.round(observation.routines / observation.sessionTotal * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round(observation.routines / observation.sessionTotal * 100)) : [],
           },
           {
             label: 'BEHAVIOR MANAGEMENT',
@@ -129,7 +131,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.TransitionTypeColors.behaviorManagementColor,
             fill: false,
             lineTension: 0,
-            data: props.data.trends ? props.data.trends.map(observation => Math.round(observation.behaviorManagement / observation.sessionTotal * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round(observation.behaviorManagement / observation.sessionTotal * 100)) : [],
           },
           {
             label: 'OTHER',
@@ -137,7 +139,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.TransitionTypeColors.otherColor,
             fill: false,
             lineTension: 0,
-            data: props.data.trends ? props.data.trends.map(observation => Math.round(observation.other / observation.sessionTotal * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round(observation.other / observation.sessionTotal * 100)) : [],
           }
         ]
       }
@@ -155,7 +157,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
         alignItems="flex-start"
         style={{width: '100%'}}
       >
-        <Grid item style={{width: '100%'}}>
+        <Grid item style={{width: '100%', height: '148px'}}>
           <Grid
             container
             direction="row"
@@ -196,12 +198,12 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
             style={{fontFamily: 'Arimo'}}
           >
             <Grid item xs={4}>
-              {props.teacher ? (props.teacher.firstName + " " + props.teacher.lastName) : (null)}
+              {teacher ? (teacher.firstName + " " + teacher.lastName) : (null)}
             </Grid>
             <Grid item xs={4} />
             <Grid item xs={4}>
               <Grid container direction="row" justify="flex-end">
-                {moment(props.date).format('MM/DD/YYYY')}
+                {moment(date).format('MM/DD/YYYY')}
               </Grid>
             </Grid>
           </Grid>
@@ -209,45 +211,51 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
             <Grid item style={{paddingTop: '1em'}}>
-              {props.data && props.data.summary ? (
+              {data && data.summary ? (
                 <TransitionTimePie
-                  transitionTime={props.data.summary[0].total}
-                  learningActivityTime={props.data.summary[0].sessionTotal - props.data.summary[0].total}
+                  transitionTime={data.summary[0].total}
+                  learningActivityTime={data.summary[0].sessionTotal - data.summary[0].total}
                   completed={(): void => {setSummary(true)}}
+                  title={true}
                 />
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.details ? (
+              {data && data.details ? (
                 <TransitionBarChart
-                  line={props.data.details[0].line}
-                  traveling={props.data.details[0].traveling}
-                  waiting={props.data.details[0].waiting}
-                  routines={props.data.details[0].routines}
-                  behaviorManagement={props.data.details[0].behaviorManagement}
-                  other={props.data.details[0].other}
+                  line={data.details[0].line}
+                  traveling={data.details[0].traveling}
+                  waiting={data.details[0].waiting}
+                  routines={data.details[0].routines}
+                  behaviorManagement={data.details[0].behaviorManagement}
+                  other={data.details[0].other}
                   completed={(): void => {setDetails(true)}}
+                  title={true}
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.trends ? (
-                <TransitionTrendsGraph
-                  data={(): {
-                    labels: Array<Array<string>>;
-                    datasets: Array<{
-                        label: string;
-                        backgroundColor: string;
-                        borderColor: string;
-                        fill: boolean;
-                        lineTension: number;
-                        data: Array<number>;
-                    }>
-                  } | undefined => handleTrendsFormatData()}
-                  completed={(): void => {setTrends(true)}}
-                />
-              ) : (null)}
-            </Grid>
+            {data && data.trends ? (
+              <div>
+                {(data.summary && data.details) ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: (data.summary && data.details) ? '1em' : '8em'}}>
+                  <TransitionTrendsGraph
+                    data={(): {
+                      labels: Array<Array<string>>;
+                      datasets: Array<{
+                          label: string;
+                          backgroundColor: string;
+                          borderColor: string;
+                          fill: boolean;
+                          lineTension: number;
+                          data: Array<number>;
+                      }>
+                    } | undefined => handleTrendsFormatData()}
+                    completed={(): void => {setTrends(true)}}
+                    title={true}
+                  />
+                </Grid>
+              </div>
+            ) : (null)}
           </Grid>
         </Grid>
       </Grid>

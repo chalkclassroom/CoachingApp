@@ -120,7 +120,7 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div style={{width: '100%'}} id='ap'>
+    <div style={{width: '100%'}}>
       <Grid
         container
         direction="column"
@@ -128,7 +128,9 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
         alignItems="flex-start"
         style={{width: '100%'}}
       >
-        <Grid item style={{width: '100%'}}>
+        <Grid item style={{width: '100%',
+          height: '148px'
+        }}>
           <Grid
             container
             direction="row"
@@ -187,6 +189,7 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
                   lowLevel={data.summary.lowLevelQuestion + data.summary.lowLevelResponse}
                   highLevel={data.summary.highLevelQuestion + data.summary.highLevelResponse}
                   completed={(): void => {setSummary(true)}}
+                  title={true}
                 />
               ) : (null)}
             </Grid>
@@ -198,28 +201,33 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
                   llqCount={data.details.lowLevelQuestion}
                   llqResponseCount={data.details.lowLevelResponse}
                   completed={(): void => {setDetails(true)}}
+                  title={true}
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '8em'}}>
-              {data && data.trends ? (
-                <LevelOfInstructionTrendsGraph
-                  data={(): {
-                    labels: Array<string>;
-                    datasets: Array<{
-                      label: string;
-                      backgroundColor: string;
-                      borderColor: string;
-                      fill: boolean;
-                      lineTension: number;
-                      borderDash?: Array<number>;
-                      data: Array<number>;
-                    }>
-                  } | undefined => handleTrendsFormatData()}
-                  completed={(): void => {setTrends(true)}}
-                />
-              ) : (null)}
-            </Grid>
+            {data && data.trends ? (
+              <div>
+                {(data.summary && data.details) ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: (data.summary && data.details) ? '1em' : '8em'}}>
+                  <LevelOfInstructionTrendsGraph
+                    data={(): {
+                      labels: Array<string>;
+                      datasets: Array<{
+                        label: string;
+                        backgroundColor: string;
+                        borderColor: string;
+                        fill: boolean;
+                        lineTension: number;
+                        borderDash?: Array<number>;
+                        data: Array<number>;
+                      }>
+                    } | undefined => handleTrendsFormatData()}
+                    completed={(): void => {setTrends(true)}}
+                    title={true}
+                  />
+                </Grid>
+              </div>
+            ) : (null)}
           </Grid>
         </Grid>
       </Grid>

@@ -15,7 +15,8 @@ interface Props {
       data: Array<number>
     }>
   } | undefined,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -26,7 +27,8 @@ class ListeningTrendsGraph extends React.Component<Props, {}> {
 
   static propTypes = {
     data: PropTypes.func.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -57,9 +59,11 @@ class ListeningTrendsGraph extends React.Component<Props, {}> {
             intersect: true
           },
           title: {
-            display: false,
-            text: "Teacher Listening Trends",
+            display: this.props.title,
+            text: "Trends",
             fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
             fontStyle: "bold"
           },
           scales: {

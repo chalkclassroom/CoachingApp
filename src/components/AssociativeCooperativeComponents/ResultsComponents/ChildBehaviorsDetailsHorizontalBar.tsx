@@ -10,7 +10,8 @@ interface Props {
   ac3: number,
   ac4: number,
   totalVisits: number,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -32,7 +33,8 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
     ac3: PropTypes.number.isRequired,
     ac4: PropTypes.number.isRequired,
     totalVisits: PropTypes.number.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -95,6 +97,14 @@ class ChildBehaviorsDetailsHorizontalBar extends React.Component<Props, {}> {
           },
           legend: {
             display: false
+          },
+          title: {
+            display: this.props.title,
+            text: "Child Details",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

@@ -10,7 +10,8 @@ interface Props {
   listening4: number,
   listening5: number,
   listening6: number,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -32,7 +33,8 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
     listening4: PropTypes.number.isRequired,
     listening5: PropTypes.number.isRequired,
     listening6: PropTypes.number.isRequired,
-    completed: PropTypes.func
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -134,9 +136,11 @@ class ListeningDetailsChart extends React.Component<Props, {}> {
             display: false,
           },
           title: {
-            display: false,
-            text: "Listening to Children Details",
+            display: this.props.title,
+            text: "Details",
             fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
             fontStyle: "bold"
           },
           plugins: {

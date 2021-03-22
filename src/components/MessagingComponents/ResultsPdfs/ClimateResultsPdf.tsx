@@ -96,7 +96,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div style={{width: '100%'}} id='ap'>
+    <div style={{width: '100%'}}>
       <Grid
         container
         direction="column"
@@ -104,7 +104,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
         alignItems="flex-start"
         style={{width: '100%'}}
       >
-        <Grid item style={{width: '100%'}}>
+        <Grid item style={{width: '100%', height: '148px'}}>
           <Grid
             container
             direction="row"
@@ -163,6 +163,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
                   positiveResponses={props.data.details.specificCount + props.data.details.nonspecificCount}
                   negativeResponses={props.data.details.disapprovalCount + props.data.details.redirectionCount}
                   completed={(): void => {setSummary(true)}}
+                  title={true}
                 />
               ) : (null)}
             </Grid>
@@ -170,38 +171,47 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
               {props.data && props.data.summary && props.data.summary.toneRating ? (
                 <AverageTone
                   averageToneRating={props.data.summary.toneRating}
+                  pdf={true}
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.details ? (
+            {props.data && props.data.details ? (
+            <div>
+              {(props.data.summary && props.data.summary.toneRating) ? (<Grid item style={{height: '148px'}} />) : null}
+              <Grid item style={{paddingTop: (props.data.summary && props.data.summary.toneRating) ? '1em' : '8em'}}>
                 <BehaviorResponsesDetailsChart
                   specificBehaviorCount={props.data.details.specificCount}
                   nonspecificBehaviorCount={props.data.details.nonspecificCount}
                   disapprovalBehaviorCount={props.data.details.disapprovalCount}
                   redirectionsBehaviorCount={props.data.details.redirectionCount}
                   completed={(): void => {setDetails(true)}}
+                  title={true}
                 />
-              ) : (null)}
-            </Grid>
-            <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.trends ? (
-                <ClimateTrendsGraph
-                  data={(): {
-                    labels: Array<string>;
-                    datasets: Array<{
-                        label: string;
-                        backgroundColor: string;
-                        borderColor: string;
-                        fill: boolean;
-                        lineTension: number;
-                        data: Array<number>;
-                    }>
-                  } | undefined => handleTrendsFormatData()}
-                  completed={(): void => {setTrends(true)}}
-                />
-              ) : (null)}
-            </Grid>
+              </Grid>
+            </div>
+            ) : (null)}
+            {props.data && props.data.trends ? (
+              <div>
+                {((props.data.summary && props.data.summary.toneRating && !props.data.details) || (props.data.summary && !props.data.summary.toneRating && props.data.details)) ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: ((props.data.summary && props.data.summary.toneRating && !props.data.details) || (props.data.summary && !props.data.summary.toneRating && props.data.details)) ? '1em' : '8em'}}>
+                  <ClimateTrendsGraph
+                    data={(): {
+                      labels: Array<string>;
+                      datasets: Array<{
+                          label: string;
+                          backgroundColor: string;
+                          borderColor: string;
+                          fill: boolean;
+                          lineTension: number;
+                          data: Array<number>;
+                      }>
+                    } | undefined => handleTrendsFormatData()}
+                    completed={(): void => {setTrends(true)}}
+                    title={true}
+                  />
+                </Grid>
+              </div>
+            ) : (null)}
           </Grid>
         </Grid>
       </Grid>

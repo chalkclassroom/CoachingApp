@@ -10,7 +10,8 @@ interface Props {
   routines: number,
   behaviorManagement: number,
   other: number,
-  completed?(): void
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -32,6 +33,8 @@ class TransitionBarChart extends React.Component<Props, {}> {
     routines: PropTypes.number.isRequired,
     behaviorManagement: PropTypes.number.isRequired,
     other: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -138,6 +141,14 @@ class TransitionBarChart extends React.Component<Props, {}> {
           },
           legend: {
             display: false,
+          },
+          title: {
+            display: this.props.title,
+            text: "Details",
+            fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
+            fontStyle: "bold"
           },
           plugins: {
             datalabels: {

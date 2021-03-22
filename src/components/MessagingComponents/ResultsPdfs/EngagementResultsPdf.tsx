@@ -167,46 +167,56 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
                   offTask={data.summary.offTask}
                   engaged={data.summary.engaged}
                   completed={(): void => {setSummary(true)}}
+                  title={true}
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '8em'}}>
-              {data && data.summary ? (
+            {data && data.summary ? (
+              <Grid item style={{paddingTop: '8em', height: 500, paddingBottom: '4em'}}>
                 <AvgBarSummary
                   avgRating={data.summary.avgRating}
                   completed={(): void => {setAvgRating(true)}}
+                  title={true}
                 />
-              ) : (null)}
-            </Grid>
-            <Grid item style={{paddingTop: '8em'}}>
-              {data && data.details ? (
-                <EngagementBarDetails
-                  offTaskDetailSplit={[data.details.offTask0, data.details.offTask1, data.details.offTask2]}
-                  mildlyEngagedDetailSplit={[data.details.mildlyEngaged0, data.details.mildlyEngaged1, data.details.mildlyEngaged2]}
-                  engagedDetailSplit={[data.details.engaged0, data.details.engaged1, data.details.engaged2]}
-                  highlyEngagedDetailSplit={[data.details.highlyEngaged0, data.details.highlyEngaged1, data.details.highlyEngaged2]}
-                  completed={(): void => {setDetails(true)}}
-                />
-              ) : (null)}
-            </Grid>
-            <Grid item style={{paddingTop: '8em'}}>
-              {data && data.trends ? (
-                <TrendsSlider
-                  data={(): {
-                    labels: Array<Array<string>>;
-                    datasets: Array<{
-                      label: string;
-                      backgroundColor: string;
-                      borderColor: string;
-                      fill: boolean;
-                      lineTension: number;
-                      data: Array<number>;
-                    }>
-                  } | undefined => handleTrendsFormatData()}
-                  completed={(): void => {setTrends(true)}}
-                />
-              ) : (null)}
-            </Grid>
+              </Grid>
+            ) : (null)}
+            {data && data.details ? (
+              <div>
+                {data.summary ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: data.summary ? '1em' : '8em'}}>
+                  <EngagementBarDetails
+                    offTaskDetailSplit={[data.details.offTask0, data.details.offTask1, data.details.offTask2]}
+                    mildlyEngagedDetailSplit={[data.details.mildlyEngaged0, data.details.mildlyEngaged1, data.details.mildlyEngaged2]}
+                    engagedDetailSplit={[data.details.engaged0, data.details.engaged1, data.details.engaged2]}
+                    highlyEngagedDetailSplit={[data.details.highlyEngaged0, data.details.highlyEngaged1, data.details.highlyEngaged2]}
+                    completed={(): void => {setDetails(true)}}
+                    title={true}
+                  />
+                </Grid>
+              </div>
+            ) : (null)}
+            {data && data.trends ? (
+              <div>
+                {(data.summary && !data.details) ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: ((data.summary && !data.details) || (!data.summary && !data.details)) ? '1em' : '8em'}}>
+                  <TrendsSlider
+                    data={(): {
+                      labels: Array<Array<string>>;
+                      datasets: Array<{
+                        label: string;
+                        backgroundColor: string;
+                        borderColor: string;
+                        fill: boolean;
+                        lineTension: number;
+                        data: Array<number>;
+                      }>
+                    } | undefined => handleTrendsFormatData()}
+                    completed={(): void => {setTrends(true)}}
+                    title={true}
+                  />
+                </Grid>
+              </div>
+            ) : (null)}
           </Grid>
         </Grid>
       </Grid>
