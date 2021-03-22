@@ -41,7 +41,7 @@ interface Props {
       startDate: {value: string}
     }> | undefined
   } | undefined,
-  date: Date | undefined,
+  date: Date,
   teacher: Types.Teacher | undefined,
   id: string,
   printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
@@ -61,7 +61,7 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     // generate PDF once all graphs have rendered
     if (summary && details && trends && !attached) {
-      printDocument('Transition Time', new Date(), id, addToAttachmentList, id);
+      printDocument('Transition Time', date, id, addToAttachmentList, id);
       setAttached(true);
     }
   })

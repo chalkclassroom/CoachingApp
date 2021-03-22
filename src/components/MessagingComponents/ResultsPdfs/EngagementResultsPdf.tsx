@@ -39,7 +39,7 @@ interface Props {
       average: number
     }> | undefined
   } | undefined,
-  date: Date | undefined,
+  date: Date,
   teacher: Types.Teacher | undefined,
   id: string,
   printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
@@ -60,7 +60,7 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     // generate PDF once all graphs have rendered
     if (summary && avgRating && details && trends && !attached) {
-      printDocument('Student Engagement', new Date(), id, addToAttachmentList, id);
+      printDocument('Student Engagement', date, id, addToAttachmentList, id);
       setAttached(true);
     }
   })

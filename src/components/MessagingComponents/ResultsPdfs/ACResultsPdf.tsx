@@ -52,7 +52,7 @@ interface Props {
       nosupport: number
     }> | undefined,
   } | undefined,
-  date: Date | undefined,
+  date: Date,
   teacher: Types.Teacher | undefined,
   id: string,
   printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
@@ -75,7 +75,7 @@ const ACResultsPdf: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     // generate PDF once all graphs have rendered
     if (childSummary && teacherSummary && childDetails && teacherDetails && childTrends && teacherTrends && !attached) {
-      printDocument('Associative and Cooperative', new Date(), id, addToAttachmentList, id);
+      printDocument('Associative and Cooperative', date, id, addToAttachmentList, id);
       setAttached(true);
     }
   })

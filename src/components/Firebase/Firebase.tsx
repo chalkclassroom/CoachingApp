@@ -2415,7 +2415,8 @@ class Firebase {
       summary?: boolean,
       details?: boolean,
       trends?: boolean,
-      practice?: string
+      practice?: string,
+      date?: Date
     }
   ): Promise<void> => {
     const attachmentRef = this.db.collection("emails").doc(emailId).collection("attachments").doc(attachment.id);
@@ -2431,7 +2432,8 @@ class Firebase {
       summary: attachment.summary,
       details: attachment.details,
       trends: attachment.trends,
-      practice: attachment.practice
+      practice: attachment.practice,
+      date: attachment.date
     })
     .then(() => {
       console.log("Attachment saved successfully!");

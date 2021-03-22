@@ -33,7 +33,7 @@ interface Props {
       llqResponse: number
     }> | undefined
   } | undefined,
-  date: Date | undefined,
+  date: Date,
   teacher: Types.Teacher | undefined,
   id: string,
   printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
@@ -53,7 +53,7 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     // generate PDF once all graphs have rendered
     if (summary && details && trends && !attached) {
-      printDocument('Level of Instruction', new Date(), id, addToAttachmentList, id);
+      printDocument('Level of Instruction', date, id, addToAttachmentList, id);
       setAttached(true);
     }
   })

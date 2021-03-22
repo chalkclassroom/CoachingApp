@@ -80,7 +80,8 @@ type Attachment = {
   summary?: boolean,
   details?: boolean,
   trends?: boolean,
-  practice?: string
+  practice?: string,
+  date?: Date
 }
 
 type TransitionData = {
@@ -528,7 +529,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     teacherId: string,
     title: string,
     graphType: 'summary' | 'details' | 'trends',
-    practice: string
+    practice: string,
+    date: Date
   ): void => {
     const newAttachments = attachments;
     const newResultObject = {
@@ -543,7 +545,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       summary: graphType === 'summary' ? true : false,
       details: graphType === 'details' ? true : false,
       trends: graphType === 'trends' ? true : false,
-      practice: practice
+      practice: practice,
+      date: date
     };
     const idMatch = (element: {
       content: string,
@@ -557,7 +560,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       summary?: boolean,
       details?: boolean,
       trends?: boolean,
-      practice?: string
+      practice?: string,
+      date?: Date
     }): boolean => element.id === sessionId;
     if (newAttachments) {
       const index = newAttachments.findIndex(idMatch);
@@ -1256,7 +1260,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           summary: data[0],
           details: data[1],
           trends: data[2],
-          date: new Date()
+          date: result.date? result.date : new Date()
         })
       })
     };
@@ -1348,7 +1352,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           summary: data[0],
           details: data[1],
           trends: data[2],
-          date: new Date()
+          date: result.date? result.date : new Date()
         })
       })
     };
@@ -1396,7 +1400,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           teacherDetails: data[2] ? {teacher1: data[2].teacher1, teacher2: data[2].teacher2, teacher3: data[2].teacher3, teacher4: data[2].teacher4} : undefined,
           childTrends: data[3],
           teacherTrends: data[4],
-          date: new Date()
+          date: result.date? result.date : new Date()
         })
       })
     };
@@ -1436,7 +1440,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           summary: data[0],
           details: data[1],
           trends: data[2],
-          date: new Date()
+          date: result.date? result.date : new Date()
         })
       })
     };
@@ -1479,7 +1483,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           } : undefined,
           details: data[2],
           trends: data[3],
-          date: new Date()
+          date: result.date? result.date : new Date()
         })
       })
     };
@@ -1518,7 +1522,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           summary: data[0],
           details: data[1],
           trends: data[2],
-          date: new Date()
+          date: result.date? result.date : new Date()
         })
       })
     };
@@ -1566,7 +1570,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           teacherDetails: data[2] ? {teacher1: data[2].teacher1, teacher2: data[2].teacher2, teacher3: data[2].teacher3, teacher4: data[2].teacher4} : undefined,
           childTrends: data[3],
           teacherTrends: data[4],
-          date: new Date()
+          date: result.date? result.date : new Date()
         })
       })
     };
@@ -1615,7 +1619,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           teacherDetails: data[2] ? {teacher1: data[2].teacher1, teacher2: data[2].teacher2, teacher3: data[2].teacher3, teacher4: data[2].teacher4} : undefined,
           childTrends: data[3],
           teacherTrends: data[4],
-          date: new Date()
+          date: result.date? result.date : new Date()
         })
       })
     };
@@ -2173,7 +2177,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 printDocument={printDocument}
                 id={result.sessionId}
                 data={transition[index]}
-                date={date}
+                date={result.date}
                 teacher={teacherObject}
                 addToAttachmentList={addToAttachmentList}
               />
@@ -2202,7 +2206,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 printDocument={printDocument}
                 id={result.sessionId}
                 data={climate[index]}
-                date={date}
+                date={result.date}
                 teacher={teacherObject}
                 addToAttachmentList={addToAttachmentList}
               />
@@ -2231,7 +2235,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 printDocument={printDocument}
                 id={result.sessionId}
                 data={math[index]}
-                date={date}
+                date={result.date}
                 teacher={teacherObject}
                 addToAttachmentList={addToAttachmentList}
               />
@@ -2260,7 +2264,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 printDocument={printDocument}
                 id={result.sessionId}
                 data={instruction[index]}
-                date={date}
+                date={result.date}
                 teacher={teacherObject}
                 addToAttachmentList={addToAttachmentList}
               />
@@ -2289,7 +2293,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 printDocument={printDocument}
                 id={result.sessionId}
                 data={engagement[index]}
-                date={date}
+                date={result.date}
                 teacher={teacherObject}
                 addToAttachmentList={addToAttachmentList}
               />
@@ -2318,7 +2322,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 printDocument={printDocument}
                 id={result.sessionId}
                 data={listening[index]}
-                date={date}
+                date={result.date}
                 teacher={teacherObject}
                 addToAttachmentList={addToAttachmentList}
               />
@@ -2347,7 +2351,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 printDocument={printDocument}
                 id={result.sessionId}
                 data={sequential[index]}
-                date={date}
+                date={result.date}
                 teacher={teacherObject}
                 addToAttachmentList={addToAttachmentList}
               />
@@ -2376,7 +2380,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                 printDocument={printDocument}
                 id={result.sessionId}
                 data={ac[index]}
-                date={date}
+                date={result.date}
                 teacher={teacherObject}
                 addToAttachmentList={addToAttachmentList}
               />

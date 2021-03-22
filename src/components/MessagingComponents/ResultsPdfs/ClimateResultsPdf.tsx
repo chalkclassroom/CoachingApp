@@ -30,7 +30,7 @@ interface Props {
       negative: number
     }> | undefined
   } | undefined,
-  date: Date | undefined,
+  date: Date,
   teacher: Types.Teacher | undefined,
   id: string,
   printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
@@ -38,17 +38,19 @@ interface Props {
 }
 
 const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
+
+  const {printDocument, id, addToAttachmentList, data, date, teacher} = props;
   
   // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
-  const [summary, setSummary] = useState(props.data && props.data.summary ? false : true);
-  const [details, setDetails] = useState(props.data && props.data.details ? false : true);
-  const [trends, setTrends] = useState(props.data && props.data.trends ? false : true);
+  const [summary, setSummary] = useState(data && data.summary ? false : true);
+  const [details, setDetails] = useState(data && data.details ? false : true);
+  const [trends, setTrends] = useState(data && data.trends ? false : true);
   const [attached, setAttached] = useState(false);
 
   useEffect(() => {
     // generate PDF once all graphs have rendered
     if (summary && details && trends && !attached) {
-      props.printDocument('Classroom Climate', new Date(), props.id, props.addToAttachmentList, props.id);
+      printDocument('Classroom Climate', date, id, addToAttachmentList, id);
       setAttached(true);
     }
   })
@@ -68,13 +70,13 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
       data: Array<number>
     }>
   } | undefined => {
-    if (props.data) {
+    if (data) {
       return {
-        labels: props.data.trends ? props.data.trends.map(observation => moment(observation.dayOfEvent.value).format("MMM Do")) : [],
+        labels: data.trends ? data.trends.map(observation => moment(observation.dayOfEvent.value).format("MMM Do")) : [],
         datasets: [
           {
             label: "Redirection/Disapproval",
-            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.negative / (observation.positive + observation.negative)) * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round((observation.negative / (observation.positive + observation.negative)) * 100)) : [],
             backgroundColor: Constants.ClimateTypeColors.negativeBar,
             borderColor: Constants.ClimateTypeColors.negativeBar,
             fill: false,
@@ -82,7 +84,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
           },
           {
             label: "Specific/General Approval",
-            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.positive / (observation.positive + observation.negative)) * 100)) : [],
+            data: data.trends ? data.trends.map(observation => Math.round((observation.positive / (observation.positive + observation.negative)) * 100)) : [],
             backgroundColor: Constants.ClimateTypeColors.positiveBar,
             borderColor: Constants.ClimateTypeColors.positiveBar,
             fill: false,
@@ -145,12 +147,12 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
             style={{fontFamily: 'Arimo'}}
           >
             <Grid item xs={4}>
-              {props.teacher ? (props.teacher.firstName + " " + props.teacher.lastName) : (null)}
+              {teacher ? (teacher.firstName + " " + teacher.lastName) : (null)}
             </Grid>
             <Grid item xs={4} />
             <Grid item xs={4}>
               <Grid container direction="row" justify="flex-end">
-                {moment(props.date).format('MM/DD/YYYY')}
+                {moment(date).format('MM/DD/YYYY')}
               </Grid>
             </Grid>
           </Grid>
@@ -158,42 +160,42 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
             <Grid item style={{paddingTop: '1em'}}>
-              {props.data && props.data.summary && props.data.details ? (
+              {data && data.summary && data.details ? (
                 <BehaviorResponsesSummaryChart
-                  positiveResponses={props.data.details.specificCount + props.data.details.nonspecificCount}
-                  negativeResponses={props.data.details.disapprovalCount + props.data.details.redirectionCount}
+                  positiveResponses={data.details.specificCount + data.details.nonspecificCount}
+                  negativeResponses={data.details.disapprovalCount + data.details.redirectionCount}
                   completed={(): void => {setSummary(true)}}
                   title={true}
                 />
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.summary && props.data.summary.toneRating ? (
+              {data && data.summary && data.summary.toneRating ? (
                 <AverageTone
-                  averageToneRating={props.data.summary.toneRating}
+                  averageToneRating={data.summary.toneRating}
                   pdf={true}
                 />
               ) : (null)}
             </Grid>
-            {props.data && props.data.details ? (
+            {data && data.details ? (
             <div>
-              {(props.data.summary && props.data.summary.toneRating) ? (<Grid item style={{height: '148px'}} />) : null}
-              <Grid item style={{paddingTop: (props.data.summary && props.data.summary.toneRating) ? '1em' : '8em'}}>
+              {(data.summary && data.summary.toneRating) ? (<Grid item style={{height: '148px'}} />) : null}
+              <Grid item style={{paddingTop: (data.summary && data.summary.toneRating) ? '1em' : '8em'}}>
                 <BehaviorResponsesDetailsChart
-                  specificBehaviorCount={props.data.details.specificCount}
-                  nonspecificBehaviorCount={props.data.details.nonspecificCount}
-                  disapprovalBehaviorCount={props.data.details.disapprovalCount}
-                  redirectionsBehaviorCount={props.data.details.redirectionCount}
+                  specificBehaviorCount={data.details.specificCount}
+                  nonspecificBehaviorCount={data.details.nonspecificCount}
+                  disapprovalBehaviorCount={data.details.disapprovalCount}
+                  redirectionsBehaviorCount={data.details.redirectionCount}
                   completed={(): void => {setDetails(true)}}
                   title={true}
                 />
               </Grid>
             </div>
             ) : (null)}
-            {props.data && props.data.trends ? (
+            {data && data.trends ? (
               <div>
-                {((props.data.summary && props.data.summary.toneRating && !props.data.details) || (props.data.summary && !props.data.summary.toneRating && props.data.details)) ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: ((props.data.summary && props.data.summary.toneRating && !props.data.details) || (props.data.summary && !props.data.summary.toneRating && props.data.details)) ? '1em' : '8em'}}>
+                {((data.summary && data.summary.toneRating && !data.details) || (data.summary && !data.summary.toneRating && data.details)) ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: ((data.summary && data.summary.toneRating && !data.details) || (data.summary && !data.summary.toneRating && data.details)) ? '1em' : '8em'}}>
                   <ClimateTrendsGraph
                     data={(): {
                       labels: Array<string>;

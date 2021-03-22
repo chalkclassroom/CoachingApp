@@ -41,7 +41,8 @@ interface Props {
     teacherId: string,
     title: string,
     graphType: 'summary' | 'details' | 'trends',
-    practice: string
+    practice: string,
+    date: Date
   ): void
 }
 
@@ -267,7 +268,8 @@ class ResultsList extends React.Component<Props, State>{
       this.props.teacherId ? this.props.teacherId : '',
       practice + ' ' + moment(observationDate).format('MM.DD.YYYY') + ' Results.pdf',
       resultType,
-      practice
+      practice,
+      observationDate
     );
   }
 

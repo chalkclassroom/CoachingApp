@@ -50,7 +50,7 @@ interface Props {
       noSupport: number
     }> | undefined,
   } | undefined,
-  date: Date | undefined,
+  date: Date,
   teacher: Types.Teacher | undefined,
   id: string,
   printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
@@ -73,7 +73,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     // generate PDF once all graphs have rendered
     if (childSummary && teacherSummary && childDetails && teacherDetails && childTrends && teacherTrends && !attached) {
-      printDocument('Math Instruction', new Date(), id, addToAttachmentList, id);
+      printDocument('Math Instruction', date, id, addToAttachmentList, id);
       setAttached(true);
     }
   })

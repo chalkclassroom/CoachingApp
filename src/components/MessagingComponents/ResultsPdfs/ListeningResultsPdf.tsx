@@ -29,7 +29,7 @@ interface ListeningResultsProps {
       notListening: number
     }> | undefined
   } | undefined,
-  date: Date | undefined,
+  date: Date,
   teacher: Types.Teacher | undefined,
   id: string,
   printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
@@ -49,7 +49,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
   useEffect(() => {
     // generate PDF once all graphs have rendered
     if (summary && details && trends && !attached) {
-      printDocument('Listening to Children', new Date(), id, addToAttachmentList, id);
+      printDocument('Listening to Children', date, id, addToAttachmentList, id);
       setAttached(true);
     }
   })
