@@ -2466,6 +2466,37 @@ class Firebase {
       }
     };
 
+    /**
+   * deletes email attachment from database
+   * @param {string} emailId
+   * @param {string} attachmentId
+   */
+  deleteAttachment = async (
+    emailId: string,
+    attachmentId: string
+  ): Promise<MessagingTypes.Email | void> => {
+    if (this.auth.currentUser) {
+      if (this.db.collection("emails").doc(emailId) && this.db.collection("emails").doc(emailId).collection("attachments").doc(attachmentId)) {
+      return this.db
+        .collection("emails")
+        .doc(emailId)
+        .collection("attachments")
+        .doc(attachmentId)
+        .delete()
+        .then(() =>
+          console.log("Attachment deleted.")
+        )
+        .catch((error: Error) =>
+          console.error(
+            "An error occurred when deleting the draft", error
+          )
+        );
+      } else {
+        return;
+      }
+    }
+  };
+
   /**
    * deletes draft email from database
    * @param {string} emailId

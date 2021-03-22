@@ -12,9 +12,24 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 interface EmailBodyProps {
   email: string | undefined,
+  emailId: string | undefined,
   setEmail: React.Dispatch<React.SetStateAction<string | undefined>>,
-  attachments: Array<{content: string, filename: string, type: string, disposition: string}> | undefined,
-  handleDelete(position: number): void,
+  attachments: Array<{
+    content: string,
+    filename: string,
+    type: string,
+    disposition: string,
+    id: string,
+    teacherId: string,
+    actionPlan: boolean,
+    result: boolean,
+    summary?: boolean,
+    details?: boolean,
+    trends?: boolean,
+    practice?: string,
+    date?: Date
+  }> | undefined,
+  handleDelete(position: number, emailId: string | undefined, attachmentId: string): void,
   readOnly: boolean | undefined
 }
 
@@ -110,7 +125,7 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
                   key={index}
                   content={attachment.content}
                   title={attachment.filename}
-                  handleDelete={(): void => props.handleDelete(index)}
+                  handleDelete={(): void => props.handleDelete(index, props.emailId, attachment.id)}
                   handlePreview={(): void => console.log('insert preview func here')}
                 />
               )

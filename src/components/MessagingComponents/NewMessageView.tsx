@@ -606,11 +606,14 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   }
 
-  const removeAttachment = (position: number): void => {
+  const removeAttachment = (position: number, emailId: string | undefined, attachmentId: string): void => {
     const newAttachments = attachments;
     if (newAttachments) {
       newAttachments.splice(position, 1);
       setAttachments(newAttachments);
+    }
+    if (emailId) {
+      firebase.deleteAttachment(emailId, attachmentId)
     }
   }
 
@@ -2441,6 +2444,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
               <Grid item style={{width: '100%', height: '50vh', paddingTop: '1em', paddingBottom: '1em'}}>
                 <EmailBody
                   email={email}
+                  emailId={emailId}
                   setEmail={setEmail}
                   attachments={attachments}
                   handleDelete={removeAttachment}
