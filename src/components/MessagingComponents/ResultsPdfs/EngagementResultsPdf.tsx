@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import PieSummary from '../../StudentEngagementComponents/ResultsComponents/PieSummary';
@@ -7,7 +9,7 @@ import EngagementBarDetails from '../../StudentEngagementComponents/ResultsCompo
 import TrendsSlider from '../../StudentEngagementComponents/ResultsComponents/TrendsSlider';
 import EngagementIconImage from '../../../assets/images/EngagementIconImage.png';
 import LogoImage from '../../../assets/images/LogoImage.png';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as Types from '../../../constants/Types';
 import * as Constants from '../../../constants/Constants';
 
@@ -38,10 +40,30 @@ interface Props {
     }> | undefined
   } | undefined,
   date: Date | undefined,
-  teacher: Types.Teacher | undefined
+  teacher: Types.Teacher | undefined,
+  id: string,
+  printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
+  addToAttachmentList(base64string: string, id: string): void
 }
 
 const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
+
+  const {printDocument, id, addToAttachmentList, data, date, teacher} = props;
+
+  // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
+  const [summary, setSummary] = useState(data && data.summary ? false : true);
+  const [avgRating, setAvgRating] = useState(data && data.summary ? false : true);
+  const [details, setDetails] = useState(data && data.details ? false : true);
+  const [trends, setTrends] = useState(data && data.trends ? false : true);
+  const [attached, setAttached] = useState(false);
+
+  useEffect(() => {
+    // generate PDF once all graphs have rendered
+    if (summary && avgRating && details && trends && !attached) {
+      printDocument('Student Engagement', new Date(), id, addToAttachmentList, id);
+      setAttached(true);
+    }
+  })
   
   /**
    * specifies formatting for child trends
@@ -58,9 +80,9 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
       data: Array<number>
     }>
   } | undefined => {
-    if (props.data) {
+    if (data) {
       return {
-        labels: props.data.trends ? [props.data.trends.map(observation => moment(observation.startDate.value).format("MMM Do"))] : [],
+        labels: data.trends ? [data.trends.map(observation => moment(observation.startDate.value).format("MMM Do"))] : [],
         datasets: [
           {
             label: "Average",
@@ -68,7 +90,7 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
             borderColor: Constants.Colors.SE,
             fill: false,
             lineTension: 0,
-            data: props.data.trends ? props.data.trends.map(observation => Math.round((observation.average + Number.EPSILON) * 100) / 100) : []
+            data: data.trends ? data.trends.map(observation => Math.round((observation.average + Number.EPSILON) * 100) / 100) : []
           }
         ]
       };
@@ -127,12 +149,12 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
             style={{fontFamily: 'Arimo'}}
           >
             <Grid item xs={4}>
-              {props.teacher ? (props.teacher.firstName + " " + props.teacher.lastName) : (null)}
+              {teacher ? (teacher.firstName + " " + teacher.lastName) : (null)}
             </Grid>
             <Grid item xs={4} />
             <Grid item xs={4}>
               <Grid container direction="row" justify="flex-end">
-                {moment(props.date).format('MM/DD/YYYY')}
+                {moment(date).format('MM/DD/YYYY')}
               </Grid>
             </Grid>
           </Grid>
@@ -140,32 +162,35 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
         <Grid item style={{width: '100%'}}>
           <Grid container direction="row" justify="center" alignItems="center" style={{width: '100%'}}>
             <Grid item style={{paddingTop: '1em'}}>
-              {props.data && props.data.summary ? (
+              {data && data.summary ? (
                 <PieSummary
-                  offTask={props.data.summary.offTask}
-                  engaged={props.data.summary.engaged}
+                  offTask={data.summary.offTask}
+                  engaged={data.summary.engaged}
+                  completed={(): void => {setSummary(true)}}
                 />
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.summary ? (
+              {data && data.summary ? (
                 <AvgBarSummary
-                  avgRating={props.data.summary.avgRating}
+                  avgRating={data.summary.avgRating}
+                  completed={(): void => {setAvgRating(true)}}
                 />
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.details ? (
+              {data && data.details ? (
                 <EngagementBarDetails
-                  offTaskDetailSplit={[props.data.details.offTask0, props.data.details.offTask1, props.data.details.offTask2]}
-                  mildlyEngagedDetailSplit={[props.data.details.mildlyEngaged0, props.data.details.mildlyEngaged1, props.data.details.mildlyEngaged2]}
-                  engagedDetailSplit={[props.data.details.engaged0, props.data.details.engaged1, props.data.details.engaged2]}
-                  highlyEngagedDetailSplit={[props.data.details.highlyEngaged0, props.data.details.highlyEngaged1, props.data.details.highlyEngaged2]}
+                  offTaskDetailSplit={[data.details.offTask0, data.details.offTask1, data.details.offTask2]}
+                  mildlyEngagedDetailSplit={[data.details.mildlyEngaged0, data.details.mildlyEngaged1, data.details.mildlyEngaged2]}
+                  engagedDetailSplit={[data.details.engaged0, data.details.engaged1, data.details.engaged2]}
+                  highlyEngagedDetailSplit={[data.details.highlyEngaged0, data.details.highlyEngaged1, data.details.highlyEngaged2]}
+                  completed={(): void => {setDetails(true)}}
                 />
               ) : (null)}
             </Grid>
             <Grid item style={{paddingTop: '8em'}}>
-              {props.data && props.data.trends ? (
+              {data && data.trends ? (
                 <TrendsSlider
                   data={(): {
                     labels: Array<Array<string>>;
@@ -178,6 +203,7 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
                       data: Array<number>;
                     }>
                   } | undefined => handleTrendsFormatData()}
+                  completed={(): void => {setTrends(true)}}
                 />
               ) : (null)}
             </Grid>
@@ -186,6 +212,11 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
       </Grid>
     </div>
   );
+}
+
+EngagementResultsPdf.propTypes = {
+  printDocument: PropTypes.func.isRequired,
+  addToAttachmentList: PropTypes.func.isRequired
 }
 
 export default (EngagementResultsPdf);

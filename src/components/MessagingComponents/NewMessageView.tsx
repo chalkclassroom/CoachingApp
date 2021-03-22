@@ -405,7 +405,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     details: InstructionData['details'],
     trends: InstructionData['trends'],
   }>>([]);
-  const [engagement, setEngagement] = useState<EngagementData>();
+  const [engagement, setEngagement] = useState<Array<{
+    sessionId: string,
+    date: Date,
+    summary: EngagementData['summary'],
+    details: EngagementData['details'],
+    trends: EngagementData['trends'],
+  }>>([]);
   const [listening, setListening]= useState<ListeningData>();
   const [sequential, setSequential] = useState<Array<{
     sessionId: string,
@@ -1431,7 +1437,50 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   }
 
-  const attachEngagementResult = (
+  const attachEngagementResult = async (
+    engagementResults: Array<Attachment>
+  ): Promise<Array<{
+    sessionId: string,
+    summary: EngagementData['summary'],
+    details: EngagementData['details'],
+    trends: EngagementData['trends'],
+    date: Date
+  }> | void> => {
+    const engagementData: Array<{
+      sessionId: string,
+      summary: EngagementData['summary'],
+      details: EngagementData['details'],
+      trends: EngagementData['trends'],
+      date: Date
+    }> = [];
+    const getData = function (result: Attachment): Promise<void> {
+      return getEngagementData(result.id, result.summary, result.details, result.trends).then((data) => {
+        engagementData.push({
+          sessionId: result.id,
+          summary: data[0] && data[1] ? {
+            offTask: data[0].offTask,
+            engaged: data[0].engaged,
+            avgRating: data[1].avgRating
+          } : undefined,
+          details: data[2],
+          trends: data[3],
+          date: new Date()
+        })
+      })
+    };
+    if (engagementResults.length > 0) {
+      const getDataForAll = Promise.all(engagementResults.map(getData))
+      getDataForAll.then(() => {
+        setEngagement(engagementData);
+        setRenderEngagementPdf(true);
+        return engagementData
+      })
+    } else {
+      return;
+    }
+  }
+
+  const attachEngagementResult2 = (
     sessionId: string,
     summary: boolean | undefined,
     details: boolean | undefined,
@@ -1605,7 +1654,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       const instructionResults = attachedResults.filter(obj => {
         return obj.practice === 'level'
       });
-      console.log('INSTRUCTION RESULTS', instructionResults)
+      const engagementResults = attachedResults.filter(obj => {
+        return obj.practice === 'engagement'
+      });
       const sequentialResults = attachedResults.filter(obj => {
         return obj.practice === 'sequential'
       });
@@ -1623,6 +1674,9 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       }
       if (instructionResults.length > 0) {
         attachInstructionResult(instructionResults)
+      }
+      if (engagementResults.length > 0) {
+        attachEngagementResult(engagementResults)
       }
       if (sequentialResults.length > 0) {
         attachSequentialResult(sequentialResults)
@@ -1646,7 +1700,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         } else if (result.practice === 'level') {
           // attachInstructionResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'engagement') {
-          attachEngagementResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
+          // attachEngagementResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'listening') {
           attachListeningResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
         } else if (result.practice === 'sequential') {
@@ -2204,26 +2258,34 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
           )
         })
       ) : (null)}
-      {renderEngagementPdf ? (
-        <div
-        id="SE"
-        style={{
-          backgroundColor: '#ffffff',
-          width: '210mm',
-          minHeight: '100mm',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          visibility: 'hidden',
-          position: 'fixed',
-          right: -1000
-        }}
-      >
-        <EngagementResultsPdf
-          data={engagement}
-          date={date}
-          teacher={teacherObject}
-        />
-      </div>
+      {renderEngagementPdf && engagement ? (
+        engagement.map((result, index) => {
+          return (
+            <div
+              key={index}
+              id={result.sessionId}
+              style={{
+                backgroundColor: '#ffffff',
+                width: '210mm',
+                minHeight: '100mm',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                visibility: 'hidden',
+                position: 'fixed',
+                right: -1000
+              }}
+            >
+              <EngagementResultsPdf
+                printDocument={printDocument}
+                id={result.sessionId}
+                data={engagement[index]}
+                date={date}
+                teacher={teacherObject}
+                addToAttachmentList={addToAttachmentList}
+              />
+            </div>
+          )
+        })
       ) : (null)}
       {renderListeningPdf ? (
         <div

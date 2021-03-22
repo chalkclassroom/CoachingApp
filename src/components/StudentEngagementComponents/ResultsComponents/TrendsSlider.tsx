@@ -5,84 +5,6 @@ import 'slick-carousel/slick/slick.css';
 import Grid from "@material-ui/core/Grid/Grid";
 import { Line } from "react-chartjs-2";
 
-const EngagementTrendsOptions = {
-  showScale: true,
-  pointDot: true,
-  showLines: true,
-  tooltips: {
-    mode: "index",
-    intersect: false
-  },
-  hover: {
-    mode: "nearest",
-    intersect: true
-  },
-  scales: {
-    xAxes: [
-      {
-        display: true,
-        scaleLabel: {
-          display: true,
-          labelString: "Date",
-          fontColor: "black",
-          fontSize: 18,
-          fontFamily: 'Arimo'
-        }
-      }
-    ],
-    yAxes: [
-      {
-        scaleLabel: {
-          display: true,
-          labelString: "Average Engagement Rating",
-          fontFamily: 'Arimo',
-          fontSize: 18,
-          fontColor: 'black'
-        },
-        ticks: {
-          beginAtZero: true,
-          min: 0,
-          max: 3,
-          stepSize: 1,
-          callback: function (value: number): string | void {
-            switch (value) {
-              case 0:
-                return 'off task';
-                break;
-              case 1:
-                return 'mildly engaged';
-                break;
-              case 2:
-                return 'engaged';
-                break;
-              case 3:
-                return 'highly engaged';
-                break;
-              default:
-                break;
-            }
-          }
-        }
-      }
-    ]
-  },
-  plugins: {
-    datalabels: {
-      display: "auto",
-      color: "gray",
-      fontFamily: 'Arimo',
-      align: function(value: {
-        dataIndex: number,
-        dataset: {
-          data: Array<number>
-        }
-      }): string {
-        return value.dataset.data[value.dataIndex] >= 4.9 ? "bottom" : "top";
-      }
-    }
-  }
-};
-
 interface Props {
   data(): {
     labels: Array<Array<string>>,
@@ -94,7 +16,8 @@ interface Props {
       lineTension: number,
       data: Array<number>
     }>
-  } | undefined
+  } | undefined,
+  completed?(): void
 }
 
 /**
@@ -105,7 +28,8 @@ interface Props {
 class TrendsSlider extends React.Component<Props, {}> {
 
   static propTypes = {
-    data: PropTypes.func.isRequired
+    data: PropTypes.func.isRequired,
+    completed: PropTypes.func
   };
 
   /**
@@ -113,12 +37,94 @@ class TrendsSlider extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     return (
       <div>
         <Grid justify={"center"} direction={"column"}>
           <Line
             data={this.props.data}
-            options={EngagementTrendsOptions}
+            options={{
+              animation: {
+                onComplete: function(): void {
+                  isCompleted ? isCompleted() : null
+                }
+              },
+              showScale: true,
+              pointDot: true,
+              showLines: true,
+              tooltips: {
+                mode: "index",
+                intersect: false
+              },
+              hover: {
+                mode: "nearest",
+                intersect: true
+              },
+              scales: {
+                xAxes: [
+                  {
+                    display: true,
+                    scaleLabel: {
+                      display: true,
+                      labelString: "Date",
+                      fontColor: "black",
+                      fontSize: 18,
+                      fontFamily: 'Arimo'
+                    }
+                  }
+                ],
+                yAxes: [
+                  {
+                    scaleLabel: {
+                      display: true,
+                      labelString: "Average Engagement Rating",
+                      fontFamily: 'Arimo',
+                      fontSize: 18,
+                      fontColor: 'black'
+                    },
+                    ticks: {
+                      beginAtZero: true,
+                      min: 0,
+                      max: 3,
+                      stepSize: 1,
+                      callback: function (value: number): string | void {
+                        switch (value) {
+                          case 0:
+                            return 'off task';
+                            break;
+                          case 1:
+                            return 'mildly engaged';
+                            break;
+                          case 2:
+                            return 'engaged';
+                            break;
+                          case 3:
+                            return 'highly engaged';
+                            break;
+                          default:
+                            break;
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              plugins: {
+                datalabels: {
+                  display: "auto",
+                  color: "gray",
+                  fontFamily: 'Arimo',
+                  align: function(value: {
+                    dataIndex: number,
+                    dataset: {
+                      data: Array<number>
+                    }
+                  }): string {
+                    return value.dataset.data[value.dataIndex] >= 4.9 ? "bottom" : "top";
+                  }
+                }
+              }
+            }}
             width={650}
             height={400}
           />

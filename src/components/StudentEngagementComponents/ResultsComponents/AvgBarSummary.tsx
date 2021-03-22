@@ -5,6 +5,7 @@ import * as Constants from '../../../constants/Constants';
 
 interface Props {
   avgRating: number,
+  completed?(): void
 }
 
 /**
@@ -22,6 +23,7 @@ class AvgBarSummary extends React.Component<Props, {}> {
 
   static propTypes = {
     avgRating: PropTypes.number.isRequired,
+    completed: PropTypes.func
   };
 
   /**
@@ -29,6 +31,7 @@ class AvgBarSummary extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const avgEngagementData = {
       datasets: [
         {
@@ -46,6 +49,11 @@ class AvgBarSummary extends React.Component<Props, {}> {
         width={650}
         height={50}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           responsive: true,
           maintainAspectRatio: true,
           scales: {

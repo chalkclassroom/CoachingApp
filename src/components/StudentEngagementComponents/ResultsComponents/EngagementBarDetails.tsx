@@ -9,6 +9,7 @@ interface Props {
   mildlyEngagedDetailSplit: Array<number>,
   engagedDetailSplit: Array<number>,
   highlyEngagedDetailSplit: Array<number>,
+  completed?(): void
 }
 
 /**
@@ -29,6 +30,7 @@ class EngagementBarDetails extends React.Component<Props, {}> {
     mildlyEngagedDetailSplit: PropTypes.array.isRequired,
     engagedDetailSplit: PropTypes.array.isRequired,
     highlyEngagedDetailSplit: PropTypes.array.isRequired,
+    completed: PropTypes.func
   };
 
   /**
@@ -36,6 +38,7 @@ class EngagementBarDetails extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const engagementData = {
       labels: [
         ["Off Task"],
@@ -69,6 +72,11 @@ class EngagementBarDetails extends React.Component<Props, {}> {
       <HorizontalBar
         data={engagementData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
