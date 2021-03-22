@@ -1630,25 +1630,25 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         return obj.result === true
       });
       const transitionResults = attachedResults.filter(obj => {
-        return obj.practice === 'transition'
+        return obj.practice === 'Transition Time'
       });
       const climateResults = attachedResults.filter(obj => {
-        return obj.practice === 'climate'
+        return obj.practice === 'Classroom Climate'
       });
       const mathResults = attachedResults.filter(obj => {
-        return obj.practice === 'math'
+        return obj.practice === 'Math Instruction'
       });
       const instructionResults = attachedResults.filter(obj => {
-        return obj.practice === 'level'
+        return obj.practice === 'Level of Instruction'
       });
       const engagementResults = attachedResults.filter(obj => {
-        return obj.practice === 'engagement'
+        return obj.practice === 'Student Engagement'
       });
       const listeningResults = attachedResults.filter(obj => {
-        return obj.practice === 'listening'
+        return obj.practice === 'Listening to Children'
       });
       const sequentialResults = attachedResults.filter(obj => {
-        return obj.practice === 'sequential'
+        return obj.practice === 'Sequential Activities'
       });
       const acResults = attachedResults.filter(obj => {
         return obj.practice === 'Associative and Cooperative'

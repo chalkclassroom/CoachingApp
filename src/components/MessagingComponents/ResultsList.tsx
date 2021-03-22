@@ -393,7 +393,7 @@ class ResultsList extends React.Component<Props, State>{
                       </Typography>
                     </TableCell>
                     <TableCell style={{width: '15%'}}>
-                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'summary', observationDate, row.practice === 'AC' ? 'Associative and Cooperative' : row.practice)}} alignItems="center">
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'summary', observationDate, practice)}} alignItems="center">
                         <Grid container direction="row" justify="center" alignItems="center">
                           <ListItemIcon>
                             <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['summary' as ResultTypeKey] : false} />
@@ -402,7 +402,7 @@ class ResultsList extends React.Component<Props, State>{
                       </ListItem>
                     </TableCell>
                     <TableCell style={{width: '15%'}}>
-                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'details', observationDate, row.practice === 'AC' ? 'Associative and Cooperative' : row.practice)}}>
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'details', observationDate, practice)}}>
                         <Grid container direction="row" justify="center" alignItems="center">
                           <ListItemIcon>
                             <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['details' as ResultTypeKey] : false} />
@@ -411,7 +411,7 @@ class ResultsList extends React.Component<Props, State>{
                       </ListItem>
                     </TableCell>
                     <TableCell style={{width: '15%'}}>
-                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'trends', observationDate, row.practice === 'AC' ? 'Associative and Cooperative' : row.practice)}}>
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, 'trends', observationDate, practice)}}>
                         <Grid container direction="row" justify="center" alignItems="center">
                           <ListItemIcon>
                             <Checkbox checked={(this.state.checked && this.state.checked[row.id]) ? this.state.checked[row.id]['trends' as ResultTypeKey] : false} />

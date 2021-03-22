@@ -197,10 +197,8 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
                         lineTension: number;
                         data: Array<number>;
                     }>
-                  } | undefined => handleTrendsFormatData()
-                  
-                }
-                completed={(): void => {setTrends(true)}}
+                  } | undefined => handleTrendsFormatData()}
+                  completed={(): void => {setTrends(true)}}
                 />
               ) : (null)}
             </Grid>
