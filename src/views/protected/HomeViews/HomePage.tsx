@@ -17,7 +17,7 @@ import ConferencePlansIcon from "@material-ui/icons/ListAlt";
 import TeacherModal from "./TeacherModal";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import CHALKLogoGIF from '../../../assets/images/CHALKLogoGIF.gif';
-import { getCoach } from '../../../state/actions/coach';
+import { coachLoaded, Role } from '../../../state/actions/coach'
 import { connect } from 'react-redux';
 import * as Types from '../../../constants/Types';
 import ReactRouterPropTypes from 'react-router-prop-types';
@@ -160,6 +160,7 @@ class HomePage extends React.Component<Props, State> {
     }).isRequired,
     coachName: PropTypes.string.isRequired,
     getCoach: PropTypes.func.isRequired,
+    userRole: PropTypes.object,
     history: ReactRouterPropTypes.history
   }
 
@@ -168,13 +169,13 @@ class HomePage extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const { classes } = this.props;
+    const { classes, userRole, coachName } = this.props;
     return (
       <div className={classes.root}>
         <FirebaseContext.Consumer>
           {(firebase: Types.FirebaseAppBar): React.ReactNode => <AppBar firebase={firebase} noBack={true} />}
         </FirebaseContext.Consumer>
-        {this.props.coachName ? (
+        {coachName ? (
           <Grid
             container
             alignItems="center"
@@ -186,7 +187,7 @@ class HomePage extends React.Component<Props, State> {
               <Grid container direction="row" justify="center" alignItems="center" style={{height: '100%'}}>
                 <Grid item>
                 <Typography variant="h3" align={"center"} style={{fontFamily: 'Arimo', verticalAlign: 'center'}}>
-                  Welcome, {this.props.coachName}!
+                  Welcome, {coachName}!
                 </Typography>
                 </Grid>
               </Grid>
@@ -266,7 +267,7 @@ class HomePage extends React.Component<Props, State> {
                     </Grid>
                   </CardContent>
                 </Card>
-                <Card className={classes.card}>
+                {[Role.COACH, Role.ADMIN].find(r => r === userRole) ? <Card className={classes.card}>
                   <CardContent>
                     <Grid
                       container
@@ -285,7 +286,7 @@ class HomePage extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </CardContent>
-                </Card>
+                </Card> :  null}
               </Grid>
               <Grid
                 container
@@ -314,7 +315,7 @@ class HomePage extends React.Component<Props, State> {
                     </Grid>
                   </CardContent>
                 </Card>
-                <Card className={classes.card}>
+                {[Role.ADMIN, Role.COACH].find(r => r === userRole) ? <Card className={classes.card}>
                   <CardContent>
                     <Grid
                       container
@@ -333,7 +334,7 @@ class HomePage extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </CardContent>
-                </Card>
+                </Card> : null}
                 <Card
                   className={classes.card}
                   onClick={(): void =>
@@ -451,7 +452,7 @@ class HomePage extends React.Component<Props, State> {
                     </Card>
                   </Grid>
                   <Grid item xs={6}>
-                    <Card className={classes.card}>
+                    {[Role.ADMIN, Role.COACH].find(r => userRole === r) ? <Card className={classes.card}>
                       <CardContent>
                         <Grid
                           container
@@ -470,7 +471,7 @@ class HomePage extends React.Component<Props, State> {
                           </Grid>
                         </Grid>
                       </CardContent>
-                    </Card>
+                    </Card> : null }
                   </Grid>
                   <Grid item xs={6}>
                     <Card className={classes.card}>
@@ -582,11 +583,12 @@ class HomePage extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: Types.ReduxState): {coachName: string} => {
+const mapStateToProps = (state: Types.ReduxState): {coachName: string, userRole: Role} => {
   return {
-    coachName: state.coachState.coachName
+    coachName: state.coachState.coachName,
+    userRole: state.coachState.role
   };
 };
 
 HomePage.contextType = FirebaseContext;
-export default withStyles(styles)(connect(mapStateToProps, {getCoach})(HomePage));
+export default withStyles(styles)(connect(mapStateToProps, {getCoach: coachLoaded})(HomePage));

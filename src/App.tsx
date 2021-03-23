@@ -1,62 +1,63 @@
-import { hot } from 'react-hot-loader/root';
-import * as React from "react";
-import * as PropTypes from 'prop-types';
-import "./App.css";
-import WelcomePage from "./views/WelcomeViews/WelcomePage";
-import ClassroomClimatePage from "./views/protected/ClassroomClimateViews/ClassroomClimatePage";
-import ClassroomClimateResultsPage from "./views/protected/ClassroomClimateViews/ClassroomClimateResultsPage";
-import LevelOfInstructionResultsPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionResultsPage";
-import Magic8MenuPage from "./views/protected/Magic8MenuPage";
-import TransitionResultsPage from "./views/protected/TransitionViews/TransitionResultsPage";
-import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
-import TransitionTimePage from "./views/protected/TransitionViews/TransitionTimePage";
-import ForgotPasswordPage from "./views/ForgotPasswordViews/ForgotPasswordPage";
-import HomePage from "./views/protected/HomeViews/HomePage";
-import TeacherListPage from "./views/protected/MyTeachers/TeacherListPage";
-import ActionPlanListPage from "./views/protected/ActionPlanViews/ActionPlanListPage";
-import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView';
-import ConferencePlanListPage from './views/protected/ConferencePlanViews/ConferencePlanListPage';
-import ConferencePlanView from './views/protected/ConferencePlanViews/ConferencePlanView';
-import blue from "@material-ui/core/colors/blue";
-import amber from "@material-ui/core/colors/amber";
-import {
-  createMuiTheme,
-  MuiThemeProvider,
-  Theme
-} from "@material-ui/core/styles";
-import LevelOfInstructionTrainingPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage";
-import LevelOfInstructionPage from "./views/protected/LevelOfInstructionViews/LevelOfInstructionPage";
-import MathInstructionTrainingPage from "./views/protected/MathInstructionViews/MathInstructionTrainingPage";
-import AssociativeCooperativeInteractionsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage";
-import AssociativeCooperativeInteractionsResultsPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage";
-import SequentialActivitiesPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesPage";
-import SequentialActivitiesResultsPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage";
-import AssociativeCooperativeInteractionsTrainingPage from "./views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage";
-import ClassroomClimateTrainingPage from "./views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage";
-import SequentialActivitiesTrainingPage from "./views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage";
-import StudentEngagementPage from "./views/protected/StudentEngagementViews/StudentEngagementPage";
-import StudentEngagementResultsPage from "./views/protected/StudentEngagementViews/StudentEngagementResultsPage";
-import TransitionTimeTrainingPage from "./views/protected/TransitionViews/TransitionTimeTrainingPage";
-import MathInstructionPage from "./views/protected/MathInstructionViews/MathInstructionPage";
-import MathInstructionResultsPage from "./views/protected/MathInstructionViews/MathInstructionResultsPage";
-import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage';
-import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
-import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
-import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage';
-import AdminPage from './views/protected/AdminViews/AdminPage';
-import TeamPage from "./views/WelcomeViews/TeamPage";
-import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
-import TrainingPage from './views/protected/TrainingPage';
-import * as LogRocket from 'logrocket';
-import setupLogRocketReact from 'logrocket-react';
-import * as ReactGA from 'react-ga';
-import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
-import Grid from '@material-ui/core/Grid';
-import { getCoach } from './state/actions/coach';
-import { getUnlocked } from './state/actions/unlocked';
-import { connect } from 'react-redux';
-import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
-import * as H from 'history';
+import { hot } from 'react-hot-loader/root'
+import * as React from 'react'
+import * as PropTypes from 'prop-types'
+import './App.css'
+import WelcomePage from './views/WelcomeViews/WelcomePage'
+import ClassroomClimatePage from './views/protected/ClassroomClimateViews/ClassroomClimatePage'
+import ClassroomClimateResultsPage from './views/protected/ClassroomClimateViews/ClassroomClimateResultsPage'
+import LevelOfInstructionResultsPage from './views/protected/LevelOfInstructionViews/LevelOfInstructionResultsPage'
+import Magic8MenuPage from './views/protected/Magic8MenuPage'
+import TransitionResultsPage from './views/protected/TransitionViews/TransitionResultsPage'
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
+import TransitionTimePage from './views/protected/TransitionViews/TransitionTimePage'
+import ForgotPasswordPage from './views/ForgotPasswordViews/ForgotPasswordPage'
+import HomePage from './views/protected/HomeViews/HomePage'
+import TeacherListPage from './views/protected/MyTeachers/TeacherListPage'
+import ActionPlanListPage from './views/protected/ActionPlanViews/ActionPlanListPage'
+import ActionPlanView from './views/protected/ActionPlanViews/ActionPlanView'
+import ConferencePlanListPage from './views/protected/ConferencePlanViews/ConferencePlanListPage'
+import ConferencePlanView from './views/protected/ConferencePlanViews/ConferencePlanView'
+import blue from '@material-ui/core/colors/blue'
+import amber from '@material-ui/core/colors/amber'
+import { createMuiTheme, MuiThemeProvider, Theme } from '@material-ui/core/styles'
+import LevelOfInstructionTrainingPage from './views/protected/LevelOfInstructionViews/LevelOfInstructionTrainingPage'
+import LevelOfInstructionPage from './views/protected/LevelOfInstructionViews/LevelOfInstructionPage'
+import MathInstructionTrainingPage from './views/protected/MathInstructionViews/MathInstructionTrainingPage'
+import AssociativeCooperativeInteractionsPage
+  from './views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsPage'
+import AssociativeCooperativeInteractionsResultsPage
+  from './views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsResultsPage'
+import SequentialActivitiesPage from './views/protected/SequentialActivitiesViews/SequentialActivitiesPage'
+import SequentialActivitiesResultsPage
+  from './views/protected/SequentialActivitiesViews/SequentialActivitiesResultsPage'
+import AssociativeCooperativeInteractionsTrainingPage
+  from './views/protected/AssociativeCooperativeViews/AssociativeCooperativeInteractionsTrainingPage'
+import ClassroomClimateTrainingPage from './views/protected/ClassroomClimateViews/ClassroomClimateTrainingPage'
+import SequentialActivitiesTrainingPage
+  from './views/protected/SequentialActivitiesViews/SequentialActivitiesTrainingPage'
+import StudentEngagementPage from './views/protected/StudentEngagementViews/StudentEngagementPage'
+import StudentEngagementResultsPage from './views/protected/StudentEngagementViews/StudentEngagementResultsPage'
+import TransitionTimeTrainingPage from './views/protected/TransitionViews/TransitionTimeTrainingPage'
+import MathInstructionPage from './views/protected/MathInstructionViews/MathInstructionPage'
+import MathInstructionResultsPage from './views/protected/MathInstructionViews/MathInstructionResultsPage'
+import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningToChildrenPage'
+import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage'
+import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage'
+import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage'
+import AdminPage from './views/protected/AdminViews/AdminPage'
+import TeamPage from './views/WelcomeViews/TeamPage'
+import TeacherDetailPage from './views/protected/MyTeachers/TeacherDetailPage'
+import TrainingPage from './views/protected/TrainingPage'
+import * as LogRocket from 'logrocket'
+import setupLogRocketReact from 'logrocket-react'
+import * as ReactGA from 'react-ga'
+import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif'
+import Grid from '@material-ui/core/Grid'
+import { coachLoaded, Role } from './state/actions/coach'
+import { getUnlocked } from './state/actions/unlocked'
+import { connect } from 'react-redux'
+import StudentEngagementTrainingPage from './views/protected/StudentEngagementViews/StudentEngagementTrainingPage'
+import * as H from 'history'
 
 
 ReactGA.initialize('UA-154034655-1');
@@ -87,29 +88,43 @@ const styles: Theme = createMuiTheme({
  *
  * @return {ReactElement}
  */
-function PrivateRoute({ auth, ...rest }): React.ReactElement {
-  return (
-    auth === true ? (
-      <Route
-        exact
-        {...rest}
+function PrivateRoute({ auth, allowedRoles = [], userRole = Role.ANONYMOUS, ...rest } : {auth: boolean, allowedRoles: Array<Role>, userRole: Role}): React.ReactElement {
+  if (auth){
+    if (allowedRoles.length == 0 || allowedRoles.find(r => r === userRole)){
+      return (
+          <Route
+              exact
+              {...rest}
+          />)
+    }else{
+      return <Route
+          {...rest}
+          render={(props): React.ReactNode => {
+            return (
+                <Redirect to={{ pathname: '/', state: {from: props.location}}} />
+            )
+          }}
       />
-    ) : (
-      <Route
+    }
+  }else{
+    return <Route
         {...rest}
         render={(props): React.ReactNode => {
           return (
-            <Redirect to={{ pathname: '/', state: {from: props.location}}} />
+              <Redirect to={{ pathname: '/', state: {from: props.location}}} />
           )
         }}
-      />
-    )
-  )
+    />
+  }
 }
 
 PrivateRoute.propTypes = {
   auth: PropTypes.bool.isRequired,
-  location: PropTypes.object
+  allowedRoles: PropTypes.array,
+  userRole: PropTypes.string,
+  location: PropTypes.object,
+  path: PropTypes.string,
+  render: PropTypes.func
 }
 
 interface Props {
@@ -118,16 +133,17 @@ interface Props {
       onAuthStateChanged(arg: any): firebase.User | null
     },
     getCoachFirstName(): Promise<string>,
-    getUserRole(): Promise<string>,
+    getUserRole(): Promise<Role>,
     getUnlockedSections(): Promise<Array<number>>
   },
-  getCoach(name: string, role: string): void,
+  coachLoaded(name: string, role: Role): void,
   getUnlocked(unlocked: Array<number>): void
 }
 
 interface State {
   auth: boolean,
-  loading: boolean
+  loading: boolean,
+  role: Role
 }
 
 /**
@@ -143,7 +159,8 @@ class App extends React.Component<Props, State> {
     super(props);
     this.state = {
       auth: false,
-      loading: true
+      loading: true,
+      role: Role.ANONYMOUS
     };
   }
 
@@ -152,11 +169,12 @@ class App extends React.Component<Props, State> {
     this.removeListener = this.props.firebase.auth.onAuthStateChanged((user: firebase.User) => {
       if (user) {
         this.props.firebase.getCoachFirstName().then((name: string) => {
-          this.props.firebase.getUserRole().then((role: string) => {
-            this.props.getCoach(name, role);
+          this.props.firebase.getUserRole().then((role: Role) => {
+            this.props.coachLoaded(name, role);
             this.setState({
               auth: true,
-              loading: false
+              loading: false,
+              role
             });
           })
 
@@ -195,7 +213,12 @@ class App extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    return this.state.loading === true ? (
+    const {
+      loading,
+        role,
+        auth
+    } = this.state;
+    return loading === true ? (
       <Grid
         container
         direction="row"
@@ -213,7 +236,7 @@ class App extends React.Component<Props, State> {
               exact
               path="/"
               render={(props): React.ReactElement =>
-                this.state.auth === true ? (
+                auth === true ? (
                   <Redirect to={{ pathname: '/Home', state: { from: props.location } }} />
                 ) : (
                   <WelcomePage />
@@ -222,52 +245,52 @@ class App extends React.Component<Props, State> {
             />
             <Route exact path="/forgot" component={ForgotPasswordPage} />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/Landing"
               render={(props: object) : React.ReactElement=> <WelcomePage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/Invite"
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/Account"
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/Home"
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <HomePage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth || !this.state.auth}
+              auth={auth || !auth}
               path="/team"
               render={(props: object) : React.ReactElement=> <TeamPage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth || !this.state.auth}
+              auth={auth || !auth}
               path="/Training"
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <TrainingPage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/ActionPlans"
               render={(props: {
                 history: H.History
               }) : React.ReactElement=> <ActionPlanListPage {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
               path="/ActionPlan"
               render={(props: {
                 history: H.History,
@@ -279,7 +302,9 @@ class App extends React.Component<Props, State> {
               }) : React.ReactElement=> <ActionPlanView {...props}/>}
             />
             <PrivateRoute
-              auth={this.state.auth}
+              auth={auth}
+              allowedRoles={[Role.COACH, Role.ADMIN]}
+              userRole={role}
               path="/ConferencePlans"
               render={(props: {
                 history: H.History
@@ -288,6 +313,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/ConferencePlan"
+              allowedRoles={[Role.COACH, Role.ADMIN]}
+              userRole={role}
               render={(props: {
                 history: H.History,
                 location: H.Location,
@@ -418,6 +445,8 @@ class App extends React.Component<Props, State> {
               exact
               auth={this.state.auth}
               path="/MyTeachers"
+              allowedRoles={[Role.COACH, Role.ADMIN]}
+              userRole={role}
               render={(props: {
                 history: H.History,
                 type: string
@@ -426,6 +455,8 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path={`/MyTeachers/:teacherid`}
+              allowedRoles={[Role.COACH, Role.ADMIN]}
+              userRole={role}
               render={(props: {
                 history: H.History,
                 location: H.Location,
@@ -492,6 +523,8 @@ class App extends React.Component<Props, State> {
             />
             <PrivateRoute
                 auth={this.state.auth}
+                allowedRoles={[Role.ADMIN]}
+                userRole={role}
                 path="/Admin"
                 component={AdminPage}
             />
@@ -504,5 +537,5 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default hot(connect(null, {getCoach, getUnlocked})(App));
+export default hot(connect(null, {coachLoaded: coachLoaded, getUnlocked})(App));
 
