@@ -349,11 +349,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
   const [attachments, setAttachments] = useState<Array<Attachment>>();
-  const [resultsAttachments, setResultsAttachments] = useState<Array<{
-    sessionId: string,
-    teacherId: string
-  }>>();
-  const [includeAttachments, setIncludeAttachments] = useState(true);
   const [checkedResults, setCheckedResults] = useState<{[id: string]: {
     summary: boolean,
     details: boolean,
@@ -361,16 +356,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   }}>({});
   const [templateDialog, setTemplateDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [tool, setTool] = useState('');
-  const [apGoal, setApGoal] = useState('');
-  const [goalTimeline, setGoalTimeline] = useState<Date>();
-  const [benefit, setBenefit] = useState('');
-  const [date, setDate] = useState<Date>();
-  const [actionSteps, setActionSteps] = useState<Array<{
-    step: string,
-    person: string,
-    timeline: Date
-  }>>();
   const [attachedCount, setAttachedCount] = useState(0);
   const [doneAttaching, setDoneAttaching] = useState(true);
   const [renderActionPlan, setRenderActionPlan] = useState(false);
@@ -458,16 +443,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     date: Date,
     actionSteps: Array<{step: string, person: string, timeline: Date}>
   }>>();
-  const [transitionData, setTransitionData] = useState<Array<{
-    actionPlanId: string,
-    tool: string,
-    sessionId: string,
-    goal: string,
-    goalTimeline: Date,
-    benefit: string,
-    date: Date,
-    actionSteps: Array<{step: string, person: string, timeline: Date}>
-  }>>();
 
   const recipientSelected = (newRecipient: {value: string, id: string, label: string, firstName: string}): void => {
     setRecipient(newRecipient);
@@ -533,11 +508,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       setEmailId(props.draft.id);
       setEmail(props.draft.emailContent);
       setSubject(props.draft.subject);
-      /* setRecipient({
-        value: props.draft.recipientEmail,
-        id: props.draft.recipientId,
-        label: props.draft.recipientName
-      }); */
       recipientSelected({
         value: props.draft.recipientEmail,
         id: props.draft.recipientId,
@@ -723,7 +693,44 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     } else {
       window.open(uri);
     }
- }
+  }
+
+  const addToAttachmentList = (base64string: string, id: string): void => {
+    let newAttachments: Array<{
+      content: string,
+      filename: string,
+      type: string,
+      disposition: string,
+      id: string,
+      teacherId: string,
+      actionPlan: boolean,
+      result: boolean,
+      summary?: boolean,
+      details?: boolean,
+      trends?: boolean,
+      practice?: string
+    }> = [];
+    const idMatch = (element: {
+      content: string,
+      filename: string,
+      type: string,
+      disposition: string,
+      id: string,
+      teacherId: string,
+      actionPlan: boolean,
+      result: boolean,
+      summary?: boolean,
+      details?: boolean,
+      trends?: boolean,
+      practice?: string
+    }): boolean => element.id === id;
+    if (attachments) {
+      newAttachments = attachments;
+      const index = newAttachments.findIndex(idMatch);
+      newAttachments[index].content = base64string;
+      setAttachedCount(attachedCount+1);
+    }
+  }
 
   const printDocument = async (practice: string | undefined, date: Date, elementId: string, addToAttachmentList: typeof functionForType, id: string): Promise<void> => {
     console.log('PRINT DOCUMENT CALLED');
@@ -852,7 +859,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
           teacher: string,
           tool: string
         }) => {
-          console.log('what IS THE SESSION ID', data)
           const thisActionPlan = {
             actionPlanId: actionPlan.id,
             tool: data.tool,
@@ -897,77 +903,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       })
     }
     return actionPlanData
-  }
-
-  const attachActionPlan = (actionPlanId: string, addToAttachmentList: typeof functionForType): void => {
-    firebase.getAPInfo(actionPlanId).then((actionPlanData: {
-      sessionId: string,
-      goal: string,
-      goalTimeline: firebase.firestore.Timestamp,
-      benefit: string,
-      dateModified: {seconds: number, nanoseconds: number},
-     dateCreated: {seconds: number, nanoseconds: number},
-      coach: string,
-      teacher: string,
-      tool: string
-    }) => {
-      const newDate = changeDateType(actionPlanData.dateModified);
-      setTool(actionPlanData.tool);
-      setApGoal(actionPlanData.goal);
-      if (actionPlanData.goalTimeline && (typeof actionPlanData.goalTimeline !== 'string')) {
-        setGoalTimeline(actionPlanData.goalTimeline.toDate());
-      } else {
-        setGoalTimeline(new Date());
-      }
-      setBenefit(actionPlanData.benefit);
-      setDate(newDate);
-      const newActionStepsArray: Array<{
-        step: string,
-        person: string,
-        timeline: Date
-      }> = [];
-      props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{
-        step: string,
-        person: string,
-        timeline: firebase.firestore.Timestamp
-      }>) => {
-        actionStepsData.forEach((value, index) => {
-          newActionStepsArray[index] = {
-            step: value.step,
-            person: value.person,
-            timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
-              value.timeline.toDate() :
-              new Date(),
-          };
-        })
-      }).then(() => {
-        setActionSteps(newActionStepsArray);
-      }).then(() => {
-        setRenderActionPlan(true);
-      }).then(async () => {
-        printDocument(actionPlanData.tool, newDate, 'apPdf', addToAttachmentList, actionPlanId).then(() => {
-          setRenderActionPlan(false);
-          setTool('');
-          setApGoal('');
-          setGoalTimeline(undefined);
-          setBenefit('');
-          setDate(undefined)
-          setActionSteps([]);
-        })
-      })
-      /* .then(() => {
-        setRenderActionPlan(false);
-        setTool('');
-        setApGoal('');
-        setGoalTimeline(undefined);
-        setBenefit('');
-        setDate(undefined)
-        setActionSteps([]);
-      }) */
-      .catch(() => {
-        console.log('error retrieving action steps');
-      });
-    })
   }
 
   const getListeningData = (
@@ -1307,7 +1242,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         .then((trends: ACData['childTrends']) => {return trends}) : null,
       trends ? props.firebase.fetchTeacherACTrend(teacherObject ? teacherObject.id : '')
         .then((trends: ACData['teacherTrends']) => {
-          console.log('here aret eacher trends', trends);
           return trends
         }) : null
     ])
@@ -1430,7 +1364,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     if (mathResults.length > 0) {
       const getDataForAll = Promise.all(mathResults.map(getData))
       getDataForAll.then(() => {
-        console.log('THIS IS MATH DATA', mathData)
         setMath(mathData);
         setRenderMathPdf(true);
         return mathData
@@ -1600,7 +1533,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     if (sequentialResults.length > 0) {
       const getDataForAll = Promise.all(sequentialResults.map(getData))
       getDataForAll.then(() => {
-        console.log('THIS IS SEQUENTIAL DATA', sequentialData)
         setSequential(sequentialData);
         setRenderSequentialPdf(true);
         return sequentialData
@@ -1649,7 +1581,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     if (acResults.length > 0) {
       const getDataForAll = Promise.all(acResults.map(getData))
       getDataForAll.then(() => {
-        console.log('THIS IS AC DATA', acData)
         setAC(acData);
         setRenderACPdf(true);
         return acData
@@ -1715,75 +1646,14 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     }
   }
 
-  const asyncForEach = async (array: Array<{
-    content: string,
-    filename: string,
-    type: string,
-    disposition: string,
-    id: string,
-    teacherId: string,
-    actionPlan: boolean,
-    result: boolean
-  }>, callback: unknown): Promise<void> => {
-    for (let index = 0; index < array.length; index++) {
-      if (index > 0) {
-        setTimeout(() => {callback(array[index], index, array)}, 8000)
-      } else {
-        await callback(array[index], index, array)
-      }
-    }
-  }
-
-  const addToAttachmentList = (base64string: string, id: string): void => {
-    console.log('add to attachment list called');
-    let newAttachments: Array<{
-      content: string,
-      filename: string,
-      type: string,
-      disposition: string,
-      id: string,
-      teacherId: string,
-      actionPlan: boolean,
-      result: boolean,
-      summary?: boolean,
-      details?: boolean,
-      trends?: boolean,
-      practice?: string
-    }> = [];
-    const idMatch = (element: {
-      content: string,
-      filename: string,
-      type: string,
-      disposition: string,
-      id: string,
-      teacherId: string,
-      actionPlan: boolean,
-      result: boolean,
-      summary?: boolean,
-      details?: boolean,
-      trends?: boolean,
-      practice?: string
-    }): boolean => element.id === id;
-    if (attachments) {
-      newAttachments = attachments;
-      const index = newAttachments.findIndex(idMatch);
-      newAttachments[index].content = base64string;
-      setAttachedCount(attachedCount+1);
-    }
-  }
-
   const attachAll = async (): Promise<void> => {
     setActionPlanDisplay(false);
     if (attachments) {
       setDoneAttaching(false);
-      console.log('what are the attachments before getapdata', attachments);
       getAPData(addToAttachmentList).then((aPData) => {
-        console.log('this is the apdata', aPData, aPData.length);
         setRenderActionPlan(true);
       });
       getResultsData();
-        // setClimate(climateData);
-        // setRenderClimatePdf(true);
     }
   }
 
@@ -1812,7 +1682,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       // encrypted with the user's uid from firebase
       const encryptedMsg = CryptoJS.AES
         .encrypt(JSON.stringify(msg), firebase.auth.currentUser.uid)
-        // .encrypt('test', firebase.auth.currentUser.uid)
         .toString();
       
       firebase.sendEmail(encryptedMsg)
@@ -1855,12 +1724,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     + 'Best, \n'
     + 'Clare';
 
-  const greetingText = "Hi " + recipient.firstName;
-
-  const chooseOptions = (): JSX.Element => <div style={{padding: '1em'}}>
-                <h3 style={{fontFamily: 'Arimo'}}>Please choose a recipient for your message.</h3>
-  </div>;
-
   const removeResult = (id: string, type: ResultTypeKey): void => {
     const newCheckedResults = checkedResults;
     if (newCheckedResults) {
@@ -1876,58 +1739,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     }
     setCheckedResults(newCheckedResults);
   }
-
-  /* const recipientSelected = (newRecipient: {value: string, id: string, label: string, firstName: string}): void => {
-    setRecipient(newRecipient);
-    const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
-      return obj.id === newRecipient.id
-    });
-    setTeacherObject(teacherData[0]);
-    firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{
-      id: string,
-      date: {
-        seconds: number,
-        nanoseconds: number
-      },
-      practice: string,
-      achieveBy: firebase.firestore.Timestamp
-    }>) => {
-      setActionPlans(actionPlans);
-      console.log('aplans', actionPlans)
-      if (actionPlans && actionPlans.length > 0) {
-        setNoActionPlansMessage('')
-      } else {
-        setNoActionPlansMessage('You have not created any action plans with ' + newRecipient.label + '.');
-      }
-    }).catch((error : Error) => {
-      console.log('error', error);
-      setNoActionPlansMessage('There was an error retrieving ' + newRecipient.label + '\'s action plans.');
-    });
-    firebase.getAllTeacherObservations(newRecipient.id).then((observations: Array<{
-      id: string,
-      date: firebase.firestore.Timestamp,
-      practice: string
-    }>) => {
-      setObservations(observations);
-      const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
-      console.log('observations', observations)
-      if (observations && observations.length > 0) {
-        observations.forEach(result => {
-          unchecked[result.id] = {'summary': false, 'details': false, 'trends': false}
-        })
-      }
-      setCheckedResults(unchecked);
-      console.log('observations', observations)
-      if (observations && observations.length > 0) {
-        setNoObservationsMessage('')
-      } else {
-        setNoObservationsMessage('You have no observation data for ' + newRecipient.label + '.');
-      }
-    }).catch((error : Error) => {
-      console.log('error', error);
-      setNoObservationsMessage('There was an error retrieving ' + newRecipient.label + '\'s results.');
-    });
-  } */
 
   const saveEmail = async (
     email?: string,
@@ -1960,7 +1771,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     recipient?: {
       id: string,
       name: string,
-      email: string
+      email: string,
+      firstName: string
     },
     emailId?: string,
     attachments?: Array<Attachment>
@@ -2343,29 +2155,31 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 <Grid item>
                   <Grid container direction="row" justify="space-between" style={{width: '100%'}}>
                     <Grid item>
-                      <SendButton disabled={!doneAttaching} sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId, attachments)}}/>
+                      <SendButton
+                        disabled={!doneAttaching}
+                        sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId, attachments)}}
+                      />
                     </Grid>
                     <Grid item>
                       <Grid container direction="row">
                         <Grid item style={{paddingRight: '1em'}}>
                           <AttachButton 
                             acceptAttachment={(): void => setActionPlanDisplay(true)} 
-                            // disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
                             disabled={!doneAttaching}
                           />
                         </Grid>
                         <Grid item style={{paddingRight: '1em'}}>
-                          <SaveButton disabled={!doneAttaching} saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value, firstName: recipient.firstName}, emailId, attachments)}} saveDraft={(): void => setActionPlanDisplay(true)} />
+                          <SaveButton
+                            disabled={!doneAttaching}
+                            saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value, firstName: recipient.firstName}, emailId, attachments)}}
+                            saveDraft={(): void => setActionPlanDisplay(true)}
+                          />
                         </Grid>
                         <Grid item>
                           <DeleteButton email={email} onClick={(): void => setDeleteDialog(true)} />
                         </Grid>
                         <AttachmentDialog
                           recipientId={recipient.id}
-                          // addAttachment={addAttachment}
-                          setIncludeAttachments={(value: boolean): void => {
-                            setIncludeAttachments(value)
-                          }}
                           attachAll={attachAll}
                           actionPlans={actionPlans}
                           noActionPlansMessage={noActionPlansMessage}

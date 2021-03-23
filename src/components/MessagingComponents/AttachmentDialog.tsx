@@ -43,7 +43,6 @@ interface AttachmentDialogProps {
   firebase: any;
   teacherList: Array<Types.Teacher>;
   addAttachment(content: string, practice: string, date: Date): void;
-  setIncludeAttachments(value: boolean): void;
   addActionPlanAttachment(actionPlanId: string, teacherId: string, title: string): void;
   addResultsAttachment(
     sessionId: string,
@@ -526,7 +525,6 @@ AttachmentDialog.propTypes = {
   addAttachment: PropTypes.func.isRequired,
   addResult: PropTypes.func.isRequired,
   removeResult: PropTypes.func.isRequired,
-  setIncludeAttachments: PropTypes.func.isRequired,
   addActionPlanAttachment: PropTypes.func.isRequired,
   addResultsAttachment: PropTypes.func.isRequired,
   attachAll: PropTypes.func.isRequired

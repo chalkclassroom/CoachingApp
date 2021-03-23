@@ -112,7 +112,12 @@ export interface Message {
   // than sent or draft.
   delivered: boolean; 
   // to store the list of attachments for each message 
-  attachments: Attachment[] | undefined;
+  attachments: Array<{
+    content: string,
+    filename: string,
+    type: string,
+    disposition: string
+  }> | undefined;
 };
 
 // interface defining the structure Select from
