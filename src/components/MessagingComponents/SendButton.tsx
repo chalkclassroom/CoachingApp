@@ -11,7 +11,8 @@ interface SendButtonProps {
       name: string,
       email: string
     },
-    emailId?: string) => void
+    emailId?: string) => void,
+    disabled: boolean
 }
 
 const SendButton: React.FC<SendButtonProps> = (props: SendButtonProps) => {
@@ -20,6 +21,7 @@ const SendButton: React.FC<SendButtonProps> = (props: SendButtonProps) => {
       color='primary' 
       aria-label='send'
       onClick={(): void => {props.sendMail()}}
+      disabled={props.disabled}
     >
       Send <SendIcon style={{marginLeft: '0.4em'}}/>
     </Button>

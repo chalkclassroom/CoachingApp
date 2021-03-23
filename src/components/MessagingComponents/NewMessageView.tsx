@@ -371,6 +371,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     person: string,
     timeline: Date
   }>>();
+  const [attachedCount, setAttachedCount] = useState(0);
+  const [doneAttaching, setDoneAttaching] = useState(true);
   const [renderActionPlan, setRenderActionPlan] = useState(false);
   const [renderTransitionPdf, setRenderTransitionPdf] = useState(false);
   const [renderClimatePdf, setRenderClimatePdf] = useState(false);
@@ -545,7 +547,11 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     }
     if (props.attachments && !attachments) {
       setAttachments(props.attachments);
+      setAttachedCount(props.attachments.length);
       console.log('setting attaachments from draft')
+    }
+    if (attachments && attachedCount === attachments.length) {
+      setDoneAttaching(true);
     }
   });
 
@@ -676,6 +682,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
 
   const removeAttachment = (position: number, emailId: string | undefined, attachmentId: string): void => {
     const newAttachments = attachments;
+    setAttachedCount(attachedCount - 1);
     if (newAttachments) {
       newAttachments.splice(position, 1);
       setAttachments(newAttachments);
@@ -962,8 +969,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       });
     })
   }
-
-  const waitFor = (ms: number): Promise<void> => new Promise(r => setTimeout(r, ms));
 
   const getListeningData = (
     sessionId: string,
@@ -1347,59 +1352,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     }
   }
 
-  const attachClimateResultOld = async (
-    sessionId: string,
-    summary: boolean | undefined,
-    details: boolean | undefined,
-    trends: boolean | undefined,
-    addToAttachmentList: typeof functionForType
-  ): Promise<void> => {
-    getClimateData(sessionId, summary, details, trends).then((data) => {
-      if (climate === undefined) {
-        console.log('CLIMATE UNDEFINED HERE');
-        return Promise.all([
-          setClimate([{
-            sessionId: sessionId,
-            summary: data[0],
-            details: data[1],
-            trends: data[2],
-            date: new Date()
-          }]),
-          setDate(new Date())
-        ])
-      } else {
-        console.log('CLIMATE defined HERE');
-        const newClimate = [...climate];
-        newClimate.push({
-          sessionId: sessionId,
-          summary: data[0],
-          details: data[1],
-          trends: data[2],
-          date: new Date()
-        });
-        return Promise.all([
-          setClimate([...climate, {
-            sessionId: sessionId,
-            summary: data[0],
-            details: data[1],
-            trends: data[2],
-            date: new Date()
-          }]),
-          setDate(new Date())
-        ])
-      }
-    })
-    /* .then(() => {
-      setRenderClimatePdf(true);
-    }).then(() => {
-      console.log('this is what climate is now', climate);
-      setTimeout(()=> {printDocument('Classroom Climate', new Date(), sessionId, addToAttachmentList, sessionId)}, 10000)
-    }).then(() => {
-      // setTimeout(() => {setRenderClimatePdf(false)}, 10000);
-      // setTimeout(() => {setClimate(undefined)}, 10000);
-    }) */
-  }
-
   const attachClimateResult = async (
     climateResults: Array<Attachment>
   ): Promise<Array<{
@@ -1707,8 +1659,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     }
   }
 
-  const getResultsData = async (addToAttachmentList: typeof functionForType): Promise<void> => {
-    let i = 0;
+  const getResultsData = async (): Promise<void> => {
     if (attachments) {
       const attachedResults = attachments.filter(obj => {
         return obj.result === true
@@ -1761,92 +1712,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       if (acResults.length > 0) {
         attachACResult(acResults)
       }
-      attachedResults.forEach((result) => {
-        i++;
-        console.log(i, 'doing this for results', result.practice, result.id)
-        if (result.practice === 'transition') {
-          console.log('transition')
-          // attachTransitionResult(transitionResults)
-        } else if (result.practice === 'climate') {
-          console.log('CLIMATE', attachments);
-          /* attachClimateResult(climateResults).then((climateData) => {
-            console.log('THIS IS THE CLIMATE DATA1', climateData);
-          }) */
-        } else if (result.practice === 'math') {
-          // attachMathResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
-        } else if (result.practice === 'level') {
-          // attachInstructionResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
-        } else if (result.practice === 'engagement') {
-          // attachEngagementResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
-        } else if (result.practice === 'listening') {
-          // attachListeningResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
-        } else if (result.practice === 'sequential') {
-          // attachSequentialResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
-        } else if (result.practice === 'Associative and Cooperative') {
-          // attachACResult(result.id, result.summary, result.details, result.trends, addToAttachmentList)
-        }
-        // }
-        /* firebase.getAPInfo(actionPlan.id).then((data: {
-          sessionId: string,
-          goal: string,
-          goalTimeline: firebase.firestore.Timestamp,
-          benefit: string,
-          dateModified: {seconds: number, nanoseconds: number},
-          dateCreated: {seconds: number, nanoseconds: number},
-          coach: string,
-          teacher: string,
-          tool: string
-        }) => {
-          console.log('what IS THE SESSION ID', data)
-          const thisActionPlan = {
-            actionPlanId: actionPlan.id,
-            tool: data.tool,
-            sessionId: data.sessionId,
-            goal: data.goal,
-            goalTimeline: (data.goalTimeline && (typeof data.goalTimeline !== 'string')) ?
-              data.goalTimeline.toDate() : new Date(),
-            benefit: data.benefit,
-            date: changeDateType(data.dateModified),
-            actionSteps: [{step: '', person: '', timeline: new Date()}]
-          };
-          const newActionStepsArray: Array<{
-            step: string,
-            person: string,
-            timeline: Date
-          }> = [];
-          props.firebase.getActionSteps(actionPlan.id).then((actionStepsData: Array<{
-            step: string,
-            person: string,
-            timeline: firebase.firestore.Timestamp
-          }>) => {
-            actionStepsData.forEach((value, index) => {
-              newActionStepsArray[index] = {
-                step: value.step,
-                person: value.person,
-                timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
-                  value.timeline.toDate() :
-                  new Date()
-              };
-            })
-          }).then(() => {
-            console.log('what are the attachments now?', attachments);
-            thisActionPlan.actionSteps = newActionStepsArray;
-            console.log('IS IT A NUMBER?', thisActionPlan);
-            setRenderActionPlan(true);
-            const copyActionPlanData = [...actionPlanData];
-            copyActionPlanData.push(thisActionPlan);
-            setActionPlanData(copyActionPlanData);
-            console.log('getAPData calling print document');
-            printDocument(thisActionPlan.tool, thisActionPlan.date, thisActionPlan.actionPlanId, addToAttachmentList, thisActionPlan.actionPlanId)
-            console.log('what is this action plan', thisActionPlan);
-          }).then(() => {
-            actionPlanData.push(thisActionPlan)
-          })
-        }) */
-      })
-      // console.log('ACTION PLAN DATA ARRAY', actionPlanData, 'length', actionPlanData.length)
     }
-    // return actionPlanData
   }
 
   const asyncForEach = async (array: Array<{
@@ -1902,69 +1768,22 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       newAttachments = attachments;
       const index = newAttachments.findIndex(idMatch);
       newAttachments[index].content = base64string;
+      setAttachedCount(attachedCount+1);
     }
   }
 
   const attachAll = async (): Promise<void> => {
     setActionPlanDisplay(false);
     if (attachments) {
+      setDoneAttaching(false);
       console.log('what are the attachments before getapdata', attachments);
       getAPData(addToAttachmentList).then((aPData) => {
         console.log('this is the apdata', aPData, aPData.length);
         setRenderActionPlan(true);
       });
-      getResultsData(addToAttachmentList).then((climateData) => {
-        console.log('THE CLIMATE DATA', climateData)
+      getResultsData();
         // setClimate(climateData);
         // setRenderClimatePdf(true);
-      });
-      await asyncForEach(attachments, async (attachment: {
-        content: string,
-        filename: string,
-        type: string,
-        disposition: string,
-        id: string,
-        teacherId: string,
-        actionPlan: boolean,
-        result: boolean,
-        summary?: boolean,
-        details?: boolean,
-        trends?: boolean,
-        practice?: string
-      }) => {
-        console.log('this is the attachment practice', attachment.practice);
-        // await waitFor(10000);
-        if (attachments) {
-          console.log('if attachments')
-          if (attachment.actionPlan) {
-            // attachActionPlan(attachment.id, addToAttachmentList);
-            /* getAPData(addToAttachmentList).then((aPData) => {
-              console.log('this is the apdata', aPData, aPData.length);
-              setRenderActionPlan(true);
-            }) */
-            console.log('THIS ATTACHMENT IS AN ACTION PLAN');
-          } else if (attachment.result) {
-            console.log('else if attachmen.result');
-            /* if (attachment.practice === 'transition') {
-              attachTransitionResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
-            } else if (attachment.practice === 'climate') {
-              attachClimateResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
-            } else if (attachment.practice === 'math') {
-              attachMathResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
-            } else if (attachment.practice === 'level') {
-              attachInstructionResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
-            } else if (attachment.practice === 'engagement') {
-              attachEngagementResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
-            } else if (attachment.practice === 'listening') {
-              attachListeningResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
-            } else if (attachment.practice === 'sequential') {
-              attachSequentialResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
-            } else if (attachment.practice === 'Associative and Cooperative') {
-              attachACResult(attachment.id, attachment.summary, attachment.details, attachment.trends, addToAttachmentList)
-            } */
-          }
-        }
-      })
     }
   }
 
@@ -2472,7 +2291,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
               <RecipientAddress
                 selectedOption={recipient}
                 setOption={(newOption: SelectOption): void => recipientSelected(newOption)}
-                readOnly={props.readOnly}
+                readOnly={props.readOnly || attachments}
               />
             </Grid>
           </Grid>
@@ -2524,7 +2343,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 <Grid item>
                   <Grid container direction="row" justify="space-between" style={{width: '100%'}}>
                     <Grid item>
-                      <SendButton sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId, attachments)}}/>
+                      <SendButton disabled={!doneAttaching} sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId, attachments)}}/>
                     </Grid>
                     <Grid item>
                       <Grid container direction="row">
@@ -2532,10 +2351,11 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                           <AttachButton 
                             acceptAttachment={(): void => setActionPlanDisplay(true)} 
                             // disabled={theme !== ThemeOptions.ACTION_PLAN || recipient === null}
+                            disabled={!doneAttaching}
                           />
                         </Grid>
                         <Grid item style={{paddingRight: '1em'}}>
-                          <SaveButton saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value, firstName: recipient.firstName}, emailId, attachments)}} saveDraft={(): void => setActionPlanDisplay(true)} />
+                          <SaveButton disabled={!doneAttaching} saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value, firstName: recipient.firstName}, emailId, attachments)}} saveDraft={(): void => setActionPlanDisplay(true)} />
                         </Grid>
                         <Grid item>
                           <DeleteButton email={email} onClick={(): void => setDeleteDialog(true)} />

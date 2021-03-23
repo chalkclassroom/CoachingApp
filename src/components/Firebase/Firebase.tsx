@@ -2384,7 +2384,7 @@ class Firebase {
           emailContent: email ? email : '',
           subject: subject ? subject : '',
           recipientId: recipient ? recipient.id : '',
-          recipientFirstName: recipient ? recipient.firstName : '',
+          recipientFirstName: recipient.firstName ? recipient.firstName : '',
           recipientName: recipient ? recipient.name : '',
           recipientEmail: recipient ? recipient.email : '',
           dateCreated: firebase.firestore.Timestamp.now(),

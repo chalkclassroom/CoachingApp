@@ -4,7 +4,8 @@ import SaveIcon from '@material-ui/icons/Save';
 
 interface SaveButtonProps {
   saveDraft: () => void,
-  saveEmail: () => void
+  saveEmail: () => void,
+  disabled: boolean
 }
 
 const SaveButton: React.FC<SaveButtonProps> = (props: SaveButtonProps) => {
@@ -14,6 +15,7 @@ const SaveButton: React.FC<SaveButtonProps> = (props: SaveButtonProps) => {
       aria-label='save'
       component='label'
       onClick={props.saveEmail}
+      disabled={props.disabled}
     >
       <SaveIcon style={{marginRight: "0.2em"}}/>
       Save  

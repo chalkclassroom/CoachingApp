@@ -37,7 +37,8 @@ interface AttachmentBarProps {
   title: string,
   content: string,
   handleDelete(): void,
-  handlePreview(): void
+  handlePreview(): void,
+  readOnly: boolean
 }
 
 const AttachmentBar: React.FC<AttachmentBarProps> = (props: AttachmentBarProps) => {
@@ -62,7 +63,7 @@ const AttachmentBar: React.FC<AttachmentBarProps> = (props: AttachmentBarProps) 
             <Grid item onClick={(): void => props.handlePreview()} style={{paddingLeft: '1em'}}>
               <VisibilityIcon />
             </Grid>
-            <Grid item onClick={(): void => props.handleDelete()} style={{paddingLeft: '1em'}}>
+            <Grid item onClick={props.readOnly ? undefined : (): void => props.handleDelete()} style={{paddingLeft: '1em'}}>
               <CloseIcon />
             </Grid>
           </Grid>
@@ -127,6 +128,7 @@ const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {
                   title={attachment.filename}
                   handleDelete={(): void => props.handleDelete(index, props.emailId, attachment.id)}
                   handlePreview={(): void => console.log('insert preview func here')}
+                  readOnly={props.readOnly}
                 />
               )
             })
