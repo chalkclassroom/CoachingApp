@@ -314,12 +314,13 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     label: 'None'
   });
   const [alertEnum, setAlertEnum] = useState(Alerts.NO_ERROR);
-  const [recipient, setRecipient] = useState<{value: string | undefined, id: string | undefined, label: string | undefined}>({
+  const [recipient, setRecipient] = useState<{value: string | undefined, id: string | undefined, label: string | undefined, firstName: string | undefined}>({
     value: '',
     id: '',
-    label: ''
+    label: '',
+    firstName: ''
   });
-  const [recipientName, setRecipientName] = useState("Katherine");
+  // const [recipientName, setRecipientName] = useState("Katherine");
   const [actionPlans, setActionPlans] = useState<Array<{
    id: string,
     date: {
@@ -1944,14 +1945,14 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     }
   };
 
-  const thankYou = 'Hi ' + recipientName + ', \n \n'
+  const thankYou = 'Hi ' + recipient.firstName + ', \n \n'
   + 'Thanks for welcoming me today in your classroom! '
   + 'I really enjoyed my visit and look forward to '
   + 'chatting with you soon about Transition Time. \n \n'
   + 'Best wishes, \n'
   + 'Clare';
 
-  const feedback = 'Hi ' + recipientName + ', \n \n'
+  const feedback = 'Hi ' + recipient.firstName + ', \n \n'
   + 'Thanks for welcoming me today in your classroom! \n \n'
   + 'It was a joy to see the children so engaged in those small '
   + 'groups when you used cotton balls to teach counting. \n \n'
@@ -1960,7 +1961,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
   + 'Best, \n'
   + 'Clare';
 
-  const actionPlan = 'Hi ' + recipientName + ', \n \n'
+  const actionPlan = 'Hi ' + recipient.firstName + ', \n \n'
     + 'Thanks for meeting today and creating this action plan. '
     + 'I think it looks great, and I look forward to working '
     + 'on these goals with you! \n \n'
@@ -1968,7 +1969,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     + 'Best, \n'
     + 'Clare';
 
-  const greetingText = "Hi " + recipientName;
+  const greetingText = "Hi " + recipient.firstName;
 
   const chooseOptions = (): JSX.Element => <div style={{padding: '1em'}}>
                 <h3 style={{fontFamily: 'Arimo'}}>Please choose a recipient for your message.</h3>
@@ -1990,7 +1991,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     setCheckedResults(newCheckedResults);
   }
 
-  const recipientSelected = (newRecipient: {value: string, id: string, label: string}): void => {
+  const recipientSelected = (newRecipient: {value: string, id: string, label: string, firstName: string}): void => {
     setRecipient(newRecipient);
     const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
       return obj.id === newRecipient.id

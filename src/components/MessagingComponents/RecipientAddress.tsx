@@ -29,14 +29,15 @@ interface RecipientAddressProps {
 }
 
 const RecipientAddress: React.FC<RecipientAddressProps> = (props: RecipientAddressProps) => {
-  const teacherList: Array<{value: string, id: string, label: string}> = [];
+  const teacherList: Array<{value: string, id: string, label: string, firstName: string}> = [];
   useEffect(() => {
     // converts teacher list into proper format for Select component
     props.teachers.forEach((teacher) => {
       const newTeacher = {
         value: teacher.email,
         id: teacher.id,
-        label: (teacher.firstName + ' ' + teacher.lastName)
+        label: (teacher.firstName + ' ' + teacher.lastName),
+        firstName: teacher.firstName
       };
       teacherList.push(newTeacher);
     });
