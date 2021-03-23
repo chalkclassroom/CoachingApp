@@ -2349,6 +2349,7 @@ class Firebase {
     subject?: string,
     recipient?: {
       id: string,
+      firstName: string,
       name: string,
       email: string
     },
@@ -2361,6 +2362,7 @@ class Firebase {
           emailContent: email ? email : '',
           subject: subject ? subject : '',
           recipientId: recipient ? recipient.id : '',
+          recipientFirstName: recipient ? recipient.firstName : '',
           recipientName: recipient ? recipient.name : '',
           recipientEmail: recipient ? recipient.email : '',
           dateModified: firebase.firestore.Timestamp.now(),
@@ -2382,6 +2384,7 @@ class Firebase {
           emailContent: email ? email : '',
           subject: subject ? subject : '',
           recipientId: recipient ? recipient.id : '',
+          recipientFirstName: recipient ? recipient.firstName : '',
           recipientName: recipient ? recipient.name : '',
           recipientEmail: recipient ? recipient.email : '',
           dateCreated: firebase.firestore.Timestamp.now(),
@@ -2554,6 +2557,7 @@ class Firebase {
               emailContent: doc.data().emailContent,
               subject: doc.data().subject,
               recipientId: doc.data().recipientId,
+              recipientFirstName: doc.data().recipientFirstName ? doc.data().recipientFirstName : doc.data().recipientName,
               recipientName: doc.data().recipientName,
               recipientEmail: doc.data().recipientEmail,
               type: doc.data().type,

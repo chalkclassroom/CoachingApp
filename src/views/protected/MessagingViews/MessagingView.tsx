@@ -78,6 +78,7 @@ const MessagingView: React.FC<{}> = () => {
         emailContent: email.emailContent,
         subject: email.subject,
         recipientId: email.recipientId,
+        recipientFirstName: email.recipientFirstName,
         recipientName: email.recipientName,
         recipientEmail: email.recipientEmail,
         dateCreated: email.dateCreated,
@@ -91,6 +92,7 @@ const MessagingView: React.FC<{}> = () => {
       initialDraft.emailContent = email.emailContent;
       initialDraft.subject = email.subject;
       initialDraft.recipientId = email.recipientId;
+      initialDraft.recipientFirstName = email.recipientFirstName;
       initialDraft.recipientName = email.recipientName;
       initialDraft.recipientEmail = email.recipientEmail;
       newDraftsArray[updatedDraftIndex] = initialDraft;

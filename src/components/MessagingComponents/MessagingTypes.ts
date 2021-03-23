@@ -134,6 +134,7 @@ export interface Email {
   emailContent: string | undefined,
   subject: string | undefined,
   recipientId: string | undefined,
+  recipientFirstName: string | undefined,
   recipientName: string | undefined,
   recipientEmail: string | undefined,
   type: string,

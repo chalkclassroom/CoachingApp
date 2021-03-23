@@ -462,6 +462,58 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     actionSteps: Array<{step: string, person: string, timeline: Date}>
   }>>();
 
+  const recipientSelected = (newRecipient: {value: string, id: string, label: string, firstName: string}): void => {
+    setRecipient(newRecipient);
+    const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
+      return obj.id === newRecipient.id
+    });
+    setTeacherObject(teacherData[0]);
+    firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{
+      id: string,
+      date: {
+        seconds: number,
+        nanoseconds: number
+      },
+      practice: string,
+      achieveBy: firebase.firestore.Timestamp
+    }>) => {
+      setActionPlans(actionPlans);
+      console.log('aplans', actionPlans)
+      if (actionPlans && actionPlans.length > 0) {
+        setNoActionPlansMessage('')
+      } else {
+        setNoActionPlansMessage('You have not created any action plans with ' + newRecipient.label + '.');
+      }
+    }).catch((error : Error) => {
+      console.log('error', error);
+      setNoActionPlansMessage('There was an error retrieving ' + newRecipient.label + '\'s action plans.');
+    });
+    firebase.getAllTeacherObservations(newRecipient.id).then((observations: Array<{
+      id: string,
+      date: firebase.firestore.Timestamp,
+      practice: string
+    }>) => {
+      setObservations(observations);
+      const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
+      console.log('observations', observations)
+      if (observations && observations.length > 0) {
+        observations.forEach(result => {
+          unchecked[result.id] = {'summary': false, 'details': false, 'trends': false}
+        })
+      }
+      setCheckedResults(unchecked);
+      console.log('observations', observations)
+      if (observations && observations.length > 0) {
+        setNoObservationsMessage('')
+      } else {
+        setNoObservationsMessage('You have no observation data for ' + newRecipient.label + '.');
+      }
+    }).catch((error : Error) => {
+      console.log('error', error);
+      setNoObservationsMessage('There was an error retrieving ' + newRecipient.label + '\'s results.');
+    });
+  }
+
   // get the user's name
   useEffect(() => {
     if (userName === '') {
@@ -474,11 +526,17 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       setEmailId(props.draft.id);
       setEmail(props.draft.emailContent);
       setSubject(props.draft.subject);
-      setRecipient({
+      /* setRecipient({
         value: props.draft.recipientEmail,
         id: props.draft.recipientId,
         label: props.draft.recipientName
-      });
+      }); */
+      recipientSelected({
+        value: props.draft.recipientEmail,
+        id: props.draft.recipientId,
+        label: props.draft.recipientName,
+        firstName: props.draft.recipientFirstName ? props.draft.recipientFirstName : ''
+      })
     }
   });
 
@@ -1991,7 +2049,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     setCheckedResults(newCheckedResults);
   }
 
-  const recipientSelected = (newRecipient: {value: string, id: string, label: string, firstName: string}): void => {
+  /* const recipientSelected = (newRecipient: {value: string, id: string, label: string, firstName: string}): void => {
     setRecipient(newRecipient);
     const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
       return obj.id === newRecipient.id
@@ -2041,7 +2099,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
       console.log('error', error);
       setNoObservationsMessage('There was an error retrieving ' + newRecipient.label + '\'s results.');
     });
-  }
+  } */
 
   const saveEmail = async (
     email?: string,
@@ -2049,7 +2107,8 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
     recipient?: {
       id: string,
       name: string,
-      email: string
+      email: string,
+      firstName: string
     },
     emailId?: string,
     attachments?: Array<Attachment>
@@ -2467,7 +2526,7 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
                           />
                         </Grid>
                         <Grid item style={{paddingRight: '1em'}}>
-                          <SaveButton saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId, attachments)}} saveDraft={(): void => setActionPlanDisplay(true)} />
+                          <SaveButton saveEmail={(): void => {saveEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value, firstName: recipient.firstName}, emailId, attachments)}} saveDraft={(): void => setActionPlanDisplay(true)} />
                         </Grid>
                         <Grid item>
                           <DeleteButton email={email} onClick={(): void => setDeleteDialog(true)} />
