@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as PropTypes from 'prop-types';
-import { Email } from './MessagingTypes';
+import { Email, Attachment } from './MessagingTypes';
 import NewMessageView from './NewMessageView';
 import EmailList from './EmailList';
 import Typography from '@material-ui/core/Typography';
@@ -17,9 +17,14 @@ interface SentViewProps {
 
 const SentView: React.FC<SentViewProps> = (props: SentViewProps) => {
   const [selectedEmail, setSelectedEmail] = useState<Email>();
+  const [selectedAttachments, setSelectedAttachments] = useState<Array<Attachment>>();
+  const firebase = props.firebase;
+
   const onClick = (email: Email): void => {
     setSelectedEmail(email);
-    console.log('this is the email', email);
+    firebase.getAttachments(email.id).then((attachmentArray: Array<Attachment>) => {
+      setSelectedAttachments(attachmentArray)
+    })
   }
 
   return (
@@ -40,7 +45,7 @@ const SentView: React.FC<SentViewProps> = (props: SentViewProps) => {
             </Grid>
           </Grid>
           <Grid item>
-            <NewMessageView draft={selectedEmail} setMenuOption={props.setMenuOption} firebase={props.firebase} readOnly={true} />
+            <NewMessageView draft={selectedEmail} attachments={selectedAttachments} setMenuOption={props.setMenuOption} firebase={props.firebase} readOnly={true} />
           </Grid>
         </Grid>
       ) : (

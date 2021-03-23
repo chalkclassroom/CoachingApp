@@ -2574,6 +2574,39 @@ class Firebase {
     }
   }
 
+  /**
+   * gets email's attachments
+   * @param {string} emailId
+   */
+  getAttachments = async (emailId: string): Promise<Array<MessagingTypes.Attachment> | void> => {
+    this.query = this.db.collection("emails").doc(emailId).collection("attachments");
+    return this.query.get()
+      .then((querySnapshot: firebase.firestore.QuerySnapshot) => {
+        const attachmentArray: Array<MessagingTypes.Attachment> = [];
+        querySnapshot.forEach(doc =>
+          attachmentArray.push({
+            content: doc.data().content,
+            filename: doc.data().filename,
+            type: doc.data().type,
+            disposition: doc.data().disposition,
+            id: doc.data().id,
+            teacherId: doc.data().teacherId,
+            actionPlan: doc.data().actionPlan,
+            result: doc.data().result,
+            summary: doc.data().summary,
+            details: doc.data().details,
+            trends: doc.data().trends,
+            practice: doc.data().practice,
+            date: doc.data().date
+          })
+        );
+        return attachmentArray;
+      })
+      .catch(() => {
+        console.log('error retrieving action steps');
+      })
+  }
+
 }
 
 export default Firebase;

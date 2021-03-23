@@ -52,6 +52,7 @@ interface NewMessageViewProps {
   setSubject: React.Dispatch<React.SetStateAction<string>>;
   recipient: {value: string, id: string, label: string};
   setRecipient: React.Dispatch<React.SetStateAction<{value: string, id: string, label: string}>> */
+  attachments?: Array<Attachment>,
   updateDrafts?(email: Email): void;
   readOnly?: boolean;
   moveDraftToSent?(email: Email): void;
@@ -302,7 +303,11 @@ type ACData = {
   }> | undefined
 }
 
-const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProps) => {
+/**
+ * @return {ReactElement}
+ * @param {NewMessageViewProps} props
+ */
+function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   const [theme, setTheme] = useState({
     id: '0',
     value: 'None',
@@ -537,6 +542,10 @@ const NewMessageView: React.FC<NewMessageViewProps> = (props: NewMessageViewProp
         label: props.draft.recipientName,
         firstName: props.draft.recipientFirstName ? props.draft.recipientFirstName : ''
       })
+    }
+    if (props.attachments && !attachments) {
+      setAttachments(props.attachments);
+      console.log('setting attaachments from draft')
     }
   });
 

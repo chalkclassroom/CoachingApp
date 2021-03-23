@@ -62,7 +62,7 @@ export enum ThemeOptions {
   CUSTOM = 'Blank',
 };
 
-// an interface defining structure of each attachment
+/* // an interface defining structure of each attachment
 export interface Attachment {
   // string id for each action plan
   // id: string;
@@ -83,7 +83,7 @@ export interface Attachment {
   filename: string,
   type: string,
   disposition: string
-};
+}; */
 
 // interface defining the structure of each message to be sent to firebase
 export interface Message {
@@ -142,4 +142,20 @@ export interface Email {
   dateCreated?: firebase.firestore.Timestamp,
   dateModified: firebase.firestore.Timestamp,
   // attachments
+}
+
+export interface Attachment {
+  content: string,
+  filename: string,
+  type: string,
+  disposition: string,
+  id: string,
+  teacherId: string,
+  actionPlan: boolean,
+  result: boolean,
+  summary?: boolean,
+  details?: boolean,
+  trends?: boolean,
+  practice?: string,
+  date?: Date
 }

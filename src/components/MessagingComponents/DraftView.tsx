@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as PropTypes from 'prop-types';
-import { Email } from './MessagingTypes';
+import { Email, Attachment } from './MessagingTypes';
 import NewMessageView from './NewMessageView';
 import EmailList from './EmailList';
 import Typography from '@material-ui/core/Typography';
@@ -20,8 +20,14 @@ interface DraftViewProps {
 
 const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
   const [selectedDraft, setSelectedDraft] = useState<Email>();
+  const [selectedAttachments, setSelectedAttachments] = useState<Array<Attachment>>();
+  const firebase = props.firebase;
+
   const onClick = (draft: Email): void => {
     setSelectedDraft(draft);
+    firebase.getAttachments(draft.id).then((attachmentArray: Array<Attachment>) => {
+      setSelectedAttachments(attachmentArray)
+    })
   }
 
   return (
@@ -42,7 +48,7 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
             </Grid>
           </Grid>
           <Grid item>
-            <NewMessageView draft={selectedDraft} updateDrafts={props.updateDrafts} setMenuOption={props.setMenuOption} removeFromDrafts={props.removeFromDrafts} moveDraftToSent={props.moveDraftToSent} firebase={props.firebase} />
+            <NewMessageView draft={selectedDraft} attachments={selectedAttachments} updateDrafts={props.updateDrafts} setMenuOption={props.setMenuOption} removeFromDrafts={props.removeFromDrafts} moveDraftToSent={props.moveDraftToSent} firebase={props.firebase} />
           </Grid>
         </Grid>
       ) : (
