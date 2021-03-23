@@ -81,9 +81,11 @@ const TransitionResultsPdf: React.FC<Props> = (props: Props) => {
       data: Array<number>
     }>
   } | undefined => {
-    if (data) {
+    if (data && data.trends) {
+      const dateArray: Array<Array<string>> = [];
+      data.trends.map(observation => dateArray.push([moment(observation.startDate.value).format("MMM Do")]))
       return {
-        labels: data.trends ? [data.trends.map(observation => moment(observation.startDate.value).format("MMM Do"))] : [],
+        labels: dateArray,
         datasets: [
           {
             label: 'TOTAL',
