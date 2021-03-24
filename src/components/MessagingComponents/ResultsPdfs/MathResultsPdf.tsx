@@ -62,7 +62,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
   const {printDocument, id, addToAttachmentList, data, date, teacher} = props;
   
   // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
-  const [childSummary, setChildSummary] = useState(data && data.childSummary ? false : true);
+  const [childSummary, setChildSummary] = useState(data && data.childSummary && data.teacherSummary ? false : true);
   const [teacherSummary, setTeacherSummary] = useState(data && data.teacherSummary ? false : true);
   const [childDetails, setChildDetails] = useState(data && data.childDetails ? false : true);
   const [teacherDetails, setTeacherDetails] = useState(data && data.teacherDetails ? false : true);
@@ -256,7 +256,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
             {data && data.childDetails ? (
               <div>
                 {data.teacherSummary ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: data.teacherSummary ? '1em' : '8em'}}>
+                <Grid item style={{paddingTop: '1em'}}>
                   <ChildBarDetails
                     math1={data.childDetails.math1}
                     math2={data.childDetails.math2}
@@ -285,7 +285,7 @@ const MathResultsPdf: React.FC<Props> = (props: Props) => {
             {data && data.childTrends ? (
               <div>
                 {(data.teacherSummary || data.childDetails) ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: (data.teacherSummary || data.childDetails )? '1em' : '8em'}}>
+                <Grid item style={{paddingTop: '1em'}}>
                   <ChildLineTrends
                     data={(): {
                       labels: Array<string>;

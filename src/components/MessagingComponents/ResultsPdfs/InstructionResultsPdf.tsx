@@ -193,8 +193,8 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
                 />
               ) : (null)}
             </Grid>
-            <Grid item style={{paddingTop: '8em'}}>
-              {data && data.details ? (
+            {data && data.details ? (
+              <Grid item style={{paddingTop: data.summary ? '8em' : '1em'}}>
                 <InstructionTypeDetailsChart
                   hlqCount={data.details.highLevelQuestion}
                   hlqResponseCount={data.details.highLevelResponse}
@@ -203,12 +203,12 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
                   completed={(): void => {setDetails(true)}}
                   title={true}
                 />
-              ) : (null)}
-            </Grid>
+              </Grid>
+            ) : (null)}
             {data && data.trends ? (
               <div>
                 {(data.summary && data.details) ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: (data.summary && data.details) ? '1em' : '8em'}}>
+                <Grid item style={{paddingTop: ((data.summary && data.details) || (!data.summary && !data.details)) ? '1em' : '8em'}}>
                   <LevelOfInstructionTrendsGraph
                     data={(): {
                       labels: Array<string>;

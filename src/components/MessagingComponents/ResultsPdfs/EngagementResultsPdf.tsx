@@ -185,7 +185,7 @@ const EngagementResultsPdf: React.FC<Props> = (props: Props) => {
             {data && data.details ? (
               <div>
                 {data.summary ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: data.summary ? '1em' : '8em'}}>
+                <Grid item style={{paddingTop: '1em'}}>
                   <EngagementBarDetails
                     offTaskDetailSplit={[data.details.offTask0, data.details.offTask1, data.details.offTask2]}
                     mildlyEngagedDetailSplit={[data.details.mildlyEngaged0, data.details.mildlyEngaged1, data.details.mildlyEngaged2]}

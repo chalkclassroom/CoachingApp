@@ -180,7 +180,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
             {data && data.details ? (
             <div>
               {(data.summary && data.summary.toneRating) ? (<Grid item style={{height: '148px'}} />) : null}
-              <Grid item style={{paddingTop: (data.summary && data.summary.toneRating) ? '1em' : '8em'}}>
+              <Grid item style={{paddingTop: ((data.summary && data.summary.toneRating) || !data.summary) ? '1em' : '8em'}}>
                 <BehaviorResponsesDetailsChart
                   specificBehaviorCount={data.details.specificCount}
                   nonspecificBehaviorCount={data.details.nonspecificCount}

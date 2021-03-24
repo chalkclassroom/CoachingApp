@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import * as PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { renderToStaticMarkup } from 'react-dom/server';
 import ChooseTheme from './ChooseTheme';
 import EmailBody from './EmailBody';
 import SubjectLine from './SubjectLine';
@@ -15,8 +14,6 @@ import SaveButton from './SaveButton';
 import AttachButton from './AttachButton';
 import TemplateDialog from './TemplateDialog';
 import DeleteDialog from './DeleteDialog';
-// import AlertDialog from './AlertDialog';
-// import ChooseActionPlanDialog from './ChooseActionPlanDialog';
 import AttachmentDialog from './AttachmentDialog';
 import { Alerts, ThemeOptions, Message, Attachment, SelectOption, TemplateOption, Email } from './MessagingTypes';
 import * as CryptoJS from 'crypto-js';
@@ -33,25 +30,12 @@ import ListeningResultsPdf from './ResultsPdfs/ListeningResultsPdf';
 import SequentialResultsPdf from './ResultsPdfs/SequentialResultsPdf';
 import ACResultsPdf from './ResultsPdfs/ACResultsPdf';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
 import * as Types from '../../constants/Types';
 
 
 interface NewMessageViewProps {
   firebase: any;
-  // the initial message loaded
-  // is a prop as it allows editing drafts to be easier
-  // DraftView just modifies two states in the parent component: initialMsg and menuOption
-  // and the NewMessageView is loaded with that draft as content
   draft?: Email;
-  /* email: string;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
-  emailId: string;
-  setEmailId: React.Dispatch<React.SetStateAction<string>>;
-  subject: string;
-  setSubject: React.Dispatch<React.SetStateAction<string>>;
-  recipient: {value: string, id: string, label: string};
-  setRecipient: React.Dispatch<React.SetStateAction<{value: string, id: string, label: string}>> */
   attachments?: Array<Attachment>,
   updateDrafts?(email: Email): void;
   readOnly?: boolean;
@@ -69,7 +53,7 @@ interface ResultType {
 
 type ResultTypeKey = keyof ResultType;
 
-type Attachment = {
+/* type Attachment = {
   content: string,
   filename: string,
   type: string,
@@ -83,7 +67,7 @@ type Attachment = {
   trends?: boolean,
   practice?: string,
   date?: Date
-}
+} */
 
 type TransitionData = {
   summary: {
@@ -335,13 +319,13 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     practice: string,
     achieveBy: firebase.firestore.Timestamp
   }>>([]);
-  const [noActionPlansMessage, setNoActionPlansMessage] = useState<string>('');
+  const [noActionPlansMessage, setNoActionPlansMessage] = useState<string>('Retrieving action plans...');
   const [observations, setObservations] = useState<Array<{
     id: string,
     date: firebase.firestore.Timestamp,
     practice: string
   }>>([]);
-  const [noObservationsMessage, setNoObservationsMessage] = useState<string>('');
+  const [noObservationsMessage, setNoObservationsMessage] = useState<string>('Retrieving results...');
   const [actionPlanDisplay, setActionPlanDisplay] = useState(false);
   const [subject, setSubject] = useState<string | undefined>('');
   const firebase = props.firebase;
@@ -349,6 +333,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
   const [attachments, setAttachments] = useState<Array<Attachment>>();
+  const [attachDisabled, setAttachDisabled] = useState(true);
   const [checkedResults, setCheckedResults] = useState<{[id: string]: {
     summary: boolean,
     details: boolean,
@@ -356,7 +341,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   }}>({});
   const [templateDialog, setTemplateDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [attachedCount, setAttachedCount] = useState(0);
   const [doneAttaching, setDoneAttaching] = useState(true);
   const [renderActionPlan, setRenderActionPlan] = useState(false);
   const [renderTransitionPdf, setRenderTransitionPdf] = useState(false);
@@ -509,19 +493,26 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       setEmail(props.draft.emailContent);
       setSubject(props.draft.subject);
       recipientSelected({
-        value: props.draft.recipientEmail,
-        id: props.draft.recipientId,
-        label: props.draft.recipientName,
+        value: props.draft.recipientEmail ? props.draft.recipientEmail : '',
+        id: props.draft.recipientId ? props.draft.recipientId : '',
+        label: props.draft.recipientName ? props.draft.recipientName : '',
         firstName: props.draft.recipientFirstName ? props.draft.recipientFirstName : ''
       })
     }
     if (props.attachments && !attachments) {
       setAttachments(props.attachments);
-      setAttachedCount(props.attachments.length);
-      console.log('setting attaachments from draft')
     }
-    if (attachments && attachedCount === attachments.length) {
-      setDoneAttaching(true);
+    if (!doneAttaching && attachments) {
+      const attachmentsContent = attachments.map(a => a.content);
+      const contentEmpty = attachmentsContent.filter(obj => {
+        return obj === ''
+      });
+      if (contentEmpty.length === 0) {
+        setDoneAttaching(true)
+      }
+    }
+    if (((noObservationsMessage === '') && noActionPlansMessage === '')) {
+      setAttachDisabled(false)
     }
   });
 
@@ -652,7 +643,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
 
   const removeAttachment = (position: number, emailId: string | undefined, attachmentId: string): void => {
     const newAttachments = attachments;
-    setAttachedCount(attachedCount - 1);
     if (newAttachments) {
       newAttachments.splice(position, 1);
       setAttachments(newAttachments);
@@ -725,10 +715,10 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       practice?: string
     }): boolean => element.id === id;
     if (attachments) {
-      newAttachments = attachments;
+      newAttachments = [...attachments];
       const index = newAttachments.findIndex(idMatch);
       newAttachments[index].content = base64string;
-      setAttachedCount(attachedCount+1);
+      setAttachments(newAttachments);
     }
   }
 
@@ -744,36 +734,36 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
    }).then((canvas) => {
       console.log('canvas');
     // canvas context
-    const context = canvas.getContext("2d");
+    // const context = canvas.getContext("2d");
     // get the current ImageData for the canvas
-    const data = context.getImageData(0, 0, canvas.width, canvas.height);
+    // const data = context.getImageData(0, 0, canvas.width, canvas.height);
     // store the current globalCompositeOperation
-    const compositeOperation = context.globalCompositeOperation;
+    // const compositeOperation = context.globalCompositeOperation;
     // set to draw behind current content
-    context.globalCompositeOperation = "destination-over";
+    // context.globalCompositeOperation = "destination-over";
     //set background color
-    context.fillStyle = "#FFFFFF";
+    // context.fillStyle = "#FFFFFF";
     // draw background/rectangle on entire canvas
-    context.fillRect(0,0,canvas.width,canvas.height);
+    // context.fillRect(0,0,canvas.width,canvas.height);
 
-    const tempCanvas = document.createElement("canvas");
-    const tCtx = tempCanvas.getContext("2d");
+    // const tempCanvas = document.createElement("canvas");
+    // const tCtx = tempCanvas.getContext("2d");
 
-    tempCanvas.width = 1588;
-    tempCanvas.height = 2000;
+    // tempCanvas.width = 1588;
+    // tempCanvas.height = 2000;
 
-    tCtx.drawImage(canvas,0,0);
+    // tCtx.drawImage(canvas,0,0);
 
     // write on screen
-    const imgData2 = tempCanvas.toDataURL("image/png");
-    saveAs(imgData2, 'cropped.png');
+    // const imgData2 = tempCanvas.toDataURL("image/png");
+    // saveAs(imgData2, 'cropped.png');
 
         const link = document.createElement("a");
         document.body.appendChild(link);
         link.download = "html_image.png";
         const imgData = canvas.toDataURL('image/png');
         // console.log('IMGDATA', imgData);
-        saveAs(imgData, 'canvas.png');
+        // saveAs(imgData, 'canvas.png');
         // const config1 = {width: 100, height: 100, top: 50, left: 30};
         const imgWidth = 190; 
         const pageHeight = 265;
@@ -783,28 +773,29 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         let heightLeft = imgHeight;
         const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
         let position = 10;
-        const imgProps= pdf.getImageProperties(imgData);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        // const imgProps= pdf.getImageProperties(imgData);
+        // const pdfWidth = pdf.internal.pageSize.getWidth();
+        // const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
         // pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
         // pdf.addImage(imgData2, 'PNG', 10, 10, 190, 220);
         pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-        console.log('this is the pdfWidth', pdfWidth, 'height:', pdfHeight, ' or this?', pdf.internal.pageSize.getHeight());
-        console.log('this is the img width', imgWidth);
-        console.log('image height', imgHeight);
-        console.log('this is the height left 1', heightLeft);
+        // console.log('this is the pdfWidth', pdfWidth, 'height:', pdfHeight, ' or this?', pdf.internal.pageSize.getHeight());
+        // console.log('this is the img width', imgWidth);
+        // console.log('image height', imgHeight);
+        // console.log('this is the height left 1', heightLeft);
         heightLeft -= pageHeight;
-        let i = 0;
+        // let i = 0;
         while (heightLeft >= 0) {
-          i++;
-          console.log('this is the height left in while', heightLeft);
+          // i++;
+          // console.log('this is the height left in while', heightLeft);
           position = heightLeft - imgHeight;
           // position = heightLeft - pageHeight
-          console.log('this is the position', position, 'and position - 30 why?', position - 30)
+          // console.log('this is the position', position, 'and position - 30 why?', position - 30)
           pdf.addPage();
           pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
           heightLeft -= pageHeight;
         }
+        // use this for downloading pdf
         pdf.save("download.pdf");
         const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
         const reader = new FileReader();
@@ -815,9 +806,9 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
           if (base64data) {
             newBase64Data = (base64data as string).replace('data:application/pdf;base64,', '');
           }
-          console.log('data is', newBase64Data);
-          console.log('practice is', practice);
-          console.log('date is', date);
+          // console.log('data is', newBase64Data);
+          // console.log('practice is', practice);
+          // console.log('date is', date);
           addToAttachmentList(newBase64Data, id);
         }
       })
@@ -1755,7 +1746,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     return firebase.saveEmail(email, subject, recipient, emailId).then((data: Email) => {
       if (attachments) {
         attachments.forEach((attachment) => {
-          console.log('saving', attachment)
+          console.log('saving', attachment, recipient)
           firebase.saveAttachment(data.id, attachment)
         })
       }
@@ -2156,8 +2147,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                   <Grid container direction="row" justify="space-between" style={{width: '100%'}}>
                     <Grid item>
                       <SendButton
-                        disabled={!doneAttaching}
-                        sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value}, emailId, attachments)}}
+                        disabled={attachDisabled || !doneAttaching}
+                        sendMail={(): void => {saveAndSendEmail(email, subject, {id: recipient.id, name: recipient.label, email: recipient.value, firstName: recipient.firstName}, emailId, attachments)}}
                       />
                     </Grid>
                     <Grid item>
@@ -2165,7 +2156,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                         <Grid item style={{paddingRight: '1em'}}>
                           <AttachButton 
                             acceptAttachment={(): void => setActionPlanDisplay(true)} 
-                            disabled={!doneAttaching}
+                            disabled={attachDisabled || !doneAttaching}
                           />
                         </Grid>
                         <Grid item style={{paddingRight: '1em'}}>
@@ -2229,9 +2220,4 @@ const mapStateToProps = (state: Types.ReduxState): {
   };
 };
 
-export default compose(connect(
-  mapStateToProps,
-  null
-), NewMessageView);
-
-// export default connect(mapStateToProps)(NewMessageView);
+export default connect(mapStateToProps)(NewMessageView);
