@@ -667,10 +667,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     return newDate
   }
 
-  const functionForType = (base64string: string, id: string): void=> {
-    return;
-  }
-
   const saveAs = (uri, filename) => {
     const link = document.createElement('a');
     if (typeof link.download === 'string') {
@@ -727,7 +723,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     }
   }
 
-  const printDocument = async (practice: string | undefined, date: Date, elementId: string, addToAttachmentList: typeof functionForType, id: string): Promise<void> => {
+  const printDocument = async (practice: string | undefined, date: Date, elementId: string, id: string): Promise<void> => {
     console.log('PRINT DOCUMENT CALLED');
     const input: HTMLElement = document.getElementById(elementId);
     let base64data: string | ArrayBuffer | null = null;
@@ -819,7 +815,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       })
   }
 
-  const getAPData = async (addToAttachmentList: typeof functionForType): Promise<Array<{
+  const getAPData = async (): Promise<Array<{
     actionPlanId: string,
     tool: string,
     sessionId: string,
@@ -891,7 +887,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
             const copyActionPlanData = [...actionPlanData];
             copyActionPlanData.push(thisActionPlan);
             setActionPlanData(copyActionPlanData);
-            printDocument(thisActionPlan.tool, thisActionPlan.date, thisActionPlan.actionPlanId, addToAttachmentList, thisActionPlan.actionPlanId)
+            printDocument(thisActionPlan.tool, thisActionPlan.date, thisActionPlan.actionPlanId, thisActionPlan.actionPlanId)
           }).then(() => {
             actionPlanData.push(thisActionPlan)
           })
@@ -1649,7 +1645,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     setActionPlanDisplay(false);
     if (attachments) {
       setDoneAttaching(false);
-      getAPData(addToAttachmentList).then((aPData) => {
+      getAPData().then(() => {
         setRenderActionPlan(true);
       });
       getResultsData();
@@ -1876,7 +1872,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 data={transition[index]}
                 date={result.date}
                 teacher={teacherObject}
-                addToAttachmentList={addToAttachmentList}
               />
             </div>
           )
@@ -1905,7 +1900,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 data={climate[index]}
                 date={result.date}
                 teacher={teacherObject}
-                addToAttachmentList={addToAttachmentList}
               />
             </div>
           )
@@ -1934,7 +1928,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 data={math[index]}
                 date={result.date}
                 teacher={teacherObject}
-                addToAttachmentList={addToAttachmentList}
               />
             </div>
           )
@@ -1963,7 +1956,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 data={instruction[index]}
                 date={result.date}
                 teacher={teacherObject}
-                addToAttachmentList={addToAttachmentList}
               />
             </div>
           )
@@ -1992,7 +1984,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 data={engagement[index]}
                 date={result.date}
                 teacher={teacherObject}
-                addToAttachmentList={addToAttachmentList}
               />
             </div>
           )
@@ -2021,7 +2012,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 data={listening[index]}
                 date={result.date}
                 teacher={teacherObject}
-                addToAttachmentList={addToAttachmentList}
               />
             </div>
           )
@@ -2050,7 +2040,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 data={sequential[index]}
                 date={result.date}
                 teacher={teacherObject}
-                addToAttachmentList={addToAttachmentList}
               />
             </div>
           )
@@ -2079,7 +2068,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 data={ac[index]}
                 date={result.date}
                 teacher={teacherObject}
-                addToAttachmentList={addToAttachmentList}
               />
             </div>
           )

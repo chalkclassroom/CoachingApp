@@ -35,16 +35,6 @@ export enum Alerts {
   EMAIL_VIEW = 'Are you sure you want to view this message?',
 }
 
-// an enum of all the possible actions in the messaging view
-// unused currently but left in for possible future use
-export enum MessageActions {
-  SAVE = 'Save',
-  SEND = 'Send',
-  ATTACH = 'Attach',
-  DELETE = 'Delete',
-  VIEW = 'View',
-}
-
 // an enum of all the possible menu options in messaging view
 export enum MenuOptions {
   SENT = 'Sent',
@@ -61,29 +51,6 @@ export enum ThemeOptions {
   THANK_YOU = 'Thank You',
   CUSTOM = 'Blank',
 };
-
-/* // an interface defining structure of each attachment
-export interface Attachment {
-  // string id for each action plan
-  // id: string;
-  // type by default should be "action plan" but is a field
-  // here in case in future we decide to have a non-action plan
-  // attachments
-  // type?: string;
-  // date of the action plan meeting
-  // date: Date;
-  // which magic eight does the action plan belong too. optional again
-  // for the same reason.
-  // practice?: MagicEight;
-
-  // doesn't have a content field as a message with a lot of attachments
-  // could theoretically become too heavy. just storing ids and then retirieving
-  // the content when we are actually sending the email allows us to skip that possibility
-  content: string,
-  filename: string,
-  type: string,
-  disposition: string
-}; */
 
 // interface defining the structure of each message to be sent to firebase
 export interface Message {
@@ -102,7 +69,6 @@ export interface Message {
   // the text content of the message: required by sendgrid
   textContent: string;
   // the html content of the message: required for styling 
-  // content: JSX.Element;
   content: string;
   // boolean for if the message has been delivered or not
   // false implies it should be returned when draft messages are required

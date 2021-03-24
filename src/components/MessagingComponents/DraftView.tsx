@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import * as PropTypes from 'prop-types';
 import { Email, Attachment } from './MessagingTypes';
 import NewMessageView from './NewMessageView';
@@ -19,6 +20,7 @@ interface DraftViewProps {
 };
 
 const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
+  const {drafts, noDrafts, updateDrafts, moveDraftToSent, setMenuOption, removeFromDrafts} = props;
   const [selectedDraft, setSelectedDraft] = useState<Email>();
   const [selectedAttachments, setSelectedAttachments] = useState<Array<Attachment>>();
   const firebase = props.firebase;
@@ -32,7 +34,7 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
 
   return (
     <div>
-      {props.noDrafts ? (
+      {noDrafts ? (
         <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
           You do not have any drafts.
         </Typography>
@@ -48,11 +50,11 @@ const DraftView: React.FC<DraftViewProps> = (props: DraftViewProps) => {
             </Grid>
           </Grid>
           <Grid item>
-            <NewMessageView draft={selectedDraft} attachments={selectedAttachments} updateDrafts={props.updateDrafts} setMenuOption={props.setMenuOption} removeFromDrafts={props.removeFromDrafts} moveDraftToSent={props.moveDraftToSent} firebase={props.firebase} />
+            <NewMessageView draft={selectedDraft} attachments={selectedAttachments} updateDrafts={updateDrafts} setMenuOption={setMenuOption} removeFromDrafts={removeFromDrafts} moveDraftToSent={moveDraftToSent} firebase={firebase} />
           </Grid>
         </Grid>
       ) : (
-        <EmailList emails={props.drafts} onClick={onClick} />
+        <EmailList emails={drafts} onClick={onClick} />
       )}
     </div>
   );

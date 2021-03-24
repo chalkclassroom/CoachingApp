@@ -36,13 +36,12 @@ interface Props {
   date: Date,
   teacher: Types.Teacher | undefined,
   id: string,
-  printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
-  addToAttachmentList(base64string: string, id: string): void
+  printDocument(practice: string | undefined, date: Date, elementId: string, id: string): void
 }
 
 const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
 
-  const {printDocument, id, addToAttachmentList, data, date, teacher} = props;
+  const {printDocument, id, data, date, teacher} = props;
 
   // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
   const [summary, setSummary] = useState(data && data.summary ? false : true);
@@ -53,7 +52,7 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     // generate PDF once all graphs have rendered
     if (summary && details && trends && !attached) {
-      printDocument('Level of Instruction', date, id, addToAttachmentList, id);
+      printDocument('Level of Instruction', date, id, id);
       setAttached(true);
     }
   })
@@ -236,8 +235,7 @@ const InstructionResultsPdf: React.FC<Props> = (props: Props) => {
 }
 
 InstructionResultsPdf.propTypes = {
-  printDocument: PropTypes.func.isRequired,
-  addToAttachmentList: PropTypes.func.isRequired
+  printDocument: PropTypes.func.isRequired
 }
 
 export default (InstructionResultsPdf);

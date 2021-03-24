@@ -32,13 +32,12 @@ interface ListeningResultsProps {
   date: Date,
   teacher: Types.Teacher | undefined,
   id: string,
-  printDocument(practice: string | undefined, date: Date, elementId: string, addToAttachmentList: unknown, id: string): void,
-  addToAttachmentList(base64string: string, id: string): void
+  printDocument(practice: string | undefined, date: Date, elementId: string, id: string): void
 }
 
 const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningResultsProps) => {
   
-  const {printDocument, id, addToAttachmentList, data, date, teacher} = props;
+  const {printDocument, id, data, date, teacher} = props;
 
   // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
   const [summary, setSummary] = useState(data && data.summary ? false : true);
@@ -49,7 +48,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
   useEffect(() => {
     // generate PDF once all graphs have rendered
     if (summary && details && trends && !attached) {
-      printDocument('Listening to Children', date, id, addToAttachmentList, id);
+      printDocument('Listening to Children', date, id, id);
       setAttached(true);
     }
   })
@@ -214,8 +213,7 @@ const ListeningResultsPdf: React.FC<ListeningResultsProps> = (props: ListeningRe
 }
 
 ListeningResultsPdf.propTypes = {
-  printDocument: PropTypes.func.isRequired,
-  addToAttachmentList: PropTypes.func.isRequired
+  printDocument: PropTypes.func.isRequired
 }
 
 export default (ListeningResultsPdf);
