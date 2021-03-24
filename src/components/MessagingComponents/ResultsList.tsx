@@ -16,8 +16,8 @@ import {
   ListItem,
   ListItemIcon
 } from '@material-ui/core';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import moment from 'moment';
+// import VisibilityIcon from '@material-ui/icons/Visibility';
+import * as moment from 'moment';
 import TransitionTimeIconImage from '../../assets/images/TransitionTimeIconImage.svg';
 import ClassroomClimateIconImage from '../../assets/images/ClassroomClimateIconImage.svg';
 import MathIconImage from '../../assets/images/MathIconImage.svg';
@@ -26,12 +26,11 @@ import InstructionIconImage from '../../assets/images/InstructionIconImage.svg';
 import ListeningIconImage from '../../assets/images/ListeningIconImage.svg';
 import SequentialIconImage from '../../assets/images/SequentialIconImage.svg';
 import AssocCoopIconImage from '../../assets/images/AssocCoopIconImage.svg';
-import * as Constants from '../../constants/Constants';
 
 interface Props {
   results?: ResultsInfo[],
   teacherId?: string,
-  onClick(sessionId: string, teacherId: string, date: Date, tool: string): void,
+  // onClick(sessionId: string, teacherId: string, date: Date, tool: string): void,
   checkedResults: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} | undefined,
   addResult(id: string, type: ResultTypeKey): void,
   removeResult(id: string, type: ResultTypeKey): void,
@@ -292,7 +291,7 @@ class ResultsList extends React.Component<Props, State>{
 
   static propTypes = {
     results: PropTypes.array,
-    onClick: PropTypes.func.isRequired
+    // onClick: PropTypes.func.isRequired
   }
 
   /**

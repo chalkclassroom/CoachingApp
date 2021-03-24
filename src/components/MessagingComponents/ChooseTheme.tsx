@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Select from 'react-select';
-import { SelectOption } from './MessagingTypes';
+import { TemplateOption } from './MessagingTypes';
 
 const customStyles = {
   indicatorsContainer: (provided: React.CSSProperties): React.CSSProperties => ({
@@ -19,8 +19,8 @@ const customStyles = {
 }
 
 interface ChooseThemeProps {
-  selectedOption: SelectOption;
-  setOption: (newOption: SelectOption) => void;
+  selectedOption: TemplateOption;
+  setOption: (newOption: TemplateOption) => void;
   readOnly: boolean | undefined;
 }
 

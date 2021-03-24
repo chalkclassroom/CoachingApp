@@ -1,5 +1,5 @@
 // A simple submit button which which submits the form
-import React from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 

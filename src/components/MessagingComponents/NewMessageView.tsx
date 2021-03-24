@@ -15,9 +15,8 @@ import AttachButton from './AttachButton';
 import TemplateDialog from './TemplateDialog';
 import DeleteDialog from './DeleteDialog';
 import AttachmentDialog from './AttachmentDialog';
-import { Alerts, ThemeOptions, Message, Attachment, SelectOption, TemplateOption, Email } from './MessagingTypes';
+import { ThemeOptions, Message, Attachment, SelectOption, TemplateOption, Email } from './MessagingTypes';
 import * as CryptoJS from 'crypto-js';
-import * as moment from 'moment';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import ActionPlanForPdf from './ActionPlanForPdf';
@@ -70,11 +69,11 @@ type ResultTypeKey = keyof ResultType;
 } */
 
 type TransitionData = {
-  summary: {
+  summary: Array<{
     total: number,
     sessionTotal: number,
     startDate: {value: string}
-  } | undefined,
+  }> | undefined,
   details: Array<{
     line: number,
     traveling: number,
@@ -302,7 +301,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     value: 'None',
     label: 'None'
   });
-  const [alertEnum, setAlertEnum] = useState(Alerts.NO_ERROR);
   const [recipient, setRecipient] = useState<{value: string | undefined, id: string | undefined, label: string | undefined, firstName: string | undefined}>({
     value: '',
     id: '',
@@ -429,56 +427,58 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     actionSteps: Array<{step: string, person: string, timeline: Date}>
   }>>();
 
-  const recipientSelected = (newRecipient: {value: string, id: string, label: string, firstName: string}): void => {
-    setRecipient(newRecipient);
-    const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
-      return obj.id === newRecipient.id
-    });
-    setTeacherObject(teacherData[0]);
-    firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{
-      id: string,
-      date: {
-        seconds: number,
-        nanoseconds: number
-      },
-      practice: string,
-      achieveBy: firebase.firestore.Timestamp
-    }>) => {
-      setActionPlans(actionPlans);
-      console.log('aplans', actionPlans)
-      if (actionPlans && actionPlans.length > 0) {
-        setNoActionPlansMessage('')
-      } else {
-        setNoActionPlansMessage('You have not created any action plans with ' + newRecipient.label + '.');
-      }
-    }).catch((error : Error) => {
-      console.log('error', error);
-      setNoActionPlansMessage('There was an error retrieving ' + newRecipient.label + '\'s action plans.');
-    });
-    firebase.getAllTeacherObservations(newRecipient.id).then((observations: Array<{
-      id: string,
-      date: firebase.firestore.Timestamp,
-      practice: string
-    }>) => {
-      setObservations(observations);
-      const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
-      console.log('observations', observations)
-      if (observations && observations.length > 0) {
-        observations.forEach(result => {
-          unchecked[result.id] = {'summary': false, 'details': false, 'trends': false}
-        })
-      }
-      setCheckedResults(unchecked);
-      console.log('observations', observations)
-      if (observations && observations.length > 0) {
-        setNoObservationsMessage('')
-      } else {
-        setNoObservationsMessage('You have no observation data for ' + newRecipient.label + '.');
-      }
-    }).catch((error : Error) => {
-      console.log('error', error);
-      setNoObservationsMessage('There was an error retrieving ' + newRecipient.label + '\'s results.');
-    });
+  const recipientSelected = (newRecipient: {value: string| undefined, id: string | undefined, label: string | undefined, firstName: string | undefined}): void => {
+    if (newRecipient.value && newRecipient.id && newRecipient.label && newRecipient.firstName) {
+      setRecipient(newRecipient);
+      const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
+        return obj.id === newRecipient.id
+      });
+      setTeacherObject(teacherData[0]);
+      firebase.getAllTeacherActionPlans(newRecipient.id).then((actionPlans: Array<{
+        id: string,
+        date: {
+          seconds: number,
+          nanoseconds: number
+        },
+        practice: string,
+        achieveBy: firebase.firestore.Timestamp
+      }>) => {
+        setActionPlans(actionPlans);
+        console.log('aplans', actionPlans)
+        if (actionPlans && actionPlans.length > 0) {
+          setNoActionPlansMessage('')
+        } else {
+          setNoActionPlansMessage('You have not created any action plans with ' + newRecipient.label + '.');
+        }
+      }).catch((error : Error) => {
+        console.log('error', error);
+        setNoActionPlansMessage('There was an error retrieving ' + newRecipient.label + '\'s action plans.');
+      });
+      firebase.getAllTeacherObservations(newRecipient.id).then((observations: Array<{
+        id: string,
+        date: firebase.firestore.Timestamp,
+        practice: string
+      }>) => {
+        setObservations(observations);
+        const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
+        console.log('observations', observations)
+        if (observations && observations.length > 0) {
+          observations.forEach(result => {
+            unchecked[result.id] = {'summary': false, 'details': false, 'trends': false}
+          })
+        }
+        setCheckedResults(unchecked);
+        console.log('observations', observations)
+        if (observations && observations.length > 0) {
+          setNoObservationsMessage('')
+        } else {
+          setNoObservationsMessage('You have no observation data for ' + newRecipient.label + '.');
+        }
+      }).catch((error : Error) => {
+        console.log('error', error);
+        setNoObservationsMessage('There was an error retrieving ' + newRecipient.label + '\'s results.');
+      });
+    }
   }
 
   // get the user's name
@@ -667,7 +667,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     return newDate
   }
 
-  const functionForType = (base64string: string, id: string) => {
+  const functionForType = (base64string: string, id: string): void=> {
     return;
   }
 
@@ -746,7 +746,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     // const compositeOperation = context.globalCompositeOperation;
     // set to draw behind current content
     // context.globalCompositeOperation = "destination-over";
-    //set background color
+    // set background color
     // context.fillStyle = "#FFFFFF";
     // draw background/rectangle on entire canvas
     // context.fillRect(0,0,canvas.width,canvas.height);
@@ -933,7 +933,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         total: number,
         sessionTotal: number,
         startDate: {value: string}
-      }>) => {return summary}) : null,
+      }>) => {console.log('THI SIS TRANSITION SUMMARY', summary); return summary}) : null,
       details ? props.firebase.fetchTransitionTypeSummary(sessionId).then((details: Array<{
         line: number,
         traveling: number,
@@ -1658,7 +1658,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
 
   const sendMail = async (): Promise<void> => {
     if (recipient === null) {
-      setAlertEnum(Alerts.NO_RECIPIENT);             
+      return;            
     } else {
       // create the message object to send to funcSendEmail
       const msg: Message = {
@@ -1686,15 +1686,9 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       firebase.sendEmail(encryptedMsg)
         .then((res: {data: string}): void => {
           console.log(JSON.stringify(res));
-          if(res.data === '200') {
-            setAlertEnum(Alerts.EMAIL_SEND_SUCCESS);
-          } else {
-            setAlertEnum(Alerts.EMAIL_SEND_FAIL);
-          }
         })
         .catch((err: Error): void => {
           console.log(JSON.stringify(err));
-          setAlertEnum(Alerts.EMAIL_SEND_FAIL);
         });
     }
   };
@@ -2103,7 +2097,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
               <RecipientAddress
                 selectedOption={recipient}
                 setOption={(newOption: SelectOption): void => recipientSelected(newOption)}
-                readOnly={props.readOnly || attachments}
+                readOnly={props.readOnly || (attachments && attachments.length>0)}
               />
             </Grid>
           </Grid>
@@ -2193,12 +2187,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                           open={actionPlanDisplay}
                           recipientName={recipient.label}
                           handleClose={(): void => setActionPlanDisplay(false)}
-                          /* handleDelete={(existActionPlan: string): void => {
-                            removeAttachment(existActionPlan);
-                            setActionPlanDisplay(false);
-                          }} */
-                          attachmentList={attachments}
                           firebase={firebase}
+                          coachName={userName + ' ' + userLastName}
                         />
                       </Grid>
                     </Grid>

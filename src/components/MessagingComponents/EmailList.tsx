@@ -13,7 +13,7 @@ import {
   TableContainer,
   TablePagination
 } from '@material-ui/core';
-import moment from 'moment';
+import * as moment from 'moment';
 import { Email } from './MessagingTypes';
 
 interface Props {

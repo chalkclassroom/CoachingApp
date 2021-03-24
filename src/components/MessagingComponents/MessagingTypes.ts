@@ -123,9 +123,10 @@ export interface Message {
 // interface defining the structure Select from
 // MaterialUI needs
 export interface SelectOption {
-  value: string;
-  id: string;
-  label: string;
+  value: string | undefined;
+  id: string | undefined;
+  label: string | undefined;
+  firstName: string | undefined;
 }
 
 export interface TemplateOption {

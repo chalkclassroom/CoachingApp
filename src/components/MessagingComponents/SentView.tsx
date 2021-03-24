@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import * as PropTypes from 'prop-types';
 import { Email, Attachment } from './MessagingTypes';
 import NewMessageView from './NewMessageView';
@@ -18,6 +19,7 @@ interface SentViewProps {
 const SentView: React.FC<SentViewProps> = (props: SentViewProps) => {
   const [selectedEmail, setSelectedEmail] = useState<Email>();
   const [selectedAttachments, setSelectedAttachments] = useState<Array<Attachment>>();
+  const {emails, noEmails, setMenuOption} = props;
   const firebase = props.firebase;
 
   const onClick = (email: Email): void => {
@@ -29,7 +31,7 @@ const SentView: React.FC<SentViewProps> = (props: SentViewProps) => {
 
   return (
     <div>
-      {props.noEmails ? (
+      {noEmails ? (
         <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
           You have not sent any emails.
         </Typography>
@@ -45,11 +47,11 @@ const SentView: React.FC<SentViewProps> = (props: SentViewProps) => {
             </Grid>
           </Grid>
           <Grid item>
-            <NewMessageView draft={selectedEmail} attachments={selectedAttachments} setMenuOption={props.setMenuOption} firebase={props.firebase} readOnly={true} />
+            <NewMessageView draft={selectedEmail} attachments={selectedAttachments} setMenuOption={setMenuOption} firebase={firebase} readOnly={true} />
           </Grid>
         </Grid>
       ) : (
-        <EmailList emails={props.emails} onClick={onClick} sent={true} />
+        <EmailList emails={emails} onClick={onClick} sent={true} />
       )}
     </div>
   );

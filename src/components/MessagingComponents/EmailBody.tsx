@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CloseIcon from '@material-ui/icons/Close';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+// import VisibilityIcon from '@material-ui/icons/Visibility';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -78,7 +78,7 @@ AttachmentBar.propTypes = {
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
   handleDelete: PropTypes.func.isRequired,
-  handlePreview: PropTypes.func.isRequired
+  // handlePreview: PropTypes.func.isRequired
 }
 
 const EmailBody: React.FC<EmailBodyProps> = (props: EmailBodyProps) => {

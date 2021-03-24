@@ -17,7 +17,7 @@ import {
   ListItemIcon
 } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import moment from 'moment';
+import * as moment from 'moment';
 import TransitionTimeIconImage from '../assets/images/TransitionTimeIconImage.svg';
 import ClassroomClimateIconImage from '../assets/images/ClassroomClimateIconImage.svg';
 import MathIconImage from '../assets/images/MathIconImage.svg';
