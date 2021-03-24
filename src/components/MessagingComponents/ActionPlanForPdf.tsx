@@ -3,7 +3,6 @@ import * as PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { TextField } from '@material-ui/core';
 import TransitionTimeImage from '../../assets/images/TransitionTimeImage.png';
 import ClassroomClimateIconImage from '../../assets/images/ClassroomClimateIconImage.png';
 import MathIconImage from '../../assets/images/MathIconImage.png';
@@ -13,7 +12,7 @@ import ListeningtoChildrenImage from '../../assets/images/ListeningtoChildrenIma
 import SequentialActivitiesImage from '../../assets/images/SequentialActivitiesImage.png';
 import AssocCoopInteractionsImage from '../../assets/images/AssocCoopInteractionsImage.png';
 import LogoImage from '../../assets/images/LogoImage.png';
-import moment from 'moment';
+import * as moment from 'moment';
 import * as Types from '../../constants/Types';
 
 const styles: object = {
@@ -43,7 +42,8 @@ interface Props {
     person: string,
     timeline: Date
   }> | undefined,
-  teacher: Types.Teacher
+  teacher: Types.Teacher,
+  coachName: string
 }
 
 interface Style {
@@ -155,8 +155,7 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
               </Grid>
               <Grid item xs={4}>
                 <Grid container direction="row" justify="center">
-                  {/* CHANGE THIS */}
-                  Clare Speer
+                  {this.props.coachName}
                 </Grid>
               </Grid>
               <Grid item xs={4}>
@@ -182,25 +181,20 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                     </Grid>
                   </Grid>
                   <Grid item>
-                    <TextField
+                    <p
                       id="goal"
-                      name="goal"
-                      type="text"
-                      value={this.props.apGoal}
-                      margin="normal"
-                      variant="standard"
-                      fullWidth
-                      multiline
-                      rowsMax={3}
-                      rows={3}
                       className={classes.textField}
-                      InputProps={{
-                        disableUnderline: true,
-                        readOnly: true,
-                        style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                      style={{
+                        fontFamily: "Arimo",
+                        width: '98%',
+                        marginLeft: '0.5em',
+                        marginTop: 0,
+                        paddingTop: '0em',
+                        marginBottom: '0.5em'
                       }}
-                      style={{marginTop: 0, paddingTop: '0em', marginBottom: 0}}
-                    />
+                    >
+                      {this.props.apGoal}
+                    </p>
                   </Grid>
                 </Grid>
               </Grid>
@@ -218,25 +212,19 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                     </Grid>
                   </Grid>
                   <Grid item style={{paddingLeft: '0.5em'}}>
-                    <TextField
+                    <p
                       id="goalTimeline"
-                      name="goalTimeline"
-                      type="text"
-                      value={moment(this.props.goalTimeline).format('MM/DD/YYYY')}
-                      margin="normal"
-                      variant="standard"
-                      fullWidth
-                      multiline
-                      rowsMax={3}
-                      rows={3}
                       className={classes.textField}
-                      InputProps={{
-                        disableUnderline: true,
-                        readOnly: true,
-                        style: {fontFamily: "Arimo", width: '98%'}
+                      style={{
+                        fontFamily: "Arimo",
+                        width: '98%',
+                        marginTop: 0,
+                        paddingTop: '0em',
+                        marginBottom: '0.5em'
                       }}
-                      style={{marginTop: 0, paddingTop: '0em', marginBottom: 0}}
-                    />
+                    >
+                      {moment(this.props.goalTimeline).format('MM/DD/YYYY')}
+                    </p>
                   </Grid>
                 </Grid>
               </Grid>
@@ -258,33 +246,28 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                     </Grid>
                   </Grid>
                   <Grid item>
-                    <TextField
+                    <p
                       id="benefit"
-                      name="benefit"
-                      type="text"
-                      value={this.props.benefit}
-                      margin="normal"
-                      variant="standard"
-                      fullWidth
-                      multiline
-                      rowsMax={2}
-                      rows={2}
                       className={classes.textField}
-                      InputProps={{
-                        disableUnderline: true,
-                        readOnly: true,
-                        style: {fontFamily: "Arimo", width: '98%', marginLeft: '0.5em'}
+                      style={{
+                        fontFamily: "Arimo",
+                        width: '98%',
+                        marginLeft: '0.5em',
+                        marginTop: 0,
+                        paddingTop: '0em',
+                        marginBottom: '0.5em'
                       }}
-                      style={{marginTop: 0, paddingTop: '0em', paddingBottom: '0.5em', marginBottom: 0}}
-                    />
+                    >
+                      {this.props.benefit}
+                    </p>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} style={{width: '100%', height: '38vh'}}>
-            <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
-              <Grid item style={{width: '48%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+          <Grid item xs={12} style={{width: '100%', minHeight: '38vh'}}>
+            <Grid container direction="row" justify="space-between" alignItems="stretch" style={{height: '100%'}}>
+              <Grid item style={{width: '48%', border: '2px solid #0988ec', borderRadius: '0.5em', overflow: 'auto'}}>
                 <Grid container direction="column" justify="center" style={{width: '100%'}}>
                   <Grid item>
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -300,26 +283,22 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                   <Grid item>
                     {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
                       return(
-                        <TextField
+                        <p
                           key={index}
                           id={"actionSteps" + index.toString()}
-                          name={"actionSteps" + index.toString()}
-                          type="text"
-                          value={(index + 1) + '.  ' + value.step}
-                          margin="normal"
-                          variant="standard"
-                          fullWidth
-                          multiline
-                          rowsMax={4}
-                          rows={4}
                           className={classes.textField}
-                          InputProps={{
-                            disableUnderline: true,
-                            readOnly: true,
-                            style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
+                          style={{
+                            fontFamily: "Arimo",
+                            width: '90%',
+                            marginLeft: '0.5em',
+                            marginRight: '0.5em',
+                            marginTop: '-0.25em',
+                            paddingBottom: '0.5em',
+                            marginBottom: '0.5em'
                           }}
-                          style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0 }}
-                        />
+                        >
+                          {(index+1) + '.  ' + value.step}
+                        </p>  
                       );
                     }) : null}
                   </Grid>
@@ -329,7 +308,7 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item style={{width: '28%', border: '2px solid #ffd300', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+              <Grid item style={{width: '28%', border: '2px solid #ffd300', borderRadius: '0.5em', overflow: 'auto'}}>
                 <Grid container direction="column" style={{width: '100%'}}>
                   <Grid item>
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -345,32 +324,29 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                   <Grid item>
                     {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
                       return(
-                        <TextField
+                        <p
                           key={index}
                           id={"person" + index.toString()}
-                          name={"person" + index.toString()}
-                          type="text"
-                          value={(index + 1) + '.  ' + value.person}
-                          margin="normal"
-                          variant="standard"
-                          fullWidth
-                          multiline
-                          rowsMax={4}
-                          rows={4}
                           className={classes.textField}
-                          InputProps={{
-                            disableUnderline: true,
-                            readOnly: true,
-                            style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
+                          style={{
+                            fontFamily: "Arimo",
+                            width: '90%',
+                            marginLeft: '0.5em',
+                            marginRight: '0.5em',
+                            marginTop: '-0.25em',
+                            paddingBottom: '0.5em',
+                            paddingTop: '1.5em',
+                            marginBottom: '0.5em'
                           }}
-                          style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
-                        />
+                        >
+                          {(index+1) + '.  ' + value.person}
+                        </p>
                       );
                     }) : null}
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item style={{width: '21%', border: '2px solid #6f39c4', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+              <Grid item style={{width: '21%', border: '2px solid #6f39c4', borderRadius: '0.5em', overflow: 'auto'}}>
                 <Grid container direction="column" style={{width: '100%'}}>
                   <Grid item>
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -386,26 +362,23 @@ class ActionPlanForPdf extends React.Component<Props, {}> {
                   <Grid item>
                     {this.props.actionSteps ? this.props.actionSteps.map((value, index) => {
                       return(
-                        <TextField
+                        <p
                           key={index}
                           id={"timeline" + index.toString()}
-                          name={"timeline" + index.toString()}
-                          type="text"
-                          value={(index + 1) + '.  ' + moment(value.timeline).format('MM/DD/YYYY')}
-                          margin="normal"
-                          variant="standard"
-                          fullWidth
-                          multiline
-                          rowsMax={4}
-                          rows={4}
                           className={classes.textField}
-                          InputProps={{
-                            disableUnderline: true,
-                            readOnly: true,
-                            style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
+                          style={{
+                            fontFamily: "Arimo",
+                            width: '90%',
+                            marginLeft: '0.5em',
+                            marginRight: '0.5em',
+                            marginTop: '-0.25em',
+                            paddingBottom: '0.5em',
+                            paddingTop: '1.5em',
+                            marginBottom: '0.5em'
                           }}
-                          style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
-                        />
+                        >
+                          {(index+1) + '.  ' + moment(value.timeline).format('MM/DD/YYYY')}
+                        </p>
                       );
                     }) : null}
                   </Grid>

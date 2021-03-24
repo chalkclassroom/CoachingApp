@@ -330,6 +330,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   const [subject, setSubject] = useState<string | undefined>('');
   const firebase = props.firebase;
   const [userName, setUserName] = useState('');
+  const [userLastName, setUserLastName] = useState('');
   const [email, setEmail] = useState<string | undefined>('');
   const [emailId, setEmailId] = useState('');
   const [attachments, setAttachments] = useState<Array<Attachment>>();
@@ -487,6 +488,10 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         .then((name: string): void => {
           setUserName(name);
         });
+      firebase.getCoachLastName()
+        .then((lastName: string): void => {
+          setUserLastName(lastName)
+        })
     }
     if (props.draft && emailId === '') {
       setEmailId(props.draft.id);
@@ -763,7 +768,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         link.download = "html_image.png";
         const imgData = canvas.toDataURL('image/png');
         // console.log('IMGDATA', imgData);
-        // saveAs(imgData, 'canvas.png');
+        saveAs(imgData, 'canvas.png');
         // const config1 = {width: 100, height: 100, top: 50, left: 30};
         const imgWidth = 190; 
         const pageHeight = 265;
@@ -1829,7 +1834,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
               style={{
                 backgroundColor: '#ffffff',
                 width: '210mm',
-                minHeight: '100mm',
+                minHeight: '290mm',
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 visibility: 'hidden',
@@ -1845,6 +1850,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                 date={actionPlan.date}
                 actionSteps={actionPlan.actionSteps}
                 teacher={teacherObject}
+                coachName={userName + ' ' + userLastName}
               />
             </div>
           )
