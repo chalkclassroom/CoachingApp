@@ -38,7 +38,7 @@ interface AttachmentBarProps {
   content: string,
   handleDelete(): void,
   handlePreview(): void,
-  readOnly: boolean
+  readOnly: boolean | undefined
 }
 
 const AttachmentBar: React.FC<AttachmentBarProps> = (props: AttachmentBarProps) => {
@@ -60,9 +60,10 @@ const AttachmentBar: React.FC<AttachmentBarProps> = (props: AttachmentBarProps) 
                 <CircularProgress size='1.5em' />
               </Grid>
             ) : (null)}
+            {/* ADD THIS LAATER
             <Grid item onClick={(): void => props.handlePreview()} style={{paddingLeft: '1em'}}>
               <VisibilityIcon />
-            </Grid>
+            </Grid> */}
             <Grid item onClick={props.readOnly ? undefined : (): void => props.handleDelete()} style={{paddingLeft: '1em'}}>
               <CloseIcon />
             </Grid>

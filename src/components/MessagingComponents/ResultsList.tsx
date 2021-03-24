@@ -79,7 +79,8 @@ const headCells = [
   { id: 'summary', numeric: false, disablePadding: false, label: 'Summary' },
   { id: 'details', numeric: false, disablePadding: false, label: 'Details' },
   { id: 'trends', numeric: false, disablePadding: false, label: 'Trends' },
-  { id: 'preview', numeric: false, disablePadding: false, label: ''}
+  // ADD THIS LATER
+  // { id: 'preview', numeric: false, disablePadding: false, label: ''}
 ];
 
 /**
@@ -421,14 +422,15 @@ class ResultsList extends React.Component<Props, State>{
                         </Grid>
                       </ListItem>
                     </TableCell>
-                    <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
+                    {/* ADD THIS IN LATER (preview button for results) */}
+                    {/* <TableCell style={{paddingTop: '0.5em', paddingBottom: '0.5em', paddingRight: '0.5em', paddingLeft: 0}}>
                       <VisibilityIcon
                         style={{fill: Constants.Colors.MI}}
                         onClick={(): void => {
                           this.props.onClick(row.id, this.props.teacherId ? this.props.teacherId : '', observationDate, practice);
                         }}
                       />
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 )
               })
