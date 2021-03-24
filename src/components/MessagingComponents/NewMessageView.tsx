@@ -364,7 +364,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     sessionId: string,
     date: Date,
     summary: ClimateData['summary'],
-    details: ClimateData['details'],
+    details: ClimateData['details'] & {detailsChecked: boolean} | undefined,
     trends: ClimateData['trends'],
   }>>([]);
   const [math, setMath] = useState<Array<{
@@ -965,7 +965,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     trends: boolean | undefined
   ): Promise<[
     ClimateData['summary'] | undefined,
-    ClimateData['details'] | undefined,
+    ClimateData['details'] & {detailsChecked: boolean} | undefined,
     ClimateData['trends'] | undefined
   ]> => {
     return Promise.all([
@@ -975,7 +975,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         };
         return summary
       }) : null,
-      (summary || details) ? props.firebase.fetchBehaviourTypeCount(sessionId).then((details: Array<{
+      (summary || details) ? props.firebase.fetchBehaviourTypeCount(sessionId).then((detailsData: Array<{
         behaviorResponse: string,
         count: number
       }>) => {
@@ -983,7 +983,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         let nonspecificCount = 0;
         let disapprovalCount = 0;
         let redirectionCount = 0;
-        details.forEach(behavior => {
+        detailsData.forEach(behavior => {
           if (behavior.behaviorResponse === "specificapproval") {
             specificCount = behavior.count;
           } else if (behavior.behaviorResponse === "nonspecificapproval") {
@@ -994,11 +994,14 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
             redirectionCount = behavior.count;
           }
         });
+        const detailsChecked = details;
         return {
           specificCount: specificCount,
           nonspecificCount: nonspecificCount,
           disapprovalCount: disapprovalCount,
-          redirectionCount: redirectionCount
+          redirectionCount: redirectionCount,
+          // so that checking summary but not details does not render both in PDF
+          detailsChecked: detailsChecked ? true : false
         }
       }) : null,
       trends ? props.firebase.fetchBehaviourTrend(teacherObject ? teacherObject.id : '').then((trends: Array<{
@@ -1287,14 +1290,14 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   ): Promise<Array<{
     sessionId: string,
     summary: ClimateData['summary'],
-    details: ClimateData['details'],
+    details: ClimateData['details'] & {detailsChecked: boolean} | undefined,
     trends: ClimateData['trends'],
     date: Date
   }> | void> => {
     const climateData: Array<{
       sessionId: string,
       summary: ClimateData['summary'],
-      details: ClimateData['details'],
+      details: ClimateData['details'] & {detailsChecked: boolean} | undefined,
       trends: ClimateData['trends'],
       date: Date
     }> = [];

@@ -22,7 +22,8 @@ interface Props {
       specificCount: number,
       nonspecificCount: number,
       disapprovalCount: number,
-      redirectionCount: number
+      redirectionCount: number,
+      detailsChecked: boolean
     } | undefined,
     trends: Array<{
       dayOfEvent: {value: string},
@@ -43,7 +44,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
   
   // graphs are true if they have not been selected for PDF, otherwise false until animation onComplete
   const [summary, setSummary] = useState(data && data.summary ? false : true);
-  const [details, setDetails] = useState(data && data.details ? false : true);
+  const [details, setDetails] = useState(data && data.details && data.details.detailsChecked ? false : true);
   const [trends, setTrends] = useState(data && data.trends ? false : true);
   const [attached, setAttached] = useState(false);
 
@@ -177,7 +178,7 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
                 />
               ) : (null)}
             </Grid>
-            {data && data.details ? (
+            {data && data.details && data.details.detailsChecked ? (
             <div>
               {(data.summary && data.summary.toneRating) ? (<Grid item style={{height: '148px'}} />) : null}
               <Grid item style={{paddingTop: ((data.summary && data.summary.toneRating) || !data.summary) ? '1em' : '8em'}}>
@@ -194,8 +195,8 @@ const ClimateResultsPdf: React.FC<Props> = (props: Props) => {
             ) : (null)}
             {data && data.trends ? (
               <div>
-                {((data.summary && data.summary.toneRating && !data.details) || (data.summary && !data.summary.toneRating && data.details)) ? (<Grid item style={{height: '148px'}} />) : null}
-                <Grid item style={{paddingTop: ((data.summary && data.summary.toneRating && !data.details) || (data.summary && !data.summary.toneRating && data.details)) ? '1em' : '8em'}}>
+                {((data.summary && data.summary.toneRating && data.details && !data.details.detailsChecked) || (data.summary && !data.summary.toneRating && data.details && data.details.detailsChecked)) ? (<Grid item style={{height: '148px'}} />) : null}
+                <Grid item style={{paddingTop: ((data.summary && data.summary.toneRating && data.details && !data.details.detailsChecked) || (data.summary && !data.summary.toneRating && data.details && data.details.detailsChecked)) ? '1em' : '8em'}}>
                   <ClimateTrendsGraph
                     data={(): {
                       labels: Array<string>;
