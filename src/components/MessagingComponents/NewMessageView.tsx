@@ -738,7 +738,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
    * @param {string} id
    */
   const printDocument = async (practice: string | undefined, date: Date, elementId: string, id: string): Promise<void> => {
-    console.log('PRINT DOCUMENT CALLED');
     const input: HTMLElement = document.getElementById(elementId);
     let base64data: string | ArrayBuffer | null = null;
     let newBase64Data = '';
@@ -746,87 +745,38 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       onclone: function (clonedDoc) {
         clonedDoc.getElementById(elementId).style.visibility = 'visible';
       },
-   }).then((canvas) => {
-      console.log('canvas');
-    // canvas context
-    // const context = canvas.getContext("2d");
-    // get the current ImageData for the canvas
-    // const data = context.getImageData(0, 0, canvas.width, canvas.height);
-    // store the current globalCompositeOperation
-    // const compositeOperation = context.globalCompositeOperation;
-    // set to draw behind current content
-    // context.globalCompositeOperation = "destination-over";
-    // set background color
-    // context.fillStyle = "#FFFFFF";
-    // draw background/rectangle on entire canvas
-    // context.fillRect(0,0,canvas.width,canvas.height);
-
-    // const tempCanvas = document.createElement("canvas");
-    // const tCtx = tempCanvas.getContext("2d");
-
-    // tempCanvas.width = 1588;
-    // tempCanvas.height = 2000;
-
-    // tCtx.drawImage(canvas,0,0);
-
-    // write on screen
-    // const imgData2 = tempCanvas.toDataURL("image/png");
-    // saveAs(imgData2, 'cropped.png');
-
-        const link = document.createElement("a");
-        document.body.appendChild(link);
-        link.download = "html_image.png";
-        const imgData = canvas.toDataURL('image/png');
-        // console.log('IMGDATA', imgData);
-        saveAs(imgData, 'canvas.png');
-        // const config1 = {width: 100, height: 100, top: 50, left: 30};
-        const imgWidth = 190; 
-        const pageHeight = 265;
-        // const imgWidth = 190; 
-        // const pageHeight = 215;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        let heightLeft = imgHeight;
-        const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
-        let position = 10;
-        // const imgProps= pdf.getImageProperties(imgData);
-        // const pdfWidth = pdf.internal.pageSize.getWidth();
-        // const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        // pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth*0.9, pdfHeight);
-        // pdf.addImage(imgData2, 'PNG', 10, 10, 190, 220);
+    }).then((canvas) => {
+      const link = document.createElement("a");
+      document.body.appendChild(link);
+      link.download = "html_image.png";
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 190; 
+      const pageHeight = 265;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
+      const pdf = new jsPDF('p', 'mm', 'a4', true); // true compresses the pdf
+      let position = 10;
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
         pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-        // console.log('this is the pdfWidth', pdfWidth, 'height:', pdfHeight, ' or this?', pdf.internal.pageSize.getHeight());
-        // console.log('this is the img width', imgWidth);
-        // console.log('image height', imgHeight);
-        // console.log('this is the height left 1', heightLeft);
         heightLeft -= pageHeight;
-        // let i = 0;
-        while (heightLeft >= 0) {
-          // i++;
-          // console.log('this is the height left in while', heightLeft);
-          position = heightLeft - imgHeight;
-          // position = heightLeft - pageHeight
-          // console.log('this is the position', position, 'and position - 30 why?', position - 30)
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
+      }
+      // use this for downloading pdf
+      // pdf.save("download.pdf");
+      const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
+      const reader = new FileReader();
+      reader.readAsDataURL(blobPDF);
+      reader.onloadend = function(): void {
+        base64data = reader.result;
+        if (base64data) {
+          newBase64Data = (base64data as string).replace('data:application/pdf;base64,', '');
         }
-        // use this for downloading pdf
-        pdf.save("download.pdf");
-        const blobPDF = new Blob([ pdf.output('blob') ], { type: 'application/pdf'});
-        const reader = new FileReader();
-        reader.readAsDataURL(blobPDF);
-        reader.onloadend = function(): void {
-          base64data = reader.result;
-          // let newBase64Data = '';
-          if (base64data) {
-            newBase64Data = (base64data as string).replace('data:application/pdf;base64,', '');
-          }
-          // console.log('data is', newBase64Data);
-          // console.log('practice is', practice);
-          // console.log('date is', date);
-          addToAttachmentList(newBase64Data, id);
-        }
-      })
+        addToAttachmentList(newBase64Data, id);
+      }
+    })
   }
 
   const getAPData = async (): Promise<Array<{
@@ -1674,7 +1624,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       const msg: Message = {
         id: '0000001',
         from: 'chalkcoaching@gmail.com',
-        to: 'clare.speer@gmail.com',
+        to: recipient.value,
         subject: subject ? subject : '',
         theme: ThemeOptions.FEEDBACK,
         textContent: 'test',
