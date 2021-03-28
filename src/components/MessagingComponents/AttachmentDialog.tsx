@@ -33,8 +33,11 @@ interface AttachmentDialogProps {
     practice: string
   }>,
   checkedResults: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} | undefined,
+  checkedActionPlans: Array<string> | undefined,
   addResult(id: string, type: ResultTypeKey): void,
   removeResult(id: string, type: ResultTypeKey): void,
+  addActionPlan(id: string): void,
+  removeActionPlan(id: string): void,
   handleClose: () => void;
   recipientName: string | undefined;
   firebase: any;
@@ -62,7 +65,6 @@ interface ResultType {
 
 type ResultTypeKey = keyof ResultType;
 
-// const AttachmentDialog: React.FC<AttachmentDialogProps> = (props: AttachmentDialogProps) => {
   /**
    * @return {ReactElement}
    * @param {AttachmentDialogProps} props
@@ -74,8 +76,11 @@ type ResultTypeKey = keyof ResultType;
     actionPlans,
     results,
     checkedResults,
+    checkedActionPlans,
     addResult,
     removeResult,
+    addActionPlan,
+    removeActionPlan,
     handleClose,
     recipientName,
     firebase,
@@ -100,39 +105,18 @@ type ResultTypeKey = keyof ResultType;
     person: string,
     timeline: Date
   }>>();
-  const [checkedActionPlans, setCheckedActionPlans] = useState<Array<string>>([]);
   const [checkedResultsState, setCheckedResultsState] = useState<{[id: string]: {
     summary: boolean,
     details: boolean,
     trends: boolean
   }}>({});
-  /* const [sessionIdPreview, setSessionIdPreview] = useState<string>();
-  const [selectionsPreview, setSelectionsPreview] = useState<{
-    summary: boolean,
-    details: boolean,
-    trends: boolean
-  }>();
-  const [datePreview, setDatePreview] = useState<Date>(); */
-
-  const removeActionPlan = (id: string): void => {
-    const newCheckedActionPlans = checkedActionPlans;
-    const index = newCheckedActionPlans.indexOf(id);
-    newCheckedActionPlans.splice(index, 1);
-    setCheckedActionPlans(newCheckedActionPlans);
-  }
-
-  const addActionPlan = (id: string): void => {
-    const newCheckedActionPlans = checkedActionPlans;
-    newCheckedActionPlans.push(id);
-    setCheckedActionPlans(newCheckedActionPlans);
-  }
 
   /**
    * @param {string} id
    * @param {ResultTypeKey} resultType
    */
   const handleCheckResult = (id: string, resultType: ResultTypeKey): void => {
-    const newCheckedResults = checkedResultsState;
+    const newCheckedResults = {...checkedResultsState};
     if (newCheckedResults[id]) {
       if (newCheckedResults[id][resultType]) {
         newCheckedResults[id][resultType] = false;
@@ -220,11 +204,11 @@ type ResultTypeKey = keyof ResultType;
     })
   };
 
+  // add this back in after getting results stored in redux
   /* const handleViewResultPreview = (sessionId: string, teacherId: string, date: Date, tool: string): void => {
     const teacherData: Types.Teacher[] = teacherList.filter(obj => {
       return obj.id === teacherId
     });
-    console.log('checked results', checkedResultsState[sessionId]);
     setTeacherObject(teacherData[0]);
     setSessionIdPreview(sessionId);
     setSelectionsPreview({
@@ -267,7 +251,10 @@ type ResultTypeKey = keyof ResultType;
                 </Grid>
               ) : (null)}
               <Grid item>
-                <IconButton onClick={handleClose} style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+                <IconButton 
+                  onClick={(): void => {handleClose()}}
+                  style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}
+                >
                   <CloseIcon />
                 </IconButton>
               </Grid>
@@ -357,41 +344,15 @@ type ResultTypeKey = keyof ResultType;
                 ) : view === 'actionPlans' ? (
                   (recipientName && (actionPlans.length > 0)) ? (
                     <div>
-                    <ActionPlanList
-                      actionPlans={actionPlans}
-                      teacherId={recipientId}
-                      onClick={handleViewActionPlan}
-                      checkedActionPlans={checkedActionPlans}
-                      addActionPlan={addActionPlan}
-                      removeActionPlan={removeActionPlan}
-                      // handleChooseActionPlan={handleChooseActionPlan}
-                      addActionPlanAttachment={addActionPlanAttachment}
-                    />
-                    {teacherObject ? (
-                      <div
-                      id="apPdf"
-                      style={{
-                        backgroundColor: '#ffffff',
-                        width: '210mm',
-                        minHeight: '100mm',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                        visibility: 'hidden'
-                      }}
-                    >
-                      <ActionPlanForPdf
-                        tool={tool}
-                        apGoal={apGoal}
-                        goalTimeline={goalTimeline}
-                        benefit={benefit}
-                        date={date}
-                        actionSteps={actionSteps}
-                        teacher={teacherObject}
-                        coachName={coachName}
+                      <ActionPlanList
+                        actionPlans={actionPlans}
+                        teacherId={recipientId}
+                        onClick={handleViewActionPlan}
+                        checkedActionPlans={checkedActionPlans}
+                        addActionPlan={addActionPlan}
+                        removeActionPlan={removeActionPlan}
+                        addActionPlanAttachment={addActionPlanAttachment}
                       />
-                    </div>
-                    ) : (null)}
-                      
                     </div>
                   ) : (
                     <Typography variant="h5" align="center" style={{fontFamily: 'Arimo'}}>
@@ -464,6 +425,8 @@ type ResultTypeKey = keyof ResultType;
 AttachmentDialog.propTypes = {
   addResult: PropTypes.func.isRequired,
   removeResult: PropTypes.func.isRequired,
+  addActionPlan: PropTypes.func.isRequired,
+  removeActionPlan: PropTypes.func.isRequired,
   addActionPlanAttachment: PropTypes.func.isRequired,
   addResultsAttachment: PropTypes.func.isRequired,
   attachAll: PropTypes.func.isRequired

@@ -2432,11 +2432,11 @@ class Firebase {
       teacherId: attachment.teacherId,
       actionPlan: attachment.actionPlan,
       result: attachment.result,
-      summary: attachment.summary,
-      details: attachment.details,
-      trends: attachment.trends,
-      practice: attachment.practice,
-      date: attachment.date
+      summary: attachment.summary ? attachment.summary : false,
+      details: attachment.details ? attachment.details : false,
+      trends: attachment.trends ? attachment.trends : false,
+      practice: attachment.practice ? attachment.practice : '',
+      date: attachment.date ? attachment.date : {}
     })
     .then(() => {
       console.log("Attachment saved successfully!");

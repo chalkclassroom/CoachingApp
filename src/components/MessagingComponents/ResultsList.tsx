@@ -251,14 +251,22 @@ class ResultsList extends React.Component<Props, State>{
    * @param {string} practice
    */
   handleCheck = (id: string, resultType: ResultTypeKey, observationDate: Date, practice: string): void => {
-    const newChecked = this.state.checked;
-    if (newChecked) {
+    const newChecked = this.state.checked ? {...this.state.checked} : {};
+    if (newChecked[id]) {
       if (newChecked[id][resultType]) {
         newChecked[id][resultType] = false;
         this.props.removeResult(id, resultType);
       } else {
         newChecked[id][resultType] = true;
         this.props.addResult(id, resultType);
+      }
+    } else {
+      if (resultType === 'summary') {
+        newChecked[id] = {summary: true, details: false, trends: false}
+      } else if (resultType === 'details') {
+        newChecked[id] = {summary: false, details: true, trends: false}
+      } else {
+        newChecked[id] = {summary: false, details: false, trends: true}
       }
     }
     this.setState({checked: newChecked});

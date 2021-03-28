@@ -32,8 +32,7 @@ interface Props {
   actionPlans?: Array<ActionPlanInfo>,
   teacherId?: string,
   onClick(actionPlanId: string, teacherId: string): void,
-  // handleChooseActionPlan(actionPlanId: string, teacherId: string, practice: string): void,
-  checkedActionPlans: Array<string>,
+  checkedActionPlans: Array<string> | undefined,
   addActionPlan(id: string): void,
   removeActionPlan(id: string): void,
   addActionPlanAttachment?(actionPlanId: string, teacherId: string, title: string): void
@@ -43,7 +42,6 @@ interface State {
   result: Array<TeacherListInfo> | Array<ActionPlanInfo>,
   order: 'desc' | 'asc',
   orderBy: TeacherListInfoKey,
-  // rows: number,
   rowsPerPage: number,
   page: number,
   selected: Array<string>,
@@ -272,8 +270,8 @@ class ActionPlanList extends React.Component<Props, State>{
    *
    */
   componentDidMount(): void {
-    if (!this.state.checked[0]) {
-      this.setState({checked: this.props.checkedActionPlans})
+    if (!this.state.checked[0] && this.props.checkedActionPlans) {
+      this.setState({checked: [...this.props.checkedActionPlans]})
     }
     const firebase = this.context;
     if (!this.props.actionPlans) {
@@ -300,9 +298,11 @@ class ActionPlanList extends React.Component<Props, State>{
 
   /**
    * @param {string} id
+   * @param {string} practice
+   * @param {Date} modified
    */
-  handleCheck = (id: string): void => {
-    const newChecked = this.state.checked;
+  handleCheck = (id: string, practice: string, modified: Date): void => {
+    const newChecked = [...this.state.checked];
     const index = newChecked.indexOf(id);
     if (index === -1) {
       newChecked.push(id);
@@ -312,6 +312,9 @@ class ActionPlanList extends React.Component<Props, State>{
       this.props.removeActionPlan(id)
     }
     this.setState({checked: newChecked});
+    if (this.props.addActionPlanAttachment && this.props.teacherId) {
+      this.props.addActionPlanAttachment(id, this.props.teacherId, (practice === 'AC' ? 'Associative and Cooperative' : practice) + ' ' + moment(modified).format('MM.DD.YYYY') + ' Action Plan.pdf');
+    }
   }
 
   /**
@@ -382,12 +385,9 @@ class ActionPlanList extends React.Component<Props, State>{
                         paddingLeft: 0
                       }}
                     >
-                      <ListItem onClick={(): void => {this.handleCheck(row.id)}}>
+                      <ListItem onClick={(): void => {this.handleCheck(row.id, row.practice, row.modified)}}>
                         <ListItemIcon>
-                          <Checkbox checked = {this.state.checked.includes(row.id)} onClick={(): void => {
-                            // this.props.handleChooseActionPlan(row.id, this.props.teacherId, row.practice);
-                            this.props.addActionPlanAttachment(row.id, this.props.teacherId, (row.practice === 'AC' ? 'Associative and Cooperative' : row.practice) + ' ' + moment(row.modified).format('MM.DD.YYYY') + ' Action Plan.pdf');
-                          }} />
+                          <Checkbox checked = {this.props.checkedActionPlans ? this.props.checkedActionPlans.includes(row.id) : false} />
                         </ListItemIcon>
                       </ListItem>
                     </TableCell>

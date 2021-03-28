@@ -31,7 +31,6 @@ import ACResultsPdf from './ResultsPdfs/ACResultsPdf';
 import { connect } from 'react-redux';
 import * as Types from '../../constants/Types';
 
-
 interface NewMessageViewProps {
   firebase: any;
   draft?: Email;
@@ -51,22 +50,6 @@ interface ResultType {
 }
 
 type ResultTypeKey = keyof ResultType;
-
-/* type Attachment = {
-  content: string,
-  filename: string,
-  type: string,
-  disposition: string,
-  id: string,
-  teacherId: string,
-  actionPlan: boolean,
-  result: boolean,
-  summary?: boolean,
-  details?: boolean,
-  trends?: boolean,
-  practice?: string,
-  date?: Date
-} */
 
 type TransitionData = {
   summary: Array<{
@@ -307,7 +290,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     label: '',
     firstName: ''
   });
-  // const [recipientName, setRecipientName] = useState("Katherine");
   const [actionPlans, setActionPlans] = useState<Array<{
    id: string,
     date: {
@@ -338,6 +320,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     details: boolean,
     trends: boolean
   }}>({});
+  const [checkedActionPlans, setCheckedActionPlans] = useState<Array<string>>();
   const [templateDialog, setTemplateDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [doneAttaching, setDoneAttaching] = useState(true);
@@ -427,7 +410,11 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     actionSteps: Array<{step: string, person: string, timeline: Date}>
   }>>();
 
-  const recipientSelected = (newRecipient: {value: string| undefined, id: string | undefined, label: string | undefined, firstName: string | undefined}): void => {
+  /**
+   * sets email recipient, fetches all their action plans and results
+   * @param {object} newRecipient
+   */
+  const recipientSelected = (newRecipient: {value: string | undefined, id: string | undefined, label: string | undefined, firstName: string | undefined}): void => {
     if (newRecipient.value && newRecipient.id && newRecipient.label && newRecipient.firstName) {
       setRecipient(newRecipient);
       const teacherData: Types.Teacher[] = props.teacherList.filter(obj => {
@@ -481,7 +468,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     }
   }
 
-  // get the user's name
   useEffect(() => {
     if (userName === '') {
       firebase.getCoachFirstName()
@@ -493,6 +479,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
           setUserLastName(lastName)
         })
     }
+    // sets states for email content and info if opening a draft
     if (props.draft && emailId === '') {
       setEmailId(props.draft.id);
       setEmail(props.draft.emailContent);
@@ -504,9 +491,24 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         firstName: props.draft.recipientFirstName ? props.draft.recipientFirstName : ''
       })
     }
+    // sets attachments if viewing a draft or sent email
     if (props.attachments && !attachments) {
       setAttachments(props.attachments);
+      const attachedActionPlans = props.attachments.filter(obj => {
+        return obj.actionPlan === true
+      });
+      const attachedActionPlanIds = attachedActionPlans.map(a => a.id);
+      setCheckedActionPlans(attachedActionPlanIds);
+      const attachedResults = props.attachments.filter(obj => {
+        return obj.result === true
+      });
+      const checked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
+      attachedResults.forEach(result => {
+        checked[result.id] = {'summary': false, 'details': false, 'trends': false}
+      });
+      setCheckedResults(checked);
     }
+    // sets doneAttaching state to update buttons when attachments are completed
     if (!doneAttaching && attachments) {
       const attachmentsContent = attachments.map(a => a.content);
       const contentEmpty = attachmentsContent.filter(obj => {
@@ -522,7 +524,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   });
 
   const addActionPlanAttachment = (actionPlanId: string, teacherId: string, title: string): void => {
-    const newAttachments = attachments;
+    const newAttachments = attachments ? [...attachments] : [];
     const idMatch = (element: {
       content: string,
       filename: string,
@@ -533,7 +535,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       actionPlan: boolean,
       result: boolean
     }): boolean => element.id === actionPlanId;
-    if (newAttachments) {
+    if (newAttachments.length > 0) {
       const index = newAttachments.findIndex(idMatch);
       if (index !== -1) {
         newAttachments.splice(index, 1);
@@ -572,7 +574,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     practice: string,
     date: Date
   ): void => {
-    const newAttachments = attachments;
+    const newAttachments = attachments ? [...attachments] : [];
     const newResultObject = {
       content: '',
       filename: title,
@@ -603,7 +605,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       practice?: string,
       date?: Date
     }): boolean => element.id === sessionId;
-    if (newAttachments) {
+    if (newAttachments.length > 0) {
       const index = newAttachments.findIndex(idMatch);
       if (index !== -1) {
         if (graphType === 'summary') {
@@ -647,8 +649,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   }
 
   const removeAttachment = (position: number, emailId: string | undefined, attachmentId: string): void => {
-    const newAttachments = attachments;
-    if (newAttachments) {
+    const newAttachments = attachments ? [...attachments] : [];
+    if (newAttachments.length > 0) {
       newAttachments.splice(position, 1);
       setAttachments(newAttachments);
     }
@@ -686,6 +688,11 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     }
   }
 
+  /**
+   * updates attachment in attachments state with content for PDF
+   * @param {string} base64string
+   * @param {string} id
+   */
   const addToAttachmentList = (base64string: string, id: string): void => {
     let newAttachments: Array<{
       content: string,
@@ -723,6 +730,13 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     }
   }
 
+  /**
+   * takes screenshot of action plan or results, then creates multipage PDF
+   * @param {string | undefined} practice
+   * @param {Date} date
+   * @param {string} elementId
+   * @param {string} id
+   */
   const printDocument = async (practice: string | undefined, date: Date, elementId: string, id: string): Promise<void> => {
     console.log('PRINT DOCUMENT CALLED');
     const input: HTMLElement = document.getElementById(elementId);
@@ -1714,7 +1728,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     + 'Clare';
 
   const removeResult = (id: string, type: ResultTypeKey): void => {
-    const newCheckedResults = checkedResults;
+    const newCheckedResults = {...checkedResults};
     if (newCheckedResults) {
       newCheckedResults[id][type] = false;
     }
@@ -1722,11 +1736,32 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   }
 
   const addResult = (id: string, type: ResultTypeKey): void => {
-    const newCheckedResults = checkedResults;
-    if (newCheckedResults) {
+    const newCheckedResults = {...checkedResults};
+    if (newCheckedResults[id]) {
       newCheckedResults[id][type] = true;
+    } else {
+      if (type === 'summary') {
+        newCheckedResults[id] = {summary: true, details: false, trends: false}
+      } else if (type === 'details') {
+        newCheckedResults[id] = {summary: false, details: true, trends: false}
+      } else {
+        newCheckedResults[id] = {summary: false, details: false, trends: true}
+      }
     }
     setCheckedResults(newCheckedResults);
+  }
+
+  const removeActionPlan = (id: string): void => {
+    const newCheckedActionPlans = checkedActionPlans ? [...checkedActionPlans] : [];
+    const index = newCheckedActionPlans.indexOf(id);
+    newCheckedActionPlans.splice(index, 1);
+    setCheckedActionPlans(newCheckedActionPlans);
+  }
+
+  const addActionPlan = (id: string): void => {
+    const newCheckedActionPlans = checkedActionPlans ? [...checkedActionPlans] : [];
+    newCheckedActionPlans.push(id);
+    setCheckedActionPlans(newCheckedActionPlans);
   }
 
   const saveEmail = async (
@@ -1744,7 +1779,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     return firebase.saveEmail(email, subject, recipient, emailId).then((data: Email) => {
       if (attachments) {
         attachments.forEach((attachment) => {
-          console.log('saving', attachment, recipient)
           firebase.saveAttachment(data.id, attachment)
         })
       }
@@ -1794,6 +1828,40 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
   const keepTemplate = (): void => {
     setTemplateDialog(false)
   }
+
+  /**
+   * called when user closes attachment dialog (rather than attaching)
+   * removes unattached checked action plans and results
+   */
+  const handleClose= (): void => {
+    if (attachments) {
+      const attachmentsWithContent = attachments.filter(obj => {
+        return obj.content !== ''
+      });
+      const attachmentsWithoutContent = attachments.filter(obj => {
+        return obj.content === ''
+      });
+      const newCheckedResults = {...checkedResults};
+      const newCheckedActionPlans = checkedActionPlans ? [...checkedActionPlans] : [];
+      attachmentsWithoutContent.forEach((attachment) => {
+        if (attachment.result && newCheckedResults) {
+          delete newCheckedResults[attachment.id]
+          setCheckedResults(newCheckedResults);
+        }
+      })
+      const attachmentsIds = attachmentsWithContent.map(a => a.id);
+      const attachedActionPlans = newCheckedActionPlans.filter(actionPlanId => {
+        return attachmentsIds.includes(actionPlanId)
+      });
+      setCheckedActionPlans(attachedActionPlans)
+      if (attachmentsWithContent.length === 0) {
+        setAttachments([])
+      } else {
+        setAttachments(attachmentsWithContent)
+      }
+    }
+    setActionPlanDisplay(false)
+  };
 
   const handleDelete = (): void => {
     props.setMenuOption('SENT');
@@ -2169,12 +2237,15 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                           addResultsAttachment={addResultsAttachment}
                           results={observations}
                           checkedResults={checkedResults}
+                          checkedActionPlans={checkedActionPlans}
                           addResult={addResult}
                           removeResult={removeResult}
+                          addActionPlan={addActionPlan}
+                          removeActionPlan={removeActionPlan}
                           noResultsMessage={noObservationsMessage}
                           open={actionPlanDisplay}
                           recipientName={recipient.label}
-                          handleClose={(): void => setActionPlanDisplay(false)}
+                          handleClose={handleClose}
                           firebase={firebase}
                           coachName={userName + ' ' + userLastName}
                         />
@@ -2183,7 +2254,6 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
                   </Grid>
                 </Grid>
               )}
-              
             </Grid>
           </Paper>
         </Grid>
