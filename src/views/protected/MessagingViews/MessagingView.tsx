@@ -7,7 +7,7 @@ import MessagingMenu from '../../../components/MessagingComponents/MessagingMenu
 import NewMessageView from '../../../components/MessagingComponents/NewMessageView';
 import DraftView from '../../../components/MessagingComponents/DraftView';
 import SentView from '../../../components/MessagingComponents/SentView';
-import { MenuOptions, MenuOptionsKey, Message, ThemeOptions, Attachment, Email } from '../../../components/MessagingComponents/MessagingTypes';
+import { MenuOptions, MenuOptionsKey, Email } from '../../../components/MessagingComponents/MessagingTypes';
 import * as Types from '../../../constants/Types';
 
 // No props to maintain API with other major views
@@ -89,21 +89,6 @@ const MessagingView: React.FC<{}> = () => {
   const removeFromDrafts = (emailId: string): void => {
     setDrafts(drafts.filter(item => item.id !== emailId));
   }
-  
-  // State to record the message input to NewMessage so that if a user is coming from DraftView, this can be updated
-  // to be the message from Draft, else a new message
-  const initialMsg: Message = {
-    id: '',
-    from: firebase.auth.currentUser.email,
-    to: '',
-    subject: '',
-    theme: ThemeOptions.CUSTOM,
-    textContent: '',
-    content: '',
-    delivered: false,
-    attachments: Array<Attachment>(),
-  };
-  const [initMessage, setInitMessage] = useState(initialMsg);
 
   // Update right pane of the page according to what the user chose on the left pane
   const getBody = (): JSX.Element => {
