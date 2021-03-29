@@ -80,7 +80,7 @@ const MessagingView: React.FC<{}> = () => {
   const moveDraftToSent = (email: Email): void => {
     const draftIndex = drafts.map(function(e) { return e.id; }).indexOf(email.id);
     const sentEmail = drafts[draftIndex];
-    const allSentEmails = sentEmails;
+    const allSentEmails = [...sentEmails];
     setDrafts(drafts.filter(item => item.id !== sentEmail.id));
     allSentEmails.push(email);
     setSentEmails(allSentEmails);
