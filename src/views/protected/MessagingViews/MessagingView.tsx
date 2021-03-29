@@ -10,29 +10,6 @@ import SentView from '../../../components/MessagingComponents/SentView';
 import { MenuOptions, MenuOptionsKey, Message, ThemeOptions, Attachment, Email } from '../../../components/MessagingComponents/MessagingTypes';
 import * as Types from '../../../constants/Types';
 
-// CSS for the Grid layout
-/* const gridContainer = {
-	display: 'grid',
-	gridTemplateColumns: 'auto 1fr',
-	gridTemplateRows: 'auto 15% 1fr',
-	gridGap: '0.2em',
-};
-
-const appbar = {
-	gridRow: '1',		
-	gridColumn: '1 / span 4',
-};
-
-const menu = {
-	gridRow: '2 / span 3',
-	gridColumn: '1',
-};
-
-const chosenView = {
-	gridRow: '3 / span 4',
-	gridColumn: '2 / span 4',
-}; */
-
 // No props to maintain API with other major views
 const MessagingView: React.FC<{}> = () => {
 

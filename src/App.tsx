@@ -174,11 +174,6 @@ class App extends React.Component<Props, State> {
           teacherPromiseList.forEach(tpromise => {
             tpromise.then((data: Types.Teacher) => {
               teacherList.push(data);
-              /* this.setState((previousState) => {
-                return {
-                  teachers: previousState.teachers.concat(data)
-                };
-              }, () => { this.props.getTeacherList(this.state.teachers) }); */
             });
           });
           this.props.getTeacherList(teacherList);
