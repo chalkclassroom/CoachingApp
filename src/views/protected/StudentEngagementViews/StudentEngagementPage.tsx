@@ -205,7 +205,9 @@ class StudentEngagementPage extends React.Component<Props, State> {
                     <Dashboard
                       type="SE"
                       infoDisplay={
-                          this.state.completeEnabled && <Countdown type="SE" timerTime={RATING_INTERVAL} time={this.state.time} />
+                          this.state.completeEnabled
+                          // &&
+                          // <Countdown type="SE" timerTime={RATING_INTERVAL} time={this.state.time} />
                       }
                       infoPlacement="center"
                       completeObservation={this.state.completeEnabled}

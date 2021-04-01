@@ -17,9 +17,11 @@ import GridListTile from '@material-ui/core/GridListTile';
 import Card from '@material-ui/core/Card';
 import CardContent  from '@material-ui/core/CardContent';
 import Paper  from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
 import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
+import CloseIcon from '@material-ui/icons/Close';
 import Modal from "@material-ui/core/Modal"
-import ObserveImage from '../../assets/images/ObserveImage.png';
+import Countdown from "../Countdown";
 import { updateEngagementCount } from '../../state/actions/student-engagement';
 import { connect } from 'react-redux';
 
@@ -127,7 +129,10 @@ interface Props {
 }
 
 interface State {
-  students: Array<string>,
+  students: Array<{
+    name: string,
+    count: number
+  }>,
   open: boolean,
   setOpen: boolean,
   studentTextFieldValue: string
@@ -136,7 +141,8 @@ interface State {
   entryType: number,
   entries: number,
   selectedPoint: number,
-  modal: boolean
+  modal: boolean,
+  // time: number
 }
 
 const NAME_LIST = 0;
@@ -149,6 +155,7 @@ type Status = typeof NAME_LIST | typeof OBSERVATION;
  * @class CenterMenuStudentEngagement
  */
 class CenterMenuStudentEngagement extends React.Component<Props, State> {
+  // timer: NodeJS.Timeout;
   /**
    * @param {Props} props
    */
@@ -163,18 +170,17 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   }
 
   state = {
-    students: [] as string[],
+    students: [] as {name: string, count: number}[],
     open: false,
     setOpen: false,
     studentTextFieldValue: '' as string,
     status: NAME_LIST as Status,
-    currentStudent: 0 as number,
+    currentStudent: -1 as number,
     selectedPoint: -1 as number,
     entryType: -1 as number,
     entries: 0 as number,
-    modal: true as boolean,
+    modal: false as boolean,
   };
-
 
   handleClickOpen = (): void => {
     this.setState({ setOpen: true });
@@ -189,8 +195,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
    */
   handleAddStudent = (studentName: string): void => {
     if(studentName){
-      const newList = this.state.students.concat(studentName);
-      this.setState({ students: newList, studentTextFieldValue: '', setOpen: false });
+      const newList = this.state.students.concat({name: studentName, count: 0});
+      this.setState({ students: newList, studentTextFieldValue: '', setOpen: false }, () => {console.log('this state students', this.state.students)});
     }
   };
 
@@ -230,7 +236,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     const mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
     this.props.firebase.handlePushSEEachEntry(mEntry);
     this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
-    this.showModalForNextPerson();
   }
 
   handleConfirmRating = (): void => {
@@ -247,33 +252,41 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
           entryType = 'none';
       }
       const mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
-      console.log(mEntry);
+      console.log(mEntry, this.state.students);
       this.props.firebase.handlePushSEEachEntry(mEntry);
       /* if (this.state.selectedPoint > 0) {
         this.props.updateEngagementCount(true);
       } else {
         this.props.updateEngagementCount(false);
       } */
-      this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
+      const studentsStateCopy = [...this.state.students];
+      const currentStudentIndex = this.state.currentStudent;
+      const currentCount = studentsStateCopy[currentStudentIndex].count;
+      const studentName = studentsStateCopy[currentStudentIndex].name;
+      studentsStateCopy[currentStudentIndex] = {name: studentName, count: currentCount+1};
+      this.setState({ students: studentsStateCopy }, () => {console.log('new student1', this.state.students)});
+      // this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
       this.props.handleTimerReset();
       this.handleSelectedValue(-1);
-      this.setState({entries: this.state.entries+1});
-      this.showModalForNextPerson();
+      this.setState({
+        entries: this.state.entries+1,
+        modal: false
+      });
+      // this.showModalForNextPerson();
     }
   }
 
-  showModalForNextPerson = (): void =>{
+  /* showModalForNextPerson = (): void =>{
     this.setState({modal: true});
     this.props.handleTimerReset();
-  }
+  } */
 
   beginObservingStudent = (): void =>{
-    this.setState({modal: false});
     this.props.handleTimerStart();
   }
 
   generateHashCodeOfStudent = (): number => {
-    return this.hashCode(this.state.students[this.state.currentStudent].concat(this.state.currentStudent))
+    return this.hashCode(this.state.students[this.state.currentStudent].name.concat(this.state.currentStudent.toString()))
   }
 
   /**
@@ -339,466 +352,149 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
    */
   render(): React.ReactNode {
     const { classes } = this.props;
-    switch (this.state.status) {
-      case NAME_LIST:
-        return (
-          <Grid
-            container
-            alignItems={'center'}
-            justify={'center'}
-            direction={'column'}
-            style={{height: '100%'}}
-          >
-            <Dialog
-              open={this.state.setOpen}
-              onClose={(): void => this.handleClose()}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                {'Enter Student Name'}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  You can add a description of the student for
-                  your reference.
-                  <form>
-                    <TextField
-                      id="name-filled"
-                      label="Student Name"
-                      variant="outlined"
-                      color="secondary"
-                      fullWidth
-                      value={this.state.studentTextFieldValue}
-                      onChange={this.handleStudentTextFieldChange}
-                    />
-                  </form>
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={(): void => this.handleClose()}
-                  color="secondary"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={(): void =>
-                    this.handleAddStudent(
-                      this.state.studentTextFieldValue.toString()
-                    )
-                  }
-                  color="secondary"
-                  autoFocus
-                >
-                  Add
-                </Button>
-              </DialogActions>
-            </Dialog>
-            <Grid
-              container
-              alignItems="center"
-              direction="row"
-              justify={'center'}
-            >
-              <Grid item xs={3} />
-              <Grid item xs={6}>
-                <Typography
-                  variant="h4"
-                  align="center"
-                  gutterBottom
-                  style={{ fontFamily: 'Arimo' }}
-                >
-                  Create Student List
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  align="center"
-                  gutterBottom
-                  style={{ fontFamily: 'Arimo' }}
-                >
-                  Please enter the student names.
-                </Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Fab
-                  className={classes.button}
-                  aria-label="add"
-                  onClick={(): void => this.handleClickOpen()}
-                >
-                  <AddIcon />
-                </Fab>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              alignItems="center"
-              direction="row"
-              justify="center"
-            >
-              <Grid item xs={12}>
-                <Grid
-                  alignItems="center"
-                  direction="row"
-                  justify="center"
-                  container
-                >
-                  <Grid item>
-                    <GridList
-                      cellHeight={60}
-                      className={classes.gridList}
-                      cols={4}
-                    >
-                      {this.state.students.map(
-                        (student: string, i: number) => {
-                          return (
-                            <GridListTile
-                              key={i + 'grid'}
-                              cols={1}
-                            >
-                              <Card>
-                                <CardContent>
-                                  <Paper
-                                    className={classes.root}
-                                    elevation={1}
-                                    style={{padding: 8}}
-                                  >
-                                    <Typography variant="subtitle2">
-                                      {
-                                        i + 1 + ' : ' + student.charAt(0)
-                                        .toUpperCase() + student.substring(1)
-                                      }
-                                    </Typography>
-                                  </Paper>
-                                </CardContent>
-                              </Card>
-                            </GridListTile>
-                          )
-                        }
-                      )}
-                    </GridList>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
+    const ratingOptions = [
+      {
+        value: 0,
+        label: '0',
+        text: 'Off Task'
+      },
+      {
+        value: 1,
+        label: '1',
+        text: 'Mildly Engaged'
+      },
+      {
+        value: 2,
+        label: '2',
+        text: 'Engaged'
+      },
+      {
+        value: 3,
+        label: '3',
+        text: 'Highly Engaged'
+      },
+    ];
+    return (
+      <Grid
+        container
+        alignItems={'center'}
+        justify={'center'}
+        direction={'column'}
+        style={{height: '100%'}}
+      >
+        <Modal open={this.state.modal && this.state.status === 1}>
+          <div style={getModalStyle()} className={classes.paper}>
             <Grid
               container
               alignItems="center"
               direction="column"
-              justify="flex-start"
+              justify={'center'}
+              style={{width: '100%'}}
             >
-              <Button
-                key={'Begin'}
-                variant="contained"
-                className={classes.button}
-                onClick={(): void => this.switchToObservationPage()}
-                disabled={this.state.students.length === 0}
-              >
-                Begin Observation
-              </Button>
-            </Grid>
-          </Grid>
-        )
-      case OBSERVATION:
-        return (
-          <div style={{width: '100%', height: '100%'}}>
-            <Modal open={this.state.modal}>
-              <div style={getModalStyle()} className={classes.paper}>
-                <Grid
-                  container
-                  alignItems="center"
-                  direction="column"
-                  justify="flex-start"
-                >
-                  <Typography variant="h6" gutterBottom style={{fontFamily: "Arimo"}}>
-                    Start Observing this Student
-                  </Typography>
-                  <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                    {this.state.students[this.state.currentStudent].charAt(0).toUpperCase()+this.state.students[this.state.currentStudent].substr(1)}
-                  </Typography>
-                  <Grid
-                    alignItems="center"
-                    direction="column"
-                    justify="space-evenly"
-                    container
-                    item xs={6}
-                  >
-                    <img src={ObserveImage} />
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      className={classes.button}
-                      style={{fontFamily: "Arimo"}}
-                      onClick={(): void => this.beginObservingStudent()}
+              <Grid item style={{width: '100%'}}>
+                <Grid container direction="row" justify="flex-end" style={{width: '100%'}}>
+                  <Grid item>
+                    <IconButton 
+                      onClick={(): void => {
+                        this.setState({modal: false});
+                        this.props.handleTimerReset();
+                      }}
+                      style={{boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}
                     >
-                      Begin Observation
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      style={{fontFamily: "Arimo", color: "red"}}
-                      onClick={(): void => this.handleSkipRating()}
-                    >
-                      Skip
-                    </Button>
+                      <CloseIcon />
+                    </IconButton>
                   </Grid>
                 </Grid>
-              </div>
-            </Modal>
-            <div style={{height: '100%'}}>
-              <Button variant="text" onClick={(): void =>this.switchToNameList()} style={{padding: '1em'}}>
-                <BackIcon/>  Back
-              </Button>
-              <Grid
-                container
-                alignItems="center"
-                direction="column"
-                justify={'center'}
-                style={{width: '100%'}}
-              >
-                <Grid item>
-                  <Typography variant="h6" gutterBottom style={{fontFamily: "Arimo"}}>
-                    {this.props.time != 0?"Please observe ":"Now Rate "}this student&apos;s level of engagement.
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                    {this.state.students[this.state.currentStudent].charAt(0).toUpperCase()+this.state.students[this.state.currentStudent].substr(1)}
-                  </Typography>
-                </Grid>
-                <Grid item style={{marginTop: '3em', marginBottom: '3em', width: '100%'}}>
-                  <Grid
-                    alignItems="center"
-                    direction="row"
-                    justify="space-around"
-                    container
-                    style={{width: '100%'}}
-                  >
-                    <Button
-                      variant={this.state.selectedPoint === 0? "contained": "outlined"}
-                      disabled={this.props.time!=0?true:false}
-                      style={{
-                        width: '18vh',
-                        height: '18vh',
-                        maxWidth: 130,
-                        maxHeight: 130,
-                        fontFamily: "Arimo",
-                        fontSize: 14
-                      }}
-                      onClick={(): void => this.handleSelectedValue(0)}
-                    >
-                      <Grid
-                        alignItems="center"
-                        direction="column"
-                        justify="center"
-                        container
-                        item xs={12}
-                      >
-                        <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                          <b>0</b>
-                        </Typography>
-                        <Typography variant="subtitle2" gutterBottom>
-                          Off Task
-                        </Typography>
-                      </Grid>
-                    </Button>
-                    <Button
-                      variant={this.state.selectedPoint === 1? "contained": "outlined"}
-                      disabled={this.props.time!=0?true:false}
-                      style={{
-                        width: '18vh',
-                        height: '18vh',
-                        maxWidth: 130,
-                        maxHeight: 130,
-                        fontFamily: "Arimo",
-                        fontSize: 14
-                      }}
-                      onClick={(): void => this.handleSelectedValue(1)}
-                    >
-                      <Grid
-                        alignItems="center"
-                        direction="column"
-                        justify="center"
-                        container
-                        item xs={12}
-                      >
-                        <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                          <b>1</b>
-                        </Typography>
-                        <Typography variant="subtitle2" gutterBottom>
-                          Mildy Engaged
-                        </Typography>
-                      </Grid>
-                    </Button>
-                    <Button
-                      disabled={this.props.time!=0?true:false}
-                      variant={this.state.selectedPoint === 2? "contained": "outlined"}
-                      style={{
-                        width: '18vh',
-                        height: '18vh',
-                        maxWidth: 130,
-                        maxHeight: 130,
-                        fontFamily: "Arimo",
-                        fontSize: 14,
-                      }}
-                      onClick={(): void => this.handleSelectedValue(2)}
-                    >
-                      <Grid
-                        alignItems="center"
-                        direction="column"
-                        justify="center"
-                        container
-                        item xs={12}
-                      >
-                        <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                          <b>2</b>
-                        </Typography>
-                        <Typography variant="subtitle2" gutterBottom>
-                          Engaged
-                        </Typography>
-                      </Grid>
-                    </Button>
-                    <Button
-                      disabled={this.props.time!=0?true:false}
-                      variant={this.state.selectedPoint === 3? "contained": "outlined"}
-                      style={{
-                        width: '18vh',
-                        height: '18vh',
-                        maxWidth: 130,
-                        maxHeight: 130,
-                        fontFamily: "Arimo",
-                        fontSize: 14
-                      }}
-                      onClick={(): void => this.handleSelectedValue(3)}
-                    >
-                      <Grid
-                        alignItems="center"
-                        direction="column"
-                        justify="center"
-                        container
-                        item xs={12}
-                      >
-                        <Typography variant="h4" gutterBottom style={{fontFamily: "Arimo"}}>
-                          <b>3</b>
-                        </Typography>
-                        <Typography variant="subtitle2" gutterBottom>
-                          Highly Engaged
-                        </Typography>
-                      </Grid>
-                    </Button>
-                  </Grid>
-                </Grid>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6" gutterBottom style={{fontFamily: "Arimo"}}>
+                  {this.props.time != 0?"Please observe ":"Now Rate "}this student&apos;s level of engagement.
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h4" style={{fontFamily: "Arimo"}}>
+                  {this.state.students[this.state.currentStudent] ? (this.state.students[this.state.currentStudent].name.charAt(0).toUpperCase()+this.state.students[this.state.currentStudent].name.substr(1)) : (null)}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Countdown type="SE" timerTime={5000} time={this.props.time} horizontal={true} />
+              </Grid>
+              <Grid item style={{marginTop: '3em', marginBottom: '3em', width: '100%'}}>
                 <Grid
                   alignItems="stretch"
                   direction="row"
                   justify="space-around"
                   container
-                  item xs={8}
-                  style={{marginTop: 20, marginBottom: 20}}
+                  style={{width: '100%'}}
                 >
-                  <BootstrapButton
-                    variant={this.state.entryType === 0? "contained": "outlined"}
-                    style={{
-                      minHeight: 100,
-                      maxHeight: 100,
-                      minWidth: 100,
-                      maxWidth: 100,
-                      fontFamily: "Arimo",
-                      fontSize: 14,
-                      backgroundColor: this.state.entryType === 0 && "#0069d9",
-                      borderColor: this.state.entryType === 0 && "#005cbf",
-                    }}
-                    onClick={(): void => this.handleSelectedType(0)}
-                  >
-                    <Grid
-                      alignItems="center"
-                      direction="column"
-                      justify="center"
-                      container
-                      item xs={12}
-                    >
-                      <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
-                        Small Group
-                      </Typography>
-                    </Grid>
-                  </BootstrapButton>
-                  <BootstrapButton
-                    variant={this.state.entryType === 1? "contained": "outlined"}
-                    style={{
-                      minHeight: 100,
-                      maxHeight: 100,
-                      minWidth: 100,
-                      maxWidth: 100,
-                      fontFamily: "Arimo",
-                      fontSize: 14,
-                      backgroundColor: this.state.entryType === 1 && "#0069d9",
-                      borderColor: this.state.entryType === 1 && "#005cbf",
-                    }}
-                    onClick={(): void => this.handleSelectedType(1)}
-                  >
-                    <Grid
-                      alignItems="center"
-                      direction="column"
-                      justify="center"
-                      container
-                      item xs={12}
-                    >
-                      <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
-                        Whole Group
-                      </Typography>
-                    </Grid>
-                  </BootstrapButton>
-                  <BootstrapButton
-                    variant={this.state.entryType === 2? "contained": "outlined"}
-                    style={{
-                      minHeight: 100,
-                      maxHeight: 100,
-                      minWidth: 100,
-                      maxWidth: 100,
-                      fontFamily: "Arimo",
-                      fontSize: 14,
-                      backgroundColor: this.state.entryType === 2 && "#0069d9",
-                      borderColor: this.state.entryType === 2 && "#005cbf",
-                    }}
-                    onClick={(): void => this.handleSelectedType(2)}
-                  >
-                    <Grid
-                      alignItems="center"
-                      direction="column"
-                      justify="center"
-                      container
-                      item xs={12}
-                    >
-                      <Typography variant="subtitle2" gutterBottom style={{color: '#ffffff'}}>
-                        Transition
-                      </Typography>
-                    </Grid>
-                  </BootstrapButton>
+                  {ratingOptions.map((item, index) => {
+                    return (
+                      <Button
+                        key={index}
+                        variant={this.state.selectedPoint === item.value ? "contained": "outlined"}
+                        disabled={this.props.time!=0?true:false}
+                        style={{
+                          width: '18vh',
+                          height: '18vh',
+                          maxWidth: 130,
+                          maxHeight: 130,
+                          fontFamily: "Arimo",
+                          fontSize: 14,
+                          paddingTop: 0,
+                          paddingBottom: 0,
+                          margin: 0
+                        }}
+                        onClick={(): void => this.handleSelectedValue(item.value)}
+                      >
+                        <Grid
+                          alignItems="stretch"
+                          direction="column"
+                          justify="flex-start"
+                          style={{
+                            width: '18vh',
+                            height: '18vh',
+                            maxWidth: 130,
+                            maxHeight: 130,
+                            paddingTop: '1em'
+                          }}
+                        >
+                          <Grid item style={{height: '50%'}}>
+                          <Typography variant="h4" style={{fontFamily: "Arimo", paddingTop: '0.5em'}}>
+                            <b>{item.label}</b>
+                          </Typography>
+                          </Grid>
+                          <Grid>
+                          <Typography variant="subtitle2">
+                            {item.text}
+                          </Typography>
+                          </Grid>
+                        </Grid>
+                      </Button>
+                    )
+                  })}
                 </Grid>
-                <Grid
-                  alignItems="center"
-                  direction="row"
-                  justify="space-between"
-                  container
-                  item xs={6}
-                >
-                  <Button
-                    variant="outlined"
-                    style={{fontFamily: "Arimo", color: "red"}}
-                    onClick={(): void => this.handleSkipRating()}
-                  >
-                    SKIP RATING
-                  </Button>
+              </Grid>
+              <Grid
+                alignItems="center"
+                direction="row"
+                justify="center"
+                container
+              >
+                <Grid item>
                   <Button
                     color="primary"
                     variant="contained"
                     className={classes.button}
                     style={{fontFamily: "Arimo"}}
-                    disabled={this.state.entryType === -1 || 
+                    /* disabled={this.state.entryType === -1 || 
                       this.state.selectedPoint === -1 || 
                       this.props.time !==0
-                    }
+                    } */
+                    disabled={this.state.selectedPoint === -1}
                     onClick={(): void => {
                       this.handleConfirmRating();
+                      this.props.handleTimerReset();
+                      this.setState({modal: false});
                       if(this.state.selectedPoint > 0) {
                         this.props.updateEngagementCount(true)
                       } else {
@@ -810,12 +506,219 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                   </Button>
                 </Grid>
               </Grid>
-            </div>
+            </Grid>
           </div>
-        );
-      default:
-        return <div>Unknown status value!!!</div>;
-    }
+        </Modal>
+        <Dialog
+          open={this.state.setOpen}
+          onClose={(): void => this.handleClose()}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {'Enter Student Name'}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              You can add a description of the student for
+              your reference.
+              <form>
+                <TextField
+                  id="name-filled"
+                  label="Student Name"
+                  variant="outlined"
+                  color="secondary"
+                  fullWidth
+                  value={this.state.studentTextFieldValue}
+                  onChange={this.handleStudentTextFieldChange}
+                />
+              </form>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={(): void => this.handleClose()}
+              color="secondary"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={(): void =>
+                this.handleAddStudent(
+                  this.state.studentTextFieldValue.toString()
+                )
+              }
+              color="secondary"
+              autoFocus
+            >
+              Add
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {this.state.status === 0 ? (<Grid
+          container
+          alignItems="center"
+          direction="row"
+          justify={'center'}
+        >
+          <Grid item xs={3} />
+          <Grid item xs={6}>
+            <Typography
+              variant="h4"
+              align="center"
+              gutterBottom
+              style={{ fontFamily: 'Arimo' }}
+            >
+              Create Student List
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              align="center"
+              gutterBottom
+              style={{ fontFamily: 'Arimo' }}
+            >
+              Please enter the student names.
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Fab
+              className={classes.button}
+              aria-label="add"
+              onClick={(): void => this.handleClickOpen()}
+            >
+              <AddIcon />
+            </Fab>
+          </Grid>
+        </Grid>) : (
+          <Grid container direction="column">
+            <Grid item>
+              <Grid container direction="row" justify="center" alignItems="center">
+                <Grid item xs={3}>
+                  <Button variant="contained" onClick={(): void => {this.setState({entryType: 0})}}>
+                    Small Group
+                  </Button>
+                </Grid>
+                <Grid item xs={3}>
+                  <Button variant="outlined" onClick={(): void => {this.setState({entryType: 1})}}>
+                    Whole Group
+                  </Button>
+                </Grid>
+                <Grid item xs={3}>
+                  <Button variant="outlined" onClick={(): void => {this.setState({entryType: 2})}}>
+                    Centers
+                  </Button>
+                </Grid>
+                <Grid item xs={3}>
+                  <Button variant="outlined" onClick={(): void => {this.setState({entryType: 3})}}>
+                    Transition
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Typography
+                variant="h5"
+                align="center"
+                gutterBottom
+                style={{ fontFamily: 'Arimo' }}
+              >
+                Select a student to observe:
+              </Typography>
+            </Grid>
+          </Grid>
+        )}
+        <Grid
+          container
+          alignItems="center"
+          direction="row"
+          justify="center"
+        >
+          <Grid item xs={12}>
+            <Grid
+              alignItems="center"
+              direction="row"
+              justify="center"
+              container
+            >
+              <Grid item>
+                <GridList
+                  cellHeight={60}
+                  className={classes.gridList}
+                  cols={4}
+                >
+                  {this.state.students.map(
+                    (student: {name: string, count: number}, i: number) => {
+                      return (
+                        <GridListTile
+                          key={i + 'grid'}
+                          cols={1}
+                        >
+                          <Card
+                            onClick={(): void => {
+                              this.state.status === 1 ? (
+                                this.setState({
+                                  // open: true,
+                                  currentStudent: i,
+                                  modal: true
+                                }, () => {
+                                  this.beginObservingStudent();
+                                })
+                              ) : null
+                            }}
+                          >
+                            <CardContent>
+                              <Paper
+                                className={classes.root}
+                                elevation={1}
+                                style={{padding: 8}}
+                              >
+                                <Grid container direction="row" justify="space-between">
+                                  <Grid item>
+                                  <Typography variant="subtitle2">
+                                    {
+                                      student.name.charAt(0)
+                                      .toUpperCase() + student.name.substring(1)
+                                    }
+                                  </Typography>
+                                  </Grid>
+                                  <Grid item>
+                                    <Typography variant="subtitle2">
+                                      {student.count}
+                                    </Typography>
+                                  </Grid>
+                                </Grid>
+                              </Paper>
+                            </CardContent>
+                          </Card>
+                        </GridListTile>
+                      )
+                    }
+                  )}
+                </GridList>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        {this.state.status === 0 ? (
+          <Grid
+            container
+            alignItems="center"
+            direction="column"
+            justify="flex-start"
+          >
+            <Button
+              key={'Begin'}
+              variant="contained"
+              className={classes.button}
+              onClick={(): void => this.switchToObservationPage()}
+              disabled={this.state.students.length === 0}
+            >
+              Begin Observation
+            </Button>
+          </Grid>
+        ) : (null)}
+      </Grid>
+    )
   }
 }
 
