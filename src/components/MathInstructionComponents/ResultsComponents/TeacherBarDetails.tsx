@@ -40,9 +40,9 @@ class TeacherBarDetails extends React.Component<Props, {}> {
     const teacherBehaviorsData = {
       labels: [
         "Using math vocabulary",
-        "Asking questions about math concepts",
+        ["Asking questions about", "math concepts"],
         "Demonstrating math concepts",
-        "Doing math with children",
+        ["Helping children use math", "to problem solve"],
       ],
       datasets: [
         {

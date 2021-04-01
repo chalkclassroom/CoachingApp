@@ -77,8 +77,18 @@ class EngagementBarDetails extends React.Component<Props, {}> {
                   stepSize: 5,
                   min: 0,
                   max:
-                    (Math.max(Math.max(...this.props.offTaskDetailSplit), Math.max(...this.props.mildlyEngagedDetailSplit), Math.max(...this.props.engagedDetailSplit), Math.max(...this.props.highlyEngagedDetailSplit)) > 20) ?
-                    Math.max(Math.max(...this.props.offTaskDetailSplit), Math.max(...this.props.mildlyEngagedDetailSplit), Math.max(...this.props.engagedDetailSplit), Math.max(...this.props.highlyEngagedDetailSplit))  : 20,
+                    (Math.max(
+                      this.props.offTaskDetailSplit.reduce((a, b) => a + b, 0),
+                      this.props.mildlyEngagedDetailSplit.reduce((a, b) => a + b, 0),
+                      this.props.engagedDetailSplit.reduce((a, b) => a + b, 0),
+                      this.props.highlyEngagedDetailSplit.reduce((a, b) => a + b, 0)
+                    ) > 20) ?
+                    Math.max(
+                      this.props.offTaskDetailSplit.reduce((a, b) => a + b, 0),
+                      this.props.mildlyEngagedDetailSplit.reduce((a, b) => a + b, 0),
+                      this.props.engagedDetailSplit.reduce((a, b) => a + b, 0),
+                      this.props.highlyEngagedDetailSplit.reduce((a, b) => a + b, 0)
+                    ) : 20,
                   fontSize: 16,
                   fontColor: 'black'
                 },
