@@ -16,8 +16,8 @@ exports.funcChildMathTrend = functions.https.onCall(async(data, context) => {
     console.log(data.teacherId);
     //SQL query to get child trends for AC
     const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
-                    COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) AND (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'math' ELSE NULL END) AS math,
-                    COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) AND checklist.child5 THEN 'notMath' ELSE NULL END) as notMath
+                    COUNT(CASE WHEN (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'math' ELSE NULL END) AS math,
+                    COUNT(CASE WHEN checklist.child5 THEN 'notMath' ELSE NULL END) as notMath
                     FROM cqrefpwa.observations.math
                     WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
                     GROUP BY startDate
