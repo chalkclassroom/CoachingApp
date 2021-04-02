@@ -14,10 +14,10 @@ const bigquery = new BigQuery();
 exports.funcChildSeqTrend = functions.https.onCall(async(data, context) => {
   console.log(context.auth.uid);
   console.log(data.teacherId);
-  //SQL query to get child trends for AC
+  //SQL query to get child trends for sequential
   const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
-                    COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) AND (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'sequential' ELSE NULL END) AS sequential,
-                    COUNT(CASE WHEN (peopleType = 1 OR peopleType = 2) AND checklist.child5 THEN 'notSequential' ELSE NULL END) as notSequential
+                    COUNT(CASE WHEN (checklist.child1 OR checklist.child2 OR checklist.child3 OR checklist.child4) THEN 'sequential' ELSE NULL END) AS sequential,
+                    COUNT(CASE WHEN checklist.child5 THEN 'notSequential' ELSE NULL END) as notSequential
                     FROM cqrefpwa.observations.sequential
                     WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
                     GROUP BY startDate
