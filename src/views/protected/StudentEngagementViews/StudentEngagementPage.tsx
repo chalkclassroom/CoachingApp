@@ -213,7 +213,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
                   >
                     <Dashboard
                       type="SE"
-                      infoDisplay={<TotalVisitCount count={this.state.totalVisitCount} /> }
+                      infoDisplay={<TotalVisitCount count={this.state.totalVisitCount} title="Total Observations:" /> }
                       infoPlacement="flex-start"
                       completeObservation={this.state.completeEnabled}
                       stopTimer={this.stopTimer}
