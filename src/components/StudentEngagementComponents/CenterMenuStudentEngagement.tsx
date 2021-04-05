@@ -127,7 +127,8 @@ interface Props {
     handlePushSEEachEntry(mEntry: object): void
   },
   onStatusChange(enable: boolean): void,
-  updateEngagementCount(engaged: boolean): void
+  updateEngagementCount(engaged: boolean): void,
+  incrementVisitCount(): void
 }
 
 interface State {
@@ -385,7 +386,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     time: PropTypes.number.isRequired,
     handleTimerReset: PropTypes.func.isRequired,
     handleTimerStart: PropTypes.func.isRequired,
-    updateEngagementCount: PropTypes.func.isRequired
+    updateEngagementCount: PropTypes.func.isRequired,
+    incrementVisitCount: PropTypes.func.isRequired
   }
 
 
@@ -559,6 +561,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     disabled={this.state.selectedPoint === -1}
                     onClick={(): void => {
                       this.handleConfirmRating();
+                      this.props.incrementVisitCount();
                       this.props.handleTimerReset();
                       this.setState({modal: false});
                       if(this.state.selectedPoint > 0) {

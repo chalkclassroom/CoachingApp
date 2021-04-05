@@ -8,6 +8,7 @@ import CenterMenuStudentEngagement from "../../../components/StudentEngagementCo
 import { connect } from "react-redux";
 import Dashboard from "../../../components/Dashboard";
 import Countdown from "../../../components/Countdown";
+import TotalVisitCount from '../../../components/TotalVisitCount';
 import TeacherModal from '../HomeViews/TeacherModal';
 import * as Types from '../../../constants/Types';
 
@@ -94,7 +95,8 @@ interface Props {
 interface State {
   time: number,
   completeEnabled: boolean,
-  teacherModal: boolean
+  teacherModal: boolean,
+  totalVisitCount: number
 }
 
 /**
@@ -104,12 +106,19 @@ interface State {
 class StudentEngagementPage extends React.Component<Props, State> {
   timer: NodeJS.Timeout;
 
-  state = {
-    time: RATING_INTERVAL,
-    recs: true,
-    completeEnabled: false,
-    teacherModal: false
-  };
+  /**
+   * @param {Props} props 
+   */
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      time: RATING_INTERVAL,
+      completeEnabled: false,
+      teacherModal: false,
+      totalVisitCount: 0
+    }
+  }
 
   tick = (): void => {
     if (this.state.time <= 0) {
@@ -204,12 +213,8 @@ class StudentEngagementPage extends React.Component<Props, State> {
                   >
                     <Dashboard
                       type="SE"
-                      infoDisplay={
-                          this.state.completeEnabled
-                          // &&
-                          // <Countdown type="SE" timerTime={RATING_INTERVAL} time={this.state.time} />
-                      }
-                      infoPlacement="center"
+                      infoDisplay={<TotalVisitCount count={this.state.totalVisitCount} /> }
+                      infoPlacement="flex-start"
                       completeObservation={this.state.completeEnabled}
                       stopTimer={this.stopTimer}
                     />
@@ -233,6 +238,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
                         time={this.state.time}
                         handleTimerReset = {this.handleTimerReset}
                         handleTimerStart = {this.handleTimerStart}
+                        incrementVisitCount = {(): void => {this.setState({totalVisitCount: this.state.totalVisitCount + 1})}}
                       />
                     )}
                   </FirebaseContext.Consumer>
