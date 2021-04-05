@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 import { withStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { TextField } from '@material-ui/core';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
@@ -24,6 +25,7 @@ import Modal from "@material-ui/core/Modal"
 import Countdown from "../Countdown";
 import { updateEngagementCount } from '../../state/actions/student-engagement';
 import { connect } from 'react-redux';
+import * as Constants from '../../constants/Constants';
 
 const styles: object = (theme: Theme) => ({
   root: {
@@ -150,6 +152,42 @@ const OBSERVATION = 1;
 
 type Status = typeof NAME_LIST | typeof OBSERVATION;
 
+interface ActivitySettingButtonsProps {
+  activitySetting: number,
+  changeActivitySetting(activitySetting: number): void
+}
+
+/**
+ * buttons for choosing the activity setting
+ * @param {ActivitySettingButtonsProps} props
+ * @return {ReactElement}
+ */
+const ActivitySettingButtons = (props: ActivitySettingButtonsProps): React.ReactElement => {
+  return (
+    <Grid container direction="row" justify="space-around" alignItems="center">
+      <MuiThemeProvider theme={Constants.EngagementTheme}>
+        <Button variant="contained" color={(props.activitySetting === 0 || props.activitySetting === -1) ? "primary" : "secondary"} onClick={(): void => {props.changeActivitySetting(0)}}>
+          Small Group
+        </Button>
+        <Button variant="contained" color={(props.activitySetting === 1 || props.activitySetting === -1) ? "primary" : "secondary"} onClick={(): void => {props.changeActivitySetting(1)}}>
+          Whole Group
+        </Button>
+        <Button variant="contained" color={(props.activitySetting === 3 || props.activitySetting === -1) ? "primary" : "secondary"} onClick={(): void => {props.changeActivitySetting(3)}}>
+          Centers
+        </Button>
+        <Button variant="contained" color={(props.activitySetting === 2 || props.activitySetting === -1) ? "primary" : "secondary"} onClick={(): void => {props.changeActivitySetting(2)}}>
+          Transition
+        </Button>
+      </MuiThemeProvider>
+    </Grid>
+  )
+}
+
+ActivitySettingButtons.propTypes = {
+  activitySetting: PropTypes.number.isRequired,
+  changeActivitySetting: PropTypes.func.isRequired
+}
+
 /**
  * Student Engagement Name Collection Page
  * @class CenterMenuStudentEngagement
@@ -232,6 +270,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
         break;
       case 2: entryType = 'transition';
         break;
+      case 3: entryType = 'centers';
+        break;
       default:
         entryType = 'none';
     }
@@ -249,6 +289,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
         case 1: entryType = 'whole';
           break;
         case 2: entryType = 'transition';
+          break;
+        case 3: entryType = 'centers';
           break;
         default:
           entryType = 'none';
@@ -327,7 +369,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     this.setState({ entryType: type });
   }
 
-
   static propTypes = {
     classes: PropTypes.object.isRequired,
     onStatusChange: PropTypes.func.isRequired,
@@ -384,6 +425,29 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
         direction={'column'}
         style={{height: '100%'}}
       >
+        <Modal open={this.state.entryType === -1 && this.state.status === 1}>
+          <div style={getModalStyle()} className={classes.paper}>
+            <Grid
+              container
+              alignItems="center"
+              direction="column"
+              justify='center'
+              style={{width: '100%'}}
+            >
+              <Grid item>
+                <Typography variant="h5" style={{fontFamily: 'Arimo', paddingBottom: '1em'}}>
+                  Please choose the current activity setting in the classroom:
+                </Typography>
+              </Grid>
+              <Grid item style={{width: '100%'}}>
+                <ActivitySettingButtons
+                  activitySetting={this.state.entryType}
+                  changeActivitySetting={(activitySetting: number): void => {this.setState({entryType: activitySetting}, () => {console.log('new entry type', this.state.entryType)})}}
+                />
+              </Grid>
+            </Grid>
+          </div>
+        </Modal>
         <Modal open={this.state.modal && this.state.status === 1}>
           <div style={getModalStyle()} className={classes.paper}>
             <Grid
@@ -594,29 +658,27 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
           </Grid>
         </Grid>) : (
           <Grid container direction="column">
-            <Grid item>
-              <Grid container direction="row" justify="center" alignItems="center">
-                <Grid item xs={3}>
-                  <Button variant="contained" onClick={(): void => {this.setState({entryType: 0})}}>
-                    Small Group
-                  </Button>
-                </Grid>
-                <Grid item xs={3}>
-                  <Button variant="outlined" onClick={(): void => {this.setState({entryType: 1})}}>
-                    Whole Group
-                  </Button>
-                </Grid>
-                <Grid item xs={3}>
-                  <Button variant="outlined" onClick={(): void => {this.setState({entryType: 2})}}>
-                    Centers
-                  </Button>
-                </Grid>
-                <Grid item xs={3}>
-                  <Button variant="outlined" onClick={(): void => {this.setState({entryType: 3})}}>
-                    Transition
-                  </Button>
-                </Grid>
-              </Grid>
+            <Grid item style={{paddingBottom: '2em'}}>
+              <ActivitySettingButtons
+                activitySetting={this.state.entryType}
+                changeActivitySetting={(activitySetting: number): void => {this.setState({entryType: activitySetting}, () => {console.log('new entry type', this.state.entryType)})}}
+              />
+              {/* <Grid container direction="row" justify="space-around" alignItems="center">
+              <MuiThemeProvider theme={Constants.EngagementTheme}>
+                    <Button variant="contained" color={this.state.entryType === 0 ? "primary" : "secondary"} onClick={(): void => {this.setState({entryType: 0})}}>
+                      Small Group
+                    </Button>
+                    <Button variant="contained" color={this.state.entryType === 1 ? "primary" : "secondary"} onClick={(): void => {this.setState({entryType: 1})}}>
+                      Whole Group
+                    </Button>
+                    <Button variant="contained" color={this.state.entryType === 3 ? "primary" : "secondary"} onClick={(): void => {this.setState({entryType: 3})}}>
+                      Centers
+                    </Button>
+                    <Button variant="contained" color={this.state.entryType === 2 ? "primary" : "secondary"} onClick={(): void => {this.setState({entryType: 2})}}>
+                      Transition
+                    </Button>
+                  </MuiThemeProvider> */}
+              {/* </Grid> */}
             </Grid>
             <Grid item>
               <Typography

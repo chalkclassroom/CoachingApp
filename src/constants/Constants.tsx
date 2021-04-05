@@ -61,6 +61,9 @@ export const EngagementTheme = createMuiTheme({
   palette: {
     primary: {
       main: '#e99c2e'
+    },
+    secondary: {
+      main: '#d3d3d3'
     }
   }
 });
