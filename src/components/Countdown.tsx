@@ -37,7 +37,7 @@ interface Props {
   timerTime: number,
   type: Types.DashboardType,
   time: number,
-  horizontal: boolean
+  horizontal?: boolean
 }
 
 interface Style {
@@ -96,7 +96,8 @@ Countdown.propTypes = {
   classes: PropTypes.object.isRequired,
   timerTime: PropTypes.number.isRequired,
   type: PropTypes.oneOf<Types.DashboardType>(['AppBar', 'TT', 'CC', 'MI', 'SE', 'IN', 'LC', 'SA', 'LI', 'AC', 'RedGraph', 'NotPresent']).isRequired,
-  time: PropTypes.number.isRequired
+  time: PropTypes.number.isRequired,
+  horizontal: PropTypes.bool
 }
 
 export default withStyles(styles)(Countdown);

@@ -18,7 +18,7 @@ import Card from '@material-ui/core/Card';
 import CardContent  from '@material-ui/core/CardContent';
 import Paper  from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
+// import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
 import CloseIcon from '@material-ui/icons/Close';
 import Modal from "@material-ui/core/Modal"
 import Countdown from "../Countdown";
@@ -193,12 +193,14 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   /**
    * @param {string} studentName
    */
-  handleAddStudent = (studentName: string): void => {
+  /* handleAddStudent = (studentName: string): void => {
+    console.log('called handleAddStudent', studentName)
     if(studentName){
-      const newList = this.state.students.concat({name: studentName, count: 0});
+      console.log('student name capitalizid', studentName.charAt(0).toUpperCase() + studentName.substring(1))
+      const newList = this.state.students.concat({name: studentName.charAt(0).toUpperCase() + studentName.substring(1), count: 0});
       this.setState({ students: newList, studentTextFieldValue: '', setOpen: false }, () => {console.log('this state students', this.state.students)});
     }
-  };
+  }; */
 
   /**
    * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} e
@@ -413,7 +415,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               </Grid>
               <Grid item>
                 <Typography variant="h4" style={{fontFamily: "Arimo"}}>
-                  {this.state.students[this.state.currentStudent] ? (this.state.students[this.state.currentStudent].name.charAt(0).toUpperCase()+this.state.students[this.state.currentStudent].name.substr(1)) : (null)}
+                  {this.state.students[this.state.currentStudent] ? (this.state.students[this.state.currentStudent].name) : (null)}
                 </Typography>
               </Grid>
               <Grid item>
@@ -543,11 +545,12 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               Cancel
             </Button>
             <Button
-              onClick={(): void =>
-                this.handleAddStudent(
-                  this.state.studentTextFieldValue.toString()
-                )
-              }
+              onClick={(): void => {
+                const nameString = this.state.studentTextFieldValue.toString();
+                // capitalizes first char of name, sets count to 0
+                const newList = this.state.students.concat({name: nameString.charAt(0).toUpperCase() + nameString.substring(1), count: 0});
+                this.setState({ students: newList, studentTextFieldValue: '', setOpen: false });
+              }}
               color="secondary"
               autoFocus
             >
@@ -675,10 +678,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                 <Grid container direction="row" justify="space-between">
                                   <Grid item>
                                   <Typography variant="subtitle2">
-                                    {
-                                      student.name.charAt(0)
-                                      .toUpperCase() + student.name.substring(1)
-                                    }
+                                    {student.name}
                                   </Typography>
                                   </Grid>
                                   <Grid item>
