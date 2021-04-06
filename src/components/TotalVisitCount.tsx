@@ -52,7 +52,7 @@ class TotalVisitCount extends React.Component<Props, {}> {
       >
         <Grid>
           <div style={{ margin: 20 }} />
-          <Typography variant="h5" component="h3" style={{fontFamily: 'Arimo'}}>
+          <Typography variant="h5" component="h3" align="center" style={{fontFamily: 'Arimo'}}>
             {this.props.title ? this.props.title : 'Total Visits:'}
           </Typography>
           <Typography

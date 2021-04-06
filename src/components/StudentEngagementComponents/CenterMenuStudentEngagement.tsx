@@ -39,7 +39,7 @@ const styles: object = (theme: Theme) => ({
     backgroundColor: '#e99b2e',
   },
   gridList: {
-    width: 500,
+    width: 700,
     height: 360,
   },
   paper: {
@@ -437,8 +437,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               style={{width: '100%'}}
             >
               <Grid item>
-                <Typography variant="h5" style={{fontFamily: 'Arimo', paddingBottom: '1em'}}>
-                  Please choose the current activity setting in the classroom:
+                <Typography align="center" variant="h5" style={{fontFamily: 'Arimo', paddingBottom: '1em'}}>
+                  Please select the current activity setting in the classroom:
                 </Typography>
               </Grid>
               <Grid item style={{width: '100%'}}>
@@ -446,6 +446,11 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                   activitySetting={this.state.entryType}
                   changeActivitySetting={(activitySetting: number): void => {this.setState({entryType: activitySetting}, () => {console.log('new entry type', this.state.entryType)})}}
                 />
+              </Grid>
+              <Grid item>
+                <Typography align="center" variant="h6" style={{fontFamily: 'Arimo', paddingBottom: '1em', paddingTop: '1em'}}>
+                  You may change your selection later if the activity setting changes during your observation.
+                </Typography>
               </Grid>
             </Grid>
           </div>
@@ -476,7 +481,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               </Grid>
               <Grid item>
                 <Typography variant="h6" gutterBottom style={{fontFamily: "Arimo"}}>
-                  {this.props.time != 0?"Please observe ":"Now Rate "}this student&apos;s level of engagement.
+                  {this.props.time != 0?"Please observe ":"Now rate "}this student&apos;s level of engagement.
                 </Typography>
               </Grid>
               <Grid item>
@@ -700,6 +705,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
           alignItems="center"
           direction="row"
           justify="center"
+          style={{paddingTop: '1em', paddingBottom: '1em'}}
         >
           <Grid item xs={12}>
             <Grid
@@ -741,12 +747,12 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                                 style={{padding: 8}}
                               >
                                 <Grid container direction="row" justify="space-between">
-                                  <Grid item>
-                                  <Typography variant="subtitle2">
-                                    {student.name}
-                                  </Typography>
+                                  <Grid item xs={9}>
+                                    <Typography noWrap variant="subtitle2">
+                                      {student.name}
+                                    </Typography>
                                   </Grid>
-                                  <Grid item>
+                                  <Grid item xs={2}>
                                     <Typography variant="subtitle2">
                                       {student.count}
                                     </Typography>
