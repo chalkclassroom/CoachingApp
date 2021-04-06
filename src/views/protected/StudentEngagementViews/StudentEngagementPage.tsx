@@ -96,7 +96,8 @@ interface State {
   time: number,
   completeEnabled: boolean,
   teacherModal: boolean,
-  totalVisitCount: number
+  totalVisitCount: number,
+  background: boolean
 }
 
 /**
@@ -116,16 +117,34 @@ class StudentEngagementPage extends React.Component<Props, State> {
       time: RATING_INTERVAL,
       completeEnabled: false,
       teacherModal: false,
-      totalVisitCount: 0
+      totalVisitCount: 0,
+      background: false
     }
   }
 
   tick = (): void => {
+    if (this.state.time <= 1000 && this.state.time > 0) {
+      // if one second left, set background to true
+      // activates background color (Fade component in CenterMenuStudentEngagement)
+      this.setState({ background: true }, () => {
+        setTimeout(() => {
+          this.setState({ background: false })
+        }, 500);
+      })
+    }
     if (this.state.time <= 0) {
-      this.setState({ time: 0 });
+      this.setState({
+        time: 0
+      }, () => {
+        this.stopTimer();
+      });
     } else {
       if (this.state.time - 1000 < 0) {
-        this.setState({ time: 0 });
+        this.setState({
+          time: 0
+        }, () => {
+          this.stopTimer();
+        });
       } else {
         this.setState({ time: this.state.time - 1000 });
       }
@@ -239,6 +258,7 @@ class StudentEngagementPage extends React.Component<Props, State> {
                         handleTimerReset = {this.handleTimerReset}
                         handleTimerStart = {this.handleTimerStart}
                         incrementVisitCount = {(): void => {this.setState({totalVisitCount: this.state.totalVisitCount + 1})}}
+                        background={this.state.background}
                       />
                     )}
                   </FirebaseContext.Consumer>

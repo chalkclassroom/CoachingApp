@@ -2,6 +2,7 @@ import * as React from "react";
 import * as PropTypes from 'prop-types';
 import { withStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Fade from '@material-ui/core/Fade';
 import { TextField } from '@material-ui/core';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -128,7 +129,8 @@ interface Props {
   },
   onStatusChange(enable: boolean): void,
   updateEngagementCount(engaged: boolean): void,
-  incrementVisitCount(): void
+  incrementVisitCount(): void,
+  background: boolean
 }
 
 interface State {
@@ -387,7 +389,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
     handleTimerReset: PropTypes.func.isRequired,
     handleTimerStart: PropTypes.func.isRequired,
     updateEngagementCount: PropTypes.func.isRequired,
-    incrementVisitCount: PropTypes.func.isRequired
+    incrementVisitCount: PropTypes.func.isRequired,
+    background: PropTypes.bool.isRequired
   }
 
 
@@ -464,6 +467,15 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               justify={'center'}
               style={{width: '100%'}}
             >
+              {/* Fade component flashes an orange background as visual cue that timer has ended */}
+              <Fade in={this.props.background} timeout={{enter: 300, exit: 600}} style={{height: '100%'}}>
+                <Grid item style={{
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  backgroundColor: '#EDAF57' // lighter shade of SE color
+                }} />
+              </Fade>
               <Grid item style={{width: '100%'}}>
                 <Grid container direction="row" justify="flex-end" style={{width: '100%'}}>
                   <Grid item>
@@ -502,47 +514,49 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                 >
                   {ratingOptions.map((item, index) => {
                     return (
-                      <Button
-                        key={index}
-                        variant={this.state.selectedPoint === item.value ? "contained": "outlined"}
-                        disabled={this.props.time!=0?true:false}
-                        style={{
-                          width: '18vh',
-                          height: '18vh',
-                          maxWidth: 130,
-                          maxHeight: 130,
-                          fontFamily: "Arimo",
-                          fontSize: 14,
-                          paddingTop: 0,
-                          paddingBottom: 0,
-                          margin: 0
-                        }}
-                        onClick={(): void => this.handleSelectedValue(item.value)}
-                      >
-                        <Grid
-                          alignItems="stretch"
-                          direction="column"
-                          justify="flex-start"
+                      <MuiThemeProvider key={index} theme={Constants.EngagementTheme}>
+                        <Button
+                          variant="contained"
+                          disabled={this.props.time!=0?true:false}
+                          color={(this.state.selectedPoint === item.value || this.state.selectedPoint === -1) ? "primary" : "secondary"}
                           style={{
                             width: '18vh',
                             height: '18vh',
                             maxWidth: 130,
                             maxHeight: 130,
-                            paddingTop: '1em'
+                            fontFamily: "Arimo",
+                            fontSize: 14,
+                            paddingTop: 0,
+                            paddingBottom: 0,
+                            margin: 0
                           }}
+                          onClick={(): void => this.handleSelectedValue(item.value)}
                         >
-                          <Grid item style={{height: '50%'}}>
-                          <Typography variant="h4" style={{fontFamily: "Arimo", paddingTop: '0.5em'}}>
-                            <b>{item.label}</b>
-                          </Typography>
+                          <Grid
+                            alignItems="stretch"
+                            direction="column"
+                            justify="flex-start"
+                            style={{
+                              width: '18vh',
+                              height: '18vh',
+                              maxWidth: 130,
+                              maxHeight: 130,
+                              paddingTop: '1em'
+                            }}
+                          >
+                            <Grid item style={{height: '50%'}}>
+                            <Typography variant="h4" style={{fontFamily: "Arimo", paddingTop: '0.6em'}}>
+                              <b>{item.label}</b>
+                            </Typography>
+                            </Grid>
+                            <Grid>
+                            <Typography variant="subtitle1" style={{fontWeight: 'bold'}}>
+                              {item.text}
+                            </Typography>
+                            </Grid>
                           </Grid>
-                          <Grid>
-                          <Typography variant="subtitle2">
-                            {item.text}
-                          </Typography>
-                          </Grid>
-                        </Grid>
-                      </Button>
+                        </Button>
+                      </MuiThemeProvider>
                     )
                   })}
                 </Grid>
@@ -669,24 +683,8 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             <Grid item style={{paddingBottom: '2em'}}>
               <ActivitySettingButtons
                 activitySetting={this.state.entryType}
-                changeActivitySetting={(activitySetting: number): void => {this.setState({entryType: activitySetting}, () => {console.log('new entry type', this.state.entryType)})}}
+                changeActivitySetting={(activitySetting: number): void => {this.setState({entryType: activitySetting})}}
               />
-              {/* <Grid container direction="row" justify="space-around" alignItems="center">
-              <MuiThemeProvider theme={Constants.EngagementTheme}>
-                    <Button variant="contained" color={this.state.entryType === 0 ? "primary" : "secondary"} onClick={(): void => {this.setState({entryType: 0})}}>
-                      Small Group
-                    </Button>
-                    <Button variant="contained" color={this.state.entryType === 1 ? "primary" : "secondary"} onClick={(): void => {this.setState({entryType: 1})}}>
-                      Whole Group
-                    </Button>
-                    <Button variant="contained" color={this.state.entryType === 3 ? "primary" : "secondary"} onClick={(): void => {this.setState({entryType: 3})}}>
-                      Centers
-                    </Button>
-                    <Button variant="contained" color={this.state.entryType === 2 ? "primary" : "secondary"} onClick={(): void => {this.setState({entryType: 2})}}>
-                      Transition
-                    </Button>
-                  </MuiThemeProvider> */}
-              {/* </Grid> */}
             </Grid>
             <Grid item>
               <Typography
@@ -765,6 +763,22 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                       )
                     }
                   )}
+                  {this.state.status === 1 ? (
+                    <GridListTile
+                      cols={1}
+                    >
+                      <Grid container direction="row" justify="center" alignItems="center">
+                        <Fab
+                          size='small'
+                          className={classes.button}
+                          aria-label="add"
+                          onClick={(): void => this.handleClickOpen()}
+                        >
+                          <AddIcon />
+                        </Fab>
+                      </Grid>
+                    </GridListTile>
+                  ) : (null)}
                 </GridList>
               </Grid>
             </Grid>
