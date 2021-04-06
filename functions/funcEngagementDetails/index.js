@@ -18,15 +18,19 @@ exports.funcEngagementDetails = functions.https.onCall(async(data, context) => {
   COUNT(CASE WHEN (point = 0 AND entryType='small')  THEN 'offTask' ELSE NULL END) AS offTask0,
   COUNT(CASE WHEN (point = 0 AND entryType='whole')  THEN 'offTask' ELSE NULL END) AS offTask1,
   COUNT(CASE WHEN (point = 0 AND entryType='transition')  THEN 'offTask' ELSE NULL END) AS offTask2,
+  COUNT(CASE WHEN (point = 0 AND entryType='centers') THEN 'offTask' ELSE NULL END) AS offTask3,
   COUNT(CASE WHEN (point = 1 AND entryType='small')  THEN 'offTask' ELSE NULL END) AS mildlyEngaged0,
   COUNT(CASE WHEN (point = 1 AND entryType='whole')  THEN 'offTask' ELSE NULL END) AS mildlyEngaged1,
   COUNT(CASE WHEN (point = 1 AND entryType='transition')  THEN 'offTask' ELSE NULL END) AS mildlyEngaged2,
+  COUNT(CASE WHEN (point = 1 AND entryType='centers') THEN 'offTask' ELSE NULL END) AS mildlyEngaged3,
   COUNT(CASE WHEN (point = 2 AND entryType='small')  THEN 'offTask' ELSE NULL END) AS engaged0,
   COUNT(CASE WHEN (point = 2 AND entryType='whole')  THEN 'offTask' ELSE NULL END) AS engaged1,
   COUNT(CASE WHEN (point = 2 AND entryType='transition')  THEN 'offTask' ELSE NULL END) AS engaged2,
+  COUNT(CASE WHEN (point = 2 AND entryType='centers') THEN 'offTask' ELSE NULL END) AS engaged3,
   COUNT(CASE WHEN (point = 3 AND entryType='small')  THEN 'offTask' ELSE NULL END) AS highlyEngaged0,
   COUNT(CASE WHEN (point = 3 AND entryType='whole')  THEN 'offTask' ELSE NULL END) AS highlyEngaged1,
   COUNT(CASE WHEN (point = 3 AND entryType='transition')  THEN 'offTask' ELSE NULL END) AS highlyEngaged2,
+  COUNT(CASE WHEN (point = 3 AND entryType='centers')  THEN 'offTask' ELSE NULL END) AS highlyEngaged3,
   FROM cqrefpwa.observations.engagement
   WHERE id ='`+data.sessionId+`'`;
 
