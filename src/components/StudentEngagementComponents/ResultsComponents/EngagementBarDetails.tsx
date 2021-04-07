@@ -56,6 +56,12 @@ class EngagementBarDetails extends React.Component<Props, {}> {
         backgroundColor:  Constants.Colors.TT,
         hoverBackgroundColor:  Constants.Colors.TT
       },{
+        label: 'Centers',
+        stack: '0',
+        data: [this.props.offTaskDetailSplit[3],this.props.mildlyEngagedDetailSplit[3],this.props.engagedDetailSplit[3],this.props.highlyEngagedDetailSplit[3]],
+        backgroundColor:  Constants.Colors.SA,
+        hoverBackgroundColor:  Constants.Colors.SA
+      },{
         label: 'Transition',
         stack: '0',
         data: [this.props.offTaskDetailSplit[2],this.props.mildlyEngagedDetailSplit[2],this.props.engagedDetailSplit[2],this.props.highlyEngagedDetailSplit[2]],
