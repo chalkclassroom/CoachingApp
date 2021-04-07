@@ -20,7 +20,6 @@ import Card from '@material-ui/core/Card';
 import CardContent  from '@material-ui/core/CardContent';
 import Paper  from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-// import BackIcon from '@material-ui/icons/KeyboardArrowLeft';
 import CloseIcon from '@material-ui/icons/Close';
 import Modal from "@material-ui/core/Modal"
 import Countdown from "../Countdown";
@@ -65,46 +64,6 @@ function getModalStyle(): React.CSSProperties {
   } as React.CSSProperties;
 }
 
-const BootstrapButton = withStyles({
-  root: {
-    boxShadow: 'none',
-    textTransform: 'none',
-    fontSize: 16,
-    padding: '6px 12px',
-    border: '1px solid',
-    lineHeight: 1.5,
-    backgroundColor: '#e99b2e',
-    borderColor: '#e99b2e',
-    textColor: '#ffffff',
-    borderRadius: '50%',
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '&:hover': {
-      backgroundColor: '#0069d9',
-      borderColor: '#0062cc',
-      boxShadow: 'none',
-    },
-    '&:active': {
-      boxShadow: 'none',
-      backgroundColor: '#0062cc',
-      borderColor: '#005cbf',
-    },
-    '&:focus': {
-      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
-    },
-  },
-})(Button);
-
 interface Style {
   paper: string,
   button: string,
@@ -146,8 +105,7 @@ interface State {
   entryType: number,
   entries: number,
   selectedPoint: number,
-  modal: boolean,
-  // time: number
+  modal: boolean
 }
 
 const NAME_LIST = 0;
@@ -169,16 +127,32 @@ const ActivitySettingButtons = (props: ActivitySettingButtonsProps): React.React
   return (
     <Grid container direction="row" justify="space-around" alignItems="center">
       <MuiThemeProvider theme={Constants.EngagementTheme}>
-        <Button variant="contained" color={(props.activitySetting === 0 || props.activitySetting === -1) ? "primary" : "secondary"} onClick={(): void => {props.changeActivitySetting(0)}}>
+        <Button
+          variant="contained"
+          color={(props.activitySetting === 0 || props.activitySetting === -1) ? "primary" : "secondary"}
+          onClick={(): void => {props.changeActivitySetting(0)}}
+        >
           Small Group
         </Button>
-        <Button variant="contained" color={(props.activitySetting === 1 || props.activitySetting === -1) ? "primary" : "secondary"} onClick={(): void => {props.changeActivitySetting(1)}}>
+        <Button
+          variant="contained"
+          color={(props.activitySetting === 1 || props.activitySetting === -1) ? "primary" : "secondary"}
+          onClick={(): void => {props.changeActivitySetting(1)}}
+        >
           Whole Group
         </Button>
-        <Button variant="contained" color={(props.activitySetting === 3 || props.activitySetting === -1) ? "primary" : "secondary"} onClick={(): void => {props.changeActivitySetting(3)}}>
+        <Button
+          variant="contained"
+          color={(props.activitySetting === 3 || props.activitySetting === -1) ? "primary" : "secondary"}
+          onClick={(): void => {props.changeActivitySetting(3)}}
+        >
           Centers
         </Button>
-        <Button variant="contained" color={(props.activitySetting === 2 || props.activitySetting === -1) ? "primary" : "secondary"} onClick={(): void => {props.changeActivitySetting(2)}}>
+        <Button
+          variant="contained"
+          color={(props.activitySetting === 2 || props.activitySetting === -1) ? "primary" : "secondary"}
+          onClick={(): void => {props.changeActivitySetting(2)}}
+        >
           Transition
         </Button>
       </MuiThemeProvider>
@@ -232,18 +206,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   };
 
   /**
-   * @param {string} studentName
-   */
-  /* handleAddStudent = (studentName: string): void => {
-    console.log('called handleAddStudent', studentName)
-    if(studentName){
-      console.log('student name capitalizid', studentName.charAt(0).toUpperCase() + studentName.substring(1))
-      const newList = this.state.students.concat({name: studentName.charAt(0).toUpperCase() + studentName.substring(1), count: 0});
-      this.setState({ students: newList, studentTextFieldValue: '', setOpen: false }, () => {console.log('this state students', this.state.students)});
-    }
-  }; */
-
-  /**
    * @param {ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>} e
    */
   handleStudentTextFieldChange = (e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void =>{
@@ -255,32 +217,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
   switchToObservationPage = (): void => {
     this.setState({ status: OBSERVATION });
     this.props.onStatusChange(true);
-  }
-
-  switchToNameList = (): void => {
-    this.setState({ status: NAME_LIST });
-    this.props.onStatusChange(false);
-  }
-
-  handleSkipRating = (): void => {
-    this.props.handleTimerReset();
-    this.handleSelectedValue(-1);
-    let entryType: string;
-    switch(this.state.entryType){
-      case 0: entryType = 'small';
-        break;
-      case 1: entryType = 'whole';
-        break;
-      case 2: entryType = 'transition';
-        break;
-      case 3: entryType = 'centers';
-        break;
-      default:
-        entryType = 'none';
-    }
-    const mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
-    this.props.firebase.handlePushSEEachEntry(mEntry);
-    this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
   }
 
   handleConfirmRating = (): void => {
@@ -299,37 +235,20 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
           entryType = 'none';
       }
       const mEntry= {"id": this.generateHashCodeOfStudent(), "point": this.state.selectedPoint, entryType: entryType};
-      console.log(mEntry, this.state.students);
       this.props.firebase.handlePushSEEachEntry(mEntry);
-      /* if (this.state.selectedPoint > 0) {
-        this.props.updateEngagementCount(true);
-      } else {
-        this.props.updateEngagementCount(false);
-      } */
       const studentsStateCopy = [...this.state.students];
       const currentStudentIndex = this.state.currentStudent;
       const currentCount = studentsStateCopy[currentStudentIndex].count;
       const studentName = studentsStateCopy[currentStudentIndex].name;
       studentsStateCopy[currentStudentIndex] = {name: studentName, count: currentCount+1};
-      this.setState({ students: studentsStateCopy }, () => {console.log('new student1', this.state.students)});
-      // this.setState({ currentStudent: (this.state.currentStudent +1) % this.state.students.length });
+      this.setState({ students: studentsStateCopy });
       this.props.handleTimerReset();
       this.handleSelectedValue(-1);
       this.setState({
         entries: this.state.entries+1,
         modal: false
       });
-      // this.showModalForNextPerson();
     }
-  }
-
-  /* showModalForNextPerson = (): void =>{
-    this.setState({modal: true});
-    this.props.handleTimerReset();
-  } */
-
-  beginObservingStudent = (): void =>{
-    this.props.handleTimerStart();
   }
 
   generateHashCodeOfStudent = (): number => {
@@ -363,13 +282,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
    */
   handleSelectedValue=(point: number): void =>{
     this.setState({ selectedPoint: point });
-  }
-
-  /**
-   * @param {number} type
-   */
-  handleSelectedType = (type: number): void => {
-    this.setState({ entryType: type });
   }
 
   static propTypes = {
@@ -447,7 +359,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
               <Grid item style={{width: '100%'}}>
                 <ActivitySettingButtons
                   activitySetting={this.state.entryType}
-                  changeActivitySetting={(activitySetting: number): void => {this.setState({entryType: activitySetting}, () => {console.log('new entry type', this.state.entryType)})}}
+                  changeActivitySetting={(activitySetting: number): void => {this.setState({entryType: activitySetting})}}
                 />
               </Grid>
               <Grid item>
@@ -533,6 +445,7 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                           onClick={(): void => this.handleSelectedValue(item.value)}
                         >
                           <Grid
+                            container
                             alignItems="stretch"
                             direction="column"
                             justify="flex-start"
@@ -573,10 +486,6 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                     variant="contained"
                     className={classes.button}
                     style={{fontFamily: "Arimo"}}
-                    /* disabled={this.state.entryType === -1 || 
-                      this.state.selectedPoint === -1 || 
-                      this.props.time !==0
-                    } */
                     disabled={this.state.selectedPoint === -1}
                     onClick={(): void => {
                       this.handleConfirmRating();
@@ -644,41 +553,43 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
             </Button>
           </DialogActions>
         </Dialog>
-        {this.state.status === 0 ? (<Grid
-          container
-          alignItems="center"
-          direction="row"
-          justify={'center'}
-        >
-          <Grid item xs={3} />
-          <Grid item xs={6}>
-            <Typography
-              variant="h4"
-              align="center"
-              gutterBottom
-              style={{ fontFamily: 'Arimo' }}
-            >
-              Create Student List
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              align="center"
-              gutterBottom
-              style={{ fontFamily: 'Arimo' }}
-            >
-              Please enter the student names.
-            </Typography>
+        {this.state.status === 0 ? (
+          <Grid
+            container
+            alignItems="center"
+            direction="row"
+            justify={'center'}
+          >
+            <Grid item xs={3} />
+            <Grid item xs={6}>
+              <Typography
+                variant="h4"
+                align="center"
+                gutterBottom
+                style={{ fontFamily: 'Arimo' }}
+              >
+                Create Student List
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                align="center"
+                gutterBottom
+                style={{ fontFamily: 'Arimo' }}
+              >
+                Please enter the student names.
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Fab
+                className={classes.button}
+                aria-label="add"
+                onClick={(): void => this.handleClickOpen()}
+              >
+                <AddIcon />
+              </Fab>
+            </Grid>
           </Grid>
-          <Grid item xs={3}>
-            <Fab
-              className={classes.button}
-              aria-label="add"
-              onClick={(): void => this.handleClickOpen()}
-            >
-              <AddIcon />
-            </Fab>
-          </Grid>
-        </Grid>) : (
+        ) : (
           <Grid container direction="column">
             <Grid item style={{paddingBottom: '2em'}}>
               <ActivitySettingButtons
@@ -729,11 +640,10 @@ class CenterMenuStudentEngagement extends React.Component<Props, State> {
                             onClick={(): void => {
                               this.state.status === 1 ? (
                                 this.setState({
-                                  // open: true,
                                   currentStudent: i,
                                   modal: true
                                 }, () => {
-                                  this.beginObservingStudent();
+                                  this.props.handleTimerStart();
                                 })
                               ) : null
                             }}
