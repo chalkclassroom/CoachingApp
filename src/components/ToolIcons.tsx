@@ -19,6 +19,7 @@ import StudentEngagementObservationPopUp from './StudentEngagementComponents/Stu
 import LevelOfInstructionObservationPopUp from './LevelOfInstructionComponents/LevelOfInstructionObservationPopUp';
 import ListeningToChildrenObservationPopUp from './ListeningComponents/ListeningToChildrenObservationPopUp';
 import SequentialActivitiesObservationPopUp from './SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
+import LiteracyInstructionObservationPopUp from './LiteracyComponents/LiteracyInstructionObservationPopUp';
 import AssociativeCooperativeInteractionsObservationPopUp from './AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
 import ObservationModal from './ObservationModal';
 import ResultsModal from './ResultsModal';
@@ -57,7 +58,7 @@ function ToolIcons(props: Props): React.ReactElement {
     'LevelOfInstruction': <LevelOfInstructionObservationPopUp />,
     'ListeningToChildren': <ListeningToChildrenObservationPopUp />,
     'SequentialActivities': <SequentialActivitiesObservationPopUp />,
-    'LiteracyInstruction': <div />,
+    'LiteracyInstruction': <LiteracyInstructionObservationPopUp handleBegin={(): void => history.push({pathname: `/${selected}`})} />,
     'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />,
     'none': <div />
   }
@@ -192,6 +193,7 @@ function ToolIcons(props: Props): React.ReactElement {
         </Grid>
       </Grid>
       <ObservationModal
+        type={selected}
         open={observeModal}
         content={ObservationPopUp[selected]}
         handleBegin={(): void => history.push({pathname: `/${selected}`})}

@@ -43,6 +43,7 @@ import ListeningToChildrenPage from './views/protected/ListeningViews/ListeningT
 import ListeningToChildrenResultsPage from './views/protected/ListeningViews/ListeningToChildrenResultsPage';
 import ListeningToChildrenTrainingPage from './views/protected/ListeningViews/ListeningToChildrenTrainingPage';
 import LiteracyTrainingPage from './views/protected/LiteracyViews/LiteracyTrainingPage';
+import LiteracyInstructionPage from './views/protected/LiteracyViews/LiteracyInstructionPage';
 import AdminPage from './views/protected/AdminViews/AdminPage';
 import TeamPage from "./views/WelcomeViews/TeamPage";
 import TeacherDetailPage from "./views/protected/MyTeachers/TeacherDetailPage";
@@ -413,6 +414,11 @@ class App extends React.Component<Props, State> {
               auth={this.state.auth}
               path="/LiteracyInstructionTraining"
               render={() : React.ReactElement=> <LiteracyTrainingPage />}
+            />
+            <PrivateRoute
+              auth={this.state.auth}
+              path="/LiteracyInstruction"
+              render={() : React.ReactElement=> <LiteracyInstructionPage />}
             />
             <PrivateRoute
               exact
