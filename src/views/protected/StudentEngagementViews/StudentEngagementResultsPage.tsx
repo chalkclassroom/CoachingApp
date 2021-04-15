@@ -379,21 +379,25 @@ class StudentEngagementResultsPage extends React.Component<Props, State> {
       offTask0: number,
       offTask1: number,
       offTask2: number,
+      offTask3: number,
       mildlyEngaged0: number,
       mildlyEngaged1: number,
       mildlyEngaged2: number,
+      mildlyEngaged3: number,
       engaged0: number,
       engaged1: number,
       engaged2: number,
+      engaged3: number,
       highlyEngaged0: number,
       highlyEngaged1: number,
       highlyEngaged2: number,
+      highlyEngaged3: number
     }) => {
       this.setState({
-        offTaskDetailSplit: [detail.offTask0,detail.offTask1,detail.offTask2],
-        mildlyEngagedDetailSplit: [detail.mildlyEngaged0,detail.mildlyEngaged1,detail.mildlyEngaged2],
-        engagedDetailSplit: [detail.engaged0,detail.engaged1,detail.engaged2],
-        highlyEngagedDetailSplit: [detail.highlyEngaged0, detail.highlyEngaged1, detail.highlyEngaged2],
+        offTaskDetailSplit: [detail.offTask0, detail.offTask1, detail.offTask2, detail.offTask3],
+        mildlyEngagedDetailSplit: [detail.mildlyEngaged0, detail.mildlyEngaged1, detail.mildlyEngaged2, detail.mildlyEngaged3],
+        engagedDetailSplit: [detail.engaged0, detail.engaged1, detail.engaged2, detail.engaged3],
+        highlyEngagedDetailSplit: [detail.highlyEngaged0, detail.highlyEngaged1, detail.highlyEngaged2, detail.highlyEngaged3],
       })
     })
   }

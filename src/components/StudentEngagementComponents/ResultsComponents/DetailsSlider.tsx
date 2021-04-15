@@ -78,10 +78,10 @@ class DetailsSlider extends React.Component<Props, {}> {
               </Grid>
             </Grid>
             <EngagementBarDetails
-                offTaskDetailSplit={this.props.offTaskDetailSplit}
-                mildlyEngagedDetailSplit={this.props.mildlyEngagedDetailSplit}
-                engagedDetailSplit={this.props.engagedDetailSplit}
-                highlyEngagedDetailSplit={this.props.highlyEngagedDetailSplit}
+              offTaskDetailSplit={this.props.offTaskDetailSplit}
+              mildlyEngagedDetailSplit={this.props.mildlyEngagedDetailSplit}
+              engagedDetailSplit={this.props.engagedDetailSplit}
+              highlyEngagedDetailSplit={this.props.highlyEngagedDetailSplit}
             />
           </Grid>
         </div>
