@@ -196,7 +196,16 @@ function ToolIcons(props: Props): React.ReactElement {
         type={selected}
         open={observeModal}
         content={ObservationPopUp[selected]}
-        handleBegin={(): void => history.push({pathname: `/${selected}`})}
+        handleBegin={selected === 'LiteracyInstruction' ? (
+          (checklistType: string): void => {
+            history.push({
+              pathname: `/${selected}`,
+              state: {checklist: checklistType}
+            })
+          }
+        ) : (
+          (): void => history.push({pathname: `/${selected}`})
+        )}
         handleClose={(): void => setObserveModal(false)}
       />
       <LockedModal

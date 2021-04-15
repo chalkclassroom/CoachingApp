@@ -1,9 +1,10 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { useState, useEffect } from 'react';
+import {useLocation, useHistory} from 'react-router-dom';
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
-import TeacherChecklist from '../../../components/ListeningComponents/TeacherChecklist';
+import Checklist from '../../../components/LiteracyComponents/Checklist';
 import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from "react-redux";
 import * as Types from '../../../constants/Types';
@@ -13,7 +14,12 @@ import * as Types from '../../../constants/Types';
 }; */
 
 interface Props {
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  location: {
+    state: {
+      checklist: string
+    }
+  },
 }
 
 /**
@@ -23,6 +29,10 @@ interface Props {
  */
 function LiteracyInstructionPage(props: Props): React.ReactElement {
   const { teacherSelected } = props;
+  const location = useLocation();
+  const history = useHistory();
+  console.log('location', location);
+  console.log('and history', history);
   const [teacherModal, setTeacherModal] = useState(false);
   useEffect(() => {
     if (!teacherSelected) {
@@ -36,10 +46,7 @@ function LiteracyInstructionPage(props: Props): React.ReactElement {
           {(firebase: Types.FirebaseAppBar): React.ReactNode => (<AppBar firebase={firebase} />)}
         </FirebaseContext.Consumer>
         <main>
-          <div>
-            literacy instruction
-          </div>
-          {/* <FirebaseContext.Consumer>
+          <FirebaseContext.Consumer>
             {(firebase: {
               auth: {
                 currentUser: {
@@ -55,12 +62,14 @@ function LiteracyInstructionPage(props: Props): React.ReactElement {
                 checked: Array<number>
               }): Promise<void>
             }): React.ReactNode => (
-              <TeacherChecklist
+              <Checklist
                 firebase={firebase}
                 type='LI'
+                // checklist={location.state.checklist}
+                checklist='FoundationalTeacher'
               />
             )}
-          </FirebaseContext.Consumer> */}
+          </FirebaseContext.Consumer>
         </main>
       </div>
     ) : (

@@ -364,6 +364,10 @@ export const Checklist: {
     ChildBehaviors?: Array<JSX.Element>,
     TeacherBehaviors: Array<JSX.Element>
   },
+  LI: {
+    FoundationalChild: Array<JSX.Element>,
+    FoundationalTeacher: Array<JSX.Element>
+  }
 } = {
   'MI': {
     'ChildInstructions': 'Select the types of math activities children are doing at this center.',
@@ -462,6 +466,71 @@ export const Checklist: {
       <div key={3}>Asks <b>open-ended questions</b> to encourage conversation</div>,
       <div key={4}><b>Expands on children&apos;s play or talk</b> using questions or comments</div>,
       <div key={5}>Encourages children to <b>talk to peers</b></div>,
+    ]
+  },
+  'LI': {
+    'FoundationalChild': [
+      <div key={0}>
+        Using knowledge of <b>rhyming, alliteration, and/or syllables</b>
+      </div>,
+      <div key={1}>
+        Using knowledge of <b>individual sounds (phonemes)</b>
+      </div>,
+      <div key={2}>
+        Using <b>alphabet knowledge</b> and/or <b>word identification skills</b>
+      </div>,
+      <div key={3}>
+        Using knowledge of <b>letter-sound correspondence</b>
+      </div>,
+      <div key={4}>
+        <b>Inventing spellings or generating conventional spellings</b>
+      </div>,
+      <div key={5}>
+        Using knowledge of <b>print concepts</b>
+      </div>,
+      <div key={6}>
+        <b>Matching spoken words to print</b>
+      </div>,
+      <div key={7}>
+        <b>Responding to open-ended questions or prompts</b> about foundational skills
+      </div>,
+      <div key={8}>
+        Using foundational skills for a <b>realistic reading and/or writing purpose</b>
+        {" "} (e.g., demonstrating how to write a list)
+      </div>
+    ],
+    'FoundationalTeacher': [
+      <div key={0}>
+        Focusing on <b>rhyming, alliteration, and/or syllables</b>
+      </div>,
+      <div key={1}>
+        Focusing on <b>individual sounds (phonemes)</b>
+      </div>,
+      <div key={2}>
+        Focusing on <b>alphabet knowledge</b> and/or <b>word identification skills</b>
+      </div>,
+      <div key={3}>
+        Focusing on <b>letter-sound correspondence</b>
+      </div>,
+      <div key={4}>
+        <b>Supporting children&apos;s inventive spelling</b>
+      </div>,
+      <div key={5}>
+        Focusing on <b>print concepts</b>
+      </div>,
+      <div key={6}>
+        <b>Matching spoken words to print</b>
+      </div>,
+      <div key={7}>
+        Asking <b>open-ended questions or prompts</b> about foundational skills
+      </div>,
+      <div key={8}>
+        Using <b>multi-modal instruction</b> (e.g., gestures/actions, objects, visuals)
+      </div>,
+      <div key={9}>
+        Using foundational skills for a <b>realistic reading and/or writing purpose</b>
+        {" "} (e.g., demonstrating how to write a list)
+      </div>
     ]
   }
 }

@@ -35,7 +35,7 @@ interface Style {
 interface Props {
   classes: Style,
   content?: React.ReactNode,
-  handleBegin(): void,
+  handleBegin(checklistType?: string): void,
   handleClose(): void,
   open: boolean,
   type: Types.Selected
