@@ -58,7 +58,9 @@ function ToolIcons(props: Props): React.ReactElement {
     'LevelOfInstruction': <LevelOfInstructionObservationPopUp />,
     'ListeningToChildren': <ListeningToChildrenObservationPopUp />,
     'SequentialActivities': <SequentialActivitiesObservationPopUp />,
-    'LiteracyInstruction': <LiteracyInstructionObservationPopUp handleBegin={(): void => history.push({pathname: `/${selected}`})} />,
+    'LiteracyInstruction': <LiteracyInstructionObservationPopUp handleBegin={(checklistType?: string): void => {
+      history.push({pathname:`/${selected}`, state: {checklist: checklistType}})
+    }} />,
     'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />,
     'none': <div />
   }
@@ -196,16 +198,9 @@ function ToolIcons(props: Props): React.ReactElement {
         type={selected}
         open={observeModal}
         content={ObservationPopUp[selected]}
-        handleBegin={selected === 'LiteracyInstruction' ? (
-          (checklistType: string): void => {
-            history.push({
-              pathname: `/${selected}`,
-              state: {checklist: checklistType}
-            })
-          }
-        ) : (
-          (): void => history.push({pathname: `/${selected}`})
-        )}
+        handleBegin={(checklistType?: string): void => {
+          history.push({pathname:`/${selected}`, state: {checklist: checklistType}})
+        }}
         handleClose={(): void => setObserveModal(false)}
       />
       <LockedModal

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from "prop-types";
 import { useState, useEffect } from 'react';
-import {useLocation, useHistory} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import AppBar from "../../../components/AppBar";
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import Checklist from '../../../components/LiteracyComponents/Checklist';
@@ -9,17 +9,8 @@ import TeacherModal from '../HomeViews/TeacherModal';
 import { connect } from "react-redux";
 import * as Types from '../../../constants/Types';
 
-/* function handleCloseTeacherModal(): void => {
-  this.setState({ teacherModal: false })
-}; */
-
 interface Props {
-  teacherSelected: Types.Teacher,
-  location: {
-    state: {
-      checklist: string
-    }
-  },
+  teacherSelected: Types.Teacher
 }
 
 /**
@@ -30,9 +21,6 @@ interface Props {
 function LiteracyInstructionPage(props: Props): React.ReactElement {
   const { teacherSelected } = props;
   const location = useLocation();
-  const history = useHistory();
-  console.log('location', location);
-  console.log('and history', history);
   const [teacherModal, setTeacherModal] = useState(false);
   useEffect(() => {
     if (!teacherSelected) {
@@ -65,8 +53,8 @@ function LiteracyInstructionPage(props: Props): React.ReactElement {
               <Checklist
                 firebase={firebase}
                 type='LI'
-                // checklist={location.state.checklist}
-                checklist='FoundationalTeacher'
+                checklist={location.state.checklist}
+                // checklist='FoundationalTeacher'
               />
             )}
           </FirebaseContext.Consumer>

@@ -112,11 +112,11 @@ interface State {
 }
 
 /**
- * Teacher Checklist
- * @class TeacherChecklist
+ * Checklist
+ * @class Checklist
  * @return {void}
  */
-class TeacherChecklist extends React.Component<Props, State> {
+class Checklist extends React.Component<Props, State> {
   timer: NodeJS.Timeout;
   /**
    * @param {Props} props
@@ -410,4 +410,4 @@ const mapStateToProps = (state: Types.ReduxState): {teacherSelected: Types.Teach
   };
 };
 
-export default connect(mapStateToProps, { updateListeningCount })(withStyles(styles)(TeacherChecklist));
+export default connect(mapStateToProps, { updateListeningCount })(withStyles(styles)(Checklist));
