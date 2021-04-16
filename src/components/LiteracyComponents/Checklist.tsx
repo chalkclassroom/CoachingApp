@@ -19,7 +19,7 @@ import { updateListeningCount } from "../../state/actions/listening-to-children"
 import * as Constants from '../../constants/Constants';
 import * as Types from '../../constants/Types';
 
-type ChecklistType = 'FoundationalTeacher' | 'FoundationalChild';
+type ChecklistType = 'FoundationalTeacher' | 'FoundationalChild' | 'WritingTeacher' | 'WritingChild';
 
 const styles: object = {
   root: {
@@ -127,7 +127,7 @@ class Checklist extends React.Component<Props, State> {
     const mEntry = {
       teacher: this.props.teacherSelected.id,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: "listening"
+      type: "LI"
     };
     this.props.firebase.handleSession(mEntry);
 
@@ -150,7 +150,7 @@ class Checklist extends React.Component<Props, State> {
         if (this.state.checked.length > 0) {
           this.handleSubmit(this.state.checked);
         } else {
-          this.handleSubmit([7]);
+          this.handleSubmit([Constants.Checklist.LI[this.props.checklist as ChecklistType].length + 1]);
         }
         this.setState({ final: false })
       } else {
@@ -199,7 +199,7 @@ class Checklist extends React.Component<Props, State> {
       if (this.state.checked.length > 0) {
         this.handleSubmit(this.state.checked);
       } else {
-        this.handleSubmit([7]);
+        this.handleSubmit([Constants.Checklist.LI[this.props.checklist as ChecklistType].length + 1]);
       }
     });
   }
@@ -208,7 +208,7 @@ class Checklist extends React.Component<Props, State> {
    * @param {Array<number>} checked
    */
   handleSubmit = (checked: Array<number>): void => {
-    if (checked.indexOf(7)===0){
+    if (checked.indexOf(Constants.Checklist.LI[this.props.checklist as ChecklistType].length + 1)===0){
       this.props.updateListeningCount(false)
     } else {
       this.props.updateListeningCount(true)
@@ -271,6 +271,8 @@ class Checklist extends React.Component<Props, State> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const checklist = Constants.Checklist.LI[this.props.checklist as ChecklistType];
+    const midpoint = Math.ceil(checklist.length/2);
     return (
       <div className={this.props.classes.root}>
         <Dialog
@@ -349,9 +351,9 @@ class Checklist extends React.Component<Props, State> {
                   <Grid item>
                     <Grid container direction={"row"} justify="center" alignItems="center" xs={12}>
                       <Grid item xs={5}>
-                        <Card style={{height: '75vh'}}>
+                        <Card style={{height: (15*midpoint).toString() + 'vh'}}>
                           <List>
-                            {Constants.Checklist.LI[this.props.checklist as ChecklistType].slice(0, 5).map((value, index) => {
+                            {checklist.slice(0, midpoint).map((value, index) => {
                               return (<ListItem
                                 key={index}
                                 onClick={this.handleCheck(index+1)}
@@ -371,17 +373,17 @@ class Checklist extends React.Component<Props, State> {
                         </Card>
                       </Grid>
                       <Grid item xs={5}>
-                        <Card style={{height: '75vh'}}>
+                        <Card style={{height: (15*midpoint).toString() + 'vh'}} >
                           <List>
-                            {Constants.Checklist.LI[this.props.checklist as ChecklistType].slice(5, 10).map((value, index) => {
+                            {checklist.slice(midpoint, checklist.length).map((value, index) => {
                               return (<ListItem
                                 key={index}
-                                onClick={this.handleCheck(index+4)}
+                                onClick={this.handleCheck(index+midpoint+1)}
                                 style={{height: '15vh'}}
                               >
                                 <ListItemIcon>
                                   <Checkbox
-                                    checked={this.state.checked.includes(index+4)}
+                                    checked={this.state.checked.includes(index+midpoint+1)}
                                   />
                                 </ListItemIcon>
                                 <ListItemText disableTypography style={{fontFamily: 'Arimo'}}>

@@ -366,7 +366,9 @@ export const Checklist: {
   },
   LI: {
     FoundationalChild: Array<JSX.Element>,
-    FoundationalTeacher: Array<JSX.Element>
+    FoundationalTeacher: Array<JSX.Element>,
+    WritingChild: Array<JSX.Element>,
+    WritingTeacher: Array<JSX.Element>
   }
 } = {
   'MI': {
@@ -530,6 +532,58 @@ export const Checklist: {
       <div key={9}>
         Using foundational skills for a <b>realistic reading and/or writing purpose</b>
         {" "} (e.g., demonstrating how to write a list)
+      </div>
+    ],
+    'WritingChild': [
+      <div key={0}>
+        Talks about the content or meaning of the writing/drawing<b></b>
+      </div>,
+      <div key={1}>
+        Draws to communicate meaning<b></b>
+      </div>,
+      <div key={2}>
+        Makes writing forms (e.g., scribbles, letter-like forms, random letter strings, letters)<b></b>
+      </div>,
+      <div key={3}>
+        Says aloud the message to be written<b></b>
+      </div>,
+      <div key={4}>
+        Writes one or more letters in their name<b></b>
+      </div>,
+      <div key={5}>
+        Uses knowledge of the alphabet and/or letter-sound correspondence<b></b>
+      </div>,
+      <div key={6}>
+        Invents spellings or generates conventional spellings<b></b>
+      </div>,
+      <div key={7}>
+        “Reads” the message<b></b>
+      </div>
+    ],
+    'WritingTeacher': [
+      <div key={0}>
+        Talks to children about the content or meaning of the writing/drawing<b></b>
+      </div>,
+      <div key={1}>
+        Invites children to write part of a message (beyond their name)<b></b>
+      </div>,
+      <div key={2}>
+        Writes a meaningful message in front of children<b></b>
+      </div>,
+      <div key={3}>
+        Demonstrates and talks about writing processes (e.g., print concepts, handwriting)<b></b>
+      </div>,
+      <div key={4}>
+        Invites children to write their name<b></b>
+      </div>,
+      <div key={5}>
+        Responds positively to all writing forms (e.g., child scribbles, letter-like forms, letters)<b></b>
+      </div>,
+      <div key={6}>
+        Supports children’s inventive and/or conventional spelling<b></b>
+      </div>,
+      <div key={7}>
+        Invites children to read the message  (e.g., “Read what you wrote to me!” or “What does that say?”)<b></b>
       </div>
     ]
   }

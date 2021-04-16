@@ -183,7 +183,7 @@ export default function LiteracyInstructionObservationPopUp(props: Props): React
                       </ul>
                     </Typography>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <Button onClick={handleBegin} variant="contained" color="primary">
+                      <Button onClick={(): void => {handleBegin('WritingTeacher')}} variant="contained" color="primary">
                         BEGIN TEACHER OBSERVATION
                       </Button>
                     </Grid>
@@ -205,7 +205,7 @@ export default function LiteracyInstructionObservationPopUp(props: Props): React
                       </ul>
                     </Typography>
                     <Grid container direction="row" justify="center" alignItems="center">
-                      <Button variant="contained" color="primary">
+                      <Button onClick={(): void => {handleBegin('WritingChild')}} variant="contained" color="primary">
                         BEGIN CHILD OBSERVATION
                       </Button>
                     </Grid>
