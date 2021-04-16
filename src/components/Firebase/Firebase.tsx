@@ -539,7 +539,8 @@ class Firebase {
     observedBy: string,
     teacher: string,
     type: string,
-    start?: Date
+    start?: Date,
+    checklist?: string // specific literacy type
   }): Promise<void> => {
     this.sessionRef = this.db.collection("observations").doc();
     this.sessionRef
@@ -549,6 +550,7 @@ class Firebase {
         teacher: "/user/" + mEntry.teacher,
         end: firebase.firestore.FieldValue.serverTimestamp(),
         type: mEntry.type,
+        checklist: mEntry.checklist ? mEntry.checklist : undefined,
         completed: false
       })
       .catch((error: Error) => console.error("Error setting session ref: ", error));

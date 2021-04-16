@@ -127,7 +127,8 @@ class Checklist extends React.Component<Props, State> {
     const mEntry = {
       teacher: this.props.teacherSelected.id,
       observedBy: this.props.firebase.auth.currentUser.uid,
-      type: "LI"
+      type: "LI",
+      checklist: this.props.checklist
     };
     this.props.firebase.handleSession(mEntry);
 
