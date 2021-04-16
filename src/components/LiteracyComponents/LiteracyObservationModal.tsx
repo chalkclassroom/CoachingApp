@@ -7,7 +7,8 @@ import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
 import Button from '@material-ui/core/Button';
 import CloseIcon from "@material-ui/icons/Close";
-import { Tooltip, Card, Collapse, Divider } from "@material-ui/core";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import { Tooltip, Card, Collapse, Divider, Fade } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import * as Constants from '../../constants/Constants';
   
@@ -57,7 +58,22 @@ function LiteracyObservationModal(props: Props): React.ReactElement {
             direction="row"
             justify="flex-end"
           >
-            <Grid item xs={1} />
+            <Grid item xs={1}>
+              <Fade in={literacyType!==0}>
+                <Grid
+                  container
+                  alignItems="center"
+                  direction="row"
+                  justify="flex-end"
+                >
+                  <IconButton style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', padding: 10 }}>
+                    <Tooltip title={"Back"} placement={"right"}>
+                      <ChevronLeftIcon onClick={(): void => setLiteracyType(0)} />
+                    </Tooltip>
+                  </IconButton>
+                </Grid>
+              </Fade>
+            </Grid>
             <Grid item xs={10}>
               <Typography variant="h4" align="center" style={{fontFamily: 'Arimo'}}>
                 Literacy Instruction Observation
