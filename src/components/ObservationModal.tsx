@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
@@ -9,8 +9,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import { Tooltip } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import * as Types from '../constants/Types';
-  
-const styles: object = {
+
+const useStyles = makeStyles({
   root: {
     backgroundColor: '#ffffff'
   },
@@ -20,22 +20,15 @@ const styles: object = {
     backgroundColor: 'white',
     padding: '2em',
     borderRadius: 8,
-    position: "fixed",
-            top: `50%`,
-            left: `50%`,
-            transform: `translate(-50%, -50%)`,
+    top: `50%`,
+    left: `50%`,
+    transform: `translate(-50%, -50%)`,
   }
-};
-
-interface Style {
-  root: string,
-  paper: string,
-}
+});
 
 interface Props {
-  classes: Style,
-  content?: React.ReactNode,
-  handleBegin(checklistType?: string): void,
+  content: React.ReactNode,
+  handleBegin(): void,
   handleClose(): void,
   open: boolean,
   type: Types.Selected
@@ -52,20 +45,12 @@ interface State {
  * @return {ReactElement}
  */
 function ObservationModal(props: Props): React.ReactElement {
-  const { classes, handleBegin, handleClose, open, content, type } = props;
+  const { handleBegin, handleClose, open, content, type } = props;
+  const classes = useStyles();
   return (
     <div>
       <Modal open={open}>
-        <div
-          style={{
-            /* position: "fixed",
-            top: `50%`,
-            left: `50%`,
-            transform: `translate(-50%, -50%)`, */
-            width: type === 'LiteracyInstruction' ? '80%' : '50%'
-          }}
-          className={classes.paper}
-        >
+        <div className={classes.paper}>
           <Grid
             container
             alignItems="center"
@@ -82,7 +67,6 @@ function ObservationModal(props: Props): React.ReactElement {
                   : type === 'ListeningToChildren' ? 'Listening to Children'
                   : type === 'StudentEngagement' ? 'Student Engagement'
                   : type === 'SequentialActivities' ? 'Sequential Activities'
-                  : type === 'LiteracyInstruction' ? 'Literacy Instruction'
                   : 'Associative and Cooperative'
                 } Observation
               </Typography>
@@ -112,11 +96,11 @@ function ObservationModal(props: Props): React.ReactElement {
             <Grid item>
               {content}
             </Grid>
-            {type !== 'LiteracyInstruction' ? (<Grid item style={{paddingTop: '2em'}}>
+            <Grid item style={{paddingTop: '2em'}}>
               <Button onClick={handleBegin} variant="contained" color="primary">
                 BEGIN OBSERVATION
               </Button>
-            </Grid>) : null}
+            </Grid>
           </Grid>
         </div>
       </Modal>
@@ -125,11 +109,10 @@ function ObservationModal(props: Props): React.ReactElement {
 }
 
 ObservationModal.propTypes = {
-  classes: PropTypes.object.isRequired,
   content: PropTypes.element,
   handleBegin: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired
 }
 
-export default withStyles(styles)(ObservationModal);
+export default ObservationModal;

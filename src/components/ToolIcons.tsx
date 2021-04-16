@@ -19,8 +19,8 @@ import StudentEngagementObservationPopUp from './StudentEngagementComponents/Stu
 import LevelOfInstructionObservationPopUp from './LevelOfInstructionComponents/LevelOfInstructionObservationPopUp';
 import ListeningToChildrenObservationPopUp from './ListeningComponents/ListeningToChildrenObservationPopUp';
 import SequentialActivitiesObservationPopUp from './SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
-import LiteracyInstructionObservationPopUp from './LiteracyComponents/LiteracyInstructionObservationPopUp';
 import AssociativeCooperativeInteractionsObservationPopUp from './AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
+import LiteracyObservationModal from './LiteracyComponents/LiteracyObservationModal';
 import ObservationModal from './ObservationModal';
 import ResultsModal from './ResultsModal';
 import LockedModal from './LockedModal';
@@ -58,9 +58,7 @@ function ToolIcons(props: Props): React.ReactElement {
     'LevelOfInstruction': <LevelOfInstructionObservationPopUp />,
     'ListeningToChildren': <ListeningToChildrenObservationPopUp />,
     'SequentialActivities': <SequentialActivitiesObservationPopUp />,
-    'LiteracyInstruction': <LiteracyInstructionObservationPopUp handleBegin={(checklistType?: string): void => {
-      history.push({pathname:`/${selected}`, state: {checklist: checklistType}})
-    }} />,
+    'LiteracyInstruction': <div />, // Literacy has its own Observation Modal
     'AssociativeCooperativeInteractions': <AssociativeCooperativeInteractionsObservationPopUp />,
     'none': <div />
   }
@@ -194,15 +192,25 @@ function ToolIcons(props: Props): React.ReactElement {
           </Grid>
         </Grid>
       </Grid>
-      <ObservationModal
-        type={selected}
-        open={observeModal}
-        content={ObservationPopUp[selected]}
-        handleBegin={(checklistType?: string): void => {
-          history.push({pathname:`/${selected}`, state: {checklist: checklistType}})
-        }}
-        handleClose={(): void => setObserveModal(false)}
-      />
+      {selected === 'LiteracyInstruction' ? (
+        <LiteracyObservationModal
+          open={observeModal}
+          handleBegin={(checklistType: string): void => {
+            history.push({pathname:`/${selected}`, state: {checklist: checklistType}})
+          }}
+          handleClose={(): void => setObserveModal(false)}
+        />
+      ) : (
+        <ObservationModal
+          type={selected}
+          open={observeModal}
+          content={ObservationPopUp[selected]}
+          handleBegin={(): void => {
+            history.push({pathname:`/${selected}`})
+          }}
+          handleClose={(): void => setObserveModal(false)}
+        />
+      )}
       <LockedModal
         open={lockedModal}
         handleClose={(): void => setLockedModal(false)}
