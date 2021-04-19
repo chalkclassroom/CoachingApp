@@ -53,6 +53,7 @@ import EngagementResultsDialog from './StudentEngagementComponents/EngagementRes
 import InstructionResultsDialog from './LevelOfInstructionComponents/InstructionResultsDialog';
 import ListeningResultsDialog from './ListeningComponents/ListeningResultsDialog';
 import SequentialResultsDialog from './SequentialActivitiesComponents/SequentialResultsDialog';
+import LiteracyResultsDialog from './LiteracyComponents/LiteracyResultsDialog';
 import ACResultsDialog from './AssociativeCooperativeComponents/ACResultsDialog';
 import * as Types from '../constants/Types';
 import * as H from 'history';
@@ -374,6 +375,10 @@ class Dashboard extends React.Component<Props, State> {
         />
         <SequentialResultsDialog
           open={this.state.resultsDialog==="SA"}
+          history={this.props.history}
+        />
+        <LiteracyResultsDialog
+          open={this.state.resultsDialog==="LI"}
           history={this.props.history}
         />
         <ACResultsDialog

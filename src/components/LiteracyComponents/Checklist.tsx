@@ -347,7 +347,7 @@ class Checklist extends React.Component<Props, State> {
               <Zoom in={this.state.in}>
                 <Grid container alignItems="center" justify="center" direction="column" style={{height: '100%'}}>
                   <Typography variant="h6" align={"center"} style={{paddingBottom: '1em', fontFamily: 'Arimo'}}>
-                    Select all the teacher behaviors you see:
+                    Select all the {(this.props.checklist==='FoundationalChild' || this.props.checklist==='WritingChild') ? 'child' : 'teacher'} behaviors you see:
                   </Typography>
                   <Grid item>
                     <Grid container direction={"row"} justify="center" alignItems="center" xs={12}>
