@@ -1018,8 +1018,9 @@ class Firebase {
    * gets ids and start dates of each observation for a particular teacher and tool
    * @param {string} teacherId
    * @param {string} sessionType
+   * @param {string} checklist
    */
-  fetchSessionDates = async (teacherId: string, sessionType: string):
+  fetchSessionDates = async (teacherId: string, sessionType: string, checklist?: string):
     Promise<Array<{id: string, sessionStart: {value: string}}> | void> =>
   {
     const getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable(
@@ -1027,7 +1028,7 @@ class Firebase {
     );
     return getTransitionSessionDatesFirebaseFunction({
       teacherId: teacherId,
-      type: sessionType
+      type: checklist ? 'literacy' + checklist : sessionType
     })
       .then(
         (result: {data: Array<Array<{id: string, sessionStart: {value: string}}>>}) =>
