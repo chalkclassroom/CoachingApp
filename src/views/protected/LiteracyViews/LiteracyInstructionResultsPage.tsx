@@ -165,7 +165,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "listening").then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+      firebase.fetchSessionDates(teacherId, "LI", 'FoundationalTeacher').then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
         {if (dates[0]) {
           this.setState({
             sessionDates: dates,
@@ -196,7 +196,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     const dateArray: Array<Array<string>> = [];
     const listeningArray: Array<number> = [];
     const notListeningArray: Array<number> = [];
-    firebase.fetchListeningTrend(teacherId)
+    /* firebase.fetchListeningTrend(teacherId)
     .then((dataSet: Array<{startDate: {value: string}, listening: number, notListening: number}>) => {
       dataSet.forEach(data => {
         dateArray.push([
@@ -210,7 +210,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         trendsListening: listeningArray,
         trendsNotListening: notListeningArray
       });
-    });
+    }); */
   };
 
   /**
@@ -273,7 +273,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchListeningSummary(this.state.sessionId)
+    /* firebase.fetchListeningSummary(this.state.sessionId)
     .then((summary: {listening: number, notListening: number}) => {
       this.setState({
         listening: summary.listening,
@@ -297,7 +297,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         listening5: summary.listening5,
         listening6: summary.listening6,
       })
-    })
+    }) */
   }
 
   /**
