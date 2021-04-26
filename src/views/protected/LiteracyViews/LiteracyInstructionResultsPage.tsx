@@ -8,7 +8,7 @@ import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
-import ListeningSummaryChart from "../../../components/ListeningComponents/ResultsComponents/ListeningSummaryChart";
+import LiteracySummaryChart from "../../../components/LiteracyComponents/ResultsComponents/LiteracySummaryChart";
 import ListeningDetailsChart from "../../../components/ListeningComponents/ResultsComponents/ListeningDetailsChart";
 import ListeningTrendsGraph from "../../../components/ListeningComponents/ResultsComponents/ListeningTrendsGraph";
 import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
@@ -514,9 +514,9 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <ListeningSummaryChart
-                    listening={this.state.listening}
-                    notListening={this.state.notListening}
+                  <LiteracySummaryChart
+                    literacy={10}
+                    noLiteracy={5}
                   />
                 </Grid>
               </Grid>
