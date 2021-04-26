@@ -274,6 +274,11 @@ class Checklist extends React.Component<Props, State> {
   render(): React.ReactNode {
     const checklist = Constants.Checklist.LI[this.props.checklist as ChecklistType];
     const midpoint = Math.ceil(checklist.length/2);
+    const titleText = this.props.checklist === 'FoundationalTeacher' ? 'Teacher Foundational Skills Checklist'
+      : this.props.checklist === 'FoundationalChild' ? 'Child Foundational Skills Checklist'
+      : this.props.checklist === 'WritingTeacher' ? 'Teacher Writing Checklist'
+      : this.props.checklist === 'WritingChild' ? 'Child Writing Checklist'
+      : 'Unknown Checklist';
     return (
       <div className={this.props.classes.root}>
         <Dialog
@@ -346,7 +351,10 @@ class Checklist extends React.Component<Props, State> {
             <Grid item className={this.props.classes.contentGrid}>
               <Zoom in={this.state.in}>
                 <Grid container alignItems="center" justify="center" direction="column" style={{height: '100%'}}>
-                  <Typography variant="h6" align={"center"} style={{paddingBottom: '1em', fontFamily: 'Arimo'}}>
+                  <Typography variant="h5" align={"center"} style={{paddingBottom: '0.5em', fontFamily: 'Arimo'}}>
+                    {titleText}
+                  </Typography>
+                  <Typography variant="h6" align={"center"} style={{paddingBottom: '0.5em', fontFamily: 'Arimo'}}>
                     Select all the {(this.props.checklist==='FoundationalChild' || this.props.checklist==='WritingChild') ? 'child' : 'teacher'} behaviors you see:
                   </Typography>
                   <Grid item>
