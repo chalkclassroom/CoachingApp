@@ -494,11 +494,11 @@ export const Checklist: {
         <b>Matching spoken words to print</b>
       </div>,
       <div key={7}>
-        <b>Responding to open-ended questions or prompts</b> about foundational skills
-      </div>,
-      <div key={8}>
         Using foundational skills for a <b>realistic reading and/or writing purpose</b>
         {" "} (e.g., demonstrating how to write a list)
+      </div>,
+      <div key={8}>
+        <b>Responding to open-ended questions or prompts</b> about foundational skills
       </div>
     ],
     'FoundationalTeacher': [
@@ -524,15 +524,16 @@ export const Checklist: {
         <b>Matching spoken words to print</b>
       </div>,
       <div key={7}>
-        Asking <b>open-ended questions or prompts</b> about foundational skills
-      </div>,
-      <div key={8}>
-        Using <b>multi-modal instruction</b> (e.g., gestures/actions, objects, visuals)
-      </div>,
-      <div key={9}>
         Using foundational skills for a <b>realistic reading and/or writing purpose</b>
         {" "} (e.g., demonstrating how to write a list)
-      </div>
+      </div>,
+      <div key={8}>
+        Asking <b>open-ended questions or prompts</b> about foundational skills
+      </div>,
+      <div key={9}>
+        Using <b>multi-modal instruction</b> (e.g., gestures/actions, objects, visuals)
+      </div>,
+      
     ],
     'WritingChild': [
       <div key={0}>
