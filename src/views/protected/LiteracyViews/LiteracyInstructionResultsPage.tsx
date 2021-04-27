@@ -170,7 +170,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchSessionDates(teacherId, "LI", 'FoundationalTeacher').then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+      firebase.fetchLiteracySessionDates(teacherId, this.props.location.state.type).then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
         {if (dates[0]) {
           this.setState({
             sessionDates: dates,

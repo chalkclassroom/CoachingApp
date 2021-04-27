@@ -1018,26 +1018,50 @@ class Firebase {
    * gets ids and start dates of each observation for a particular teacher and tool
    * @param {string} teacherId
    * @param {string} sessionType
-   * @param {string} checklist
    */
-  fetchSessionDates = async (teacherId: string, sessionType: string, checklist?: string):
-    Promise<Array<{id: string, sessionStart: {value: string}}> | void> =>
-  {
-    const getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable(
-      "funcSessionDates"
-    );
-    return getTransitionSessionDatesFirebaseFunction({
-      teacherId: teacherId,
-      type: checklist ? 'literacy' + checklist : sessionType
-    })
-      .then(
-        (result: {data: Array<Array<{id: string, sessionStart: {value: string}}>>}) =>
-          result.data[0]
-      )
-      .catch((error: Error) =>
-        console.error("Error occurred getting session dates: ", error)
-      );
-  };
+   fetchSessionDates = async (teacherId: string, sessionType: string):
+   Promise<Array<{id: string, sessionStart: {value: string}}> | void> =>
+ {
+   const getTransitionSessionDatesFirebaseFunction = this.functions.httpsCallable(
+     "funcSessionDates"
+   );
+   return getTransitionSessionDatesFirebaseFunction({
+     teacherId: teacherId,
+     type: sessionType
+   })
+     .then(
+       (result: {data: Array<Array<{id: string, sessionStart: {value: string}}>>}) =>
+         result.data[0]
+     )
+     .catch((error: Error) =>
+       console.error("Error occurred getting session dates: ", error)
+     );
+ };
+
+  /**
+   * cloud function
+   * gets ids and start dates of each literacy observation for a particular teacher and focus
+   * @param {string} teacherId
+   * @param {number} checklist
+   */
+   fetchLiteracySessionDates = async (teacherId: string, checklist: number):
+   Promise<Array<{id: string, sessionStart: {value: string}}> | void> =>
+ {
+   const getLiteracySessionDatesFirebaseFunction = this.functions.httpsCallable(
+     "funcLiteracySessionDates"
+   );
+   return getLiteracySessionDatesFirebaseFunction({
+     teacherId: teacherId,
+     type: checklist === 1 ? 'Foundational' : 'Writing'
+   })
+     .then(
+       (result: {data: Array<Array<{id: string, sessionStart: {value: string}}>>}) =>
+         result.data[0]
+     )
+     .catch((error: Error) =>
+       console.error("Error occurred getting session dates: ", error)
+     );
+ };
 
   /**
    * Transition Time cloud function
