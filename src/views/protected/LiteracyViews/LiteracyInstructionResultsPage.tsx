@@ -35,7 +35,12 @@ const styles: object = {
 
 interface Props {
   classes: Style,
-  teacherSelected: Types.Teacher
+  teacherSelected: Types.Teacher,
+  location: {
+    state: {
+      type: number
+    }
+  },
 }
 
 interface Style {

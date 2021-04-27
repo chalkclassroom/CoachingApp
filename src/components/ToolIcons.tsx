@@ -21,6 +21,7 @@ import ListeningToChildrenObservationPopUp from './ListeningComponents/Listening
 import SequentialActivitiesObservationPopUp from './SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
 import AssociativeCooperativeInteractionsObservationPopUp from './AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
 import LiteracyObservationModal from './LiteracyComponents/LiteracyObservationModal';
+import LiteracyResultsModal from './LiteracyComponents/LiteracyResultsModal';
 import ObservationModal from './ObservationModal';
 import ResultsModal from './ResultsModal';
 import LockedModal from './LockedModal';
@@ -215,12 +216,23 @@ function ToolIcons(props: Props): React.ReactElement {
         open={lockedModal}
         handleClose={(): void => setLockedModal(false)}
       />
-      <ResultsModal
-        open={resultsModal}
-        handleBegin={(): void => history.push({pathname: `/${selected}Results`})}
-        handleClose={(): void => setResultsModal(false)}
-        tool={selected}
-      />
+      {selected === 'LiteracyInstruction' ? (
+        <LiteracyResultsModal
+          open={resultsModal}
+          handleBegin={(checklistType: number): void => {
+            history.push({pathname:`/${selected}Results`, state: {type: checklistType}})
+          }}
+          handleClose={(): void => setResultsModal(false)}
+          tool={selected}
+        />
+      ) : (
+        <ResultsModal
+          open={resultsModal}
+          handleBegin={(): void => history.push({pathname: `/${selected}Results`})}
+          handleClose={(): void => setResultsModal(false)}
+          tool={selected}
+        />
+      )}
       <ResultsTrainingModal
         open={resultsTrainingModal}
         handleClose={(): void => {
