@@ -9,6 +9,7 @@ import FirebaseContext from "../../../components/Firebase/FirebaseContext";
 import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import LiteracySummaryChart from "../../../components/LiteracyComponents/ResultsComponents/LiteracySummaryChart";
+import LiteracyDetailsFoundationalChart from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsFoundationalChart";
 import ListeningDetailsChart from "../../../components/ListeningComponents/ResultsComponents/ListeningDetailsChart";
 import ListeningTrendsGraph from "../../../components/ListeningComponents/ResultsComponents/ListeningTrendsGraph";
 import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
@@ -545,13 +546,17 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                       Did the teacher do one type of behavior less often than the other behaviors?               
                     </Typography>
                   </Grid>
-                  <ListeningDetailsChart
-                    listening1={this.state.listening1}
-                    listening2={this.state.listening2}
-                    listening3={this.state.listening3}
-                    listening4={this.state.listening4}
-                    listening5={this.state.listening5}
-                    listening6={this.state.listening6}
+                  <LiteracyDetailsFoundationalChart
+                    literacy1={0}
+                    literacy2={4}
+                    literacy3={5}
+                    literacy4={8}
+                    literacy5={0}
+                    literacy6={4}
+                    literacy7={0}
+                    literacy8={1}
+                    literacy9={2}
+                    literacy10={8}
                   />
                 </Grid>
               </div>
