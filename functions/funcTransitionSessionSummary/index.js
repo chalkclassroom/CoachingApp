@@ -1,6 +1,7 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
+const { canAccessObservation } = require('../common/accessUtils')
 
 // Creates a client
 const bigquery = new BigQuery();
@@ -14,13 +15,18 @@ const bigquery = new BigQuery();
 exports.funcTransitionSessionSummary = functions.https.onCall(async (data, context) => {
   //let message = req.query.message || req.body.message || 'Hello World!';
   console.log(context.auth.uid);
-  console.log(data.teacherId);
+  console.log(data.sessionId);
+  if (!await canAccessObservation(data.sessionId, context.auth.uid)){
+    return [];
+  }else{
+    console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
+  }
   // The SQL query to run
   const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
                       SUM(TIMESTAMP_DIFF(transitionEnd, transitionStart, millisecond)) AS total,
                       MAX(TIMESTAMP_DIFF(sessionEnd, sessionStart, millisecond)) AS sessionTotal
                     FROM cqrefpwa.observations.transition
-                    WHERE id = '`+data.sessionId+`'
+                    WHERE id = '${data.sessionId}'
                     GROUP BY startDate
                     ORDER BY startDate ASC`;
 

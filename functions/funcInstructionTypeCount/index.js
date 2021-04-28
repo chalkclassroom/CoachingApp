@@ -1,6 +1,7 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const functions = require("firebase-functions");
+const { canAccessObservation } = require('../common/accessUtils')
 
 // Creates a client
 const bigquery = new BigQuery();
@@ -15,9 +16,14 @@ exports.funcInstructionTypeCount = functions.https.onCall(async (data, context) 
     //let message = req.query.message || req.body.message || 'Hello World!';
     console.log(context.auth.uid);
     console.log(data.sessionId);
+    if (!await canAccessObservation(data.sessionId, context.auth.uid)){
+        return [];
+    }else{
+        console.log(`User ${context.auth.uid} can access observation ${data.sessionId}`)
+    }
     // The SQL query to run
     const sqlQuery = `SELECT instructionType, COUNT(instructionType) AS count FROM cqrefpwa.observations.level 
-  WHERE id = '`+data.sessionId+`' GROUP BY instructionType`;
+  WHERE id = '${data.sessionId}' GROUP BY instructionType`;
     console.log(sqlQuery);
 
     const options = {
