@@ -1,6 +1,7 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 
+const {canAccessTeacher} = require('../common/teacherUtils')
 // Creates a client
 const bigquery = new BigQuery();
 
@@ -12,6 +13,7 @@ const bigquery = new BigQuery();
  */
 
 exports.fetchACDetails = async(req, res) => {
+
   //SQL query to get number of checks for each item on checklist
   const sqlQuery = `SELECT
                     COUNT(CASE WHEN (peopleType = 2 OR peopleType = 3 OR peopleType = 4) AND (checked = 1 OR checked = 2) THEN 'associative' ELSE NULL END) AS associative,
