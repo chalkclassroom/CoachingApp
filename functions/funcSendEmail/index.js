@@ -2,24 +2,26 @@ const sgMail = require("@sendgrid/mail");
 const functions = require("firebase-functions");
 const CryptoJS = require("crypto-js");
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(functions.config().sendgrid.key);
 
 exports.funcSendEmail = functions.https.onCall(async (data, context) => {
     console.log(context.auth.uid);
     let bytes  = CryptoJS.AES.decrypt(data, context.auth.uid);
-    console.log('bytes', bytes);
+    // console.log('bytes', bytes);
     let decryptedData = JSON.parse(JSON.stringify(CryptoJS.enc.Utf8.stringify(bytes)));
-    console.log('decrypted data', decryptedData)
+    // console.log('decrypted data', decryptedData)
     console.log('json string decrypted', JSON.stringify(decryptedData));
-    messageObj = JSON.parse(decryptedData);
+    let messageObj = JSON.parse(decryptedData);
     console.log('message obj', messageObj);
     const message = {
-        to: messageObj.to,
-        from: messageObj.from,
-        subject: messageObj.subject,
-        text: messageObj.content,
-        // html: messageObj.textContent
+      to: messageObj.to,
+      from: messageObj.from,
+      subject: messageObj.subject,
+      text: messageObj.content,
     };
+    if (messageObj.attachments) {
+      message.attachments = messageObj.attachments;
+    }
     console.log('message', message);
 
     return sgMail.send(message)

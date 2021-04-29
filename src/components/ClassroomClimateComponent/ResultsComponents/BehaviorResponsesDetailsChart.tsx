@@ -8,6 +8,8 @@ interface Props {
   redirectionsBehaviorCount: number,
   nonspecificBehaviorCount: number,
   specificBehaviorCount: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -27,6 +29,8 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
     redirectionsBehaviorCount: PropTypes.number.isRequired,
     nonspecificBehaviorCount: PropTypes.number.isRequired,
     specificBehaviorCount: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -62,10 +66,16 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
         ],
       }]
     };
+    const isCompleted = this.props.completed;
     return(
       <HorizontalBar
         data={climateData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
@@ -113,9 +123,11 @@ class BehaviorResponsesDetailsChart extends React.Component<Props, {}> {
             display: false,
           },
           title: {
-            display: false,
-            text: "Classroom Climate Details",
+            display: this.props.title,
+            text: "Details",
             fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
             fontStyle: "bold"
           },
           plugins: {

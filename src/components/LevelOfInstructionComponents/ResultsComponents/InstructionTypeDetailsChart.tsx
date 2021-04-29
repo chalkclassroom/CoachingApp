@@ -7,6 +7,8 @@ interface Props {
   hlqResponseCount: number,
   llqCount: number,
   llqResponseCount: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -26,6 +28,8 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
     hlqResponseCount: PropTypes.number.isRequired,
     llqCount: PropTypes.number.isRequired,
     llqResponseCount: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   }
 
   /**
@@ -33,6 +37,7 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
+    const isCompleted = this.props.completed;
     const instructionData = {  
       labels: [
         ["Teacher Asks", "High-Level Question"],
@@ -55,6 +60,11 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
       <HorizontalBar
         data={instructionData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           scales: {
             xAxes: [
               {
@@ -112,9 +122,11 @@ class InstructionTypeDetailsChart extends React.Component<Props, {}> {
             display: false,
           },
           title: {
-            display: false,
-            text: "Level of Instruction Details",
+            display: this.props.title,
+            text: "Details",
             fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
             fontStyle: "bold"
           },
           plugins: {

@@ -7,6 +7,8 @@ import * as Constants from '../../../constants/Constants';
 interface Props {
   positiveResponses: number,
   negativeResponses: number,
+  completed?(): void,
+  title?: boolean
 }
 
 /**
@@ -24,6 +26,8 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
   static propTypes = {
     positiveResponses: PropTypes.number.isRequired,
     negativeResponses: PropTypes.number.isRequired,
+    completed: PropTypes.func,
+    title: PropTypes.bool
   };
 
   /**
@@ -42,10 +46,16 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
       ]
     };
     const total = this.props.positiveResponses + this.props.negativeResponses;
+    const isCompleted = this.props.completed;
     return (
       <Pie
         data={behaviorResponseData}
         options={{
+          animation: {
+            onComplete: function(): void {
+              isCompleted ? isCompleted() : null
+            }
+          },
           tooltips: {
             callbacks: {
               label: function(tooltipItem: { datasetIndex: number, index: number },
@@ -74,9 +84,11 @@ class BehaviorResponsesSummaryChart extends React.Component<Props, {}> {
             }
           },
           title: {
-            display: false,
-            text: "Classroom Climate Summary",
+            display: this.props.title,
+            text: "Summary",
             fontSize: 20,
+            fontColor: 'black',
+            fontFamily: 'Arimo',
             fontStyle: "bold"
           },
           plugins: {

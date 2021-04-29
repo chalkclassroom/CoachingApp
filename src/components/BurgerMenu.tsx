@@ -268,7 +268,6 @@ class BurgerMenu extends React.Component<Props, State>{
             </ListItem>
             <ListItem
               button
-              disabled
               onClick={(): void => {
                 this.setState({ menu: 7, chalkOpen: false });
               }}
@@ -279,7 +278,7 @@ class BurgerMenu extends React.Component<Props, State>{
               </ListItemIcon>
               <ListItemText
                 primary="Messages"
-                onClick={(): void => this.props.history.push("/Messages")}
+                onClick={(): void => this.props.history.push("/Messaging")}
               />
             </ListItem>
             <ListItem

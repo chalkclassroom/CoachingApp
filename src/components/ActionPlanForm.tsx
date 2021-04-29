@@ -64,7 +64,6 @@ interface Props {
     }>>,
     getActionSteps(actionPlanId: string): Promise<Array<{
       step: string,
-      materials: string,
       person: string,
       timeline: firebase.firestore.Timestamp
     }>>,
@@ -78,7 +77,6 @@ interface Props {
       actionPlanId: string,
       index: string,
       step: string,
-      materials: string,
       person: string,
       timeline: Date | null
     ): Promise<void>,
@@ -99,7 +97,11 @@ interface State {
   benefit: string,
   date: Date,
   actionSteps: string,
-  actionStepsArray: Array<{step: string, materials: string, person: string, timeline: Date | null}>,
+  actionStepsArray: Array<{
+    step: string,
+    person: string,
+    timeline: Date | null
+  }>,
   editMode: boolean,
   actionPlanExists: boolean,
   actionPlanId: string,
@@ -138,7 +140,11 @@ class ActionPlanForm extends React.Component<Props, State> {
       benefit: '',
       date: new Date(),
       actionSteps: '',
-      actionStepsArray: [{step: '', materials: '', person: '', timeline: new Date()}],
+      actionStepsArray: [{
+        step: '',
+        person: '',
+        timeline: new Date()
+      }],
       editMode: false,
       actionPlanExists: this.props.actionPlanExists,
       actionPlanId: '',
@@ -157,7 +163,11 @@ class ActionPlanForm extends React.Component<Props, State> {
 
   handleAddActionStep = (): void => {
     this.setState({
-      actionStepsArray: [...this.state.actionStepsArray, {step: '', materials: '', person: '', timeline: new Date()}]
+      actionStepsArray: [...this.state.actionStepsArray, {
+        step: '',
+        person: '',
+        timeline: new Date()
+      }]
     }, () => {
       this.props.firebase.createActionStep(this.state.actionPlanId, (this.state.actionStepsArray.length-1).toString());
     })
@@ -208,19 +218,6 @@ class ActionPlanForm extends React.Component<Props, State> {
   handleChangeActionStep = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newArray = [...this.state.actionStepsArray];
     newArray[number].step = event.target.value;
-    this.setState({
-      actionStepsArray: newArray,
-      saved: false
-    });
-  }
-
-  /**
-   * @param {number} number
-   * @return {void}
-   */
-  handleChangeMaterials = (number: number) => (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const newArray = [...this.state.actionStepsArray];
-    newArray[number].materials = event.target.value;
     this.setState({
       actionStepsArray: newArray,
       saved: false
@@ -316,20 +313,17 @@ class ActionPlanForm extends React.Component<Props, State> {
       });
       const newActionStepsArray: Array<{
         step: string,
-        materials: string,
         person: string,
         timeline: Date
       }> = [];
       this.props.firebase.getActionSteps(actionPlanId).then((actionStepsData: Array<{
         step: string,
-        materials: string,
         person: string,
         timeline: firebase.firestore.Timestamp
       }>) => {
         actionStepsData.forEach((value, index) => {
           newActionStepsArray[index] = {
             step: value.step,
-            materials: value.materials,
             person: value.person,
             timeline: (value.timeline && (typeof value.timeline !== 'string')) ?
               value.timeline.toDate() :
@@ -407,7 +401,6 @@ class ActionPlanForm extends React.Component<Props, State> {
         this.state.actionPlanId,
         index.toString(),
         value.step,
-        value.materials,
         value.person,
         value.timeline
       ).then(() => {
@@ -514,14 +507,12 @@ class ActionPlanForm extends React.Component<Props, State> {
     const goalTimelineOpen = Boolean(this.state.popover === 'goal-timeline-popover');
     const benefitOpen = Boolean(this.state.popover === 'benefit-popover');
     const actionStepOpen = Boolean(this.state.popover === 'action-step-popover');
-    const materialsOpen = Boolean(this.state.popover === 'materials-popover');
     const personOpen = Boolean(this.state.popover === 'person-popover');
     const timelineOpen = Boolean(this.state.popover === 'timeline-popover');
     const goalId = goalOpen ? 'goal-popover' : undefined;
     const goalTimelineId = goalTimelineOpen ? 'goal-timeline-popover' : undefined;
     const benefitId = benefitOpen ? 'benefit-popover' : undefined;
     const actionStepId = actionStepOpen ? 'action-step-popover' : undefined;
-    const materialsId = materialsOpen ? 'materials-popover' : undefined;
     const personId = personOpen ? 'person-popover' : undefined;
     const timelineId = timelineOpen ? 'timeline-popover' : undefined;
     return (
@@ -907,7 +898,7 @@ class ActionPlanForm extends React.Component<Props, State> {
               </Grid>
               <Grid item xs={12} style={{width: '100%', height: '38vh'}}>
                 <Grid container direction="row" justify="space-between" style={{height: '100%'}}>
-                  <Grid item style={{width: '38%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+                  <Grid item style={{width: '48%', border: '2px solid #0988ec', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
@@ -1008,103 +999,7 @@ class ActionPlanForm extends React.Component<Props, State> {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item style={{width: '19%', border: '2px solid #009365', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
-                    <Grid container direction="column" style={{width: '100%'}}>
-                      <Grid item>
-                        <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
-                          <Grid item xs={11}>
-                            <Typography style={{fontSize: '1em', fontFamily: 'Arimo', marginLeft: '0.5em', marginTop: '0.5em', fontWeight: 'bold'}}>
-                              Materials
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={1}>
-                            <Grid container justify="flex-end" direction="row" alignItems="center">
-                              <Grid item>
-                                <InfoIcon
-                                  style={{
-                                    fill: "#009365",
-                                    marginRight: '0.3em',
-                                    marginTop: '0.3em'
-                                  }}
-                                  onClick={
-                                    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => this.handlePopoverOpen(e, 'materials-popover')
-                                  }
-                                />
-                                <Popover
-                                  id={materialsId}
-                                  open={materialsOpen}
-                                  anchorEl={this.state.anchorEl}
-                                  onClose={this.handlePopoverClose}
-                                  anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right'
-                                  }}
-                                  transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'center'
-                                  }}
-                                  elevation={16}
-                                >
-                                  <div style={{padding: '2em'}}>
-                                    <Typography variant="h5" style={{fontFamily: 'Arimo'}}>
-                                      Materials
-                                    </Typography>
-                                    <ul>
-                                      <li>
-                                        <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                                          List materials or resources needed to support
-                                          <br />
-                                          each action step.
-                                        </Typography>
-                                      </li>
-                                      <li>
-                                        <Typography variant="h6" style={{fontFamily: 'Arimo'}}>
-                                          Example: laminated cards for small-group game,
-                                          <br />
-                                          list of high-level questions for read-aloud                                 
-                                        </Typography>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </Popover>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid item>
-                        <ol style={{paddingLeft: '1.5em', marginTop: '0.5em', marginBottom: 0}}>
-                          {this.state.actionStepsArray.map((value, index) => {
-                            return(
-                              <li key={index}>
-                                <TextField
-                                  id={"materials" + index.toString()}
-                                  name={"materials" + index.toString()}
-                                  type="text"
-                                  value={value.materials}
-                                  onChange={this.handleChangeMaterials(index)}
-                                  margin="normal"
-                                  variant="standard"
-                                  fullWidth
-                                  multiline
-                                  rowsMax={4}
-                                  rows={4}
-                                  className={classes.textField}
-                                  InputProps={{
-                                    disableUnderline: true,
-                                    readOnly: this.props.readOnly,
-                                    style: {fontFamily: "Arimo", width: '90%', marginLeft: '0.5em', marginRight: '0.5em'}
-                                  }}
-                                  style={{marginTop: '-0.25em', paddingBottom: '0.5em', marginBottom: 0}}
-                                />
-                              </li>
-                            );
-                          })}
-                        </ol>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item style={{width: '19%', border: '2px solid #ffd300', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
+                  <Grid item style={{width: '28%', border: '2px solid #ffd300', borderRadius: '0.5em', height: '100%', overflow: 'auto'}}>
                     <Grid container direction="column" style={{width: '100%'}}>
                       <Grid item>
                         <Grid container direction="row" justify="flex-start" alignItems="center" style={{width: '100%'}}>
