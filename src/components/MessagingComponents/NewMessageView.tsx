@@ -409,6 +409,8 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
     date: Date,
     actionSteps: Array<{step: string, person: string, timeline: Date}>
   }>>();
+  const [fetchedActionPlans, setFetchedActionPlans] = useState(false);
+  const [fetchedResults, setFetchedResults] = useState(false);
 
   /**
    * sets email recipient, fetches all their action plans and results
@@ -432,6 +434,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       }>) => {
         setActionPlans(actionPlans);
         console.log('aplans', actionPlans)
+        setFetchedActionPlans(true);
         if (actionPlans && actionPlans.length > 0) {
           setNoActionPlansMessage('')
         } else {
@@ -447,6 +450,7 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
         practice: string
       }>) => {
         setObservations(observations);
+        setFetchedResults(true);
         const unchecked: {[id: string]: {summary: boolean, details: boolean, trends: boolean}} = {};
         console.log('observations', observations)
         if (observations && observations.length > 0) {
@@ -519,6 +523,9 @@ function NewMessageView(props: NewMessageViewProps): React.ReactElement {
       }
     }
     if (((noObservationsMessage === '') && noActionPlansMessage === '')) {
+      setAttachDisabled(false)
+    }
+    if (fetchedActionPlans && fetchedResults) {
       setAttachDisabled(false)
     }
   });
