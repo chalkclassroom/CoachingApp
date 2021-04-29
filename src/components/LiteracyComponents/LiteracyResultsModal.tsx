@@ -128,7 +128,7 @@ function ResultsModal(props: Props): React.ReactElement {
                         <Typography variant="h6" style={{fontFamily: 'Arimo', paddingLeft: '0.5em', paddingRight: '0.5em'}}>
                           Observe lessons and activities designed to foster children’s phonological
                           awareness and develop their knowledge of the alphabetic principle and
-                          print concepts through realistic reading and writing experiences.
+                          print concepts.
                         </Typography>
                       </Grid>
                     </Grid>

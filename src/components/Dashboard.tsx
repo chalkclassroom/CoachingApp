@@ -38,6 +38,7 @@ import ClassroomClimateHelp from "./ClassroomClimateComponent/ClassroomClimateHe
 import MathInstructionHelp from './MathInstructionComponents/MathInstructionHelp';
 import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocCoopHelp";
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
+import LiteracyInstructionHelp from './LiteracyComponents/LiteracyInstructionHelp';
 import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp";
 import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
 import YesNoDialog from "./Shared/YesNoDialog";
@@ -168,7 +169,8 @@ type Props = RouteComponentProps & {
   infoDisplay?: React.ReactElement,
   completeObservation: boolean,
   updateSessionTime(time: number): void,
-  stopTimer?(): void
+  stopTimer?(): void,
+  checklistType?: string
 }
 
 interface State {
@@ -402,6 +404,8 @@ class Dashboard extends React.Component<Props, State> {
             <LevelOfInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} />
           : this.typeString === "LC" ?
             <ListeningToChildrenHelp open={this.state.help} close={this.handleClickAwayHelp} />
+          : this.typeString === "LI" ? 
+            <LiteracyInstructionHelp open={this.state.help} close={this.handleClickAwayHelp} type={this.props.checklistType} />
           : <div />
         ) : this.state.notes ? (
           <FirebaseContext.Consumer>

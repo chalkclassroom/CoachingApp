@@ -344,6 +344,7 @@ class Checklist extends React.Component<Props, State> {
                     infoPlacement="center"
                     completeObservation={true}
                     stopTimer={this.stopTimer}
+                    checklistType={this.props.checklist}
                   />
                 </Grid>
               </Grid>
