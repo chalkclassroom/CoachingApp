@@ -1591,6 +1591,28 @@ class Firebase {
   };
 
   /**
+   * Literacy Instruction cloud function
+   * gets counts of summary data
+   * @param {string} sessionId
+   */
+   fetchLiteracySummary = async (sessionId: string, type: string): Promise<{
+    literacy: number,
+    noLiteracy: number
+  } | void> => {
+    const getLiteracySummaryFirebaseFunction = this.functions.httpsCallable(
+      "funcLiteracySummary"
+    );
+    return getLiteracySummaryFirebaseFunction({ sessionId: sessionId, type: type })
+      .then(
+        (result: {data: Array<Array<{literacy: number, noLiteracy: number}>>}) =>
+          result.data[0][0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting listening summary: ", error)
+      );
+  };
+
+  /**
    * Associative Cooperative cloud function
    * gets counts of child data for each observation
    * @param {string} teacherId

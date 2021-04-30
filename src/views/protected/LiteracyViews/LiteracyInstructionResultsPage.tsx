@@ -50,8 +50,8 @@ interface Style {
 }
 
 interface State {
-  listening: number,
-  notListening: number,
+  literacy: number,
+  noLiteracy: number,
   sessionId: string,
   conferencePlanId: string,
   listening1: number,
@@ -86,8 +86,8 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      listening: 0,
-      notListening: 0,
+      literacy: 0,
+      noLiteracy: 0,
       sessionId: '',
       conferencePlanId: '',
       listening1: 0,
@@ -151,8 +151,8 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
   handleDateFetching = (teacherId: string): void => {
     const firebase = this.context;
     this.setState({
-      listening: 0,
-      notListening: 0,
+      literacy: 0,
+      noLiteracy: 0,
       sessionId: '',
       conferencePlanId: '',
       listening1: 0,
@@ -279,14 +279,15 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    /* firebase.fetchListeningSummary(this.state.sessionId)
-    .then((summary: {listening: number, notListening: number}) => {
+    firebase.fetchLiteracySummary(this.state.sessionId, this.props.location.state.type)
+    .then((summary: {literacy: number, noLiteracy: number}) => {
       this.setState({
-        listening: summary.listening,
-        notListening: summary.notListening,
+        literacy: summary.literacy,
+        noLiteracy: summary.noLiteracy,
       });
+      console.log('literacy', summary.literacy, 'no literacy', summary.noLiteracy)
     });
-    firebase.fetchListeningDetails(this.state.sessionId)
+    /* firebase.fetchListeningDetails(this.state.sessionId)
     .then((summary: {
       listening1: number,
       listening2: number,
@@ -521,8 +522,8 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                 </Grid>
                 <Grid item>
                   <LiteracySummaryChart
-                    literacy={10}
-                    noLiteracy={5}
+                    literacy={this.state.literacy}
+                    noLiteracy={this.state.noLiteracy}
                   />
                 </Grid>
               </Grid>
