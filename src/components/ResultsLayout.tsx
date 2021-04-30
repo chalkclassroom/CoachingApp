@@ -123,7 +123,8 @@ interface Props {
   conferencePlanId: string,
   addNoteToPlan(conferencePlanId: string, note: string): void,
   conferencePlanExists: boolean,
-  noDataYet: boolean
+  noDataYet: boolean,
+  literacyType?: number
 }
 
 interface Style {
@@ -279,6 +280,7 @@ class ResultsLayout extends React.Component<Props, State> {
                     handleOpenNotes={this.handleOpenNotes}
                     handleCloseNotes={this.handleCloseNotes}
                     notesModal={this.state.notesModal}
+                    literacyType={this.props.literacyType}
                   />
                 </Grid>
               </Grid>

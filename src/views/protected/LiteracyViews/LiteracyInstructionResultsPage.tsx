@@ -590,6 +590,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
             actionPlanExists={this.state.actionPlanExists}
             conferencePlanExists={this.state.conferencePlanExists}
             noDataYet={this.state.noDataYet}
+            literacyType={this.props.location.state.type}
           />
         </div>
       ) : (

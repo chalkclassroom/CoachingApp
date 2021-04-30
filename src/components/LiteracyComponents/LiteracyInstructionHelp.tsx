@@ -36,7 +36,7 @@ const useStyles = makeStyles({
 interface Props {
   open: boolean,
   close(): void,
-  type: string
+  type: string | number
 }
 
 /**

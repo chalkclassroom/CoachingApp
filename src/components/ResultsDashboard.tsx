@@ -37,6 +37,7 @@ import AssocCoopHelp from "../views/protected/AssociativeCooperativeViews/AssocC
 import SequentialActivitiesHelp from './SequentialActivitiesComponents/SequentialActivitiesHelp';
 import LevelOfInstructionHelp from "../views/protected/LevelOfInstructionViews/LevelOfInstructionHelp";
 import ListeningToChildrenHelp from './ListeningComponents/ListeningToChildrenHelp';
+import LiteracyInstructionHelp from './LiteracyComponents/LiteracyInstructionHelp';
 import { TextField, MenuItem } from '@material-ui/core';
 import NotesListDetailTable from './ResultsComponents/NotesListDetailTable';
 import * as moment from 'moment';
@@ -154,7 +155,8 @@ interface Props {
   handleCloseNotes(): void,
   notesModal: boolean,
   teacherSelected: Types.Teacher,
-  teacherList: Array<Types.Teacher>
+  teacherList: Array<Types.Teacher>,
+  literacyType?: number
 }
 
 interface State {
@@ -331,6 +333,8 @@ class ResultsDashboard extends React.Component<Props, State> {
             <LevelOfInstructionHelp open={this.state.help} close={this.handleCloseHelp} />
           : this.props.magic8 === "Listening to Children" ? 
             <ListeningToChildrenHelp open={this.state.help} close={this.handleCloseHelp} />
+          : this.props.magic8 === "Literacy Instruction" ? 
+            <LiteracyInstructionHelp open={this.state.help} close={this.handleCloseHelp} type={this.props.literacyType ? this.props.literacyType : 0} />
           : <div />
         ) : this.props.notesModal ? (
           <NotesListDetailTable
