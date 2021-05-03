@@ -1045,7 +1045,7 @@ class Firebase {
    * @param {number} checklist
    */
    fetchLiteracySessionDates = async (teacherId: string, checklist: number):
-   Promise<Array<{id: string, sessionStart: {value: string}}> | void> =>
+   Promise<Array<{id: string, sessionStart: {value: string}, who: string}> | void> =>
  {
    const getLiteracySessionDatesFirebaseFunction = this.functions.httpsCallable(
      "funcLiteracySessionDates"
@@ -1055,7 +1055,7 @@ class Firebase {
      type: checklist === 1 ? 'Foundational' : 'Writing'
    })
      .then(
-       (result: {data: Array<Array<{id: string, sessionStart: {value: string}}>>}) =>
+       (result: {data: Array<Array<{id: string, sessionStart: {value: string}, who: string}>>}) =>
          result.data[0]
      )
      .catch((error: Error) =>
@@ -1595,14 +1595,14 @@ class Firebase {
    * gets counts of summary data
    * @param {string} sessionId
    */
-   fetchLiteracySummary = async (sessionId: string, type: string): Promise<{
+   fetchLiteracySummary = async (sessionId: string, type: string, who: string): Promise<{
     literacy: number,
     noLiteracy: number
   } | void> => {
     const getLiteracySummaryFirebaseFunction = this.functions.httpsCallable(
       "funcLiteracySummary"
     );
-    return getLiteracySummaryFirebaseFunction({ sessionId: sessionId, type: type })
+    return getLiteracySummaryFirebaseFunction({ sessionId: sessionId, type: type, who: who })
       .then(
         (result: {data: Array<Array<{literacy: number, noLiteracy: number}>>}) =>
           result.data[0][0]

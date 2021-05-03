@@ -67,7 +67,7 @@ interface State {
   actionPlanExists: boolean,
   conferencePlanExists: boolean,
   addedToPlan: Array<{panel: string, number: number, question: string}>,
-  sessionDates: Array<{id: string, sessionStart: {value: string}}>,
+  sessionDates: Array<{id: string, sessionStart: {value: string}, who: string}>,
   noteAdded: boolean,
   questionAdded: boolean,
   teacherModal: boolean,
@@ -171,7 +171,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      firebase.fetchLiteracySessionDates(teacherId, this.props.location.state.type).then((dates: Array<{id: string, sessionStart: {value: string}}>) =>
+      firebase.fetchLiteracySessionDates(teacherId, this.props.location.state.type).then((dates: Array<{id: string, sessionStart: {value: string}, who: string}>) =>
         {if (dates[0]) {
           this.setState({
             sessionDates: dates,
@@ -262,6 +262,8 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
    */
   getData = (): void => {
     const firebase = this.context;
+    const index = this.state.sessionDates.map(e => e.id).indexOf(this.state.sessionId);
+    const who = this.state.sessionDates[index].who;
     this.handleNotesFetching(this.state.sessionId);
     firebase.getConferencePlan(this.state.sessionId)
     .then((conferencePlanData: Array<{id: string, feedback: string, questions: Array<string>, notes: string, date: Date}>) => {
@@ -279,7 +281,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchLiteracySummary(this.state.sessionId, this.props.location.state.type)
+    firebase.fetchLiteracySummary(this.state.sessionId, this.props.location.state.type===1 ? 'Foundational' : 'Writing', who)
     .then((summary: {literacy: number, noLiteracy: number}) => {
       this.setState({
         literacy: summary.literacy,
