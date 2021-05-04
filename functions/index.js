@@ -47,6 +47,7 @@ exports.funcInstructionTypeCount = require('./funcInstructionTypeCount').funcIns
 exports.funcListeningDetails = require('./funcListeningDetails').funcListeningDetails;
 exports.funcListeningSummary = require('./funcListeningSummary').funcListeningSummary;
 exports.funcListeningTrend = require('./funcListeningTrend').funcListeningTrend;
+exports.funcLiteracyDetails = require('./funcLiteracyDetails').funcLiteracyDetails;
 exports.funcLiteracySessionDates = require('./funcLiteracySessionDates').funcLiteracySessionDates;
 exports.funcLiteracySummary = require('./funcLiteracySummary').funcLiteracySummary;
 exports.funcMathDetails = require('./funcMathDetails').funcMathDetails;

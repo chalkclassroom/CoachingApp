@@ -1594,6 +1594,8 @@ class Firebase {
    * Literacy Instruction cloud function
    * gets counts of summary data
    * @param {string} sessionId
+   * @param {string} type
+   * @param {string} who
    */
    fetchLiteracySummary = async (sessionId: string, type: string, who: string): Promise<{
     literacy: number,
@@ -1609,6 +1611,49 @@ class Firebase {
       )
       .catch((error: Error) =>
         console.error("Error occurred getting listening summary: ", error)
+      );
+  };
+
+  /**
+   * Literacy Instruction cloud function
+   * gets counts of each literacy behavior type
+   * @param {string} sessionId
+   * @param {string} type
+   * @param {string} who
+   */
+   fetchLiteracyDetails = async (sessionId: string, type: string, who: string): Promise<{
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number,
+    literacy9: number,
+    literacy10: number
+  } | void> => {
+    const getLiteracyDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcLiteracyDetails"
+    );
+    return getLiteracyDetailsFirebaseFunction({ sessionId: sessionId, type: type, who: who })
+      .then(
+        (result: {data: Array<Array<{
+          literacy1: number,
+          literacy2: number,
+          literacy3: number,
+          literacy4: number,
+          literacy5: number,
+          literacy6: number,
+          literacy7: number,
+          literacy8: number,
+          literacy9: number,
+          literacy10: number
+        }>>}) =>
+          result.data[0][0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting literacy details: ", error)
       );
   };
 

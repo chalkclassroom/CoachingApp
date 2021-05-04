@@ -54,12 +54,16 @@ interface State {
   noLiteracy: number,
   sessionId: string,
   conferencePlanId: string,
-  listening1: number,
-  listening2: number,
-  listening3: number,
-  listening4: number,
-  listening5: number,
-  listening6: number,
+  literacy1: number,
+  literacy2: number,
+  literacy3: number,
+  literacy4: number,
+  literacy5: number,
+  literacy6: number,
+  literacy7: number,
+  literacy8: number,
+  literacy9: number,
+  literacy10: number,
   trendsDates: Array<Array<string>>,
   trendsListening: Array<number>,
   trendsNotListening: Array<number>,
@@ -90,12 +94,16 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       noLiteracy: 0,
       sessionId: '',
       conferencePlanId: '',
-      listening1: 0,
-      listening2: 0,
-      listening3: 0,
-      listening4: 0,
-      listening5: 0,
-      listening6: 0,
+      literacy1: 0,
+      literacy2: 0,
+      literacy3: 0,
+      literacy4: 0,
+      literacy5: 0,
+      literacy6: 0,
+      literacy7: 0,
+      literacy8: 0,
+      literacy9: 0,
+      literacy10: 0,
       trendsDates: [],
       trendsListening: [],
       trendsNotListening: [],
@@ -287,26 +295,33 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         literacy: summary.literacy,
         noLiteracy: summary.noLiteracy,
       });
-      console.log('literacy', summary.literacy, 'no literacy', summary.noLiteracy)
     });
-    /* firebase.fetchListeningDetails(this.state.sessionId)
+    firebase.fetchLiteracyDetails(this.state.sessionId, this.props.location.state.type===1 ? 'Foundational' : 'Writing', who)
     .then((summary: {
-      listening1: number,
-      listening2: number,
-      listening3: number,
-      listening4: number,
-      listening5: number,
-      listening6: number,
+      literacy1: number,
+      literacy2: number,
+      literacy3: number,
+      literacy4: number,
+      literacy5: number,
+      literacy6: number,
+      literacy7: number,
+      literacy8: number,
+      literacy9: number,
+      literacy10: number
     }) => {
       this.setState({
-        listening1: summary.listening1,
-        listening2: summary.listening2,
-        listening3: summary.listening3,
-        listening4: summary.listening4,
-        listening5: summary.listening5,
-        listening6: summary.listening6,
+        literacy1: summary.literacy1,
+        literacy2: summary.literacy2,
+        literacy3: summary.literacy3,
+        literacy4: summary.literacy4,
+        literacy5: summary.literacy5,
+        literacy6: summary.literacy6,
+        literacy7: summary.literacy7,
+        literacy8: summary.literacy8,
+        literacy9: summary.literacy9,
+        literacy10: summary.literacy10
       })
-    }) */
+    })
   }
 
   /**
@@ -550,16 +565,16 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                     </Typography>
                   </Grid>
                   <LiteracyDetailsFoundationalChart
-                    literacy1={0}
-                    literacy2={4}
-                    literacy3={5}
-                    literacy4={8}
-                    literacy5={0}
-                    literacy6={4}
-                    literacy7={0}
-                    literacy8={1}
-                    literacy9={2}
-                    literacy10={8}
+                    literacy1={this.state.literacy1}
+                    literacy2={this.state.literacy2}
+                    literacy3={this.state.literacy3}
+                    literacy4={this.state.literacy4}
+                    literacy5={this.state.literacy5}
+                    literacy6={this.state.literacy6}
+                    literacy7={this.state.literacy7}
+                    literacy8={this.state.literacy8}
+                    literacy9={this.state.literacy9}
+                    literacy10={this.state.literacy10}
                   />
                 </Grid>
               </div>
