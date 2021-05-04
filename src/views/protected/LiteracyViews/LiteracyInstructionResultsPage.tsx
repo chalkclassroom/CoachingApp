@@ -10,6 +10,7 @@ import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import LiteracySummaryChart from "../../../components/LiteracyComponents/ResultsComponents/LiteracySummaryChart";
 import LiteracyDetailsFoundationalChart from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsFoundationalChart";
+import LiteracyTrendsFoundational from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsFoundational";
 import ListeningDetailsChart from "../../../components/ListeningComponents/ResultsComponents/ListeningDetailsChart";
 import ListeningTrendsGraph from "../../../components/ListeningComponents/ResultsComponents/ListeningTrendsGraph";
 import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
@@ -586,8 +587,8 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                     Teacher Behaviors
                   </Typography>
                 </Grid>
-                <ListeningTrendsGraph
-                  data={this.handleTrendsFormatData}
+                <LiteracyTrendsFoundational
+                  // data={this.handleTrendsFormatData}
                 />
               </Grid>
             }
