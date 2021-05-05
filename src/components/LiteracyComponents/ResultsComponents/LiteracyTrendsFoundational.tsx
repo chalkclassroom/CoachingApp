@@ -68,7 +68,72 @@ const totals = [
   },
 ];
 
-function createData(name: string, first: number, second: number, third: number, fourth: number, backgroundColor: string) {
+type sampleDataKey = 'title' | 'item1' | 'item2' | 'item3' | 'item4' | 'item5' | 'item6' | 'item7' | 'item8' | 'item9' | 'item10' | 'total';
+
+const sampleData = [
+  {
+    title: <div>8/21/20 <br /> Morning Meeting</div>,
+    item1: 0,
+    item2: 2,
+    item3: 2,
+    item4: 2,
+    item5: 0,
+    item6: 0,
+    item7: 1,
+    item8: 0,
+    item9: 2,
+    item10: 0,
+    total: 14
+  },
+  {
+    title: <div>9/24/20 <br/> Morning Meeting</div>,
+    item1: 0,
+    item2: 0,
+    item3: 3,
+    item4: 0,
+    item5: 0,
+    item6: 0,
+    item7: 0,
+    item8: 2,
+    item9: 3,
+    item10: 0,
+    total: 10
+  },
+  {
+    title: <div>10/5/20  <br/>Shared Reading</div>,
+    item1: 0,
+    item2: 0,
+    item3: 4,
+    item4: 3,
+    item5: 0,
+    item6: 7,
+    item7: 2,
+    item8: 0,
+    item9: 7,
+    item10: 2,
+    total: 7
+  },
+];
+
+function createData(name: string, backgroundColor: string) {
+  // const density = population / size;
+  return { name, backgroundColor };
+}
+
+const numberRows = [
+  createData('Rhyming, alliteration, and/or syllables', '#cfe2f3'),
+  createData('Individual sounds', '#cfe2f3'),
+  createData('Alphabet knowledge and/or word identification skills', '#d9ead3'),
+  createData('Letter-sound correspondence', '#d9ead3'),
+  createData('Supporting inventive spelling', '#d9ead3'),
+  createData('Print concepts', '#d9ead3'),
+  createData('Matching spoken words to print', '#d9ead3'),
+  createData('Asking open-ended questions', '#fff2cc'),
+  createData('Using foundational skills for realistic reading and/or writing', '#f4cccc'),
+  createData('Using multimodal instruction', '#d9d2e9')
+];
+
+/* function createData(name: string, first: number, second: number, third: number, fourth: number, backgroundColor: string) {
   // const density = population / size;
   return { name, first, second, third, fourth, backgroundColor };
 }
@@ -84,7 +149,7 @@ const numberRows = [
   createData('Asking open-ended questions', 0, 2, 0, 6, '#fff2cc'),
   createData('Using foundational skills for realistic reading and/or writing', 2, 3, 7, 4, '#f4cccc'),
   createData('Using multimodal instruction', 0, 0, 2, 1, '#d9d2e9')
-];
+]; */
 
 const percentageRows = [
   createData('Rhyming, alliteration, and/or syllables', 7, 0, 0, 0, '#cfe2f3'),
@@ -227,22 +292,47 @@ export default function StickyHeadTable() {
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
-                {columns.map((column) => (
+                {sampleData.map(a => a.title).map((title, index) => (
                   <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    key={index}
+                    align='right'
+                    style={{ minWidth: '2em' }}
                   >
-                    {column.label}
+                    {title}
                   </TableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {(view === 'number' ? numberRows : percentageRows).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+              {numberRows.map((row, index) => {
+                console.log('row is', row);
+                const checklistItem = 'item' + index.toString();
+                console.log('checklist item', checklistItem)
+                return(
+                <TableRow key={index} hover role="checkbox" tabIndex={-1}>
+                  <TableCell align='left' style={{backgroundColor: row.backgroundColor, fontWeight: 'bold'}}>
+                    {row.name}
+                  </TableCell>
+                  {sampleData.map(a => a[checklistItem as sampleDataKey]).map((item1, index) => {
+                    console.log('samp data is', item1)
+                    // const value = (view === 'percentage' && column.id !== 'name') ? row[column.id]+'%' : row[column.id];
+                    return (
+                      <TableCell key={index} align='right' style={{backgroundColor: row.backgroundColor}}>
+                        {/* {column.format && typeof value === 'number' ? column.format(value) : value} */}
+                        {item1}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                );
+              })}
+              
+              {/* {(view === 'number' ? columns : columns).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                console.log('row is', row)
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
+                    {numberRows.map((column) => {
+                      console.log('column is', column)
                       const value = (view === 'percentage' && column.id !== 'name') ? row[column.id]+'%' : row[column.id];
                       return (
                         <TableCell key={column.id} align={column.align} style={{backgroundColor: row.backgroundColor, fontWeight: column.id === 'name' ? 'bold' : undefined}}>
@@ -252,17 +342,20 @@ export default function StickyHeadTable() {
                     })}
                   </TableRow>
                 );
-              })}
+              })} */}
             </TableBody>
             <TableHead>
               <TableRow>
-                {totals.map((total) => (
+                <TableCell>
+                  Total number of 1-minute intervals
+                </TableCell>
+                {sampleData.map(a => a.total).map((total, index) => (
                   <TableCell
-                    key={total.id}
-                    align={total.align}
-                    style={{ minWidth: total.minWidth, fontWeight: total.id !== 'total' ? 'bold' : undefined}}
+                    key={index}
+                    align={'right'}
+                    style={{ minWidth: '2em', fontWeight: 'bold'}}
                   >
-                    {total.label}
+                    {total}
                   </TableCell>
                 ))}
               </TableRow>
