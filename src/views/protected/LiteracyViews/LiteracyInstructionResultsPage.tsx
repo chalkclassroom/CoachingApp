@@ -54,6 +54,7 @@ interface State {
   literacy: number,
   noLiteracy: number,
   sessionId: string,
+  who: string,
   conferencePlanId: string,
   literacy1: number,
   literacy2: number,
@@ -108,6 +109,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       literacy: 0,
       noLiteracy: 0,
       sessionId: '',
+      who: '',
       conferencePlanId: '',
       literacy1: 0,
       literacy2: 0,
@@ -178,6 +180,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       literacy: 0,
       noLiteracy: 0,
       sessionId: '',
+      who: '',
       conferencePlanId: '',
       literacy1: 0,
       literacy2: 0,
@@ -340,7 +343,8 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         literacy7: summary.literacy7,
         literacy8: summary.literacy8,
         literacy9: summary.literacy9,
-        literacy10: summary.literacy10
+        literacy10: summary.literacy10,
+        who: who
       })
     })
     firebase.fetchLiteracyTrendFoundational(this.props.teacherSelected.id, 'Teacher')
@@ -615,6 +619,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                     literacy8={this.state.literacy8}
                     literacy9={this.state.literacy9}
                     literacy10={this.state.literacy10}
+                    who={this.state.who}
                   />
                 </Grid>
               </div>

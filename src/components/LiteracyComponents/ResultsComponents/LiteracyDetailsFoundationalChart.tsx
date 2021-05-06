@@ -13,7 +13,8 @@ interface Props {
   literacy7: number,
   literacy8: number,
   literacy9: number,
-  literacy10: number
+  literacy10: number,
+  who: string
 }
 
 /**
@@ -38,7 +39,8 @@ class LiteracyDetailsFoundationalChart extends React.Component<Props, {}> {
     literacy7: PropTypes.number.isRequired,
     literacy8: PropTypes.number.isRequired,
     literacy9: PropTypes.number.isRequired,
-    literacy10: PropTypes.number.isRequired
+    literacy10: PropTypes.number.isRequired,
+    who: PropTypes.string.isRequired
   }
 
   /**
@@ -46,7 +48,7 @@ class LiteracyDetailsFoundationalChart extends React.Component<Props, {}> {
    * @return {ReactNode}
    */
   render(): React.ReactNode {
-    const literacyData = {  
+    const teacherData = {  
       labels: [
         ["Focusing on rhyming, alliteration,", "and/or syllables"],
         "Focusing on individual sounds",
@@ -57,7 +59,7 @@ class LiteracyDetailsFoundationalChart extends React.Component<Props, {}> {
         "Matching spoken words to print",
         ["Asking open-ended questions", "or prompts"],
         ["Using foundational skills", "for a realistic reading", "and/or writing purpose"],
-        "Using multimodal instruction",
+        "Using multimodal instruction"
       ],
       datasets: [{
         data: [
@@ -98,9 +100,57 @@ class LiteracyDetailsFoundationalChart extends React.Component<Props, {}> {
         ]
       }]
     };
+    const childData = {  
+      labels: [
+        ["Focusing on rhyming, alliteration,", "and/or syllables"],
+        "Focusing on individual sounds",
+        ["Focusing on alphabet", "knowledge and/or word", "identification skills"],
+        ["Focusing on letter-sound", "correspondence"],
+        "Supporting inventive spelling",
+        "Focusing on print concepts",
+        "Matching spoken words to print",
+        ["Asking open-ended questions", "or prompts"],
+        ["Using foundational skills", "for a realistic reading", "and/or writing purpose"]
+      ],
+      datasets: [{
+        data: [
+          this.props.literacy1,
+          this.props.literacy2,
+          this.props.literacy3,
+          this.props.literacy4,
+          this.props.literacy5,
+          this.props.literacy6,
+          this.props.literacy7,
+          this.props.literacy8,
+          this.props.literacy9
+        ],
+        backgroundColor: [
+          '#3c78d8',
+          '#3c78d8',
+          '#6aa84f',
+          '#6aa84f',
+          '#6aa84f',
+          '#6aa84f',
+          '#6aa84f',
+          '#f1c232',
+          Constants.Colors.LI
+        ],
+        hoverBackgroundColor: [
+          '#3c78d8',
+          '#3c78d8',
+          '#6aa84f',
+          '#6aa84f',
+          '#6aa84f',
+          '#6aa84f',
+          '#6aa84f',
+          '#f1c232',
+          Constants.Colors.LI
+        ]
+      }]
+    };
     return (
       <HorizontalBar
-        data={literacyData}
+        data={this.props.who === 'Teacher' ? teacherData : childData}
         options={{
           scales: {
             xAxes: [
@@ -118,7 +168,7 @@ class LiteracyDetailsFoundationalChart extends React.Component<Props, {}> {
                       this.props.literacy7,
                       this.props.literacy8,
                       this.props.literacy9,
-                      this.props.literacy10
+                      this.props.who === 'Teacher' ? this.props.literacy10 : 0
                     ) > 20) ?
                     Math.max(
                       this.props.literacy1,
@@ -130,7 +180,7 @@ class LiteracyDetailsFoundationalChart extends React.Component<Props, {}> {
                       this.props.literacy7,
                       this.props.literacy8,
                       this.props.literacy9,
-                      this.props.literacy10
+                      this.props.who === 'Teacher' ? this.props.literacy10 : 0
                     ) : 20,
                   fontSize: 16,
                   stepSize: 1
@@ -150,7 +200,8 @@ class LiteracyDetailsFoundationalChart extends React.Component<Props, {}> {
               {
                 ticks: {
                   fontSize: 12,
-                  padding: 8
+                  padding: 8,
+                  fontColor: 'black'
                 },
                 scaleLabel: {
                   display: false,
@@ -196,7 +247,7 @@ class LiteracyDetailsFoundationalChart extends React.Component<Props, {}> {
           }
         }}
         width={650}
-        height={400}       
+        height={500}       
       />
     );
   }
