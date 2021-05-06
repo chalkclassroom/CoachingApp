@@ -50,6 +50,7 @@ exports.funcListeningTrend = require('./funcListeningTrend').funcListeningTrend;
 exports.funcLiteracyDetails = require('./funcLiteracyDetails').funcLiteracyDetails;
 exports.funcLiteracySessionDates = require('./funcLiteracySessionDates').funcLiteracySessionDates;
 exports.funcLiteracySummary = require('./funcLiteracySummary').funcLiteracySummary;
+exports.funcLiteracyTrendFoundational = require('./funcLiteracyTrendFoundational').funcLiteracyTrendFoundational;
 exports.funcMathDetails = require('./funcMathDetails').funcMathDetails;
 exports.funcSendEmail = require('./funcSendEmail').funcSendEmail;
 exports.funcSeqDetails = require('./funcSeqDetails').funcSeqDetails;

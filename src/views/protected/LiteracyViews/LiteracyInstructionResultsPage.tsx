@@ -65,6 +65,20 @@ interface State {
   literacy8: number,
   literacy9: number,
   literacy10: number,
+  trends: Array<{
+    startDate: {value: string},
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number,
+    literacy9: number,
+    literacy10: number,
+    total: number
+  }>,
   trendsDates: Array<Array<string>>,
   trendsListening: Array<number>,
   trendsNotListening: Array<number>,
@@ -106,6 +120,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       literacy9: 0,
       literacy10: 0,
       trendsDates: [],
+      trends: [],
       trendsListening: [],
       trendsNotListening: [],
       notes: [],
@@ -164,13 +179,18 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       noLiteracy: 0,
       sessionId: '',
       conferencePlanId: '',
-      listening1: 0,
-      listening2: 0,
-      listening3: 0,
-      listening4: 0,
-      listening5: 0,
-      listening6: 0,
+      literacy1: 0,
+      literacy2: 0,
+      literacy3: 0,
+      literacy4: 0,
+      literacy5: 0,
+      literacy6: 0,
+      literacy7: 0,
+      literacy8: 0,
+      literacy9: 0,
+      literacy10: 0,
       trendsDates: [],
+      trends: [],
       trendsListening: [],
       trendsNotListening: [],
       notes: [],
@@ -321,6 +341,25 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         literacy8: summary.literacy8,
         literacy9: summary.literacy9,
         literacy10: summary.literacy10
+      })
+    })
+    firebase.fetchLiteracyTrendFoundational(this.props.teacherSelected.id, 'Teacher')
+    .then((trends: Array<{
+      startDate: {value: string},
+      literacy1: number,
+      literacy2: number,
+      literacy3: number,
+      literacy4: number,
+      literacy5: number,
+      literacy6: number,
+      literacy7: number,
+      literacy8: number,
+      literacy9: number,
+      literacy10: number,
+      total: number
+    }>) => {
+      this.setState({
+        trends: trends
       })
     })
   }
@@ -588,6 +627,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                   </Typography>
                 </Grid>
                 <LiteracyTrendsFoundational
+                  teacherData={this.state.trends}
                   // data={this.handleTrendsFormatData}
                 />
               </Grid>

@@ -1658,6 +1658,52 @@ class Firebase {
   };
 
   /**
+   * Literacy Instruction cloud function
+   * gets literacy data for each foundational skills observation
+   * @param {string} teacherId
+   * @param {string} who
+   */
+   fetchLiteracyTrendFoundational = async (teacherId: string, who: string): Promise<Array<{
+    startDate: {value: string},
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number,
+    literacy9: number,
+    literacy10: number,
+    total: number
+  }> | void> => {
+    const getLiteracyTrendFoundationalFirebaseFunction = this.functions.httpsCallable(
+      "funcLiteracyTrendFoundational"
+    );
+    return getLiteracyTrendFoundationalFirebaseFunction({ teacherId: teacherId, type: 'Foundational', who: who })
+      .then(
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          literacy1: number,
+          literacy2: number,
+          literacy3: number,
+          literacy4: number,
+          literacy5: number,
+          literacy6: number,
+          literacy7: number,
+          literacy8: number,
+          literacy9: number,
+          literacy10: number,
+          total: number
+        }>>}) =>
+          result.data[0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting listening trend: ", error)
+      );
+  };
+
+  /**
    * Associative Cooperative cloud function
    * gets counts of child data for each observation
    * @param {string} teacherId
