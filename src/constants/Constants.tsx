@@ -537,54 +537,54 @@ export const Checklist: {
     ],
     'WritingChild': [
       <div key={0}>
-        Talks about the content or meaning of the writing/drawing<b></b>
+        <b>Talks about the content or meaning</b> of the writing/drawing
       </div>,
       <div key={1}>
-        Draws to communicate meaning<b></b>
+        <b>Draws to communicate meaning</b>
       </div>,
       <div key={2}>
-        Makes writing forms (e.g., scribbles, letter-like forms, random letter strings, letters)<b></b>
+        <b>Makes writing forms</b> (e.g., scribbles, letter-like forms, random letter strings, letters)
       </div>,
       <div key={3}>
-        Says aloud the message to be written<b></b>
+        <b>Says aloud the message to be written</b>
       </div>,
       <div key={4}>
-        Writes one or more letters in their name<b></b>
+        <b>Writes</b> one or more <b>letters in their name</b>
       </div>,
       <div key={5}>
-        Uses knowledge of the alphabet and/or letter-sound correspondence<b></b>
+        Uses knowledge of the <b>alphabet and/or letter-sound correspondence</b>
       </div>,
       <div key={6}>
-        Invents spellings or generates conventional spellings<b></b>
+        <b>Invents spellings</b> or generates conventional spellings
       </div>,
       <div key={7}>
-        “Reads” the message<b></b>
+        <b>“Reads”</b> the message
       </div>
     ],
     'WritingTeacher': [
       <div key={0}>
-        Talks to children about the content or meaning of the writing/drawing<b></b>
+        <b>Talks to children about the content or meaning</b> of the writing/drawing
       </div>,
       <div key={1}>
-        Invites children to write part of a message (beyond their name)<b></b>
+        <b>Invites children to write part of a message</b> (beyond their name)
       </div>,
       <div key={2}>
-        Writes a meaningful message in front of children<b></b>
+        <b>Writes a meaningful message</b> in front of children
       </div>,
       <div key={3}>
-        Demonstrates and talks about writing processes (e.g., print concepts, handwriting)<b></b>
+        <b>Demonstrates and talks about writing processes</b> (e.g., print concepts, handwriting)
       </div>,
       <div key={4}>
-        Invites children to write their name<b></b>
+        <b>Invites children to write their name</b>
       </div>,
       <div key={5}>
-        Responds positively to all writing forms (e.g., child scribbles, letter-like forms, letters)<b></b>
+        <b>Responds positively to all writing forms</b> (e.g., child scribbles, letter-like forms, letters)
       </div>,
       <div key={6}>
-        Supports children’s inventive and/or conventional spelling<b></b>
+        Supports children’s <b>inventive and/or conventional spelling</b>
       </div>,
       <div key={7}>
-        Invites children to read the message  (e.g., “Read what you wrote to me!” or “What does that say?”)<b></b>
+        <b>Invites children to read the message</b> (e.g., “Read what you wrote to me!” or “What does that say?”)
       </div>
     ]
   }
