@@ -46,11 +46,11 @@ interface Props {
 
 /**
  * Modal to confirm view results
- * @function ResultsModal
+ * @function LiteracyResultsModal
  * @param {Props} props
  * @return {ReactElement}
  */
-function ResultsModal(props: Props): React.ReactElement {
+function LiteracyResultsModal(props: Props): React.ReactElement {
   const { handleBegin, handleClose, open } = props;
   const [type, setType] = useState(0);
   const classes = useStyles();
@@ -250,11 +250,11 @@ function ResultsModal(props: Props): React.ReactElement {
   );
 }
 
-ResultsModal.propTypes = {
+LiteracyResultsModal.propTypes = {
   handleBegin: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   tool: PropTypes.string.isRequired
 }
 
-export default ResultsModal;
+export default LiteracyResultsModal;

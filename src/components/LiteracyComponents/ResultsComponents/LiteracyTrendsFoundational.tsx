@@ -18,7 +18,7 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 interface Props {
   teacherData: Array<{
-    startDate: {value: string},
+    startDate: string,
     literacy1: number,
     literacy2: number,
     literacy3: number,
@@ -29,7 +29,8 @@ interface Props {
     literacy8: number,
     literacy9: number,
     literacy10: number,
-    total: number
+    total: number,
+    activitySetting: string
   }>
 }
 
@@ -262,15 +263,27 @@ export default function LiteracyTrendsFoundational(props: Props) {
             <TableHead>
               <TableRow>
                 <TableCell />
-                {teacherData.map(a => a.startDate).map((startDate: {value: string}, index: number) => (
-                  <TableCell
-                    key={index}
-                    align='right'
-                    style={{ minWidth: '2em' }}
-                  >
-                    {startDate.value}
-                  </TableCell>
-                ))}
+                {teacherData.map(a => [a.startDate, a.activitySetting]).map((description: Array<string>, index: number) => {
+                  return(
+                    <TableCell
+                      key={index}
+                      align='right'
+                      padding='none'
+                      style={{ minWidth: '2em', paddingLeft: '0.2em', paddingRight: '0.2em', height: '100%'}}
+                    >
+                      <Grid container direction="column" alignItems="flex-end" justify="center" style={{height: '100%'}}>
+                        <Grid item>
+                          {description[1]}
+                        </Grid>
+                        <Grid item>
+                          <strong>
+                          {description[0]}
+                          </strong>
+                        </Grid>
+                      </Grid>
+                    </TableCell>
+                  )
+                })}
               </TableRow>
             </TableHead>
             <TableBody>

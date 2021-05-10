@@ -13,7 +13,8 @@ const bigquery = new BigQuery();
  */
 exports.funcLiteracyTrendFoundational = functions.https.onCall(async(data, context) => {
     const tableType = data.type + data.who;
-    const sqlQuery = `SELECT DATE(sessionStart) AS startDate,
+    const sqlQuery = `SELECT FORMAT_TIMESTAMP('%m/%d/%Y', DATE(sessionStart)) AS startDate,
+                    activitySetting,
                     COUNT(CASE WHEN (checklist.item1) THEN 'literacy1' ELSE NULL END) AS literacy1,
                     COUNT(CASE WHEN (checklist.item2) THEN 'literacy2' ELSE NULL END) AS literacy2,
                     COUNT(CASE WHEN (checklist.item3) THEN 'literacy3' ELSE NULL END) AS literacy3,
@@ -27,7 +28,7 @@ exports.funcLiteracyTrendFoundational = functions.https.onCall(async(data, conte
                     COUNT (sessionStart) AS total,
                     FROM cqrefpwa.observations.literacy`+tableType+`
                     WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
-                    GROUP BY startDate
+                    GROUP BY startDate, activitySetting
                     ORDER BY startDate ASC;`;
 
     console.log(sqlQuery);

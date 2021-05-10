@@ -67,7 +67,7 @@ interface State {
   literacy9: number,
   literacy10: number,
   trends: Array<{
-    startDate: {value: string},
+    startDate: string,
     literacy1: number,
     literacy2: number,
     literacy3: number,
@@ -78,7 +78,8 @@ interface State {
     literacy8: number,
     literacy9: number,
     literacy10: number,
-    total: number
+    total: number,
+    activitySetting: string
   }>,
   trendsDates: Array<Array<string>>,
   trendsListening: Array<number>,
@@ -349,7 +350,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     })
     firebase.fetchLiteracyTrendFoundational(this.props.teacherSelected.id, 'Teacher')
     .then((trends: Array<{
-      startDate: {value: string},
+      startDate: string,
       literacy1: number,
       literacy2: number,
       literacy3: number,
@@ -360,8 +361,10 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       literacy8: number,
       literacy9: number,
       literacy10: number,
-      total: number
+      total: number,
+      activitySetting: string
     }>) => {
+      console.log('the trends', trends)
       this.setState({
         trends: trends
       })

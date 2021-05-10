@@ -434,6 +434,7 @@ exports.observationsToBQ = functions.firestore
                                       sessionEnd: Math.floor(session.end.toDate() / 1000),
                                       teacher: session.teacher,
                                       observedBy: session.observedBy,
+                                      activitySetting: session.activitySetting,
                                       checklist: {
                                         item1: entryData.Checked.includes(1),
                                         item2: entryData.Checked.includes(2),
@@ -482,6 +483,7 @@ exports.observationsToBQ = functions.firestore
                                       sessionEnd: Math.floor(session.end.toDate() / 1000),
                                       teacher: session.teacher,
                                       observedBy: session.observedBy,
+                                      activitySetting: session.activitySetting,
                                       checklist: {
                                         item1: entryData.Checked.includes(1),
                                         item2: entryData.Checked.includes(2),

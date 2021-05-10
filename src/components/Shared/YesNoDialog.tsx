@@ -5,6 +5,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { withStyles } from "@material-ui/core";
+import ActivitySettingModal from '../LiteracyComponents/ActivitySettingModal';
 
 const styles: object = {
   button: {
@@ -24,7 +25,9 @@ interface Props {
   buttonWidth?: string,
   buttonMargin?: number,
   dialogTitle?: string,
-  onAcceptParams?: number
+  onAcceptParams?: number,
+  literacy: boolean,
+  handleLiteracyActivitySetting(activitySetting: string): Promise<void>
 }
 
 interface State {
@@ -102,6 +105,7 @@ class YesNoDialog extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
+        <ActivitySettingModal open={this.props.literacy && this.state.open} handleClose={this.handleClose} handleAccept={this.handleAccept} handleLiteracyActivitySetting={this.props.handleLiteracyActivitySetting} />
         <Button
           onClick={this.handleClickOpen}
           variant={this.props.buttonVariant}
@@ -119,7 +123,7 @@ class YesNoDialog extends React.Component<Props, State> {
           {this.props.buttonText}
         </Button>
         <Dialog
-          open={this.state.open}
+          open={this.state.open && !this.props.literacy}
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"

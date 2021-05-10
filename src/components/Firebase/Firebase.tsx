@@ -550,7 +550,7 @@ class Firebase {
         teacher: "/user/" + mEntry.teacher,
         end: firebase.firestore.FieldValue.serverTimestamp(),
         type: mEntry.type,
-        checklist: mEntry.checklist ? mEntry.checklist : undefined,
+        checklist: mEntry.checklist ? mEntry.checklist : null,
         completed: false
       })
       .catch((error: Error) => console.error("Error setting session ref: ", error));
@@ -644,6 +644,21 @@ class Firebase {
       .catch((error: Error) =>
         console.error("Error occurred adding observation: ", error)
       );
+  };
+
+  /**
+   * sets fields in document for current observation
+   * @param {string} activitySetting
+   */
+   handleLiteracyActivitySetting = async (activitySetting: string): Promise<void> => {
+    console.log('what is this sessionref', this.sessionRef)
+    this.sessionRef
+    .update({
+      activitySetting: activitySetting
+    })
+    .catch((error: Error) =>
+      console.error("Error occurred updating session ref: ", error)
+    );
   };
 
   /**
@@ -1675,7 +1690,8 @@ class Firebase {
     literacy8: number,
     literacy9: number,
     literacy10: number,
-    total: number
+    total: number,
+    activitySetting: string
   }> | void> => {
     const getLiteracyTrendFoundationalFirebaseFunction = this.functions.httpsCallable(
       "funcLiteracyTrendFoundational"
@@ -1694,7 +1710,8 @@ class Firebase {
           literacy8: number,
           literacy9: number,
           literacy10: number,
-          total: number
+          total: number,
+          activitySetting: string
         }>>}) =>
           result.data[0]
       )
