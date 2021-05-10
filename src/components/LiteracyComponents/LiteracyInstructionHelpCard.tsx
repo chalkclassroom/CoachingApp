@@ -8,6 +8,8 @@ import Grid from '@material-ui/core/Grid';
 import * as Constants from '../../constants/Constants';
 import LiteracyFoundationalTeacher from './LiteracyFoundationalTeacher';
 import LiteracyFoundationalChild from './LiteracyFoundationalChild';
+import LiteracyWritingTeacher from './LiteracyWritingTeacher';
+import LiteracyWritingChild from './LiteracyWritingChild';
 
 const useStyles = makeStyles({
   tabBar: {
@@ -92,6 +94,18 @@ export default function LiteracyInstructionHelpCard(props: Props): React.ReactEl
         <Grid container direction='column'>
           <Grid item>
             <LiteracyFoundationalChild />
+          </Grid>
+        </Grid>
+      ) : type === 'WritingChild' ? (
+        <Grid container direction='column'>
+          <Grid item>
+            <LiteracyWritingChild />
+          </Grid>
+        </Grid>
+      ) : type === 'WritingTeacher' ? (
+        <Grid container direction='column'>
+          <Grid item>
+            <LiteracyWritingTeacher />
           </Grid>
         </Grid>
       ) : (null)}
