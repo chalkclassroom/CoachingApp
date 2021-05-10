@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { makeStyles } from "@material-ui/core/styles/index";
 import * as PropTypes from 'prop-types';
-import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
@@ -24,7 +24,7 @@ function getModalStyle(): React.CSSProperties {
   } as React.CSSProperties;
 }
   
-const styles: object = {
+const useStyles = makeStyles({
   root: {
     backgroundColor: '#ffffff'
   },
@@ -35,16 +35,10 @@ const styles: object = {
     padding: '2em',
     borderRadius: 8
   },
-};
-
-interface Style {
-  root: string,
-  paper: string,
-}
+});
 
 interface Props {
-  classes: Style,
-  handleBegin(checklistType: number): void,
+  handleBegin(checklistType: number | string): void,
   handleClose(): void,
   open: boolean,
   tool: string
@@ -57,8 +51,9 @@ interface Props {
  * @return {ReactElement}
  */
 function ResultsModal(props: Props): React.ReactElement {
-  const { classes, handleBegin, handleClose, open } = props;
+  const { handleBegin, handleClose, open } = props;
   const [type, setType] = useState(0);
+  const classes = useStyles();
   return (
     <div>
       <Modal open={open}>
@@ -256,11 +251,10 @@ function ResultsModal(props: Props): React.ReactElement {
 }
 
 ResultsModal.propTypes = {
-  classes: PropTypes.object.isRequired,
   handleBegin: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   tool: PropTypes.string.isRequired
 }
 
-export default withStyles(styles)(ResultsModal);
+export default ResultsModal;
