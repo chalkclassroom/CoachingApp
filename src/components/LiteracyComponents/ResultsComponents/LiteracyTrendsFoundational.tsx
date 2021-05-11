@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -15,6 +14,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import Badge from '@material-ui/core/Badge';
+import Typography from '@material-ui/core/Typography';
+import * as Constants from '../../../constants/Constants';
 
 interface Props {
   teacherData: Array<{
@@ -166,6 +171,7 @@ export default function LiteracyTrendsFoundational(props: Props) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [view, setView] = useState('number');
   const [activitySetting, setActivitySetting] = useState('All');
+  const [activityFilter, setActivityFilter] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -173,26 +179,30 @@ export default function LiteracyTrendsFoundational(props: Props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (index: number) => {
+    console.log('handle close', index)
+    setActivityFilter(index);
     setAnchorEl(null);
-  };
-
-  const handleClose1 = () => {
-    return;
   };
 
   const handleView = (event: React.MouseEvent<HTMLElement, MouseEvent>, newView: string) => {
     setView(newView);
   };
 
-  /* const handleActivitySetting = (event, newSetting) => {
-    setActivitySetting(newSetting);
-  }; */
+  const activitySettings = [
+    'None',
+    'Morning Meeting',
+    'Teacher-Directed Lesson',
+    'Shared Reading',
+    'Shared Writing',
+    'Individual Child Activity',
+    'Center Time Activity'
+  ];
 
   return (
     <Grid container direction="column">
       <Grid item style={{paddingBottom: '0.5em'}}>
-        <Grid container direction="row" justify="space-between" alignItems="center">
+        <Grid container direction="row" justify="space-between" alignItems="center" style={{paddingTop: '1em'}}>
           <Grid item>
             <ToggleButtonGroup
               value={view}
@@ -209,15 +219,27 @@ export default function LiteracyTrendsFoundational(props: Props) {
             </ToggleButtonGroup>
           </Grid>
           <Grid item>
-            <Button
-              aria-controls="activity-setting"
-              aria-haspopup="true"
-              variant="contained"
-              color="primary"
+            <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
+              Teacher Behaviors
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconButton
+              // aria-controls="activity-setting"
+              // aria-haspopup="true"
+              // variant="contained"
+              // color="primary"
               onClick={handleClick}
+              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', padding: 10 }}
             >
-              {activitySetting}
-            </Button>
+              <Tooltip title={"Close"} placement={"right"}>
+                <MuiThemeProvider theme={Constants.LiteracyTheme}>
+                  <Badge color='primary' variant='dot' invisible={activityFilter === 0}>
+                    <FilterListIcon />
+                  </Badge>
+                </MuiThemeProvider>
+              </Tooltip>
+            </IconButton>
             <Menu
               id='activity-setting'
               anchorEl={anchorEl}
@@ -239,20 +261,15 @@ export default function LiteracyTrendsFoundational(props: Props) {
                   // width: '20ch',
                 },
               }}
-              onClose={handleClose}
+              onClose={(): void => setAnchorEl(null)}
             >
-              <MenuItem onClick={handleClose1}>
-                <ListItemText primary="All" />
-              </MenuItem>
-              <MenuItem onClick={handleClose1}>
-                <ListItemText primary="Morning Meeting" />
-              </MenuItem>
-              <MenuItem onClick={handleClose1}>
-                <ListItemText primary="Shared Reading" />
-              </MenuItem>
-              <MenuItem onClick={handleClose1}>
-                <ListItemText primary="Something else" />
-              </MenuItem>
+              {activitySettings.map((value, index) => {
+                return (
+                  <MenuItem key={index} disabled={index>0 && !teacherData.some(e => e.activitySetting === value)} onClick={(): void => {handleClose(index)}}>
+                    <ListItemText primary={value} />
+                  </MenuItem>
+                )
+              })}
             </Menu>
           </Grid>
         </Grid>
@@ -263,7 +280,9 @@ export default function LiteracyTrendsFoundational(props: Props) {
             <TableHead>
               <TableRow>
                 <TableCell />
-                {teacherData.map(a => [a.startDate, a.activitySetting]).map((description: Array<string>, index: number) => {
+                {teacherData.filter(obj => {
+                  return (activityFilter ? obj.activitySetting === activitySettings[activityFilter] : obj)
+                }).map(a => [a.startDate, a.activitySetting]).map((description: Array<string>, index: number) => {
                   return(
                     <TableCell
                       key={index}
@@ -294,7 +313,9 @@ export default function LiteracyTrendsFoundational(props: Props) {
                   <TableCell align='left' style={{backgroundColor: row.backgroundColor, fontWeight: 'bold'}}>
                     {row.name}
                   </TableCell>
-                  {teacherData.map(a => a[checklistItem as sampleDataKey]).map((literacy: (number), index2: number) => {
+                  {teacherData.filter(obj => {
+                    return (activityFilter ? obj.activitySetting === activitySettings[activityFilter] : obj)
+                  }).map(a => a[checklistItem as sampleDataKey]).map((literacy: (number), index2: number) => {
                     return (
                       <TableCell key={index2} align='right' style={{backgroundColor: row.backgroundColor}}>
                         {view === 'number' ? literacy : (Math.round((literacy/teacherData[index2].total)*100))+'%'}
@@ -310,7 +331,9 @@ export default function LiteracyTrendsFoundational(props: Props) {
                 <TableCell>
                   Total number of 1-minute intervals
                 </TableCell>
-                {teacherData.map(a => a.total).map((total: number, index: number) => (
+                {teacherData.filter(obj => {
+                  return (activityFilter ? obj.activitySetting === activitySettings[activityFilter] : obj)
+                }).map(a => a.total).map((total: number, index: number) => (
                   <TableCell
                     key={index}
                     align={'right'}

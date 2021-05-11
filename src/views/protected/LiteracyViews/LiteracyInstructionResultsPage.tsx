@@ -560,7 +560,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
               <Grid container justify={"center"} direction={"column"}>
                 <Grid item style={{paddingTop: '1em'}}>
                   <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
-                    Listening to Children
+                    Literacy Instruction
                   </Typography>
                 </Grid>
                 <Typography align="left" variant="subtitle1" style={{fontFamily: 'Arimo', paddingTop: '0.5em'}}>
@@ -571,13 +571,13 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                     <List>
                       <ListItem style={{padding: 0}}>
                         <ListItemIcon style={{margin: 0}}>
-                          <SignalWifi4BarIcon style={{fill: Constants.Colors.LC, transform: 'rotate(-45deg)'}} />
+                          <SignalWifi4BarIcon style={{fill: Constants.Colors.LI, transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
-                        <ListItemText primary="Listening to children/encouraging child talk" />
+                        <ListItemText primary="Supporting children’s foundational skills development" />
                       </ListItem>
                       <ListItem style={{padding: 0}}>
                         <ListItemIcon style={{margin: 0}}>
-                          <SignalWifi4BarIcon style={{fill: Constants.Colors.RedGraph, transform: 'rotate(-45deg)'}} />
+                          <SignalWifi4BarIcon style={{fill: Constants.Colors.NotPresent, transform: 'rotate(-45deg)'}} />
                         </ListItemIcon>
                         <ListItemText primary="Not doing any target behaviors" />
                       </ListItem>
@@ -629,14 +629,8 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
             }
             trendsGraph={
               <Grid container direction="column" justify="center">
-                <Grid item style={{paddingTop: '1em', paddingBottom: '0.5em'}}>
-                  <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
-                    Teacher Behaviors
-                  </Typography>
-                </Grid>
                 <LiteracyTrendsFoundational
                   teacherData={this.state.trends}
-                  // data={this.handleTrendsFormatData}
                 />
               </Grid>
             }
