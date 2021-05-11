@@ -39,110 +39,13 @@ interface Props {
   }>
 }
 
-const columns = [
-  { id: 'name', label: '', minWidth: '12em', align: 'left' },
-  { id: 'first', label: <div>8/21/20 <br /> Morning Meeting</div>, minWidth: '2em', align: 'right' },
-  {
-    id: 'second',
-    label: <div>9/24/20 <br/> Morning Meeting</div>,
-    minWidth: '2em',
-    align: 'right',
-    // format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'third',
-    label: <div>10/5/20  <br/>Shared Reading</div>,
-    minWidth: '2em',
-    align: 'right',
-    // format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'fourth',
-    label: <div>12/4/20 <br/> Morning Meeting</div>,
-    minWidth: '2em',
-    align: 'right',
-    // format: (value) => value.toFixed(2),
-  },
-];
-
-const totals = [
-  { id: 'total', label: 'Total number of 1-minute intervals', minWidth: '10em', align: 'left' },
-  { id: 'first', label: '14', minWidth: '2em', align: 'right' },
-  {
-    id: 'second',
-    label: 10,
-    minWidth: '2em',
-    align: 'right',
-    // format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'third',
-    label: 7,
-    minWidth: '2em',
-    align: 'right',
-    // format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'fourth',
-    label: 15,
-    minWidth: '2em',
-    align: 'right',
-    // format: (value) => value.toFixed(2),
-  },
-];
-
 type sampleDataKey = 'literacy1' | 'literacy2' | 'literacy3' | 'literacy4' | 'literacy5' | 'literacy6' | 'literacy7' | 'literacy8' | 'literacy9' | 'literacy10' | 'total';
-
-const sampleData = [
-  {
-    title: <div>8/21/20 <br /> Morning Meeting</div>,
-    item1: 0,
-    item2: 2,
-    item3: 2,
-    item4: 2,
-    item5: 0,
-    item6: 0,
-    item7: 1,
-    item8: 0,
-    item9: 2,
-    item10: 0,
-    total: 14
-  },
-  {
-    title: <div>9/24/20 <br/> Morning Meeting</div>,
-    item1: 0,
-    item2: 0,
-    item3: 3,
-    item4: 0,
-    item5: 0,
-    item6: 0,
-    item7: 0,
-    item8: 2,
-    item9: 3,
-    item10: 0,
-    total: 10
-  },
-  {
-    title: <div>10/5/20  <br/>Shared Reading</div>,
-    item1: 0,
-    item2: 0,
-    item3: 4,
-    item4: 3,
-    item5: 0,
-    item6: 7,
-    item7: 2,
-    item8: 0,
-    item9: 7,
-    item10: 2,
-    total: 7
-  },
-];
 
 function createData(name: string, backgroundColor: string) {
   return { name, backgroundColor };
 }
 
-const numberRows = [
+const dataRows = [
   createData('Rhyming, alliteration, and/or syllables', '#cfe2f3'),
   createData('Individual sounds', '#cfe2f3'),
   createData('Alphabet knowledge and/or word identification skills', '#d9ead3'),
@@ -158,8 +61,11 @@ const numberRows = [
 const useStyles = makeStyles({
   root: {
     width: '100%',
+    // overflowX: 'auto'
   },
   container: {
+    // width: '100%',
+    // overflowX: 'auto'
     // maxHeight: 440,
   },
 });
@@ -225,10 +131,6 @@ export default function LiteracyTrendsFoundational(props: Props) {
           </Grid>
           <Grid item>
             <IconButton
-              // aria-controls="activity-setting"
-              // aria-haspopup="true"
-              // variant="contained"
-              // color="primary"
               onClick={handleClick}
               style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', padding: 10 }}
             >
@@ -279,7 +181,7 @@ export default function LiteracyTrendsFoundational(props: Props) {
           <Table stickyHeader aria-label="sticky table" size="small">
             <TableHead>
               <TableRow>
-                <TableCell />
+                <TableCell style={{minWidth: 250, position: 'sticky', left: 0, backgroundColor: '#fafafa', zIndex: 1}} />
                 {teacherData.filter(obj => {
                   return (activityFilter ? obj.activitySetting === activitySettings[activityFilter] : obj)
                 }).map(a => [a.startDate, a.activitySetting]).map((description: Array<string>, index: number) => {
@@ -288,7 +190,7 @@ export default function LiteracyTrendsFoundational(props: Props) {
                       key={index}
                       align='right'
                       padding='none'
-                      style={{ minWidth: '2em', paddingLeft: '0.2em', paddingRight: '0.2em', height: '100%'}}
+                      style={{ minWidth: 90, paddingLeft: '0.2em', paddingRight: '0.2em', height: '100%'}}
                     >
                       <Grid container direction="column" alignItems="flex-end" justify="center" style={{height: '100%'}}>
                         <Grid item>
@@ -306,18 +208,18 @@ export default function LiteracyTrendsFoundational(props: Props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {numberRows.map((row, index) => {
+              {dataRows.map((row, index) => {
                 const checklistItem = 'literacy' + (index+1).toString();
                 return(
                 <TableRow key={index} hover role="checkbox" tabIndex={-1}>
-                  <TableCell align='left' style={{backgroundColor: row.backgroundColor, fontWeight: 'bold'}}>
+                  <TableCell align='left' style={{backgroundColor: row.backgroundColor, fontWeight: 'bold', minWidth: 250, position: 'sticky', left: 0}}>
                     {row.name}
                   </TableCell>
                   {teacherData.filter(obj => {
                     return (activityFilter ? obj.activitySetting === activitySettings[activityFilter] : obj)
                   }).map(a => a[checklistItem as sampleDataKey]).map((literacy: (number), index2: number) => {
                     return (
-                      <TableCell key={index2} align='right' style={{backgroundColor: row.backgroundColor}}>
+                      <TableCell key={index2} width="20%" align='right' style={{backgroundColor: row.backgroundColor, width: '20%'}}>
                         {view === 'number' ? literacy : (Math.round((literacy/teacherData[index2].total)*100))+'%'}
                       </TableCell>
                     );
@@ -328,7 +230,7 @@ export default function LiteracyTrendsFoundational(props: Props) {
             </TableBody>
             <TableHead>
               <TableRow>
-                <TableCell>
+                <TableCell style={{minWidth: 250, position: 'sticky', left: 0}}>
                   Total number of 1-minute intervals
                 </TableCell>
                 {teacherData.filter(obj => {
@@ -337,7 +239,8 @@ export default function LiteracyTrendsFoundational(props: Props) {
                   <TableCell
                     key={index}
                     align={'right'}
-                    style={{ minWidth: '2em', fontWeight: 'bold'}}
+                    width="20%"
+                    style={{ fontWeight: 'bold'}}
                   >
                     {total}
                   </TableCell>

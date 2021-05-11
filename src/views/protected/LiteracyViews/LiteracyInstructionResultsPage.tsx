@@ -597,7 +597,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
                 <Grid container justify={"center"} direction={"column"}>
                   <Grid item style={{paddingTop: '1em'}}>
                     <Typography variant="h5" style={{textAlign: "center", fontFamily: 'Arimo'}}>
-                      Teacher Behaviors
+                      {this.state.who === 'Teacher' ? 'Teacher ' : 'Child '} Behaviors
                     </Typography>
                   </Grid>
                   <Grid container justify={"center"} direction={"column"}>
