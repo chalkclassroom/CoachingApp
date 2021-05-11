@@ -10,7 +10,8 @@ import * as moment from "moment";
 import ResultsLayout from '../../../components/ResultsLayout';
 import LiteracySummaryChart from "../../../components/LiteracyComponents/ResultsComponents/LiteracySummaryChart";
 import LiteracyDetailsFoundationalChart from "../../../components/LiteracyComponents/ResultsComponents/LiteracyDetailsFoundationalChart";
-import LiteracyTrendsFoundational from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsFoundational";
+import LiteracyTrendsFoundationalTeacher from "../../../components/LiteracyComponents/ResultsComponents/LiteracyTrendsFoundationalTeacher";
+import TrendsSlider from "../../../components/LiteracyComponents/ResultsComponents/TrendsSlider";
 import ListeningDetailsChart from "../../../components/ListeningComponents/ResultsComponents/ListeningDetailsChart";
 import ListeningTrendsGraph from "../../../components/ListeningComponents/ResultsComponents/ListeningTrendsGraph";
 import ListeningCoachingQuestions from "../../../components/ListeningComponents/ResultsComponents/ListeningCoachingQuestions";
@@ -66,7 +67,7 @@ interface State {
   literacy8: number,
   literacy9: number,
   literacy10: number,
-  trends: Array<{
+  teacherTrends: Array<{
     startDate: string,
     literacy1: number,
     literacy2: number,
@@ -78,6 +79,21 @@ interface State {
     literacy8: number,
     literacy9: number,
     literacy10: number,
+    total: number,
+    activitySetting: string
+  }>,
+  childTrends: Array<{
+    startDate: string,
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number,
+    literacy9: number,
+    // literacy10: number,
     total: number,
     activitySetting: string
   }>,
@@ -123,7 +139,8 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       literacy9: 0,
       literacy10: 0,
       trendsDates: [],
-      trends: [],
+      teacherTrends: [],
+      childTrends: [],
       trendsListening: [],
       trendsNotListening: [],
       notes: [],
@@ -194,7 +211,8 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       literacy9: 0,
       literacy10: 0,
       trendsDates: [],
-      trends: [],
+      teacherTrends: [],
+      childTrends: [],
       trendsListening: [],
       trendsNotListening: [],
       notes: [],
@@ -348,7 +366,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         who: who
       })
     })
-    firebase.fetchLiteracyTrendFoundational(this.props.teacherSelected.id, 'Teacher')
+    firebase.fetchLiteracyTrendFoundationalTeacher(this.props.teacherSelected.id)
     .then((trends: Array<{
       startDate: string,
       literacy1: number,
@@ -364,9 +382,27 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       total: number,
       activitySetting: string
     }>) => {
-      console.log('the trends', trends)
       this.setState({
-        trends: trends
+        teacherTrends: trends
+      })
+    });
+    firebase.fetchLiteracyTrendFoundationalChild(this.props.teacherSelected.id)
+    .then((trends: Array<{
+      startDate: string,
+      literacy1: number,
+      literacy2: number,
+      literacy3: number,
+      literacy4: number,
+      literacy5: number,
+      literacy6: number,
+      literacy7: number,
+      literacy8: number,
+      literacy9: number,
+      total: number,
+      activitySetting: string
+    }>) => {
+      this.setState({
+        childTrends: trends
       })
     })
   }
@@ -628,11 +664,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
               </div>
             }
             trendsGraph={
-              <Grid container direction="column" justify="center">
-                <LiteracyTrendsFoundational
-                  teacherData={this.state.trends}
-                />
-              </Grid>
+              <TrendsSlider teacherData={this.state.teacherTrends} childData={this.state.childTrends} />
             }
             changeSessionId={this.changeSessionId}
             sessionId={this.state.sessionId}

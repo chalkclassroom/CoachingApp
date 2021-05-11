@@ -1674,11 +1674,10 @@ class Firebase {
 
   /**
    * Literacy Instruction cloud function
-   * gets literacy data for each foundational skills observation
+   * gets literacy data for each foundational skills observation for teachers
    * @param {string} teacherId
-   * @param {string} who
    */
-   fetchLiteracyTrendFoundational = async (teacherId: string, who: string): Promise<Array<{
+   fetchLiteracyTrendFoundationalTeacher = async (teacherId: string): Promise<Array<{
     startDate: {value: string},
     literacy1: number,
     literacy2: number,
@@ -1694,9 +1693,9 @@ class Firebase {
     activitySetting: string
   }> | void> => {
     const getLiteracyTrendFoundationalFirebaseFunction = this.functions.httpsCallable(
-      "funcLiteracyTrendFoundational"
+      "funcLiteracyTrendFoundationalTeacher"
     );
-    return getLiteracyTrendFoundationalFirebaseFunction({ teacherId: teacherId, type: 'Foundational', who: who })
+    return getLiteracyTrendFoundationalFirebaseFunction({ teacherId: teacherId })
       .then(
         (result: {data: Array<Array<{
           startDate: {value: string},
@@ -1713,6 +1712,51 @@ class Firebase {
           total: number,
           activitySetting: string
         }>>}) =>
+          result.data[0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting listening trend: ", error)
+      );
+  };
+
+  /**
+   * Literacy Instruction cloud function
+   * gets literacy data for each foundational skills observation for children
+   * @param {string} teacherId
+   */
+   fetchLiteracyTrendFoundationalChild = async (teacherId: string): Promise<Array<{
+    startDate: {value: string},
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number,
+    literacy9: number,
+    total: number,
+    activitySetting: string
+  }> | void> => {
+    const getLiteracyTrendFoundationalFirebaseFunction = this.functions.httpsCallable(
+      "funcLiteracyTrendFoundationalChild"
+    );
+    return getLiteracyTrendFoundationalFirebaseFunction({ teacherId: teacherId })
+      .then(
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          literacy1: number,
+          literacy2: number,
+          literacy3: number,
+          literacy4: number,
+          literacy5: number,
+          literacy6: number,
+          literacy7: number,
+          literacy8: number,
+          literacy9: number,
+          total: number,
+          activitySetting: string
+        }>>}) => 
           result.data[0]
       )
       .catch((error: Error) =>

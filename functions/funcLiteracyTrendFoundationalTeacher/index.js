@@ -11,8 +11,7 @@ const bigquery = new BigQuery();
  * @param {!express:Request} req HTTP request context.
  * @param {!express:Response} res HTTP response context.
  */
-exports.funcLiteracyTrendFoundational = functions.https.onCall(async(data, context) => {
-    const tableType = data.type + data.who;
+exports.funcLiteracyTrendFoundationalTeacher = functions.https.onCall(async(data, context) => {
     const sqlQuery = `SELECT FORMAT_TIMESTAMP('%m/%d/%Y', DATE(sessionStart)) AS startDate,
                     activitySetting,
                     COUNT(CASE WHEN (checklist.item1) THEN 'literacy1' ELSE NULL END) AS literacy1,
@@ -26,7 +25,7 @@ exports.funcLiteracyTrendFoundational = functions.https.onCall(async(data, conte
                     COUNT(CASE WHEN (checklist.item9) THEN 'literacy9' ELSE NULL END) AS literacy9,
                     COUNT(CASE WHEN (checklist.item10) THEN 'literacy10' ELSE NULL END) AS literacy10,
                     COUNT (sessionStart) AS total,
-                    FROM cqrefpwa.observations.literacy`+tableType+`
+                    FROM cqrefpwa.observations.literacyFoundationalTeacher
                     WHERE teacher = '/user/`+data.teacherId+`' AND observedBy = '/user/`+context.auth.uid+`'
                     GROUP BY startDate, activitySetting
                     ORDER BY startDate ASC;`;
