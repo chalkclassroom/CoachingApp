@@ -12,9 +12,8 @@ const bigquery = new BigQuery();
  * @param {!express:Response} res HTTP response context.
  */
 
-exports.funcLiteracyDetails = functions.https.onCall(async(data, context) => {
+exports.funcLiteracyDetailsWriting = functions.https.onCall(async(data, context) => {
     //SQL query to get number of checks for each item on checklist
-    const tableType = data.type + data.who;
     const sqlQuery = `SELECT
                       COUNT(CASE WHEN (checklist.item1) THEN 'literacy1' ELSE NULL END) AS literacy1,
                       COUNT(CASE WHEN (checklist.item2) THEN 'literacy2' ELSE NULL END) AS literacy2,
@@ -24,9 +23,7 @@ exports.funcLiteracyDetails = functions.https.onCall(async(data, context) => {
                       COUNT(CASE WHEN (checklist.item6) THEN 'literacy6' ELSE NULL END) AS literacy6,
                       COUNT(CASE WHEN (checklist.item7) THEN 'literacy7' ELSE NULL END) AS literacy7,
                       COUNT(CASE WHEN (checklist.item8) THEN 'literacy8' ELSE NULL END) AS literacy8,
-                      COUNT(CASE WHEN (checklist.item9) THEN 'literacy9' ELSE NULL END) AS literacy9,
-                      COUNT(CASE WHEN (checklist.item10) THEN 'literacy10' ELSE NULL END) AS literacy10,
-                      FROM cqrefpwa.observations.literacy`+tableType+`
+                      FROM cqrefpwa.observations.literacyWriting`+data.who+`
                       WHERE id ='`+data.sessionId+`'`;
 
     console.log(sqlQuery);

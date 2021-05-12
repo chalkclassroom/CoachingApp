@@ -6,8 +6,10 @@ import 'slick-carousel/slick/slick.css';
 import Grid from "@material-ui/core/Grid/Grid";
 import LiteracyTrendsFoundationalTeacher from './LiteracyTrendsFoundationalTeacher';
 import LiteracyTrendsFoundationalChild from './LiteracyTrendsFoundationalChild';
+import LiteracyTrendsWriting from './LiteracyTrendsWriting';
 
 interface Props {
+  type: number,
   teacherData: Array<{
     startDate: string,
     literacy1: number,
@@ -47,8 +49,9 @@ interface Props {
 class TrendsSlider extends React.Component<Props, {}> {
 
   static propTypes = {
-    childData: PropTypes.func.isRequired,
-    teacherData: PropTypes.func.isRequired
+    type: PropTypes.number.isRequired,
+    childData: PropTypes.array.isRequired,
+    teacherData: PropTypes.array.isRequired
   };
 
   /**
@@ -67,16 +70,30 @@ class TrendsSlider extends React.Component<Props, {}> {
       <Slider {...settings}>
         <div>
           <Grid container justify={"center"} direction={"column"}>
-            <LiteracyTrendsFoundationalTeacher
-              teacherData={this.props.teacherData}
-            />
+            {this.props.type === 1 ? (
+              <LiteracyTrendsFoundationalTeacher
+                teacherData={this.props.teacherData}
+              />
+            ) : (
+              <LiteracyTrendsWriting
+                data={this.props.teacherData}
+                who='Teacher'
+              />
+            )}
           </Grid>
         </div>
         <div>
           <Grid container justify={"center"} direction={"column"}>
-            <LiteracyTrendsFoundationalChild
-              childData={this.props.childData}
-            />
+            {this.props.type === 1 ? (
+              <LiteracyTrendsFoundationalChild
+                childData={this.props.childData}
+              />
+            ) : (
+              <LiteracyTrendsWriting
+                data={this.props.childData}
+                who='Child'
+              />
+            )}
           </Grid>
         </div>
       </Slider>

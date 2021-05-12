@@ -1616,9 +1616,9 @@ class Firebase {
     literacy: number,
     noLiteracy: number
   } | void> => {
-    const getLiteracySummaryFirebaseFunction = this.functions.httpsCallable(
-      "funcLiteracySummary"
-    );
+    const getLiteracySummaryFirebaseFunction = type === 'Foundational' ? this.functions.httpsCallable(
+      "funcLiteracySummaryFoundational"
+    ) : this.functions.httpsCallable("funcLiteracySummaryWriting");
     return getLiteracySummaryFirebaseFunction({ sessionId: sessionId, type: type, who: who })
       .then(
         (result: {data: Array<Array<{literacy: number, noLiteracy: number}>>}) =>
@@ -1633,10 +1633,9 @@ class Firebase {
    * Literacy Instruction cloud function
    * gets counts of each literacy behavior type
    * @param {string} sessionId
-   * @param {string} type
    * @param {string} who
    */
-   fetchLiteracyDetails = async (sessionId: string, type: string, who: string): Promise<{
+   fetchLiteracyDetailsFoundational = async (sessionId: string, who: string): Promise<{
     literacy1: number,
     literacy2: number,
     literacy3: number,
@@ -1649,9 +1648,9 @@ class Firebase {
     literacy10: number
   } | void> => {
     const getLiteracyDetailsFirebaseFunction = this.functions.httpsCallable(
-      "funcLiteracyDetails"
+      "funcLiteracyDetailsFoundational"
     );
-    return getLiteracyDetailsFirebaseFunction({ sessionId: sessionId, type: type, who: who })
+    return getLiteracyDetailsFirebaseFunction({ sessionId: sessionId, who: who })
       .then(
         (result: {data: Array<Array<{
           literacy1: number,
@@ -1664,6 +1663,44 @@ class Firebase {
           literacy8: number,
           literacy9: number,
           literacy10: number
+        }>>}) =>
+          result.data[0][0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting literacy details: ", error)
+      );
+  };
+
+  /**
+   * Literacy Instruction cloud function
+   * gets counts of each literacy behavior type
+   * @param {string} sessionId
+   * @param {string} who
+   */
+   fetchLiteracyDetailsWriting = async (sessionId: string, who: string): Promise<{
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number
+  } | void> => {
+    const getLiteracyDetailsFirebaseFunction = this.functions.httpsCallable(
+      "funcLiteracyDetailsWriting"
+    );
+    return getLiteracyDetailsFirebaseFunction({ sessionId: sessionId, who: who })
+      .then(
+        (result: {data: Array<Array<{
+          literacy1: number,
+          literacy2: number,
+          literacy3: number,
+          literacy4: number,
+          literacy5: number,
+          literacy6: number,
+          literacy7: number,
+          literacy8: number
         }>>}) =>
           result.data[0][0]
       )
@@ -1757,6 +1794,49 @@ class Firebase {
           total: number,
           activitySetting: string
         }>>}) => 
+          result.data[0]
+      )
+      .catch((error: Error) =>
+        console.error("Error occurred getting listening trend: ", error)
+      );
+  };
+
+  /**
+   * Literacy Instruction cloud function
+   * gets literacy data for each writing observation
+   * @param {string} teacherId
+   */
+   fetchLiteracyTrendWriting = async (teacherId: string, who: string): Promise<Array<{
+    startDate: {value: string},
+    literacy1: number,
+    literacy2: number,
+    literacy3: number,
+    literacy4: number,
+    literacy5: number,
+    literacy6: number,
+    literacy7: number,
+    literacy8: number,
+    total: number,
+    activitySetting: string
+  }> | void> => {
+    const getLiteracyTrendFoundationalFirebaseFunction = this.functions.httpsCallable(
+      "funcLiteracyTrendWriting"
+    );
+    return getLiteracyTrendFoundationalFirebaseFunction({ teacherId: teacherId, who: who })
+      .then(
+        (result: {data: Array<Array<{
+          startDate: {value: string},
+          literacy1: number,
+          literacy2: number,
+          literacy3: number,
+          literacy4: number,
+          literacy5: number,
+          literacy6: number,
+          literacy7: number,
+          literacy8: number,
+          total: number,
+          activitySetting: string
+        }>>}) =>
           result.data[0]
       )
       .catch((error: Error) =>

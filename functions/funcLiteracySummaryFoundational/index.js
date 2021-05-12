@@ -12,7 +12,7 @@ const bigquery = new BigQuery();
  * @param {!express:Response} res HTTP response context.
  */
 
-exports.funcLiteracySummary = functions.https.onCall(async (data, context) => {
+exports.funcLiteracySummaryFoundational = functions.https.onCall(async (data, context) => {
 
     //SQL query to get number of checks for each item on checklist
     const tableType = data.type + data.who;
