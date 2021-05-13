@@ -84,6 +84,44 @@ export default function LiteracyInstructionHelpCard(props: Props): React.ReactEl
             {tabValue === 0 ? <LiteracyFoundationalTeacher /> : <LiteracyFoundationalChild />}
           </Grid>
         </Grid>
+      ) : type === 'Writing' ? (
+        <Grid container direction="column">
+          <Grid item>
+            <MuiThemeProvider theme={Constants.LiteracyTheme}>
+              <TabBar position="static" color="default" className={classes.tabBar}>
+                <Tabs
+                  value={tabValue}
+                  indicatorColor="secondary"
+                  variant="fullWidth"
+                >
+                  <Tab
+                    label="Teacher Behaviors"
+                    onClick={handleChecklist1}
+                    style={{
+                      fontFamily: "Arimo",
+                      fontSize: '1em',
+                      color: 'black',
+                      backgroundColor: tabValue === 0 ? Constants.Colors.LI : '#d3d3d3'
+                    }}
+                  />
+                  <Tab
+                    label="Child Behaviors"
+                    onClick={handleChecklist2}
+                    style={{
+                      fontFamily: "Arimo",
+                      fontSize: '1em',
+                      color: 'black',
+                      backgroundColor: tabValue === 1 ? Constants.Colors.LI : '#d3d3d3'
+                    }}
+                  />
+                </Tabs>
+              </TabBar>
+            </MuiThemeProvider>
+          </Grid>
+          <Grid item>
+            {tabValue === 0 ? <LiteracyWritingTeacher /> : <LiteracyWritingChild />}
+          </Grid>
+        </Grid>
       ) : type === 'FoundationalTeacher' ? (
         <Grid container direction='column'>
           <Grid item>

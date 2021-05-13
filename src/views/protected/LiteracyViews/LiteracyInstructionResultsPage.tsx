@@ -755,10 +755,10 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
             conferencePlanExists={this.state.conferencePlanExists}
             noDataYet={this.state.noDataYet}
             literacyType={
-              this.props.location.state.type === LiteracyTypes.FOUNDATIONAL ? 'Foundational'+this.state.who
-                : this.props.location.state.type === LiteracyTypes.WRITING ? 'Writing'+this.state.who
-                : this.props.location.state.type === LiteracyTypes.READING ? 'Reading'+this.state.who
-                : 'Language'+this.state.who
+              this.props.location.state.type === LiteracyTypes.FOUNDATIONAL ? 'Foundational'
+                : this.props.location.state.type === LiteracyTypes.WRITING ? 'Writing'
+                : this.props.location.state.type === LiteracyTypes.READING ? 'Reading'
+                : 'Language'
             }
           />
         </div>
