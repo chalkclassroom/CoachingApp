@@ -124,7 +124,7 @@ interface Props {
   addNoteToPlan(conferencePlanId: string, note: string): void,
   conferencePlanExists: boolean,
   noDataYet: boolean,
-  literacyType?: number
+  literacyType?: string
 }
 
 interface Style {

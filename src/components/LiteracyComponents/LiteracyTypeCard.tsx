@@ -39,7 +39,7 @@ function LiteracyTypeCard(props: Props): React.ReactElement {
               elevation={4}
               style={{
                 color: Constants.Colors.LI,
-                height: '10em',
+                height: '7em',
                 borderColor: Constants.Colors.LI,
                 borderWidth: '1px',
                 borderStyle: 'solid'
@@ -53,7 +53,7 @@ function LiteracyTypeCard(props: Props): React.ReactElement {
             </Card>
           </Grid>
           <Grid item xs={7}>
-            <Typography variant="h6" style={{fontFamily: 'Arimo', paddingLeft: '0.5em', paddingRight: '0.5em'}}>
+            <Typography variant="subtitle1" style={{fontFamily: 'Arimo', paddingLeft: '0.5em', paddingRight: '0.5em'}}>
               {descriptionText}
             </Typography>
           </Grid>

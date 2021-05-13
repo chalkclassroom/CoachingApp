@@ -114,6 +114,14 @@ interface State {
   noDataYet: boolean
 }
 
+enum LiteracyTypes {
+  NONE = 0,
+  FOUNDATIONAL = 1,
+  WRITING = 2,
+  READING = 3,
+  LANGUAGE = 4
+}
+
 /**
  * literacy instruction results
  * @class LiteracyInstructionResultsPage
@@ -336,14 +344,14 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchLiteracySummary(this.state.sessionId, this.props.location.state.type===1 ? 'Foundational' : 'Writing', who)
+    firebase.fetchLiteracySummary(this.state.sessionId, this.props.location.state.type===LiteracyTypes.FOUNDATIONAL ? 'Foundational' : 'Writing', who)
     .then((summary: {literacy: number, noLiteracy: number}) => {
       this.setState({
         literacy: summary.literacy,
         noLiteracy: summary.noLiteracy,
       });
     });
-    this.props.location.state.type === 1 ? (
+    this.props.location.state.type === LiteracyTypes.FOUNDATIONAL ? (
       firebase.fetchLiteracyDetailsFoundational(this.state.sessionId, who)
       .then((summary: {
         literacy1: number,
@@ -396,7 +404,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         })
       })
     )
-    if (this.props.location.state.type === 1) {
+    if (this.props.location.state.type === LiteracyTypes.FOUNDATIONAL) {
       firebase.fetchLiteracyTrendFoundationalTeacher(this.props.teacherSelected.id)
       .then((trends: Array<{
         startDate: string,
@@ -436,7 +444,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
           childTrends: trends
         })
       })
-    } else if (this.props.location.state.type === 3) {
+    } else if (this.props.location.state.type === LiteracyTypes.WRITING) {
       firebase.fetchLiteracyTrendWriting(this.props.teacherSelected.id, 'Teacher')
       .then((trends: Array<{
         startDate: string,
@@ -698,7 +706,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
               </Grid>
             }
             details={
-              this.props.location.state.type === 1 ? (
+              this.props.location.state.type === LiteracyTypes.FOUNDATIONAL ? (
                 <LiteracyDetailsFoundational
                   literacy1={this.state.literacy1}
                   literacy2={this.state.literacy2}
@@ -746,7 +754,12 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
             actionPlanExists={this.state.actionPlanExists}
             conferencePlanExists={this.state.conferencePlanExists}
             noDataYet={this.state.noDataYet}
-            literacyType={this.props.location.state.type}
+            literacyType={
+              this.props.location.state.type === LiteracyTypes.FOUNDATIONAL ? 'Foundational'+this.state.who
+                : this.props.location.state.type === LiteracyTypes.WRITING ? 'Writing'+this.state.who
+                : this.props.location.state.type === LiteracyTypes.READING ? 'Reading'+this.state.who
+                : 'Language'+this.state.who
+            }
           />
         </div>
       ) : (

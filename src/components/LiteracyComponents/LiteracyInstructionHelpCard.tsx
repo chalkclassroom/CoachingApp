@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  type: string | number
+  type: string
 }
 
 /**
@@ -46,7 +46,7 @@ export default function LiteracyInstructionHelpCard(props: Props): React.ReactEl
 
   return (
     <div>
-      {type === 1 ? (
+      {type === 'Foundational' ? (
         <Grid container direction="column">
           <Grid item>
             <MuiThemeProvider theme={Constants.LiteracyTheme}>

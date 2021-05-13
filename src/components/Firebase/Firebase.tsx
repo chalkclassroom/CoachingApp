@@ -73,9 +73,9 @@ class Firebase {
           .then(() => console.log('Woohoo! Multi-Tab Persistence!'))
           .catch((error: Error) => console.error('Offline Not Working: ', error))
       this.functions = firebase.functions()
-      if (process.env.USE_LOCAL_FUNCTIONS) {
+      // if (process.env.USE_LOCAL_FUNCTIONS) {
         this.functions.useFunctionsEmulator('http://localhost:5001')
-      }
+      // }
       // this.sessionRef = null;
     }
   }

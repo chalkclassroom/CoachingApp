@@ -156,7 +156,7 @@ interface Props {
   notesModal: boolean,
   teacherSelected: Types.Teacher,
   teacherList: Array<Types.Teacher>,
-  literacyType?: number
+  literacyType?: string
 }
 
 interface State {
@@ -334,7 +334,7 @@ class ResultsDashboard extends React.Component<Props, State> {
           : this.props.magic8 === "Listening to Children" ? 
             <ListeningToChildrenHelp open={this.state.help} close={this.handleCloseHelp} />
           : this.props.magic8 === "Literacy Instruction" ? 
-            <LiteracyInstructionHelp open={this.state.help} close={this.handleCloseHelp} type={this.props.literacyType ? this.props.literacyType : 0} />
+            <LiteracyInstructionHelp open={this.state.help} close={this.handleCloseHelp} type={this.props.literacyType ? this.props.literacyType : ''} />
           : <div />
         ) : this.props.notesModal ? (
           <NotesListDetailTable

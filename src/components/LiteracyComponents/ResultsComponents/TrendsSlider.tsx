@@ -20,8 +20,8 @@ interface Props {
     literacy6: number,
     literacy7: number,
     literacy8: number,
-    literacy9: number,
-    literacy10: number,
+    literacy9?: number,
+    literacy10?: number,
     total: number,
     activitySetting: string
   }>,
@@ -35,7 +35,7 @@ interface Props {
     literacy6: number,
     literacy7: number,
     literacy8: number,
-    literacy9: number,
+    literacy9?: number,
     total: number,
     activitySetting: string
   }>

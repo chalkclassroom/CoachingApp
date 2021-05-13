@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import CloseIcon from "@material-ui/icons/Close";
 import { Tooltip, Collapse, Card, Divider } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
+import LiteracyTypeCard from './LiteracyTypeCard';
 import * as Constants from '../../constants/Constants';
 
 /**
@@ -44,6 +45,14 @@ interface Props {
   tool: string
 }
 
+enum LiteracyTypes {
+  NONE = 0,
+  FOUNDATIONAL = 1,
+  WRITING = 2,
+  READING = 3,
+  LANGUAGE = 4
+}
+
 /**
  * Modal to confirm view results
  * @function LiteracyResultsModal
@@ -52,7 +61,7 @@ interface Props {
  */
 function LiteracyResultsModal(props: Props): React.ReactElement {
   const { handleBegin, handleClose, open } = props;
-  const [type, setType] = useState(0);
+  const [literacyType, setLiteracyType] = useState(0);
   const classes = useStyles();
   return (
     <div>
@@ -97,149 +106,46 @@ function LiteracyResultsModal(props: Props): React.ReactElement {
             </Grid>
             <Grid item style={{paddingTop: '1em'}}>
               <Grid container direction="column" justify="center" alignItems="center">
-                <Collapse in={type===0 || type === 1} style={{width: '100%'}}>
-                  <Grid item style={{paddingBottom: '1em'}}>
-                    <Grid container direction="row" justify="space-around" alignItems="center">
-                      <Grid item xs={3}>
-                        <Card
-                          onClick={(): void => {type === 1 ? setType(0) : setType(1)}}
-                          elevation={4}
-                          style={{
-                            color: Constants.Colors.LI,
-                            height: '10em',
-                            borderColor: Constants.Colors.LI,
-                            borderWidth: '1px',
-                            borderStyle: 'solid'
-                          }}
-                        >
-                          <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
-                            <Typography variant="h5" align="center" style={{fontFamily: 'Arimo', fontWeight: 'bold', padding: '0.5em'}}>
-                              Foundational Skills
-                            </Typography>
-                          </Grid>
-                        </Card>
-                      </Grid>
-                      <Grid item xs={7}>
-                        <Typography variant="h6" style={{fontFamily: 'Arimo', paddingLeft: '0.5em', paddingRight: '0.5em'}}>
-                          Observe lessons and activities designed to foster children’s phonological
-                          awareness and develop their knowledge of the alphabetic principle and
-                          print concepts.
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Collapse>
-                <Collapse in={type===1}>
-                  <Grid item>
-                    <Grid container direction='row' justify='center' alignItems='center'>
-                      <Grid item xs={5}>
-                        <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
-                          <ul>
-                            <li>
-                              Observe the teacher delivering instruction or interacting with children.
-                            </li>
-                            <li>
-                              Select the types of foundational skills instruction that occur.
-                            </li>
-                          </ul>
-                        </Typography>
-                        <Grid container direction="row" justify="center" alignItems="center">
-                          <Button onClick={(): void => {handleBegin('FoundationalTeacher')}} variant="contained" color="primary">
-                            BEGIN TEACHER OBSERVATION
-                          </Button>
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={2} style={{height: '100%'}}>
-                        <Grid container direction="row" justify="center" alignItems="center">
-                          <Divider orientation="vertical" flexItem style={{height: '5em'}} />
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={5}>
-                        <Typography variant="h6" align="left" style={{fontFamily: 'Arimo'}}>
-                          <ul>
-                            <li>
-                              Observe children participating in lessons or activities.
-                            </li>
-                            <li>
-                              Select the types of foundational skills and knowledge that children are using.
-                            </li>
-                          </ul>
-                        </Typography>
-                        <Grid container direction="row" justify="center" alignItems="center">
-                          <Button onClick={(): void => {handleBegin('FoundationalChild')}} variant="contained" color="primary">
-                            BEGIN CHILD OBSERVATION
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Collapse>
-                <Collapse in={type===0 || type === 2} style={{width: '100%'}}>
-                  <Grid item style={{paddingBottom: '1em'}}>
-                    <Grid container direction="row" justify="space-around" alignItems="center">
-                      <Grid item xs={3}>
-                        <Card
-                          onClick={(): void => {type === 2 ? setType(0) : setType(2)}}
-                          elevation={4}
-                          style={{
-                            color: Constants.Colors.LI,
-                            height: '10em',
-                            borderColor: Constants.Colors.LI,
-                            borderWidth: '1px',
-                            borderStyle: 'solid'
-                          }}
-                        >
-                          <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
-                            <Typography variant="h5" align="center" style={{fontFamily: 'Arimo', fontWeight: 'bold', padding: '0.5em'}}>
-                              Language and Comprehension
-                            </Typography>
-                          </Grid>
-                        </Card>
-                      </Grid>
-                      <Grid item xs={7}>
-                        <Typography variant="h6" style={{fontFamily: 'Arimo', padding: '0.5em'}}>
-                          Observe activities designed to nurture children’s language and content
-                          development, listening comprehension, and critical responses to culturally
-                          diverse texts.
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Collapse>
-                <Collapse in={type===0 || type === 3} style={{width: '100%'}}>
-                  <Grid item>
-                    <Grid container direction="row" justify="space-around" alignItems="center">
-                      <Grid item xs={3}>
-                        <Card
-                          onClick={(): void => {type === 3 ? setType(0) : setType(3)}}
-                          elevation={4}
-                          style={{
-                            color: Constants.Colors.LI,
-                            height: '10em',
-                            borderColor: Constants.Colors.LI,
-                            borderWidth: '1px',
-                            borderStyle: 'solid'
-                          }}
-                        >
-                          <Grid container direction="column" justify="center" alignItems="center" style={{height: '100%'}}>
-                            <Typography variant="h5" align="center" style={{fontFamily: 'Arimo', fontWeight: 'bold', padding: '0.5em'}}>
-                              Writing
-                            </Typography>
-                          </Grid>
-                        </Card>
-                      </Grid>
-                      <Grid item xs={7}>
-                        <Typography variant="h6" style={{fontFamily: 'Arimo', padding: '0.5em'}}>
-                          Observe activities designed to engage children in writing that conveys meaning.
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Collapse>
+                <LiteracyTypeCard
+                  type={LiteracyTypes.FOUNDATIONAL}
+                  literacyType={literacyType}
+                  setLiteracyType={setLiteracyType}
+                  title="Foundational Skills"
+                  descriptionText="Observe lessons and activities designed to foster children’s phonological
+                  awareness and develop their knowledge of the alphabetic principle and
+                  print concepts."
+                />
+                <LiteracyTypeCard
+                  type={LiteracyTypes.WRITING}
+                  literacyType={literacyType}
+                  setLiteracyType={setLiteracyType}
+                  title="Writing"
+                  descriptionText="Observe lessons and activities designed to engage children in emergent writing."
+                />
+                <LiteracyTypeCard
+                  type={LiteracyTypes.READING}
+                  literacyType={literacyType}
+                  setLiteracyType={setLiteracyType}
+                  title="Book Reading"
+                  descriptionText={<div>
+                    Observe interactive book readings that support children&apos;s vocabulary
+                    and content knowledge, text comprehension, and speaking/listening skills.
+                    <i>To observe shared book readings focusing on print concepts,
+                    select the Foundational Skills tool.</i>
+                  </div>}
+                />
+                <LiteracyTypeCard
+                  type={LiteracyTypes.LANGUAGE}
+                  literacyType={literacyType}
+                  setLiteracyType={setLiteracyType}
+                  title="Language Environment"
+                  descriptionText="Observe responsive and content-rich teacher-child interactions
+                  that promote children's language development."
+                />
               </Grid>
             </Grid>
             <Grid item style={{paddingTop: '2em'}}>
-              <Button disabled={type===0} onClick={(): void => {handleBegin(type)}} variant="contained" color="primary">
+              <Button disabled={literacyType===0} onClick={(): void => {handleBegin(literacyType)}} variant="contained" color="primary">
                 VIEW RESULTS
               </Button>
             </Grid>

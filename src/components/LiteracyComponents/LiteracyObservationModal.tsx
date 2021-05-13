@@ -158,7 +158,7 @@ function LiteracyObservationModal(props: Props): React.ReactElement {
                       descriptionText={<div>
                         Observe interactive book readings that support children&apos;s vocabulary
                         and content knowledge, text comprehension, and speaking/listening skills.
-                        <i>*To observe shared book readings that focus more on print concepts,
+                        <i>To observe shared book readings focusing on print concepts,
                         select the Foundational Skills tool.</i>
                       </div>}
                     />
