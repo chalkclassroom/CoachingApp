@@ -111,6 +111,14 @@ const ViewEnum = {
   KNOWLEDGECHECK: 6
 };
 
+enum LiteracyTypes {
+  NONE = 0,
+  FOUNDATIONAL = 1,
+  WRITING = 2,
+  READING = 3,
+  LANGUAGE = 4
+}
+
 interface Props {
   classes: Style,
   icon: string,
@@ -118,7 +126,8 @@ interface Props {
   conceptsUrl: string;
   demonstrationUrl: string;
   definitions: React.ReactElement;
-  section: string
+  section: string,
+  literacyType: LiteracyTypes
 }
 
 interface Style {
@@ -195,7 +204,8 @@ class TrainingLayout extends React.Component<Props, State> {
     conceptsUrl: PropTypes.string.isRequired,
     demonstrationUrl: PropTypes.string.isRequired,
     definitions: PropTypes.element.isRequired,
-    section: PropTypes.string.isRequired
+    section: PropTypes.string.isRequired,
+    literacyType: PropTypes.number.isRequired
   };
 
   /**
@@ -229,6 +239,7 @@ class TrainingLayout extends React.Component<Props, State> {
                   demonstrationClick={this.demonstrationClick}
                   knowledgeCheckClick={this.knowledgeCheckClick}
                   colorTheme={this.props.colorTheme}
+                  literacyType={this.props.literacyType}
                 />
               </Grid>
             </Grid>

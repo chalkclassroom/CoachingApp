@@ -11,6 +11,7 @@ import { Tooltip, Collapse, Card, Divider, Fade } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import LiteracyTypeCard from './LiteracyTypeCard';
+import LiteracyObservationOptions from './LiteracyObservationOptions';
 import * as Constants from '../../constants/Constants';
 
 /**
@@ -40,10 +41,11 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  handleBegin(checklistType: number | string): void,
+  handleBegin(checklistType: number): void,
   handleClose(): void,
   open: boolean,
-  tool: string
+  tool: string,
+  type: string
 }
 
 enum LiteracyTypes {
@@ -56,12 +58,12 @@ enum LiteracyTypes {
 
 /**
  * Modal to confirm view results
- * @function LiteracyResultsModal
+ * @function LiteracyModal
  * @param {Props} props
  * @return {ReactElement}
  */
-function LiteracyResultsModal(props: Props): React.ReactElement {
-  const { handleBegin, handleClose, open } = props;
+function LiteracyModal(props: Props): React.ReactElement {
+  const { handleBegin, handleClose, open, type } = props;
   const [literacyType, setLiteracyType] = useState(0);
   const classes = useStyles();
   return (
@@ -101,7 +103,7 @@ function LiteracyResultsModal(props: Props): React.ReactElement {
                 </Grid>
                 <Grid item xs={10}>
                   <Typography variant="h4" align="center" style={{fontFamily: 'Arimo'}}>
-                    Literacy Instruction Results
+                    Literacy Instruction {type === 'Observe' ? 'Observation' : type === 'Results' ? 'Results' : 'Training'}
                   </Typography>
                 </Grid>
                 <Grid item xs={1}>
@@ -158,13 +160,41 @@ function LiteracyResultsModal(props: Props): React.ReactElement {
                   descriptionText="Observe responsive and content-rich teacher-child interactions
                   that promote children's language development."
                 />
+                {type === 'Observe' ? (
+                  <div>
+                    <LiteracyObservationOptions
+                      handleBegin={handleBegin}
+                      checklistType="Foundational"
+                      type={LiteracyTypes.FOUNDATIONAL}
+                      literacyType={literacyType}
+                      teacherInstruction1="Observe the teacher delivering instruction or interacting with children."
+                      teacherInstruction2="Select the types of foundational skills instruction that occur."
+                      childInstruction1="Observe children participating in lessons or activities."
+                      childInstruction2="Select the types of foundational skills and knowledge that children are using."
+                    />
+                    <LiteracyObservationOptions
+                      handleBegin={handleBegin}
+                      checklistType="Writing"
+                      type={LiteracyTypes.WRITING}
+                      literacyType={literacyType}
+                      teacherInstruction1="Observe the teacher delivering instruction or interacting with children."
+                      teacherInstruction2="Select the types of foundational skills instruction that occur."
+                      childInstruction1="Observe children writing independently or with teachers/peers."
+                      childInstruction2="Select the types of child writing behaviors that occur."
+                    />
+                  </div>
+                ) : ( <div /> )}
               </Grid>
             </Grid>
-            <Grid item style={{paddingTop: '2em'}}>
-              <Button disabled={literacyType===0} onClick={(): void => {handleBegin(literacyType)}} variant="contained" color="primary">
-                VIEW RESULTS
-              </Button>
-            </Grid>
+            {type === 'Observe' ? (
+              null
+            ) : (
+              <Grid item style={{paddingTop: '2em'}}>
+                <Button disabled={literacyType===0} onClick={(): void => {handleBegin(literacyType)}} variant="contained" color="primary">
+                  {type === 'Results' ? 'VIEW RESULTS' : 'BEGIN TRAINING'}
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </div>
       </Modal>
@@ -172,11 +202,11 @@ function LiteracyResultsModal(props: Props): React.ReactElement {
   );
 }
 
-LiteracyResultsModal.propTypes = {
+LiteracyModal.propTypes = {
   handleBegin: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   tool: PropTypes.string.isRequired
 }
 
-export default LiteracyResultsModal;
+export default LiteracyModal;

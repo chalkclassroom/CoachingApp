@@ -20,8 +20,7 @@ import LevelOfInstructionObservationPopUp from './LevelOfInstructionComponents/L
 import ListeningToChildrenObservationPopUp from './ListeningComponents/ListeningToChildrenObservationPopUp';
 import SequentialActivitiesObservationPopUp from './SequentialActivitiesComponents/SequentialActivitiesObservationPopUp';
 import AssociativeCooperativeInteractionsObservationPopUp from './AssociativeCooperativeComponents/AssociativeCooperativeInteractionsObservationPopUp';
-import LiteracyObservationModal from './LiteracyComponents/LiteracyObservationModal';
-import LiteracyResultsModal from './LiteracyComponents/LiteracyResultsModal';
+import LiteracyModal from './LiteracyComponents/LiteracyModal';
 import ObservationModal from './ObservationModal';
 import ResultsModal from './ResultsModal';
 import LockedModal from './LockedModal';
@@ -50,6 +49,7 @@ function ToolIcons(props: Props): React.ReactElement {
   const [observeModal, setObserveModal] = useState(false);
   const [resultsModal, setResultsModal] = useState(false);
   const [lockedModal, setLockedModal] = useState(false);
+  const [literacyTrainingModal, setLiteracyTrainingModal] = useState(false);
 
   const ObservationPopUp = {
     'TransitionTime': <TransitionTimeObservationPopUp />,
@@ -68,9 +68,13 @@ function ToolIcons(props: Props): React.ReactElement {
     setSelected(tool);
     if (training) {
       if (type === 'Observe') {
-        history.push({
-          pathname: `/${tool}Training`,
-        });
+        if (tool === 'LiteracyInstruction') {
+          setLiteracyTrainingModal(true)
+        } else {
+          history.push({
+            pathname: `/${tool}Training`,
+          });
+        }
       } else {
         setResultsTrainingModal(true);
       }
@@ -194,12 +198,14 @@ function ToolIcons(props: Props): React.ReactElement {
         </Grid>
       </Grid>
       {selected === 'LiteracyInstruction' ? (
-        <LiteracyObservationModal
+        <LiteracyModal
           open={observeModal}
-          handleBegin={(checklistType: string): void => {
+          handleBegin={(checklistType: number): void => {
             history.push({pathname:`/${selected}`, state: {checklist: checklistType}})
           }}
           handleClose={(): void => setObserveModal(false)}
+          tool={selected}
+          type='Observe'
         />
       ) : (
         <ObservationModal
@@ -217,13 +223,14 @@ function ToolIcons(props: Props): React.ReactElement {
         handleClose={(): void => setLockedModal(false)}
       />
       {selected === 'LiteracyInstruction' ? (
-        <LiteracyResultsModal
+        <LiteracyModal
           open={resultsModal}
           handleBegin={(checklistType: number): void => {
             history.push({pathname:`/${selected}Results`, state: {type: checklistType}})
           }}
           handleClose={(): void => setResultsModal(false)}
           tool={selected}
+          type='Results'
         />
       ) : (
         <ResultsModal
@@ -238,6 +245,15 @@ function ToolIcons(props: Props): React.ReactElement {
         handleClose={(): void => {
           setResultsTrainingModal(false);
         }}
+      />
+      <LiteracyModal
+        open={literacyTrainingModal}
+        handleBegin={(checklistType: number): void => {
+          history.push({pathname:`/${selected}Training`, state: {type: checklistType}})
+        }}
+        handleClose={(): void => setLiteracyTrainingModal(false)}
+        tool={selected}
+        type='Training'
       />
     </div>
   );

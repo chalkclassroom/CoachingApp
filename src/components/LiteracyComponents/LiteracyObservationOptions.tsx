@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import { Collapse, Button, Divider } from "@material-ui/core";
 
 interface Props {
-  handleBegin(checklistType?: string): void,
+  handleBegin(checklistType: number | string): void,
   checklistType: string
   type: number,
   literacyType: number,
@@ -32,6 +32,7 @@ function LiteracyObservationOptions(props: Props): React.ReactElement {
     childInstruction1,
     childInstruction2
   } = props;
+  const stringType = literacyType === 1 ? 'Foundational' : literacyType === 2 ? 'Writing' : literacyType === 3 ? 'Reading' : 'Language'
   return (
     <Collapse in={literacyType===type}>
       <Grid item>
@@ -48,7 +49,7 @@ function LiteracyObservationOptions(props: Props): React.ReactElement {
               </ul>
             </Typography>
             <Grid container direction="row" justify="center" alignItems="center">
-              <Button onClick={(): void => {handleBegin(checklistType + 'Teacher')}} variant="contained" color="primary">
+              <Button onClick={(): void => {handleBegin(stringType + 'Teacher')}} variant="contained" color="primary">
                 BEGIN TEACHER OBSERVATION
               </Button>
             </Grid>
@@ -70,7 +71,7 @@ function LiteracyObservationOptions(props: Props): React.ReactElement {
               </ul>
             </Typography>
             <Grid container direction="row" justify="center" alignItems="center">
-              <Button onClick={(): void => {handleBegin(checklistType + 'Child')}} variant="contained" color="primary">
+              <Button onClick={(): void => {handleBegin(stringType + 'Child')}} variant="contained" color="primary">
                 BEGIN CHILD OBSERVATION
               </Button>
             </Grid>

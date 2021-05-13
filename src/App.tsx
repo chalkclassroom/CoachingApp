@@ -414,7 +414,10 @@ class App extends React.Component<Props, State> {
             <PrivateRoute
               auth={this.state.auth}
               path="/LiteracyInstructionTraining"
-              render={() : React.ReactElement=> <LiteracyTrainingPage />}
+              render={(props: {
+                history: H.History
+              }) : React.ReactElement=> <LiteracyTrainingPage {...props}/>}
+              // render={() : React.ReactElement=> <LiteracyTrainingPage />}
             />
             <PrivateRoute
               auth={this.state.auth}
