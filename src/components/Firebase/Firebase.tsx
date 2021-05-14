@@ -700,6 +700,24 @@ class Firebase {
   };
 
   /**
+   * gets unlocked literacy sections
+   */
+   getLiteracyTraining = async (): Promise<Array<number> | void> => {
+    if (this.auth.currentUser) {
+      return this.db
+      .collection("users")
+      .doc(this.auth.currentUser.uid)
+      .collection("training")
+      .doc('LI')
+      .get()
+      .then((doc: firebase.firestore.DocumentData) => {
+        return doc.data();
+      })
+      .catch((error: Error) => console.error("Error getting cached document:", error));
+    }
+  };
+
+  /**
    * adds tool to user's watched list when they watch results training video
    * @param {string} section
    */

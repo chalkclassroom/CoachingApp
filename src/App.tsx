@@ -56,6 +56,7 @@ import CHALKLogoGIF from './assets/images/CHALKLogoGIF.gif';
 import Grid from '@material-ui/core/Grid';
 import { getCoach } from './state/actions/coach';
 import { getUnlocked } from './state/actions/unlocked';
+import { getTraining } from './state/actions/training-literacy';
 import { connect } from 'react-redux';
 import StudentEngagementTrainingPage from "./views/protected/StudentEngagementViews/StudentEngagementTrainingPage";
 import * as H from 'history';
@@ -121,10 +122,46 @@ interface Props {
     },
     getCoachFirstName(): Promise<string>,
     getUserRole(): Promise<string>,
-    getUnlockedSections(): Promise<Array<number>>
+    getUnlockedSections(): Promise<Array<number>>,
+    getLiteracyTraining(): Promise<{
+      conceptsFoundational: boolean,
+      conceptsWriting: boolean,
+      conceptsReading: boolean,
+      conceptsLanguage: boolean,
+      definitionsFoundational: boolean,
+      definitionsWriting: boolean,
+      definitionsReading: boolean,
+      definitionsLanguage: boolean,
+      demoFoundational: boolean,
+      demoWriting: boolean,
+      demoReading: boolean,
+      demoLanguage: boolean,
+      knowledgeCheckFoundational: boolean,
+      knowledgeCheckWriting: boolean,
+      knowledgeCheckReading: boolean,
+      knowledgeCheckLanguage: boolean
+    }>
   },
   getCoach(name: string, role: string): void,
-  getUnlocked(unlocked: Array<number>): void
+  getUnlocked(unlocked: Array<number>): void,
+  getTraining(result: {
+    conceptsFoundational: boolean,
+    conceptsWriting: boolean,
+    conceptsReading: boolean,
+    conceptsLanguage: boolean,
+    definitionsFoundational: boolean,
+    definitionsWriting: boolean,
+    definitionsReading: boolean,
+    definitionsLanguage: boolean,
+    demoFoundational: boolean,
+    demoWriting: boolean,
+    demoReading: boolean,
+    demoLanguage: boolean,
+    knowledgeCheckFoundational: boolean,
+    knowledgeCheckWriting: boolean,
+    knowledgeCheckReading: boolean,
+    knowledgeCheckLanguage: boolean
+  }): void
 }
 
 interface State {
@@ -165,6 +202,26 @@ class App extends React.Component<Props, State> {
         });
         this.props.firebase.getUnlockedSections().then((unlocked: Array<number>) => {
           this.props.getUnlocked(unlocked);
+        })
+        this.props.firebase.getLiteracyTraining().then((result: {
+          conceptsFoundational: boolean,
+          conceptsWriting: boolean,
+          conceptsReading: boolean,
+          conceptsLanguage: boolean,
+          definitionsFoundational: boolean,
+          definitionsWriting: boolean,
+          definitionsReading: boolean,
+          definitionsLanguage: boolean,
+          demoFoundational: boolean,
+          demoWriting: boolean,
+          demoReading: boolean,
+          demoLanguage: boolean,
+          knowledgeCheckFoundational: boolean,
+          knowledgeCheckWriting: boolean,
+          knowledgeCheckReading: boolean,
+          knowledgeCheckLanguage: boolean
+        }) => {
+          this.props.getTraining(result)
         })
       } else {
         this.setState({
@@ -523,5 +580,5 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default hot(connect(null, {getCoach, getUnlocked})(App));
+export default hot(connect(null, {getCoach, getUnlocked, getTraining})(App));
 
