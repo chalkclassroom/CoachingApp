@@ -11,21 +11,13 @@ import CheckmarkImage from "../../assets/images/CheckmarkImage.png";
 import {MuiThemeProvider} from '@material-ui/core/styles';
 
 interface Props {
-  type: number,
+  type: Constants.LiteracyTypes,
   title: string,
   descriptionText: string | JSX.Element,
-  literacyType: number,
-  setLiteracyType: React.Dispatch<React.SetStateAction<LiteracyTypes>>,
+  literacyType: Constants.LiteracyTypes,
+  setLiteracyType: React.Dispatch<React.SetStateAction<Constants.LiteracyTypes>>,
   activity: string,
   unlocked: boolean
-}
-
-enum LiteracyTypes {
-  NONE = 0,
-  FOUNDATIONAL = 1,
-  WRITING = 2,
-  READING = 3,
-  LANGUAGE = 4
 }
 
 /**
@@ -37,7 +29,7 @@ enum LiteracyTypes {
 function LiteracyTypeCard(props: Props): React.ReactElement {
   const { type, title, descriptionText, literacyType, setLiteracyType, activity, unlocked } = props;
   return (
-    <Collapse in={literacyType===LiteracyTypes.NONE || literacyType === type} style={{width: '100%'}}>
+    <Collapse in={literacyType===Constants.LiteracyTypes.NONE || literacyType === type} style={{width: '100%'}}>
       <Grid item style={{paddingBottom: '1em'}}>
         <Grid container direction="row" justify="space-around" alignItems="center">
           <Grid item xs={3}>
@@ -54,7 +46,7 @@ function LiteracyTypeCard(props: Props): React.ReactElement {
             <Card
               onClick={(): void => {
                 if (unlocked || activity === 'Training') {
-                  literacyType === type ? setLiteracyType(LiteracyTypes.NONE) : setLiteracyType(type)
+                  literacyType === type ? setLiteracyType(Constants.LiteracyTypes.NONE) : setLiteracyType(type)
                 }
               }}
               elevation={(unlocked || activity === 'Training') ? 8 : 0}

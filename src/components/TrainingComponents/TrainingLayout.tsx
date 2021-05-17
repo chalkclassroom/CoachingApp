@@ -9,6 +9,7 @@ import TrainingQuestionnaire from './TrainingQuestionnaire';
 import TrainingObservationDashboard from './TrainingObservationDashboard';
 import Grid from '@material-ui/core/Grid';
 import * as Types from '../../constants/Types';
+import * as Constants from '../../constants/Constants';
 
 const styles: object = {
   root: {
@@ -111,14 +112,6 @@ const ViewEnum = {
   KNOWLEDGECHECK: 6
 };
 
-enum LiteracyTypes {
-  NONE = 0,
-  FOUNDATIONAL = 1,
-  WRITING = 2,
-  READING = 3,
-  LANGUAGE = 4
-}
-
 interface Props {
   classes: Style,
   icon: string,
@@ -127,7 +120,7 @@ interface Props {
   demonstrationUrl: string;
   definitions: React.ReactElement;
   section: string,
-  literacyType: LiteracyTypes
+  literacyType: Constants.LiteracyTypes
 }
 
 interface Style {
@@ -205,7 +198,7 @@ class TrainingLayout extends React.Component<Props, State> {
     demonstrationUrl: PropTypes.string.isRequired,
     definitions: PropTypes.element.isRequired,
     section: PropTypes.string.isRequired,
-    literacyType: PropTypes.number.isRequired
+    literacyType: PropTypes.string.isRequired
   };
 
   /**

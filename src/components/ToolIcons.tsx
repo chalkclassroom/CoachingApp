@@ -29,6 +29,7 @@ import ResultsTrainingModal from '../components/TrainingComponents/ResultsTraini
 import { useState } from 'react';
 import { connect } from "react-redux";
 import * as Types from '../constants/Types';
+import * as Constants from '../constants/Constants';
 import * as H from 'history';
 
 interface Props {
@@ -226,7 +227,7 @@ function ToolIcons(props: Props): React.ReactElement {
       {selected === 'LiteracyInstruction' ? (
         <LiteracyModal
           open={observeModal}
-          handleBegin={(checklistType: number): void => {
+          handleBegin={(checklistType: Constants.LiteracyTypes): void => {
             history.push({pathname:`/${selected}`, state: {checklist: checklistType}})
           }}
           handleClose={(): void => setObserveModal(false)}
@@ -255,7 +256,7 @@ function ToolIcons(props: Props): React.ReactElement {
       {selected === 'LiteracyInstruction' ? (
         <LiteracyModal
           open={resultsModal}
-          handleBegin={(checklistType: number): void => {
+          handleBegin={(checklistType: Constants.LiteracyTypes): void => {
             history.push({pathname:`/${selected}Results`, state: {type: checklistType}})
           }}
           handleClose={(): void => setResultsModal(false)}
@@ -282,7 +283,7 @@ function ToolIcons(props: Props): React.ReactElement {
       />
       <LiteracyModal
         open={literacyTrainingModal}
-        handleBegin={(checklistType: number): void => {
+        handleBegin={(checklistType: Constants.LiteracyTypes): void => {
           history.push({pathname:`/${selected}Training`, state: {type: checklistType}})
         }}
         handleClose={(): void => setLiteracyTrainingModal(false)}

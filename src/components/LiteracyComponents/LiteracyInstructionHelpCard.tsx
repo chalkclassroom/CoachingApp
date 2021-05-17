@@ -46,7 +46,7 @@ export default function LiteracyInstructionHelpCard(props: Props): React.ReactEl
 
   return (
     <div>
-      {type === 'Foundational' ? (
+      {type === Constants.LiteracyTypes.FOUNDATIONAL ? (
         <Grid container direction="column">
           <Grid item>
             <MuiThemeProvider theme={Constants.LiteracyTheme}>
@@ -84,7 +84,7 @@ export default function LiteracyInstructionHelpCard(props: Props): React.ReactEl
             {tabValue === 0 ? <LiteracyFoundationalTeacher /> : <LiteracyFoundationalChild />}
           </Grid>
         </Grid>
-      ) : type === 'Writing' ? (
+      ) : type === Constants.LiteracyTypes.WRITING ? (
         <Grid container direction="column">
           <Grid item>
             <MuiThemeProvider theme={Constants.LiteracyTheme}>

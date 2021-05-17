@@ -3,6 +3,7 @@ import * as PropTypes from "prop-types";
 import { Button, Card, ListItem, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider, Theme } from '@material-ui/core/styles';
+import * as Constants from '../../constants/Constants';
 
 const styles: object = {
   card: {
@@ -125,14 +126,6 @@ const styles: object = {
   }
 };
 
-enum LiteracyTypes {
-  NONE = 0,
-  FOUNDATIONAL = 1,
-  WRITING = 2,
-  READING = 3,
-  LANGUAGE = 4
-}
-
 interface Props {
   classes: {
     container: string,
@@ -153,7 +146,7 @@ interface Props {
   demonstrationClick(): void,
   knowledgeCheckClick(): void,
   colorTheme: Theme,
-  literacyType: LiteracyTypes
+  literacyType: Constants.LiteracyTypes
 }
 
 /**
@@ -181,10 +174,10 @@ function TrainingDashboard(props: Props): React.ReactElement {
           <img src={Icon} width={"100px"} alt="Magic Eight" />
         </ListItem>
         <Typography>
-          {literacyType === LiteracyTypes.FOUNDATIONAL ? 'Foundational Skills'
-            : literacyType === LiteracyTypes.WRITING ? 'Writing'
-            : literacyType === LiteracyTypes.READING ? 'Book Reading'
-            : literacyType === LiteracyTypes.LANGUAGE ? 'Language Environment'
+          {literacyType === Constants.LiteracyTypes.FOUNDATIONAL ? 'Foundational Skills'
+            : literacyType === Constants.LiteracyTypes.WRITING ? 'Writing'
+            : literacyType === Constants.LiteracyTypes.READING ? 'Book Reading'
+            : literacyType === Constants.LiteracyTypes.LANGUAGE ? 'Language Environment'
             : null
           }
         </Typography>

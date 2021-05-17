@@ -8,7 +8,7 @@ interface Props {
   literacyType: number,
   location: {
     state: {
-      type: number
+      type: Constants.LiteracyTypes
     }
   },
 }

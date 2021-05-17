@@ -44,7 +44,7 @@ interface Props {
   teacherSelected: Types.Teacher,
   location: {
     state: {
-      type: number
+      type: Constants.LiteracyTypes
     }
   },
 }
@@ -112,14 +112,6 @@ interface State {
   questionAdded: boolean,
   teacherModal: boolean,
   noDataYet: boolean
-}
-
-enum LiteracyTypes {
-  NONE = 0,
-  FOUNDATIONAL = 1,
-  WRITING = 2,
-  READING = 3,
-  LANGUAGE = 4
 }
 
 /**
@@ -343,14 +335,14 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
     }).catch(() => {
       console.log('unable to retrieve conference plan')
     })
-    firebase.fetchLiteracySummary(this.state.sessionId, this.props.location.state.type===LiteracyTypes.FOUNDATIONAL ? 'Foundational' : 'Writing', who)
+    firebase.fetchLiteracySummary(this.state.sessionId, this.props.location.state.type===Constants.LiteracyTypes.FOUNDATIONAL ? 'Foundational' : 'Writing', who)
     .then((summary: {literacy: number, noLiteracy: number}) => {
       this.setState({
         literacy: summary.literacy,
         noLiteracy: summary.noLiteracy,
       });
     });
-    this.props.location.state.type === LiteracyTypes.FOUNDATIONAL ? (
+    this.props.location.state.type === Constants.LiteracyTypes.FOUNDATIONAL ? (
       firebase.fetchLiteracyDetailsFoundational(this.state.sessionId, who)
       .then((summary: {
         literacy1: number,
@@ -403,7 +395,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
         })
       })
     )
-    if (this.props.location.state.type === LiteracyTypes.FOUNDATIONAL) {
+    if (this.props.location.state.type === Constants.LiteracyTypes.FOUNDATIONAL) {
       firebase.fetchLiteracyTrendFoundationalTeacher(this.props.teacherSelected.id)
       .then((trends: Array<{
         startDate: string,
@@ -443,7 +435,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
           childTrends: trends
         })
       })
-    } else if (this.props.location.state.type === LiteracyTypes.WRITING) {
+    } else if (this.props.location.state.type === Constants.LiteracyTypes.WRITING) {
       firebase.fetchLiteracyTrendWriting(this.props.teacherSelected.id, 'Teacher')
       .then((trends: Array<{
         startDate: string,
@@ -705,7 +697,7 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
               </Grid>
             }
             details={
-              this.props.location.state.type === LiteracyTypes.FOUNDATIONAL ? (
+              this.props.location.state.type === Constants.LiteracyTypes.FOUNDATIONAL ? (
                 <LiteracyDetailsFoundational
                   literacy1={this.state.literacy1}
                   literacy2={this.state.literacy2}
@@ -754,9 +746,9 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
             conferencePlanExists={this.state.conferencePlanExists}
             noDataYet={this.state.noDataYet}
             literacyType={
-              this.props.location.state.type === LiteracyTypes.FOUNDATIONAL ? 'Foundational'
-                : this.props.location.state.type === LiteracyTypes.WRITING ? 'Writing'
-                : this.props.location.state.type === LiteracyTypes.READING ? 'Reading'
+              this.props.location.state.type === Constants.LiteracyTypes.FOUNDATIONAL ? 'Foundational'
+                : this.props.location.state.type === Constants.LiteracyTypes.WRITING ? 'Writing'
+                : this.props.location.state.type === Constants.LiteracyTypes.READING ? 'Reading'
                 : 'Language'
             }
           />

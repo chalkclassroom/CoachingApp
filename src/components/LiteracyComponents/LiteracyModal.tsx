@@ -41,7 +41,7 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  handleBegin(checklistType: number): void,
+  handleBegin(checklistType: string): void,
   handleClose(): void,
   open: boolean,
   tool: string,
@@ -52,14 +52,6 @@ interface Props {
   language: boolean
 }
 
-enum LiteracyTypes {
-  NONE = 0,
-  FOUNDATIONAL = 1,
-  WRITING = 2,
-  READING = 3,
-  LANGUAGE = 4
-}
-
 /**
  * Modal to confirm view results
  * @function LiteracyModal
@@ -68,7 +60,7 @@ enum LiteracyTypes {
  */
 function LiteracyModal(props: Props): React.ReactElement {
   const { handleBegin, handleClose, open, type, foundational, writing, reading, language } = props;
-  const [literacyType, setLiteracyType] = useState(0);
+  const [literacyType, setLiteracyType] = useState(Constants.LiteracyTypes.NONE);
   const classes = useStyles();
   return (
     <div>
@@ -90,7 +82,7 @@ function LiteracyModal(props: Props): React.ReactElement {
                 style={{width: '100%'}}
               >
                 <Grid item xs={1}>
-                  <Fade in={literacyType!==LiteracyTypes.NONE}>
+                  <Fade in={literacyType!==Constants.LiteracyTypes.NONE}>
                     <Grid
                       container
                       alignItems="center"
@@ -99,7 +91,7 @@ function LiteracyModal(props: Props): React.ReactElement {
                     >
                       <IconButton style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', padding: 10 }}>
                         <Tooltip title={"Back"} placement={"right"}>
-                          <ChevronLeftIcon onClick={(): void => setLiteracyType(LiteracyTypes.NONE)} />
+                          <ChevronLeftIcon onClick={(): void => setLiteracyType(Constants.LiteracyTypes.NONE)} />
                         </Tooltip>
                       </IconButton>
                     </Grid>
@@ -129,7 +121,7 @@ function LiteracyModal(props: Props): React.ReactElement {
             <Grid item style={{paddingTop: '1em'}}>
               <Grid container direction="column" justify="center" alignItems="center">
                 <LiteracyTypeCard
-                  type={LiteracyTypes.FOUNDATIONAL}
+                  type={Constants.LiteracyTypes.FOUNDATIONAL}
                   literacyType={literacyType}
                   setLiteracyType={setLiteracyType}
                   title="Foundational Skills"
@@ -140,7 +132,7 @@ function LiteracyModal(props: Props): React.ReactElement {
                   unlocked={foundational}
                 />
                 <LiteracyTypeCard
-                  type={LiteracyTypes.WRITING}
+                  type={Constants.LiteracyTypes.WRITING}
                   literacyType={literacyType}
                   setLiteracyType={setLiteracyType}
                   title="Writing"
@@ -149,7 +141,7 @@ function LiteracyModal(props: Props): React.ReactElement {
                   unlocked={writing}
                 />
                 <LiteracyTypeCard
-                  type={LiteracyTypes.READING}
+                  type={Constants.LiteracyTypes.READING}
                   literacyType={literacyType}
                   setLiteracyType={setLiteracyType}
                   title="Book Reading"
@@ -163,7 +155,7 @@ function LiteracyModal(props: Props): React.ReactElement {
                   unlocked={reading}
                 />
                 <LiteracyTypeCard
-                  type={LiteracyTypes.LANGUAGE}
+                  type={Constants.LiteracyTypes.LANGUAGE}
                   literacyType={literacyType}
                   setLiteracyType={setLiteracyType}
                   title="Language Environment"
@@ -176,8 +168,7 @@ function LiteracyModal(props: Props): React.ReactElement {
                   <div>
                     <LiteracyObservationOptions
                       handleBegin={handleBegin}
-                      checklistType="Foundational"
-                      type={LiteracyTypes.FOUNDATIONAL}
+                      type={Constants.LiteracyTypes.FOUNDATIONAL}
                       literacyType={literacyType}
                       teacherInstruction1="Observe the teacher delivering instruction or interacting with children."
                       teacherInstruction2="Select the types of foundational skills instruction that occur."
@@ -186,8 +177,7 @@ function LiteracyModal(props: Props): React.ReactElement {
                     />
                     <LiteracyObservationOptions
                       handleBegin={handleBegin}
-                      checklistType="Writing"
-                      type={LiteracyTypes.WRITING}
+                      type={Constants.LiteracyTypes.WRITING}
                       literacyType={literacyType}
                       teacherInstruction1="Observe the teacher delivering instruction or interacting with children."
                       teacherInstruction2="Select the types of foundational skills instruction that occur."
@@ -202,7 +192,7 @@ function LiteracyModal(props: Props): React.ReactElement {
               null
             ) : (
               <Grid item style={{paddingTop: '2em'}}>
-                <Button disabled={literacyType===0} onClick={(): void => {handleBegin(literacyType)}} variant="contained" color="primary">
+                <Button disabled={literacyType===Constants.LiteracyTypes.NONE} onClick={(): void => {handleBegin(literacyType)}} variant="contained" color="primary">
                   {type === 'Results' ? 'VIEW RESULTS' : 'BEGIN TRAINING'}
                 </Button>
               </Grid>
@@ -218,7 +208,11 @@ LiteracyModal.propTypes = {
   handleBegin: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  tool: PropTypes.string.isRequired
+  tool: PropTypes.string.isRequired,
+  foundational: PropTypes.bool.isRequired,
+  writing: PropTypes.bool.isRequired,
+  reading: PropTypes.bool.isRequired,
+  language: PropTypes.bool.isRequired
 }
 
 export default LiteracyModal;

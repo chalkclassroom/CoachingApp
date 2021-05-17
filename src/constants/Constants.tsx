@@ -237,7 +237,15 @@ export const CentersSecondHalf = [
   "Music and Movement",
   "Library",
   "Small Group"
-]
+];
+
+export enum LiteracyTypes {
+  NONE = '',
+  FOUNDATIONAL = 'Foundational',
+  WRITING = 'Writing',
+  READING = 'Reading',
+  LANGUAGE = 'Language'
+}
 
 
 // Team Members
