@@ -237,6 +237,30 @@ function ToolIcons(props: Props): React.ReactElement {
           handleClose={(): void => setObserveModal(false)}
           tool={selected}
           type='Observe'
+          foundational={
+            trainingLiteracy.conceptsFoundational
+            && trainingLiteracy.definitionsFoundational
+            && trainingLiteracy.demoFoundational
+            && trainingLiteracy.knowledgeCheckFoundational
+          }
+          writing={
+            trainingLiteracy.conceptsWriting
+            && trainingLiteracy.definitionsWriting
+            && trainingLiteracy.demoWriting
+            && trainingLiteracy.knowledgeCheckWriting
+          }
+          reading={
+            trainingLiteracy.conceptsReading
+            && trainingLiteracy.definitionsReading
+            && trainingLiteracy.demoReading
+            && trainingLiteracy.knowledgeCheckReading
+          }
+          language={
+            trainingLiteracy.conceptsLanguage
+            && trainingLiteracy.definitionsLanguage
+            && trainingLiteracy.demoLanguage
+            && trainingLiteracy.knowledgeCheckLanguage
+          }
         />
       ) : (
         <ObservationModal
@@ -262,6 +286,30 @@ function ToolIcons(props: Props): React.ReactElement {
           handleClose={(): void => setResultsModal(false)}
           tool={selected}
           type='Results'
+          foundational={
+            trainingLiteracy.conceptsFoundational
+            && trainingLiteracy.definitionsFoundational
+            && trainingLiteracy.demoFoundational
+            && trainingLiteracy.knowledgeCheckFoundational
+          }
+          writing={
+            trainingLiteracy.conceptsWriting
+            && trainingLiteracy.definitionsWriting
+            && trainingLiteracy.demoWriting
+            && trainingLiteracy.knowledgeCheckWriting
+          }
+          reading={
+            trainingLiteracy.conceptsReading
+            && trainingLiteracy.definitionsReading
+            && trainingLiteracy.demoReading
+            && trainingLiteracy.knowledgeCheckReading
+          }
+          language={
+            trainingLiteracy.conceptsLanguage
+            && trainingLiteracy.definitionsLanguage
+            && trainingLiteracy.demoLanguage
+            && trainingLiteracy.knowledgeCheckLanguage
+          }
         />
       ) : (
         <ResultsModal
@@ -285,6 +333,30 @@ function ToolIcons(props: Props): React.ReactElement {
         handleClose={(): void => setLiteracyTrainingModal(false)}
         tool={selected}
         type='Training'
+        foundational={
+          trainingLiteracy.conceptsFoundational
+          && trainingLiteracy.definitionsFoundational
+          && trainingLiteracy.demoFoundational
+          && trainingLiteracy.knowledgeCheckFoundational
+        }
+        writing={
+          trainingLiteracy.conceptsWriting
+          && trainingLiteracy.definitionsWriting
+          && trainingLiteracy.demoWriting
+          && trainingLiteracy.knowledgeCheckWriting
+        }
+        reading={
+          trainingLiteracy.conceptsReading
+          && trainingLiteracy.definitionsReading
+          && trainingLiteracy.demoReading
+          && trainingLiteracy.knowledgeCheckReading
+        }
+        language={
+          trainingLiteracy.conceptsLanguage
+          && trainingLiteracy.definitionsLanguage
+          && trainingLiteracy.demoLanguage
+          && trainingLiteracy.knowledgeCheckLanguage
+        }
       />
     </div>
   );

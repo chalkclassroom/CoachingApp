@@ -233,7 +233,6 @@ class LiteracyInstructionResultsPage extends React.Component<Props, State> {
       sessionDates: [],
       noDataYet: false
     }, () => {
-      console.log('what is the type for checklist', this.props.location.state.type)
       firebase.fetchLiteracySessionDates(teacherId, this.props.location.state.type).then((dates: Array<{id: string, sessionStart: {value: string}, who: string}>) =>
         {if (dates[0]) {
           this.setState({

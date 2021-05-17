@@ -26,6 +26,14 @@ export const Colors = {
   'NotPresent': "#bababa"
 }
 
+export const TransparentTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ffffff00'
+    }
+  }
+});
+
 export const TransitionTheme = createMuiTheme({
   palette: {
     primary: {

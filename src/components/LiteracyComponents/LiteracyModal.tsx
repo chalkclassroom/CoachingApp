@@ -45,7 +45,11 @@ interface Props {
   handleClose(): void,
   open: boolean,
   tool: string,
-  type: string
+  type: string,
+  foundational: boolean,
+  writing: boolean,
+  reading: boolean,
+  language: boolean
 }
 
 enum LiteracyTypes {
@@ -63,7 +67,7 @@ enum LiteracyTypes {
  * @return {ReactElement}
  */
 function LiteracyModal(props: Props): React.ReactElement {
-  const { handleBegin, handleClose, open, type } = props;
+  const { handleBegin, handleClose, open, type, foundational, writing, reading, language } = props;
   const [literacyType, setLiteracyType] = useState(0);
   const classes = useStyles();
   return (
@@ -132,6 +136,8 @@ function LiteracyModal(props: Props): React.ReactElement {
                   descriptionText="Observe lessons and activities designed to foster children’s phonological
                   awareness and develop their knowledge of the alphabetic principle and
                   print concepts."
+                  activity={type}
+                  unlocked={foundational}
                 />
                 <LiteracyTypeCard
                   type={LiteracyTypes.WRITING}
@@ -139,6 +145,8 @@ function LiteracyModal(props: Props): React.ReactElement {
                   setLiteracyType={setLiteracyType}
                   title="Writing"
                   descriptionText="Observe lessons and activities designed to engage children in emergent writing."
+                  activity={type}
+                  unlocked={writing}
                 />
                 <LiteracyTypeCard
                   type={LiteracyTypes.READING}
@@ -151,6 +159,8 @@ function LiteracyModal(props: Props): React.ReactElement {
                     <i>To observe shared book readings focusing on print concepts,
                     select the Foundational Skills tool.</i>
                   </div>}
+                  activity={type}
+                  unlocked={reading}
                 />
                 <LiteracyTypeCard
                   type={LiteracyTypes.LANGUAGE}
@@ -159,6 +169,8 @@ function LiteracyModal(props: Props): React.ReactElement {
                   title="Language Environment"
                   descriptionText="Observe responsive and content-rich teacher-child interactions
                   that promote children's language development."
+                  activity={type}
+                  unlocked={language}
                 />
                 {type === 'Observe' ? (
                   <div>
